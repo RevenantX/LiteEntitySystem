@@ -1,3 +1,4 @@
 ﻿.idea
 obj
 bin
+*.meta

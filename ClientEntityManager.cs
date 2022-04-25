@@ -20,7 +20,7 @@ namespace LiteEntitySystem
         private struct StatePreloadData
         {
             public ushort EntityId;
-            public uint EntityFields;
+            public int EntityFieldsOffset;
             public ushort TotalSize;
             public int DataOffset;
             public int InterpolatedCachesCount;
@@ -49,7 +49,7 @@ namespace LiteEntitySystem
 
             public ushort Tick;
             public ushort ProcessedTick;
-            public bool IsFullSync;
+            public bool IsBaseline;
             
             private readonly NetPacketReader[] _packetReaders = new NetPacketReader[MaxParts];
             private readonly NetDataWriter _finalWriter = new NetDataWriter();
@@ -71,7 +71,7 @@ namespace LiteEntitySystem
                     statePart = null;
                 }
 
-                IsFullSync = false;
+                IsBaseline = false;
                 Tick = tick;
                 InterpolatedCount = 0;
                 PreloadDataCount = 0;
@@ -80,50 +80,76 @@ namespace LiteEntitySystem
                 _totalPartsCount = 0;
             }
 
-            private void PreloadInterpolationData(ClientEntityManager entityManager, ref StatePreloadData preloadData, int initialReaderPosition)
+            public void Preload(ClientEntityManager entityManager)
             {
-                var entity = entityManager.EntitiesArray[preloadData.EntityId];
-                if (entity.IsLocalControlled)
-                    return;
-                
-                var classData = entityManager.ClassDataDict[entity.ClassId];
-                if (classData.InterpolatedMethods == null) 
-                    return;
-                
-                int stateReaderOffset = preloadData.EntityFields == StateSerializer.AllFields 
-                    ? initialReaderPosition + StateSerializer.HeaderSize + sizeof(ushort)
-                    : preloadData.DataOffset;
-                int initialDataOffset = 0;
-
-                InterpolatedFields[InterpolatedCount++] = PreloadDataCount - 1;
-                preloadData.InterpolatedCachesCount = 0;
-
-                for (int i = 0; i < classData.InterpolatedMethods.Length; i++)
+                //preload some data
+                while (FinalReader.AvailableBytes > 0)
                 {
-                    if ((preloadData.EntityFields & (1 << i)) != 0)
+                    Utils.ResizeIfFull(ref PreloadDataArray, PreloadDataCount);
+                    ref var preloadData = ref PreloadDataArray[PreloadDataCount++];
+                    int initialReaderPosition = FinalReader.Position;
+                    
+                    ushort fullSyncAndTotalSize = FinalReader.GetUShort();
+                    preloadData.TotalSize = (ushort)(fullSyncAndTotalSize >> 1);
+                    preloadData.EntityId = FinalReader.GetUShort();
+                    FinalReader.SetPosition(initialReaderPosition + preloadData.TotalSize);
+                    if (preloadData.EntityId > MaxEntityCount)
                     {
-                        if (InterpolatedCount == InterpolatedFields.Length)
-                            Array.Resize(ref InterpolatedFields, InterpolatedCount*2);
-
-                        if (preloadData.InterpolatedCaches == null)
-                            preloadData.InterpolatedCaches = new InterpolatedCache[InterpolatedFields.Length];
-                        else if(preloadData.InterpolatedCachesCount == preloadData.InterpolatedCaches.Length)
-                            Array.Resize(ref preloadData.InterpolatedCaches, preloadData.InterpolatedCaches.Length * 2);
-                        
-                        preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
-                        {
-                            Field = i,
-                            Interpolator = classData.InterpolatedMethods[i],
-                            StateReaderOffset = stateReaderOffset,
-                            InitialDataOffset = initialDataOffset
-                        };
-                        stateReaderOffset += classData.Fields[i].IntSize;
+                        //Should remove at all
+                        Logger.LogError($"[CEM] Invalid entity id: {preloadData.EntityId}");
+                        return;
                     }
-                    initialDataOffset += classData.Fields[i].IntSize;
+
+                    if ((fullSyncAndTotalSize & 1) == 1)
+                    {
+                        preloadData.EntityFieldsOffset = -1;
+                        preloadData.DataOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
+                    }
+                    else
+                    {
+                        //it should be herer at preload
+                        var entity = entityManager.EntitiesArray[preloadData.EntityId];
+                        var classData = entityManager.ClassDataDict[entity.ClassId];
+                        preloadData.EntityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
+                        preloadData.DataOffset = 
+                            initialReaderPosition + 
+                            StateSerializer.DiffHeaderSize + 
+                            classData.FieldsFlagsSize;
+                        
+                        //preload interpolation info
+                        if (entity.IsLocalControlled || classData.InterpolatedMethods == null)
+                            return;
+
+                        int stateReaderOffset = preloadData.DataOffset;
+                        int initialDataOffset = 0;
+
+                        InterpolatedFields[InterpolatedCount++] = PreloadDataCount - 1;
+                        preloadData.InterpolatedCachesCount = 0;
+
+                        for (int i = 0; i < classData.InterpolatedMethods.Length; i++)
+                        {
+                            if (preloadData.EntityFieldsOffset == -1 ||
+                                (FinalReader.RawData[preloadData.EntityFieldsOffset + i/8] & (1 << i%8)) != 0)
+                            {
+                                Utils.ResizeIfFull(ref InterpolatedFields, InterpolatedCount);
+                                Utils.ResizeOrCreate(ref preloadData.InterpolatedCaches, InterpolatedFields.Length);
+
+                                preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
+                                {
+                                    Field = i,
+                                    Interpolator = classData.InterpolatedMethods[i],
+                                    StateReaderOffset = stateReaderOffset,
+                                    InitialDataOffset = initialDataOffset
+                                };
+                                stateReaderOffset += classData.Fields[i].IntSize;
+                            }
+                            initialDataOffset += classData.Fields[i].IntSize;
+                        }
+                    }
                 }
             }
 
-            public bool Read(ClientEntityManager entityManager, bool isLastPart, NetPacketReader reader)
+            public bool ReadPart(bool isLastPart, NetPacketReader reader)
             {
                 //check processed tick
                 byte partNumber = reader.GetByte();
@@ -160,32 +186,6 @@ namespace LiteEntitySystem
                         statePart = null;
                     }
                     FinalReader.SetSource(_finalWriter);
-
-                    //preload some data
-                    while (FinalReader.AvailableBytes > 0)
-                    {
-                        if (PreloadDataCount == PreloadDataArray.Length)
-                        {
-                            Array.Resize(ref PreloadDataArray, PreloadDataCount*2);
-                        }
-                        ref var preloadData = ref PreloadDataArray[PreloadDataCount++];
-                        int initialReaderPosition = FinalReader.Position;
-                        preloadData.TotalSize = FinalReader.GetUShort();
-                        preloadData.EntityId = FinalReader.GetUShort();
-                        if (preloadData.EntityId > MaxEntityCount)
-                        {
-                            //Should remove at all
-                            Logger.LogError($"[CEM] Invalid entity id: {preloadData.EntityId}");
-                            return false;
-                        }
-                        preloadData.EntityFields = FinalReader.GetUInt();
-                        preloadData.DataOffset = FinalReader.Position;
-                        FinalReader.SetPosition(initialReaderPosition + preloadData.TotalSize);
-
-                        //preload interpolation info
-                        PreloadInterpolationData(entityManager, ref preloadData, initialReaderPosition);
-                    }
-                    
                     return true;
                 }
                 return false;
@@ -227,7 +227,7 @@ namespace LiteEntitySystem
         private readonly NetDataWriter _predictWriter = new NetDataWriter(false, NetConstants.MaxPacketSize*MaxParts);
         private readonly NetDataReader _predictReader = new NetDataReader();
         
-        private uint _currentReadFields;
+        private int _fieldsIndex;
         private NetDataReader _currentReader;
 
         public ClientEntityManager(NetPeer localPeer, byte headerByte, int framesPerSecond, IInputGenerator inputGenerator) : base(NetworkMode.Client, framesPerSecond)
@@ -347,6 +347,7 @@ namespace LiteEntitySystem
                     _stateB = _lerpBuffer.Min;
                     _lerpBuffer.Remove(_stateB);
                     _lerpTime = SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTime;
+                    _stateB.Preload(this);
                 }
             }
 
@@ -403,13 +404,12 @@ namespace LiteEntitySystem
             var reader = _stateA.FinalReader;
             _currentReader = reader;
 
-            if (_stateA.IsFullSync)
+            if (_stateA.IsBaseline)
             {
                 while (reader.AvailableBytes > 0)
                 {
                     ushort entityId = reader.GetUShort();
-                    uint entityFields = reader.GetUInt();
-                    ReadEntityState(entityId, entityFields);
+                    ReadEntityState(entityId, true);
                 }
  
                 if (reader.AvailableBytes != 0)
@@ -423,7 +423,7 @@ namespace LiteEntitySystem
                 {
                     ref var preloadData = ref _stateA.PreloadDataArray[i];
                     reader.SetPosition(preloadData.DataOffset);
-                    if (!ReadEntityState(preloadData.EntityId, preloadData.EntityFields))
+                    if (!ReadEntityState(preloadData.EntityId, preloadData.EntityFieldsOffset == -1))
                         return;
                     //Logger.Log($"[{entity.Id}] READ: {reader.Position - initialReadSize}");
                 }
@@ -441,8 +441,8 @@ namespace LiteEntitySystem
                     _predictedEntities[internalEntity.Id].MakeDiff(0, _predictWriter, true);
                     _predictReader.SetSource(_predictWriter.Data, StateSerializer.HeaderSize, _predictWriter.Length);
                     _currentReader = _predictReader;
-                    _currentReadFields = StateSerializer.AllFields;
-                    Read(internalEntity);
+                    _fullSyncRead = true;
+                    ReadEntity(internalEntity);
                 }
                 PredictionReset = false;
                 
@@ -473,13 +473,15 @@ namespace LiteEntitySystem
             }
         }
 
-        private bool ReadEntityState(ushort entityInstanceId, uint fields)
+        private bool _fullSyncRead;
+
+        private bool ReadEntityState(ushort entityInstanceId, bool fullSync)
         {
+            _fullSyncRead = fullSync;
             var entity = EntitiesArray[entityInstanceId];
-            _currentReadFields = fields;
 
             //full sync
-            if (_currentReadFields == StateSerializer.AllFields)
+            if (_fullSyncRead)
             {
                 byte version = _currentReader.GetByte();
                 ushort classId = _currentReader.GetUShort();
@@ -498,7 +500,7 @@ namespace LiteEntitySystem
                         entityInstanceId,
                         version, 
                         this), 
-                    Read);
+                    ReadEntity);
                 Logger.Log($"[CEM] EntityCreated: {entityInstanceId} cid: {entity.ClassId}, v: {version}");
             }
             else
@@ -509,27 +511,27 @@ namespace LiteEntitySystem
                     return false;
                 }
                 //read old
-                Read(entity);
+                ReadEntity(entity);
             }
 
             return true;
         }
         
-        private unsafe void Read(InternalEntity entity)
+        private unsafe void ReadEntity(InternalEntity entity)
         {
             var classData = ClassDataDict[entity.ClassId];
             var fixedFields = classData.Fields;
             byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref entity);
-            int fixedReadSize = _currentReader.Position;
-            bool fullSync = _currentReadFields == StateSerializer.AllFields;
-            
+            int readerPosition = _currentReader.Position;
+
             StateSerializer stateSerializer = null;
+            ref byte[] interpolatedInitialData = ref _interpolatedInitialData[entity.Id];
             ref byte[] interpolatePrevData = ref _interpolatePrevData[entity.Id];
             
             if (!PredictionReset && entity.IsLocalControlled)
             {
                 stateSerializer = _predictedEntities[entity.Id];
-                if (fullSync)
+                if (_fullSyncRead)
                 {
                     stateSerializer ??= new StateSerializer();
                     stateSerializer.Init(classData, entity);
@@ -537,23 +539,15 @@ namespace LiteEntitySystem
                     _predictedEntities[entity.Id] = stateSerializer;
                     _ownedEntities.Add(entity);
                     
-                    if(interpolatePrevData == null)
-                        interpolatePrevData = new byte[classData.InterpolatedFieldsSize];
-                    else if(interpolatePrevData.Length < classData.InterpolatedFieldsSize)
-                        Array.Resize(ref interpolatePrevData, classData.InterpolatedFieldsSize);
+                    Utils.ResizeOrCreate(ref interpolatedInitialData, classData.InterpolatedFieldsSize);
+                    Utils.ResizeOrCreate(ref interpolatePrevData, classData.InterpolatedFieldsSize);
                 }
             }
-
-            ref byte[] interpolatedInitialData = ref _interpolatedInitialData[entity.Id];
-            if (fullSync)
+            else if (_fullSyncRead)
             {
-                if (interpolatedInitialData == null)
-                    interpolatedInitialData = new byte[classData.InterpolatedFieldsSize];
-                else if (interpolatedInitialData.Length < classData.InterpolatedFieldsSize)
-                    Array.Resize(ref interpolatedInitialData, classData.InterpolatedFieldsSize);
+                Utils.ResizeOrCreate(ref interpolatedInitialData, classData.InterpolatedFieldsSize);
             }
-
-            stateSerializer?.ResetStringIndex();
+            int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
             int fixedDataOffset = 0;
 
             fixed (byte* rawData = _currentReader.RawData, interpDataPtr = interpolatedInitialData)
@@ -561,20 +555,18 @@ namespace LiteEntitySystem
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
                     ref var entityFieldInfo = ref fixedFields[i];
-                    if ((_currentReadFields & (1 << i)) == 0)
+                    if (!_fullSyncRead && (rawData[fieldsFlagsOffset + i / 8] & (1 << (i % 8))) == 0)
                     {
-                        if(entityFieldInfo.Type == FixedFieldType.String)
-                            stateSerializer?.IncrementStringIndex();
                         fixedDataOffset += entityFieldInfo.IntSize;
                         continue;
                     }
                     byte* fieldPtr = entityPtr + entityFieldInfo.Offset;
-                    byte* readDataPtr = rawData + fixedReadSize;
+                    byte* readDataPtr = rawData + readerPosition;
 
                     switch (entityFieldInfo.Type)
                     {
                         case FixedFieldType.None:
-                            if (i < classData.InterpolatedMethods.Length && (entity.IsServerControlled || (!PredictionReset && fullSync)) )
+                            if (i < classData.InterpolatedMethods.Length && (entity.IsServerControlled || (!PredictionReset && _fullSyncRead)) )
                             {
                                 //this is interpolated save for future
                                 Unsafe.CopyBlock(interpDataPtr + fixedDataOffset, readDataPtr, entityFieldInfo.Size);
@@ -588,20 +580,12 @@ namespace LiteEntitySystem
                             Unsafe.AsRef<EntityLogic>(fieldPtr) = entity.EntityManager.GetEntityById(entityId);
                             stateSerializer?.WritePredicted(fixedDataOffset, readDataPtr, entityFieldInfo.Size);
                             break;
-                        
-                        case FixedFieldType.String:
-                            _currentReader.SetPosition(fixedReadSize);
-                            ref var str = ref Unsafe.AsRef<string>(fieldPtr);
-                            str = _currentReader.GetString();
-                            fixedReadSize += _currentReader.Position - fixedReadSize;
-                            stateSerializer?.WriteString(ref str);
-                            break;
                     }
-                    fixedReadSize += entityFieldInfo.IntSize;
+                    readerPosition += entityFieldInfo.IntSize;
                     fixedDataOffset += entityFieldInfo.IntSize;
                 }
             }
-            _currentReader.SetPosition(fixedReadSize);
+            _currentReader.SetPosition(readerPosition);
             entity.OnSync();
         }
 
@@ -634,7 +618,7 @@ namespace LiteEntitySystem
                     
                     _stateA = new ServerStateData
                     {
-                        IsFullSync = true
+                        IsBaseline = true
                     };
                     _stateA.FinalReader.SetSource(_compressionBuffer, 0, decompressedSize);
                     _stateA.Tick = _stateA.FinalReader.GetUShort();
@@ -682,9 +666,9 @@ namespace LiteEntitySystem
                         }
                         _receivedStates.Add(newServerTick, serverState);
                     }
-
+                    
                     //if got full state - add to lerp buffer
-                    if(serverState.Read(this, isLastPart, reader))
+                    if(serverState.ReadPart(isLastPart, reader))
                     {
                         _receivedStates.Remove(serverState.Tick);
                         

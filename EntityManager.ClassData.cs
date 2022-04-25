@@ -8,8 +8,7 @@ namespace LiteEntitySystem
     internal enum FixedFieldType
     {
         None,
-        EntityId,
-        String
+        EntityId
     }
     public partial class EntityManager
     {
@@ -40,6 +39,7 @@ namespace LiteEntitySystem
             public readonly int[] BaseIds;
 
             public readonly int FieldsCount;
+            public readonly int FieldsFlagsSize;
             public readonly int FixedFieldsSize;
             public readonly EntityFieldInfo[] Fields;
             
@@ -116,7 +116,6 @@ namespace LiteEntitySystem
                                 fields.Add(new EntityFieldInfo(offset, ft == typeof(bool) ? 1 : fieldSize, FixedFieldType.None));
                             }
 
-
                             FixedFieldsSize += fieldSize;
                         }
                         else if (ft == typeof(EntityLogic) || ft.IsSubclassOf(typeof(InternalEntity)))
@@ -126,7 +125,7 @@ namespace LiteEntitySystem
                         }
                         else if (ft == typeof(string))
                         {
-                            fields.Add(new EntityFieldInfo(offset, 0, FixedFieldType.String));
+                            //none
                         }
                         else
                         {
@@ -138,6 +137,7 @@ namespace LiteEntitySystem
                 InterpolatedMethods = interpolatedMethods.ToArray();
                 Fields = fields.ToArray();
                 FieldsCount = Fields.Length;
+                FieldsFlagsSize = (FieldsCount-1) / 8 + 1;
             }
         }
         

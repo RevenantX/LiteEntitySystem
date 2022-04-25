@@ -12,17 +12,27 @@ namespace LiteEntitySystem
         private byte _version;
 
         private const int MaxHistory = 32; //should be power of two
-        private const int MaxFields = 31;
-        public const int HeaderSize = 9;
-        public const int DiffHeaderSize = 8;
-        public const uint AllFields = uint.MaxValue;
+        public const int HeaderSize = 5;
+        public const int HeaderWithTotalSize = 7;
+        public const int DiffHeaderSize = 4;
 
         private EntityClassData _classData;
         private InternalEntity _entityLogic;
         private readonly NetDataWriter[] _history = new NetDataWriter[MaxHistory];
         private byte[] _latestEntityData;
-        private readonly ushort[] _fieldChangeTicks = new ushort[MaxFields];
+        private ushort[] _fieldChangeTicks;
         private ushort _versionChangedTick;
+
+        private struct Packet
+        {
+            public ushort Id;
+            public int Tick;
+            public int LifeTime;
+            public byte[] Data;
+        }
+        
+        private byte[] _packets;
+        private int _packetsCount;
 
         public byte IncrementVersion(ushort tick)
         {
@@ -38,19 +48,20 @@ namespace LiteEntitySystem
                 return;
             _stringHashcodes.Clear();
             _latestStrings.Clear();
+            
+            int minimalDataSize = HeaderSize + _classData.FieldsFlagsSize + _classData.FixedFieldsSize;
+            Utils.ResizeOrCreate(ref _latestEntityData, minimalDataSize);
+            Utils.ResizeOrCreate(ref _fieldChangeTicks, classData.FieldsCount);
 
-            int dataSize = HeaderSize + _classData.FixedFieldsSize;
-            if (_latestEntityData == null)
-                _latestEntityData = new byte[dataSize];
-            else if(_latestEntityData.Length < dataSize)
-                Array.Resize(ref _latestEntityData, dataSize);
-
-            //only in diff
-            FastBitConverter.GetBytes(_latestEntityData, 0, e.Id);
-            FastBitConverter.GetBytes(_latestEntityData, 2, AllFields);
-            //full data
-            _latestEntityData[6] = e.Version;
-            FastBitConverter.GetBytes(_latestEntityData, 7, e.ClassId);
+            unsafe
+            {
+                fixed (byte* data = _latestEntityData)
+                {
+                    *(ushort*) (data) = e.Id;
+                    data[2] = e.Version;
+                    *(ushort*) (data + 3) = e.ClassId;
+                }
+            }
 
             //only if revertable
             if(_history[0] == null)
@@ -61,16 +72,6 @@ namespace LiteEntitySystem
         private readonly List<NetDataWriter> _latestStrings = new List<NetDataWriter>();
         private readonly List<int> _stringHashcodes = new List<int>();
         private int _stringIndex;
-
-        public void ResetStringIndex()
-        {
-            _stringIndex = -1;
-        }
-
-        public void IncrementStringIndex()
-        {
-            _stringIndex++;
-        }
 
         public bool WriteString(ref string str)
         {
@@ -146,100 +147,99 @@ namespace LiteEntitySystem
                             }
                             offset += 2;
                             break;
-                        
-                        case FixedFieldType.String:
-                            ref string str = ref Unsafe.AsRef<string>(fieldPtr);
-                            if(WriteString(ref str))
-                                _fieldChangeTicks[i] = currentTick;
-                            break;
                     }
                 }
             }
         }
 
-        public unsafe int MakeDiff(ushort playerTick, NetDataWriter result, bool isFullSync)
+        public unsafe int MakeDiff(ushort playerTick, NetDataWriter result, bool isBaseline)
         {
             if (_classData.IsServerOnly)
                 return -1;
             
-            int totalSizePos = result.Length;
+            int startPos = result.Length;
             int resultOffset;
             
             int lastDataOffset = HeaderSize;
-            int stringIndex = 0;
             bool writeMaxFields = false;
-            
+
             fixed (byte* lastEntityData = _latestEntityData, resultData = result.Data)
             {
-                uint* fields;
-                if (isFullSync)
+                ushort* fieldFlagsPtr = (ushort*) (resultData + startPos);
+                //initial state with compression
+                if (isBaseline)
                 {
-                    //dont write total size in full sync
+                    //dont write total size in full sync and fields
                     //totalSizePos here equal to EID position
-                    fields = (uint*)(resultData + totalSizePos + sizeof(ushort));
-                    Unsafe.CopyBlock(resultData + totalSizePos, lastEntityData, HeaderSize);
-                    resultOffset = totalSizePos + HeaderSize;//- size
+                    //set fields to sync all
+                    Unsafe.CopyBlock(resultData + startPos, lastEntityData, HeaderSize);
+                    resultOffset = startPos + HeaderSize;
                     writeMaxFields = true;
-                }
+                } //just new class
                 else if (EntityManager.SequenceDiff(_versionChangedTick, playerTick) > 0)
                 {
                     //write full header here (totalSize + eid)
-                    fields = (uint*)(resultData + totalSizePos + sizeof(ushort) + sizeof(ushort));
-                    Unsafe.CopyBlock(resultData + totalSizePos + sizeof(ushort), lastEntityData, HeaderSize);
-                    resultOffset = totalSizePos + sizeof(ushort) + HeaderSize;
+                    //also all fields
+                    *fieldFlagsPtr = 1;
+                    Unsafe.CopyBlock(resultData + startPos + sizeof(ushort), lastEntityData, HeaderSize);
+                    resultOffset = startPos + HeaderWithTotalSize;
                     writeMaxFields = true;
                 }
-                else
+                else //make diff
                 {
-                    int entityIdPos = totalSizePos + sizeof(ushort);
-                    fields = (uint*)(resultData + entityIdPos + sizeof(ushort));
-                    resultOffset = totalSizePos + DiffHeaderSize;
-                    
+                    bool hasChanges = false;
+                    // -1 for cycle
+                    byte* fields = resultData + startPos + DiffHeaderSize - 1;
+                    *fieldFlagsPtr = 0;
                     //put entity id
-                    *(ushort*)(resultData + entityIdPos) = *(ushort*)lastEntityData;
-                }
-                
-                *fields = 0;
-
-                for (int i = 0; i < _classData.FieldsCount; i++)
-                {
-                    ref var fixedFieldInfo = ref _classData.Fields[i];
-                    if (isFullSync || EntityManager.SequenceDiff(_fieldChangeTicks[i], playerTick) > 0)
+                    *(ushort*)(resultData + startPos + sizeof(ushort)) = *(ushort*)lastEntityData;
+                    resultOffset = startPos + DiffHeaderSize + _classData.FieldsFlagsSize;
+                    
+                    for (int i = 0; i < _classData.FieldsCount; i++)
                     {
-                        *fields |= 1u << i;
-                        if (fixedFieldInfo.Type == FixedFieldType.String)
+                        ref var fixedFieldInfo = ref _classData.Fields[i];
+                        if (i % 8 == 0)
                         {
-                            var stringData = _latestStrings[stringIndex++];
-                            fixed(byte* latestString = stringData.Data)
-                                Unsafe.CopyBlock(resultData + resultOffset, latestString, (uint)stringData.Length);
-                            resultOffset += stringData.Length;
+                            fields++;
+                            *fields = 0;
                         }
-                        else
+                        if (EntityManager.SequenceDiff(_fieldChangeTicks[i], playerTick) > 0)
                         {
+                            hasChanges = true;
+                            *fields |= (byte)(1 << i%8);
                             Unsafe.CopyBlock(resultData + resultOffset, lastEntityData + lastDataOffset, fixedFieldInfo.Size);
                             resultOffset += fixedFieldInfo.IntSize;
                         }
+                        lastDataOffset += fixedFieldInfo.IntSize;
                     }
-                    lastDataOffset += fixedFieldInfo.IntSize;
+                    
+                    if (!hasChanges)
+                        return -1;
                 }
-                //no changes
-                if (*fields == 0)
-                    return -1;
-
                 if (writeMaxFields)
                 {
-                    *fields = AllFields;
+                    for (int i = 0; i < _classData.FieldsCount; i++)
+                    {
+                        ref var fixedFieldInfo = ref _classData.Fields[i];
+                        Unsafe.CopyBlock(
+                            resultData + resultOffset, 
+                            lastEntityData + lastDataOffset,
+                            fixedFieldInfo.Size);
+                        resultOffset += fixedFieldInfo.IntSize;
+                        lastDataOffset += fixedFieldInfo.IntSize;
+                    }
                 }
-                if(!isFullSync)
+                if(!isBaseline)
                 {
                     //write totalSize
                     int resultSize = resultOffset - result.Length;
-                    if (resultSize > ushort.MaxValue)
+                    if (resultSize > ushort.MaxValue/2)
                     {
                         //request full sync
                         return -1;
                     }
-                    *(ushort*)(resultData + totalSizePos) = (ushort)resultSize;
+                    
+                    *fieldFlagsPtr |= (ushort)(resultSize  << 1);
                 }
             }
 
