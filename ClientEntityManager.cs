@@ -115,25 +115,26 @@ namespace LiteEntitySystem
                             initialReaderPosition + 
                             StateSerializer.DiffHeaderSize + 
                             classData.FieldsFlagsSize;
+                        preloadData.InterpolatedCachesCount = 0;
                         
                         //preload interpolation info
                         if (entity.IsLocalControlled || classData.InterpolatedMethods == null)
+                        {
                             return;
+                        }
 
                         int stateReaderOffset = preloadData.DataOffset;
                         int initialDataOffset = 0;
 
+                        Utils.ResizeIfFull(ref InterpolatedFields, InterpolatedCount);
+                        Utils.ResizeOrCreate(ref preloadData.InterpolatedCaches, classData.InterpolatedMethods.Length);
                         InterpolatedFields[InterpolatedCount++] = PreloadDataCount - 1;
-                        preloadData.InterpolatedCachesCount = 0;
 
                         for (int i = 0; i < classData.InterpolatedMethods.Length; i++)
                         {
                             if (preloadData.EntityFieldsOffset == -1 ||
                                 (FinalReader.RawData[preloadData.EntityFieldsOffset + i/8] & (1 << i%8)) != 0)
                             {
-                                Utils.ResizeIfFull(ref InterpolatedFields, InterpolatedCount);
-                                Utils.ResizeOrCreate(ref preloadData.InterpolatedCaches, InterpolatedFields.Length);
-
                                 preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
                                 {
                                     Field = i,
