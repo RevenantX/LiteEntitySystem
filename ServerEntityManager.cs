@@ -59,7 +59,7 @@ namespace LiteEntitySystem
     {
         private readonly Queue<ushort> _possibleId = new Queue<ushort>();
         private readonly NetDataWriter _netDataWriter = new NetDataWriter(false, NetConstants.MaxPacketSize*MaxParts);
-        private readonly StateSerializer[] _entitySerializers = new StateSerializer[MaxEntityCount];
+        internal readonly StateSerializer[] EntitySerializers = new StateSerializer[MaxEntityCount];
         private readonly NetPlayer[] _netPlayers = new NetPlayer[MaxPlayers];
         
         private int _netPlayersCount;
@@ -113,7 +113,7 @@ namespace LiteEntitySystem
             var classData = ClassDataDict[EntityClassInfo<T>.ClassId];
             ushort entityId = _possibleId.Count > 0 ? _possibleId.Dequeue() : _nextId++;
             
-            ref var stateSerializer = ref _entitySerializers[entityId];
+            ref var stateSerializer = ref EntitySerializers[entityId];
             stateSerializer ??= new StateSerializer();
 
             var entityParams = new EntityParams(
@@ -134,12 +134,6 @@ namespace LiteEntitySystem
             return entity;
         }
 
-        internal void ExecuteOnClient<T>(ushort senderId, T value, RemoteCall remoteCallInfo) where T : struct
-        {
-            var stateSerialzer = _entitySerializers[senderId];
-            stateSerialzer.AddRemoteCall(value, remoteCallInfo);
-        }
-        
         protected override void OnLogicTick()
         {
             ServerTick = Tick;
@@ -216,7 +210,7 @@ namespace LiteEntitySystem
                     _netDataWriter.Data[1] = PacketEntityFullSync;
                     for (int i = 0; i <= MaxEntityId; i++)
                     {
-                        _entitySerializers[i].MakeBaseline(Tick, _netDataWriter);
+                        EntitySerializers[i].MakeBaseline(Tick, _netDataWriter);
                     }
                     Utils.ResizeOrCreate(ref _compressionBuffer, _netDataWriter.Length);
 
@@ -256,7 +250,7 @@ namespace LiteEntitySystem
 
                 for (int i = 0; i <= MaxEntityId; i++)
                 {
-                    int resultDataSize = _entitySerializers[i].MakeDiff(
+                    int resultDataSize = EntitySerializers[i].MakeDiff(
                         minimalTick, 
                         Tick, 
                         netPlayer.ServerTick, 

@@ -30,7 +30,7 @@ namespace LiteEntitySystem
             
             if (methodToCall.Target != this)
                 throw new Exception("You can call this only on this class methods");
-            Serializer.AddSyncableCall(this, value, methodToCall.Method);
+            Serializer.AddSyncableCall(this, value, count, methodToCall.Method);
         }
     }
     

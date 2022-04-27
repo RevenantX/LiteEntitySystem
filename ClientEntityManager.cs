@@ -25,6 +25,13 @@ namespace LiteEntitySystem
             public int DataOffset;
             public int InterpolatedCachesCount;
             public InterpolatedCache[] InterpolatedCaches;
+            public int RemoteCallsCount;
+            public RemoteCallsCache[] RemoteCallsCaches;
+        }
+
+        private struct RemoteCallsCache
+        {
+            
         }
 
         private struct InterpolatedCache
@@ -82,6 +89,7 @@ namespace LiteEntitySystem
 
             public void Preload(ClientEntityManager entityManager)
             {
+                byte[] readerData = FinalReader.RawData;
                 //preload some data
                 while (FinalReader.AvailableBytes > 0)
                 {
@@ -107,7 +115,7 @@ namespace LiteEntitySystem
                     }
                     else
                     {
-                        //it should be herer at preload
+                        //it should be here at preload
                         var entity = entityManager.EntitiesArray[preloadData.EntityId];
                         var classData = entityManager.ClassDataDict[entity.ClassId];
                         preloadData.EntityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
@@ -116,35 +124,45 @@ namespace LiteEntitySystem
                             StateSerializer.DiffHeaderSize + 
                             classData.FieldsFlagsSize;
                         preloadData.InterpolatedCachesCount = 0;
-                        
-                        //preload interpolation info
-                        if (entity.IsLocalControlled || classData.InterpolatedMethods == null)
-                        {
-                            return;
-                        }
 
                         int stateReaderOffset = preloadData.DataOffset;
                         int initialDataOffset = 0;
-
-                        Utils.ResizeIfFull(ref InterpolatedFields, InterpolatedCount);
-                        Utils.ResizeOrCreate(ref preloadData.InterpolatedCaches, classData.InterpolatedMethods.Length);
-                        InterpolatedFields[InterpolatedCount++] = PreloadDataCount - 1;
-
-                        for (int i = 0; i < classData.InterpolatedMethods.Length; i++)
+                        int fieldIndex = 0;
+                        
+                        //preload interpolation info
+                        if (!entity.IsLocalControlled && classData.InterpolatedMethods != null)
                         {
-                            if (preloadData.EntityFieldsOffset == -1 ||
-                                (FinalReader.RawData[preloadData.EntityFieldsOffset + i/8] & (1 << i%8)) != 0)
+                            Utils.ResizeIfFull(ref InterpolatedFields, InterpolatedCount);
+                            Utils.ResizeOrCreate(ref preloadData.InterpolatedCaches, classData.InterpolatedMethods.Length);
+                            InterpolatedFields[InterpolatedCount++] = PreloadDataCount - 1;
+                            
+                            for (; fieldIndex < classData.InterpolatedMethods.Length; fieldIndex++)
                             {
-                                preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
+                                if ((readerData[preloadData.EntityFieldsOffset + fieldIndex/8] & (1 << fieldIndex%8)) != 0)
                                 {
-                                    Field = i,
-                                    Interpolator = classData.InterpolatedMethods[i],
-                                    StateReaderOffset = stateReaderOffset,
-                                    InitialDataOffset = initialDataOffset
-                                };
-                                stateReaderOffset += classData.Fields[i].IntSize;
+                                    preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
+                                    {
+                                        Field = fieldIndex,
+                                        Interpolator = classData.InterpolatedMethods[fieldIndex],
+                                        StateReaderOffset = stateReaderOffset,
+                                        InitialDataOffset = initialDataOffset
+                                    };
+                                    stateReaderOffset += classData.Fields[fieldIndex].IntSize;
+                                }
+                                initialDataOffset += classData.Fields[fieldIndex].IntSize;
                             }
-                            initialDataOffset += classData.Fields[i].IntSize;
+                        }
+                        
+                        //preload rpcs
+                        for (; fieldIndex < classData.FieldsCount; fieldIndex++)
+                        {
+                            if ((readerData[preloadData.EntityFieldsOffset + fieldIndex / 8] & (1 << fieldIndex % 8)) != 0)
+                                stateReaderOffset += classData.Fields[fieldIndex].IntSize;
+                        }
+
+                        if (stateReaderOffset < initialReaderPosition + preloadData.TotalSize)
+                        {
+                            Logger.Log("There is RPC!");
                         }
                     }
                 }
@@ -529,6 +547,7 @@ namespace LiteEntitySystem
             ref byte[] interpolatedInitialData = ref _interpolatedInitialData[entity.Id];
             ref byte[] interpolatePrevData = ref _interpolatePrevData[entity.Id];
             
+            //create predicted entities
             if (!PredictionReset && entity.IsLocalControlled)
             {
                 stateSerializer = _predictedEntities[entity.Id];
@@ -544,10 +563,12 @@ namespace LiteEntitySystem
                     Utils.ResizeOrCreate(ref interpolatePrevData, classData.InterpolatedFieldsSize);
                 }
             }
+            //create interpolation buffers
             else if (_fullSyncRead)
             {
                 Utils.ResizeOrCreate(ref interpolatedInitialData, classData.InterpolatedFieldsSize);
             }
+            
             int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
             int fixedDataOffset = 0;
 

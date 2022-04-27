@@ -31,7 +31,6 @@ namespace LiteEntitySystem
             public ushort Tick;
             public ushort LifeTime;
             public byte[] Data;
-            public bool IsArray;
             public ushort Size;
             public RemoteCallPacket Next;
             public RemoteCallPacket Prev;
@@ -67,7 +66,6 @@ namespace LiteEntitySystem
                 Tick = _entityLogic.EntityManager.Tick,
                 Data = new byte[remoteCallInfo.DataSize],
                 LifeTime = remoteCallInfo.LifeTime,
-                IsArray = false,
                 Size = (ushort)remoteCallInfo.DataSize
             };
             unsafe
@@ -88,7 +86,6 @@ namespace LiteEntitySystem
                 Tick = _entityLogic.EntityManager.Tick,
                 Data = new byte[remoteCallInfo.DataSize * count],
                 LifeTime = remoteCallInfo.LifeTime,
-                IsArray = true,
                 Size = (ushort)(remoteCallInfo.DataSize * count)
             };
             Buffer.BlockCopy(value, 0, rpc.Data, 0, count);
@@ -105,7 +102,6 @@ namespace LiteEntitySystem
                 Tick = _entityLogic.EntityManager.Tick,
                 Data = new byte[remoteCallInfo.DataSize],
                 LifeTime = 0,
-                IsArray = false,
                 Size = (ushort)remoteCallInfo.DataSize
             };
             unsafe
@@ -128,7 +124,6 @@ namespace LiteEntitySystem
                 Tick = _entityLogic.EntityManager.Tick,
                 Data = new byte[remoteCallInfo.DataSize * count],
                 LifeTime = 0,
-                IsArray = true,
                 Size = (ushort)(remoteCallInfo.DataSize * count)
             };
             Buffer.BlockCopy(value, 0, rpc.Data, 0, count);
@@ -344,11 +339,10 @@ namespace LiteEntitySystem
                             //put new
                             resultData[resultOffset] = rpcNode.Id;
                             resultData[resultOffset + 1] = rpcNode.SyncableId;
-                            resultData[resultOffset + 2] = (byte)(rpcNode.IsArray ? 1 : 0);
-                            Unsafe.AsRef<ushort>(resultData[resultOffset + 3]) = rpcNode.Size;
+                            Unsafe.AsRef<ushort>(resultData[resultOffset + 2]) = rpcNode.Size;
                             fixed (byte* rpcData = rpcNode.Data)
                             {
-                                Unsafe.CopyBlock(resultData + resultOffset + 5, rpcData, rpcNode.Size);
+                                Unsafe.CopyBlock(resultData + resultOffset + 4, rpcData, rpcNode.Size);
                             }
                         }
                         else if (EntityManager.SequenceDiff(rpcNode.Tick, minimalTick) < 0)

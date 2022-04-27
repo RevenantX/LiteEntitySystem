@@ -120,7 +120,26 @@ namespace LiteEntitySystem
                 {
                     if ((remoteCallInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
                         methodToCall(EntityManager.ServerTick, value);
-                    ((ServerEntityManager)EntityManager).ExecuteOnClient(Id, value, remoteCallInfo);
+                    ((ServerEntityManager)EntityManager).EntitySerializers[Id].AddRemoteCall(value, remoteCallInfo);
+                }
+                else if(InternalIsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
+                {
+                    methodToCall(EntityManager.Tick, value);
+                }
+            }
+            
+            protected void ExecuteRemoteCall<T>(Action<ushort, T[]> methodToCall, T[] value, int count) where T : struct
+            {
+                if (methodToCall.Target != this)
+                    throw new Exception("You can call this only on this class methods");
+                var classData = EntityManager.ClassDataDict[ClassId];
+                if(!classData.RemoteCalls.TryGetValue(methodToCall.Method, out RemoteCall remoteCallInfo))
+                    throw new Exception($"{methodToCall.Method.Name} is not [RemoteCall] method");
+                if (EntityManager.IsServer)
+                {
+                    if ((remoteCallInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
+                        methodToCall(EntityManager.ServerTick, value);
+                    ((ServerEntityManager)EntityManager).EntitySerializers[Id].AddRemoteCall(value, count, remoteCallInfo);
                 }
                 else if(InternalIsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
                 {
