@@ -192,13 +192,21 @@ namespace LiteEntitySystem
             base.Update();
             
             //send only if tick changed
-            if (prevTick == Tick || Tick % (int) SendRate != 0)
+            if (_netPlayersCount == 0 || prevTick == Tick || Tick % (int) SendRate != 0)
                 return;
 
             //header byte, packet type (2 bytes)
             _netDataWriter.SetPosition(2);
             _netDataWriter.Put(Tick);
             
+            //calculate minimalTick
+            ushort minimalTick = _netPlayers[0].ServerTick;
+            for (int pidx = 0; pidx < _netPlayersCount; pidx++)
+            {
+                var netPlayer = _netPlayers[pidx];
+                minimalTick = netPlayer.ServerTick < minimalTick ? netPlayer.ServerTick : minimalTick;
+            }
+
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
             {
                 var netPlayer = _netPlayers[pidx];
@@ -208,7 +216,7 @@ namespace LiteEntitySystem
                     _netDataWriter.Data[1] = PacketEntityFullSync;
                     for (int i = 0; i <= MaxEntityId; i++)
                     {
-                        _entitySerializers[i].MakeDiff(Tick, 0, _netDataWriter, true);
+                        _entitySerializers[i].MakeBaseline(Tick, _netDataWriter);
                     }
                     Utils.ResizeOrCreate(ref _compressionBuffer, _netDataWriter.Length);
 
@@ -248,7 +256,12 @@ namespace LiteEntitySystem
 
                 for (int i = 0; i <= MaxEntityId; i++)
                 {
-                    int resultDataSize = _entitySerializers[i].MakeDiff(Tick, netPlayer.ServerTick, _netDataWriter, false);
+                    int resultDataSize = _entitySerializers[i].MakeDiff(
+                        minimalTick, 
+                        Tick, 
+                        netPlayer.ServerTick, 
+                        _netDataWriter);
+                    
                     if(resultDataSize == -1)
                     {
                         //nothing changed: reset and go to next

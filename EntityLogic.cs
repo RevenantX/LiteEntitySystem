@@ -102,7 +102,7 @@ namespace LiteEntitySystem
                 Version = entityParams.Version;
             }
 
-            protected void ExecuteRemoteCall<T>(Action<T> methodToCall, T value) where T : struct
+            protected void ExecuteRemoteCall<T>(Action<ushort, T> methodToCall, T value) where T : struct
             {
                 if (methodToCall.Target != this)
                     throw new Exception("You can call this only on this class methods");
@@ -112,12 +112,12 @@ namespace LiteEntitySystem
                 if (EntityManager.IsServer)
                 {
                     if ((remoteCallInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
-                        methodToCall(value);
+                        methodToCall(EntityManager.ServerTick, value);
                     ((ServerEntityManager)EntityManager).ExecuteOnClient(Id, value, remoteCallInfo);
                 }
                 else if(InternalIsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
                 {
-                    methodToCall(value);
+                    methodToCall(EntityManager.Tick, value);
                 }
             }
 

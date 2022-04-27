@@ -23,19 +23,23 @@ namespace LiteEntitySystem
         private ushort[] _fieldChangeTicks;
         private ushort _versionChangedTick;
 
-        private struct RemoteCallPacket
+        private class RemoteCallPacket
         {
             public byte Id;
             public ushort Tick;
             public ushort LifeTime;
             public byte[] Data;
+            public RemoteCallPacket Next;
+            public RemoteCallPacket Prev;
         }
         
         private byte[] _packets;
         private int _packetsCount;
         private ushort _lastWriteTick;
 
-        private readonly LinkedList<RemoteCallPacket> _remoteCallPackets = new LinkedList<RemoteCallPacket>();
+        private RemoteCallPacket _rpcHead;
+        private RemoteCallPacket _rpcTail;
+        private Queue<RemoteCallPacket> _rpcPool;
 
         public void AddRemoteCall<T>(ushort tick, T value, RemoteCall remoteCallInfo) where T : struct
         {
@@ -53,7 +57,17 @@ namespace LiteEntitySystem
                     Unsafe.Copy(rawData, ref value);
                 }
             }
-            _remoteCallPackets.AddLast(rpc);
+
+            if (_rpcHead == null)
+            {
+                _rpcHead = rpc;
+            }
+            else
+            {
+                _rpcTail.Next = rpc;
+                rpc.Prev = _rpcTail;
+            }
+            _rpcTail = rpc;
         }
 
         public byte IncrementVersion(ushort tick)
@@ -98,81 +112,137 @@ namespace LiteEntitySystem
             }
         }
 
-        public unsafe int MakeDiff(ushort serverTick, ushort playerTick, NetDataWriter result, bool isBaseline)
+        private unsafe void Write(ushort serverTick)
         {
-            if (_classData.IsServerOnly)
-                return -1;
-
             //write if there new tick
-            if (serverTick != _lastWriteTick)
+            if (serverTick == _lastWriteTick) 
+                return;
+            
+            _lastWriteTick = serverTick;
+
+            byte* entityPointer = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref _entityLogic);
+            int offset = HeaderSize;
+
+            fixed (byte* latestEntityData = _latestEntityData)
             {
-                _lastWriteTick = serverTick;
-
-                byte* entityPointer = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref _entityLogic);
-                int offset = HeaderSize;
-
-                fixed (byte* latestEntityData = _latestEntityData)
+                for (int i = 0; i < _classData.FieldsCount; i++)
                 {
-                    for (int i = 0; i < _classData.FieldsCount; i++)
-                    {
-                        ref var entityFieldInfo = ref _classData.Fields[i];
-                        byte* fieldPtr = entityPointer + entityFieldInfo.Offset;
-                        byte* latestDataPtr = latestEntityData + offset;
+                    ref var entityFieldInfo = ref _classData.Fields[i];
+                    byte* fieldPtr = entityPointer + entityFieldInfo.Offset;
+                    byte* latestDataPtr = latestEntityData + offset;
 
-                        //update only changed fields
-                        switch (entityFieldInfo.Type)
-                        {
-                            case FixedFieldType.None:
-                                if (Utils.memcmp(latestDataPtr, fieldPtr, entityFieldInfo.PtrSize) != 0)
-                                {
-                                    Unsafe.CopyBlock(latestDataPtr, fieldPtr, entityFieldInfo.Size);
-                                    _fieldChangeTicks[i] = serverTick;
-                                }
-                                offset += entityFieldInfo.IntSize;
-                                break;
+                    //update only changed fields
+                    switch (entityFieldInfo.Type)
+                    {
+                        case FixedFieldType.None:
+                            if (Utils.memcmp(latestDataPtr, fieldPtr, entityFieldInfo.PtrSize) != 0)
+                            {
+                                Unsafe.CopyBlock(latestDataPtr, fieldPtr, entityFieldInfo.Size);
+                                _fieldChangeTicks[i] = serverTick;
+                            }
+                            offset += entityFieldInfo.IntSize;
+                            break;
                         
-                            case FixedFieldType.EntityId:
-                                ushort entityId = Unsafe.AsRef<EntityLogic>(fieldPtr)?.Id ?? EntityManager.InvalidEntityId;
-                                ushort *ushortPtr = (ushort*)latestDataPtr;
-                                if (*ushortPtr != entityId)
-                                {
-                                    *ushortPtr = entityId;
-                                    _fieldChangeTicks[i] = serverTick;
-                                }
-                                offset += 2;
-                                break;
-                        }
+                        case FixedFieldType.EntityId:
+                            ushort entityId = Unsafe.AsRef<EntityLogic>(fieldPtr)?.Id ?? EntityManager.InvalidEntityId;
+                            ushort *ushortPtr = (ushort*)latestDataPtr;
+                            if (*ushortPtr != entityId)
+                            {
+                                *ushortPtr = entityId;
+                                _fieldChangeTicks[i] = serverTick;
+                            }
+                            offset += 2;
+                            break;
                     }
                 }
             }
+        }
+
+        public unsafe int MakeBaseline(ushort serverTick, NetDataWriter result)
+        {
+            if (_classData.IsServerOnly)
+                return -1;
+            Write(serverTick);
             
+            //make diff
+            int startPos = result.Length;
+            int lastDataOffset = HeaderSize;
+
+            fixed (byte* lastEntityData = _latestEntityData, resultData = result.Data)
+            {
+                //initial state with compression
+                //dont write total size in full sync and fields
+                //totalSizePos here equal to EID position
+                //set fields to sync all
+                Unsafe.CopyBlock(resultData + startPos, lastEntityData, HeaderSize);
+                int resultOffset = startPos + HeaderSize;
+                for (int i = 0; i < _classData.FieldsCount; i++)
+                {
+                    ref var fixedFieldInfo = ref _classData.Fields[i];
+                    Unsafe.CopyBlock(
+                        resultData + resultOffset, 
+                        lastEntityData + lastDataOffset,
+                        fixedFieldInfo.Size);
+                    resultOffset += fixedFieldInfo.IntSize;
+                    lastDataOffset += fixedFieldInfo.IntSize;
+                }
+
+                byte* entityPointer = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref _entityLogic);
+                for (int i = 0; i < _classData.SyncableFields.Length; i++)
+                {
+                    Unsafe.AsRef<SyncableField>(entityPointer + _classData.SyncableFields[i].Offset).FullSyncWrite(resultData, ref resultOffset);
+                }
+                result.SetPosition(resultOffset);
+                return resultOffset;
+            }
+        }
+
+        public unsafe int MakeDiff(ushort minimalTick, ushort serverTick, ushort playerTick, NetDataWriter result)
+        {
+            if (_classData.IsServerOnly)
+                return -1;
+            Write(serverTick);
+
+            //remove old RPCs
+            while (_rpcHead != null && EntityManager.SequenceDiff(minimalTick, _rpcHead.Tick) >= 0)
+            {
+                _rpcPool.Enqueue(_rpcHead);
+                if (_rpcTail == _rpcHead)
+                    _rpcTail = null;
+                _rpcHead = _rpcHead.Next;
+            }
+
             //make diff
             int startPos = result.Length;
             int resultOffset;
             int lastDataOffset = HeaderSize;
-            bool writeMaxFields = false;
+            byte* entityPointer = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref _entityLogic);
 
             fixed (byte* lastEntityData = _latestEntityData, resultData = result.Data)
             {
                 ushort* fieldFlagsPtr = (ushort*) (resultData + startPos);
                 //initial state with compression
-                if (isBaseline)
-                {
-                    //dont write total size in full sync and fields
-                    //totalSizePos here equal to EID position
-                    //set fields to sync all
-                    Unsafe.CopyBlock(resultData + startPos, lastEntityData, HeaderSize);
-                    resultOffset = startPos + HeaderSize;
-                    writeMaxFields = true;
-                } //just new class
-                else if (EntityManager.SequenceDiff(_versionChangedTick, playerTick) > 0)
+                if (EntityManager.SequenceDiff(_versionChangedTick, playerTick) > 0)
                 {
                     //write full header here (totalSize + eid)
                     //also all fields
                     *fieldFlagsPtr = 1;
                     Unsafe.CopyBlock(resultData + startPos + sizeof(ushort), lastEntityData, HeaderSize);
                     resultOffset = startPos + HeaderWithTotalSize;
-                    writeMaxFields = true;
+                    for (int i = 0; i < _classData.FieldsCount; i++)
+                    {
+                        ref var fixedFieldInfo = ref _classData.Fields[i];
+                        Unsafe.CopyBlock(
+                            resultData + resultOffset, 
+                            lastEntityData + lastDataOffset,
+                            fixedFieldInfo.Size);
+                        resultOffset += fixedFieldInfo.IntSize;
+                        lastDataOffset += fixedFieldInfo.IntSize;
+                    }
+                    for (int i = 0; i < _classData.SyncableFields.Length; i++)
+                    {
+                        Unsafe.AsRef<SyncableField>(entityPointer + _classData.SyncableFields[i].Offset).FullSyncWrite(resultData, ref resultOffset);
+                    }
                 }
                 else //make diff
                 {
@@ -201,35 +271,20 @@ namespace LiteEntitySystem
                         }
                         lastDataOffset += fixedFieldInfo.IntSize;
                     }
-                    
+
                     if (!hasChanges)
                         return -1;
                 }
-                if (writeMaxFields)
+
+                //write totalSize
+                int resultSize = resultOffset - result.Length;
+                if (resultSize > ushort.MaxValue/2)
                 {
-                    for (int i = 0; i < _classData.FieldsCount; i++)
-                    {
-                        ref var fixedFieldInfo = ref _classData.Fields[i];
-                        Unsafe.CopyBlock(
-                            resultData + resultOffset, 
-                            lastEntityData + lastDataOffset,
-                            fixedFieldInfo.Size);
-                        resultOffset += fixedFieldInfo.IntSize;
-                        lastDataOffset += fixedFieldInfo.IntSize;
-                    }
+                    //request full sync
+                    return -1;
                 }
-                if(!isBaseline)
-                {
-                    //write totalSize
-                    int resultSize = resultOffset - result.Length;
-                    if (resultSize > ushort.MaxValue/2)
-                    {
-                        //request full sync
-                        return -1;
-                    }
-                    
-                    *fieldFlagsPtr |= (ushort)(resultSize  << 1);
-                }
+                
+                *fieldFlagsPtr |= (ushort)(resultSize  << 1);
             }
 
             result.SetPosition(resultOffset);

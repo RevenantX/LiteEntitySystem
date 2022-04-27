@@ -439,7 +439,7 @@ namespace LiteEntitySystem
                 foreach (var internalEntity in _ownedEntities)
                 {
                     _predictWriter.Reset();
-                    _predictedEntities[internalEntity.Id].MakeDiff(Tick, 0, _predictWriter, true);
+                    _predictedEntities[internalEntity.Id].MakeBaseline(Tick, _predictWriter);
                     _predictReader.SetSource(_predictWriter.Data, StateSerializer.HeaderSize, _predictWriter.Length);
                     _currentReader = _predictReader;
                     _fullSyncRead = true;
@@ -584,6 +584,13 @@ namespace LiteEntitySystem
                     }
                     readerPosition += entityFieldInfo.IntSize;
                     fixedDataOffset += entityFieldInfo.IntSize;
+                }
+                if (_fullSyncRead)
+                {
+                    for (int i = 0; i < classData.SyncableFields.Length; i++)
+                    {
+                        Unsafe.AsRef<SyncableField>(entityPtr + classData.SyncableFields[i].Offset).FullSyncRead(rawData, ref readerPosition);
+                    }
                 }
             }
             _currentReader.SetPosition(readerPosition);

@@ -42,6 +42,7 @@ namespace LiteEntitySystem
             public readonly int FieldsFlagsSize;
             public readonly int FixedFieldsSize;
             public readonly EntityFieldInfo[] Fields;
+            public readonly EntityFieldInfo[] SyncableFields;
             
             public readonly InterpolatorDelegate[] InterpolatedMethods;
             public readonly int InterpolatedFieldsSize;
@@ -81,6 +82,7 @@ namespace LiteEntitySystem
                 
                 var interpolatedMethods = new List<InterpolatorDelegate>();
                 var fields = new List<EntityFieldInfo>();
+                var syncableFields = new List<EntityFieldInfo>();
 
                 //add here to baseTypes to add fields
                 baseTypes.Insert(0, typeof(InternalEntity));
@@ -102,7 +104,7 @@ namespace LiteEntitySystem
                         if (remoteCallAttribute.Id == byte.MaxValue)
                         {
                             remoteCallAttribute.Id = rpcIndex++;
-                            remoteCallAttribute.DataSize = Marshal.SizeOf(method.GetParameters()[0]);
+                            remoteCallAttribute.DataSize = Marshal.SizeOf(method.GetParameters()[1].ParameterType);
                         }
                         if (rpcIndex == byte.MaxValue)
                             throw new Exception("254 is max RemoteCall methods");
@@ -141,19 +143,23 @@ namespace LiteEntitySystem
                             fields.Add(new EntityFieldInfo(offset, 2, FixedFieldType.EntityId));
                             FixedFieldsSize += 2;
                         }
-                        else if (ft == typeof(string))
+                        else if (ft.IsSubclassOf(typeof(SyncableField)))
                         {
-                            //none
+                            if (field.IsInitOnly)
+                                syncableFields.Add(new EntityFieldInfo(offset, 0, FixedFieldType.None));
+                            else
+                                throw new Exception("Syncable fields should be readonly!");
                         }
                         else
                         {
-                            Logger.LogError($"UnsupportedSyncVar: {field.Name}");
+                            Logger.LogError($"UnsupportedSyncVar: {field.Name} - {ft}");
                         }
                     }
                 }
                 
                 InterpolatedMethods = interpolatedMethods.ToArray();
                 Fields = fields.ToArray();
+                SyncableFields = syncableFields.ToArray();
                 FieldsCount = Fields.Length;
                 FieldsFlagsSize = (FieldsCount-1) / 8 + 1;
             }
