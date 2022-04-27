@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
@@ -33,15 +34,13 @@ namespace LiteEntitySystem
     public class RemoteCall : Attribute
     {
         public readonly ExecuteFlags Flags;
-        public readonly ushort LifeTime;
-        
+
         internal byte Id = byte.MaxValue;
         internal int DataSize;
         
-        public RemoteCall(ExecuteFlags flags, ushort lifeTime)
+        public RemoteCall(ExecuteFlags flags)
         {
             Flags = flags;
-            LifeTime = lifeTime;
         }
     }
 
@@ -109,7 +108,7 @@ namespace LiteEntitySystem
                 Version = entityParams.Version;
             }
 
-            protected void ExecuteRemoteCall<T>(Action<ushort, T> methodToCall, T value) where T : struct
+            protected void ExecuteRemoteCall<T>(Action<T> methodToCall, T value) where T : struct
             {
                 if (methodToCall.Target != this)
                     throw new Exception("You can call this only on this class methods");
@@ -119,16 +118,16 @@ namespace LiteEntitySystem
                 if (EntityManager.IsServer)
                 {
                     if ((remoteCallInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
-                        methodToCall(EntityManager.ServerTick, value);
+                        methodToCall(value);
                     ((ServerEntityManager)EntityManager).EntitySerializers[Id].AddRemoteCall(value, remoteCallInfo);
                 }
                 else if(InternalIsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
                 {
-                    methodToCall(EntityManager.Tick, value);
+                    methodToCall(value);
                 }
             }
             
-            protected void ExecuteRemoteCall<T>(Action<ushort, T[]> methodToCall, T[] value, int count) where T : struct
+            protected void ExecuteRemoteCall<T>(Action<T[]> methodToCall, T[] value, int count) where T : struct
             {
                 if (methodToCall.Target != this)
                     throw new Exception("You can call this only on this class methods");
@@ -138,12 +137,12 @@ namespace LiteEntitySystem
                 if (EntityManager.IsServer)
                 {
                     if ((remoteCallInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
-                        methodToCall(EntityManager.ServerTick, value);
+                        methodToCall(value);
                     ((ServerEntityManager)EntityManager).EntitySerializers[Id].AddRemoteCall(value, count, remoteCallInfo);
                 }
                 else if(InternalIsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
                 {
-                    methodToCall(EntityManager.Tick, value);
+                    methodToCall(value);
                 }
             }
 
@@ -158,8 +157,11 @@ namespace LiteEntitySystem
     {
         [SyncVar] private ushort _parentId;
         [SyncVar] private byte _isDestroyed;
+
+        private ushort _prevParent = EntityManager.InvalidEntityId;
         
         public bool IsDestroyed => _isDestroyed == 1;
+        public readonly List<EntityLogic> Childs = new List<EntityLogic>();
 
         internal void DestroyInternal()
         {
@@ -175,6 +177,14 @@ namespace LiteEntitySystem
                 EntityManager.RemoveEntity(this);
                 OnDestroy();
             }
+
+            if (_prevParent != _parentId)
+            {
+                ushort newId = _parentId;
+                _parentId = _prevParent;
+                _prevParent = newId;
+                SetParentInternal(newId);
+            }
         }
 
         protected virtual void OnDestroy()
@@ -184,7 +194,42 @@ namespace LiteEntitySystem
 
         public void SetParent(EntityLogic parentEntity)
         {
-            _parentId = parentEntity.Id;
+            ushort id = parentEntity == null ? EntityManager.InvalidEntityId : parentEntity.Id;
+            if (EntityManager.IsClient || id == _parentId)
+                return;
+            SetParentInternal(id);
+        }
+
+        private void SetParentInternal(ushort newId)
+        {
+            EntityManager.GetEntityById(_parentId)?.Childs.Remove(this);
+            _parentId = newId;
+            var newParent = EntityManager.GetEntityById(_parentId);
+            if (newParent != null)
+            {
+                newParent.Childs.Add(this);
+
+                bool localControl;
+                
+                if (newParent is PawnLogic pawn)
+                    localControl = pawn.InternalIsLocalControlled;
+                else
+                    localControl = false;
+                
+                if (localControl != InternalIsLocalControlled)
+                {
+                    SetLocalControl(this, localControl);
+                }
+            }
+        }
+
+        private void SetLocalControl(EntityLogic entity, bool localControl)
+        {
+            entity.InternalIsLocalControlled = localControl;
+            foreach (EntityLogic child in Childs)
+            {
+                SetLocalControl(child, localControl);
+            }
         }
         
         public T GetParent<T>() where T : EntityLogic

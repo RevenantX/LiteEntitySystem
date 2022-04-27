@@ -115,7 +115,7 @@ namespace LiteEntitySystem
                         if (remoteCallAttribute.Id == byte.MaxValue)
                         {
                             remoteCallAttribute.Id = rpcIndex++;
-                            remoteCallAttribute.DataSize = Marshal.SizeOf(method.GetParameters()[1].ParameterType);
+                            remoteCallAttribute.DataSize = Marshal.SizeOf(method.GetParameters()[0].ParameterType);
                             if (rpcIndex == byte.MaxValue)
                                 throw new Exception("254 is max RemoteCall methods");
                         }

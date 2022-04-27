@@ -29,7 +29,6 @@ namespace LiteEntitySystem
             public byte Id = byte.MaxValue;
             public byte SyncableId = byte.MaxValue;
             public ushort Tick;
-            public ushort LifeTime;
             public byte[] Data;
             public ushort Size;
             public RemoteCallPacket Next;
@@ -65,7 +64,6 @@ namespace LiteEntitySystem
                 Id = remoteCallInfo.Id,
                 Tick = _entityLogic.EntityManager.Tick,
                 Data = new byte[remoteCallInfo.DataSize],
-                LifeTime = remoteCallInfo.LifeTime,
                 Size = (ushort)remoteCallInfo.DataSize
             };
             unsafe
@@ -85,7 +83,6 @@ namespace LiteEntitySystem
                 Id = remoteCallInfo.Id,
                 Tick = _entityLogic.EntityManager.Tick,
                 Data = new byte[remoteCallInfo.DataSize * count],
-                LifeTime = remoteCallInfo.LifeTime,
                 Size = (ushort)(remoteCallInfo.DataSize * count)
             };
             Buffer.BlockCopy(value, 0, rpc.Data, 0, count);
@@ -101,7 +98,6 @@ namespace LiteEntitySystem
                 SyncableId = field.FieldId,
                 Tick = _entityLogic.EntityManager.Tick,
                 Data = new byte[remoteCallInfo.DataSize],
-                LifeTime = 0,
                 Size = (ushort)remoteCallInfo.DataSize
             };
             unsafe
@@ -123,7 +119,6 @@ namespace LiteEntitySystem
                 SyncableId = field.FieldId,
                 Tick = _entityLogic.EntityManager.Tick,
                 Data = new byte[remoteCallInfo.DataSize * count],
-                LifeTime = 0,
                 Size = (ushort)(remoteCallInfo.DataSize * count)
             };
             Buffer.BlockCopy(value, 0, rpc.Data, 0, count);
@@ -339,10 +334,11 @@ namespace LiteEntitySystem
                             //put new
                             resultData[resultOffset] = rpcNode.Id;
                             resultData[resultOffset + 1] = rpcNode.SyncableId;
-                            Unsafe.AsRef<ushort>(resultData[resultOffset + 2]) = rpcNode.Size;
+                            Unsafe.AsRef<ushort>(resultData[resultOffset + 2]) = rpcNode.Tick;
+                            Unsafe.AsRef<ushort>(resultData[resultOffset + 4]) = rpcNode.Size;
                             fixed (byte* rpcData = rpcNode.Data)
                             {
-                                Unsafe.CopyBlock(resultData + resultOffset + 4, rpcData, rpcNode.Size);
+                                Unsafe.CopyBlock(resultData + resultOffset + 6, rpcData, rpcNode.Size);
                             }
                         }
                         else if (EntityManager.SequenceDiff(rpcNode.Tick, minimalTick) < 0)
