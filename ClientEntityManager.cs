@@ -241,7 +241,7 @@ namespace LiteEntitySystem
         private readonly byte[][] _interpolatePrevData = new byte[MaxEntityCount][];
         
         private readonly StateSerializer[] _predictedEntities = new StateSerializer[MaxEntityCount];
-        private readonly EntityFilter<InternalEntity> _ownedEntities = new EntityFilter<InternalEntity>();
+        internal readonly EntityFilter<EntityLogic> OwnedEntities = new EntityFilter<EntityLogic>();
         public bool PredictionReset { get; private set; }
         private readonly NetDataWriter _predictWriter = new NetDataWriter(false, NetConstants.MaxPacketSize*MaxParts);
         private readonly NetDataReader _predictReader = new NetDataReader();
@@ -284,7 +284,7 @@ namespace LiteEntitySystem
                 _inputReader.Clear();
             }
             
-            foreach (var entity in _ownedEntities)
+            foreach (var entity in OwnedEntities)
             {
                 unsafe
                 {
@@ -293,7 +293,7 @@ namespace LiteEntitySystem
                     var classData = ClassDataDict[entity.ClassId];
                     int offset = 0;
       
-                    byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref entityLocal);
+                    byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref entityLocal);
                     fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
                            prevDataPtr = _interpolatePrevData[entity.Id])
                     {
@@ -333,7 +333,7 @@ namespace LiteEntitySystem
             
             //local interpolation
             float localLerpT = (float)(_accumulator/DeltaTime);
-            foreach (var entity in _ownedEntities)
+            foreach (var entity in OwnedEntities)
             {
                 var entityLocal = entity;
                 var classData = ClassDataDict[entity.ClassId];
@@ -341,7 +341,7 @@ namespace LiteEntitySystem
                 
                 unsafe
                 {
-                    byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref entityLocal);
+                    byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref entityLocal);
                     fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
                            prevDataPtr = _interpolatePrevData[entity.Id])
                     {
@@ -454,14 +454,14 @@ namespace LiteEntitySystem
             if (_inputCommands.Count > 0)
             {
                 PredictionReset = true;
-                foreach (var internalEntity in _ownedEntities)
+                foreach (var entity in OwnedEntities)
                 {
                     _predictWriter.Reset();
-                    _predictedEntities[internalEntity.Id].MakeBaseline(Tick, _predictWriter);
+                    _predictedEntities[entity.Id].MakeBaseline(Tick, _predictWriter);
                     _predictReader.SetSource(_predictWriter.Data, StateSerializer.HeaderSize, _predictWriter.Length);
                     _currentReader = _predictReader;
                     _fullSyncRead = true;
-                    ReadEntity(internalEntity);
+                    ReadEntity(entity);
                 }
                 PredictionReset = false;
                 
@@ -557,8 +557,7 @@ namespace LiteEntitySystem
                     stateSerializer.Init(classData, entity);
                     
                     _predictedEntities[entity.Id] = stateSerializer;
-                    _ownedEntities.Add(entity);
-                    
+
                     Utils.ResizeOrCreate(ref interpolatedInitialData, classData.InterpolatedFieldsSize);
                     Utils.ResizeOrCreate(ref interpolatePrevData, classData.InterpolatedFieldsSize);
                 }
@@ -615,7 +614,6 @@ namespace LiteEntitySystem
                 }
             }
             _currentReader.SetPosition(readerPosition);
-            entity.OnSync();
         }
 
         private byte[] _compressionBuffer;

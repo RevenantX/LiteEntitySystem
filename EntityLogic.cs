@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using LiteNetLib;
+using System.Runtime.CompilerServices;
 using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
@@ -8,7 +8,8 @@ namespace LiteEntitySystem
     [AttributeUsage(AttributeTargets.Field)]
     public class SyncVar : Attribute
     {
-        public readonly bool IsInterpolated;
+        internal readonly bool IsInterpolated;
+        internal readonly string OnSyncMethod;
 
         public SyncVar()
         {
@@ -18,6 +19,11 @@ namespace LiteEntitySystem
         public SyncVar(bool isInterpolated)
         {
             IsInterpolated = isInterpolated;
+        }
+        
+        public SyncVar(string onSyncMethod)
+        {
+            OnSyncMethod = onSyncMethod;
         }
     }
 
@@ -92,10 +98,6 @@ namespace LiteEntitySystem
             {
             }
 
-            public virtual void OnSync()
-            {
-            }
-
             public virtual void OnConstructed()
             {
             }
@@ -155,36 +157,31 @@ namespace LiteEntitySystem
 
     public abstract class EntityLogic : EntityManager.InternalEntity
     {
-        [SyncVar] private ushort _parentId;
-        [SyncVar] private byte _isDestroyed;
+        [SyncVar(nameof(SetParentInternal))] private ushort _parentId;
+        [SyncVar(nameof(DestroyedSync))] private byte _isDestroyed;
 
-        private ushort _prevParent = EntityManager.InvalidEntityId;
-        
         public bool IsDestroyed => _isDestroyed == 1;
         public readonly List<EntityLogic> Childs = new List<EntityLogic>();
+
+        private bool _ownedEntity;
 
         internal void DestroyInternal()
         {
             _isDestroyed = 1;
+            if(_ownedEntity)
+                ((ClientEntityManager)EntityManager).OwnedEntities.Remove(this);
             EntityManager.RemoveEntity(this);
             OnDestroy();
+            foreach (EntityLogic entityLogic in Childs)
+            {
+                entityLogic.DestroyInternal();
+            }
         }
 
-        public override void OnSync()
+        private void DestroyedSync(byte prevValue, byte currentValue)
         {
-            if (_isDestroyed == 1)
-            {
-                EntityManager.RemoveEntity(this);
-                OnDestroy();
-            }
-
-            if (_prevParent != _parentId)
-            {
-                ushort newId = _parentId;
-                _parentId = _prevParent;
-                _prevParent = newId;
-                SetParentInternal(newId);
-            }
+            if(_isDestroyed == 1)
+                DestroyInternal();
         }
 
         protected virtual void OnDestroy()
@@ -197,34 +194,36 @@ namespace LiteEntitySystem
             ushort id = parentEntity == null ? EntityManager.InvalidEntityId : parentEntity.Id;
             if (EntityManager.IsClient || id == _parentId)
                 return;
-            SetParentInternal(id);
+            SetParentInternal(_parentId, id);
         }
 
-        private void SetParentInternal(ushort newId)
+        private void SetParentInternal(ushort oldId, ushort newId)
         {
-            EntityManager.GetEntityById(_parentId)?.Childs.Remove(this);
+            EntityManager.GetEntityById(oldId)?.Childs.Remove(this);
             _parentId = newId;
             var newParent = EntityManager.GetEntityById(_parentId);
             if (newParent != null)
             {
                 newParent.Childs.Add(this);
-
-                bool localControl;
-                
-                if (newParent is PawnLogic pawn)
-                    localControl = pawn.InternalIsLocalControlled;
-                else
-                    localControl = false;
-                
-                if (localControl != InternalIsLocalControlled)
+                if (newParent.InternalIsLocalControlled != InternalIsLocalControlled)
                 {
-                    SetLocalControl(this, localControl);
+                    SetLocalControl(this, newParent.InternalIsLocalControlled);
                 }
             }
         }
 
         private void SetLocalControl(EntityLogic entity, bool localControl)
         {
+            if (localControl)
+            {
+                _ownedEntity = true;
+                ((ClientEntityManager)EntityManager).OwnedEntities.Add(this);
+            }
+            else if(_ownedEntity)
+            {
+                _ownedEntity = false;
+                ((ClientEntityManager)EntityManager).OwnedEntities.Remove(this);
+            }
             entity.InternalIsLocalControlled = localControl;
             foreach (EntityLogic child in Childs)
             {
@@ -253,7 +252,7 @@ namespace LiteEntitySystem
     [UpdateableEntity]
     public abstract class PawnLogic : EntityLogic
     {
-        [SyncVar] private ControllerLogic _controller;
+        [SyncVar(nameof(OnControllerSync))] private ControllerLogic _controller;
 
         public ControllerLogic Controller
         {
@@ -263,10 +262,9 @@ namespace LiteEntitySystem
 
         protected PawnLogic(EntityParams entityParams) : base(entityParams) { }
 
-        public override void OnSync()
+        private void OnControllerSync(ControllerLogic prev, ControllerLogic next)
         {
-            InternalIsLocalControlled = EntityManager.IsClient && _controller != null && _controller.OwnerId == EntityManager.PlayerId;
-            base.OnSync();
+            InternalIsLocalControlled = EntityManager.IsClient && next != null && next.OwnerId == EntityManager.PlayerId;
         }
 
         public override void Update()
@@ -277,7 +275,7 @@ namespace LiteEntitySystem
     
     public abstract class ControllerLogic : EntityLogic
     {
-        [SyncVar] private ushort _ownerId;
+        [SyncVar(nameof(OnOwnerSync))] private ushort _ownerId;
         [SyncVar] private PawnLogic _controlledEntity;
 
         public ushort OwnerId
@@ -292,7 +290,7 @@ namespace LiteEntitySystem
         {
         }
 
-        public override void OnSync()
+        private void OnOwnerSync()
         {
             InternalIsLocalControlled = _ownerId == EntityManager.PlayerId;
         }
@@ -306,6 +304,7 @@ namespace LiteEntitySystem
         {
             _controlledEntity = target;
             target.Controller = this;
+            target.SetParent(this);
             EntityManager.GetEntities<T>().OnRemoved +=
                 e =>
                 {
