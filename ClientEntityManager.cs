@@ -592,13 +592,19 @@ namespace LiteEntitySystem
                                 //this is interpolated save for future
                                 Unsafe.CopyBlock(interpDataPtr + fixedDataOffset, readDataPtr, entityFieldInfo.Size);
                             }
+                            entity.CallOnSync(entityFieldInfo.Name, fieldPtr, readDataPtr);
                             Unsafe.CopyBlock(fieldPtr, readDataPtr, entityFieldInfo.Size);
                             stateSerializer?.WritePredicted(fixedDataOffset, readDataPtr, entityFieldInfo.Size);
                             break;
 
                         case FixedFieldType.EntityId:
                             ushort entityId = *(ushort*)(readDataPtr);
-                            Unsafe.AsRef<EntityLogic>(fieldPtr) = entity.EntityManager.GetEntityById(entityId);
+                            ref var entityField = ref Unsafe.AsRef<EntityLogic>(fieldPtr);
+
+                            var prevEntity = entityField;
+                            entityField = entity.EntityManager.GetEntityById(entityId);
+                            entity.CallOnSync(entityFieldInfo.Name, Unsafe.AsPointer(ref prevEntity), Unsafe.AsPointer(ref entityField));
+                            
                             stateSerializer?.WritePredicted(fixedDataOffset, readDataPtr, entityFieldInfo.Size);
                             break;
                     }

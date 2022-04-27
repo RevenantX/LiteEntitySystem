@@ -19,14 +19,16 @@ namespace LiteEntitySystem
             public readonly int IntSize;
             public readonly UIntPtr PtrSize;
             public readonly FixedFieldType Type;
+            public readonly string Name;
 
-            public EntityFieldInfo(int offset, int size, FixedFieldType type)
+            public EntityFieldInfo(string name, int offset, int size, FixedFieldType type)
             {
                 Offset = offset;
                 Size = (uint)size;
                 IntSize = size;
                 PtrSize = (UIntPtr)Size;
                 Type = type;
+                Name = name;
             }
         }
         
@@ -139,19 +141,19 @@ namespace LiteEntitySystem
                                 if (!InterpolatedData.TryGetValue(ft, out var interpolatedInfo))
                                     throw new Exception($"No info how to interpolate: {ft}");
                                 interpolatedMethods.Insert(0, interpolatedInfo);
-                                fields.Insert(0, new EntityFieldInfo(offset, fieldSize, FixedFieldType.None));
+                                fields.Insert(0, new EntityFieldInfo(field.Name, offset, fieldSize, FixedFieldType.None));
                                 InterpolatedFieldsSize += fieldSize;
                             }
                             else
                             {
-                                fields.Add(new EntityFieldInfo(offset, ft == typeof(bool) ? 1 : fieldSize, FixedFieldType.None));
+                                fields.Add(new EntityFieldInfo(field.Name, offset, ft == typeof(bool) ? 1 : fieldSize, FixedFieldType.None));
                             }
 
                             FixedFieldsSize += fieldSize;
                         }
                         else if (ft == typeof(EntityLogic) || ft.IsSubclassOf(typeof(InternalEntity)))
                         {
-                            fields.Add(new EntityFieldInfo(offset, 2, FixedFieldType.EntityId));
+                            fields.Add(new EntityFieldInfo(field.Name, offset, 2, FixedFieldType.EntityId));
                             FixedFieldsSize += 2;
                         }
                         else if (ft.IsSubclassOf(typeof(SyncableField)))
@@ -160,7 +162,7 @@ namespace LiteEntitySystem
                                 throw new Exception("Syncable fields should be readonly!");
 
                             //syncable rpcs
-                            syncableFields.Add(new EntityFieldInfo(offset, 0, FixedFieldType.None));
+                            syncableFields.Add(new EntityFieldInfo(field.Name, offset, 0, FixedFieldType.None));
                             foreach (var syncableType in GetBaseTypes(ft, typeof(SyncableField), true))
                             {
                                 foreach (var method in syncableType.GetMethods(bindingFlags))

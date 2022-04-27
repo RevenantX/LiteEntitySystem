@@ -9,7 +9,6 @@ namespace LiteEntitySystem
     public class SyncVar : Attribute
     {
         internal readonly bool IsInterpolated;
-        internal readonly string OnSyncMethod;
 
         public SyncVar()
         {
@@ -19,11 +18,6 @@ namespace LiteEntitySystem
         public SyncVar(bool isInterpolated)
         {
             IsInterpolated = isInterpolated;
-        }
-        
-        public SyncVar(string onSyncMethod)
-        {
-            OnSyncMethod = onSyncMethod;
         }
     }
 
@@ -89,6 +83,32 @@ namespace LiteEntitySystem
             public bool IsServerControlled => !InternalIsLocalControlled;
             
             internal bool InternalIsLocalControlled;
+            
+            internal unsafe delegate void OnSyncDelegate(void* valuePtr, void* newValuePtr);
+
+            private readonly Dictionary<string, OnSyncDelegate> OnSyncDelegates =
+                new Dictionary<string, OnSyncDelegate>();
+
+            protected void BindOnSync<T>(string varName, Action<T, T> onSync)
+            {
+                if (EntityManager.IsServer)
+                    return;
+                unsafe
+                {
+                    OnSyncDelegates[varName] = (valuePtr, newValuePtr) =>
+                    {
+                        onSync(Unsafe.AsRef<T>(valuePtr), Unsafe.AsRef<T>(newValuePtr));
+                    };
+                }
+            }
+
+            internal unsafe void CallOnSync(string varName, void* valuePtr, void* newValuePtr)
+            {
+                if (OnSyncDelegates.TryGetValue(varName, out var d))
+                {
+                    d(valuePtr, newValuePtr);
+                }
+            }
 
             public virtual void ProcessPacket(byte id, NetDataReader reader)
             {
@@ -157,8 +177,11 @@ namespace LiteEntitySystem
 
     public abstract class EntityLogic : EntityManager.InternalEntity
     {
-        [SyncVar(nameof(SetParentInternal))] private ushort _parentId;
-        [SyncVar(nameof(DestroyedSync))] private byte _isDestroyed;
+        [SyncVar] 
+        private ushort _parentId;
+        
+        [SyncVar] 
+        private byte _isDestroyed;
 
         public bool IsDestroyed => _isDestroyed == 1;
         public readonly List<EntityLogic> Childs = new List<EntityLogic>();
@@ -194,10 +217,10 @@ namespace LiteEntitySystem
             ushort id = parentEntity == null ? EntityManager.InvalidEntityId : parentEntity.Id;
             if (EntityManager.IsClient || id == _parentId)
                 return;
-            SetParentInternal(_parentId, id);
+            SetParentSync(_parentId, id);
         }
 
-        private void SetParentInternal(ushort oldId, ushort newId)
+        private void SetParentSync(ushort oldId, ushort newId)
         {
             EntityManager.GetEntityById(oldId)?.Childs.Remove(this);
             _parentId = newId;
@@ -238,7 +261,8 @@ namespace LiteEntitySystem
         
         protected EntityLogic(EntityParams entityParams) : base(entityParams)
         {
-
+            BindOnSync<byte>(nameof(_isDestroyed), DestroyedSync);
+            BindOnSync<ushort>(nameof(_parentId), SetParentSync);
         }
     }
 
@@ -252,7 +276,7 @@ namespace LiteEntitySystem
     [UpdateableEntity]
     public abstract class PawnLogic : EntityLogic
     {
-        [SyncVar(nameof(OnControllerSync))] private ControllerLogic _controller;
+        [SyncVar] private ControllerLogic _controller;
 
         public ControllerLogic Controller
         {
@@ -260,7 +284,10 @@ namespace LiteEntitySystem
             internal set => _controller = value;
         }
 
-        protected PawnLogic(EntityParams entityParams) : base(entityParams) { }
+        protected PawnLogic(EntityParams entityParams) : base(entityParams)
+        {
+            BindOnSync<ControllerLogic>(nameof(_controller), OnControllerSync);
+        }
 
         private void OnControllerSync(ControllerLogic prev, ControllerLogic next)
         {
@@ -275,7 +302,7 @@ namespace LiteEntitySystem
     
     public abstract class ControllerLogic : EntityLogic
     {
-        [SyncVar(nameof(OnOwnerSync))] private ushort _ownerId;
+        [SyncVar] private ushort _ownerId;
         [SyncVar] private PawnLogic _controlledEntity;
 
         public ushort OwnerId
@@ -288,11 +315,12 @@ namespace LiteEntitySystem
 
         protected ControllerLogic(EntityParams entityParams) : base(entityParams)
         {
+            BindOnSync<ushort>(nameof(_ownerId), OnOwnerSync);
         }
 
-        private void OnOwnerSync()
+        private void OnOwnerSync(ushort prevOwner, ushort newOwner)
         {
-            InternalIsLocalControlled = _ownerId == EntityManager.PlayerId;
+            InternalIsLocalControlled = newOwner == EntityManager.PlayerId;
         }
 
         public virtual void BeforeControlledUpdate()

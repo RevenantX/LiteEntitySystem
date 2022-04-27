@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using LiteNetLib;
 using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
@@ -13,7 +12,6 @@ namespace LiteEntitySystem
         SendToOther = 1 << 1,
         ExecuteOnPrediction = 1 << 2,
         ExecuteOnServer = 1 << 3,
-        OnlyLatest = 1 << 4,
         All = SendToOther | SendToOwner | ExecuteOnPrediction | ExecuteOnServer
     }
 
