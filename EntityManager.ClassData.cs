@@ -54,8 +54,25 @@ namespace LiteEntitySystem
 
             public readonly Func<EntityParams, InternalEntity> EntityConstructor;
 
-            public readonly Dictionary<string, RemoteCall> RemoteCallMethods = new Dictionary<string, RemoteCall>();
-                
+            public readonly Dictionary<MethodInfo, RemoteCall> RemoteCalls = new Dictionary<MethodInfo, RemoteCall>();
+
+            public readonly Dictionary<MethodInfo, SyncableRemoteCall> SyncableRemoteCalls =
+                new Dictionary<MethodInfo, SyncableRemoteCall>();
+
+            private static List<Type> GetBaseTypes(Type ofType, Type until, bool includeSelf)
+            {
+                var baseTypes = new List<Type>();
+                var baseType = ofType.BaseType;
+                while (baseType != until)
+                {
+                    baseTypes.Insert(0, baseType);
+                    baseType = baseType!.BaseType;
+                }
+                if(includeSelf)
+                    baseTypes.Add(ofType);
+                return baseTypes;
+            }
+            
             public EntityClassData(
                 EntityManager manager, 
                 Type entType, 
@@ -69,14 +86,7 @@ namespace LiteEntitySystem
                 IsSingleton = entType.IsSubclassOf(typeof(SingletonEntityLogic));
                 FilterId = IsSingleton ? manager._singletonRegisteredCount++ : manager._filterRegisteredCount++;
 
-                var baseTypes = new List<Type>();
-                var baseType = entType.BaseType;
-                while (baseType != typeof(InternalEntity))
-                {
-                    baseTypes.Insert(0, baseType);
-                    baseType = baseType!.BaseType;
-                }
-
+                var baseTypes = GetBaseTypes(entType, typeof(InternalEntity), false);
                 BaseTypes = baseTypes.ToArray();
                 BaseIds = new int[baseTypes.Count];
                 
@@ -94,6 +104,7 @@ namespace LiteEntitySystem
                                    BindingFlags.DeclaredOnly;
 
                 byte rpcIndex = 0;
+                byte syncableRpcIndex = 0;
                 foreach (var typesToCheck in baseTypes)
                 {
                     foreach (var method in typesToCheck.GetMethods(bindingFlags))
@@ -105,10 +116,10 @@ namespace LiteEntitySystem
                         {
                             remoteCallAttribute.Id = rpcIndex++;
                             remoteCallAttribute.DataSize = Marshal.SizeOf(method.GetParameters()[1].ParameterType);
+                            if (rpcIndex == byte.MaxValue)
+                                throw new Exception("254 is max RemoteCall methods");
                         }
-                        if (rpcIndex == byte.MaxValue)
-                            throw new Exception("254 is max RemoteCall methods");
-                        RemoteCallMethods.Add(method.Name, remoteCallAttribute);
+                        RemoteCalls.Add(method, remoteCallAttribute);
                     }
                     foreach (var field in typesToCheck.GetFields(bindingFlags))
                     {
@@ -145,10 +156,28 @@ namespace LiteEntitySystem
                         }
                         else if (ft.IsSubclassOf(typeof(SyncableField)))
                         {
-                            if (field.IsInitOnly)
-                                syncableFields.Add(new EntityFieldInfo(offset, 0, FixedFieldType.None));
-                            else
+                            if (!field.IsInitOnly)
                                 throw new Exception("Syncable fields should be readonly!");
+
+                            //syncable rpcs
+                            syncableFields.Add(new EntityFieldInfo(offset, 0, FixedFieldType.None));
+                            foreach (var syncableType in GetBaseTypes(ft, typeof(SyncableField), true))
+                            {
+                                foreach (var method in syncableType.GetMethods(bindingFlags))
+                                {
+                                    var rcAttribute = method.GetCustomAttribute<SyncableRemoteCall>();
+                                    if(rcAttribute == null)
+                                        continue;
+                                    if (rcAttribute.Id == byte.MaxValue)
+                                    {
+                                        rcAttribute.Id = syncableRpcIndex++;
+                                        rcAttribute.DataSize = Marshal.SizeOf(method.GetParameters()[0].ParameterType);
+                                    }
+                                    if (syncableRpcIndex == byte.MaxValue)
+                                        throw new Exception("254 is max RemoteCall methods");
+                                    SyncableRemoteCalls[method] = rcAttribute;
+                                }
+                            }
                         }
                         else
                         {

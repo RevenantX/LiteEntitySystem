@@ -45,6 +45,13 @@ namespace LiteEntitySystem
         }
     }
 
+    [AttributeUsage(AttributeTargets.Method)]
+    public class SyncableRemoteCall : Attribute
+    {
+        internal byte Id = byte.MaxValue;
+        internal int DataSize;
+    }
+
     public readonly struct EntityParams
     {
         public readonly ushort ClassId;
@@ -107,7 +114,7 @@ namespace LiteEntitySystem
                 if (methodToCall.Target != this)
                     throw new Exception("You can call this only on this class methods");
                 var classData = EntityManager.ClassDataDict[ClassId];
-                if(!classData.RemoteCallMethods.TryGetValue(methodToCall.Method.Name, out RemoteCall remoteCallInfo))
+                if(!classData.RemoteCalls.TryGetValue(methodToCall.Method, out RemoteCall remoteCallInfo))
                     throw new Exception($"{methodToCall.Method.Name} is not [RemoteCall] method");
                 if (EntityManager.IsServer)
                 {

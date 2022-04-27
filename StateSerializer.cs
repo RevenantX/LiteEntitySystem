@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using LiteNetLib.Utils;
 using EntityClassData = LiteEntitySystem.EntityManager.EntityClassData;
@@ -25,10 +26,13 @@ namespace LiteEntitySystem
 
         private class RemoteCallPacket
         {
-            public byte Id;
+            public byte Id = byte.MaxValue;
+            public byte SyncableId = byte.MaxValue;
             public ushort Tick;
             public ushort LifeTime;
             public byte[] Data;
+            public bool IsArray;
+            public ushort Size;
             public RemoteCallPacket Next;
             public RemoteCallPacket Prev;
         }
@@ -41,23 +45,8 @@ namespace LiteEntitySystem
         private RemoteCallPacket _rpcTail;
         private Queue<RemoteCallPacket> _rpcPool;
 
-        public void AddRemoteCall<T>(ushort tick, T value, RemoteCall remoteCallInfo) where T : struct
+        private void AddRpcPacket(RemoteCallPacket rpc)
         {
-            var rpc = new RemoteCallPacket
-            {
-                Id = remoteCallInfo.Id,
-                Tick = tick,
-                Data = new byte[remoteCallInfo.DataSize],
-                LifeTime = remoteCallInfo.LifeTime
-            };
-            unsafe
-            {
-                fixed (byte* rawData = rpc.Data)
-                {
-                    Unsafe.Copy(rawData, ref value);
-                }
-            }
-
             if (_rpcHead == null)
             {
                 _rpcHead = rpc;
@@ -68,6 +57,82 @@ namespace LiteEntitySystem
                 rpc.Prev = _rpcTail;
             }
             _rpcTail = rpc;
+        }
+        
+        public void AddRemoteCall<T>(T value, RemoteCall remoteCallInfo) where T : struct
+        {
+            var rpc = new RemoteCallPacket
+            {
+                Id = remoteCallInfo.Id,
+                Tick = _entityLogic.EntityManager.Tick,
+                Data = new byte[remoteCallInfo.DataSize],
+                LifeTime = remoteCallInfo.LifeTime,
+                IsArray = false,
+                Size = (ushort)remoteCallInfo.DataSize
+            };
+            unsafe
+            {
+                fixed (byte* rawData = rpc.Data)
+                {
+                    Unsafe.Copy(rawData, ref value);
+                }
+            }
+            AddRpcPacket(rpc);
+        }
+        
+        public void AddRemoteCall<T>(T[] value, int count, RemoteCall remoteCallInfo) where T : struct
+        {
+            var rpc = new RemoteCallPacket
+            {
+                Id = remoteCallInfo.Id,
+                Tick = _entityLogic.EntityManager.Tick,
+                Data = new byte[remoteCallInfo.DataSize * count],
+                LifeTime = remoteCallInfo.LifeTime,
+                IsArray = true,
+                Size = (ushort)(remoteCallInfo.DataSize * count)
+            };
+            Buffer.BlockCopy(value, 0, rpc.Data, 0, count);
+            AddRpcPacket(rpc);
+        }
+
+        public void AddSyncableCall<T>(SyncableField field, T value, MethodInfo method) where T : struct
+        {
+            var remoteCallInfo = _classData.SyncableRemoteCalls[method];
+            var rpc = new RemoteCallPacket
+            {
+                Id = remoteCallInfo.Id,
+                SyncableId = field.FieldId,
+                Tick = _entityLogic.EntityManager.Tick,
+                Data = new byte[remoteCallInfo.DataSize],
+                LifeTime = 0,
+                IsArray = false,
+                Size = (ushort)remoteCallInfo.DataSize
+            };
+            unsafe
+            {
+                fixed (byte* rawData = rpc.Data)
+                {
+                    Unsafe.Copy(rawData, ref value);
+                }
+            }
+            AddRpcPacket(rpc);
+        }
+        
+        public void AddSyncableCall<T>(SyncableField field, T[] value, int count, MethodInfo method) where T : struct
+        {
+            var remoteCallInfo = _classData.SyncableRemoteCalls[method];
+            var rpc = new RemoteCallPacket
+            {
+                Id = remoteCallInfo.Id,
+                SyncableId = field.FieldId,
+                Tick = _entityLogic.EntityManager.Tick,
+                Data = new byte[remoteCallInfo.DataSize * count],
+                LifeTime = 0,
+                IsArray = true,
+                Size = (ushort)(remoteCallInfo.DataSize * count)
+            };
+            Buffer.BlockCopy(value, 0, rpc.Data, 0, count);
+            AddRpcPacket(rpc);
         }
 
         public byte IncrementVersion(ushort tick)
@@ -90,6 +155,14 @@ namespace LiteEntitySystem
 
             unsafe
             {
+                byte* entityPointer = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref _entityLogic);
+                for (int i = 0; i < _classData.SyncableFields.Length; i++)
+                {
+                    ref var syncable = ref Unsafe.AsRef<SyncableField>(entityPointer + _classData.SyncableFields[i].Offset);
+                    syncable.Serializer = this;
+                    syncable.FieldId = (byte)i;
+                }
+                
                 fixed (byte* data = _latestEntityData)
                 {
                     *(ushort*) (data) = e.Id;
@@ -203,15 +276,6 @@ namespace LiteEntitySystem
                 return -1;
             Write(serverTick);
 
-            //remove old RPCs
-            while (_rpcHead != null && EntityManager.SequenceDiff(minimalTick, _rpcHead.Tick) >= 0)
-            {
-                _rpcPool.Enqueue(_rpcHead);
-                if (_rpcTail == _rpcHead)
-                    _rpcTail = null;
-                _rpcHead = _rpcHead.Next;
-            }
-
             //make diff
             int startPos = result.Length;
             int resultOffset;
@@ -271,6 +335,32 @@ namespace LiteEntitySystem
                         }
                         lastDataOffset += fixedFieldInfo.IntSize;
                     }
+                    var rpcNode = _rpcHead;
+                    while (rpcNode != null)
+                    {
+                        if (EntityManager.SequenceDiff(playerTick, rpcNode.Tick) < 0)
+                        {
+                            hasChanges = true;
+                            //put new
+                            resultData[resultOffset] = rpcNode.Id;
+                            resultData[resultOffset + 1] = rpcNode.SyncableId;
+                            resultData[resultOffset + 2] = (byte)(rpcNode.IsArray ? 1 : 0);
+                            Unsafe.AsRef<ushort>(resultData[resultOffset + 3]) = rpcNode.Size;
+                            fixed (byte* rpcData = rpcNode.Data)
+                            {
+                                Unsafe.CopyBlock(resultData + resultOffset + 5, rpcData, rpcNode.Size);
+                            }
+                        }
+                        else if (EntityManager.SequenceDiff(rpcNode.Tick, minimalTick) < 0)
+                        {
+                            //remove old RPCs
+                            _rpcPool.Enqueue(rpcNode);
+                            if (_rpcTail == _rpcHead)
+                                _rpcTail = null;
+                            _rpcHead = rpcNode.Next;
+                        }
+                        rpcNode = rpcNode.Next;
+                    }
 
                     if (!hasChanges)
                         return -1;
@@ -281,6 +371,7 @@ namespace LiteEntitySystem
                 if (resultSize > ushort.MaxValue/2)
                 {
                     //request full sync
+                    Logger.LogWarning("TODO: RequestFullSync");
                     return -1;
                 }
                 

@@ -137,7 +137,7 @@ namespace LiteEntitySystem
         internal void ExecuteOnClient<T>(ushort senderId, T value, RemoteCall remoteCallInfo) where T : struct
         {
             var stateSerialzer = _entitySerializers[senderId];
-            stateSerialzer.AddRemoteCall(Tick, value, remoteCallInfo);
+            stateSerialzer.AddRemoteCall(value, remoteCallInfo);
         }
         
         protected override void OnLogicTick()
