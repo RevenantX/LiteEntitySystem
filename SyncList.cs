@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace LiteEntitySystem
 {
-    public class FastList<T> : IList<T>
+    public class SyncList<T> where T : struct
     {
-        public T[] Data;
+        private T[] _data;
         private int _count;
         public int Count => _count;
-        public bool IsReadOnly => false;
-
+    
+        /*
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             throw new NotImplementedException();
@@ -20,80 +20,67 @@ namespace LiteEntitySystem
         {
             throw new NotImplementedException();
         }
+        */
 
-        public FastList()
+        public SyncList()
         {
-            Data = new T[8];
+            _data = new T[8];
         }
 
-        public FastList(int capacity)
+        public SyncList(int capacity)
         {
-            Data = new T[capacity];
-        }
-
-        public int AddCount(int count)
-        {
-            int prevCount = _count;
-            _count += count;
-            int len = Data.Length;
-            if (len < _count)
-            {
-                while (len < _count)
-                    len *= 2;
-                System.Array.Resize(ref Data, len);
-            }
-            return prevCount;
+            _data = new T[capacity];
         }
 
         public void CloneFrom(T[] array)
         {
             _count = array.Length;
-            if (_count > Data.Length)
-                System.Array.Resize(ref Data, _count);
+            if (_count > _data.Length)
+                Array.Resize(ref _data, _count);
             for (int i = 0; i < _count; i++)
-                Data[i] = array[i];
+                _data[i] = array[i];
         }
 
         public void CloneFrom(T[] array, int count)
         {
             _count = count;
-            if (_count > Data.Length)
-                System.Array.Resize(ref Data, _count);
+            if (_count > _data.Length)
+                Array.Resize(ref _data, _count);
             for (int i = 0; i < _count; i++)
-                Data[i] = array[i];
+                _data[i] = array[i];
         }
 
         public void CloneFrom(List<T> list)
         {
             _count = list.Count;
-            if (_count > Data.Length)
-                System.Array.Resize(ref Data, _count);
+            if (_count > _data.Length)
+                Array.Resize(ref _data, _count);
             for (int i = 0; i < _count; i++)
-                Data[i] = list[i];
+                _data[i] = list[i];
         }
 
-        public void CloneFrom(FastList<T> list)
+        public void CloneFrom(SyncList<T> list)
         {
             _count = list._count;
-            if (_count > Data.Length)
-                System.Array.Resize(ref Data, _count);
+            if (_count > _data.Length)
+                Array.Resize(ref _data, _count);
             for (int i = 0; i < _count; i++)
-                Data[i] = list.Data[i];
+                _data[i] = list._data[i];
         }
 
         public T[] ToArray()
         {
             var arr = new T[_count];
             for (int i = 0; i < _count; i++)
-                arr[i] = Data[i];
+                arr[i] = _data[i];
             return arr;
         }
 
         public void Add(T item)
         {
-            if (Data.Length == _count)
-                Array.Resize(ref Data, Data.Length * 2);
-            Data[_count] = item;
+            if (_data.Length == _count)
+                Array.Resize(ref _data, _data.Length * 2);
+            _data[_count] = item;
             _count++;
         }
 
@@ -106,7 +93,7 @@ namespace LiteEntitySystem
         {
             if (_count == 0)
                 return;
-            Array.Clear(Data, 0, _count);
+            Array.Clear(_data, 0, _count);
             _count = 0;
         }
 
@@ -114,7 +101,7 @@ namespace LiteEntitySystem
         {
             for (int i = 0; i < _count; i++)
             {
-                if (Data[i].Equals(item))
+                if (_data[i].Equals(item))
                     return true;
             }
             return false;
@@ -122,17 +109,17 @@ namespace LiteEntitySystem
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            Array.Copy(Data, 0, array, arrayIndex, _count);
+            Array.Copy(_data, 0, array, arrayIndex, _count);
         }
 
         public bool Remove(T item)
         {
             for (int i = 0; i < _count; i++)
             {
-                if (Data[i].Equals(item))
+                if (_data[i].Equals(item))
                 {
-                    Data[i] = Data[_count - 1];
-                    Data[_count - 1] = default;
+                    _data[i] = _data[_count - 1];
+                    _data[_count - 1] = default;
                     _count--;
                     return true;
                 }
@@ -144,7 +131,7 @@ namespace LiteEntitySystem
         {
             for (int i = 0; i < _count; i++)
             {
-                if (Data[i].Equals(item))
+                if (_data[i].Equals(item))
                     return i;
             }
             return -1;
@@ -157,15 +144,11 @@ namespace LiteEntitySystem
 
         public void RemoveAt(int index)
         {
-            Data[index] = Data[_count - 1];
-            Data[_count - 1] = default;
+            _data[index] = _data[_count - 1];
+            _data[_count - 1] = default;
             _count--;
         }
 
-        public T this[int index]
-        {
-            get => Data[index];
-            set => Data[index] = value;
-        }
+        public ref T this[int index] => ref _data[index];
     }
 }

@@ -29,6 +29,22 @@ namespace LiteEntitySystem
     [AttributeUsage(AttributeTargets.Class)]
     public class ServerOnly : Attribute { }
 
+    [AttributeUsage(AttributeTargets.Method)]
+    public class RemoteCall : Attribute
+    {
+        public readonly ExecuteFlags Flags;
+        public readonly ushort LifeTime;
+        
+        internal byte Id = byte.MaxValue;
+        internal int DataSize;
+        
+        public RemoteCall(ExecuteFlags flags, ushort lifeTime)
+        {
+            Flags = flags;
+            LifeTime = lifeTime;
+        }
+    }
+
     public readonly struct EntityParams
     {
         public readonly ushort ClassId;
@@ -86,21 +102,23 @@ namespace LiteEntitySystem
                 Version = entityParams.Version;
             }
 
-            protected void SendPacket(byte id, DeliveryMethod deliveryMethod, SendDestination sendDestination)
+            protected void ExecuteRemoteCall<T>(Action<T> methodToCall, T value) where T : struct
             {
-
-            }
-
-            protected void SendPacket<T>(byte id, T packet, DeliveryMethod deliveryMethod,
-                SendDestination sendDestination) where T : INetSerializable
-            {
-                
-            }
-
-            protected void SendPacketAuto<T>(byte id, T packet, DeliveryMethod deliveryMethod,
-                SendDestination sendDestination) where T : class, new()
-            {
-               
+                if (methodToCall.Target != this)
+                    throw new Exception("You can call this only on this class methods");
+                var classData = EntityManager.ClassDataDict[ClassId];
+                if(!classData.RemoteCallMethods.TryGetValue(methodToCall.Method.Name, out RemoteCall remoteCallInfo))
+                    throw new Exception($"{methodToCall.Method.Name} is not [RemoteCall] method");
+                if (EntityManager.IsServer)
+                {
+                    if ((remoteCallInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
+                        methodToCall(value);
+                    ((ServerEntityManager)EntityManager).ExecuteOnClient(Id, value, remoteCallInfo);
+                }
+                else if(InternalIsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
+                {
+                    methodToCall(value);
+                }
             }
 
             public int CompareTo(InternalEntity other)

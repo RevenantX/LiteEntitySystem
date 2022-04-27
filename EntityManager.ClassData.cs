@@ -44,7 +44,7 @@ namespace LiteEntitySystem
             public readonly EntityFieldInfo[] Fields;
             
             public readonly InterpolatorDelegate[] InterpolatedMethods;
-            public int InterpolatedFieldsSize;
+            public readonly int InterpolatedFieldsSize;
 
             public readonly bool IsUpdateable;
             public readonly bool IsServerOnly;
@@ -53,6 +53,8 @@ namespace LiteEntitySystem
 
             public readonly Func<EntityParams, InternalEntity> EntityConstructor;
 
+            public readonly Dictionary<string, RemoteCall> RemoteCallMethods = new Dictionary<string, RemoteCall>();
+                
             public EntityClassData(
                 EntityManager manager, 
                 Type entType, 
@@ -70,7 +72,7 @@ namespace LiteEntitySystem
                 var baseType = entType.BaseType;
                 while (baseType != typeof(InternalEntity))
                 {
-                    baseTypes.Add(baseType);
+                    baseTypes.Insert(0, baseType);
                     baseType = baseType!.BaseType;
                 }
 
@@ -81,16 +83,32 @@ namespace LiteEntitySystem
                 var fields = new List<EntityFieldInfo>();
 
                 //add here to baseTypes to add fields
+                baseTypes.Insert(0, typeof(InternalEntity));
                 baseTypes.Add(entType);
-                baseTypes.Add(typeof(InternalEntity));
-                
+
+                var bindingFlags = BindingFlags.Instance |
+                                   BindingFlags.Public |
+                                   BindingFlags.NonPublic |
+                                   BindingFlags.DeclaredOnly;
+
+                byte rpcIndex = 0;
                 foreach (var typesToCheck in baseTypes)
                 {
-                    foreach (var field in typesToCheck.GetFields(
-                                 BindingFlags.Instance | 
-                                 BindingFlags.Public | 
-                                 BindingFlags.NonPublic | 
-                                 BindingFlags.DeclaredOnly))
+                    foreach (var method in typesToCheck.GetMethods(bindingFlags))
+                    {
+                        var remoteCallAttribute = method.GetCustomAttribute<RemoteCall>();
+                        if(remoteCallAttribute == null)
+                            continue;
+                        if (remoteCallAttribute.Id == byte.MaxValue)
+                        {
+                            remoteCallAttribute.Id = rpcIndex++;
+                            remoteCallAttribute.DataSize = Marshal.SizeOf(method.GetParameters()[0]);
+                        }
+                        if (rpcIndex == byte.MaxValue)
+                            throw new Exception("254 is max RemoteCall methods");
+                        RemoteCallMethods.Add(method.Name, remoteCallAttribute);
+                    }
+                    foreach (var field in typesToCheck.GetFields(bindingFlags))
                     {
                         var syncVarAttribute = field.GetCustomAttribute<SyncVar>();
                         var ft = field.FieldType;

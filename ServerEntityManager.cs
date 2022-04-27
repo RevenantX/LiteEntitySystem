@@ -134,6 +134,12 @@ namespace LiteEntitySystem
             return entity;
         }
 
+        internal void ExecuteOnClient<T>(ushort senderId, T value, RemoteCall remoteCallInfo) where T : struct
+        {
+            var stateSerialzer = _entitySerializers[senderId];
+            stateSerialzer.AddRemoteCall(Tick, value, remoteCallInfo);
+        }
+        
         protected override void OnLogicTick()
         {
             ServerTick = Tick;
@@ -189,11 +195,6 @@ namespace LiteEntitySystem
             if (prevTick == Tick || Tick % (int) SendRate != 0)
                 return;
 
-            for (int i = 0; i <= MaxEntityId; i++)
-            {
-                _entitySerializers[i].Write(Tick);
-            }
-
             //header byte, packet type (2 bytes)
             _netDataWriter.SetPosition(2);
             _netDataWriter.Put(Tick);
@@ -206,27 +207,26 @@ namespace LiteEntitySystem
                 {
                     _netDataWriter.Data[1] = PacketEntityFullSync;
                     for (int i = 0; i <= MaxEntityId; i++)
-                        _entitySerializers[i].MakeDiff(0, _netDataWriter, true);
-                    Logger.Log($"[SEM] SendWorld to player {netPlayer.Id}: {_netDataWriter.Length} bytes, MaxEntityId: {MaxEntityId}");
-
-                    if (_compressionBuffer == null)
-                        _compressionBuffer = new byte[_netDataWriter.Length];
-                    else if (_compressionBuffer.Length < _netDataWriter.Length)
-                        Array.Resize(ref _compressionBuffer, _netDataWriter.Length);
+                    {
+                        _entitySerializers[i].MakeDiff(Tick, 0, _netDataWriter, true);
+                    }
+                    Utils.ResizeOrCreate(ref _compressionBuffer, _netDataWriter.Length);
 
                     //compress initial data
                     int originalLength = _netDataWriter.Length - 2;
-                    var encodedLength = LZ4Codec.Encode(
+                    int encodedLength = LZ4Codec.Encode(
                         _netDataWriter.Data,
                         2, 
                         _netDataWriter.Length - 2,
                         _compressionBuffer,
                         0,
-                        _compressionBuffer.Length);
+                        _compressionBuffer.Length,
+                        LZ4Level.L10_OPT);
                     _netDataWriter.SetPosition(2);
                     _netDataWriter.Put(originalLength);
                     _netDataWriter.Put(_compressionBuffer, 0, encodedLength);
-
+                    Logger.Log($"[SEM] SendWorld to player {netPlayer.Id}. orig: {originalLength} bytes, compressed: {encodedLength}, MaxEntityId: {MaxEntityId}");
+                    
                     netPlayer.Peer.Send(_netDataWriter, DeliveryMethod.ReliableOrdered);
                     netPlayer.IsNew = false;
                     continue;
@@ -248,7 +248,7 @@ namespace LiteEntitySystem
 
                 for (int i = 0; i <= MaxEntityId; i++)
                 {
-                    int resultDataSize = _entitySerializers[i].MakeDiff(netPlayer.ServerTick, _netDataWriter, false);
+                    int resultDataSize = _entitySerializers[i].MakeDiff(Tick, netPlayer.ServerTick, _netDataWriter, false);
                     if(resultDataSize == -1)
                     {
                         //nothing changed: reset and go to next

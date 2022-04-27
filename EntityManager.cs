@@ -7,11 +7,13 @@ using LiteNetLib.Utils;
 namespace LiteEntitySystem
 {
     [Flags]
-    public enum SendDestination : byte
+    public enum ExecuteFlags : byte
     {
-        Owner = 1 << 0,
-        Other = 1 << 1,
-        All = Other | Owner
+        SendToOwner = 1,
+        SendToOther = 1 << 1,
+        ExecuteOnPrediction = 1 << 2,
+        ExecuteOnServer = 1 << 3,
+        All = SendToOther | SendToOwner | ExecuteOnPrediction | ExecuteOnServer
     }
 
     public enum NetworkMode : byte

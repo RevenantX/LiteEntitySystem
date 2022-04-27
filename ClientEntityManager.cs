@@ -439,7 +439,7 @@ namespace LiteEntitySystem
                 foreach (var internalEntity in _ownedEntities)
                 {
                     _predictWriter.Reset();
-                    _predictedEntities[internalEntity.Id].MakeDiff(0, _predictWriter, true);
+                    _predictedEntities[internalEntity.Id].MakeDiff(Tick, 0, _predictWriter, true);
                     _predictReader.SetSource(_predictWriter.Data, StateSerializer.HeaderSize, _predictWriter.Length);
                     _currentReader = _predictReader;
                     _fullSyncRead = true;
@@ -600,11 +600,7 @@ namespace LiteEntitySystem
                 case PacketEntityFullSync:
                 {
                     int decompressedSize = reader.GetInt();
-                    
-                    if (_compressionBuffer == null)
-                        _compressionBuffer = new byte[decompressedSize];
-                    else if (_compressionBuffer.Length < decompressedSize)
-                        Array.Resize(ref _compressionBuffer, decompressedSize);
+                    Utils.ResizeOrCreate(ref _compressionBuffer, decompressedSize);
                     int decodedBytes = LZ4Codec.Decode(
                         reader.RawData,
                         reader.Position,
