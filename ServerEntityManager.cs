@@ -149,7 +149,7 @@ namespace LiteEntitySystem
                 }
                 else
                 {
-                    foreach (var controller in GetEntities<HumanControllerLogic>())
+                    foreach (var controller in GetControllers<HumanControllerLogic>())
                     {
                         if (player.Id == controller.OwnerId)
                         {

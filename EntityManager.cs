@@ -112,6 +112,25 @@ namespace LiteEntitySystem
 
             return typedFilter;
         }
+        
+        public EntityFilter<T> GetControllers<T>() where T : ControllerLogic
+        {
+            CheckStart();
+            
+            ref var entityFilter = ref _entityFilters[_registeredTypeIds[typeof(T)]];
+            if (entityFilter != null)
+                return (EntityFilter<T>)entityFilter;
+            
+            var typedFilter = new EntityFilter<T>();
+            entityFilter = typedFilter;
+            for (int i = 0; i < MaxEntityIndex; i++)
+            {
+                if(EntitiesArray[i] is T castedEnt)
+                    typedFilter.Add(castedEnt);
+            }
+
+            return typedFilter;
+        }
 
         public T GetSingleton<T>() where T : SingletonEntityLogic
         {

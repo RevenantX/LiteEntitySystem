@@ -97,6 +97,7 @@ namespace LiteEntitySystem
                 {
                     OnSyncDelegates[varName] = (valuePtr, newValuePtr) =>
                     {
+                        Unsafe.as
                         onSync(Unsafe.AsRef<T>(valuePtr), Unsafe.AsRef<T>(newValuePtr));
                     };
                 }
@@ -235,8 +236,11 @@ namespace LiteEntitySystem
             }
         }
 
-        private void SetLocalControl(EntityLogic entity, bool localControl)
+        internal void SetLocalControl(EntityLogic entity, bool localControl)
         {
+            if (EntityManager.IsServer || entity.InternalIsLocalControlled == localControl)
+                return;
+            
             if (localControl)
             {
                 _ownedEntity = true;
@@ -291,7 +295,11 @@ namespace LiteEntitySystem
 
         private void OnControllerSync(ControllerLogic prev, ControllerLogic next)
         {
-            InternalIsLocalControlled = EntityManager.IsClient && next != null && next.OwnerId == EntityManager.PlayerId;
+            if (next != null)
+            {   
+                SetLocalControl(this, next != null && next.OwnerId == EntityManager.PlayerId);
+                Logger.Log(next.ToString());
+            }
         }
 
         public override void Update()
@@ -300,7 +308,7 @@ namespace LiteEntitySystem
         }
     }
     
-    public abstract class ControllerLogic : EntityLogic
+    public abstract class ControllerLogic : EntityManager.InternalEntity
     {
         [SyncVar] private ushort _ownerId;
         [SyncVar] private PawnLogic _controlledEntity;
@@ -332,7 +340,6 @@ namespace LiteEntitySystem
         {
             _controlledEntity = target;
             target.Controller = this;
-            target.SetParent(this);
             EntityManager.GetEntities<T>().OnRemoved +=
                 e =>
                 {
