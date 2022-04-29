@@ -1,34 +1,32 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem
 {
-    internal enum FixedFieldType
-    {
-        None,
-        EntityId
-    }
     public partial class EntityManager
     {
+        internal unsafe delegate void OnSyncDelegate(void* ent, void* previousValue);
+
         internal readonly struct EntityFieldInfo
         {
             public readonly int Offset;
             public readonly uint Size;
             public readonly int IntSize;
             public readonly UIntPtr PtrSize;
-            public readonly FixedFieldType Type;
-            public readonly string Name;
+            public readonly bool IsEntity;
+            public readonly OnSyncDelegate OnSync;
 
-            public EntityFieldInfo(string name, int offset, int size, FixedFieldType type)
+            public EntityFieldInfo(OnSyncDelegate onSync, int offset, int size, bool isEntity)
             {
                 Offset = offset;
                 Size = (uint)size;
                 IntSize = size;
                 PtrSize = (UIntPtr)Size;
-                Type = type;
-                Name = name;
+                IsEntity = isEntity;
+                OnSync = onSync;
             }
         }
         
@@ -60,6 +58,40 @@ namespace LiteEntitySystem
 
             public readonly Dictionary<MethodInfo, SyncableRemoteCall> SyncableRemoteCalls =
                 new Dictionary<MethodInfo, SyncableRemoteCall>();
+            
+            public static unsafe OnSyncDelegate OnSyncGenerator<TEnt, TValue>(MethodInfo method) where TEnt : InternalEntity
+            {
+                var typedDelegate = (Action<TEnt, TValue>)method.CreateDelegate(typeof(Action<TEnt, TValue>));
+                return (ent, previousValue) =>
+                {
+                    typedDelegate(
+                        Unsafe.AsRef<TEnt>(ent),
+                        previousValue == null ? default : Unsafe.AsRef<TValue>(previousValue));
+                };
+            }
+
+            private static OnSyncDelegate GetOnSyncDelegate(Type entityType, Type valueType, string methodName)
+            {
+                if (string.IsNullOrEmpty(methodName))
+                    return null;
+                
+                var method = entityType.GetMethod(
+                    methodName,
+                    BindingFlags.Instance |
+                    BindingFlags.Public |
+                    BindingFlags.DeclaredOnly |
+                    BindingFlags.NonPublic);
+                if (method == null)
+                {
+                    Logger.LogError($"Method: {methodName} not found in {entityType}");
+                    return null;
+                }
+
+                return (OnSyncDelegate)typeof(EntityClassData)
+                    .GetMethod("OnSyncGenerator")
+                    !.MakeGenericMethod(entityType, valueType)
+                    .Invoke(null, new object[] { method });
+            }
 
             private static List<Type> GetBaseTypes(Type ofType, Type until, bool includeSelf)
             {
@@ -107,9 +139,9 @@ namespace LiteEntitySystem
 
                 byte rpcIndex = 0;
                 byte syncableRpcIndex = 0;
-                foreach (var typesToCheck in baseTypes)
+                foreach (var baseType in baseTypes)
                 {
-                    foreach (var method in typesToCheck.GetMethods(bindingFlags))
+                    foreach (var method in baseType.GetMethods(bindingFlags))
                     {
                         var remoteCallAttribute = method.GetCustomAttribute<RemoteCall>();
                         if(remoteCallAttribute == null)
@@ -123,14 +155,15 @@ namespace LiteEntitySystem
                         }
                         RemoteCalls.Add(method, remoteCallAttribute);
                     }
-                    foreach (var field in typesToCheck.GetFields(bindingFlags))
+                    foreach (var field in baseType.GetFields(bindingFlags))
                     {
                         var syncVarAttribute = field.GetCustomAttribute<SyncVar>();
-                        var ft = field.FieldType;
                         if(syncVarAttribute == null)
                             continue;
                         
+                        var ft = field.FieldType;
                         int offset = Marshal.ReadInt32(field.FieldHandle.Value + 3 * IntPtr.Size) & 0xFFFFFF;
+                        var onSyncMethod = GetOnSyncDelegate(baseType, ft, syncVarAttribute.MethodName);
                         
                         if (ft.IsValueType)
                         {
@@ -141,19 +174,19 @@ namespace LiteEntitySystem
                                 if (!InterpolatedData.TryGetValue(ft, out var interpolatedInfo))
                                     throw new Exception($"No info how to interpolate: {ft}");
                                 interpolatedMethods.Insert(0, interpolatedInfo);
-                                fields.Insert(0, new EntityFieldInfo(field.Name, offset, fieldSize, FixedFieldType.None));
+                                fields.Insert(0, new EntityFieldInfo(onSyncMethod, offset, fieldSize, false));
                                 InterpolatedFieldsSize += fieldSize;
                             }
                             else
                             {
-                                fields.Add(new EntityFieldInfo(field.Name, offset, ft == typeof(bool) ? 1 : fieldSize, FixedFieldType.None));
+                                fields.Add(new EntityFieldInfo(onSyncMethod, offset, ft == typeof(bool) ? 1 : fieldSize, false));
                             }
 
                             FixedFieldsSize += fieldSize;
                         }
                         else if (ft == typeof(EntityLogic) || ft.IsSubclassOf(typeof(InternalEntity)))
                         {
-                            fields.Add(new EntityFieldInfo(field.Name, offset, 2, FixedFieldType.EntityId));
+                            fields.Add(new EntityFieldInfo(onSyncMethod, offset, 2, true));
                             FixedFieldsSize += 2;
                         }
                         else if (ft.IsSubclassOf(typeof(SyncableField)))
@@ -162,7 +195,7 @@ namespace LiteEntitySystem
                                 throw new Exception("Syncable fields should be readonly!");
 
                             //syncable rpcs
-                            syncableFields.Add(new EntityFieldInfo(field.Name, offset, 0, FixedFieldType.None));
+                            syncableFields.Add(new EntityFieldInfo(onSyncMethod, offset, 0, false));
                             foreach (var syncableType in GetBaseTypes(ft, typeof(SyncableField), true))
                             {
                                 foreach (var method in syncableType.GetMethods(bindingFlags))

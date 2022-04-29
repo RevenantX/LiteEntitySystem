@@ -195,27 +195,25 @@ namespace LiteEntitySystem
                     byte* latestDataPtr = latestEntityData + offset;
 
                     //update only changed fields
-                    switch (entityFieldInfo.Type)
+                    if(entityFieldInfo.IsEntity)
                     {
-                        case FixedFieldType.None:
-                            if (Utils.memcmp(latestDataPtr, fieldPtr, entityFieldInfo.PtrSize) != 0)
-                            {
-                                Unsafe.CopyBlock(latestDataPtr, fieldPtr, entityFieldInfo.Size);
-                                _fieldChangeTicks[i] = serverTick;
-                            }
-                            offset += entityFieldInfo.IntSize;
-                            break;
-                        
-                        case FixedFieldType.EntityId:
-                            ushort entityId = Unsafe.AsRef<EntityLogic>(fieldPtr)?.Id ?? EntityManager.InvalidEntityId;
-                            ushort *ushortPtr = (ushort*)latestDataPtr;
-                            if (*ushortPtr != entityId)
-                            {
-                                *ushortPtr = entityId;
-                                _fieldChangeTicks[i] = serverTick;
-                            }
-                            offset += 2;
-                            break;
+                        ushort entityId = Unsafe.AsRef<EntityLogic>(fieldPtr)?.Id ?? EntityManager.InvalidEntityId;
+                        ushort *ushortPtr = (ushort*)latestDataPtr;
+                        if (*ushortPtr != entityId)
+                        {
+                            *ushortPtr = entityId;
+                            _fieldChangeTicks[i] = serverTick;
+                        }
+                        offset += 2;
+                    }
+                    else
+                    {
+                        if (Utils.memcmp(latestDataPtr, fieldPtr, entityFieldInfo.PtrSize) != 0)
+                        {
+                            Unsafe.CopyBlock(latestDataPtr, fieldPtr, entityFieldInfo.Size);
+                            _fieldChangeTicks[i] = serverTick;
+                        }
+                        offset += entityFieldInfo.IntSize;
                     }
                 }
             }

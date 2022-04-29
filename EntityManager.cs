@@ -142,7 +142,7 @@ namespace LiteEntitySystem
             return _singletonEntities[ClassDataDict[EntityClassInfo<T>.ClassId].FilterId] as T;
         }
 
-        protected InternalEntity AddEntity(EntityParams entityParams, Action<InternalEntity> onConstruct)
+        protected InternalEntity AddEntity(EntityParams entityParams)
         {
             if (entityParams.Id >= InvalidEntityId)
             {
@@ -152,7 +152,16 @@ namespace LiteEntitySystem
             
             var classData = ClassDataDict[entityParams.ClassId];
             var entity = classData.EntityConstructor(entityParams);
-            onConstruct?.Invoke(entity);
+
+            EntitiesArray[entity.Id] = entity;
+            EntitiesCount++;
+            
+            return entity;
+        }
+
+        protected void ConstructEntity(InternalEntity entity)
+        {
+            var classData = ClassDataDict[entity.ClassId];
             if (classData.IsSingleton)
             {
                 _singletonEntities[classData.FilterId] = (SingletonEntityLogic)entity;
@@ -168,11 +177,6 @@ namespace LiteEntitySystem
             if (classData.IsUpdateable)
                 AliveEntities.Add(entity);
             entity.OnConstructed();
-            
-            EntitiesArray[entity.Id] = entity;
-            EntitiesCount++;
-            
-            return entity;
         }
 
         internal void RemoveEntity(EntityLogic e)

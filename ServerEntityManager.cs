@@ -124,10 +124,9 @@ namespace LiteEntitySystem
             T entity;
 
             //unity 2020 thats why.
-            if (initMethod != null)
-                entity = (T)AddEntity(entityParams, e => initMethod((T)e));
-            else
-                entity = (T)AddEntity(entityParams, null);
+            entity = (T)AddEntity(entityParams);
+            initMethod?.Invoke(entity);
+            ConstructEntity(entity);
               
             stateSerializer.Init(classData, entity);
             //Debug.Log($"[SEM] Entity create. clsId: {classData.ClassId}, id: {entityId}, v: {version}");

@@ -25,7 +25,7 @@ namespace LiteEntitySystem
         {
             if (arr == null)
                 arr = new T[count];
-            else if (count == arr.Length)
+            else if (count >= arr.Length)
                 Array.Resize(ref arr, count*2);
         }
 
