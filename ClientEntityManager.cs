@@ -327,7 +327,7 @@ namespace LiteEntitySystem
             }
         }
 
-        public override void Update()
+        public override unsafe void Update()
         {
             CheckStart();
 
@@ -344,24 +344,21 @@ namespace LiteEntitySystem
                 var classData = ClassDataDict[entity.ClassId];
                 int offset = 0;
                 
-                unsafe
+                byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref entityLocal);
+                fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
+                       prevDataPtr = _interpolatePrevData[entity.Id])
                 {
-                    byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref entityLocal);
-                    fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
-                           prevDataPtr = _interpolatePrevData[entity.Id])
+                    if (prevDataPtr == null)
+                        continue;
+                    for(int i = 0; i < classData.InterpolatedMethods.Length; i++)
                     {
-                        if (prevDataPtr == null)
-                            continue;
-                        for(int i = 0; i < classData.InterpolatedMethods.Length; i++)
-                        {
-                            var field = classData.Fields[i];
-                            classData.InterpolatedMethods[i](
-                                prevDataPtr + offset,
-                                currentDataPtr + offset,
-                                entityPtr + field.Offset,
-                                localLerpT);
-                            offset += field.IntSize;
-                        }
+                        var field = classData.Fields[i];
+                        classData.InterpolatedMethods[i](
+                            prevDataPtr + offset,
+                            currentDataPtr + offset,
+                            entityPtr + field.Offset,
+                            localLerpT);
+                        offset += field.IntSize;
                     }
                 }
             }
@@ -386,23 +383,19 @@ namespace LiteEntitySystem
                     ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
                     var entity = EntitiesArray[preloadData.EntityId];
                     var fields = ClassDataDict[entity.ClassId].Fields;
-                    
-                    unsafe
+                    byte* entityPtr = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref entity);
+                    fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr =
+                               _stateB.FinalReader.RawData)
                     {
-                        byte* entityPtr = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref entity);
-                        fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr =
-                                   _stateB.FinalReader.RawData)
+                        for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
                         {
-                            for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
+                            var interpolatedCache = preloadData.InterpolatedCaches[j];
                             {
-                                var interpolatedCache = preloadData.InterpolatedCaches[j];
-                                {
-                                    interpolatedCache.Interpolator(
-                                        initialDataPtr + interpolatedCache.InitialDataOffset,
-                                        nextDataPtr + interpolatedCache.StateReaderOffset,
-                                        entityPtr + fields[interpolatedCache.Field].Offset,
-                                        fTimer);
-                                }
+                                interpolatedCache.Interpolator(
+                                    initialDataPtr + interpolatedCache.InitialDataOffset,
+                                    nextDataPtr + interpolatedCache.StateReaderOffset,
+                                    entityPtr + fields[interpolatedCache.Field].Offset,
+                                    fTimer);
                             }
                         }
                     }
@@ -425,7 +418,7 @@ namespace LiteEntitySystem
             }
         }
 
-        private void ReadEntityStates()
+        private unsafe void ReadEntityStates()
         {
             ServerTick = _stateA.Tick;
             var reader = _stateA.FinalReader;
@@ -449,48 +442,44 @@ namespace LiteEntitySystem
                 {
                     ref var preloadData = ref _stateA.PreloadDataArray[i];
                     reader.SetPosition(preloadData.DataOffset);
-                    if (!ReadEntityState(reader, preloadData.EntityId, preloadData.EntityFieldsOffset == -1))
-                        return;
-                    //Logger.Log($"[{entity.Id}] READ: {reader.Position - initialReadSize}");
+                    ReadEntityState(reader, preloadData.EntityId, preloadData.EntityFieldsOffset == -1);
                 }
             }
             
-            unsafe
+            //SetEntityIds
+            for (int i = 0; i < _setEntityIdsCount; i++)
             {
-                //SetEntityIds
-                for (int i = 0; i < _setEntityIdsCount; i++)
-                {
-                    ref var setIdInfo = ref _setEntityIds[i];
-                    byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref setIdInfo.Entity);
-                    Unsafe.AsRef<InternalEntity>(entityPtr + setIdInfo.FieldOffset) =
-                        setIdInfo.Id == InvalidEntityId ? null : EntitiesArray[setIdInfo.Id];
-                }
-                _setEntityIdsCount = 0;
+                ref var setIdInfo = ref _setEntityIds[i];
+                byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref setIdInfo.Entity);
+                Unsafe.AsRef<InternalEntity>(entityPtr + setIdInfo.FieldOffset) =
+                    setIdInfo.Id == InvalidEntityId ? null : EntitiesArray[setIdInfo.Id];
+            }
+            _setEntityIdsCount = 0;
 
-                //Make OnSyncCalls
-                for (int i = 0; i < _syncCallsCount; i++)
+            //Make OnSyncCalls
+            for (int i = 0; i < _syncCallsCount; i++)
+            {
+                ref var syncCall = ref _syncCalls[i];
+                fixed (byte* readerData = reader.RawData)
                 {
-                    ref var syncCall = ref _syncCalls[i];
-                    fixed (byte* readerData = reader.RawData)
+                    if (syncCall.IsEntity)
                     {
-                        if (syncCall.IsEntity)
-                        {
-                            ushort prevId = *(ushort*)(readerData + syncCall.PrevDataPos);
-                            var prevEntity = prevId == InvalidEntityId ? null : EntitiesArray[prevId];
-                            syncCall.OnSync(
-                                Unsafe.AsPointer(ref syncCall.Entity),
-                                prevEntity != null ? Unsafe.AsPointer(ref prevEntity) : null);
-                        }
-                        else
-                        {
-                            syncCall.OnSync(
-                                Unsafe.AsPointer(ref syncCall.Entity),
-                                readerData + syncCall.PrevDataPos);
-                        }
+                        ushort prevId = *(ushort*)(readerData + syncCall.PrevDataPos);
+                        var prevEntity = prevId == InvalidEntityId ? null : EntitiesArray[prevId];
+                        syncCall.OnSync(
+                            Unsafe.AsPointer(ref syncCall.Entity),
+                            prevEntity != null ? Unsafe.AsPointer(ref prevEntity) : null);
+                    }
+                    else
+                    {
+                        syncCall.OnSync(
+                            Unsafe.AsPointer(ref syncCall.Entity),
+                            readerData + syncCall.PrevDataPos);
                     }
                 }
-                _syncCallsCount = 0;
             }
+            _syncCallsCount = 0;
+            
             //Call construct methods
             for (int i = 0; i < _entitiesToConstructCount; i++)
             {
@@ -506,10 +495,35 @@ namespace LiteEntitySystem
                 PredictionReset = true;
                 foreach (var entity in OwnedEntities)
                 {
+                    var localEntity = entity;
                     _predictWriter.Reset();
                     _predictedEntities[entity.Id].MakeBaseline(Tick, _predictWriter);
-                    _predictReader.SetSource(_predictWriter.Data, StateSerializer.HeaderSize, _predictWriter.Length);
-                    ReadEntityState(_predictReader, entity.Id, false);
+                    _predictReader.SetSource(_predictWriter.Data, 0, _predictWriter.Length);
+                    
+                    var classData = ClassDataDict[entity.ClassId];
+                    var fixedFields = classData.Fields;
+                    byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref localEntity);
+                    int readerPosition = StateSerializer.HeaderSize;
+                    fixed (byte* rawData = _predictReader.RawData)
+                    {
+                        for (int i = 0; i < classData.FieldsCount; i++)
+                        {
+                            ref var entityFieldInfo = ref fixedFields[i];
+                            byte* fieldPtr = entityPtr + entityFieldInfo.Offset;
+                            byte* readDataPtr = rawData + readerPosition;
+                            if (entityFieldInfo.IsEntity)
+                            {
+                                //put prev data into reader for SyncCalls
+                                ushort id = *(ushort*) readDataPtr;
+                                Unsafe.AsRef<InternalEntity>(fieldPtr) = id == InvalidEntityId ? null : EntitiesArray[id];
+                            }
+                            else
+                            {
+                                Unsafe.CopyBlock(fieldPtr, readDataPtr, entityFieldInfo.Size);
+                            }
+                            readerPosition += entityFieldInfo.IntSize;
+                        }
+                    }
                 }
                 PredictionReset = false;
                 
@@ -562,7 +576,7 @@ namespace LiteEntitySystem
         private InternalEntity[] _entitiesToConstruct = new InternalEntity[8];
         private int _entitiesToConstructCount;
 
-        private unsafe bool ReadEntityState(NetDataReader reader, ushort entityInstanceId, bool fullSync)
+        private unsafe void ReadEntityState(NetDataReader reader, ushort entityInstanceId, bool fullSync)
         {
             var entity = EntitiesArray[entityInstanceId];
 
@@ -588,29 +602,29 @@ namespace LiteEntitySystem
             else if (entity == null)
             {
                 Logger.LogError($"EntityNull? : {entityInstanceId}");
-                return false;
+                return;
             }
             
             var classData = ClassDataDict[entity.ClassId];
-            var fixedFields = classData.Fields;
-            byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref entity);
-            int readerPosition = reader.Position;
 
-            StateSerializer stateSerializer = null;
             //create predicted entities
-            if (!PredictionReset && entity.IsLocalControlled)
-            {
-                stateSerializer = _predictedEntities[entity.Id];
-            }
+            var stateSerializer = entity.IsLocalControlled 
+                ? _predictedEntities[entity.Id] 
+                : null;
+
             //create interpolation buffers
             ref byte[] interpolatedInitialData = ref _interpolatedInitialData[entity.Id];
             Utils.ResizeOrCreate(ref interpolatedInitialData, classData.InterpolatedFieldsSize);
             Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
             Utils.ResizeOrCreate(ref _setEntityIds, _setEntityIdsCount + classData.FieldsCount);
             
+            var fixedFields = classData.Fields;
+            byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref entity);
+            int readerPosition = reader.Position;
             int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
             int fixedDataOffset = 0;
             byte* tempData = stackalloc byte[MaxFieldSize];
+            bool writeInterpolationData = entity.IsServerControlled || fullSync;
 
             fixed (byte* rawData = reader.RawData, interpDataPtr = interpolatedInitialData)
             {
@@ -639,7 +653,7 @@ namespace LiteEntitySystem
                     }
                     else
                     {
-                        if (i < classData.InterpolatedMethods.Length && (entity.IsServerControlled || (!PredictionReset && fullSync)) )
+                        if (i < classData.InterpolatedMethods.Length && writeInterpolationData)
                         {
                             //this is interpolated save for future
                             Unsafe.CopyBlock(interpDataPtr + fixedDataOffset, readDataPtr, entityFieldInfo.Size);
@@ -651,7 +665,7 @@ namespace LiteEntitySystem
                     }
                     stateSerializer?.WritePredicted(fixedDataOffset, readDataPtr, entityFieldInfo.Size);
 
-                    if(!PredictionReset && entityFieldInfo.OnSync != null)
+                    if(entityFieldInfo.OnSync != null)
                         _syncCalls[_syncCallsCount++] = new SyncCallInfo
                         {
                             OnSync = entityFieldInfo.OnSync,
@@ -672,8 +686,6 @@ namespace LiteEntitySystem
                 }
             }
             reader.SetPosition(readerPosition);
-
-            return true;
         }
 
         private byte[] _compressionBuffer;

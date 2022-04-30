@@ -61,15 +61,12 @@ namespace LiteEntitySystem
         private readonly NetDataWriter _netDataWriter = new NetDataWriter(false, NetConstants.MaxPacketSize*MaxParts);
         internal readonly StateSerializer[] EntitySerializers = new StateSerializer[MaxEntityCount];
         private readonly NetPlayer[] _netPlayers = new NetPlayer[MaxPlayers];
-        
         private int _netPlayersCount;
-
         private const int MaxPlayers = 128;
         private ushort _nextId;
 
         public const byte ServerPlayerId = 0;
         public override byte PlayerId => ServerPlayerId;
-
         public ServerSendRate SendRate;
 
         public ServerEntityManager(byte packetHeader, int framesPerSecond) : base(NetworkMode.Server, framesPerSecond)
