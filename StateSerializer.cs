@@ -32,7 +32,6 @@ namespace LiteEntitySystem
             public byte[] Data;
             public ushort Size;
             public RemoteCallPacket Next;
-            public RemoteCallPacket Prev;
         }
         
         private byte[] _packets;
@@ -52,7 +51,6 @@ namespace LiteEntitySystem
             else
             {
                 _rpcTail.Next = rpc;
-                rpc.Prev = _rpcTail;
             }
             _rpcTail = rpc;
         }
@@ -219,10 +217,10 @@ namespace LiteEntitySystem
             }
         }
 
-        public unsafe int MakeBaseline(ushort serverTick, NetDataWriter result)
+        public unsafe void MakeBaseline(ushort serverTick, NetDataWriter result)
         {
             if (_classData.IsServerOnly)
-                return -1;
+                return;
             Write(serverTick);
             
             //make diff
@@ -254,7 +252,6 @@ namespace LiteEntitySystem
                     Unsafe.AsRef<SyncableField>(entityPointer + _classData.SyncableFields[i].Offset).FullSyncWrite(resultData, ref resultOffset);
                 }
                 result.SetPosition(resultOffset);
-                return resultOffset;
             }
         }
 

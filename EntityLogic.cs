@@ -276,11 +276,7 @@ namespace LiteEntitySystem
 
         private void OnControllerSync(ControllerLogic prev)
         {
-            if (_controller != null)
-            {   
-                SetLocalControl(this, _controller != null && _controller.OwnerId == EntityManager.PlayerId);
-                Logger.Log(_controller.ToString());
-            }
+            SetLocalControl(this, _controller != null && _controller.OwnerId == EntityManager.PlayerId);
         }
 
         public override void Update()
