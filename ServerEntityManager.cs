@@ -112,16 +112,12 @@ namespace LiteEntitySystem
             
             ref var stateSerializer = ref EntitySerializers[entityId];
             stateSerializer ??= new StateSerializer();
-
-            var entityParams = new EntityParams(
+            
+            var entity = (T)AddEntity(new EntityParams(
                 classData.ClassId, 
                 entityId,
                 stateSerializer.IncrementVersion(Tick),
-                this);
-            T entity;
-
-            //unity 2020 thats why.
-            entity = (T)AddEntity(entityParams);
+                this));
             initMethod?.Invoke(entity);
             ConstructEntity(entity);
               
@@ -139,7 +135,7 @@ namespace LiteEntitySystem
                 if (!player.IsFirstStateReceived) 
                     continue;
                 
-                if (player.TimeBuffer > 0)
+                if (player.TimeBuffer > 0f)
                 {
                     player.TimeBuffer -= DeltaTime;
                 }
@@ -151,6 +147,10 @@ namespace LiteEntitySystem
                         {
                             if (player.AvailableInput.Count > 0)
                             {
+                                if (player.AvailableInput.Count > 2)
+                                {
+                                    player.AvailableInput.Remove(player.AvailableInput.Min);
+                                }
                                 var inputFrame = player.AvailableInput.Min;
                                 player.AvailableInput.Remove(inputFrame);
                                 controller.ReadInput(inputFrame.Reader);
@@ -160,7 +160,7 @@ namespace LiteEntitySystem
                             else
                             {
                                 //TODO: round trip time maybe?
-                                player.TimeBuffer = 0.1f;
+                                player.TimeBuffer = 0.01f;
                             }
                         }
                     }

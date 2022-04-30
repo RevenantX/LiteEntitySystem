@@ -33,7 +33,7 @@ namespace LiteEntitySystem
         protected const byte PacketEntityFullSync = 4;
         protected const byte PacketEntitySyncLast = 5;
         
-        public const int MaxSavedStateDiff = 32;
+        public const int MaxSavedStateDiff = 6;
 
         protected const int MaxFieldSize = 1024;
         private const int MaxSequence = 65536;

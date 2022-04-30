@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using K4os.Compression.LZ4;
 using LiteNetLib;
 using LiteNetLib.Utils;
-using UnityEngine;
 
 namespace LiteEntitySystem
 {
@@ -39,6 +38,7 @@ namespace LiteEntitySystem
         private readonly NetDataWriter _predictWriter = new NetDataWriter(false, NetConstants.MaxPacketSize*MaxParts);
         private readonly NetDataReader _predictReader = new NetDataReader();
         
+        private byte[] _compressionBuffer;
         private ServerStateData _stateA;
         private ServerStateData _stateB;
         private float _lerpTime;
@@ -480,8 +480,6 @@ namespace LiteEntitySystem
             reader.SetPosition(readerPosition);
         }
 
-        private byte[] _compressionBuffer;
-        
         public void Deserialize(NetPacketReader reader)
         {
             byte packetType = reader.GetByte();

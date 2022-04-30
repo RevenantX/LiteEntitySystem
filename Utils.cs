@@ -32,14 +32,14 @@ namespace LiteEntitySystem
         public static void DebugProfileBegin(string name)
         {
 #if UNITY_2020_1_OR_NEWER
-            UnityEngine.Profiling.Profiler.BeginSample(name);
+            //UnityEngine.Profiling.Profiler.BeginSample(name);
 #endif
         }
 
         public static void DebugProfileEnd()
         {
 #if UNITY_2020_1_OR_NEWER
-            UnityEngine.Profiling.Profiler.EndSample();
+            //UnityEngine.Profiling.Profiler.EndSample();
 #endif       
         }
     }
