@@ -173,7 +173,7 @@ namespace LiteEntitySystem
             }
         }
 
-        private unsafe void Write(ushort serverTick)
+        public unsafe void Write(ushort serverTick)
         {
             //write if there new tick
             if (serverTick == _lastWriteTick) 
@@ -195,14 +195,13 @@ namespace LiteEntitySystem
                     //update only changed fields
                     if(entityFieldInfo.IsEntity)
                     {
-                        ushort entityId = Unsafe.AsRef<EntityLogic>(fieldPtr)?.Id ?? EntityManager.InvalidEntityId;
+                        ushort entityId = Unsafe.AsRef<InternalEntity>(fieldPtr)?.Id ?? EntityManager.InvalidEntityId;
                         ushort *ushortPtr = (ushort*)latestDataPtr;
                         if (*ushortPtr != entityId)
                         {
                             *ushortPtr = entityId;
                             _fieldChangeTicks[i] = serverTick;
                         }
-                        offset += 2;
                     }
                     else
                     {
@@ -211,8 +210,8 @@ namespace LiteEntitySystem
                             Unsafe.CopyBlock(latestDataPtr, fieldPtr, entityFieldInfo.Size);
                             _fieldChangeTicks[i] = serverTick;
                         }
-                        offset += entityFieldInfo.IntSize;
                     }
+                    offset += entityFieldInfo.IntSize;
                 }
             }
         }
