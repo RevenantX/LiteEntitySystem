@@ -19,7 +19,7 @@ namespace LiteEntitySystem
     {
         public override byte PlayerId => (byte)(_localPeer.RemoteId + 1);
         public int StoredCommands => _inputCommands.Count;
-        public int LastProcessedTick => _lastProcessedTick;
+        public int LastProcessedTick => _stateA?.ProcessedTick ?? 0;
         public int LerpBufferCount => _lerpBuffer.Count;
 
         private const int InterpolateBufferSize = 10;
@@ -44,7 +44,7 @@ namespace LiteEntitySystem
         private float _lerpTime;
         private double _timer;
         private bool _isSyncReceived;
-        private int _lastProcessedTick;
+        private ushort _lastServerTick;
         
         internal readonly EntityFilter<EntityLogic> OwnedEntities = new EntityFilter<EntityLogic>();
 
@@ -82,7 +82,7 @@ namespace LiteEntitySystem
             
             var inputWriter = _inputCommands.Add();
             inputWriter.SetPosition(2);
-            inputWriter.Put(ServerTick);
+            inputWriter.Put(_lastServerTick);
             inputWriter.Put(Tick);
             
             foreach(var controller in GetControllers<HumanControllerLogic>())
@@ -283,8 +283,6 @@ namespace LiteEntitySystem
             }
             _entitiesToConstructCount = 0;
 
-            _lastProcessedTick = _stateA.ProcessedTick;
-
             //reset entities
             if (_inputCommands.Count > 0)
             {
@@ -324,7 +322,7 @@ namespace LiteEntitySystem
                 {
                     ushort inputTick = BitConverter.ToUInt16(inputCommand.Data, 4);
 
-                    if (SequenceDiff(_lastProcessedTick, inputTick) >= 0)
+                    if (SequenceDiff(_stateA.ProcessedTick, inputTick) >= 0)
                     {
                         //remove processed inputs
                         commandsToRemove++;
@@ -507,6 +505,7 @@ namespace LiteEntitySystem
                     };
                     _stateA.FinalReader.SetSource(_compressionBuffer, 0, decompressedSize);
                     _stateA.Tick = _stateA.FinalReader.GetUShort();
+                    _lastServerTick = _stateA.Tick;
                     ReadEntityStates();
                     _isSyncReceived = true;
                     break;
@@ -555,6 +554,11 @@ namespace LiteEntitySystem
                     //if got full state - add to lerp buffer
                     if(serverState.ReadPart(isLastPart, reader))
                     {
+                        if (SequenceDiff(serverState.Tick, _lastServerTick) > 0)
+                        {
+                            _lastServerTick = serverState.Tick;
+                        }
+                        
                         _receivedStates.Remove(serverState.Tick);
                         
                         if (_lerpBuffer.Count >= InterpolateBufferSize)
