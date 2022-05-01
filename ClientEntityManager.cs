@@ -172,6 +172,16 @@ namespace LiteEntitySystem
                     _lerpBuffer.Remove(_stateB);
                     _lerpTime = SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTime;
                     _stateB.Preload(this);
+                    
+                    int commandsToRemove = 0;
+                    //remove processed inputs
+                    foreach (var inputCommand in _inputCommands)
+                    {
+                        ushort inputTick = BitConverter.ToUInt16(inputCommand.Data, 4);
+                        if (SequenceDiff(_stateB.ProcessedTick, inputTick) >= 0)
+                            commandsToRemove++;
+                    }
+                    _inputCommands.RemoveFromStart(commandsToRemove);
                 }
             }
 
@@ -315,31 +325,19 @@ namespace LiteEntitySystem
                         }
                     }
                 }
-
-                int commandsToRemove = 0;
+                
                 //reapply input
                 foreach (var inputCommand in _inputCommands)
                 {
-                    ushort inputTick = BitConverter.ToUInt16(inputCommand.Data, 4);
-
-                    if (SequenceDiff(_stateA.ProcessedTick, inputTick) >= 0)
+                    //reapply input data
+                    _inputReader.SetSource(inputCommand.Data, 6, inputCommand.Length);
+                    foreach(var entity in GetControllers<HumanControllerLogic>())
                     {
-                        //remove processed inputs
-                        commandsToRemove++;
+                        entity.ReadInput(_inputReader);
+                        entity.ControlledEntity?.Update();
                     }
-                    else
-                    {
-                        //reapply input data
-                        _inputReader.SetSource(inputCommand.Data, 6, inputCommand.Length);
-                        foreach(var entity in GetControllers<HumanControllerLogic>())
-                        {
-                            entity.ReadInput(_inputReader);
-                            entity.ControlledEntity?.Update();
-                        }
-                        _inputReader.Clear();
-                    }
+                    _inputReader.Clear();
                 }
-                _inputCommands.RemoveFromStart(commandsToRemove);
             }
         }
 
@@ -503,6 +501,7 @@ namespace LiteEntitySystem
                     {
                         IsBaseline = true
                     };
+                    _inputCommands.FastClear();
                     _stateA.FinalReader.SetSource(_compressionBuffer, 0, decompressedSize);
                     _stateA.Tick = _stateA.FinalReader.GetUShort();
                     _lastServerTick = _stateA.Tick;
