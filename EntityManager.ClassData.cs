@@ -8,7 +8,7 @@ namespace LiteEntitySystem
 {
     public partial class EntityManager
     {
-        internal unsafe delegate void OnSyncDelegate(void* ent, void* previousValue);
+        internal unsafe delegate void MethodCallDelegate(void* ent, void* previousValue);
 
         internal readonly struct EntityFieldInfo
         {
@@ -17,9 +17,9 @@ namespace LiteEntitySystem
             public readonly int IntSize;
             public readonly UIntPtr PtrSize;
             public readonly bool IsEntity;
-            public readonly OnSyncDelegate OnSync;
+            public readonly MethodCallDelegate OnSync;
 
-            public EntityFieldInfo(OnSyncDelegate onSync, int offset, int size, bool isEntity)
+            public EntityFieldInfo(MethodCallDelegate onSync, int offset, int size, bool isEntity)
             {
                 Offset = offset;
                 Size = (uint)size;
@@ -56,10 +56,14 @@ namespace LiteEntitySystem
 
             public readonly Dictionary<MethodInfo, RemoteCall> RemoteCalls = new Dictionary<MethodInfo, RemoteCall>();
 
+            public readonly MethodCallDelegate[] RemoteCallsClient = new MethodCallDelegate[255];
+            
+            public readonly MethodCallDelegate[] SyncableRemoteCallsClient = new MethodCallDelegate[255];
+            
             public readonly Dictionary<MethodInfo, SyncableRemoteCall> SyncableRemoteCalls =
                 new Dictionary<MethodInfo, SyncableRemoteCall>();
-            
-            public static unsafe OnSyncDelegate OnSyncGenerator<TEnt, TValue>(MethodInfo method) where TEnt : InternalEntity
+
+            public static unsafe MethodCallDelegate OnSyncGenerator<TEnt, TValue>(MethodInfo method) where TEnt : InternalEntity
             {
                 var typedDelegate = (Action<TEnt, TValue>)method.CreateDelegate(typeof(Action<TEnt, TValue>));
                 return (ent, previousValue) =>
@@ -70,7 +74,7 @@ namespace LiteEntitySystem
                 };
             }
 
-            private static OnSyncDelegate GetOnSyncDelegate(Type entityType, Type valueType, string methodName)
+            private static MethodCallDelegate GetOnSyncDelegate(Type entityType, Type valueType, string methodName)
             {
                 if (string.IsNullOrEmpty(methodName))
                     return null;
@@ -87,8 +91,8 @@ namespace LiteEntitySystem
                     return null;
                 }
 
-                return (OnSyncDelegate)typeof(EntityClassData)
-                    .GetMethod("OnSyncGenerator")
+                return (MethodCallDelegate)typeof(EntityClassData)
+                    .GetMethod(nameof(OnSyncGenerator))
                     !.MakeGenericMethod(entityType, valueType)
                     .Invoke(null, new object[] { method });
             }
@@ -146,14 +150,18 @@ namespace LiteEntitySystem
                         var remoteCallAttribute = method.GetCustomAttribute<RemoteCall>();
                         if(remoteCallAttribute == null)
                             continue;
+                        
+                        var parametrType = method.GetParameters()[0].ParameterType;
                         if (remoteCallAttribute.Id == byte.MaxValue)
                         {
                             remoteCallAttribute.Id = rpcIndex++;
-                            remoteCallAttribute.DataSize = Marshal.SizeOf(method.GetParameters()[0].ParameterType);
+                            remoteCallAttribute.DataSize = Marshal.SizeOf(parametrType);
                             if (rpcIndex == byte.MaxValue)
                                 throw new Exception("254 is max RemoteCall methods");
                         }
                         RemoteCalls.Add(method, remoteCallAttribute);
+                        RemoteCallsClient[remoteCallAttribute.Id] =
+                            GetOnSyncDelegate(baseType, parametrType, method.Name);
                     }
                     foreach (var field in baseType.GetFields(bindingFlags))
                     {
@@ -203,14 +211,17 @@ namespace LiteEntitySystem
                                     var rcAttribute = method.GetCustomAttribute<SyncableRemoteCall>();
                                     if(rcAttribute == null)
                                         continue;
+                                    var parameterType = method.GetParameters()[0].ParameterType;
                                     if (rcAttribute.Id == byte.MaxValue)
                                     {
                                         rcAttribute.Id = syncableRpcIndex++;
-                                        rcAttribute.DataSize = Marshal.SizeOf(method.GetParameters()[0].ParameterType);
+                                        rcAttribute.DataSize = Marshal.SizeOf(parameterType);
                                     }
                                     if (syncableRpcIndex == byte.MaxValue)
                                         throw new Exception("254 is max RemoteCall methods");
                                     SyncableRemoteCalls[method] = rcAttribute;
+                                    SyncableRemoteCallsClient[rcAttribute.Id] =
+                                        GetOnSyncDelegate(entType, parameterType, method.Name);
                                 }
                             }
                         }

@@ -41,10 +41,10 @@ namespace LiteEntitySystem
     public class RemoteCall : Attribute
     {
         public readonly ExecuteFlags Flags;
-
+        
         internal byte Id = byte.MaxValue;
         internal int DataSize;
-        
+
         public RemoteCall(ExecuteFlags flags)
         {
             Flags = flags;
@@ -56,6 +56,7 @@ namespace LiteEntitySystem
     {
         internal byte Id = byte.MaxValue;
         internal int DataSize;
+        internal EntityManager.MethodCallDelegate MethodDelegate;
     }
 
     public readonly struct EntityParams
@@ -91,10 +92,6 @@ namespace LiteEntitySystem
             
             internal bool InternalIsLocalControlled;
 
-            public virtual void ProcessPacket(byte id, NetDataReader reader)
-            {
-            }
-
             public virtual void Update()
             {
             }
@@ -116,7 +113,7 @@ namespace LiteEntitySystem
                 if (methodToCall.Target != this)
                     throw new Exception("You can call this only on this class methods");
                 var classData = EntityManager.ClassDataDict[ClassId];
-                if(!classData.RemoteCalls.TryGetValue(methodToCall.Method, out RemoteCall remoteCallInfo))
+                if(!classData.RemoteCalls.TryGetValue(methodToCall.Method, out var remoteCallInfo))
                     throw new Exception($"{methodToCall.Method.Name} is not [RemoteCall] method");
                 if (EntityManager.IsServer)
                 {
@@ -135,7 +132,7 @@ namespace LiteEntitySystem
                 if (methodToCall.Target != this)
                     throw new Exception("You can call this only on this class methods");
                 var classData = EntityManager.ClassDataDict[ClassId];
-                if(!classData.RemoteCalls.TryGetValue(methodToCall.Method, out RemoteCall remoteCallInfo))
+                if(!classData.RemoteCalls.TryGetValue(methodToCall.Method, out var remoteCallInfo))
                     throw new Exception($"{methodToCall.Method.Name} is not [RemoteCall] method");
                 if (EntityManager.IsServer)
                 {

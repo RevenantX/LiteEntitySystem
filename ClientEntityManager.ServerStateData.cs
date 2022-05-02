@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
@@ -15,13 +16,14 @@ namespace LiteEntitySystem
             public int DataOffset;
             public int InterpolatedCachesCount;
             public InterpolatedCache[] InterpolatedCaches;
-            public int RemoteCallsCount;
-            public RemoteCallsCache[] RemoteCallsCaches;
         }
 
         private struct RemoteCallsCache
         {
-            
+            public ushort EntityId;
+            public MethodCallDelegate Delegate;
+            public ushort Tick;
+            public int Offset;
         }
 
         private struct InterpolatedCache
@@ -51,12 +53,15 @@ namespace LiteEntitySystem
             public int PreloadDataCount;
             public int[] InterpolatedFields = new int[8];
             public int InterpolatedCount;
-            
+
             private readonly NetPacketReader[] _packetReaders = new NetPacketReader[MaxParts];
             private readonly NetDataWriter _finalWriter = new NetDataWriter();
             private int _totalPartsCount;
             private int _receivedPartsCount;
             private int _maxReceivedPart;
+            
+            public int RemoteCallsCount;
+            public RemoteCallsCache[] RemoteCallsCaches = new RemoteCallsCache[32];
   
             public void Reset(ushort tick)
             {
@@ -74,6 +79,7 @@ namespace LiteEntitySystem
                 _maxReceivedPart = 0;
                 _receivedPartsCount = 0;
                 _totalPartsCount = 0;
+                RemoteCallsCount = 0;
             }
 
             public void Preload(ClientEntityManager entityManager)
@@ -89,6 +95,7 @@ namespace LiteEntitySystem
                     ushort fullSyncAndTotalSize = FinalReader.GetUShort();
                     preloadData.TotalSize = (ushort)(fullSyncAndTotalSize >> 1);
                     preloadData.EntityId = FinalReader.GetUShort();
+                    preloadData.InterpolatedCachesCount = 0;
                     FinalReader.SetPosition(initialReaderPosition + preloadData.TotalSize);
                     if (preloadData.EntityId > MaxEntityCount)
                     {
@@ -112,7 +119,6 @@ namespace LiteEntitySystem
                             initialReaderPosition + 
                             StateSerializer.DiffHeaderSize + 
                             classData.FieldsFlagsSize;
-                        preloadData.InterpolatedCachesCount = 0;
 
                         int stateReaderOffset = preloadData.DataOffset;
                         int initialDataOffset = 0;
@@ -142,17 +148,30 @@ namespace LiteEntitySystem
                             }
                         }
                         
-                        //preload rpcs
                         for (; fieldIndex < classData.FieldsCount; fieldIndex++)
                         {
                             if ((readerData[preloadData.EntityFieldsOffset + fieldIndex / 8] & (1 << fieldIndex % 8)) != 0)
                                 stateReaderOffset += classData.Fields[fieldIndex].IntSize;
                         }
 
-                        if (stateReaderOffset < initialReaderPosition + preloadData.TotalSize)
+                        //preload rpcs
+                        /*
+                        while(stateReaderOffset < initialReaderPosition + preloadData.TotalSize)
                         {
-                            Logger.Log("There is RPC!");
+                            var rpcCache = new RemoteCallsCache
+                            {
+                                EntityId = preloadData.EntityId,
+                                Delegate = classData.RemoteCallsClient[readerData[stateReaderOffset]],
+                                //SyncableId = readerData[stateReaderOffset + 1],
+                                Tick = Unsafe.AsRef<ushort>(readerData[stateReaderOffset + 2]),
+                                Offset = stateReaderOffset + 6
+                            };
+                            ushort size = Unsafe.AsRef<ushort>(readerData[stateReaderOffset + 4]);
+                            //Utils.ResizeOrCreate(ref RemoteCallsCaches, RemoteCallsCount);
+                            //RemoteCallsCaches[RemoteCallsCount++] = rpcCache;
+                            stateReaderOffset += 6 + size;
                         }
+                    */
                     }
                 }
             }

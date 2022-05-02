@@ -45,6 +45,7 @@ namespace LiteEntitySystem
         private double _timer;
         private bool _isSyncReceived;
         private ushort _lastServerTick;
+        private bool _inputGenerated;
         
         internal readonly EntityFilter<EntityLogic> OwnedEntities = new EntityFilter<EntityLogic>();
 
@@ -84,7 +85,8 @@ namespace LiteEntitySystem
             inputWriter.SetPosition(2);
             inputWriter.Put(_lastServerTick);
             inputWriter.Put(Tick);
-            
+
+            _inputGenerated = true;
             foreach(var controller in GetControllers<HumanControllerLogic>())
             {
                 int sizeBefore = inputWriter.Length;
@@ -138,6 +140,15 @@ namespace LiteEntitySystem
                 return;
 
             base.Update();
+
+            if (_inputGenerated)
+            {
+                _inputGenerated = false;
+                foreach (var inputCommand in _inputCommands)
+                {
+                    _localPeer.Send(inputCommand, DeliveryMethod.Unreliable);
+                }
+            }
             
             //local interpolation
             float localLerpT = (float)(_accumulator/DeltaTime);
@@ -172,7 +183,19 @@ namespace LiteEntitySystem
                     _lerpBuffer.Remove(_stateB);
                     _lerpTime = SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTime;
                     _stateB.Preload(this);
-                    
+
+                    /*
+                    fixed (byte* rawData = _stateB.FinalReader.RawData)
+                    {
+                        for (int i = 0; i < _stateB.RemoteCallsCount; i++)
+                        {
+                            ref var rpcCache = ref _stateB.RemoteCallsCaches[i];
+                            var entity = EntitiesArray[rpcCache.EntityId];
+                            //rpcCache.Delegate(Unsafe.AsPointer(ref entity), rawData + rpcCache.Offset);
+                        }
+                    }
+                    */
+
                     int commandsToRemove = 0;
                     //remove processed inputs
                     foreach (var inputCommand in _inputCommands)
@@ -222,11 +245,6 @@ namespace LiteEntitySystem
                     _timer -= _lerpTime;
                 }
             }
-
-            foreach (var inputCommand in _inputCommands)
-            {
-                _localPeer.Send(inputCommand, DeliveryMethod.Unreliable);
-            }
         }
 
         private unsafe void ReadEntityStates()
@@ -236,6 +254,7 @@ namespace LiteEntitySystem
 
             if (_stateA.IsBaseline)
             {
+                _inputCommands.FastClear();
                 while (reader.AvailableBytes > 0)
                 {
                     ushort entityId = reader.GetUShort();
@@ -343,7 +362,7 @@ namespace LiteEntitySystem
 
         private struct SyncCallInfo
         {
-            public OnSyncDelegate OnSync;
+            public MethodCallDelegate OnSync;
             public InternalEntity Entity;
             public int PrevDataPos;
             public bool IsEntity;
@@ -501,7 +520,6 @@ namespace LiteEntitySystem
                     {
                         IsBaseline = true
                     };
-                    _inputCommands.FastClear();
                     _stateA.FinalReader.SetSource(_compressionBuffer, 0, decompressedSize);
                     _stateA.Tick = _stateA.FinalReader.GetUShort();
                     _lastServerTick = _stateA.Tick;
