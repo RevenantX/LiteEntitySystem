@@ -143,6 +143,18 @@ namespace LiteEntitySystem
             return _singletonEntities[ClassDataDict[EntityClassInfo<T>.ClassId].FilterId] as T;
         }
 
+        public bool TryGetSingleton<T>(out T singleton) where T : SingletonEntityLogic
+        {
+            var s = _singletonEntities[ClassDataDict[EntityClassInfo<T>.ClassId].FilterId];
+            if (s != null)
+            {
+                singleton = (T)s;
+                return true;
+            }
+            singleton = null;
+            return false;
+        }
+
         protected InternalEntity AddEntity(EntityParams entityParams)
         {
             if (entityParams.Id >= InvalidEntityId)

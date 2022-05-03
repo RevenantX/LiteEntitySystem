@@ -183,18 +183,16 @@ namespace LiteEntitySystem
                     _lerpBuffer.Remove(_stateB);
                     _lerpTime = SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTime;
                     _stateB.Preload(this);
-
-                    /*
+                    
                     fixed (byte* rawData = _stateB.FinalReader.RawData)
                     {
                         for (int i = 0; i < _stateB.RemoteCallsCount; i++)
                         {
                             ref var rpcCache = ref _stateB.RemoteCallsCaches[i];
                             var entity = EntitiesArray[rpcCache.EntityId];
-                            //rpcCache.Delegate(Unsafe.AsPointer(ref entity), rawData + rpcCache.Offset);
+                            rpcCache.Delegate(Unsafe.AsPointer(ref entity), rawData + rpcCache.Offset);
                         }
                     }
-                    */
 
                     int commandsToRemove = 0;
                     //remove processed inputs
@@ -498,113 +496,97 @@ namespace LiteEntitySystem
         public void Deserialize(NetPacketReader reader)
         {
             byte packetType = reader.GetByte();
-            switch (packetType)
+            if(packetType == PacketEntityFullSync)
             {
-                case PacketEntityFullSync:
+                int decompressedSize = reader.GetInt();
+                Utils.ResizeOrCreate(ref _compressionBuffer, decompressedSize);
+                int decodedBytes = LZ4Codec.Decode(
+                    reader.RawData,
+                    reader.Position,
+                    reader.AvailableBytes,
+                    _compressionBuffer,
+                    0,
+                    decompressedSize);
+                if (decodedBytes != decompressedSize)
                 {
-                    int decompressedSize = reader.GetInt();
-                    Utils.ResizeOrCreate(ref _compressionBuffer, decompressedSize);
-                    int decodedBytes = LZ4Codec.Decode(
-                        reader.RawData,
-                        reader.Position,
-                        reader.AvailableBytes,
-                        _compressionBuffer,
-                        0,
-                        decompressedSize);
-                    if (decodedBytes != decompressedSize)
-                    {
-                        Logger.LogError("Error on decompress");
-                    }
-                    
-                    _stateA = new ServerStateData
-                    {
-                        IsBaseline = true
-                    };
-                    _stateA.FinalReader.SetSource(_compressionBuffer, 0, decompressedSize);
-                    _stateA.Tick = _stateA.FinalReader.GetUShort();
-                    _lastServerTick = _stateA.Tick;
-                    ReadEntityStates();
-                    _isSyncReceived = true;
-                    break;
+                    Logger.LogError("Error on decompress");
                 }
                 
-                case PacketEntitySyncLast:
-                case PacketEntitySync:
+                _stateA = new ServerStateData
                 {
-                    bool isLastPart = packetType == PacketEntitySyncLast;
-                    ushort newServerTick = reader.GetUShort();
-                    if (SequenceDiff(newServerTick, ServerTick) <= 0)
+                    IsBaseline = true
+                };
+                _stateA.FinalReader.SetSource(_compressionBuffer, 0, decompressedSize);
+                _stateA.Tick = _stateA.FinalReader.GetUShort();
+                _lastServerTick = _stateA.Tick;
+                ReadEntityStates();
+                _isSyncReceived = true;
+            }
+            else
+            {
+                bool isLastPart = packetType == PacketEntitySyncLast;
+                ushort newServerTick = reader.GetUShort();
+                if (SequenceDiff(newServerTick, ServerTick) <= 0)
+                {
+                    reader.Recycle();
+                    return;
+                }
+                
+                if(!_receivedStates.TryGetValue(newServerTick, out var serverState))
+                {
+                    if (_receivedStates.Count > MaxSavedStateDiff)
                     {
-                        reader.Recycle();
-                        break;
-                    }
-                    
-                    if(!_receivedStates.TryGetValue(newServerTick, out var serverState))
-                    {
-                        if (_receivedStates.Count > MaxSavedStateDiff)
+                        var minimal = _receivedStates.Keys[0];
+                        if (SequenceDiff(newServerTick, minimal) > 0)
                         {
-                            var minimal = _receivedStates.Keys[0];
-                            if (SequenceDiff(newServerTick, minimal) > 0)
-                            {
-                                serverState = _receivedStates[minimal];
-                                _receivedStates.Remove(minimal);
-                                serverState.Reset(newServerTick);
-                            }
-                            else
-                            {
-                                reader.Recycle();
-                                break;
-                            }
-                        }
-                        else if (_statesPool.Count > 0)
-                        {
-                            serverState = _statesPool.Dequeue();
+                            serverState = _receivedStates[minimal];
+                            _receivedStates.Remove(minimal);
                             serverState.Reset(newServerTick);
                         }
                         else
                         {
-                            serverState = new ServerStateData { Tick = newServerTick };
+                            reader.Recycle();
+                            return;
                         }
-                        _receivedStates.Add(newServerTick, serverState);
+                    }
+                    else if (_statesPool.Count > 0)
+                    {
+                        serverState = _statesPool.Dequeue();
+                        serverState.Reset(newServerTick);
+                    }
+                    else
+                    {
+                        serverState = new ServerStateData { Tick = newServerTick };
+                    }
+                    _receivedStates.Add(newServerTick, serverState);
+                }
+                
+                //if got full state - add to lerp buffer
+                if(serverState.ReadPart(isLastPart, reader))
+                {
+                    if (SequenceDiff(serverState.Tick, _lastServerTick) > 0)
+                    {
+                        _lastServerTick = serverState.Tick;
                     }
                     
-                    //if got full state - add to lerp buffer
-                    if(serverState.ReadPart(isLastPart, reader))
+                    _receivedStates.Remove(serverState.Tick);
+                    
+                    if (_lerpBuffer.Count >= InterpolateBufferSize)
                     {
-                        if (SequenceDiff(serverState.Tick, _lastServerTick) > 0)
+                        if (SequenceDiff(serverState.Tick, _lerpBuffer.Min.Tick) > 0)
                         {
-                            _lastServerTick = serverState.Tick;
-                        }
-                        
-                        _receivedStates.Remove(serverState.Tick);
-                        
-                        if (_lerpBuffer.Count >= InterpolateBufferSize)
-                        {
-                            if (SequenceDiff(serverState.Tick, _lerpBuffer.Min.Tick) > 0)
-                            {
-                                _lerpBuffer.Remove(_lerpBuffer.Min);
-                                _lerpBuffer.Add(serverState);
-                            }
-                            else
-                            {
-                                _statesPool.Enqueue(serverState);
-                            }
+                            _lerpBuffer.Remove(_lerpBuffer.Min);
+                            _lerpBuffer.Add(serverState);
                         }
                         else
                         {
-                            _lerpBuffer.Add(serverState);
+                            _statesPool.Enqueue(serverState);
                         }
                     }
-                    break;
-                }
-
-                case PacketEntityCall:
-                {
-                    ushort entityInstanceId = reader.GetUShort();
-                    byte packetId = reader.GetByte();
-                    GetEntityById(entityInstanceId)?.ProcessPacket(packetId, reader);
-                    reader.Recycle();
-                    break;
+                    else
+                    {
+                        _lerpBuffer.Add(serverState);
+                    }
                 }
             }
         }

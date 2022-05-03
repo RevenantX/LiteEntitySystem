@@ -97,6 +97,7 @@ namespace LiteEntitySystem
                     preloadData.EntityId = FinalReader.GetUShort();
                     preloadData.InterpolatedCachesCount = 0;
                     FinalReader.SetPosition(initialReaderPosition + preloadData.TotalSize);
+                    
                     if (preloadData.EntityId > MaxEntityCount)
                     {
                         //Should remove at all
@@ -114,6 +115,7 @@ namespace LiteEntitySystem
                         //it should be here at preload
                         var entity = entityManager.EntitiesArray[preloadData.EntityId];
                         var classData = entityManager.ClassDataDict[entity.ClassId];
+                        var fields = classData.Fields;
                         preloadData.EntityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
                         preloadData.DataOffset = 
                             initialReaderPosition + 
@@ -133,7 +135,7 @@ namespace LiteEntitySystem
                             
                             for (; fieldIndex < classData.InterpolatedMethods.Length; fieldIndex++)
                             {
-                                if ((readerData[preloadData.EntityFieldsOffset + fieldIndex/8] & (1 << fieldIndex%8)) != 0)
+                                if (Utils.IsBitSet(readerData, preloadData.EntityFieldsOffset, fieldIndex))
                                 {
                                     preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
                                     {
@@ -142,36 +144,35 @@ namespace LiteEntitySystem
                                         StateReaderOffset = stateReaderOffset,
                                         InitialDataOffset = initialDataOffset
                                     };
-                                    stateReaderOffset += classData.Fields[fieldIndex].IntSize;
+                                    stateReaderOffset += fields[fieldIndex].IntSize;
                                 }
-                                initialDataOffset += classData.Fields[fieldIndex].IntSize;
+                                initialDataOffset += fields[fieldIndex].IntSize;
                             }
                         }
                         
                         for (; fieldIndex < classData.FieldsCount; fieldIndex++)
                         {
-                            if ((readerData[preloadData.EntityFieldsOffset + fieldIndex / 8] & (1 << fieldIndex % 8)) != 0)
-                                stateReaderOffset += classData.Fields[fieldIndex].IntSize;
+                            if (Utils.IsBitSet(readerData, preloadData.EntityFieldsOffset, fieldIndex))
+                                stateReaderOffset += fields[fieldIndex].IntSize;
                         }
 
                         //preload rpcs
-                        /*
                         while(stateReaderOffset < initialReaderPosition + preloadData.TotalSize)
                         {
+                            byte rpcId = readerData[stateReaderOffset];
                             var rpcCache = new RemoteCallsCache
                             {
                                 EntityId = preloadData.EntityId,
-                                Delegate = classData.RemoteCallsClient[readerData[stateReaderOffset]],
+                                Delegate = classData.RemoteCallsClient[rpcId],
                                 //SyncableId = readerData[stateReaderOffset + 1],
                                 Tick = Unsafe.AsRef<ushort>(readerData[stateReaderOffset + 2]),
                                 Offset = stateReaderOffset + 6
                             };
                             ushort size = Unsafe.AsRef<ushort>(readerData[stateReaderOffset + 4]);
-                            //Utils.ResizeOrCreate(ref RemoteCallsCaches, RemoteCallsCount);
-                            //RemoteCallsCaches[RemoteCallsCount++] = rpcCache;
+                            Utils.ResizeOrCreate(ref RemoteCallsCaches, RemoteCallsCount);
+                            RemoteCallsCaches[RemoteCallsCount++] = rpcCache;
                             stateReaderOffset += 6 + size;
                         }
-                    */
                     }
                 }
             }

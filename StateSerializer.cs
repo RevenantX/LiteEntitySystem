@@ -40,6 +40,7 @@ namespace LiteEntitySystem
                 Tick = tick;
                 Size = (ushort)size;
                 Data = new byte[size];
+                Next = null;
             }
         }
         
@@ -301,13 +302,12 @@ namespace LiteEntitySystem
                             //put new
                             resultData[resultOffset] = rpcNode.Id;
                             resultData[resultOffset + 1] = rpcNode.SyncableId;
-                            Unsafe.AsRef<ushort>(resultData[resultOffset + 2]) = rpcNode.Tick;
-                            Unsafe.AsRef<ushort>(resultData[resultOffset + 4]) = rpcNode.Size;
+                            *(ushort*)(resultData + resultOffset + 2) = rpcNode.Tick;
+                            *(ushort*)(resultData + resultOffset + 4) = rpcNode.Size;
                             fixed (byte* rpcData = rpcNode.Data)
                             {
                                 Unsafe.CopyBlock(resultData + resultOffset + 6, rpcData, rpcNode.Size);
                             }
-
                             resultOffset += 6 + rpcNode.Size;
                         }
                         else if (EntityManager.SequenceDiff(rpcNode.Tick, minimalTick) < 0)
@@ -326,7 +326,7 @@ namespace LiteEntitySystem
                 }
 
                 //write totalSize
-                int resultSize = resultOffset - result.Length;
+                int resultSize = resultOffset - startPos;
                 if (resultSize > ushort.MaxValue/2)
                 {
                     //request full sync

@@ -339,7 +339,7 @@ namespace LiteEntitySystem
                 case PacketEntityCall:
                     ushort entityId = reader.GetUShort();
                     byte packetId = reader.GetByte();
-                    GetEntityById(entityId)?.ProcessPacket(packetId, reader);
+                    //GetEntityById(entityId)?.ProcessPacket(packetId, reader);
                     reader.Recycle();
                     break;
                 

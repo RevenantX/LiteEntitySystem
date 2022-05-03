@@ -42,5 +42,17 @@ namespace LiteEntitySystem
             //UnityEngine.Profiling.Profiler.EndSample();
 #endif       
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsBitSet(byte[] byteArray, int offset, int bitNumber)
+        {
+            return (byteArray[offset + bitNumber / 8] & (1 << bitNumber % 8)) != 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe bool IsBitSet(byte* byteArray, int bitNumber)
+        {
+            return (byteArray[bitNumber / 8] & (1 << bitNumber % 8)) != 0;
+        }
     }
 }
