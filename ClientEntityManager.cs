@@ -46,6 +46,7 @@ namespace LiteEntitySystem
         private bool _isSyncReceived;
         private ushort _lastServerTick;
         private bool _inputGenerated;
+        private int _executedRpcs;
         
         internal readonly EntityFilter<EntityLogic> OwnedEntities = new EntityFilter<EntityLogic>();
 
@@ -76,6 +77,7 @@ namespace LiteEntitySystem
 
         protected override unsafe void OnLogicTick()
         {
+            ServerTick++;
             if (_inputCommands.IsFull)
             {
                 _inputCommands.RemoveFromStart(1);
@@ -85,6 +87,27 @@ namespace LiteEntitySystem
             inputWriter.SetPosition(2);
             inputWriter.Put(_lastServerTick);
             inputWriter.Put(Tick);
+
+            if (_stateB != null)
+            {
+                fixed (byte* rawData = _stateB.FinalReader.RawData)
+                {
+                    for (int i = _executedRpcs; i < _stateB.RemoteCallsCount; i++)
+                    {
+                        ref var rpcCache = ref _stateB.RemoteCallsCaches[i];
+                        if (SequenceDiff(rpcCache.Tick, ServerTick) <= 0)
+                        {
+                            var entity = EntitiesArray[rpcCache.EntityId];
+                            rpcCache.Delegate(Unsafe.AsPointer(ref entity), rawData + rpcCache.Offset);
+                            _executedRpcs++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }        
+            }
 
             _inputGenerated = true;
             foreach(var controller in GetControllers<HumanControllerLogic>())
@@ -184,15 +207,7 @@ namespace LiteEntitySystem
                     _lerpTime = SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTime;
                     _stateB.Preload(this);
                     
-                    fixed (byte* rawData = _stateB.FinalReader.RawData)
-                    {
-                        for (int i = 0; i < _stateB.RemoteCallsCount; i++)
-                        {
-                            ref var rpcCache = ref _stateB.RemoteCallsCaches[i];
-                            var entity = EntitiesArray[rpcCache.EntityId];
-                            rpcCache.Delegate(Unsafe.AsPointer(ref entity), rawData + rpcCache.Offset);
-                        }
-                    }
+                    _executedRpcs = 0;
 
                     int commandsToRemove = 0;
                     //remove processed inputs
@@ -526,7 +541,7 @@ namespace LiteEntitySystem
             {
                 bool isLastPart = packetType == PacketEntitySyncLast;
                 ushort newServerTick = reader.GetUShort();
-                if (SequenceDiff(newServerTick, ServerTick) <= 0)
+                if (SequenceDiff(newServerTick, _stateA.Tick) <= 0)
                 {
                     reader.Recycle();
                     return;

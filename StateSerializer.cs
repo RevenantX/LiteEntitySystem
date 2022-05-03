@@ -31,9 +31,10 @@ namespace LiteEntitySystem
             public ushort Tick;
             public byte[] Data;
             public ushort Size;
+            public ExecuteFlags Flags;
             public RemoteCallPacket Next;
 
-            public void Setup(byte id, byte syncableId, ushort tick, int size)
+            public void Setup(byte id, byte syncableId, ExecuteFlags flags, ushort tick, int size)
             {
                 Id = id;
                 SyncableId = syncableId;
@@ -41,6 +42,7 @@ namespace LiteEntitySystem
                 Size = (ushort)size;
                 Data = new byte[size];
                 Next = null;
+                Flags = flags;
             }
         }
         
@@ -64,7 +66,7 @@ namespace LiteEntitySystem
         public unsafe void AddRemoteCall<T>(T value, RemoteCall remoteCallInfo) where T : struct
         {
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Setup(remoteCallInfo.Id, byte.MaxValue, _entityLogic.EntityManager.Tick, remoteCallInfo.DataSize);
+            rpc.Setup(remoteCallInfo.Id, byte.MaxValue, remoteCallInfo.Flags, _entityLogic.EntityManager.Tick, remoteCallInfo.DataSize);
             fixed (byte* rawData = rpc.Data)
                 Unsafe.Copy(rawData, ref value);
             AddRpcPacket(rpc);
@@ -73,7 +75,7 @@ namespace LiteEntitySystem
         public void AddRemoteCall<T>(T[] value, int count, RemoteCall remoteCallInfo) where T : struct
         {
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Setup(remoteCallInfo.Id, byte.MaxValue, _entityLogic.EntityManager.Tick, remoteCallInfo.DataSize * count);
+            rpc.Setup(remoteCallInfo.Id, byte.MaxValue, remoteCallInfo.Flags, _entityLogic.EntityManager.Tick, remoteCallInfo.DataSize * count);
             Buffer.BlockCopy(value, 0, rpc.Data, 0, count);
             AddRpcPacket(rpc);
         }
@@ -82,7 +84,12 @@ namespace LiteEntitySystem
         {
             var remoteCallInfo = _classData.SyncableRemoteCalls[method];
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Setup(remoteCallInfo.Id, field.FieldId, _entityLogic.EntityManager.Tick, remoteCallInfo.DataSize);
+            rpc.Setup(
+                remoteCallInfo.Id, 
+                field.FieldId, 
+                ExecuteFlags.ExecuteOnServer | ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner, 
+                _entityLogic.EntityManager.Tick, 
+                remoteCallInfo.DataSize);
             fixed (byte* rawData = rpc.Data)
                 Unsafe.Copy(rawData, ref value);
             AddRpcPacket(rpc);
@@ -92,7 +99,12 @@ namespace LiteEntitySystem
         {
             var remoteCallInfo = _classData.SyncableRemoteCalls[method];
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Setup(remoteCallInfo.Id, field.FieldId, _entityLogic.EntityManager.Tick, remoteCallInfo.DataSize * count);
+            rpc.Setup(
+                remoteCallInfo.Id, 
+                field.FieldId, 
+                ExecuteFlags.ExecuteOnServer | ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner, 
+                _entityLogic.EntityManager.Tick,
+                remoteCallInfo.DataSize * count);
             Buffer.BlockCopy(value, 0, rpc.Data, 0, count);
             AddRpcPacket(rpc);
         }
@@ -228,7 +240,7 @@ namespace LiteEntitySystem
             }
         }
 
-        public unsafe int MakeDiff(ushort minimalTick, ushort serverTick, ushort playerTick, NetDataWriter result)
+        public unsafe int MakeDiff(bool isOwner, ushort minimalTick, ushort serverTick, ushort playerTick, NetDataWriter result)
         {
             if (_classData.IsServerOnly)
                 return -1;

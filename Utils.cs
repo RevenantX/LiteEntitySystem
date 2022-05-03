@@ -29,20 +29,6 @@ namespace LiteEntitySystem
                 Array.Resize(ref arr, count*2);
         }
 
-        public static void DebugProfileBegin(string name)
-        {
-#if UNITY_2020_1_OR_NEWER
-            //UnityEngine.Profiling.Profiler.BeginSample(name);
-#endif
-        }
-
-        public static void DebugProfileEnd()
-        {
-#if UNITY_2020_1_OR_NEWER
-            //UnityEngine.Profiling.Profiler.EndSample();
-#endif       
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBitSet(byte[] byteArray, int offset, int bitNumber)
         {

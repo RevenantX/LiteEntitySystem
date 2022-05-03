@@ -247,6 +247,7 @@ namespace LiteEntitySystem
                 for (int i = 0; i <= MaxEntityId; i++)
                 {
                     int resultDataSize = EntitySerializers[i].MakeDiff(
+                        false,
                         minimalTick, 
                         Tick, 
                         netPlayer.ServerTick, 
