@@ -33,7 +33,7 @@ namespace LiteEntitySystem
         public static class MethodCallGenerator
         {
             //public for AOT
-            public static unsafe MethodCallDelegate Generate<TEnt, TValue>(MethodInfo method) where TEnt : InternalEntity
+            public static unsafe MethodCallDelegate Generate<TEnt, TValue>(MethodInfo method)
             {
                 var typedDelegate = (Action<TEnt, TValue>)method.CreateDelegate(typeof(Action<TEnt, TValue>));
                 return (ent, previousValue) =>
@@ -219,13 +219,13 @@ namespace LiteEntitySystem
                                     if (rcAttribute.Id == byte.MaxValue)
                                     {
                                         rcAttribute.Id = syncableRpcIndex++;
-                                        rcAttribute.DataSize = Marshal.SizeOf(parameterType);
+                                        rcAttribute.DataSize = Marshal.SizeOf(parameterType.HasElementType ? parameterType.GetElementType() : parameterType);
                                     }
                                     if (syncableRpcIndex == byte.MaxValue)
                                         throw new Exception("254 is max RemoteCall methods");
                                     SyncableRemoteCalls[method] = rcAttribute;
                                     SyncableRemoteCallsClient[rcAttribute.Id] =
-                                        MethodCallGenerator.GetOnSyncDelegate(entType, parameterType, method.Name);
+                                        MethodCallGenerator.GetOnSyncDelegate(syncableType, parameterType, method.Name);
                                 }
                             }
                         }

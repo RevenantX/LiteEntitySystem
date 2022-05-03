@@ -65,6 +65,7 @@ namespace LiteEntitySystem
             return s.Value;
         }
 
+        [SyncableRemoteCall]
         private void SetNewString(byte[] data)
         {
             _string = Encoding.GetString(data, 0, data.Length);

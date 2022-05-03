@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,23 +15,57 @@ namespace LiteEntitySystem
     internal class EntitySystemBuildProcessor : IPreprocessBuildWithReport
     {
         private static readonly Type EntityLogicType = typeof(EntityManager.InternalEntity);
-        private const BindingFlags MethodBindFlags = BindingFlags.Instance | BindingFlags.Public |
+        private const BindingFlags BindFlags = BindingFlags.Instance | BindingFlags.Public |
                                                      BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
         private static readonly StringBuilder GenCode = new StringBuilder();
-        
+        private static readonly HashSet<(Type, Type)> AddedTypes = new HashSet<(Type, Type)>();
+        private static readonly Dictionary<Type, string> KeywordTypeMap = new Dictionary<Type, string>()
+        {
+            { typeof(string), "string" },
+            { typeof(sbyte), "sbyte" },
+            { typeof(byte), "byte" },
+            { typeof(short), "short"  },
+            { typeof(ushort), "ushort"  },
+            { typeof(int), "int"  },
+            { typeof(uint), "uint" },
+            { typeof(long), "long" },
+            { typeof(ulong), "ulong"  },
+            { typeof(char), "char"  },
+            { typeof(float), "float"  },
+            { typeof(double), "double"  },
+            { typeof(bool), "bool" },
+            { typeof(decimal), "decimal" }
+        };
+
         public int callbackOrder => 0;
+
+        private static string GetTypeName(Type type)
+        {
+            if( type.Namespace == nameof(LiteEntitySystem) )
+                return type.Name;
+            bool isArray = type.IsArray && type.HasElementType;
+            if (isArray)
+                type = type.GetElementType();
+            return KeywordTypeMap.TryGetValue(type, out var name) 
+                ? name + (isArray ? "[]" : string.Empty)
+                : type.FullName;
+        }
 
         private static void AppendGenerator(Type entityType, Type valueType)
         {
+            if (!AddedTypes.Add((entityType, valueType)))
+                return;
             GenCode.Append(' ', 12);
-            GenCode.AppendLine($"EntityManager.MethodCallGenerator.Generate<{entityType.FullName},{valueType.FullName}>(null);");
+            GenCode.AppendLine($"G.Generate<{GetTypeName(entityType)},{GetTypeName(valueType)}>(null);");
         }
 
         public void OnPreprocessBuild(BuildReport report)
         {
+            AddedTypes.Clear();
             GenCode.Append(@$"//auto generated on {DateTime.UtcNow} UTC
 namespace LiteEntitySystem
 {{
+    using G = EntityManager.MethodCallGenerator;
     public static class LES_IL2CPP_AOT
     {{
         public static void Methods()
@@ -42,17 +77,17 @@ namespace LiteEntitySystem
                              t != EntityLogicType &&
                              EntityLogicType.IsAssignableFrom(t)))
                 {
-                    foreach (var fieldInfo in entity.GetFields(MethodBindFlags))
+                    foreach (var fieldInfo in entity.GetFields(BindFlags))
                     {
                         if (fieldInfo.GetCustomAttribute<SyncVar>() == null) 
                             continue;
                         
                         if (fieldInfo.FieldType.IsSubclassOf(typeof(SyncableField)))
                         {
-                            foreach (var methodInfo in fieldInfo.FieldType.GetMethods(MethodBindFlags))
+                            foreach (var methodInfo in fieldInfo.FieldType.GetMethods(BindFlags))
                             {
                                 if (methodInfo.GetCustomAttribute<SyncableRemoteCall>() != null)
-                                    AppendGenerator(entity, methodInfo.GetParameters()[0].ParameterType);
+                                    AppendGenerator(fieldInfo.FieldType, methodInfo.GetParameters()[0].ParameterType);
                             }
                         }
                         else
@@ -60,7 +95,7 @@ namespace LiteEntitySystem
                             AppendGenerator(entity, fieldInfo.FieldType);
                         }
                     }
-                    foreach (var methodInfo in entity.GetMethods(MethodBindFlags))
+                    foreach (var methodInfo in entity.GetMethods(BindFlags))
                     {
                         if (methodInfo.GetCustomAttribute<RemoteCall>() != null)
                             AppendGenerator(entity, methodInfo.GetParameters()[0].ParameterType);
