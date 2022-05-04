@@ -23,13 +23,13 @@ namespace LiteEntitySystem
         public int LerpBufferCount => _lerpBuffer.Count;
 
         private const int InterpolateBufferSize = 10;
+        private const int InputBufferSize = 32;
         
         private readonly NetPeer _localPeer;
-        private readonly NetDataWriter _netDataWriter = new NetDataWriter();
         private readonly SortedList<ushort, ServerStateData> _receivedStates = new SortedList<ushort, ServerStateData>();
         private readonly Queue<ServerStateData> _statesPool = new Queue<ServerStateData>(MaxSavedStateDiff);
         private readonly NetDataReader _inputReader = new NetDataReader();
-        private readonly LiteRingBuffer<NetDataWriter> _inputCommands = new LiteRingBuffer<NetDataWriter>(32);
+        private readonly LiteRingBuffer<NetDataWriter> _inputCommands = new LiteRingBuffer<NetDataWriter>(InputBufferSize);
         private readonly IInputGenerator _inputGenerator;
         private readonly SortedSet<ServerStateData> _lerpBuffer = new SortedSet<ServerStateData>(new ServerStateComparer());
         private readonly byte[][] _interpolatedInitialData = new byte[MaxEntityCount][];
@@ -53,7 +53,6 @@ namespace LiteEntitySystem
         public ClientEntityManager(NetPeer localPeer, byte headerByte, int framesPerSecond, IInputGenerator inputGenerator) : base(NetworkMode.Client, framesPerSecond)
         {
             _localPeer = localPeer;
-            _netDataWriter.Put(headerByte);
             _inputCommands.Fill(() =>
             {
                 var writer = new NetDataWriter();
@@ -125,26 +124,17 @@ namespace LiteEntitySystem
                 //save data for interpolation before update
                 var entityLocal = entity;
                 var classData = ClassDataDict[entity.ClassId];
-                int offset = 0;
-  
                 byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref entityLocal);
                 fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
                        prevDataPtr = _interpolatePrevData[entity.Id])
                 {
-                    //restore previous value
-                    for(int i = 0; i < classData.InterpolatedMethods.Length; i++)
-                    {
-                        var field = classData.Fields[i];
-                        Unsafe.CopyBlock(entityPtr + field.Offset, currentDataPtr + offset, field.Size);
-                        offset += field.IntSize;
-                    }
                     Unsafe.CopyBlock(prevDataPtr, currentDataPtr, (uint)classData.InterpolatedFieldsSize);
                                         
                     //update
                     entity.Update();
                 
                     //save current
-                    offset = 0;
+                    int offset = 0;
                     for(int i = 0; i < classData.InterpolatedMethods.Length; i++)
                     {
                         var field = classData.Fields[i];
@@ -172,32 +162,7 @@ namespace LiteEntitySystem
                     _localPeer.Send(inputCommand, DeliveryMethod.Unreliable);
                 }
             }
-            
-            //local interpolation
-            float localLerpT = LerpFactor;
-            foreach (var entity in OwnedEntities)
-            {
-                var entityLocal = entity;
-                var classData = ClassDataDict[entity.ClassId];
-                int offset = 0;
-                
-                byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref entityLocal);
-                fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
-                       prevDataPtr = _interpolatePrevData[entity.Id])
-                {
-                    for(int i = 0; i < classData.InterpolatedMethods.Length; i++)
-                    {
-                        var field = classData.Fields[i];
-                        classData.InterpolatedMethods[i](
-                            prevDataPtr + offset,
-                            currentDataPtr + offset,
-                            entityPtr + field.Offset,
-                            localLerpT);
-                        offset += field.IntSize;
-                    }
-                }
-            }
-            
+
             if (_stateB == null)
             {
                 if (_lerpBuffer.Count > 1)
@@ -256,6 +221,30 @@ namespace LiteEntitySystem
                     //goto state b
                     ReadEntityStates();
                     _timer -= _lerpTime;
+                }
+            }
+            //local interpolation
+            float localLerpT = LerpFactor;
+            foreach (var entity in OwnedEntities)
+            {
+                var entityLocal = entity;
+                var classData = ClassDataDict[entity.ClassId];
+                int offset = 0;
+                
+                byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref entityLocal);
+                fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
+                       prevDataPtr = _interpolatePrevData[entity.Id])
+                {
+                    for(int i = 0; i < classData.InterpolatedMethods.Length; i++)
+                    {
+                        var field = classData.Fields[i];
+                        classData.InterpolatedMethods[i](
+                            prevDataPtr + offset,
+                            currentDataPtr + offset,
+                            entityPtr + field.Offset,
+                            localLerpT);
+                        offset += field.IntSize;
+                    }
                 }
             }
         }
@@ -359,6 +348,7 @@ namespace LiteEntitySystem
                 }
                 
                 //reapply input
+                UpdateMode = UpdateMode.PredictionRollback;
                 foreach (var inputCommand in _inputCommands)
                 {
                     //reapply input data
@@ -366,10 +356,14 @@ namespace LiteEntitySystem
                     foreach(var entity in GetControllers<HumanControllerLogic>())
                     {
                         entity.ReadInput(_inputReader);
-                        entity.ControlledEntity?.Update();
                     }
                     _inputReader.Clear();
+                    foreach (var entity in OwnedEntities)
+                    {
+                        entity.Update();
+                    }
                 }
+                UpdateMode = UpdateMode.Normal;
             }
         }
 

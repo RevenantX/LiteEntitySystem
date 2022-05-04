@@ -90,6 +90,8 @@ namespace LiteEntitySystem
             public abstract bool IsLocalControlled { get; }
             public bool IsServerControlled => !IsLocalControlled;
 
+            internal abstract bool IsControlledBy(byte playerId);
+
             public virtual void Update()
             {
             }
@@ -166,6 +168,11 @@ namespace LiteEntitySystem
         public readonly List<EntityLogic> Childs = new List<EntityLogic>();
         public ushort OwnerId => InternalOwnerId;
         public override bool IsLocalControlled => InternalOwnerId == EntityManager.PlayerId;
+
+        internal override bool IsControlledBy(byte playerId)
+        {
+            return playerId == InternalOwnerId;
+        }
 
         internal void DestroyInternal()
         {
@@ -248,6 +255,11 @@ namespace LiteEntitySystem
     public abstract class SingletonEntityLogic : InternalEntity
     {
         public override bool IsLocalControlled => false;
+        
+        internal override bool IsControlledBy(byte playerId)
+        {
+            return false;
+        }
 
         protected SingletonEntityLogic(EntityParams entityParams) : base(entityParams) { }
     }
@@ -272,22 +284,32 @@ namespace LiteEntitySystem
         {
             _controller?.BeforeControlledUpdate();
         }
-        
+
+        protected override void OnDestroy()
+        {
+            _controller?.OnControlledDestroy();
+        }
+
         protected PawnLogic(EntityParams entityParams) : base(entityParams) { }
     }
     
     public abstract class ControllerLogic : InternalEntity
     {
         [SyncVar] 
-        internal ushort InternalOwnerId;
+        internal byte InternalOwnerId;
         
         [SyncVar] 
         private PawnLogic _controlledEntity;
 
-        public ushort OwnerId => InternalOwnerId;
+        public byte OwnerId => InternalOwnerId;
         public PawnLogic ControlledEntity => _controlledEntity;
         public override bool IsLocalControlled => InternalOwnerId == EntityManager.PlayerId;
 
+        internal override bool IsControlledBy(byte playerId)
+        {
+            return InternalOwnerId == playerId;
+        }
+        
         public virtual void BeforeControlledUpdate()
         {
             
@@ -298,12 +320,11 @@ namespace LiteEntitySystem
             StopControl();
             _controlledEntity = target;
             _controlledEntity.Controller = this;
-            EntityManager.GetEntities<T>().OnRemoved +=
-                e =>
-                {
-                    if (e == _controlledEntity)
-                        StopControl();
-                };
+        }
+
+        internal void OnControlledDestroy()
+        {
+            StopControl();
         }
 
         public void StopControl()

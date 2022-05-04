@@ -35,9 +35,7 @@ namespace LiteEntitySystem
         public bool IsFirstStateReceived;
         public bool IsNew;
         public readonly SortedSet<InputBuffer> AvailableInput = new SortedSet<InputBuffer>(new InputComprarer());
-
-        public float TimeBuffer;
-
+        
         public NetPlayer(NetPeer peer)
         {
             Peer = peer;
@@ -97,8 +95,11 @@ namespace LiteEntitySystem
 
         public T AddController<T>(NetPlayer owner, Action<T> initMethod = null) where T : HumanControllerLogic
         {
-            var result = Add(initMethod);
-            result.InternalOwnerId = owner.Id;
+            var result = Add<T>(ent =>
+            {
+                ent.InternalOwnerId = owner.Id;
+                initMethod?.Invoke(ent);
+            });
             return result;
         }
         
@@ -150,34 +151,15 @@ namespace LiteEntitySystem
                 if (!player.IsFirstStateReceived) 
                     continue;
                 
-                if (player.TimeBuffer > 0f)
+                foreach (var controller in GetControllers<HumanControllerLogic>())
                 {
-                    player.TimeBuffer -= DeltaTime;
-                }
-                else
-                {
-                    foreach (var controller in GetControllers<HumanControllerLogic>())
+                    if (player.Id == controller.OwnerId && player.AvailableInput.Count > 0)
                     {
-                        if (player.Id == controller.OwnerId)
-                        {
-                            if (player.AvailableInput.Count > 0)
-                            {
-                                if (player.AvailableInput.Count > 2)
-                                {
-                                    player.AvailableInput.Remove(player.AvailableInput.Min);
-                                }
-                                var inputFrame = player.AvailableInput.Min;
-                                player.AvailableInput.Remove(inputFrame);
-                                controller.ReadInput(inputFrame.Reader);
-                                player.LastProcessedTick = inputFrame.Tick;
-                                inputFrame.Reader.Recycle();
-                            }
-                            else
-                            {
-                                //TODO: round trip time maybe?
-                                player.TimeBuffer = 0.01f;
-                            }
-                        }
+                        var inputFrame = player.AvailableInput.Min;
+                        player.AvailableInput.Remove(inputFrame);
+                        controller.ReadInput(inputFrame.Reader);
+                        player.LastProcessedTick = inputFrame.Tick;
+                        inputFrame.Reader.Recycle();
                     }
                 }
             }
@@ -262,7 +244,7 @@ namespace LiteEntitySystem
                 for (int i = 0; i <= MaxEntityId; i++)
                 {
                     int resultDataSize = EntitySerializers[i].MakeDiff(
-                        false,
+                        netPlayer.Id,
                         minimalTick, 
                         Tick, 
                         netPlayer.ServerTick, 

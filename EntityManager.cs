@@ -21,6 +21,12 @@ namespace LiteEntitySystem
         Client,
         Server
     }
+
+    public enum UpdateMode
+    {
+        Normal,
+        PredictionRollback
+    }
     
     public abstract partial class EntityManager
     {
@@ -45,16 +51,15 @@ namespace LiteEntitySystem
         public ushort Tick { get; private set; }
         public ushort ServerTick { get; protected set; }
         public float LerpFactor => (float)(_accumulator / DeltaTime);
+        public UpdateMode UpdateMode { get; protected set; }
         
         public readonly NetworkMode Mode;
         public readonly bool IsServer;
         public readonly bool IsClient;
         public readonly int FramesPerSecond;
         public readonly float DeltaTime;
-        public readonly NetSerializer Serializer = new NetSerializer();
         public virtual byte PlayerId => 0;
-
-        protected bool IsStarted => _isStarted;
+        
         protected double CurrentDelta { get; private set; }
         protected int MaxEntityId = -1; //current maximum id
         protected readonly InternalEntity[] EntitiesArray = new InternalEntity[MaxEntityCount];

@@ -239,7 +239,7 @@ namespace LiteEntitySystem
             }
         }
 
-        public unsafe int MakeDiff(bool isOwner, ushort minimalTick, ushort serverTick, ushort playerTick, NetDataWriter result)
+        public unsafe int MakeDiff(byte playerId, ushort minimalTick, ushort serverTick, ushort playerTick, NetDataWriter result)
         {
             if (_classData.IsServerOnly)
                 return -1;
@@ -307,7 +307,12 @@ namespace LiteEntitySystem
                     var rpcNode = _rpcHead;
                     while (rpcNode != null)
                     {
-                        if (EntityManager.SequenceDiff(playerTick, rpcNode.Tick) < 0)
+                        bool send = ((rpcNode.Flags & ExecuteFlags.SendToOwner) != 0 &&
+                                     _entityLogic.IsControlledBy(playerId)) ||
+                                     ((rpcNode.Flags & ExecuteFlags.SendToOther) != 0 &&
+                                     !_entityLogic.IsControlledBy(playerId));
+
+                        if (send && EntityManager.SequenceDiff(playerTick, rpcNode.Tick) < 0)
                         {
                             hasChanges = true;
                             //put new
