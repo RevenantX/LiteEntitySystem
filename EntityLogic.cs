@@ -4,6 +4,8 @@ using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
 {
+    using InternalEntity = EntityManager.InternalEntity;
+    
     [AttributeUsage(AttributeTargets.Field)]
     public class SyncVar : Attribute
     {
@@ -85,10 +87,8 @@ namespace LiteEntitySystem
             public readonly ushort Id;
             public readonly EntityManager EntityManager;
             public readonly byte Version;
-            public bool IsLocalControlled => InternalIsLocalControlled;
-            public bool IsServerControlled => !InternalIsLocalControlled;
-            
-            internal bool InternalIsLocalControlled;
+            public abstract bool IsLocalControlled { get; }
+            public bool IsServerControlled => !IsLocalControlled;
 
             public virtual void Update()
             {
@@ -119,7 +119,7 @@ namespace LiteEntitySystem
                         methodToCall(value);
                     ((ServerEntityManager)EntityManager).EntitySerializers[Id].AddRemoteCall(value, remoteCallInfo);
                 }
-                else if(InternalIsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
+                else if(IsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
                 {
                     methodToCall(value);
                 }
@@ -138,7 +138,7 @@ namespace LiteEntitySystem
                         methodToCall(value);
                     ((ServerEntityManager)EntityManager).EntitySerializers[Id].AddRemoteCall(value, count, remoteCallInfo);
                 }
-                else if(InternalIsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
+                else if(IsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
                 {
                     methodToCall(value);
                 }
@@ -151,160 +151,142 @@ namespace LiteEntitySystem
         }
     }
 
-    public abstract class EntityLogic : EntityManager.InternalEntity
+    public abstract class EntityLogic : InternalEntity
     {
-        [SyncVar(nameof(SetParentSync))] 
+        [SyncVar(nameof(OnParentChange))] 
         private ushort _parentId;
         
-        [SyncVar(nameof(DestroyedSync))] 
-        private byte _isDestroyed;
+        [SyncVar(nameof(OnDestroyChange))] 
+        private bool _isDestroyed;
+        
+        [SyncVar(nameof(OnOwnerChange))]
+        internal ushort InternalOwnerId;
 
-        public bool IsDestroyed => _isDestroyed == 1;
+        public bool IsDestroyed => _isDestroyed;
         public readonly List<EntityLogic> Childs = new List<EntityLogic>();
-
-        private bool _ownedEntity;
+        public ushort OwnerId => InternalOwnerId;
+        public override bool IsLocalControlled => InternalOwnerId == EntityManager.PlayerId;
 
         internal void DestroyInternal()
         {
-            _isDestroyed = 1;
-            if(_ownedEntity)
+            _isDestroyed = true;
+            if(IsLocalControlled)
                 ((ClientEntityManager)EntityManager).OwnedEntities.Remove(this);
             EntityManager.RemoveEntity(this);
             OnDestroy();
-            foreach (EntityLogic entityLogic in Childs)
-            {
-                entityLogic.DestroyInternal();
-            }
+            EntityManager.GetEntityById(_parentId)?.Childs.Remove(this);
+            foreach (var e in Childs)
+                e.DestroyInternal();
         }
 
-        private void DestroyedSync(byte prevValue)
+        private void OnOwnerChange(ushort prevOwner)
         {
-            if(_isDestroyed == 1)
+            Logger.Log($"Id: {Id} OwnerChange. P: {prevOwner}, C: {InternalOwnerId}");
+            var ownedEntities = ((ClientEntityManager)EntityManager).OwnedEntities;
+            if(InternalOwnerId == EntityManager.PlayerId)
+                ownedEntities.Add(this);
+            else if(prevOwner == EntityManager.PlayerId)
+                ownedEntities.Remove(this);
+        }
+
+        private void OnDestroyChange(bool prevValue)
+        {
+            if(_isDestroyed)
                 DestroyInternal();
-        }
-
-        protected virtual void OnDestroy()
-        {
-
         }
 
         public void SetParent(EntityLogic parentEntity)
         {
-            ushort id = parentEntity == null ? EntityManager.InvalidEntityId : parentEntity.Id;
-            if (EntityManager.IsClient || id == _parentId)
+            if (EntityManager.IsClient)
                 return;
+            
+            ushort id = parentEntity?.Id ?? EntityManager.InvalidEntityId;
+            if (id == _parentId)
+                return;
+            
             ushort oldId = _parentId;
             _parentId = id;
-            SetParentSync(oldId);
+            OnParentChange(oldId);
+            
+            var newParent = EntityManager.GetEntityById(_parentId);
+            InternalOwnerId = newParent?.InternalOwnerId ?? 0;
+            if (InternalOwnerId != oldId)
+            {
+                SetOwner(this, InternalOwnerId);
+            }
         }
 
-        private void SetParentSync(ushort oldId)
+        private void OnParentChange(ushort oldId)
         {
             EntityManager.GetEntityById(oldId)?.Childs.Remove(this);
             var newParent = EntityManager.GetEntityById(_parentId);
-            if (newParent != null)
+            newParent?.Childs.Add(this);
+        }
+
+        private static void SetOwner(EntityLogic entity, ushort ownerId)
+        {
+            foreach (var child in entity.Childs)
             {
-                newParent.Childs.Add(this);
-                if (newParent.InternalIsLocalControlled != InternalIsLocalControlled)
-                {
-                    SetLocalControl(this, newParent.InternalIsLocalControlled);
-                }
+                child.InternalOwnerId = ownerId;
+                SetOwner(child, ownerId);
             }
         }
 
-        internal void SetLocalControl(EntityLogic entity, bool localControl)
-        {
-            if (EntityManager.IsServer || entity.InternalIsLocalControlled == localControl)
-                return;
-            
-            if (localControl)
-            {
-                _ownedEntity = true;
-                ((ClientEntityManager)EntityManager).OwnedEntities.Add(this);
-            }
-            else if(_ownedEntity)
-            {
-                _ownedEntity = false;
-                ((ClientEntityManager)EntityManager).OwnedEntities.Remove(this);
-            }
-            entity.InternalIsLocalControlled = localControl;
-            foreach (EntityLogic child in Childs)
-            {
-                SetLocalControl(child, localControl);
-            }
-        }
-        
         public T GetParent<T>() where T : EntityLogic
         {
             return _parentId == EntityManager.InvalidEntityId ? null : (T)EntityManager.GetEntityById(_parentId);
         }
         
-        protected EntityLogic(EntityParams entityParams) : base(entityParams)
+        protected virtual void OnDestroy()
         {
 
         }
+        
+        protected EntityLogic(EntityParams entityParams) : base(entityParams) { }
     }
 
-    public abstract class SingletonEntityLogic : EntityManager.InternalEntity
+    public abstract class SingletonEntityLogic : InternalEntity
     {
-        protected SingletonEntityLogic(EntityParams entityParams) : base(entityParams)
-        {
-        }
+        public override bool IsLocalControlled => false;
+
+        protected SingletonEntityLogic(EntityParams entityParams) : base(entityParams) { }
     }
 
     [UpdateableEntity]
     public abstract class PawnLogic : EntityLogic
     {
-        [SyncVar(nameof(OnControllerSync))] 
+        [SyncVar] 
         private ControllerLogic _controller;
 
         public ControllerLogic Controller
         {
             get => _controller;
-            internal set => _controller = value;
-        }
-
-        protected PawnLogic(EntityParams entityParams) : base(entityParams)
-        {
-           
-        }
-
-        private void OnControllerSync(ControllerLogic prev)
-        {
-            SetLocalControl(this, _controller != null && _controller.OwnerId == EntityManager.PlayerId);
+            internal set
+            {
+                InternalOwnerId = value?.InternalOwnerId ?? (GetParent<EntityLogic>()?.InternalOwnerId ?? 0);
+                _controller = value;
+            }
         }
 
         public override void Update()
         {
             _controller?.BeforeControlledUpdate();
         }
+        
+        protected PawnLogic(EntityParams entityParams) : base(entityParams) { }
     }
     
-    public abstract class ControllerLogic : EntityManager.InternalEntity
+    public abstract class ControllerLogic : InternalEntity
     {
-        [SyncVar(nameof(OnOwnerSync))] 
-        private ushort _ownerId;
+        [SyncVar] 
+        internal ushort InternalOwnerId;
         
         [SyncVar] 
         private PawnLogic _controlledEntity;
 
-        public ushort OwnerId
-        {
-            get => _ownerId;
-            internal set => _ownerId = value;
-        }
-        
+        public ushort OwnerId => InternalOwnerId;
         public PawnLogic ControlledEntity => _controlledEntity;
-
-        protected ControllerLogic(EntityParams entityParams) : base(entityParams)
-        {
-           
-        }
-
-        private void OnOwnerSync(ushort prevOwner)
-        {
-            InternalIsLocalControlled = _ownerId == EntityManager.PlayerId;
-        }
+        public override bool IsLocalControlled => InternalOwnerId == EntityManager.PlayerId;
 
         public virtual void BeforeControlledUpdate()
         {
@@ -313,8 +295,9 @@ namespace LiteEntitySystem
 
         public void StartControl<T>(T target) where T : PawnLogic
         {
+            StopControl();
             _controlledEntity = target;
-            target.Controller = this;
+            _controlledEntity.Controller = this;
             EntityManager.GetEntities<T>().OnRemoved +=
                 e =>
                 {
@@ -325,21 +308,26 @@ namespace LiteEntitySystem
 
         public void StopControl()
         {
+            if (_controlledEntity == null)
+                return;
             _controlledEntity.Controller = null;
             _controlledEntity = null;
         }
-    }
-
-    public abstract class ControllerLogic<T> : ControllerLogic where T : PawnLogic
-    {
-        public new T ControlledEntity => (T) base.ControlledEntity;
-
+        
         protected ControllerLogic(EntityParams entityParams) : base(entityParams) { }
     }
 
     [ServerOnly]
-    public abstract class AiControllerLogic<T> : ControllerLogic<T> where T : PawnLogic
+    public abstract class AiControllerLogic : ControllerLogic
     {
+        protected AiControllerLogic(EntityParams entityParams) : base(entityParams) { }
+    }
+
+    [ServerOnly]
+    public abstract class AiControllerLogic<T> : AiControllerLogic where T : PawnLogic
+    {
+        public new T ControlledEntity => (T) base.ControlledEntity;
+        
         protected AiControllerLogic(EntityParams entityParams) : base(entityParams) { }
     }
 

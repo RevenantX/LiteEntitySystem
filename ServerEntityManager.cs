@@ -95,14 +95,29 @@ namespace LiteEntitySystem
             return false;
         }
 
-        public T AddController<T>(NetPlayer owner, Action<T> initMethod = null) where T : ControllerLogic
+        public T AddController<T>(NetPlayer owner, Action<T> initMethod = null) where T : HumanControllerLogic
         {
-            var result = Add<T>(initMethod);
-            result.OwnerId = owner.Id;
+            var result = Add(initMethod);
+            result.InternalOwnerId = owner.Id;
             return result;
         }
+        
+        public T AddAIController<T>(Action<T> initMethod = null) where T : AiControllerLogic
+        {
+            return Add(initMethod);
+        }
 
-        public T Add<T>(Action<T> initMethod = null) where T : InternalEntity
+        public T AddSignleton<T>(Action<T> initMethod = null) where T : SingletonEntityLogic
+        {
+            return Add(initMethod);
+        }
+
+        public T AddEntity<T>(Action<T> initMethod = null) where T : EntityLogic
+        {
+            return Add(initMethod);
+        }
+        
+        private T Add<T>(Action<T> initMethod) where T : InternalEntity
         {
             //create entity data and filters
             CheckStart();
