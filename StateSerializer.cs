@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using LiteNetLib.Utils;
-using EntityClassData = LiteEntitySystem.EntityManager.EntityClassData;
 using InternalEntity = LiteEntitySystem.EntityManager.InternalEntity;
 
 namespace LiteEntitySystem
@@ -27,17 +26,17 @@ namespace LiteEntitySystem
         private class RemoteCallPacket
         {
             public byte Id = byte.MaxValue;
-            public byte SyncableId = byte.MaxValue;
+            public byte FieldId = byte.MaxValue;
             public ushort Tick;
             public byte[] Data;
             public ushort Size;
             public ExecuteFlags Flags;
             public RemoteCallPacket Next;
 
-            public void Setup(byte id, byte syncableId, ExecuteFlags flags, ushort tick, int size)
+            public void Setup(byte id, byte FieldId, ExecuteFlags flags, ushort tick, int size)
             {
                 Id = id;
-                SyncableId = syncableId;
+                this.FieldId = FieldId;
                 Tick = tick;
                 Size = (ushort)size;
                 Data = new byte[size];
@@ -313,7 +312,7 @@ namespace LiteEntitySystem
                             hasChanges = true;
                             //put new
                             resultData[resultOffset] = rpcNode.Id;
-                            resultData[resultOffset + 1] = rpcNode.SyncableId;
+                            resultData[resultOffset + 1] = rpcNode.FieldId;
                             *(ushort*)(resultData + resultOffset + 2) = rpcNode.Tick;
                             *(ushort*)(resultData + resultOffset + 4) = rpcNode.Size;
                             fixed (byte* rpcData = rpcNode.Data)

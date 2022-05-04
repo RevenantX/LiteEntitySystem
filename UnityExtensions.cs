@@ -65,7 +65,7 @@ namespace LiteEntitySystem
             GenCode.Append(@$"//auto generated on {DateTime.UtcNow} UTC
 namespace LiteEntitySystem
 {{
-    using G = EntityManager.MethodCallGenerator;
+    using G = MethodCallGenerator;
     public static class LES_IL2CPP_AOT
     {{
         public static void Methods()

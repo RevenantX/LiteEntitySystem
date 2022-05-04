@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using LiteNetLib.Utils;
@@ -26,48 +27,99 @@ namespace LiteEntitySystem
         public const int MaxEntityCount = 8192;
         public const int MaxEntityIndex = MaxEntityCount-1;
         public const ushort InvalidEntityId = MaxEntityCount;
+        public const int MaxSavedStateDiff = 6;
 
         protected const byte PacketEntitySync = 1;
         protected const byte PacketEntityCall = 2;
         protected const byte PacketClientSync = 3;
         protected const byte PacketEntityFullSync = 4;
         protected const byte PacketEntitySyncLast = 5;
-        
-        public const int MaxSavedStateDiff = 6;
-
         protected const int MaxFieldSize = 1024;
+        protected const byte MaxParts = 255;
+        
         private const int MaxSequence = 65536;
         private const int MaxSeq2 = MaxSequence / 2;
         private const int MaxSeq15 = MaxSequence + MaxSeq2;
-
-        protected const byte MaxParts = 255;
-
-        protected double _accumulator;
-        private readonly double _stopwatchFrequency;
-        private long _lastTime;
-        private readonly Stopwatch _stopwatch = new Stopwatch();
-        protected double CurrentDelta { get; private set; }
         
-        protected readonly InternalEntity[] EntitiesArray = new InternalEntity[MaxEntityCount];
-        protected readonly EntityFilter<InternalEntity> AliveEntities = new EntityFilter<InternalEntity>();
         public int EntitiesCount { get; private set; }
-        protected int MaxEntityId = -1; //current maximum id
-
         public ushort Tick { get; private set; }
         public ushort ServerTick { get; protected set; }
+        public float LerpFactor => (float)(_accumulator / DeltaTime);
         
         public readonly NetworkMode Mode;
         public readonly bool IsServer;
         public readonly bool IsClient;
-
         public readonly int FramesPerSecond;
         public readonly float DeltaTime;
         public readonly NetSerializer Serializer = new NetSerializer();
         public virtual byte PlayerId => 0;
 
-        private bool _isStarted;
-
         protected bool IsStarted => _isStarted;
+        protected double CurrentDelta { get; private set; }
+        protected int MaxEntityId = -1; //current maximum id
+        protected readonly InternalEntity[] EntitiesArray = new InternalEntity[MaxEntityCount];
+        protected readonly EntityFilter<InternalEntity> AliveEntities = new EntityFilter<InternalEntity>();
+
+        private double _accumulator;
+        private readonly double _stopwatchFrequency;
+        private long _lastTime;
+        private readonly Stopwatch _stopwatch = new Stopwatch();
+        private bool _isStarted;
+        private SingletonEntityLogic[] _singletonEntities;
+        private EntityFilter[] _entityFilters;
+        private ushort _filterRegisteredCount;
+        private ushort _singletonRegisteredCount;
+        private readonly Dictionary<Type, int> _registeredTypeIds = new Dictionary<Type, int>();
+        private int _entityEnumSize = -1;
+
+        internal readonly EntityClassData[] ClassDataDict = new EntityClassData[ushort.MaxValue];
+
+        public void RegisterEntity<TEntity, TEnum>(TEnum id, Func<EntityParams, TEntity> constructor)
+            where TEntity : InternalEntity where TEnum : Enum
+        {
+            if (_entityEnumSize == -1)
+                _entityEnumSize = Enum.GetValues(typeof(TEnum)).Length;
+            
+            var entType = typeof(TEntity);
+
+            ushort classId = (ushort)(object)id;
+            ref var classData = ref ClassDataDict[classId];
+            bool isSingleton = entType.IsSubclassOf(typeof(SingletonEntityLogic));
+            classData = new EntityClassData(isSingleton ? _singletonRegisteredCount++ : _filterRegisteredCount++, entType, classId, constructor);
+            EntityClassInfo<TEntity>.ClassId = classId;
+            _registeredTypeIds.Add(entType, classData.FilterId);
+            
+            Logger.Log($"Register entity. Id: {id.ToString()} ({entType}), baseTypes: {classData.BaseTypes.Length}, FilterId: {classData.FilterId}");
+        }
+
+        private void SetupEntityInfo()
+        {
+            for (int e = 0; e < _entityEnumSize; e++)
+            {
+                //map base ids
+                var classData = ClassDataDict[e];
+                if(classData == null)
+                    continue;
+
+                var baseTypes = classData.BaseTypes;
+                var baseIds = classData.BaseIds;
+                
+                for (int i = 0; i < baseIds.Length; i++)
+                {
+                    if (!_registeredTypeIds.TryGetValue(baseTypes[i], out baseIds[i]))
+                    {
+                        baseIds[i] = classData.IsSingleton
+                            ? _singletonRegisteredCount++
+                            : _filterRegisteredCount++;
+                        _registeredTypeIds.Add(baseTypes[i], baseIds[i]);
+                    }
+                    Logger.Log($"Base type of {classData.ClassId} - {baseTypes[i]}");
+                }
+            }
+
+            _entityFilters = new EntityFilter[_filterRegisteredCount];
+            _singletonEntities = new SingletonEntityLogic[_singletonRegisteredCount];
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static int SequenceDiff(int newer, int older)
@@ -83,10 +135,7 @@ namespace LiteEntitySystem
             FramesPerSecond = framesPerSecond;
             DeltaTime = 1.0f / framesPerSecond;
             _stopwatchFrequency = Stopwatch.Frequency;
-            RegisterInterpolator((float prev, float current, out float result, float t) =>
-            {
-                result = prev + (current - prev) * t;
-            });
+            Interpolation.Register<float>((a, b, t) => a + (b - a) * t);
         }
 
         public EntityLogic GetEntityById(ushort id)

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
@@ -56,7 +54,7 @@ namespace LiteEntitySystem
     {
         internal byte Id = byte.MaxValue;
         internal int DataSize;
-        internal EntityManager.MethodCallDelegate MethodDelegate;
+        internal MethodCallDelegate MethodDelegate;
     }
 
     public readonly struct EntityParams

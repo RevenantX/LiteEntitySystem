@@ -174,7 +174,7 @@ namespace LiteEntitySystem
             }
             
             //local interpolation
-            float localLerpT = (float)(_accumulator/DeltaTime);
+            float localLerpT = LerpFactor;
             foreach (var entity in OwnedEntities)
             {
                 var entityLocal = entity;
