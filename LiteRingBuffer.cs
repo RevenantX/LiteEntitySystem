@@ -6,6 +6,38 @@ namespace LiteEntitySystem
 {
     public class LiteRingBuffer<T> : IEnumerable<T>
     {
+        public struct LiteRingBufferEnumerator : IEnumerator<T>
+        {
+            private int _idx;
+            private readonly LiteRingBuffer<T> _buffer;
+
+            public LiteRingBufferEnumerator(LiteRingBuffer<T> buffer)
+            {
+                _buffer = buffer;
+                _idx = -1;
+            }
+
+            public bool MoveNext()
+            {
+                if (_idx == -1)
+                    _idx = _buffer._start;
+                else
+                    _idx = (_idx + 1) % _buffer.Capacity;
+                return _idx != _buffer._end;
+            }
+
+            public void Reset()
+            {
+                _idx = -1;
+            }
+
+            public T Current => _buffer._elements[_idx];
+
+            object IEnumerator.Current => Current;
+
+            public void Dispose() { }
+        }
+        
         private readonly T[] _elements;
         private int _start;
         private int _end;
@@ -67,20 +99,20 @@ namespace LiteEntitySystem
             _start = (_start + count) % Capacity;
             _count -= count;
         }
-
-        public IEnumerator<T> GetEnumerator()
+        
+        public LiteRingBufferEnumerator GetEnumerator()
         {
-            int counter = _start;
-            while (counter != _end)
-            {
-                yield return _elements[counter];
-                counter = (counter + 1) % Capacity;
-            }           
+            return new LiteRingBufferEnumerator(this);
+        }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            return new LiteRingBufferEnumerator(this);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return new LiteRingBufferEnumerator(this);
         }
     }
 }

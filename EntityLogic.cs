@@ -188,7 +188,6 @@ namespace LiteEntitySystem
 
         private void OnOwnerChange(ushort prevOwner)
         {
-            Logger.Log($"Id: {Id} OwnerChange. P: {prevOwner}, C: {InternalOwnerId}");
             var ownedEntities = ((ClientEntityManager)EntityManager).OwnedEntities;
             if(InternalOwnerId == EntityManager.PlayerId)
                 ownedEntities.Add(this);

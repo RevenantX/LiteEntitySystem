@@ -35,9 +35,8 @@ namespace LiteEntitySystem
         private readonly byte[][] _interpolatedInitialData = new byte[MaxEntityCount][];
         private readonly byte[][] _interpolatePrevData = new byte[MaxEntityCount][];
         private readonly StateSerializer[] _predictedEntities = new StateSerializer[MaxEntityCount];
-        private readonly NetDataWriter _predictWriter = new NetDataWriter(false, NetConstants.MaxPacketSize*MaxParts);
-        private readonly NetDataReader _predictReader = new NetDataReader();
-        
+        private readonly byte[] _predictBuffer = new byte[NetConstants.MaxPacketSize*MaxParts];
+
         private byte[] _compressionBuffer;
         private ServerStateData _stateA;
         private ServerStateData _stateB;
@@ -158,9 +157,8 @@ namespace LiteEntitySystem
             {
                 _inputGenerated = false;
                 foreach (var inputCommand in _inputCommands)
-                {
                     _localPeer.Send(inputCommand, DeliveryMethod.Unreliable);
-                }
+                _localPeer.NetManager.TriggerUpdate();
             }
 
             if (_stateB == null)
@@ -320,29 +318,27 @@ namespace LiteEntitySystem
                 foreach (var entity in OwnedEntities)
                 {
                     var localEntity = entity;
-                    _predictWriter.Reset();
-                    _predictedEntities[entity.Id].MakeBaseline(1, _predictWriter);
-                    _predictReader.SetSource(_predictWriter.Data, 0, _predictWriter.Length);
-                    
+                    int pos = 0;
+                    _predictedEntities[entity.Id].MakeBaseline(1, _predictBuffer, ref pos);
                     var classData = ClassDataDict[entity.ClassId];
                     var fixedFields = classData.Fields;
                     byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref localEntity);
-                    int readerPosition = StateSerializer.HeaderSize;
-                    fixed (byte* rawData = _predictReader.RawData)
+                    pos = StateSerializer.HeaderSize;
+                    fixed (byte* rawData = _predictBuffer)
                     {
                         for (int i = 0; i < classData.FieldsCount; i++)
                         {
                             ref var entityFieldInfo = ref fixedFields[i];
                             if (entityFieldInfo.IsEntity)
                             {
-                                ushort id = *(ushort*) (rawData + readerPosition);
+                                ushort id = *(ushort*) (rawData + pos);
                                 Unsafe.AsRef<InternalEntity>(entityPtr + entityFieldInfo.Offset) = id == InvalidEntityId ? null : EntitiesArray[id];
                             }
                             else
                             {
-                                Unsafe.CopyBlock(entityPtr + entityFieldInfo.Offset, rawData + readerPosition, entityFieldInfo.Size);
+                                Unsafe.CopyBlock(entityPtr + entityFieldInfo.Offset, rawData + pos, entityFieldInfo.Size);
                             }
-                            readerPosition += entityFieldInfo.IntSize;
+                            pos += entityFieldInfo.IntSize;
                         }
                     }
                 }

@@ -56,7 +56,7 @@ namespace LiteEntitySystem
     public sealed class ServerEntityManager : EntityManager
     {
         private readonly Queue<ushort> _possibleId = new Queue<ushort>();
-        private readonly NetDataWriter _netDataWriter = new NetDataWriter(false, NetConstants.MaxPacketSize*MaxParts);
+        private readonly byte[] _packetBuffer = new byte[NetConstants.MaxPacketSize*(MaxParts+1)];
         internal readonly StateSerializer[] EntitySerializers = new StateSerializer[MaxEntityCount];
         private readonly NetPlayer[] _netPlayers = new NetPlayer[MaxPlayers];
         private int _netPlayersCount;
@@ -69,7 +69,7 @@ namespace LiteEntitySystem
 
         public ServerEntityManager(byte packetHeader, int framesPerSecond) : base(NetworkMode.Server, framesPerSecond)
         {
-            _netDataWriter.Put(packetHeader);
+            _packetBuffer[0] = packetHeader;
         }
         
         public void AddPlayer(NetPlayer player)
@@ -153,13 +153,20 @@ namespace LiteEntitySystem
                 
                 foreach (var controller in GetControllers<HumanControllerLogic>())
                 {
-                    if (player.Id == controller.OwnerId && player.AvailableInput.Count > 0)
+                    if (player.Id == controller.OwnerId)
                     {
-                        var inputFrame = player.AvailableInput.Min;
-                        player.AvailableInput.Remove(inputFrame);
-                        controller.ReadInput(inputFrame.Reader);
-                        player.LastProcessedTick = inputFrame.Tick;
-                        inputFrame.Reader.Recycle();
+                        if (player.AvailableInput.Count > 0)
+                        {
+                            var inputFrame = player.AvailableInput.Min;
+                            player.AvailableInput.Remove(inputFrame);
+                            controller.ReadInput(inputFrame.Reader);
+                            player.LastProcessedTick = inputFrame.Tick;
+                            inputFrame.Reader.Recycle();
+                        }
+                        else
+                        {
+                            player.LastProcessedTick++;
+                        }
                     }
                 }
             }
@@ -183,12 +190,11 @@ namespace LiteEntitySystem
                 return;
 
             //header byte, packet type (2 bytes)
-            _netDataWriter.SetPosition(2);
-            _netDataWriter.Put(Tick);
+            FastBitConverter.GetBytes(_packetBuffer, 2, Tick);
             
             //calculate minimalTick
             ushort minimalTick = _netPlayers[0].ServerTick;
-            for (int pidx = 0; pidx < _netPlayersCount; pidx++)
+            for (int pidx = 1; pidx < _netPlayersCount; pidx++)
             {
                 var netPlayer = _netPlayers[pidx];
                 minimalTick = netPlayer.ServerTick < minimalTick ? netPlayer.ServerTick : minimalTick;
@@ -197,32 +203,32 @@ namespace LiteEntitySystem
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
             {
                 var netPlayer = _netPlayers[pidx];
+                int writePosition = 4;
                 //send all data
                 if (netPlayer.IsNew)
                 {
-                    _netDataWriter.Data[1] = PacketEntityFullSync;
+                    _packetBuffer[1] = PacketEntityFullSync;
                     for (int i = 0; i <= MaxEntityId; i++)
                     {
-                        EntitySerializers[i].MakeBaseline(Tick, _netDataWriter);
+                        EntitySerializers[i].MakeBaseline(Tick, _packetBuffer, ref writePosition);
                     }
-                    Utils.ResizeOrCreate(ref _compressionBuffer, _netDataWriter.Length);
+                    Utils.ResizeOrCreate(ref _compressionBuffer, writePosition);
 
                     //compress initial data
-                    int originalLength = _netDataWriter.Length - 2;
+                    int originalLength = writePosition - 2;
                     int encodedLength = LZ4Codec.Encode(
-                        _netDataWriter.Data,
+                        _packetBuffer,
                         2, 
-                        _netDataWriter.Length - 2,
+                        writePosition - 2,
                         _compressionBuffer,
                         0,
                         _compressionBuffer.Length,
                         LZ4Level.L10_OPT);
-                    _netDataWriter.SetPosition(2);
-                    _netDataWriter.Put(originalLength);
-                    _netDataWriter.Put(_compressionBuffer, 0, encodedLength);
+                    FastBitConverter.GetBytes(_packetBuffer, 2, originalLength);
+                    Buffer.BlockCopy(_compressionBuffer, 0, _packetBuffer, 6, encodedLength);
                     Logger.Log($"[SEM] SendWorld to player {netPlayer.Id}. orig: {originalLength} bytes, compressed: {encodedLength}, MaxEntityId: {MaxEntityId}");
                     
-                    netPlayer.Peer.Send(_netDataWriter, DeliveryMethod.ReliableOrdered);
+                    netPlayer.Peer.Send(_packetBuffer, 0, encodedLength+6, DeliveryMethod.ReliableOrdered);
                     netPlayer.IsNew = false;
                     continue;
                 }
@@ -235,30 +241,32 @@ namespace LiteEntitySystem
                 int mtu = peer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable);
                 
                 //first part full of data
-                _netDataWriter.Data[4] = partCount;
+                _packetBuffer[4] = partCount;
                 //position = 5
-                FastBitConverter.GetBytes(_netDataWriter.Data, 5, netPlayer.LastProcessedTick);
+                FastBitConverter.GetBytes(_packetBuffer, 5, netPlayer.LastProcessedTick);
                 //position = 7
-                _netDataWriter.SetPosition(7);
+                writePosition = 7;
 
                 for (int i = 0; i <= MaxEntityId; i++)
                 {
-                    int resultDataSize = EntitySerializers[i].MakeDiff(
+                    int initialWritePosition = writePosition;
+                    EntitySerializers[i].MakeDiff(
                         netPlayer.Id,
                         minimalTick, 
                         Tick, 
                         netPlayer.ServerTick, 
-                        _netDataWriter);
+                        _packetBuffer,
+                        ref writePosition);
                     
-                    if(resultDataSize == -1)
+                    if(writePosition == initialWritePosition)
                     {
                         //nothing changed: reset and go to next
                         continue;
                     }
-                    if (resultDataSize > mtu)
+                    if (writePosition > mtu)
                     {
-                        _netDataWriter.Data[1] = PacketEntitySync;
-                        peer.Send(_netDataWriter.Data, 0, mtu, DeliveryMethod.Unreliable);
+                        _packetBuffer[1] = PacketEntitySync;
+                        peer.Send(_packetBuffer, 0, mtu, DeliveryMethod.Unreliable);
                         partCount++;
                         if (partCount == MaxParts)
                         {
@@ -268,15 +276,17 @@ namespace LiteEntitySystem
                         }
                         
                         //repeat in next packet
-                        _netDataWriter.Data[4] = partCount;
-                        _netDataWriter.SetPosition(5);
-                        _netDataWriter.Put(_netDataWriter.Data, mtu, resultDataSize - mtu);
+                        _packetBuffer[4] = partCount;
+                        Buffer.BlockCopy(_packetBuffer, mtu, _packetBuffer, 5, writePosition - mtu);
+                        writePosition -= mtu - 5;
                     }
                 }
                 //Debug.Log($"PARTS: {partCount} {_netDataWriter.Data[4]}");
-                _netDataWriter.Data[1] = PacketEntitySyncLast; //lastPart flag
-                peer.Send(_netDataWriter, DeliveryMethod.Unreliable);
+                _packetBuffer[1] = PacketEntitySyncLast; //lastPart flag
+                peer.Send(_packetBuffer, 0, writePosition, DeliveryMethod.Unreliable);
             }
+            //trigger only when there is data
+            _netPlayers[0].Peer.NetManager.TriggerUpdate();
         }
         
         public void Deserialize(NetPlayer player, NetPacketReader reader)

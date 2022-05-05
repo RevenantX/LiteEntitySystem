@@ -97,35 +97,6 @@ namespace LiteEntitySystem
             Logger.Log($"Register entity. Id: {id.ToString()} ({entType}), baseTypes: {classData.BaseTypes.Length}, FilterId: {classData.FilterId}");
         }
 
-        private void SetupEntityInfo()
-        {
-            for (int e = 0; e < _entityEnumSize; e++)
-            {
-                //map base ids
-                var classData = ClassDataDict[e];
-                if(classData == null)
-                    continue;
-
-                var baseTypes = classData.BaseTypes;
-                var baseIds = classData.BaseIds;
-                
-                for (int i = 0; i < baseIds.Length; i++)
-                {
-                    if (!_registeredTypeIds.TryGetValue(baseTypes[i], out baseIds[i]))
-                    {
-                        baseIds[i] = classData.IsSingleton
-                            ? _singletonRegisteredCount++
-                            : _filterRegisteredCount++;
-                        _registeredTypeIds.Add(baseTypes[i], baseIds[i]);
-                    }
-                    Logger.Log($"Base type of {classData.ClassId} - {baseTypes[i]}");
-                }
-            }
-
-            _entityFilters = new EntityFilter[_filterRegisteredCount];
-            _singletonEntities = new SingletonEntityLogic[_singletonRegisteredCount];
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static int SequenceDiff(int newer, int older)
         {
@@ -141,6 +112,7 @@ namespace LiteEntitySystem
             DeltaTime = 1.0f / framesPerSecond;
             _stopwatchFrequency = Stopwatch.Frequency;
             Interpolation.Register<float>((a, b, t) => a + (b - a) * t);
+            Interpolation.Register<FloatAngle>(FloatAngle.Lerp);
         }
 
         public EntityLogic GetEntityById(ushort id)
@@ -263,12 +235,36 @@ namespace LiteEntitySystem
 
         protected void CheckStart()
         {
-            if (!_isStarted)
+            if (_isStarted)
+                return;
+
+            for (int e = 0; e < _entityEnumSize; e++)
             {
-                SetupEntityInfo();
-                _stopwatch.Start();
-                _isStarted = true;
+                //map base ids
+                var classData = ClassDataDict[e];
+                if(classData == null)
+                    continue;
+
+                var baseTypes = classData.BaseTypes;
+                var baseIds = classData.BaseIds;
+                
+                for (int i = 0; i < baseIds.Length; i++)
+                {
+                    if (!_registeredTypeIds.TryGetValue(baseTypes[i], out baseIds[i]))
+                    {
+                        baseIds[i] = classData.IsSingleton
+                            ? _singletonRegisteredCount++
+                            : _filterRegisteredCount++;
+                        _registeredTypeIds.Add(baseTypes[i], baseIds[i]);
+                    }
+                    Logger.Log($"Base type of {classData.ClassId} - {baseTypes[i]}");
+                }
             }
+
+            _entityFilters = new EntityFilter[_filterRegisteredCount];
+            _singletonEntities = new SingletonEntityLogic[_singletonRegisteredCount];
+            _stopwatch.Start();
+            _isStarted = true;
         }
 
         public virtual void Update()
