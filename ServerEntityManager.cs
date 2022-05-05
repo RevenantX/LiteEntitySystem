@@ -57,6 +57,7 @@ namespace LiteEntitySystem
     {
         private readonly Queue<ushort> _possibleId = new Queue<ushort>();
         private readonly byte[] _packetBuffer = new byte[NetConstants.MaxPacketSize*(MaxParts+1)];
+        private byte[] _compressionBuffer;
         internal readonly StateSerializer[] EntitySerializers = new StateSerializer[MaxEntityCount];
         private readonly NetPlayer[] _netPlayers = new NetPlayer[MaxPlayers];
         private int _netPlayersCount;
@@ -177,8 +178,6 @@ namespace LiteEntitySystem
             }
         }
 
-        private byte[] _compressionBuffer;
-        
         public override void Update()
         {
             CheckStart();
@@ -288,8 +287,12 @@ namespace LiteEntitySystem
             //trigger only when there is data
             _netPlayers[0].Peer.NetManager.TriggerUpdate();
         }
-        
-        public void Deserialize(NetPlayer player, NetPacketReader reader)
+    }
+
+    public static class ServerEntityManagerExt
+    {
+        //hack to avoid callvirt
+        public static void Deserialize(this NetPlayer player, NetPacketReader reader)
         {
             if (reader.AvailableBytes <= 3)
             {
@@ -300,7 +303,7 @@ namespace LiteEntitySystem
             byte packetType = reader.GetByte();
             switch (packetType)
             {
-                case PacketClientSync:
+                case EntityManager.PacketClientSync:
                     ushort serverTick = reader.GetUShort();
                     ushort playerTick = reader.GetUShort();
                     
@@ -313,16 +316,16 @@ namespace LiteEntitySystem
                     }
                     
                     //Logger.Log($"[SEM] st: {serverTick}, lt: {playerTick}");
-                    if(SequenceDiff(serverTick, player.ServerTick) > 0)
+                    if(EntityManager.SequenceDiff(serverTick, player.ServerTick) > 0)
                         player.ServerTick = serverTick;
 
                     var inputBuffer = new InputBuffer(playerTick, reader);
-                    if (!player.AvailableInput.Contains(inputBuffer) && SequenceDiff(playerTick, player.LastProcessedTick) > 0)
+                    if (!player.AvailableInput.Contains(inputBuffer) && EntityManager.SequenceDiff(playerTick, player.LastProcessedTick) > 0)
                     {
-                        if (player.AvailableInput.Count >= MaxSavedStateDiff)
+                        if (player.AvailableInput.Count >= EntityManager.MaxSavedStateDiff)
                         {
                             var minimal = player.AvailableInput.Min;
-                            if (SequenceDiff(playerTick, minimal.Tick) > 0)
+                            if (EntityManager.SequenceDiff(playerTick, minimal.Tick) > 0)
                             {
                                 minimal.Reader.Recycle();
                                 player.AvailableInput.Remove(minimal);
@@ -344,7 +347,7 @@ namespace LiteEntitySystem
                     player.IsFirstStateReceived = true;
                     break;
                 
-                case PacketEntityCall:
+                case EntityManager.PacketEntityCall:
                     ushort entityId = reader.GetUShort();
                     byte packetId = reader.GetByte();
                     //GetEntityById(entityId)?.ProcessPacket(packetId, reader);

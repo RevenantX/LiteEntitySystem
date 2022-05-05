@@ -35,11 +35,11 @@ namespace LiteEntitySystem
         public const ushort InvalidEntityId = MaxEntityCount;
         public const int MaxSavedStateDiff = 6;
 
-        protected const byte PacketEntitySync = 1;
-        protected const byte PacketEntityCall = 2;
-        protected const byte PacketClientSync = 3;
-        protected const byte PacketEntityFullSync = 4;
-        protected const byte PacketEntitySyncLast = 5;
+        internal const byte PacketEntitySync = 1;
+        internal const byte PacketEntityCall = 2;
+        internal const byte PacketClientSync = 3;
+        internal const byte PacketEntityFullSync = 4;
+        internal const byte PacketEntitySyncLast = 5;
         protected const int MaxFieldSize = 1024;
         protected const byte MaxParts = 255;
         
