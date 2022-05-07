@@ -164,7 +164,7 @@ namespace LiteEntitySystem
                             {
                                 EntityId = preloadData.EntityId,
                                 Delegate = classData.RemoteCallsClient[rpcId],
-                                //SyncableId = readerData[stateReaderOffset + 1],
+                                //FieldId = readerData[stateReaderOffset + 1],
                                 Tick = Unsafe.AsRef<ushort>(readerData[stateReaderOffset + 2]),
                                 Offset = stateReaderOffset + 6
                             };

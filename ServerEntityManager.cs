@@ -146,27 +146,14 @@ namespace LiteEntitySystem
 
         private void ProcessInput(HumanControllerLogic controller, NetPlayer player)
         {
-            if (player.AvailableInput.Count > 0)
-            {
-                var inputFrame = player.AvailableInput.Min;
-                while(inputFrame.Tick <= player.LastProcessedTick)
-                {
-                    player.AvailableInput.Remove(inputFrame);
-                    inputFrame.Reader.Recycle();
-                    if (player.AvailableInput.Count == 0)
-                        return;
-                    inputFrame = player.AvailableInput.Min;
-                } 
-                
-                controller.ReadInput(inputFrame.Reader);
-                player.LastProcessedTick = inputFrame.Tick;
-                player.AvailableInput.Remove(inputFrame);
-                inputFrame.Reader.Recycle();
-            }
-            else
-            {
-                player.LastProcessedTick++;
-            }
+            if (player.AvailableInput.Count == 0)
+                return;
+            
+            var inputFrame = player.AvailableInput.Min;
+            controller.ReadInput(inputFrame.Reader);
+            player.LastProcessedTick = inputFrame.Tick;
+            player.AvailableInput.Remove(inputFrame);
+            inputFrame.Reader.Recycle();
         }
 
         protected override void OnLogicTick()
@@ -181,9 +168,7 @@ namespace LiteEntitySystem
                 foreach (var controller in GetControllers<HumanControllerLogic>())
                 {
                     if (player.Id == controller.OwnerId)
-                    {
                         ProcessInput(controller, player);
-                    }
                 }
             }
             
@@ -348,7 +333,6 @@ namespace LiteEntitySystem
                         break;
                     }
                     
-                    //Logger.Log($"[SEM] st: {serverTick}, lt: {playerTick}");
                     if(EntityManager.SequenceDiff(serverTick, player.ServerTick) > 0)
                         player.ServerTick = serverTick;
 

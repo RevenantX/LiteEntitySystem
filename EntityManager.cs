@@ -227,7 +227,7 @@ namespace LiteEntitySystem
             if (classData.IsUpdateable)
                 AliveEntities.Remove(e);
             EntitiesCount--;
-            Logger.Log($"{Mode} - RemoveEntity: {e.Id}");
+            //Logger.Log($"{Mode} - RemoveEntity: {e.Id}");
         }
 
         protected abstract void OnLogicTick();
