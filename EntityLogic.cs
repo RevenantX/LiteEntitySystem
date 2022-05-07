@@ -156,7 +156,7 @@ namespace LiteEntitySystem
     public abstract class EntityLogic : InternalEntity
     {
         [SyncVar(nameof(OnParentChange))] 
-        private ushort _parentId;
+        private ushort _parentId = EntityManager.InvalidEntityId;
         
         [SyncVar(nameof(OnDestroyChange))] 
         private bool _isDestroyed;
@@ -177,8 +177,6 @@ namespace LiteEntitySystem
         internal void DestroyInternal()
         {
             _isDestroyed = true;
-            if(IsLocalControlled)
-                ((ClientEntityManager)EntityManager).OwnedEntities.Remove(this);
             EntityManager.RemoveEntity(this);
             OnDestroy();
             EntityManager.GetEntityById(_parentId)?.Childs.Remove(this);
@@ -186,10 +184,17 @@ namespace LiteEntitySystem
                 e.DestroyInternal();
         }
 
+        public void Destroy()
+        {
+            if (EntityManager.IsClient || _isDestroyed)
+                return;
+            DestroyInternal();
+        }
+
         private void OnOwnerChange(ushort prevOwner)
         {
             var ownedEntities = ((ClientEntityManager)EntityManager).OwnedEntities;
-            if(InternalOwnerId == EntityManager.PlayerId)
+            if(IsLocalControlled)
                 ownedEntities.Add(this);
             else if(prevOwner == EntityManager.PlayerId)
                 ownedEntities.Remove(this);
@@ -197,8 +202,10 @@ namespace LiteEntitySystem
 
         private void OnDestroyChange(bool prevValue)
         {
-            if(_isDestroyed)
+            if (!prevValue && _isDestroyed)
+            {
                 DestroyInternal();
+            }
         }
 
         public void SetParent(EntityLogic parentEntity)

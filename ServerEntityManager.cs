@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using K4os.Compression.LZ4;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -143,6 +144,31 @@ namespace LiteEntitySystem
             return entity;
         }
 
+        private void ProcessInput(HumanControllerLogic controller, NetPlayer player)
+        {
+            if (player.AvailableInput.Count > 0)
+            {
+                var inputFrame = player.AvailableInput.Min;
+                while(inputFrame.Tick <= player.LastProcessedTick)
+                {
+                    player.AvailableInput.Remove(inputFrame);
+                    inputFrame.Reader.Recycle();
+                    if (player.AvailableInput.Count == 0)
+                        return;
+                    inputFrame = player.AvailableInput.Min;
+                } 
+                
+                controller.ReadInput(inputFrame.Reader);
+                player.LastProcessedTick = inputFrame.Tick;
+                player.AvailableInput.Remove(inputFrame);
+                inputFrame.Reader.Recycle();
+            }
+            else
+            {
+                player.LastProcessedTick++;
+            }
+        }
+
         protected override void OnLogicTick()
         {
             ServerTick = Tick;
@@ -156,18 +182,7 @@ namespace LiteEntitySystem
                 {
                     if (player.Id == controller.OwnerId)
                     {
-                        if (player.AvailableInput.Count > 0)
-                        {
-                            var inputFrame = player.AvailableInput.Min;
-                            player.AvailableInput.Remove(inputFrame);
-                            controller.ReadInput(inputFrame.Reader);
-                            player.LastProcessedTick = inputFrame.Tick;
-                            inputFrame.Reader.Recycle();
-                        }
-                        else
-                        {
-                            player.LastProcessedTick++;
-                        }
+                        ProcessInput(controller, player);
                     }
                 }
             }
@@ -178,7 +193,13 @@ namespace LiteEntitySystem
             }
         }
 
-        public override void Update()
+        internal override void RemoveEntity(EntityLogic e)
+        {
+            base.RemoveEntity(e);
+            EntitySerializers[e.Id].Destroy(ServerTick);
+        }
+
+        public override unsafe void Update()
         {
             CheckStart();
             ushort prevTick = Tick;
@@ -199,6 +220,7 @@ namespace LiteEntitySystem
                 minimalTick = netPlayer.ServerTick < minimalTick ? netPlayer.ServerTick : minimalTick;
             }
 
+            fixed(byte* packetBuffer = _packetBuffer)
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
             {
                 var netPlayer = _netPlayers[pidx];
@@ -206,10 +228,10 @@ namespace LiteEntitySystem
                 //send all data
                 if (netPlayer.IsNew)
                 {
-                    _packetBuffer[1] = PacketEntityFullSync;
+                    _packetBuffer[1] = PacketBaselineSync;
                     for (int i = 0; i <= MaxEntityId; i++)
                     {
-                        EntitySerializers[i].MakeBaseline(Tick, _packetBuffer, ref writePosition);
+                        EntitySerializers[i].MakeBaseline(Tick, packetBuffer, ref writePosition);
                     }
                     Utils.ResizeOrCreate(ref _compressionBuffer, writePosition);
 
@@ -246,42 +268,55 @@ namespace LiteEntitySystem
                 //position = 7
                 writePosition = 7;
 
-                for (int i = 0; i <= MaxEntityId; i++)
+                for (ushort eId = 0; eId <= MaxEntityId; eId++)
                 {
-                    int initialWritePosition = writePosition;
-                    EntitySerializers[i].MakeDiff(
+                    var diffResult = EntitySerializers[eId].MakeDiff(
                         netPlayer.Id,
                         minimalTick, 
                         Tick, 
                         netPlayer.ServerTick, 
-                        _packetBuffer,
+                        packetBuffer,
                         ref writePosition);
-                    
-                    if(writePosition == initialWritePosition)
-                    {
-                        //nothing changed: reset and go to next
-                        continue;
-                    }
-                    if (writePosition > mtu)
-                    {
-                        _packetBuffer[1] = PacketEntitySync;
-                        peer.Send(_packetBuffer, 0, mtu, DeliveryMethod.Unreliable);
-                        partCount++;
-                        if (partCount == MaxParts)
-                        {
-                            Logger.LogWarning("[SEM] PART COUNT MAX");
-                            //send at next frame
+                    switch (diffResult)
+                    { 
+                        case DiffResult.RequestBaselineSync:
+                            netPlayer.IsNew = true;
+                            netPlayer.IsFirstStateReceived = false;
                             break;
-                        }
                         
-                        //repeat in next packet
-                        _packetBuffer[4] = partCount;
-                        Buffer.BlockCopy(_packetBuffer, mtu, _packetBuffer, 5, writePosition - mtu);
-                        writePosition -= mtu - 5;
+                        case DiffResult.Destroy:
+                            //but next state will be sent
+                            _possibleId.Enqueue(eId);
+                            break;
+                        
+                        case DiffResult.Skip:
+                            //nothing changed: reset and go to next
+                            break;
+                        
+                        case DiffResult.Done:
+                            if (writePosition > mtu)
+                            {
+                                _packetBuffer[1] = PacketDiffSync;
+                                peer.Send(_packetBuffer, 0, mtu, DeliveryMethod.Unreliable);
+                                partCount++;
+                                if (partCount == MaxParts)
+                                {
+                                    Logger.LogWarning("[SEM] PART COUNT MAX");
+                                    //send at next frame
+                                    break;
+                                }
+                        
+                                //repeat in next packet
+                                _packetBuffer[4] = partCount;
+
+                                Unsafe.CopyBlock(packetBuffer + 5, packetBuffer + mtu, (uint)(writePosition - mtu));
+                                writePosition -= mtu - 5;
+                            }
+                            break;
                     }
                 }
                 //Debug.Log($"PARTS: {partCount} {_netDataWriter.Data[4]}");
-                _packetBuffer[1] = PacketEntitySyncLast; //lastPart flag
+                _packetBuffer[1] = PacketDiffSyncLast; //lastPart flag
                 peer.Send(_packetBuffer, 0, writePosition, DeliveryMethod.Unreliable);
             }
             //trigger only when there is data

@@ -95,7 +95,7 @@ namespace LiteEntitySystem
                         ref var rpcCache = ref _stateB.RemoteCallsCaches[i];
                         if (SequenceDiff(rpcCache.Tick, ServerTick) <= 0)
                         {
-                            var entity = EntitiesArray[rpcCache.EntityId];
+                            var entity = EntitiesDict[rpcCache.EntityId];
                             rpcCache.Delegate(Unsafe.AsPointer(ref entity), rawData + rpcCache.Offset);
                             _executedRpcs++;
                         }
@@ -191,7 +191,7 @@ namespace LiteEntitySystem
                 for(int i = 0; i < _stateB.InterpolatedCount; i++)
                 {
                     ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
-                    var entity = EntitiesArray[preloadData.EntityId];
+                    var entity = EntitiesDict[preloadData.EntityId];
                     var fields = ClassDataDict[entity.ClassId].Fields;
                     byte* entityPtr = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref entity);
                     fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr =
@@ -247,6 +247,13 @@ namespace LiteEntitySystem
             }
         }
 
+        internal override void RemoveEntity(EntityLogic e)
+        {
+            base.RemoveEntity(e);
+            if(e.IsLocalControlled)
+                OwnedEntities.Remove(e);
+        }
+
         private unsafe void ReadEntityStates()
         {
             ServerTick = _stateA.Tick;
@@ -277,7 +284,7 @@ namespace LiteEntitySystem
                 ref var setIdInfo = ref _setEntityIds[i];
                 byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref setIdInfo.Entity);
                 Unsafe.AsRef<InternalEntity>(entityPtr + setIdInfo.FieldOffset) =
-                    setIdInfo.Id == InvalidEntityId ? null : EntitiesArray[setIdInfo.Id];
+                    setIdInfo.Id == InvalidEntityId ? null : EntitiesDict[setIdInfo.Id];
             }
             _setEntityIdsCount = 0;
 
@@ -290,7 +297,7 @@ namespace LiteEntitySystem
                     if (syncCall.IsEntity)
                     {
                         ushort prevId = *(ushort*)(readerData + syncCall.PrevDataPos);
-                        var prevEntity = prevId == InvalidEntityId ? null : EntitiesArray[prevId];
+                        var prevEntity = prevId == InvalidEntityId ? null : EntitiesDict[prevId];
                         syncCall.OnSync(
                             Unsafe.AsPointer(ref syncCall.Entity),
                             prevEntity != null ? Unsafe.AsPointer(ref prevEntity) : null);
@@ -319,20 +326,21 @@ namespace LiteEntitySystem
                 {
                     var localEntity = entity;
                     int pos = 0;
-                    _predictedEntities[entity.Id].MakeBaseline(1, _predictBuffer, ref pos);
-                    var classData = ClassDataDict[entity.ClassId];
-                    var fixedFields = classData.Fields;
-                    byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref localEntity);
-                    pos = StateSerializer.HeaderSize;
                     fixed (byte* rawData = _predictBuffer)
                     {
+                        _predictedEntities[entity.Id].MakeBaseline(1, rawData, ref pos);
+                        var classData = ClassDataDict[entity.ClassId];
+                        var fixedFields = classData.Fields;
+                        byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref localEntity);
+                        pos = StateSerializer.HeaderSize;
+               
                         for (int i = 0; i < classData.FieldsCount; i++)
                         {
                             ref var entityFieldInfo = ref fixedFields[i];
                             if (entityFieldInfo.IsEntity)
                             {
                                 ushort id = *(ushort*) (rawData + pos);
-                                Unsafe.AsRef<InternalEntity>(entityPtr + entityFieldInfo.Offset) = id == InvalidEntityId ? null : EntitiesArray[id];
+                                Unsafe.AsRef<InternalEntity>(entityPtr + entityFieldInfo.Offset) = id == InvalidEntityId ? null : EntitiesDict[id];
                             }
                             else
                             {
@@ -387,7 +395,7 @@ namespace LiteEntitySystem
 
         private unsafe void ReadEntityState(NetDataReader reader, ushort entityInstanceId, bool fullSync)
         {
-            var entity = EntitiesArray[entityInstanceId];
+            var entity = EntitiesDict[entityInstanceId];
 
             //full sync
             if (fullSync)
@@ -400,7 +408,9 @@ namespace LiteEntitySystem
                 {
                     //this can be only on logics (not on singletons)
                     Logger.Log($"[CEM] Replace entity by new: {version}");
-                    ((EntityLogic)entity).DestroyInternal();
+                    var entityLogic = (EntityLogic) entity;
+                    if(!entityLogic.IsDestroyed)
+                        entityLogic.DestroyInternal();
                 }
 
                 //create new
@@ -501,7 +511,7 @@ namespace LiteEntitySystem
         public void Deserialize(NetPacketReader reader)
         {
             byte packetType = reader.GetByte();
-            if(packetType == PacketEntityFullSync)
+            if(packetType == PacketBaselineSync)
             {
                 int decompressedSize = reader.GetInt();
                 Utils.ResizeOrCreate(ref _compressionBuffer, decompressedSize);
@@ -529,7 +539,7 @@ namespace LiteEntitySystem
             }
             else
             {
-                bool isLastPart = packetType == PacketEntitySyncLast;
+                bool isLastPart = packetType == PacketDiffSyncLast;
                 ushort newServerTick = reader.GetUShort();
                 if (SequenceDiff(newServerTick, _stateA.Tick) <= 0)
                 {

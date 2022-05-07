@@ -35,11 +35,11 @@ namespace LiteEntitySystem
         public const ushort InvalidEntityId = MaxEntityCount;
         public const int MaxSavedStateDiff = 6;
 
-        internal const byte PacketEntitySync = 1;
+        internal const byte PacketDiffSync = 1;
         internal const byte PacketEntityCall = 2;
         internal const byte PacketClientSync = 3;
-        internal const byte PacketEntityFullSync = 4;
-        internal const byte PacketEntitySyncLast = 5;
+        internal const byte PacketBaselineSync = 4;
+        internal const byte PacketDiffSyncLast = 5;
         protected const int MaxFieldSize = 1024;
         protected const byte MaxParts = 255;
         
@@ -62,7 +62,7 @@ namespace LiteEntitySystem
         
         protected double CurrentDelta { get; private set; }
         protected int MaxEntityId = -1; //current maximum id
-        protected readonly InternalEntity[] EntitiesArray = new InternalEntity[MaxEntityCount];
+        protected readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount];
         protected readonly EntityFilter<InternalEntity> AliveEntities = new EntityFilter<InternalEntity>();
 
         private double _accumulator;
@@ -117,7 +117,7 @@ namespace LiteEntitySystem
 
         public EntityLogic GetEntityById(ushort id)
         {
-            return id == InvalidEntityId ? null : (EntityLogic)EntitiesArray[id];
+            return id == InvalidEntityId ? null : (EntityLogic)EntitiesDict[id];
         }
         
         public EntityFilter<T> GetEntities<T>() where T : EntityLogic
@@ -133,7 +133,7 @@ namespace LiteEntitySystem
             entityFilter = typedFilter;
             for (int i = 0; i < MaxEntityIndex; i++)
             {
-                if(EntitiesArray[i] is T castedEnt && !castedEnt.IsDestroyed)
+                if(EntitiesDict[i] is T castedEnt && !castedEnt.IsDestroyed)
                     typedFilter.Add(castedEnt);
             }
 
@@ -152,7 +152,7 @@ namespace LiteEntitySystem
             entityFilter = typedFilter;
             for (int i = 0; i < MaxEntityIndex; i++)
             {
-                if(EntitiesArray[i] is T castedEnt)
+                if(EntitiesDict[i] is T castedEnt)
                     typedFilter.Add(castedEnt);
             }
 
@@ -192,7 +192,7 @@ namespace LiteEntitySystem
             var classData = ClassDataDict[entityParams.ClassId];
             var entity = classData.EntityConstructor(entityParams);
 
-            EntitiesArray[entity.Id] = entity;
+            EntitiesDict[entity.Id] = entity;
             EntitiesCount++;
             
             return entity;
@@ -200,6 +200,7 @@ namespace LiteEntitySystem
 
         protected void ConstructEntity(InternalEntity entity)
         {
+            entity.OnConstructed();
             var classData = ClassDataDict[entity.ClassId];
             if (classData.IsSingleton)
             {
@@ -215,10 +216,9 @@ namespace LiteEntitySystem
             }
             if (classData.IsUpdateable)
                 AliveEntities.Add(entity);
-            entity.OnConstructed();
         }
 
-        internal void RemoveEntity(EntityLogic e)
+        internal virtual void RemoveEntity(EntityLogic e)
         {
             var classData = ClassDataDict[e.ClassId];
             _entityFilters[classData.FilterId]?.Remove(e);
@@ -226,9 +226,8 @@ namespace LiteEntitySystem
                 _entityFilters[baseId]?.Remove(e);
             if (classData.IsUpdateable)
                 AliveEntities.Remove(e);
-
             EntitiesCount--;
-            Logger.Log($"{Mode} - RemoveEntity: {e.Id}");
+            //Logger.Log($"{Mode} - RemoveEntity: {e.Id}");
         }
 
         protected abstract void OnLogicTick();

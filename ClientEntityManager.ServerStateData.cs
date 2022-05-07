@@ -113,7 +113,7 @@ namespace LiteEntitySystem
                     else
                     {
                         //it should be here at preload
-                        var entity = entityManager.EntitiesArray[preloadData.EntityId];
+                        var entity = entityManager.EntitiesDict[preloadData.EntityId];
                         var classData = entityManager.ClassDataDict[entity.ClassId];
                         var fields = classData.Fields;
                         preloadData.EntityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;

@@ -8,6 +8,21 @@ namespace LiteEntitySystem
 {
     using InternalEntity = EntityManager.InternalEntity;
     
+    internal enum DiffResult
+    {
+        Skip,
+        Destroy,
+        RequestBaselineSync,
+        Done
+    }
+
+    internal enum SerializerState
+    {
+        Init,
+        Destroyed,
+        Freed
+    }
+    
     internal sealed class StateSerializer
     {
         private byte _version;
@@ -23,6 +38,7 @@ namespace LiteEntitySystem
         private byte[] _latestEntityData;
         private ushort[] _fieldChangeTicks;
         private ushort _versionChangedTick;
+        private SerializerState _state;
 
         private class RemoteCallPacket
         {
@@ -53,6 +69,8 @@ namespace LiteEntitySystem
         private RemoteCallPacket _rpcHead;
         private RemoteCallPacket _rpcTail;
         private readonly Queue<RemoteCallPacket> _rpcPool = new Queue<RemoteCallPacket>();
+        private const int TicksToDestroy = 32;
+        private ushort _ticksOnDestroy;
 
         private void AddRpcPacket(RemoteCallPacket rpc)
         {
@@ -72,11 +90,12 @@ namespace LiteEntitySystem
             AddRpcPacket(rpc);
         }
         
-        public void AddRemoteCall<T>(T[] value, int count, RemoteCall remoteCallInfo) where T : struct
+        public unsafe void AddRemoteCall<T>(T[] value, int count, RemoteCall remoteCallInfo) where T : struct
         {
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             rpc.Setup(remoteCallInfo.Id, byte.MaxValue, remoteCallInfo.Flags, _entityLogic.EntityManager.Tick, remoteCallInfo.DataSize * count);
-            Buffer.BlockCopy(value, 0, rpc.Data, 0, count);
+            fixed (byte* rawData = rpc.Data, rawValue = Unsafe.As<byte[]>(value))
+                Unsafe.CopyBlock(rawData, rawValue, rpc.Size);
             AddRpcPacket(rpc);
         }
 
@@ -95,7 +114,7 @@ namespace LiteEntitySystem
             AddRpcPacket(rpc);
         }
         
-        public void AddSyncableCall<T>(SyncableField field, T[] value, int count, MethodInfo method) where T : struct
+        public unsafe void AddSyncableCall<T>(SyncableField field, T[] value, int count, MethodInfo method) where T : struct
         {
             var remoteCallInfo = _classData.SyncableRemoteCalls[method];
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
@@ -105,7 +124,8 @@ namespace LiteEntitySystem
                 ExecuteFlags.ExecuteOnServer | ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner, 
                 _entityLogic.EntityManager.Tick,
                 remoteCallInfo.DataSize * count);
-            Buffer.BlockCopy(value, 0, rpc.Data, 0, count);
+            fixed (byte* rawData = rpc.Data, rawValue = Unsafe.As<byte[]>(value))
+                Unsafe.CopyBlock(rawData, rawValue, rpc.Size);
             AddRpcPacket(rpc);
         }
 
@@ -121,7 +141,11 @@ namespace LiteEntitySystem
             _classData = classData;
             _entityLogic = e;
             if (classData.IsServerOnly)
+            {
+                _state = SerializerState.Freed;
                 return;
+            }
+            _state = SerializerState.Init;
 
             int minimalDataSize = HeaderSize + _classData.FieldsFlagsSize + _classData.FixedFieldsSize;
             Utils.ResizeOrCreate(ref _latestEntityData, minimalDataSize);
@@ -162,7 +186,7 @@ namespace LiteEntitySystem
         public unsafe void Write(ushort serverTick)
         {
             //write if there new tick
-            if (serverTick == _lastWriteTick) 
+            if (serverTick == _lastWriteTick || _state != SerializerState.Init) 
                 return;
             
             _lastWriteTick = serverTick;
@@ -202,16 +226,23 @@ namespace LiteEntitySystem
             }
         }
 
-        public unsafe void MakeBaseline(ushort serverTick, byte[] result, ref int position)
+        public void Destroy(ushort serverTick)
         {
-            if (_classData.IsServerOnly)
+            Write(serverTick);
+            _state = SerializerState.Destroyed;
+            _ticksOnDestroy = serverTick;
+        }
+
+        public unsafe void MakeBaseline(ushort serverTick, byte* resultData, ref int position)
+        {
+            if (_state != SerializerState.Init)
                 return;
             Write(serverTick);
             
             //make diff
             int lastDataOffset = HeaderSize;
 
-            fixed (byte* lastEntityData = _latestEntityData, resultData = result)
+            fixed (byte* lastEntityData = _latestEntityData)
             {
                 //initial state with compression
                 //don't write total size in full sync and fields
@@ -238,10 +269,13 @@ namespace LiteEntitySystem
             }
         }
 
-        public unsafe void MakeDiff(byte playerId, ushort minimalTick, ushort serverTick, ushort playerTick, byte[] result, ref int position)
+        public unsafe DiffResult MakeDiff(byte playerId, ushort minimalTick, ushort serverTick, ushort playerTick, byte* resultData, ref int position)
         {
-            if (_classData.IsServerOnly)
-                return;
+            if (_state == SerializerState.Destroyed && EntityManager.SequenceDiff(serverTick, _ticksOnDestroy) >= TicksToDestroy)
+            {
+                _state = SerializerState.Freed;
+                return DiffResult.Destroy;
+            }
             Write(serverTick);
 
             //make diff
@@ -249,7 +283,7 @@ namespace LiteEntitySystem
             int lastDataOffset = HeaderSize;
             byte* entityPointer = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref _entityLogic);
 
-            fixed (byte* lastEntityData = _latestEntityData, resultData = result)
+            fixed (byte* lastEntityData = _latestEntityData)
             {
                 ushort* fieldFlagsPtr = (ushort*) (resultData + startPos);
                 //initial state with compression
@@ -338,7 +372,7 @@ namespace LiteEntitySystem
                     if (!hasChanges)
                     {
                         position = startPos;
-                        return;
+                        return DiffResult.Skip;
                     }
                 }
 
@@ -347,13 +381,13 @@ namespace LiteEntitySystem
                 if (resultSize > ushort.MaxValue/2)
                 {
                     //request full sync
-                    Logger.LogWarning("TODO: RequestFullSync");
                     position = startPos;
-                    return;
+                    return DiffResult.RequestBaselineSync;
                 }
                 
                 *fieldFlagsPtr |= (ushort)(resultSize  << 1);
             }
+            return DiffResult.Done;
         }
     }
 }
