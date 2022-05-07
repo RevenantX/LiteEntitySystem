@@ -177,8 +177,8 @@ namespace LiteEntitySystem
         internal void DestroyInternal()
         {
             _isDestroyed = true;
-            EntityManager.RemoveEntity(this);
             OnDestroy();
+            EntityManager.RemoveEntity(this);
             EntityManager.GetEntityById(_parentId)?.Childs.Remove(this);
             foreach (var e in Childs)
                 e.DestroyInternal();
@@ -202,7 +202,7 @@ namespace LiteEntitySystem
 
         private void OnDestroyChange(bool prevValue)
         {
-            if (!prevValue && _isDestroyed)
+            if (_isDestroyed)
             {
                 DestroyInternal();
             }

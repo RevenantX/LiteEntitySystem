@@ -283,17 +283,15 @@ namespace LiteEntitySystem
                             netPlayer.IsNew = true;
                             netPlayer.IsFirstStateReceived = false;
                             break;
-                        
-                        case DiffResult.Destroy:
-                            //but next state will be sent
-                            _possibleId.Enqueue(eId);
-                            break;
-                        
+
                         case DiffResult.Skip:
                             //nothing changed: reset and go to next
                             break;
                         
+                        case DiffResult.DoneAndDestroy:
                         case DiffResult.Done:
+                            if(diffResult == DiffResult.DoneAndDestroy)
+                                _possibleId.Enqueue(eId);
                             if (writePosition > mtu)
                             {
                                 _packetBuffer[1] = PacketDiffSync;

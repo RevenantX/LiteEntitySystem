@@ -458,20 +458,27 @@ namespace LiteEntitySystem
                     byte* fieldPtr = entityPtr + entityFieldInfo.Offset;
                     byte* readDataPtr = rawData + readerPosition;
 
+                    bool hasChanges = false;
                     if (entityFieldInfo.IsEntity)
                     {
-                        _setEntityIds[_setEntityIdsCount++] = new SetEntityIdInfo
-                        {
-                            Entity = entity,
-                            FieldOffset = entityFieldInfo.Offset,
-                            Id = *(ushort*)readDataPtr
-                        };
-                        //put prev data into reader for SyncCalls
-                        stateSerializer?.WritePredicted(fixedDataOffset, readDataPtr, entityFieldInfo.Size);
                         ushort prevId = Unsafe.AsRef<InternalEntity>(fieldPtr)?.Id ?? InvalidEntityId;
-                        Unsafe.CopyBlock(readDataPtr, &prevId, entityFieldInfo.Size);
+                        if (Utils.memcmp(readDataPtr, &prevId, entityFieldInfo.PtrSize) != 0)
+                        {
+                            _setEntityIds[_setEntityIdsCount++] = new SetEntityIdInfo
+                            {
+                                Entity = entity,
+                                FieldOffset = entityFieldInfo.Offset,
+                                Id = *(ushort*)readDataPtr
+                            };
+                            
+                            //put prev data into reader for SyncCalls
+                            stateSerializer?.WritePredicted(fixedDataOffset, readDataPtr, entityFieldInfo.Size);
+                            
+                            Unsafe.CopyBlock(readDataPtr, &prevId, entityFieldInfo.Size);
+                            hasChanges = true;
+                        }
                     }
-                    else
+                    else if (Utils.memcmp(readDataPtr, fieldPtr, entityFieldInfo.PtrSize) != 0)
                     {
                         if (i < classData.InterpolatedMethods.Length && writeInterpolationData)
                         {
@@ -483,9 +490,10 @@ namespace LiteEntitySystem
                         stateSerializer?.WritePredicted(fixedDataOffset, readDataPtr, entityFieldInfo.Size);
                         //put prev data into reader for SyncCalls
                         Unsafe.CopyBlock(readDataPtr, tempData, entityFieldInfo.Size);
+                        hasChanges = true;
                     }
 
-                    if(entityFieldInfo.OnSync != null)
+                    if(entityFieldInfo.OnSync != null && hasChanges)
                         _syncCalls[_syncCallsCount++] = new SyncCallInfo
                         {
                             OnSync = entityFieldInfo.OnSync,

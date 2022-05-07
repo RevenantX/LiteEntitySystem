@@ -11,14 +11,15 @@ namespace LiteEntitySystem
     internal enum DiffResult
     {
         Skip,
-        Destroy,
+        DoneAndDestroy,
         RequestBaselineSync,
         Done
     }
 
     internal enum SerializerState
     {
-        Init,
+        Ignore,
+        Active,
         Destroyed,
         Freed
     }
@@ -142,10 +143,10 @@ namespace LiteEntitySystem
             _entityLogic = e;
             if (classData.IsServerOnly)
             {
-                _state = SerializerState.Freed;
+                _state = SerializerState.Ignore;
                 return;
             }
-            _state = SerializerState.Init;
+            _state = SerializerState.Active;
 
             int minimalDataSize = HeaderSize + _classData.FieldsFlagsSize + _classData.FixedFieldsSize;
             Utils.ResizeOrCreate(ref _latestEntityData, minimalDataSize);
@@ -186,9 +187,9 @@ namespace LiteEntitySystem
         public unsafe void Write(ushort serverTick)
         {
             //write if there new tick
-            if (serverTick == _lastWriteTick || _state != SerializerState.Init) 
+            if (serverTick == _lastWriteTick || _state != SerializerState.Active) 
                 return;
-            
+
             _lastWriteTick = serverTick;
 
             byte* entityPointer = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref _entityLogic);
@@ -228,14 +229,14 @@ namespace LiteEntitySystem
 
         public void Destroy(ushort serverTick)
         {
-            Write(serverTick);
+            Write((ushort)(serverTick+1));
             _state = SerializerState.Destroyed;
             _ticksOnDestroy = serverTick;
         }
 
         public unsafe void MakeBaseline(ushort serverTick, byte* resultData, ref int position)
         {
-            if (_state != SerializerState.Init)
+            if (_state != SerializerState.Active)
                 return;
             Write(serverTick);
             
@@ -271,10 +272,13 @@ namespace LiteEntitySystem
 
         public unsafe DiffResult MakeDiff(byte playerId, ushort minimalTick, ushort serverTick, ushort playerTick, byte* resultData, ref int position)
         {
+            if (_state == SerializerState.Ignore)
+                return DiffResult.Skip;
+            bool canReuse = false;
             if (_state == SerializerState.Destroyed && EntityManager.SequenceDiff(serverTick, _ticksOnDestroy) >= TicksToDestroy)
             {
                 _state = SerializerState.Freed;
-                return DiffResult.Destroy;
+                canReuse = true;
             }
             Write(serverTick);
 
@@ -387,7 +391,7 @@ namespace LiteEntitySystem
                 
                 *fieldFlagsPtr |= (ushort)(resultSize  << 1);
             }
-            return DiffResult.Done;
+            return canReuse ? DiffResult.DoneAndDestroy : DiffResult.Done;
         }
     }
 }
