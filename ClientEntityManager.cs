@@ -36,8 +36,7 @@ namespace LiteEntitySystem
         private readonly byte[][] _interpolatePrevData = new byte[MaxEntityCount][];
         private readonly StateSerializer[] _predictedEntities = new StateSerializer[MaxEntityCount];
         private readonly byte[] _predictBuffer = new byte[NetConstants.MaxPacketSize*MaxParts];
-
-        private byte[] _compressionBuffer;
+        
         private ServerStateData _stateA;
         private ServerStateData _stateB;
         private float _lerpTime;
@@ -95,7 +94,7 @@ namespace LiteEntitySystem
 
             if (_stateB != null)
             {
-                fixed (byte* rawData = _stateB.FinalReader.RawData)
+                fixed (byte* rawData = _stateB.Data)
                 {
                     for (int i = 0; i < _stateB.RemoteCallsCount; i++)
                     {
@@ -172,8 +171,7 @@ namespace LiteEntitySystem
                     var entity = EntitiesDict[preloadData.EntityId];
                     var fields = ClassDataDict[entity.ClassId].Fields;
                     byte* entityPtr = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref entity);
-                    fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr =
-                               _stateB.FinalReader.RawData)
+                    fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr = _stateB.Data)
                     {
                         for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
                         {
@@ -261,27 +259,32 @@ namespace LiteEntitySystem
         private unsafe void ReadEntityStates()
         {
             ServerTick = _stateA.Tick;
-            var reader = _stateA.FinalReader;
-   
-            if (_stateA.IsBaseline)
+
+            fixed (byte* readerData = _stateA.Data)
             {
-                _inputCommands.Clear();
-                while (reader.AvailableBytes > 0)
+                if (_stateA.IsBaseline)
                 {
-                    ushort entityId = reader.GetUShort();
-                    ReadEntityState(reader, entityId, true);
+                    _inputCommands.Clear();
+                    int bytesRead = _stateA.Offset;
+                    while (bytesRead < _stateA.Size)
+                    {
+                        ushort entityId = BitConverter.ToUInt16(_stateA.Data, bytesRead);
+                        bytesRead += 2;
+                        bytesRead += ReadEntityState(readerData + bytesRead, entityId, true);
+                    }
+                }
+                else
+                {
+
+                    for (int i = 0; i < _stateA.PreloadDataCount; i++)
+                    {
+                        ref var preloadData = ref _stateA.PreloadDataArray[i];
+                        ReadEntityState(readerData + preloadData.DataOffset, preloadData.EntityId,
+                            preloadData.EntityFieldsOffset == -1);
+                    }
                 }
             }
-            else
-            {
-                for(int i = 0; i < _stateA.PreloadDataCount; i++)
-                {
-                    ref var preloadData = ref _stateA.PreloadDataArray[i];
-                    reader.SetPosition(preloadData.DataOffset);
-                    ReadEntityState(reader, preloadData.EntityId, preloadData.EntityFieldsOffset == -1);
-                }
-            }
-            
+
             //SetEntityIds
             for (int i = 0; i < _setEntityIdsCount; i++)
             {
@@ -296,7 +299,7 @@ namespace LiteEntitySystem
             for (int i = 0; i < _syncCallsCount; i++)
             {
                 ref var syncCall = ref _syncCalls[i];
-                fixed (byte* readerData = reader.RawData)
+                fixed (byte* readerData = _stateA.Data)
                 {
                     if (syncCall.IsEntity)
                     {
@@ -363,15 +366,17 @@ namespace LiteEntitySystem
             UpdateMode = UpdateMode.Normal;
         }
 
-        private unsafe void ReadEntityState(NetDataReader reader, ushort entityInstanceId, bool fullSync)
+        private unsafe int ReadEntityState(byte* rawData, ushort entityInstanceId, bool fullSync)
         { 
             var entity = EntitiesDict[entityInstanceId];
-
+            int readerPosition = 0;
+            
             //full sync
             if (fullSync)
             {
-                byte version = reader.GetByte();
-                ushort classId = reader.GetUShort();
+                byte version = rawData[0];
+                ushort classId = *(ushort*)(rawData + 1);
+                readerPosition += 3;
 
                 //remove old entity
                 if (entity != null && entity.Version != version)
@@ -391,7 +396,7 @@ namespace LiteEntitySystem
             else if (entity == null)
             {
                 Logger.LogError($"EntityNull? : {entityInstanceId}");
-                return;
+                return 0;
             }
             
             var classData = ClassDataDict[entity.ClassId];
@@ -404,13 +409,12 @@ namespace LiteEntitySystem
             
             var fixedFields = classData.Fields;
             byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref entity);
-            int readerPosition = reader.Position;
             int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
             int fixedDataOffset = 0;
             bool writeInterpolationData = entity.IsServerControlled || fullSync;
             var stateSerializer = _predictedEntities[entity.Id];
 
-            fixed (byte* rawData = reader.RawData, interpDataPtr = interpolatedInitialData, tempData = _tempData)
+            fixed (byte* interpDataPtr = interpolatedInitialData, tempData = _tempData)
             {
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
@@ -450,7 +454,7 @@ namespace LiteEntitySystem
                         }
                         Unsafe.CopyBlock(tempData, fieldPtr, entityFieldInfo.Size);
                         Unsafe.CopyBlock(fieldPtr, readDataPtr, entityFieldInfo.Size);
-                        //stateSerializer?.WritePredicted(fixedDataOffset, readDataPtr, entityFieldInfo.Size);
+                        stateSerializer?.WritePredicted(fixedDataOffset, readDataPtr, entityFieldInfo.Size);
                         //put prev data into reader for SyncCalls
                         Unsafe.CopyBlock(readDataPtr, tempData, entityFieldInfo.Size);
                         hasChanges = true;
@@ -476,7 +480,8 @@ namespace LiteEntitySystem
                     }
                 }
             }
-            reader.SetPosition(readerPosition);
+
+            return readerPosition;
         }
 
         public void Deserialize(NetPacketReader reader)
@@ -484,26 +489,26 @@ namespace LiteEntitySystem
             byte packetType = reader.GetByte();
             if(packetType == PacketBaselineSync)
             {
-                int decompressedSize = reader.GetInt();
-                Utils.ResizeOrCreate(ref _compressionBuffer, decompressedSize);
+                _stateA = new ServerStateData
+                {
+                    IsBaseline = true,
+                    Size = reader.GetInt()
+                };
+                Utils.ResizeOrCreate(ref _stateA.Data, _stateA.Size);
+                
                 int decodedBytes = LZ4Codec.Decode(
                     reader.RawData,
                     reader.Position,
                     reader.AvailableBytes,
-                    _compressionBuffer,
+                    _stateA.Data,
                     0,
-                    decompressedSize);
-                if (decodedBytes != decompressedSize)
+                    _stateA.Size);
+                if (decodedBytes != _stateA.Size)
                 {
                     Logger.LogError("Error on decompress");
                 }
-                
-                _stateA = new ServerStateData
-                {
-                    IsBaseline = true
-                };
-                _stateA.FinalReader.SetSource(_compressionBuffer, 0, decompressedSize);
-                _stateA.Tick = _stateA.FinalReader.GetUShort();
+                _stateA.Tick = BitConverter.ToUInt16(_stateA.Data);
+                _stateA.Offset = 2;
                 ReadEntityStates();
                 _isSyncReceived = true;
             }

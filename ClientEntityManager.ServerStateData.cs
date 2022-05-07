@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using LiteNetLib;
-using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
 {
@@ -44,8 +43,10 @@ namespace LiteEntitySystem
         
         private class ServerStateData
         {
-            public readonly NetDataReader FinalReader = new NetDataReader();
-
+            public byte[] Data;
+            public int Size;
+            public int Offset;
+            
             public ushort Tick;
             public ushort ProcessedTick;
             public bool IsBaseline;
@@ -55,7 +56,6 @@ namespace LiteEntitySystem
             public int InterpolatedCount;
 
             private readonly NetPacketReader[] _packetReaders = new NetPacketReader[MaxParts];
-            private readonly NetDataWriter _finalWriter = new NetDataWriter();
             private int _totalPartsCount;
             private int _receivedPartsCount;
             private int _maxReceivedPart;
@@ -80,23 +80,24 @@ namespace LiteEntitySystem
                 _receivedPartsCount = 0;
                 _totalPartsCount = 0;
                 RemoteCallsCount = 0;
+                Size = 0;
+                Offset = 0;
             }
 
             public void Preload(ClientEntityManager entityManager)
             {
-                byte[] readerData = FinalReader.RawData;
+                int bytesRead = 0;
                 //preload some data
-                while (FinalReader.AvailableBytes > 0)
+                while (bytesRead < Size)
                 {
                     Utils.ResizeIfFull(ref PreloadDataArray, PreloadDataCount);
                     ref var preloadData = ref PreloadDataArray[PreloadDataCount++];
-                    int initialReaderPosition = FinalReader.Position;
-                    
-                    ushort fullSyncAndTotalSize = FinalReader.GetUShort();
+                    ushort fullSyncAndTotalSize = BitConverter.ToUInt16(Data, bytesRead);
                     preloadData.TotalSize = (ushort)(fullSyncAndTotalSize >> 1);
-                    preloadData.EntityId = FinalReader.GetUShort();
+                    preloadData.EntityId = BitConverter.ToUInt16(Data, bytesRead + 2);
                     preloadData.InterpolatedCachesCount = 0;
-                    FinalReader.SetPosition(initialReaderPosition + preloadData.TotalSize);
+                    int initialReaderPosition = bytesRead;
+                    bytesRead += preloadData.TotalSize;
                     
                     if (preloadData.EntityId > MaxEntityCount)
                     {
@@ -135,7 +136,7 @@ namespace LiteEntitySystem
                             
                             for (; fieldIndex < classData.InterpolatedMethods.Length; fieldIndex++)
                             {
-                                if (Utils.IsBitSet(readerData, preloadData.EntityFieldsOffset, fieldIndex))
+                                if (Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, fieldIndex))
                                 {
                                     preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
                                     {
@@ -152,23 +153,23 @@ namespace LiteEntitySystem
                         
                         for (; fieldIndex < classData.FieldsCount; fieldIndex++)
                         {
-                            if (Utils.IsBitSet(readerData, preloadData.EntityFieldsOffset, fieldIndex))
+                            if (Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, fieldIndex))
                                 stateReaderOffset += fields[fieldIndex].IntSize;
                         }
 
                         //preload rpcs
                         while(stateReaderOffset < initialReaderPosition + preloadData.TotalSize)
                         {
-                            byte rpcId = readerData[stateReaderOffset];
+                            byte rpcId = Data[stateReaderOffset];
                             var rpcCache = new RemoteCallsCache
                             {
                                 EntityId = preloadData.EntityId,
                                 Delegate = classData.RemoteCallsClient[rpcId],
                                 //FieldId = readerData[stateReaderOffset + 1],
-                                Tick = Unsafe.AsRef<ushort>(readerData[stateReaderOffset + 2]),
+                                Tick = Unsafe.AsRef<ushort>(Data[stateReaderOffset + 2]),
                                 Offset = stateReaderOffset + 6
                             };
-                            ushort size = Unsafe.AsRef<ushort>(readerData[stateReaderOffset + 4]);
+                            ushort size = Unsafe.AsRef<ushort>(Data[stateReaderOffset + 4]);
                             Utils.ResizeOrCreate(ref RemoteCallsCaches, RemoteCallsCount);
                             RemoteCallsCaches[RemoteCallsCount++] = rpcCache;
                             stateReaderOffset += 6 + size;
@@ -177,7 +178,7 @@ namespace LiteEntitySystem
                 }
             }
 
-            public bool ReadPart(bool isLastPart, NetPacketReader reader)
+            public unsafe bool ReadPart(bool isLastPart, NetPacketReader reader)
             {
                 //check processed tick
                 byte partNumber = reader.GetByte();
@@ -198,22 +199,27 @@ namespace LiteEntitySystem
                     reader.Recycle();
                     return false;
                 }
-                        
+
+                Size += reader.AvailableBytes;
                 _packetReaders[partNumber] = reader;
                 _receivedPartsCount++;
                 _maxReceivedPart = Math.Max(_maxReceivedPart, partNumber);
 
                 if (_receivedPartsCount == _totalPartsCount)
                 {
-                    _finalWriter.Reset();
+                    int writePosition = 0;
                     for (int i = 0; i < _totalPartsCount; i++)
                     {
                         ref var statePart = ref _packetReaders[i];
-                        _finalWriter.Put(statePart.RawData, statePart.Position, statePart.AvailableBytes);
+                        Utils.ResizeOrCreate(ref Data, Size);
+                        fixed (byte* data = Data, stateData = statePart.RawData)
+                        {
+                            Unsafe.CopyBlock(data + writePosition, stateData + statePart.Position, (uint)statePart.AvailableBytes);
+                        }
+                        writePosition += statePart.AvailableBytes;
                         statePart.Recycle();
                         statePart = null;
                     }
-                    FinalReader.SetSource(_finalWriter);
                     return true;
                 }
                 return false;
