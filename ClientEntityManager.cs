@@ -30,6 +30,7 @@ namespace LiteEntitySystem
         private readonly Queue<ServerStateData> _statesPool = new Queue<ServerStateData>(MaxSavedStateDiff);
         private readonly NetDataReader _inputReader = new NetDataReader();
         private readonly Queue<NetDataWriter> _inputCommands = new Queue<NetDataWriter>(InputBufferSize);
+        private readonly Queue<NetDataWriter> _inputPool = new Queue<NetDataWriter>(InputBufferSize);
         private readonly IInputGenerator _inputGenerator;
         private readonly SortedSet<ServerStateData> _lerpBuffer = new SortedSet<ServerStateData>(new ServerStateComparer());
         private readonly byte[][] _interpolatedInitialData = new byte[MaxEntityCount][];
@@ -109,7 +110,7 @@ namespace LiteEntitySystem
 
             if (_inputCommands.Count > InputBufferSize)
                 _inputCommands.Dequeue();
-            var inputWriter = new NetDataWriter();
+            var inputWriter = _inputPool.Count > 0 ? _inputPool.Dequeue() : new NetDataWriter();
             inputWriter.Put(_headerByte);
             inputWriter.Put(PacketClientSync);
             inputWriter.Put(ServerTick);
@@ -173,9 +174,15 @@ namespace LiteEntitySystem
                 {
                     ushort inputTick = BitConverter.ToUInt16(inputCommand.Data, 4);
                     if (SequenceDiff(_stateB.ProcessedTick, inputTick) >= 0)
-                        _inputCommands.Dequeue();
+                    {
+                        var inputWriter = _inputCommands.Dequeue();
+                        inputWriter.Reset();
+                        _inputPool.Enqueue(inputWriter);
+                    }
                     else
+                    {
                         break;
+                    }
                 }
             }
             

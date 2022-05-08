@@ -169,7 +169,7 @@ namespace LiteEntitySystem
                     {
                         int fieldSize = Marshal.SizeOf(ft);
 
-                        if (syncVarAttribute.IsInterpolated)
+                        if (syncVarAttribute.Flags.IsByteFlagSet(SyncFlags.Interpolated))
                         {
                             if (!Interpolation.Methods.TryGetValue(ft, out var interpolatedInfo))
                                 throw new Exception($"No info how to interpolate: {ft}");

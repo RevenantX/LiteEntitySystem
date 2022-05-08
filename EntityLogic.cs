@@ -5,11 +5,19 @@ using LiteNetLib.Utils;
 namespace LiteEntitySystem
 {
     using InternalEntity = EntityManager.InternalEntity;
+
+    [Flags]
+    public enum SyncFlags : byte
+    {
+        None = 0,
+        Interpolated = 1,
+        LagCompensated = 1 << 1
+    }
     
     [AttributeUsage(AttributeTargets.Field)]
     public class SyncVar : Attribute
     {
-        internal readonly bool IsInterpolated;
+        internal readonly SyncFlags Flags;
         internal readonly string MethodName;
 
         public SyncVar()
@@ -17,9 +25,9 @@ namespace LiteEntitySystem
             
         }
         
-        public SyncVar(bool isInterpolated)
+        public SyncVar(SyncFlags flags)
         {
-            IsInterpolated = isInterpolated;
+            Flags = flags;
         }
         
         public SyncVar(string methodName)

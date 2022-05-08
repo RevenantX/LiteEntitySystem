@@ -40,5 +40,11 @@ namespace LiteEntitySystem
         {
             return (byteArray[bitNumber / 8] & (1 << bitNumber % 8)) != 0;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsByteFlagSet<T>(this T flags, T flag) where T : Enum
+        {
+            return (Unsafe.As<T, byte>(ref flags) & Unsafe.As<T, byte>(ref flag)) != 0;
+        }
     }
 }
