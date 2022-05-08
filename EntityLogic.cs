@@ -92,6 +92,11 @@ namespace LiteEntitySystem
 
             internal abstract bool IsControlledBy(byte playerId);
 
+            public virtual void DebugPrint()
+            {
+                
+            }
+
             public virtual void Update()
             {
             }

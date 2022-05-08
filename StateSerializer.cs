@@ -41,6 +41,8 @@ namespace LiteEntitySystem
         private ushort _versionChangedTick;
         private SerializerState _state;
 
+        public byte[] Data => _latestEntityData;
+        
         private class RemoteCallPacket
         {
             public byte Id = byte.MaxValue;
@@ -174,14 +176,6 @@ namespace LiteEntitySystem
             if(_history[0] == null)
                 for (int i = 0; i < MaxHistory; i++)
                     _history[i] = new NetDataWriter(true, HeaderSize); 
-        }
-
-        public unsafe void WritePredicted(int latestDataOffset, byte* data, uint size)
-        {
-            fixed (byte* latestEntityData = _latestEntityData)
-            {
-                Unsafe.CopyBlock(latestEntityData + HeaderSize + latestDataOffset, data, size);
-            }
         }
 
         public unsafe void Write(ushort serverTick)
