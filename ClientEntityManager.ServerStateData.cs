@@ -57,7 +57,8 @@ namespace LiteEntitySystem
             private int _totalPartsCount;
             private int _receivedPartsCount;
             private int _maxReceivedPart;
-            
+
+            public int RemoteCallsProcessed;
             public int RemoteCallsCount;
             public RemoteCallsCache[] RemoteCallsCaches = new RemoteCallsCache[32];
   
@@ -78,6 +79,7 @@ namespace LiteEntitySystem
                 _receivedPartsCount = 0;
                 _totalPartsCount = 0;
                 RemoteCallsCount = 0;
+                RemoteCallsProcessed = 0;
                 Size = 0;
                 Offset = 0;
             }
@@ -154,10 +156,10 @@ namespace LiteEntitySystem
                                 EntityId = preloadData.EntityId,
                                 Delegate = classData.RemoteCallsClient[rpcId],
                                 //FieldId = readerData[stateReaderOffset + 1],
-                                Tick = Unsafe.AsRef<ushort>(Data[stateReaderOffset + 2]),
+                                Tick = BitConverter.ToUInt16(Data, stateReaderOffset + 2),
                                 Offset = stateReaderOffset + 6
                             };
-                            ushort size = Unsafe.AsRef<ushort>(Data[stateReaderOffset + 4]);
+                            ushort size = BitConverter.ToUInt16(Data, stateReaderOffset + 4);
                             Utils.ResizeOrCreate(ref RemoteCallsCaches, RemoteCallsCount);
                             RemoteCallsCaches[RemoteCallsCount++] = rpcCache;
                             stateReaderOffset += 6 + size;

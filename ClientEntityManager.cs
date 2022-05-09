@@ -104,22 +104,25 @@ namespace LiteEntitySystem
             }
             Utils.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
         }
+
+        private int _remoteCallsTick;
         
         protected override unsafe void OnLogicTick()
         {
             ServerTick++;
-
             if (_stateB != null)
             {
                 fixed (byte* rawData = _stateB.Data)
                 {
-                    for (int i = 0; i < _stateB.RemoteCallsCount; i++)
+                    for (int i = _stateB.RemoteCallsProcessed; i < _stateB.RemoteCallsCount; i++)
                     {
                         ref var rpcCache = ref _stateB.RemoteCallsCaches[i];
-                        if (SequenceDiff(rpcCache.Tick, ServerTick) <= 0)
+                        if (SequenceDiff(rpcCache.Tick, _remoteCallsTick) >= 0 && SequenceDiff(rpcCache.Tick, ServerTick) <= 0)
                         {
+                            _remoteCallsTick = rpcCache.Tick;
                             var entity = EntitiesDict[rpcCache.EntityId];
                             rpcCache.Delegate(Unsafe.AsPointer(ref entity), rawData + rpcCache.Offset);
+                            _stateB.RemoteCallsProcessed++;
                         }
                     }
                 }        
