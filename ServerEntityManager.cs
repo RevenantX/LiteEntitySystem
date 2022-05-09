@@ -162,8 +162,11 @@ namespace LiteEntitySystem
             inputFrame.Reader.Recycle();
         }
 
+        private bool _firstTick = true;
+        
         protected override void OnLogicTick()
         {
+            //write previous history
             ServerTick = Tick;
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
             {
@@ -179,10 +182,9 @@ namespace LiteEntitySystem
             }
             
             foreach (var aliveEntity in AliveEntities)
-            {
                 aliveEntity.Update();
-                _savedEntityData[aliveEntity.Id].WriteHistory();
-            }
+            foreach (var aliveEntity in AliveEntities)
+                _savedEntityData[aliveEntity.Id].WriteHistory(ServerTick);
         }
 
         internal override void RemoveEntity(EntityLogic e)
@@ -264,9 +266,11 @@ namespace LiteEntitySystem
                 return;
             
             _lagCompensationEnabled = true;
-            for (int i = 0; i <= MaxEntityId; i++)
+            //Logger.Log($"compensated: {player.ServerInterpolatedTick} =====");
+            foreach (var entity in AliveEntities)
             {
-                _savedEntityData[i].EnableLagCompensation(player.ServerInterpolatedTick);
+                _savedEntityData[entity.Id].EnableLagCompensation(player.ServerInterpolatedTick);
+                //entity.DebugPrint();
             }
             OnLagCompensation?.Invoke(true);
         }
@@ -276,9 +280,11 @@ namespace LiteEntitySystem
             if(!_lagCompensationEnabled)
                 return;
             _lagCompensationEnabled = false;
-            for (int i = 0; i <= MaxEntityId; i++)
+            //Logger.Log($"restored: {Tick} =====");
+            foreach (var entity in AliveEntities)
             {
-                _savedEntityData[i].DisableLagCompensation();
+                _savedEntityData[entity.Id].DisableLagCompensation();
+                //entity.DebugPrint();
             }
             OnLagCompensation?.Invoke(false);
         }

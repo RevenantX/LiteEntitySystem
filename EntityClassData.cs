@@ -54,7 +54,6 @@ namespace LiteEntitySystem
         public readonly UIntPtr PtrSize;
         public readonly bool IsEntity;
         public readonly MethodCallDelegate OnSync;
-        public readonly bool LagCompensated;
         public readonly InterpolatorDelegate Interpolator;
 
         public int FixedOffset;
@@ -64,8 +63,7 @@ namespace LiteEntitySystem
             InterpolatorDelegate interpolator,
             int offset,
             int size,
-            bool isEntity,
-            bool lagCompensated)
+            bool isEntity)
         {
             FieldOffset = offset;
             Size = (uint)size;
@@ -74,7 +72,6 @@ namespace LiteEntitySystem
             IsEntity = isEntity;
             OnSync = onSync;
             Interpolator = interpolator;
-            LagCompensated = lagCompensated;
             FixedOffset = 0;
         }
     }
@@ -92,7 +89,7 @@ namespace LiteEntitySystem
         public readonly EntityFieldInfo[] SyncableFields;
         public readonly int InterpolatedFieldsSize;
         public readonly int InterpolatedCount;
-        public readonly int[] LagCompensatedIndexes;
+        public readonly EntityFieldInfo[] LagCompensatedFields;
         public readonly int LagCompensatedSize;
 
         public readonly bool IsUpdateable;
@@ -138,16 +135,16 @@ namespace LiteEntitySystem
             
             var fields = new List<EntityFieldInfo>();
             var syncableFields = new List<EntityFieldInfo>();
-            var lagCompensatedIndexes = new List<int>();
+            var lagCompensatedFields = new List<EntityFieldInfo>();
 
             //add here to baseTypes to add fields
             baseTypes.Insert(0, typeof(EntityManager.InternalEntity));
             baseTypes.Add(entType);
 
-            var bindingFlags = BindingFlags.Instance |
-                               BindingFlags.Public |
-                               BindingFlags.NonPublic |
-                               BindingFlags.DeclaredOnly;
+            const BindingFlags bindingFlags = BindingFlags.Instance |
+                                              BindingFlags.Public |
+                                              BindingFlags.NonPublic |
+                                              BindingFlags.DeclaredOnly;
 
             byte rpcIndex = 0;
             byte syncableRpcIndex = 0;
@@ -184,7 +181,6 @@ namespace LiteEntitySystem
                     if (ft.IsValueType)
                     {
                         int fieldSize = ft == typeof(bool) ? 1 : Marshal.SizeOf(ft);
-                        bool lagCompensated = syncVarAttribute.Flags.IsByteFlagSet(SyncFlags.LagCompensated);
                         bool hasInterpolator = Interpolation.Methods.TryGetValue(ft, out var interpolator);
                         
                         if (syncVarAttribute.Flags.IsByteFlagSet(SyncFlags.Interpolated))
@@ -194,17 +190,19 @@ namespace LiteEntitySystem
                             InterpolatedFieldsSize += fieldSize;
                             InterpolatedCount++;
                         }
+
+                        var fieldInfo = new EntityFieldInfo(onSyncMethod, interpolator, offset, fieldSize, false);
                         if (syncVarAttribute.Flags.IsByteFlagSet(SyncFlags.LagCompensated))
                         {
-                            lagCompensatedIndexes.Add(fields.Count);
+                            lagCompensatedFields.Add(fieldInfo);
                             LagCompensatedSize += fieldSize;
                         }
-                        fields.Add(new EntityFieldInfo(onSyncMethod, interpolator, offset, fieldSize, false, lagCompensated));
+                        fields.Add(fieldInfo);
                         FixedFieldsSize += fieldSize;
                     }
                     else if (ft == typeof(EntityLogic) || ft.IsSubclassOf(typeof(EntityManager.InternalEntity)))
                     {
-                        fields.Add(new EntityFieldInfo(onSyncMethod, null, offset, sizeof(ushort), true, false));
+                        fields.Add(new EntityFieldInfo(onSyncMethod, null, offset, sizeof(ushort), true));
                         FixedFieldsSize += 2;
                     }
                     else if (ft.IsSubclassOf(typeof(SyncableField)))
@@ -213,7 +211,7 @@ namespace LiteEntitySystem
                             throw new Exception("Syncable fields should be readonly!");
 
                         //syncable rpcs
-                        syncableFields.Add(new EntityFieldInfo(onSyncMethod, null, offset, 0, false, false));
+                        syncableFields.Add(new EntityFieldInfo(onSyncMethod, null, offset, 0, false));
                         foreach (var syncableType in GetBaseTypes(ft, typeof(SyncableField), true))
                         {
                             foreach (var method in syncableType.GetMethods(bindingFlags))
@@ -260,7 +258,7 @@ namespace LiteEntitySystem
             SyncableFields = syncableFields.ToArray();
             FieldsCount = Fields.Length;
             FieldsFlagsSize = (FieldsCount-1) / 8 + 1;
-            LagCompensatedIndexes = lagCompensatedIndexes.ToArray();
+            LagCompensatedFields = lagCompensatedFields.ToArray();
         }
     }
     

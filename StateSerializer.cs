@@ -23,7 +23,7 @@ namespace LiteEntitySystem
 
     internal struct StateSerializer
     {
-        private const int MaxHistory = 64; //should be power of two
+        private const int MaxHistory = 32; //should be power of two
         private const int HeaderSize = 5;
         private const int HeaderWithTotalSize = 7;
         private const int TicksToDestroy = 32;
@@ -44,6 +44,7 @@ namespace LiteEntitySystem
         private RemoteCallPacket _rpcTail;
         private ushort _ticksOnDestroy;
         private ServerEntityManager _entityManager => (ServerEntityManager)_entity.EntityManager;
+        private int _filledHistory;
 
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
@@ -71,6 +72,7 @@ namespace LiteEntitySystem
                 return;
             }
             _state = SerializerState.Active;
+            _filledHistory = 0;
 
             int minimalDataSize = HeaderSize + _classData.FieldsFlagsSize + _classData.FixedFieldsSize;
             Utils.ResizeOrCreate(ref _latestEntityData, minimalDataSize);
@@ -103,18 +105,18 @@ namespace LiteEntitySystem
             } 
         }
 
-        public unsafe void WriteHistory()
+        public unsafe void WriteHistory(ushort tick)
         {
             if (_classData.LagCompensatedSize == 0)
                 return;
-            
+            _filledHistory = Math.Min(_filledHistory + 1, MaxHistory);
             byte* entityPointer = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref _entity);
             int historyOffset = 0;
-            fixed (byte* history = _history[_entityManager.Tick % MaxHistory])
+            fixed (byte* history = _history[tick % MaxHistory])
             {
-                for (int i = 0; i < _classData.LagCompensatedIndexes.Length; i++)
+                for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
                 {
-                    ref var field = ref _classData.Fields[_classData.LagCompensatedIndexes[i]];
+                    ref var field = ref _classData.LagCompensatedFields[i];
                     Unsafe.CopyBlock(history + historyOffset, entityPointer + field.FieldOffset, field.Size);
                     historyOffset += field.IntSize;
                 }
@@ -128,7 +130,7 @@ namespace LiteEntitySystem
                 return;
             _lastWriteTick = serverTick;
             byte* entityPointer = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref _entity);
-            fixed (byte* latestEntityData = _latestEntityData, history = _history[serverTick % MaxHistory])
+            fixed (byte* latestEntityData = _latestEntityData)
             {
                 for (int i = 0; i < _classData.FieldsCount; i++)
                 {
@@ -321,16 +323,16 @@ namespace LiteEntitySystem
         
         public unsafe void EnableLagCompensation(ushort playerServerTick)
         {
-            int diff = EntityManager.SequenceDiff(_lastWriteTick, playerServerTick);
-            if (diff <= 0 || diff >= MaxHistory)
+            int diff = EntityManager.SequenceDiff(_entityManager.Tick, playerServerTick);
+            if (diff <= 0 || diff >= _filledHistory || _state != SerializerState.Active)
                 return;
             byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref _entity);
             fixed (byte* history = _history[playerServerTick % MaxHistory], current = _history[_entityManager.Tick % MaxHistory])
             {
                 int historyOffset = 0;
-                for (int i = 0; i < _classData.LagCompensatedIndexes.Length; i++)
+                for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
                 {
-                    var field = _classData.Fields[_classData.LagCompensatedIndexes[i]];
+                    var field = _classData.LagCompensatedFields[i];
                     Unsafe.CopyBlock(current + historyOffset, entityPtr + field.FieldOffset, field.Size);
                     Unsafe.CopyBlock(entityPtr + field.FieldOffset, history + historyOffset, field.Size);
                     historyOffset += field.IntSize;
@@ -352,9 +354,9 @@ namespace LiteEntitySystem
             fixed (byte* history = _history[_entityManager.Tick % MaxHistory])
             {
                 int historyOffset = 0;
-                for (int i = 0; i < _classData.LagCompensatedIndexes.Length; i++)
+                for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
                 {
-                    var field = _classData.Fields[_classData.LagCompensatedIndexes[i]];
+                    var field = _classData.LagCompensatedFields[i];
                     Unsafe.CopyBlock(entityPtr + field.FieldOffset, history + historyOffset, field.Size);
                     historyOffset += field.IntSize;
                 }
