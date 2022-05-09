@@ -1,3 +1,5 @@
+using System;
+
 namespace LiteEntitySystem
 {
     internal sealed class RemoteCallPacket
@@ -10,15 +12,38 @@ namespace LiteEntitySystem
         public ExecuteFlags Flags;
         public RemoteCallPacket Next;
 
-        public void Setup(byte id, byte fieldId, ExecuteFlags flags, ushort tick, int size)
+        public void Init(RemoteCall rc)
         {
-            Id = id;
+            Id = rc.Id;
+            FieldId = byte.MaxValue;
+            Flags = rc.Flags;
+            Size = (ushort)rc.DataSize;
+            Utils.ResizeOrCreate(ref Data, Size);
+        }
+        
+        public void Init(RemoteCall rc, int count)
+        {
+            Id = rc.Id;
+            FieldId = byte.MaxValue;
+            Flags = rc.Flags;
+            Size = (ushort)(rc.DataSize*count);
+            Utils.ResizeOrCreate(ref Data, Size);
+        }
+        
+        public void Init(SyncableRemoteCall rc, byte fieldId)
+        {
+            Id = rc.Id;
             FieldId = fieldId;
-            Tick = tick;
-            Size = (ushort)size;
-            Utils.ResizeOrCreate(ref Data, size);
-            Next = null;
-            Flags = flags;
+            Size = (ushort)rc.DataSize;
+            Utils.ResizeOrCreate(ref Data, Size);
+        }
+        
+        public void Init(SyncableRemoteCall rc, byte fieldId, int count)
+        {
+            Id = rc.Id;
+            FieldId = fieldId;
+            Size = (ushort)(rc.DataSize * count);
+            Utils.ResizeOrCreate(ref Data, Size);
         }
     }
 }

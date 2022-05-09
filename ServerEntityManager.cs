@@ -12,22 +12,17 @@ namespace LiteEntitySystem
     {
         public int Compare(InputBuffer x, InputBuffer y)
         {
-            return EntityManager.SequenceDiff(x.Tick, y.Tick);
+            return EntityManager.SequenceDiff(x.ClientTick, y.ClientTick);
         }
     }
 
-    public readonly struct InputBuffer
+    public struct InputBuffer
     {
-        public readonly ushort Tick;
-        public readonly ushort ServerTick;
-        public readonly NetPacketReader Reader;
-
-        public InputBuffer(ushort tick, ushort serverTick, NetPacketReader reader)
-        {
-            Tick = tick;
-            ServerTick = serverTick;
-            Reader = reader;
-        }
+        public ushort StateATick;
+        public ushort StateBTick;
+        public ushort ClientTick;
+        public ushort LerpMsec;
+        public NetPacketReader Reader;
     }
     
     public sealed class NetPlayer
@@ -35,8 +30,10 @@ namespace LiteEntitySystem
         public readonly byte Id;
         public readonly NetPeer Peer;
         public ushort LastProcessedTick;
-        public ushort ServerTick;
-        public ushort ServerInterpolatedTick;
+        public ushort LastReceivedState;
+        public ushort StateATick;
+        public ushort StateBTick;
+        public float LerpTime;
         public bool IsFirstStateReceived;
         public bool IsNew;
         public readonly SortedSet<InputBuffer> AvailableInput = new SortedSet<InputBuffer>(new InputComprarer());
@@ -156,14 +153,14 @@ namespace LiteEntitySystem
             
             var inputFrame = player.AvailableInput.Min;
             controller.ReadInput(inputFrame.Reader);
-            player.LastProcessedTick = inputFrame.Tick;
-            player.ServerInterpolatedTick = inputFrame.ServerTick;
+            player.LastProcessedTick = inputFrame.ClientTick;
+            player.StateATick = inputFrame.StateATick;
+            player.StateBTick = inputFrame.StateBTick;
+            player.LerpTime = inputFrame.LerpMsec / 1000f;
             player.AvailableInput.Remove(inputFrame);
             inputFrame.Reader.Recycle();
         }
 
-        private bool _firstTick = true;
-        
         protected override void OnLogicTick()
         {
             //write previous history
@@ -201,7 +198,8 @@ namespace LiteEntitySystem
         internal unsafe void AddRemoteCall<T>(ushort entityId, T value, RemoteCall remoteCallInfo) where T : struct
         {
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Setup(remoteCallInfo.Id, byte.MaxValue, remoteCallInfo.Flags, Tick, remoteCallInfo.DataSize);
+            rpc.Init(remoteCallInfo);
+            rpc.Tick = Tick;
             fixed (byte* rawData = rpc.Data)
                 Unsafe.Copy(rawData, ref value);
             _savedEntityData[entityId].AddRpcPacket(rpc);
@@ -210,7 +208,8 @@ namespace LiteEntitySystem
         internal unsafe void AddRemoteCall<T>(ushort entityId, T[] value, int count, RemoteCall remoteCallInfo) where T : struct
         {
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Setup(remoteCallInfo.Id, byte.MaxValue, remoteCallInfo.Flags, Tick, remoteCallInfo.DataSize * count);
+            rpc.Init(remoteCallInfo, count);
+            rpc.Tick = Tick;
             fixed (byte* rawData = rpc.Data, rawValue = Unsafe.As<byte[]>(value))
                 Unsafe.CopyBlock(rawData, rawValue, rpc.Size);
             _savedEntityData[entityId].AddRpcPacket(rpc);
@@ -218,14 +217,12 @@ namespace LiteEntitySystem
         
         public unsafe void AddSyncableCall<T>(SyncableField field, T value, MethodInfo method) where T : struct
         {
-            var remoteCallInfo = ClassDataDict[EntitiesDict[field.EntityId].ClassId].SyncableRemoteCalls[method];
+            var entity = EntitiesDict[field.EntityId];
+            var remoteCallInfo = ClassDataDict[entity.ClassId].SyncableRemoteCalls[method];
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Setup(
-                remoteCallInfo.Id, 
-                field.FieldId, 
-                ExecuteFlags.ExecuteOnServer | ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner, 
-                Tick, 
-                remoteCallInfo.DataSize);
+            rpc.Init(remoteCallInfo, field.FieldId);
+            rpc.Tick = Tick;
+            rpc.Flags = ExecuteFlags.ExecuteOnServer | ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner;
             fixed (byte* rawData = rpc.Data)
                 Unsafe.Copy(rawData, ref value);
             _savedEntityData[field.EntityId].AddRpcPacket(rpc);
@@ -233,14 +230,12 @@ namespace LiteEntitySystem
         
         public unsafe void AddSyncableCall<T>(SyncableField field, T[] value, int count, MethodInfo method) where T : struct
         {
-            var remoteCallInfo = ClassDataDict[EntitiesDict[field.EntityId].ClassId].SyncableRemoteCalls[method];
+            var entity = EntitiesDict[field.EntityId];
+            var remoteCallInfo = ClassDataDict[entity.ClassId].SyncableRemoteCalls[method];
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Setup(
-                remoteCallInfo.Id, 
-                field.FieldId, 
-                ExecuteFlags.ExecuteOnServer | ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner, 
-                Tick,
-                remoteCallInfo.DataSize * count);
+            rpc.Init(remoteCallInfo, field.FieldId, count);
+            rpc.Tick = Tick;
+            rpc.Flags = ExecuteFlags.ExecuteOnServer | ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner;
             fixed (byte* rawData = rpc.Data, rawValue = Unsafe.As<byte[]>(value))
                 Unsafe.CopyBlock(rawData, rawValue, rpc.Size);
             _savedEntityData[field.EntityId].AddRpcPacket(rpc);
@@ -269,7 +264,7 @@ namespace LiteEntitySystem
             //Logger.Log($"compensated: {player.ServerInterpolatedTick} =====");
             foreach (var entity in AliveEntities)
             {
-                _savedEntityData[entity.Id].EnableLagCompensation(player.ServerInterpolatedTick);
+                _savedEntityData[entity.Id].EnableLagCompensation(player);
                 //entity.DebugPrint();
             }
             OnLagCompensation?.Invoke(true);
@@ -303,11 +298,11 @@ namespace LiteEntitySystem
             FastBitConverter.GetBytes(_packetBuffer, 2, Tick);
             
             //calculate minimalTick
-            ushort minimalTick = _netPlayers[0].ServerTick;
+            ushort minimalTick = _netPlayers[0].StateATick;
             for (int pidx = 1; pidx < _netPlayersCount; pidx++)
             {
                 var netPlayer = _netPlayers[pidx];
-                minimalTick = netPlayer.ServerTick < minimalTick ? netPlayer.ServerTick : minimalTick;
+                minimalTick = netPlayer.StateATick < minimalTick ? netPlayer.StateATick : minimalTick;
             }
 
             fixed(byte* packetBuffer = _packetBuffer)
@@ -364,7 +359,7 @@ namespace LiteEntitySystem
                         netPlayer.Id,
                         minimalTick, 
                         Tick, 
-                        netPlayer.ServerTick, 
+                        netPlayer.LastReceivedState, 
                         packetBuffer,
                         ref writePosition);
                     switch (diffResult)
@@ -427,28 +422,23 @@ namespace LiteEntitySystem
             switch (packetType)
             {
                 case EntityManager.PacketClientSync:
-                    ushort serverTick = reader.GetUShort();
-                    ushort serverInterpolatedTick = reader.GetUShort();
-                    ushort playerTick = reader.GetUShort();
+                    InputBuffer inputBuffer;
+                    inputBuffer.StateATick = reader.GetUShort();
+                    inputBuffer.StateBTick = reader.GetUShort();
+                    inputBuffer.LerpMsec   = reader.GetUShort();
+                    inputBuffer.ClientTick = reader.GetUShort();
+                    inputBuffer.Reader = reader;
+
+                    if (EntityManager.SequenceDiff(inputBuffer.StateBTick, player.LastReceivedState) > 0)
+                        player.LastReceivedState = inputBuffer.StateBTick;
                     
                     //read input
-                    if (reader.AvailableBytes == 0)
-                    {
-                        Logger.LogWarning("[SEM] Player input is 0");
-                        reader.Recycle();
-                        break;
-                    }
-                    
-                    if(EntityManager.SequenceDiff(serverTick, player.ServerTick) > 0)
-                        player.ServerTick = serverTick;
-
-                    var inputBuffer = new InputBuffer(playerTick, serverInterpolatedTick, reader);
-                    if (!player.AvailableInput.Contains(inputBuffer) && EntityManager.SequenceDiff(playerTick, player.LastProcessedTick) > 0)
+                    if (!player.AvailableInput.Contains(inputBuffer) && EntityManager.SequenceDiff(inputBuffer.ClientTick, player.LastProcessedTick) > 0)
                     {
                         if (player.AvailableInput.Count >= EntityManager.MaxSavedStateDiff)
                         {
                             var minimal = player.AvailableInput.Min;
-                            if (EntityManager.SequenceDiff(playerTick, minimal.Tick) > 0)
+                            if (EntityManager.SequenceDiff(inputBuffer.ClientTick, minimal.ClientTick) > 0)
                             {
                                 minimal.Reader.Recycle();
                                 player.AvailableInput.Remove(minimal);

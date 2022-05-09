@@ -161,6 +161,7 @@ namespace LiteEntitySystem
                     {
                         remoteCallAttribute.Id = rpcIndex++;
                         remoteCallAttribute.DataSize = Marshal.SizeOf(parametrType);
+                        remoteCallAttribute.IsArray = parametrType.IsArray;
                         if (rpcIndex == byte.MaxValue)
                             throw new Exception("254 is max RemoteCall methods");
                     }
@@ -262,6 +263,7 @@ namespace LiteEntitySystem
         }
     }
     
+    // ReSharper disable once UnusedTypeParameter
     internal static class EntityClassInfo<T>
     {
         // ReSharper disable once StaticMemberInGenericType

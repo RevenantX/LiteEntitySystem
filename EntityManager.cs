@@ -92,7 +92,6 @@ namespace LiteEntitySystem
             classData = new EntityClassData(isSingleton ? _singletonRegisteredCount++ : _filterRegisteredCount++, entType, classId, constructor);
             EntityClassInfo<TEntity>.ClassId = classId;
             _registeredTypeIds.Add(entType, classData.FilterId);
-            
             Logger.Log($"Register entity. Id: {id.ToString()} ({entType}), baseTypes: {classData.BaseTypes.Length}, FilterId: {classData.FilterId}");
         }
 

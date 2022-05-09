@@ -62,13 +62,16 @@ namespace LiteEntitySystem
         }
         private SetEntityIdInfo[] _setEntityIds;
         private int _setEntityIdsCount;
-
         private InternalEntity[] _entitiesToConstruct = new InternalEntity[64];
         private int _entitiesToConstructCount;
         private readonly byte[] _tempData = new byte[MaxFieldSize];
         
         internal readonly EntityFilter<EntityLogic> OwnedEntities = new EntityFilter<EntityLogic>();
         private readonly byte _headerByte;
+        private ushort _lerpMsec;
+
+        private const int InputTickOffset = 8;
+        private const int InputDataOffset = 10;
 
         public ClientEntityManager(NetPeer localPeer, byte headerByte, int framesPerSecond, IInputGenerator inputGenerator) : base(NetworkMode.Client, framesPerSecond)
         {
@@ -101,7 +104,7 @@ namespace LiteEntitySystem
             }
             Utils.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
         }
-
+        
         protected override unsafe void OnLogicTick()
         {
             ServerTick++;
@@ -113,7 +116,7 @@ namespace LiteEntitySystem
                     for (int i = 0; i < _stateB.RemoteCallsCount; i++)
                     {
                         ref var rpcCache = ref _stateB.RemoteCallsCaches[i];
-                        if (SequenceDiff(rpcCache.Tick, ServerTick) == 0)
+                        if (SequenceDiff(rpcCache.Tick, ServerTick) <= 0)
                         {
                             var entity = EntitiesDict[rpcCache.EntityId];
                             rpcCache.Delegate(Unsafe.AsPointer(ref entity), rawData + rpcCache.Offset);
@@ -127,15 +130,14 @@ namespace LiteEntitySystem
             var inputWriter = _inputPool.Count > 0 ? _inputPool.Dequeue() : new NetDataWriter();
             inputWriter.Put(_headerByte);
             inputWriter.Put(PacketClientSync);
-            //last received tick
-            inputWriter.Put(_lerpBuffer.Count > 0 ? _lerpBuffer.Max.Tick : _stateA.Tick);
-            //current interpolated tick
-            inputWriter.Put(ServerTick);
+            inputWriter.Put(_stateA.Tick);
+            inputWriter.Put(_stateB?.Tick ?? _stateA.Tick);
+            inputWriter.Put(_lerpMsec);
             inputWriter.Put(Tick);
             _inputCommands.Enqueue(inputWriter);
             _inputGenerated = true;
             _inputGenerator.GenerateInput(inputWriter);
-            _inputReader.SetSource(inputWriter.Data, 8, inputWriter.Length);
+            _inputReader.SetSource(inputWriter.Data, InputDataOffset, inputWriter.Length);
             foreach(var controller in GetControllers<HumanControllerLogic>())
             {
                 controller.ReadInput(_inputReader);
@@ -187,7 +189,7 @@ namespace LiteEntitySystem
                 //remove processed inputs
                 while (_inputCommands.TryPeek(out var inputCommand))
                 {
-                    ushort inputTick = BitConverter.ToUInt16(inputCommand.Data, 6);
+                    ushort inputTick = BitConverter.ToUInt16(inputCommand.Data, InputTickOffset);
                     if (SequenceDiff(_stateB.ProcessedTick, inputTick) >= 0)
                     {
                         var inputWriter = _inputCommands.Dequeue();
@@ -205,6 +207,7 @@ namespace LiteEntitySystem
             if (_stateB != null)
             {
                 float fTimer = (float)(_timer/_lerpTime);
+                _lerpMsec = (ushort)(fTimer * 1000f);
                 for(int i = 0; i < _stateB.InterpolatedCount; i++)
                 {
                     ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
@@ -260,7 +263,7 @@ namespace LiteEntitySystem
                     foreach (var inputCommand in _inputCommands)
                     {
                         //reapply input data
-                        _inputReader.SetSource(inputCommand.Data, 8, inputCommand.Length);
+                        _inputReader.SetSource(inputCommand.Data, InputDataOffset, inputCommand.Length);
                         foreach(var controller in GetControllers<HumanControllerLogic>())
                         {
                             controller.ReadInput(_inputReader);

@@ -52,6 +52,7 @@ namespace LiteEntitySystem
         
         internal byte Id = byte.MaxValue;
         internal int DataSize;
+        internal bool IsArray;
 
         public RemoteCall(ExecuteFlags flags)
         {
@@ -97,7 +98,7 @@ namespace LiteEntitySystem
             public readonly byte Version;
             public abstract bool IsLocalControlled { get; }
             public bool IsServerControlled => !IsLocalControlled;
-
+            
             internal abstract bool IsControlledBy(byte playerId);
 
             public virtual void DebugPrint()

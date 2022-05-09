@@ -279,8 +279,8 @@ namespace LiteEntitySystem
                             //put new
                             resultData[position] = rpcNode.Id;
                             resultData[position + 1] = rpcNode.FieldId;
-                            *(ushort*)(resultData + position + 2) = rpcNode.Tick;
-                            *(ushort*)(resultData + position + 4) = rpcNode.Size;
+                            Unsafe.Copy(resultData + position + 2, ref rpcNode.Tick);
+                            Unsafe.Copy(resultData + position + 4, ref rpcNode.Size);
                             fixed (byte* rpcData = rpcNode.Data)
                             {
                                 Unsafe.CopyBlock(resultData + position + 6, rpcData, rpcNode.Size);
@@ -294,6 +294,9 @@ namespace LiteEntitySystem
                             if (_rpcTail == _rpcHead)
                                 _rpcTail = null;
                             _rpcHead = rpcNode.Next;
+                            rpcNode.Next = null;
+                            rpcNode = _rpcHead;
+                            continue;
                         }
                         rpcNode = rpcNode.Next;
                     }
@@ -321,20 +324,36 @@ namespace LiteEntitySystem
 
         private bool _lagCompensationEnabled;
         
-        public unsafe void EnableLagCompensation(ushort playerServerTick)
+        public unsafe void EnableLagCompensation(NetPlayer player)
         {
-            int diff = EntityManager.SequenceDiff(_entityManager.Tick, playerServerTick);
+            if (_entity.IsControlledBy(player.Id))
+                return;
+            int diff = EntityManager.SequenceDiff(_entityManager.Tick, player.StateATick);
             if (diff <= 0 || diff >= _filledHistory || _state != SerializerState.Active)
                 return;
             byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref _entity);
-            fixed (byte* history = _history[playerServerTick % MaxHistory], current = _history[_entityManager.Tick % MaxHistory])
+            fixed (byte* 
+                   historyA = _history[player.StateATick % MaxHistory], 
+                   historyB = _history[player.StateBTick % MaxHistory],
+                   current = _history[_entityManager.Tick % MaxHistory])
             {
                 int historyOffset = 0;
                 for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
                 {
                     var field = _classData.LagCompensatedFields[i];
                     Unsafe.CopyBlock(current + historyOffset, entityPtr + field.FieldOffset, field.Size);
-                    Unsafe.CopyBlock(entityPtr + field.FieldOffset, history + historyOffset, field.Size);
+                    if (field.Interpolator != null)
+                    {
+                        field.Interpolator(
+                            historyA + historyOffset,
+                            historyB + historyOffset,
+                            entityPtr + field.FieldOffset,
+                            player.LerpTime);
+                    }
+                    else
+                    {
+                        Unsafe.CopyBlock(entityPtr + field.FieldOffset, historyA + historyOffset, field.Size);
+                    }
                     historyOffset += field.IntSize;
                 }
             }
