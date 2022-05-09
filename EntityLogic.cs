@@ -132,7 +132,7 @@ namespace LiteEntitySystem
                 {
                     if ((remoteCallInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
                         methodToCall(value);
-                    ((ServerEntityManager)EntityManager).EntitySerializers[Id].AddRemoteCall(value, remoteCallInfo);
+                    ((ServerEntityManager)EntityManager).AddRemoteCall(Id, value, remoteCallInfo);
                 }
                 else if(IsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
                 {
@@ -151,7 +151,7 @@ namespace LiteEntitySystem
                 {
                     if ((remoteCallInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
                         methodToCall(value);
-                    ((ServerEntityManager)EntityManager).EntitySerializers[Id].AddRemoteCall(value, count, remoteCallInfo);
+                    ((ServerEntityManager)EntityManager).AddRemoteCall(Id, value, count, remoteCallInfo);
                 }
                 else if(IsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
                 {
@@ -267,7 +267,12 @@ namespace LiteEntitySystem
         {
 
         }
-        
+
+        public virtual void OnLagCompensation(bool enabled)
+        {
+            
+        }
+
         protected EntityLogic(EntityParams entityParams) : base(entityParams) { }
     }
 
@@ -297,6 +302,18 @@ namespace LiteEntitySystem
                 InternalOwnerId = value?.InternalOwnerId ?? (GetParent<EntityLogic>()?.InternalOwnerId ?? 0);
                 _controller = value;
             }
+        }
+        
+        protected void EnableLagCompensation()
+        {
+            if (EntityManager.IsServer)
+                ((ServerEntityManager)EntityManager).EnableLagCompensation(this);
+        }
+
+        protected void DisableLagCompensation()
+        {
+            if (EntityManager.IsServer)
+                ((ServerEntityManager)EntityManager).DisableLagCompensation();
         }
 
         public override void Update()

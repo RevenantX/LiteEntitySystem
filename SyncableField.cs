@@ -7,30 +7,31 @@ namespace LiteEntitySystem
     public abstract class SyncableField
     {
         //This setups in Serializer.Init
-        internal StateSerializer Serializer;
+        internal ServerEntityManager EntityManager;
         internal byte FieldId;
+        internal ushort EntityId;
         
         public abstract unsafe void FullSyncWrite(byte* data, ref int position);
         public abstract unsafe void FullSyncRead(byte* data, ref int position);
         
         protected void ExecuteOnClient<T>(Action<T> methodToCall, T value) where T : struct
         {
-            if (Serializer == null)
+            if (EntityManager == null)
                 return;
             
             if (methodToCall.Target != this)
                 throw new Exception("You can call this only on this class methods");
-            Serializer.AddSyncableCall(this, value, methodToCall.Method);
+            EntityManager.AddSyncableCall(this, value, methodToCall.Method);
         }
         
         protected void ExecuteOnClient<T>(Action<T[]> methodToCall, T[] value, int count) where T : struct
         {
-            if (Serializer == null)
+            if (EntityManager == null)
                 return;
             
             if (methodToCall.Target != this)
                 throw new Exception("You can call this only on this class methods");
-            Serializer.AddSyncableCall(this, value, count, methodToCall.Method);
+            EntityManager.AddSyncableCall(this, value, count, methodToCall.Method);
         }
     }
     

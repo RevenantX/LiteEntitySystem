@@ -29,8 +29,6 @@ namespace LiteEntitySystem
         {
             public int Field;
             public int StateReaderOffset;
-            public int InitialDataOffset;
-            public InterpolatorDelegate Interpolator;
         }
         
         private struct ServerStateComparer : IComparer<ServerStateData>
@@ -124,37 +122,27 @@ namespace LiteEntitySystem
                             classData.FieldsFlagsSize;
 
                         int stateReaderOffset = preloadData.DataOffset;
-                        int initialDataOffset = 0;
-                        int fieldIndex = 0;
-                        
                         //preload interpolation info
-                        if (!entity.IsLocalControlled && classData.InterpolatedMethods != null)
+                        if (!entity.IsLocalControlled && classData.InterpolatedCount > 0)
                         {
                             Utils.ResizeIfFull(ref InterpolatedFields, InterpolatedCount);
-                            Utils.ResizeOrCreate(ref preloadData.InterpolatedCaches, classData.InterpolatedMethods.Length);
+                            Utils.ResizeOrCreate(ref preloadData.InterpolatedCaches, classData.InterpolatedCount);
                             InterpolatedFields[InterpolatedCount++] = PreloadDataCount - 1;
-                            
-                            for (; fieldIndex < classData.InterpolatedMethods.Length; fieldIndex++)
-                            {
-                                if (Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, fieldIndex))
-                                {
-                                    preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
-                                    {
-                                        Field = fieldIndex,
-                                        Interpolator = classData.InterpolatedMethods[fieldIndex],
-                                        StateReaderOffset = stateReaderOffset,
-                                        InitialDataOffset = initialDataOffset
-                                    };
-                                    stateReaderOffset += fields[fieldIndex].IntSize;
-                                }
-                                initialDataOffset += fields[fieldIndex].IntSize;
-                            }
                         }
-                        
-                        for (; fieldIndex < classData.FieldsCount; fieldIndex++)
+                        for (int fieldIndex = 0; fieldIndex < classData.FieldsCount; fieldIndex++)
                         {
-                            if (Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, fieldIndex))
-                                stateReaderOffset += fields[fieldIndex].IntSize;
+                            if (!Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, fieldIndex))
+                                continue;
+                            var field = fields[fieldIndex];
+                            if (!entity.IsLocalControlled && field.Interpolator != null)
+                            {
+                                preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
+                                {
+                                    Field = fieldIndex,
+                                    StateReaderOffset = stateReaderOffset
+                                };
+                            }
+                            stateReaderOffset += field.IntSize;
                         }
 
                         //preload rpcs

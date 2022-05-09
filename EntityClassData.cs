@@ -46,23 +46,36 @@ namespace LiteEntitySystem
         }
     }
 
-    internal readonly struct EntityFieldInfo
+    internal struct EntityFieldInfo
     {
-        public readonly int Offset;
+        public readonly int FieldOffset;
         public readonly uint Size;
         public readonly int IntSize;
         public readonly UIntPtr PtrSize;
         public readonly bool IsEntity;
         public readonly MethodCallDelegate OnSync;
+        public readonly bool LagCompensated;
+        public readonly InterpolatorDelegate Interpolator;
 
-        public EntityFieldInfo(MethodCallDelegate onSync, int offset, int size, bool isEntity)
+        public int FixedOffset;
+
+        public EntityFieldInfo(
+            MethodCallDelegate onSync, 
+            InterpolatorDelegate interpolator,
+            int offset,
+            int size,
+            bool isEntity,
+            bool lagCompensated)
         {
-            Offset = offset;
+            FieldOffset = offset;
             Size = (uint)size;
             IntSize = size;
             PtrSize = (UIntPtr)Size;
             IsEntity = isEntity;
             OnSync = onSync;
+            Interpolator = interpolator;
+            LagCompensated = lagCompensated;
+            FixedOffset = 0;
         }
     }
     
@@ -77,8 +90,11 @@ namespace LiteEntitySystem
         public readonly int FixedFieldsSize;
         public readonly EntityFieldInfo[] Fields;
         public readonly EntityFieldInfo[] SyncableFields;
-        public readonly InterpolatorDelegate[] InterpolatedMethods;
         public readonly int InterpolatedFieldsSize;
+        public readonly int InterpolatedCount;
+        public readonly int[] LagCompensatedIndexes;
+        public readonly int LagCompensatedSize;
+
         public readonly bool IsUpdateable;
         public readonly bool IsServerOnly;
         public readonly Type[] BaseTypes;
@@ -120,9 +136,9 @@ namespace LiteEntitySystem
             BaseTypes = baseTypes.ToArray();
             BaseIds = new int[baseTypes.Count];
             
-            var interpolatedMethods = new List<InterpolatorDelegate>();
             var fields = new List<EntityFieldInfo>();
             var syncableFields = new List<EntityFieldInfo>();
+            var lagCompensatedIndexes = new List<int>();
 
             //add here to baseTypes to add fields
             baseTypes.Insert(0, typeof(EntityManager.InternalEntity));
@@ -167,26 +183,28 @@ namespace LiteEntitySystem
                     
                     if (ft.IsValueType)
                     {
-                        int fieldSize = Marshal.SizeOf(ft);
-
+                        int fieldSize = ft == typeof(bool) ? 1 : Marshal.SizeOf(ft);
+                        bool lagCompensated = syncVarAttribute.Flags.IsByteFlagSet(SyncFlags.LagCompensated);
+                        bool hasInterpolator = Interpolation.Methods.TryGetValue(ft, out var interpolator);
+                        
                         if (syncVarAttribute.Flags.IsByteFlagSet(SyncFlags.Interpolated))
                         {
-                            if (!Interpolation.Methods.TryGetValue(ft, out var interpolatedInfo))
+                            if (!hasInterpolator)
                                 throw new Exception($"No info how to interpolate: {ft}");
-                            interpolatedMethods.Insert(0, interpolatedInfo);
-                            fields.Insert(0, new EntityFieldInfo(onSyncMethod, offset, fieldSize, false));
                             InterpolatedFieldsSize += fieldSize;
+                            InterpolatedCount++;
                         }
-                        else
+                        if (syncVarAttribute.Flags.IsByteFlagSet(SyncFlags.LagCompensated))
                         {
-                            fields.Add(new EntityFieldInfo(onSyncMethod, offset, ft == typeof(bool) ? 1 : fieldSize, false));
+                            lagCompensatedIndexes.Add(fields.Count);
+                            LagCompensatedSize += fieldSize;
                         }
-
+                        fields.Add(new EntityFieldInfo(onSyncMethod, interpolator, offset, fieldSize, false, lagCompensated));
                         FixedFieldsSize += fieldSize;
                     }
                     else if (ft == typeof(EntityLogic) || ft.IsSubclassOf(typeof(EntityManager.InternalEntity)))
                     {
-                        fields.Add(new EntityFieldInfo(onSyncMethod, offset, 2, true));
+                        fields.Add(new EntityFieldInfo(onSyncMethod, null, offset, sizeof(ushort), true, false));
                         FixedFieldsSize += 2;
                     }
                     else if (ft.IsSubclassOf(typeof(SyncableField)))
@@ -195,7 +213,7 @@ namespace LiteEntitySystem
                             throw new Exception("Syncable fields should be readonly!");
 
                         //syncable rpcs
-                        syncableFields.Add(new EntityFieldInfo(onSyncMethod, offset, 0, false));
+                        syncableFields.Add(new EntityFieldInfo(onSyncMethod, null, offset, 0, false, false));
                         foreach (var syncableType in GetBaseTypes(ft, typeof(SyncableField), true))
                         {
                             foreach (var method in syncableType.GetMethods(bindingFlags))
@@ -219,16 +237,30 @@ namespace LiteEntitySystem
                     }
                     else
                     {
-                        Logger.LogError($"UnsupportedSyncVar: {field.Name} - {ft}");
+                        Logger.LogError($"Unsupported SyncVar: {field.Name} - {ft}");
                     }
                 }
             }
             
-            InterpolatedMethods = interpolatedMethods.ToArray();
+            //sort by placing interpolated first
+            fields.Sort((a, b) =>
+            {
+                int wa = a.Interpolator != null ? 1 : 0;
+                int wb = b.Interpolator != null ? 1 : 0;
+                return wb - wa;
+            });
             Fields = fields.ToArray();
+            int fixedOffset = 0;
+            for (int i = 0; i < Fields.Length; i++)
+            {
+                Fields[i].FixedOffset = fixedOffset;
+                fixedOffset += Fields[i].IntSize;
+            }
+            
             SyncableFields = syncableFields.ToArray();
             FieldsCount = Fields.Length;
             FieldsFlagsSize = (FieldsCount-1) / 8 + 1;
+            LagCompensatedIndexes = lagCompensatedIndexes.ToArray();
         }
     }
     

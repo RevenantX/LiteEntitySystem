@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using K4os.Compression.LZ4;
 using LiteNetLib;
@@ -18,11 +19,13 @@ namespace LiteEntitySystem
     public readonly struct InputBuffer
     {
         public readonly ushort Tick;
+        public readonly ushort ServerTick;
         public readonly NetPacketReader Reader;
 
-        public InputBuffer(ushort tick, NetPacketReader reader)
+        public InputBuffer(ushort tick, ushort serverTick, NetPacketReader reader)
         {
             Tick = tick;
+            ServerTick = serverTick;
             Reader = reader;
         }
     }
@@ -33,6 +36,7 @@ namespace LiteEntitySystem
         public readonly NetPeer Peer;
         public ushort LastProcessedTick;
         public ushort ServerTick;
+        public ushort ServerInterpolatedTick;
         public bool IsFirstStateReceived;
         public bool IsNew;
         public readonly SortedSet<InputBuffer> AvailableInput = new SortedSet<InputBuffer>(new InputComprarer());
@@ -59,15 +63,18 @@ namespace LiteEntitySystem
         private readonly Queue<ushort> _possibleId = new Queue<ushort>();
         private readonly byte[] _packetBuffer = new byte[NetConstants.MaxPacketSize*(MaxParts+1)];
         private byte[] _compressionBuffer;
-        internal readonly StateSerializer[] EntitySerializers = new StateSerializer[MaxEntityCount];
+        private readonly StateSerializer[] _savedEntityData = new StateSerializer[MaxEntityCount];
         private readonly NetPlayer[] _netPlayers = new NetPlayer[MaxPlayers];
         private int _netPlayersCount;
-        private const int MaxPlayers = 128;
+        private const int MaxPlayers = byte.MaxValue;
         private ushort _nextId;
+        private readonly Queue<RemoteCallPacket> _rpcPool = new Queue<RemoteCallPacket>();
 
         public const byte ServerPlayerId = 0;
         public override byte PlayerId => ServerPlayerId;
         public ServerSendRate SendRate;
+
+        public event Action<bool> OnLagCompensation;
 
         public ServerEntityManager(byte packetHeader, int framesPerSecond) : base(NetworkMode.Server, framesPerSecond)
         {
@@ -127,10 +134,8 @@ namespace LiteEntitySystem
             
             var classData = ClassDataDict[EntityClassInfo<T>.ClassId];
             ushort entityId = _possibleId.Count > 0 ? _possibleId.Dequeue() : _nextId++;
-            
-            ref var stateSerializer = ref EntitySerializers[entityId];
-            stateSerializer ??= new StateSerializer();
-            
+            ref var stateSerializer = ref _savedEntityData[entityId];
+
             var entity = (T)AddEntity(new EntityParams(
                 classData.ClassId, 
                 entityId,
@@ -152,6 +157,7 @@ namespace LiteEntitySystem
             var inputFrame = player.AvailableInput.Min;
             controller.ReadInput(inputFrame.Reader);
             player.LastProcessedTick = inputFrame.Tick;
+            player.ServerInterpolatedTick = inputFrame.ServerTick;
             player.AvailableInput.Remove(inputFrame);
             inputFrame.Reader.Recycle();
         }
@@ -175,13 +181,106 @@ namespace LiteEntitySystem
             foreach (var aliveEntity in AliveEntities)
             {
                 aliveEntity.Update();
+                _savedEntityData[aliveEntity.Id].WriteHistory();
             }
         }
 
         internal override void RemoveEntity(EntityLogic e)
         {
             base.RemoveEntity(e);
-            EntitySerializers[e.Id].Destroy(ServerTick);
+            _savedEntityData[e.Id].Destroy(ServerTick);
+        }
+        
+        internal void PoolRpc(RemoteCallPacket rpcNode)
+        {
+            _rpcPool.Enqueue(rpcNode);
+        }
+        
+        internal unsafe void AddRemoteCall<T>(ushort entityId, T value, RemoteCall remoteCallInfo) where T : struct
+        {
+            var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
+            rpc.Setup(remoteCallInfo.Id, byte.MaxValue, remoteCallInfo.Flags, Tick, remoteCallInfo.DataSize);
+            fixed (byte* rawData = rpc.Data)
+                Unsafe.Copy(rawData, ref value);
+            _savedEntityData[entityId].AddRpcPacket(rpc);
+        }
+        
+        internal unsafe void AddRemoteCall<T>(ushort entityId, T[] value, int count, RemoteCall remoteCallInfo) where T : struct
+        {
+            var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
+            rpc.Setup(remoteCallInfo.Id, byte.MaxValue, remoteCallInfo.Flags, Tick, remoteCallInfo.DataSize * count);
+            fixed (byte* rawData = rpc.Data, rawValue = Unsafe.As<byte[]>(value))
+                Unsafe.CopyBlock(rawData, rawValue, rpc.Size);
+            _savedEntityData[entityId].AddRpcPacket(rpc);
+        }
+        
+        public unsafe void AddSyncableCall<T>(SyncableField field, T value, MethodInfo method) where T : struct
+        {
+            var remoteCallInfo = ClassDataDict[EntitiesDict[field.EntityId].ClassId].SyncableRemoteCalls[method];
+            var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
+            rpc.Setup(
+                remoteCallInfo.Id, 
+                field.FieldId, 
+                ExecuteFlags.ExecuteOnServer | ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner, 
+                Tick, 
+                remoteCallInfo.DataSize);
+            fixed (byte* rawData = rpc.Data)
+                Unsafe.Copy(rawData, ref value);
+            _savedEntityData[field.EntityId].AddRpcPacket(rpc);
+        }
+        
+        public unsafe void AddSyncableCall<T>(SyncableField field, T[] value, int count, MethodInfo method) where T : struct
+        {
+            var remoteCallInfo = ClassDataDict[EntitiesDict[field.EntityId].ClassId].SyncableRemoteCalls[method];
+            var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
+            rpc.Setup(
+                remoteCallInfo.Id, 
+                field.FieldId, 
+                ExecuteFlags.ExecuteOnServer | ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner, 
+                Tick,
+                remoteCallInfo.DataSize * count);
+            fixed (byte* rawData = rpc.Data, rawValue = Unsafe.As<byte[]>(value))
+                Unsafe.CopyBlock(rawData, rawValue, rpc.Size);
+            _savedEntityData[field.EntityId].AddRpcPacket(rpc);
+        }
+
+        private bool _lagCompensationEnabled;
+        
+        internal void EnableLagCompensation(PawnLogic pawn)
+        {
+            if (_lagCompensationEnabled || pawn.OwnerId == ServerPlayerId)
+                return;
+
+            NetPlayer player = null;
+            for (int i = 0; i < _netPlayersCount; i++)
+            {
+                if (_netPlayers[i].Id == pawn.OwnerId)
+                {
+                    player = _netPlayers[i];
+                    break;
+                }
+            }
+            if (player == null || !player.IsFirstStateReceived)
+                return;
+            
+            _lagCompensationEnabled = true;
+            for (int i = 0; i <= MaxEntityId; i++)
+            {
+                _savedEntityData[i].EnableLagCompensation(player.ServerInterpolatedTick);
+            }
+            OnLagCompensation?.Invoke(true);
+        }
+
+        internal void DisableLagCompensation()
+        {
+            if(!_lagCompensationEnabled)
+                return;
+            _lagCompensationEnabled = false;
+            for (int i = 0; i <= MaxEntityId; i++)
+            {
+                _savedEntityData[i].DisableLagCompensation();
+            }
+            OnLagCompensation?.Invoke(false);
         }
 
         public override unsafe void Update()
@@ -216,7 +315,7 @@ namespace LiteEntitySystem
                     _packetBuffer[1] = PacketBaselineSync;
                     for (int i = 0; i <= MaxEntityId; i++)
                     {
-                        EntitySerializers[i].MakeBaseline(Tick, packetBuffer, ref writePosition);
+                        _savedEntityData[i].MakeBaseline(Tick, packetBuffer, ref writePosition);
                     }
                     Utils.ResizeOrCreate(ref _compressionBuffer, writePosition);
 
@@ -255,7 +354,7 @@ namespace LiteEntitySystem
 
                 for (ushort eId = 0; eId <= MaxEntityId; eId++)
                 {
-                    var diffResult = EntitySerializers[eId].MakeDiff(
+                    var diffResult = _savedEntityData[eId].MakeDiff(
                         netPlayer.Id,
                         minimalTick, 
                         Tick, 
@@ -323,6 +422,7 @@ namespace LiteEntitySystem
             {
                 case EntityManager.PacketClientSync:
                     ushort serverTick = reader.GetUShort();
+                    ushort serverInterpolatedTick = reader.GetUShort();
                     ushort playerTick = reader.GetUShort();
                     
                     //read input
@@ -336,7 +436,7 @@ namespace LiteEntitySystem
                     if(EntityManager.SequenceDiff(serverTick, player.ServerTick) > 0)
                         player.ServerTick = serverTick;
 
-                    var inputBuffer = new InputBuffer(playerTick, reader);
+                    var inputBuffer = new InputBuffer(playerTick, serverInterpolatedTick, reader);
                     if (!player.AvailableInput.Contains(inputBuffer) && EntityManager.SequenceDiff(playerTick, player.LastProcessedTick) > 0)
                     {
                         if (player.AvailableInput.Count >= EntityManager.MaxSavedStateDiff)
