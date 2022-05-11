@@ -95,7 +95,7 @@ namespace LiteEntitySystem
         {
             ref var predictedData = ref _predictedEntities[entity.Id];
             var classData = ClassDataDict[entity.ClassId];
-            byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref entity);
+            byte* entityPtr = InternalEntity.GetPtr(ref entity);
             
             Utils.ResizeOrCreate(ref predictedData, classData.FixedFieldsSize);
             fixed (byte* predictedPtr = predictedData)
@@ -169,9 +169,9 @@ namespace LiteEntitySystem
             foreach (var entity in OwnedEntities)
             {
                 //save data for interpolation before update
-                var entityLocal = entity;
                 var classData = ClassDataDict[entity.ClassId];
-                byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref entityLocal);
+                var entityLocal = entity;
+                byte* entityPtr = InternalEntity.GetPtr(ref entityLocal);
                 fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
                        prevDataPtr = _interpolatePrevData[entity.Id])
                 {
@@ -234,7 +234,7 @@ namespace LiteEntitySystem
                     ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
                     var entity = EntitiesDict[preloadData.EntityId];
                     var fields = ClassDataDict[entity.ClassId].Fields;
-                    byte* entityPtr = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref entity);
+                    byte* entityPtr = InternalEntity.GetPtr(ref entity);
                     fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr = _stateB.Data)
                     {
                         for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
@@ -267,7 +267,7 @@ namespace LiteEntitySystem
                         fixed (byte* latestEntityData = _predictedEntities[entity.Id])
                         {
                             var classData = ClassDataDict[entity.ClassId];
-                            byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref localEntity);
+                            byte* entityPtr = InternalEntity.GetPtr(ref localEntity);
                             for (int i = 0; i < classData.FieldsCount; i++)
                             {
                                 ref var entityFieldInfo = ref classData.Fields[i];
@@ -299,7 +299,7 @@ namespace LiteEntitySystem
                     {
                         var classData = ClassDataDict[entity.ClassId];
                         var localEntity = entity;
-                        byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref localEntity);
+                        byte* entityPtr = InternalEntity.GetPtr(ref localEntity);
                         
                         for(int i = 0; i < classData.InterpolatedCount; i++)
                         {
@@ -321,7 +321,7 @@ namespace LiteEntitySystem
             {
                 var entityLocal = entity;
                 var classData = ClassDataDict[entity.ClassId];
-                byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref entityLocal);
+                byte* entityPtr = InternalEntity.GetPtr(ref entityLocal);
                 fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
                        prevDataPtr = _interpolatePrevData[entity.Id])
                 {
@@ -361,7 +361,7 @@ namespace LiteEntitySystem
                         {
                             if (offset + inputCommand.Length + sizeof(ushort) > NetConstants.MaxUnreliableDataSize)
                             {
-                                Unsafe.Copy(sendBuffer + 2, ref currentTick);
+                                Unsafe.Write(sendBuffer + 2, currentTick);
                                 _localPeer.Send(_sendBuffer, 0, offset, DeliveryMethod.Unreliable);
                                 offset = 4;
                                 
@@ -370,8 +370,7 @@ namespace LiteEntitySystem
                             }
                             
                             //put size
-                            ushort size = (ushort)(inputCommand.Length - InputHeaderSize);
-                            Unsafe.Copy(sendBuffer + offset, ref size);
+                            Unsafe.Write(sendBuffer + offset, (ushort)(inputCommand.Length - InputHeaderSize));
                             offset += sizeof(ushort);
                             
                             //put data
@@ -381,13 +380,7 @@ namespace LiteEntitySystem
 
                         tickIndex++;
                     }
-
-                    if (offset == 4)
-                    {
-                        Logger.Log("VSMISLE");
-                        return;
-                    }
-                    Unsafe.Copy(sendBuffer + 2, ref currentTick);
+                    Unsafe.Write(sendBuffer + 2, currentTick);
                     _localPeer.Send(_sendBuffer, 0, offset, DeliveryMethod.Unreliable);
                     _localPeer.NetManager.TriggerUpdate();
                 }
@@ -434,8 +427,7 @@ namespace LiteEntitySystem
             for (int i = 0; i < _setEntityIdsCount; i++)
             {
                 ref var setIdInfo = ref _setEntityIds[i];
-                byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref setIdInfo.Entity);
-                Unsafe.AsRef<InternalEntity>(entityPtr + setIdInfo.FieldOffset) =
+                Unsafe.AsRef<InternalEntity>(InternalEntity.GetPtr(ref setIdInfo.Entity) + setIdInfo.FieldOffset) =
                     setIdInfo.Id == InvalidEntityId ? null : EntitiesDict[setIdInfo.Id];
             }
             _setEntityIdsCount = 0;
@@ -513,7 +505,7 @@ namespace LiteEntitySystem
             Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
             Utils.ResizeOrCreate(ref _setEntityIds, _setEntityIdsCount + classData.FieldsCount);
             
-            byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref entity);
+            byte* entityPtr = InternalEntity.GetPtr(ref entity);
             int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
             bool writeInterpolationData = entity.IsServerControlled || fullSync;
             

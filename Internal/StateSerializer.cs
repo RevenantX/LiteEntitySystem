@@ -78,7 +78,7 @@ namespace LiteEntitySystem.Internal
 
             unsafe
             {
-                byte* entityPointer = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref _entity);
+                byte* entityPointer = InternalEntity.GetPtr(ref _entity);
                 for (int i = 0; i < _classData.SyncableFields.Length; i++)
                 {
                     ref var syncable = ref Unsafe.AsRef<SyncableField>(entityPointer + _classData.SyncableFields[i].FieldOffset);
@@ -89,9 +89,9 @@ namespace LiteEntitySystem.Internal
                 
                 fixed (byte* data = _latestEntityData)
                 {
-                    *(ushort*) (data) = e.Id;
+                    Unsafe.Write(data, e.Id);
                     data[2] = e.Version;
-                    *(ushort*) (data + 3) = e.ClassId;
+                    Unsafe.Write(data + 3, e.ClassId);
                 }
             }
             
@@ -108,7 +108,7 @@ namespace LiteEntitySystem.Internal
             if (_classData.LagCompensatedSize == 0)
                 return;
             _filledHistory = Math.Min(_filledHistory + 1, MaxHistory);
-            byte* entityPointer = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref _entity);
+            byte* entityPointer = InternalEntity.GetPtr(ref _entity);
             int historyOffset = 0;
             fixed (byte* history = _history[tick % MaxHistory])
             {
@@ -127,7 +127,7 @@ namespace LiteEntitySystem.Internal
             if (serverTick == _lastWriteTick || _state != SerializerState.Active) 
                 return;
             _lastWriteTick = serverTick;
-            byte* entityPointer = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref _entity);
+            byte* entityPointer = InternalEntity.GetPtr(ref _entity);
             fixed (byte* latestEntityData = _latestEntityData)
             {
                 for (int i = 0; i < _classData.FieldsCount; i++)
@@ -188,7 +188,7 @@ namespace LiteEntitySystem.Internal
                     position += field.IntSize;
                 }
 
-                byte* entityPointer = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref _entity);
+                byte* entityPointer = InternalEntity.GetPtr(ref _entity);
                 for (int i = 0; i < _classData.SyncableFields.Length; i++)
                 {
                     Unsafe.AsRef<SyncableField>(entityPointer + _classData.SyncableFields[i].FieldOffset).FullSyncWrite(resultData, ref position);
@@ -210,7 +210,7 @@ namespace LiteEntitySystem.Internal
 
             //make diff
             int startPos = position;
-            byte* entityPointer = (byte*)Unsafe.As<InternalEntity, IntPtr>(ref _entity);
+            byte* entityPointer = InternalEntity.GetPtr(ref _entity);
 
             fixed (byte* lastEntityData = _latestEntityData)
             {
@@ -277,8 +277,8 @@ namespace LiteEntitySystem.Internal
                             //put new
                             resultData[position] = rpcNode.Id;
                             resultData[position + 1] = rpcNode.FieldId;
-                            Unsafe.Copy(resultData + position + 2, ref rpcNode.Tick);
-                            Unsafe.Copy(resultData + position + 4, ref rpcNode.Size);
+                            Unsafe.Write(resultData + position + 2, rpcNode.Tick);
+                            Unsafe.Write(resultData + position + 4, rpcNode.Size);
                             fixed (byte* rpcData = rpcNode.Data)
                             {
                                 Unsafe.CopyBlock(resultData + position + 6, rpcData, rpcNode.Size);
@@ -329,7 +329,7 @@ namespace LiteEntitySystem.Internal
             int diff = EntityManager.SequenceDiff(_entityManager.Tick, player.StateATick);
             if (diff <= 0 || diff >= _filledHistory || _state != SerializerState.Active)
                 return;
-            byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref _entity);
+            byte* entityPtr = InternalEntity.GetPtr(ref _entity);
             fixed (byte* 
                    historyA = _history[player.StateATick % MaxHistory], 
                    historyB = _history[player.StateBTick % MaxHistory],
@@ -367,7 +367,7 @@ namespace LiteEntitySystem.Internal
                 return;
             _lagCompensationEnabled = false;
             
-            byte* entityPtr = (byte*) Unsafe.As<InternalEntity, IntPtr>(ref _entity);
+            byte* entityPtr = InternalEntity.GetPtr(ref _entity);
             fixed (byte* history = _history[_entityManager.Tick % MaxHistory])
             {
                 int historyOffset = 0;

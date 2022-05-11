@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
@@ -10,8 +11,14 @@ namespace LiteEntitySystem.Internal
         public readonly byte Version;
         public abstract bool IsLocalControlled { get; }
         public bool IsServerControlled => !IsLocalControlled;
-        
+
         internal abstract bool IsControlledBy(byte playerId);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static unsafe byte* GetPtr<T>(ref T entity) where T : InternalEntity
+        {
+            return (byte*)Unsafe.As<T, IntPtr>(ref entity);
+        }
 
         public virtual void DebugPrint()
         {

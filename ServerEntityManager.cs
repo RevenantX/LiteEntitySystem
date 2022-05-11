@@ -356,8 +356,8 @@ namespace LiteEntitySystem
                 
                 //first part full of data
                 _packetBuffer[4] = partCount;
-                Unsafe.Copy(packetBuffer + 5, ref netPlayer.LastProcessedTick);
-                Unsafe.Copy(packetBuffer + 7, ref netPlayer.LastReceivedTick);
+                Unsafe.Write(packetBuffer + 5, netPlayer.LastProcessedTick);
+                Unsafe.Write(packetBuffer + 7, netPlayer.LastReceivedTick);
                 writePosition = 9;
 
                 for (ushort eId = 0; eId <= MaxEntityId; eId++)

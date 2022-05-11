@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
@@ -62,6 +63,35 @@ namespace LiteEntitySystem.Internal
         public readonly MethodCallDelegate[] SyncableRemoteCallsClient = new MethodCallDelegate[255];
         public readonly Dictionary<MethodInfo, SyncableRemoteCall> SyncableRemoteCalls =
             new Dictionary<MethodInfo, SyncableRemoteCall>();
+
+        private static readonly int NativeFieldOffset;
+
+        private class TestOffset
+        {
+#pragma warning disable CS0414
+            public readonly uint TestValue = 0xDEADBEEF;
+#pragma warning restore CS0414
+        }
+        
+        static unsafe EntityClassData()
+        {
+            //check field offset
+            int monoOffset = 3 * IntPtr.Size;
+            int dotnetOffset = 4 + IntPtr.Size;
+
+            var field = typeof(TestOffset).GetField("TestValue");
+            int monoFieldOffset = Marshal.ReadInt32(field.FieldHandle.Value + monoOffset) & 0xFFFFFF;
+            int dotnetFieldOffset = Marshal.ReadInt32(field.FieldHandle.Value + dotnetOffset) & 0xFFFFFF;
+
+            TestOffset to = new TestOffset();
+            byte* rawData = (byte*)Unsafe.As<TestOffset, IntPtr>(ref to);
+            if (Unsafe.Read<uint>(rawData + monoFieldOffset) == 0xDEADBEEF)
+                NativeFieldOffset = monoOffset;
+            else if (Unsafe.Read<uint>(rawData + dotnetFieldOffset) == 0xDEADBEEF)
+                NativeFieldOffset = dotnetOffset;
+            else
+                Logger.Log("Unknown native field offset");
+        }
         
         private static MethodCallDelegate GetOnSyncDelegate(Type entityType, Type valueType, string methodName)
         {
@@ -154,7 +184,7 @@ namespace LiteEntitySystem.Internal
                         continue;
                     
                     var ft = field.FieldType;
-                    int offset = Marshal.ReadInt32(field.FieldHandle.Value + 3 * IntPtr.Size) & 0xFFFFFF;
+                    int offset = Marshal.ReadInt32(field.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
                     var onSyncMethod = GetOnSyncDelegate(baseType, ft, syncVarAttribute.MethodName);
                     
                     if (ft.IsValueType)
