@@ -16,9 +16,9 @@ namespace LiteEntitySystem
             var typedDelegate = (Action<TEnt, TValue>)method.CreateDelegate(typeof(Action<TEnt, TValue>));
             return (ent, previousValue) =>
             {
-                typedDelegate(
-                    Unsafe.AsRef<TEnt>(ent),
-                    previousValue == null ? default : Unsafe.AsRef<TValue>(previousValue));
+                TValue prev = default(TValue);
+                Unsafe.Copy(ref prev, previousValue);
+                typedDelegate(Unsafe.AsRef<TEnt>(ent), prev);
             };
         }
         

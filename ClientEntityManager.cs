@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using K4os.Compression.LZ4;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -10,6 +11,13 @@ namespace LiteEntitySystem
     public interface IInputGenerator
     {
         void GenerateInput(NetDataWriter writer);
+    }
+
+    internal struct InputPacketHeader
+    {
+        public ushort StateA;
+        public ushort StateB;
+        public ushort LerpMsec;
     }
 
     /// <summary>
@@ -24,6 +32,7 @@ namespace LiteEntitySystem
 
         private const int InterpolateBufferSize = 10;
         private const int InputBufferSize = 32;
+        private static readonly int InputHeaderSize = Marshal.SizeOf<InputPacketHeader>();
         
         private readonly NetPeer _localPeer;
         private readonly SortedList<ushort, ServerStateData> _receivedStates = new SortedList<ushort, ServerStateData>();
@@ -65,20 +74,19 @@ namespace LiteEntitySystem
         private InternalEntity[] _entitiesToConstruct = new InternalEntity[64];
         private int _entitiesToConstructCount;
         private readonly byte[] _tempData = new byte[MaxFieldSize];
+        private readonly byte[] _sendBuffer = new byte[NetConstants.MaxPacketSize];
         
         internal readonly EntityFilter<EntityLogic> OwnedEntities = new EntityFilter<EntityLogic>();
-        private readonly byte _headerByte;
         private ushort _lerpMsec;
-
-        private const int InputTickOffset = 8;
-        private const int InputDataOffset = 10;
+        private int _remoteCallsTick;
 
         public ClientEntityManager(NetPeer localPeer, byte headerByte, int framesPerSecond, IInputGenerator inputGenerator) : base(NetworkMode.Client, framesPerSecond)
         {
-            _headerByte = headerByte;
             _localPeer = localPeer;
             _inputGenerator = inputGenerator;
             OwnedEntities.OnAdded += OnOwnedAdded;
+            _sendBuffer[0] = headerByte;
+            _sendBuffer[1] = PacketClientSync;
         }
 
         private unsafe void OnOwnedAdded(EntityLogic entity)
@@ -105,8 +113,6 @@ namespace LiteEntitySystem
             Utils.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
         }
 
-        private int _remoteCallsTick;
-        
         protected override unsafe void OnLogicTick()
         {
             ServerTick++;
@@ -130,22 +136,33 @@ namespace LiteEntitySystem
 
             if (_inputCommands.Count > InputBufferSize)
                 _inputCommands.Dequeue();
-            var inputWriter = _inputPool.Count > 0 ? _inputPool.Dequeue() : new NetDataWriter();
-            inputWriter.Put(_headerByte);
-            inputWriter.Put(PacketClientSync);
-            inputWriter.Put(_stateA.Tick);
-            inputWriter.Put(_stateB?.Tick ?? _stateA.Tick);
-            inputWriter.Put(_lerpMsec);
-            inputWriter.Put(Tick);
-            _inputCommands.Enqueue(inputWriter);
-            _inputGenerated = true;
-            _inputGenerator.GenerateInput(inputWriter);
-            _inputReader.SetSource(inputWriter.Data, InputDataOffset, inputWriter.Length);
-            foreach(var controller in GetControllers<HumanControllerLogic>())
+            var inputWriter = _inputPool.Count > 0 ? _inputPool.Dequeue() : new NetDataWriter(true, InputHeaderSize);
+            InputPacketHeader inputPacketHeader = new InputPacketHeader
             {
-                controller.ReadInput(_inputReader);
-            }
+                StateA   = _stateA.Tick,
+                StateB   = _stateB?.Tick ?? _stateA.Tick,
+                LerpMsec = _lerpMsec
+            };
+            fixed(void* writerData = inputWriter.Data)
+                Unsafe.Copy(writerData, ref inputPacketHeader);
+            inputWriter.SetPosition(InputHeaderSize);
             
+            _inputGenerator.GenerateInput(inputWriter);
+            if (inputWriter.Length > NetConstants.MaxUnreliableDataSize - 2)
+            {
+                Logger.LogError($"Input too large: {inputWriter.Length-InputHeaderSize} bytes");
+            }
+            else
+            {
+                _inputCommands.Enqueue(inputWriter);
+                _inputGenerated = true;
+                _inputReader.SetSource(inputWriter.Data, InputHeaderSize, inputWriter.Length);
+                foreach(var controller in GetControllers<HumanControllerLogic>())
+                {
+                    controller.ReadInput(_inputReader);
+                }
+            }
+
             //local update
             foreach (var entity in OwnedEntities)
             {
@@ -190,10 +207,9 @@ namespace LiteEntitySystem
                 _stateB.Preload(this);
 
                 //remove processed inputs
-                while (_inputCommands.TryPeek(out var inputCommand))
+                while (_inputCommands.Count > 0)
                 {
-                    ushort inputTick = BitConverter.ToUInt16(inputCommand.Data, InputTickOffset);
-                    if (SequenceDiff(_stateB.ProcessedTick, inputTick) >= 0)
+                    if (SequenceDiff(_stateB.ProcessedTick, Tick - _inputCommands.Count + 1) >= 0)
                     {
                         var inputWriter = _inputCommands.Dequeue();
                         inputWriter.Reset();
@@ -266,7 +282,7 @@ namespace LiteEntitySystem
                     foreach (var inputCommand in _inputCommands)
                     {
                         //reapply input data
-                        _inputReader.SetSource(inputCommand.Data, InputDataOffset, inputCommand.Length);
+                        _inputReader.SetSource(inputCommand.Data, InputHeaderSize, inputCommand.Length);
                         foreach(var controller in GetControllers<HumanControllerLogic>())
                         {
                             controller.ReadInput(_inputReader);
@@ -307,9 +323,45 @@ namespace LiteEntitySystem
             if (_inputGenerated)
             {
                 _inputGenerated = false;
-                foreach (var inputCommand in _inputCommands)
-                    _localPeer.Send(inputCommand, DeliveryMethod.Unreliable);
-                _localPeer.NetManager.TriggerUpdate();
+                
+                //pack tick first
+                int offset = 4;
+                fixed (byte* sendBuffer = _sendBuffer)
+                {
+                    ushort currentTick = (ushort)(Tick - _inputCommands.Count + 1);
+                    ushort tickIndex = 0;
+                    
+                    foreach (var inputCommand in _inputCommands)
+                    {
+                        fixed (byte* inputData = inputCommand.Data)
+                        {
+                            if (offset + inputCommand.Length + sizeof(ushort) > NetConstants.MaxUnreliableDataSize)
+                            {
+                                Unsafe.Copy(sendBuffer + 2, ref currentTick);
+                                _localPeer.Send(_sendBuffer, 0, offset, DeliveryMethod.Unreliable);
+                                offset = 4;
+                                
+                                currentTick += tickIndex;
+                                tickIndex = 0;
+                            }
+                            
+                            //put size
+                            ushort size = (ushort)(inputCommand.Length - InputHeaderSize);
+                            Unsafe.Copy(sendBuffer + offset, ref size);
+                            offset += sizeof(ushort);
+                            
+                            //put data
+                            Unsafe.CopyBlock(sendBuffer + offset, inputData, (uint)inputCommand.Length);
+                            offset += inputCommand.Length;
+                        }
+
+                        tickIndex++;
+                    }
+                    
+                    Unsafe.Copy(sendBuffer + 2, ref currentTick);
+                    _localPeer.Send(_sendBuffer, 0, offset, DeliveryMethod.Unreliable);
+                    _localPeer.NetManager.TriggerUpdate();
+                }
             }
         }
 

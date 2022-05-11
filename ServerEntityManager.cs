@@ -12,17 +12,16 @@ namespace LiteEntitySystem
     {
         public int Compare(InputBuffer x, InputBuffer y)
         {
-            return EntityManager.SequenceDiff(x.ClientTick, y.ClientTick);
+            return EntityManager.SequenceDiff(x.Tick, y.Tick);
         }
     }
 
-    public struct InputBuffer
+    internal struct InputBuffer
     {
-        public ushort StateATick;
-        public ushort StateBTick;
-        public ushort ClientTick;
-        public ushort LerpMsec;
-        public NetPacketReader Reader;
+        public ushort Tick;
+        public InputPacketHeader Input;
+        public byte[] Data;
+        public ushort Size;
     }
     
     public sealed class NetPlayer
@@ -36,7 +35,8 @@ namespace LiteEntitySystem
         public float LerpTime;
         public bool IsFirstStateReceived;
         public bool IsNew;
-        public readonly SortedSet<InputBuffer> AvailableInput = new SortedSet<InputBuffer>(new InputComprarer());
+        
+        internal readonly SortedSet<InputBuffer> AvailableInput = new SortedSet<InputBuffer>(new InputComprarer());
         
         public NetPlayer(NetPeer peer)
         {
@@ -66,6 +66,8 @@ namespace LiteEntitySystem
         private const int MaxPlayers = byte.MaxValue;
         private ushort _nextId;
         private readonly Queue<RemoteCallPacket> _rpcPool = new Queue<RemoteCallPacket>();
+        private readonly Queue<byte[]> _inputPool = new Queue<byte[]>();
+        private readonly NetDataReader _inputReader = new NetDataReader();
 
         public const byte ServerPlayerId = 0;
         public override byte PlayerId => ServerPlayerId;
@@ -152,13 +154,15 @@ namespace LiteEntitySystem
                 return;
             
             var inputFrame = player.AvailableInput.Min;
-            controller.ReadInput(inputFrame.Reader);
-            player.LastProcessedTick = inputFrame.ClientTick;
-            player.StateATick = inputFrame.StateATick;
-            player.StateBTick = inputFrame.StateBTick;
-            player.LerpTime = inputFrame.LerpMsec / 1000f;
+            ref var inputData = ref inputFrame.Input;
+            _inputReader.SetSource(inputFrame.Data, 0, inputFrame.Size);
+            controller.ReadInput(_inputReader);
+            player.LastProcessedTick = inputFrame.Tick;
+            player.StateATick = inputData.StateA;
+            player.StateBTick = inputData.StateB;
+            player.LerpTime = inputData.LerpMsec / 1000f;
             player.AvailableInput.Remove(inputFrame);
-            inputFrame.Reader.Recycle();
+            _inputPool.Enqueue(inputFrame.Data);
         }
 
         protected override void OnLogicTick()
@@ -405,12 +409,69 @@ namespace LiteEntitySystem
             //trigger only when there is data
             _netPlayers[0].Peer.NetManager.TriggerUpdate();
         }
-    }
 
-    public static class ServerEntityManagerExt
-    {
-        //hack to avoid callvirt
-        public static void Deserialize(this NetPlayer player, NetPacketReader reader)
+        private unsafe void ReadInput(NetPlayer player, NetPacketReader reader)
+        {
+            ushort clientTick = reader.GetUShort();
+
+            while (reader.AvailableBytes >= 8)
+            {
+                InputBuffer inputBuffer = new InputBuffer
+                {
+                    Size = reader.GetUShort(),
+                    Tick = clientTick
+                };
+                if (inputBuffer.Size > NetConstants.MaxUnreliableDataSize || inputBuffer.Size > reader.AvailableBytes)
+                {
+                    Logger.LogError($"Bad input from: {player.Id} - {player.Peer.EndPoint}");
+                    return;
+                }
+                clientTick++;
+                
+                ref var input = ref inputBuffer.Input;
+                input.StateA = reader.GetUShort();
+                input.StateB = reader.GetUShort();
+                input.LerpMsec = reader.GetUShort();
+
+                if (SequenceDiff(input.StateB, player.LastReceivedState) > 0)
+                    player.LastReceivedState = input.StateB;
+                    
+                //read input
+                if (!player.AvailableInput.Contains(inputBuffer) && SequenceDiff(inputBuffer.Tick, player.LastProcessedTick) > 0)
+                {
+                    if (player.AvailableInput.Count >= MaxSavedStateDiff)
+                    {
+                        var minimal = player.AvailableInput.Min;
+                        if (SequenceDiff(inputBuffer.Tick, minimal.Tick) > 0)
+                        {
+                            _inputPool.Enqueue(minimal.Data);
+                            player.AvailableInput.Remove(minimal);
+                        }
+                        else
+                        {
+                            reader.SkipBytes(inputBuffer.Size);
+                            continue;
+                        }
+                    }
+
+                    _inputPool.TryDequeue(out inputBuffer.Data);
+                    Utils.ResizeOrCreate(ref inputBuffer.Data, inputBuffer.Size);
+                    fixed(byte* inputData = inputBuffer.Data, readerData = reader.RawData)
+                        Unsafe.CopyBlock(inputData, readerData + reader.Position, inputBuffer.Size);
+                    player.AvailableInput.Add(inputBuffer);
+                }
+                reader.SkipBytes(inputBuffer.Size);
+            }
+          
+            player.IsFirstStateReceived = true;
+        }
+
+        public void Deserialize(NetPeer peer, NetPacketReader reader)
+        {
+            Deserialize((NetPlayer)peer.Tag, reader);
+        }
+        
+        public void Deserialize(NetPlayer player, NetPacketReader reader)
         {
             if (reader.AvailableBytes <= 3)
             {
@@ -421,57 +482,21 @@ namespace LiteEntitySystem
             byte packetType = reader.GetByte();
             switch (packetType)
             {
-                case EntityManager.PacketClientSync:
-                    InputBuffer inputBuffer;
-                    inputBuffer.StateATick = reader.GetUShort();
-                    inputBuffer.StateBTick = reader.GetUShort();
-                    inputBuffer.LerpMsec   = reader.GetUShort();
-                    inputBuffer.ClientTick = reader.GetUShort();
-                    inputBuffer.Reader = reader;
-
-                    if (EntityManager.SequenceDiff(inputBuffer.StateBTick, player.LastReceivedState) > 0)
-                        player.LastReceivedState = inputBuffer.StateBTick;
-                    
-                    //read input
-                    if (!player.AvailableInput.Contains(inputBuffer) && EntityManager.SequenceDiff(inputBuffer.ClientTick, player.LastProcessedTick) > 0)
-                    {
-                        if (player.AvailableInput.Count >= EntityManager.MaxSavedStateDiff)
-                        {
-                            var minimal = player.AvailableInput.Min;
-                            if (EntityManager.SequenceDiff(inputBuffer.ClientTick, minimal.ClientTick) > 0)
-                            {
-                                minimal.Reader.Recycle();
-                                player.AvailableInput.Remove(minimal);
-                            }
-                            else
-                            {
-                                reader.Recycle();
-                                break;
-                            }
-                        }
-                        player.AvailableInput.Add(inputBuffer);
-                    }
-                    else
-                    {
-                        reader.Recycle();
-                        break;
-                    }
-
-                    player.IsFirstStateReceived = true;
+                case PacketClientSync:
+                    ReadInput(player, reader);
                     break;
                 
-                case EntityManager.PacketEntityCall:
+                case PacketEntityCall:
                     ushort entityId = reader.GetUShort();
                     byte packetId = reader.GetByte();
                     //GetEntityById(entityId)?.ProcessPacket(packetId, reader);
-                    reader.Recycle();
                     break;
                 
                 default:
                     Logger.LogWarning($"[SEM] Unknown packet type: {packetType}");
-                    reader.Recycle();
                     break;
             }
+            reader.Recycle();
         }
     }
 }
