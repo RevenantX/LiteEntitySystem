@@ -7,7 +7,7 @@ namespace LiteEntitySystem
         void LogWarning(string log);
     }
     
-    public static class Logger
+    internal static class Logger
     {
         public static ILogger LoggerImpl = null;
         

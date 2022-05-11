@@ -10,7 +10,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
-namespace LiteEntitySystem
+namespace LiteEntitySystem.Internal
 {
     internal class EntitySystemBuildProcessor : IPreprocessBuildWithReport
     {

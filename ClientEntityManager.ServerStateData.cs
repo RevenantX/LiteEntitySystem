@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using LiteNetLib;
+using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {

@@ -1,6 +1,4 @@
-using System;
-
-namespace LiteEntitySystem
+namespace LiteEntitySystem.Internal
 {
     internal sealed class RemoteCallPacket
     {

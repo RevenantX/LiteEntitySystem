@@ -1,51 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace LiteEntitySystem
+namespace LiteEntitySystem.Internal
 {
-    public unsafe delegate void MethodCallDelegate(void* ent, void* previousValue);
-
-    public static class MethodCallGenerator
-    {
-        //public for AOT
-        public static unsafe MethodCallDelegate Generate<TEnt, TValue>(MethodInfo method)
-        {
-            var typedDelegate = (Action<TEnt, TValue>)method.CreateDelegate(typeof(Action<TEnt, TValue>));
-            return (ent, previousValue) =>
-            {
-                TValue prev = default(TValue);
-                Unsafe.Copy(ref prev, previousValue);
-                typedDelegate(Unsafe.AsRef<TEnt>(ent), prev);
-            };
-        }
-        
-        internal static MethodCallDelegate GetOnSyncDelegate(Type entityType, Type valueType, string methodName)
-        {
-            if (string.IsNullOrEmpty(methodName))
-                return null;
-            
-            var method = entityType.GetMethod(
-                methodName,
-                BindingFlags.Instance |
-                BindingFlags.Public |
-                BindingFlags.DeclaredOnly |
-                BindingFlags.NonPublic);
-            if (method == null)
-            {
-                Logger.LogError($"Method: {methodName} not found in {entityType}");
-                return null;
-            }
-
-            return (MethodCallDelegate)typeof(MethodCallGenerator)
-                .GetMethod(nameof(Generate))
-                !.MakeGenericMethod(entityType, valueType)
-                .Invoke(null, new object[] { method });
-        }
-    }
-
     internal struct EntityFieldInfo
     {
         public readonly int FieldOffset;
@@ -101,6 +60,27 @@ namespace LiteEntitySystem
         public readonly MethodCallDelegate[] SyncableRemoteCallsClient = new MethodCallDelegate[255];
         public readonly Dictionary<MethodInfo, SyncableRemoteCall> SyncableRemoteCalls =
             new Dictionary<MethodInfo, SyncableRemoteCall>();
+        
+        private static MethodCallDelegate GetOnSyncDelegate(Type entityType, Type valueType, string methodName)
+        {
+            if (string.IsNullOrEmpty(methodName))
+                return null;
+            
+            var method = entityType.GetMethod(
+                methodName,
+                BindingFlags.Instance |
+                BindingFlags.Public |
+                BindingFlags.DeclaredOnly |
+                BindingFlags.NonPublic);
+            if (method == null)
+            {
+                Logger.LogError($"Method: {methodName} not found in {entityType}");
+                return null;
+            }
+
+            return (MethodCallDelegate)
+                MethodCallGenerator.GetGenericMethod(entityType, valueType).Invoke(null, new object[] { method });
+        }
 
         private static List<Type> GetBaseTypes(Type ofType, Type until, bool includeSelf)
         {
@@ -167,7 +147,7 @@ namespace LiteEntitySystem
                     }
                     RemoteCalls.Add(method, remoteCallAttribute);
                     RemoteCallsClient[remoteCallAttribute.Id] =
-                        MethodCallGenerator.GetOnSyncDelegate(baseType, parametrType, method.Name);
+                        GetOnSyncDelegate(baseType, parametrType, method.Name);
                 }
                 foreach (var field in baseType.GetFields(bindingFlags))
                 {
@@ -177,7 +157,7 @@ namespace LiteEntitySystem
                     
                     var ft = field.FieldType;
                     int offset = Marshal.ReadInt32(field.FieldHandle.Value + 3 * IntPtr.Size) & 0xFFFFFF;
-                    var onSyncMethod = MethodCallGenerator.GetOnSyncDelegate(baseType, ft, syncVarAttribute.MethodName);
+                    var onSyncMethod = GetOnSyncDelegate(baseType, ft, syncVarAttribute.MethodName);
                     
                     if (ft.IsValueType)
                     {
@@ -229,8 +209,7 @@ namespace LiteEntitySystem
                                 if (syncableRpcIndex == byte.MaxValue)
                                     throw new Exception("254 is max RemoteCall methods");
                                 SyncableRemoteCalls[method] = rcAttribute;
-                                SyncableRemoteCallsClient[rcAttribute.Id] =
-                                    MethodCallGenerator.GetOnSyncDelegate(syncableType, parameterType, method.Name);
+                                SyncableRemoteCallsClient[rcAttribute.Id] = GetOnSyncDelegate(syncableType, parameterType, method.Name);
                             }
                         }
                     }

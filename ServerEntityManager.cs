@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using K4os.Compression.LZ4;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {

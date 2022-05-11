@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace LiteEntitySystem
+namespace LiteEntitySystem.Internal
 {
     using InternalEntity = EntityManager.InternalEntity;
     
