@@ -79,6 +79,7 @@ namespace LiteEntitySystem
         internal readonly EntityFilter<EntityLogic> OwnedEntities = new EntityFilter<EntityLogic>();
         private ushort _lerpMsec;
         private int _remoteCallsTick;
+        private ushort _lastReceivedInputTick;
 
         public ClientEntityManager(NetPeer localPeer, byte headerByte, int framesPerSecond, IInputGenerator inputGenerator) : base(NetworkMode.Client, framesPerSecond)
         {
@@ -333,6 +334,12 @@ namespace LiteEntitySystem
                     
                     foreach (var inputCommand in _inputCommands)
                     {
+                        if (SequenceDiff(currentTick, _lastReceivedInputTick) <= 0)
+                        {
+                            currentTick++;
+                            continue;
+                        }
+                        
                         fixed (byte* inputData = inputCommand.Data)
                         {
                             if (offset + inputCommand.Length + sizeof(ushort) > NetConstants.MaxUnreliableDataSize)
@@ -357,7 +364,12 @@ namespace LiteEntitySystem
 
                         tickIndex++;
                     }
-                    
+
+                    if (offset == 4)
+                    {
+                        Logger.Log("VSMISLE");
+                        return;
+                    }
                     Unsafe.Copy(sendBuffer + 2, ref currentTick);
                     _localPeer.Send(_sendBuffer, 0, offset, DeliveryMethod.Unreliable);
                     _localPeer.NetManager.TriggerUpdate();
@@ -626,6 +638,9 @@ namespace LiteEntitySystem
                 //if got full state - add to lerp buffer
                 if(serverState.ReadPart(isLastPart, reader))
                 {
+                    if (SequenceDiff(serverState.LastReceivedTick, _lastReceivedInputTick) > 0)
+                        _lastReceivedInputTick = serverState.LastReceivedTick;
+                    
                     _receivedStates.Remove(serverState.Tick);
                     
                     if (_lerpBuffer.Count >= InterpolateBufferSize)

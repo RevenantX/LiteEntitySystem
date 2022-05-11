@@ -29,6 +29,7 @@ namespace LiteEntitySystem
         public readonly byte Id;
         public readonly NetPeer Peer;
         public ushort LastProcessedTick;
+        public ushort LastReceivedTick;
         public ushort LastReceivedState;
         public ushort StateATick;
         public ushort StateBTick;
@@ -352,10 +353,9 @@ namespace LiteEntitySystem
                 
                 //first part full of data
                 _packetBuffer[4] = partCount;
-                //position = 5
-                FastBitConverter.GetBytes(_packetBuffer, 5, netPlayer.LastProcessedTick);
-                //position = 7
-                writePosition = 7;
+                Unsafe.Copy(packetBuffer + 5, ref netPlayer.LastProcessedTick);
+                Unsafe.Copy(packetBuffer + 7, ref netPlayer.LastReceivedTick);
+                writePosition = 9;
 
                 for (ushort eId = 0; eId <= MaxEntityId; eId++)
                 {
@@ -459,6 +459,10 @@ namespace LiteEntitySystem
                     fixed(byte* inputData = inputBuffer.Data, readerData = reader.RawData)
                         Unsafe.CopyBlock(inputData, readerData + reader.Position, inputBuffer.Size);
                     player.AvailableInput.Add(inputBuffer);
+                    
+                    //to reduce data
+                    if (SequenceDiff(inputBuffer.Tick, player.LastReceivedTick) > 0)
+                        player.LastReceivedTick = inputBuffer.Tick;
                 }
                 reader.SkipBytes(inputBuffer.Size);
             }

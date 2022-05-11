@@ -47,6 +47,7 @@ namespace LiteEntitySystem
             
             public ushort Tick;
             public ushort ProcessedTick;
+            public ushort LastReceivedTick;
             public bool IsBaseline;
             public StatePreloadData[] PreloadDataArray = new StatePreloadData[32];
             public int PreloadDataCount;
@@ -175,6 +176,7 @@ namespace LiteEntitySystem
                 if (partNumber == 0)
                 {
                     ProcessedTick = reader.GetUShort();
+                    LastReceivedTick = reader.GetUShort();
                 }
 
                 if (isLastPart)
