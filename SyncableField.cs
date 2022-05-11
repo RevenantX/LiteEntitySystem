@@ -4,6 +4,14 @@ using System.Text;
 
 namespace LiteEntitySystem
 {
+    [AttributeUsage(AttributeTargets.Method)]
+    public class SyncableRemoteCall : Attribute
+    {
+        internal byte Id = byte.MaxValue;
+        internal int DataSize;
+        internal MethodCallDelegate MethodDelegate;
+    }
+    
     public abstract class SyncableField
     {
         //This setups in Serializer.Init

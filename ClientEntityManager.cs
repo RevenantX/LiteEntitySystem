@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using K4os.Compression.LZ4;
+using LiteEntitySystem.Internal;
 using LiteNetLib;
 using LiteNetLib.Utils;
 

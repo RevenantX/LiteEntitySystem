@@ -14,7 +14,7 @@ namespace LiteEntitySystem.Internal
 {
     internal class EntitySystemBuildProcessor : IPreprocessBuildWithReport
     {
-        private static readonly Type EntityLogicType = typeof(EntityManager.InternalEntity);
+        private static readonly Type EntityLogicType = typeof(InternalEntity);
         private const BindingFlags BindFlags = BindingFlags.Instance | BindingFlags.Public |
                                                      BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
         private static readonly StringBuilder GenCode = new StringBuilder();

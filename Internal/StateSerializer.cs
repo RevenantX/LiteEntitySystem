@@ -3,8 +3,6 @@ using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
-    using InternalEntity = EntityManager.InternalEntity;
-    
     internal enum DiffResult
     {
         Skip,

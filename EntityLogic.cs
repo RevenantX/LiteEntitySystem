@@ -1,50 +1,16 @@
 using System;
 using System.Collections.Generic;
+using LiteEntitySystem.Internal;
 using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
 {
-    using InternalEntity = EntityManager.InternalEntity;
-
-    [Flags]
-    public enum SyncFlags : byte
-    {
-        None = 0,
-        Interpolated = 1,
-        LagCompensated = 1 << 1
-    }
-    
-    [AttributeUsage(AttributeTargets.Field)]
-    public class SyncVar : Attribute
-    {
-        internal readonly SyncFlags Flags;
-        internal readonly string MethodName;
-
-        public SyncVar()
-        {
-            
-        }
-        
-        public SyncVar(SyncFlags flags)
-        {
-            Flags = flags;
-        }
-        
-        public SyncVar(string methodName)
-        {
-            MethodName = methodName;
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Field)]
-    public class RollbackVar : Attribute { }
-    
     [AttributeUsage(AttributeTargets.Class)]
     public class UpdateableEntity : Attribute { }
 
     [AttributeUsage(AttributeTargets.Class)]
     public class ServerOnly : Attribute { }
-
+    
     [AttributeUsage(AttributeTargets.Method)]
     public class RemoteCall : Attribute
     {
@@ -57,113 +23,6 @@ namespace LiteEntitySystem
         public RemoteCall(ExecuteFlags flags)
         {
             Flags = flags;
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Method)]
-    public class SyncableRemoteCall : Attribute
-    {
-        internal byte Id = byte.MaxValue;
-        internal int DataSize;
-        internal MethodCallDelegate MethodDelegate;
-    }
-
-    public readonly struct EntityParams
-    {
-        public readonly ushort ClassId;
-        public readonly ushort Id;
-        public readonly byte Version;
-        public readonly EntityManager EntityManager;
-
-        internal EntityParams(
-            ushort classId,
-            ushort id,
-            byte version,
-            EntityManager entityManager)
-        {
-            ClassId = classId;
-            Id = id;
-            Version = version;
-            EntityManager = entityManager;
-        }
-    }
-
-    public abstract partial class EntityManager
-    {
-        public abstract class InternalEntity : IComparable<InternalEntity>
-        {
-            public readonly ushort ClassId;
-            public readonly ushort Id;
-            public readonly EntityManager EntityManager;
-            public readonly byte Version;
-            public abstract bool IsLocalControlled { get; }
-            public bool IsServerControlled => !IsLocalControlled;
-            
-            internal abstract bool IsControlledBy(byte playerId);
-
-            public virtual void DebugPrint()
-            {
-                
-            }
-
-            public virtual void Update()
-            {
-            }
-
-            public virtual void OnConstructed()
-            {
-            }
-
-            protected InternalEntity(EntityParams entityParams)
-            {
-                EntityManager = entityParams.EntityManager;
-                Id = entityParams.Id;
-                ClassId = entityParams.ClassId;
-                Version = entityParams.Version;
-            }
-
-            protected void ExecuteRemoteCall<T>(Action<T> methodToCall, T value) where T : struct
-            {
-                if (methodToCall.Target != this)
-                    throw new Exception("You can call this only on this class methods");
-                var classData = EntityManager.ClassDataDict[ClassId];
-                if(!classData.RemoteCalls.TryGetValue(methodToCall.Method, out var remoteCallInfo))
-                    throw new Exception($"{methodToCall.Method.Name} is not [RemoteCall] method");
-                if (EntityManager.IsServer)
-                {
-                    if ((remoteCallInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
-                        methodToCall(value);
-                    ((ServerEntityManager)EntityManager).AddRemoteCall(Id, value, remoteCallInfo);
-                }
-                else if(IsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
-                {
-                    methodToCall(value);
-                }
-            }
-            
-            protected void ExecuteRemoteCall<T>(Action<T[]> methodToCall, T[] value, int count) where T : struct
-            {
-                if (methodToCall.Target != this)
-                    throw new Exception("You can call this only on this class methods");
-                var classData = EntityManager.ClassDataDict[ClassId];
-                if(!classData.RemoteCalls.TryGetValue(methodToCall.Method, out var remoteCallInfo))
-                    throw new Exception($"{methodToCall.Method.Name} is not [RemoteCall] method");
-                if (EntityManager.IsServer)
-                {
-                    if ((remoteCallInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
-                        methodToCall(value);
-                    ((ServerEntityManager)EntityManager).AddRemoteCall(Id, value, count, remoteCallInfo);
-                }
-                else if(IsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
-                {
-                    methodToCall(value);
-                }
-            }
-
-            public int CompareTo(InternalEntity other)
-            {
-                return Id - other.Id;
-            }
         }
     }
 

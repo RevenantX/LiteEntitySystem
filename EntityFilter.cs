@@ -1,17 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
     public abstract class EntityFilter
     {
-        internal abstract void Add(EntityManager.InternalEntity entity);
-        internal abstract void Remove(EntityManager.InternalEntity entity);
+        internal abstract void Add(InternalEntity entity);
+        internal abstract void Remove(InternalEntity entity);
     }
 
     //For usability
-    public sealed class EntityFilter<T> : EntityFilter, IEnumerable<T> where T : EntityManager.InternalEntity
+    public sealed class EntityFilter<T> : EntityFilter, IEnumerable<T> where T : InternalEntity
     {
         public struct EntityFilterEnumerator : IEnumerator<T>
         {
@@ -52,7 +53,7 @@ namespace LiteEntitySystem
         private T[] _array = new T[8];
         private ushort _count;
         
-        internal override void Add(EntityManager.InternalEntity entity)
+        internal override void Add(InternalEntity entity)
         {
             if (_dict == null)
             {
@@ -75,7 +76,7 @@ namespace LiteEntitySystem
             OnAdded?.Invoke((T)entity);
         }
 
-        internal override void Remove(EntityManager.InternalEntity entity)
+        internal override void Remove(InternalEntity entity)
         {
             ushort idx = _dict[entity.Id];
             _count--;

@@ -54,7 +54,7 @@ namespace LiteEntitySystem.Internal
         public readonly bool IsUpdateable;
         public readonly bool IsServerOnly;
         public readonly Type[] BaseTypes;
-        public readonly Func<EntityParams, EntityManager.InternalEntity> EntityConstructor;
+        public readonly Func<EntityParams, InternalEntity> EntityConstructor;
         public readonly Dictionary<MethodInfo, RemoteCall> RemoteCalls = new Dictionary<MethodInfo, RemoteCall>();
         public readonly MethodCallDelegate[] RemoteCallsClient = new MethodCallDelegate[255];
         public readonly MethodCallDelegate[] SyncableRemoteCallsClient = new MethodCallDelegate[255];
@@ -100,7 +100,7 @@ namespace LiteEntitySystem.Internal
             int filterId, 
             Type entType, 
             ushort classId,
-            Func<EntityParams, EntityManager.InternalEntity> constructor)
+            Func<EntityParams, InternalEntity> constructor)
         {
             ClassId = classId;
             IsUpdateable = entType.GetCustomAttribute<UpdateableEntity>() != null;
@@ -109,7 +109,7 @@ namespace LiteEntitySystem.Internal
             IsSingleton = entType.IsSubclassOf(typeof(SingletonEntityLogic));
             FilterId = filterId;
 
-            var baseTypes = GetBaseTypes(entType, typeof(EntityManager.InternalEntity), false);
+            var baseTypes = GetBaseTypes(entType, typeof(InternalEntity), false);
             BaseTypes = baseTypes.ToArray();
             BaseIds = new int[baseTypes.Count];
             
@@ -118,7 +118,7 @@ namespace LiteEntitySystem.Internal
             var lagCompensatedFields = new List<EntityFieldInfo>();
 
             //add here to baseTypes to add fields
-            baseTypes.Insert(0, typeof(EntityManager.InternalEntity));
+            baseTypes.Insert(0, typeof(InternalEntity));
             baseTypes.Add(entType);
 
             const BindingFlags bindingFlags = BindingFlags.Instance |
@@ -181,7 +181,7 @@ namespace LiteEntitySystem.Internal
                         fields.Add(fieldInfo);
                         FixedFieldsSize += fieldSize;
                     }
-                    else if (ft == typeof(EntityLogic) || ft.IsSubclassOf(typeof(EntityManager.InternalEntity)))
+                    else if (ft == typeof(EntityLogic) || ft.IsSubclassOf(typeof(InternalEntity)))
                     {
                         fields.Add(new EntityFieldInfo(onSyncMethod, null, offset, sizeof(ushort), true));
                         FixedFieldsSize += 2;

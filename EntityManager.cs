@@ -28,7 +28,7 @@ namespace LiteEntitySystem
         PredictionRollback
     }
     
-    public abstract partial class EntityManager
+    public abstract class EntityManager
     {
         public const int MaxEntityCount = 8192;
         public const int MaxEntityIndex = MaxEntityCount-1;
