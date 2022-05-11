@@ -293,15 +293,31 @@ namespace LiteEntitySystem
                             entity.Update();
                         }
                     }
+                    
+                    foreach (var entity in OwnedEntities)
+                    {
+                        var classData = ClassDataDict[entity.ClassId];
+                        var localEntity = entity;
+                        byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref localEntity);
+                        
+                        for(int i = 0; i < classData.InterpolatedCount; i++)
+                        {
+                            var field = classData.Fields[i];
+                            fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id])
+                            {
+                                Unsafe.CopyBlock(currentDataPtr + field.FixedOffset, entityPtr + field.FieldOffset, field.Size);
+                            }
+                        }
+                    }
+     
                     UpdateMode = UpdateMode.Normal;
                 }
             }
 
             //local interpolation
             float localLerpT = LerpFactor;
-            if(false)//foreach (var entity in OwnedEntities)
+            foreach (var entity in OwnedEntities)
             {
-                EntityLogic entity = null;
                 var entityLocal = entity;
                 var classData = ClassDataDict[entity.ClassId];
                 byte* entityPtr = (byte*) Unsafe.As<EntityLogic, IntPtr>(ref entityLocal);
