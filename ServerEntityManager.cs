@@ -59,22 +59,24 @@ namespace LiteEntitySystem
     /// </summary>
     public sealed class ServerEntityManager : EntityManager
     {
+        public const byte ServerPlayerId = 0;
+        
+        private const int MaxPlayers = byte.MaxValue;
+
         private readonly Queue<ushort> _possibleId = new Queue<ushort>();
         private readonly byte[] _packetBuffer = new byte[NetConstants.MaxPacketSize*(MaxParts+1)];
-        private byte[] _compressionBuffer;
         private readonly StateSerializer[] _savedEntityData = new StateSerializer[MaxEntityCount];
         private readonly NetPlayer[] _netPlayers = new NetPlayer[MaxPlayers];
-        private int _netPlayersCount;
-        private const int MaxPlayers = byte.MaxValue;
-        private ushort _nextId;
         private readonly Queue<RemoteCallPacket> _rpcPool = new Queue<RemoteCallPacket>();
         private readonly Queue<byte[]> _inputPool = new Queue<byte[]>();
         private readonly NetDataReader _inputReader = new NetDataReader();
-
-        public const byte ServerPlayerId = 0;
+        
+        private byte[] _compressionBuffer;
+        private int _netPlayersCount;
+        private ushort _nextId;
+        
         public override byte PlayerId => ServerPlayerId;
         public ServerSendRate SendRate;
-
         public event Action<bool> OnLagCompensation;
 
         public ServerEntityManager(byte packetHeader, int framesPerSecond) : base(NetworkMode.Server, framesPerSecond)
