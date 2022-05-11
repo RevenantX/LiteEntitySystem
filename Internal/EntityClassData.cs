@@ -35,6 +35,8 @@ namespace LiteEntitySystem.Internal
         }
     }
     
+    public delegate T EntityConstructor<out T>(EntityParams entityParams) where T : InternalEntity;
+    
     internal sealed class EntityClassData
     {
         public readonly ushort ClassId;
@@ -54,7 +56,7 @@ namespace LiteEntitySystem.Internal
         public readonly bool IsUpdateable;
         public readonly bool IsServerOnly;
         public readonly Type[] BaseTypes;
-        public readonly Func<EntityParams, InternalEntity> EntityConstructor;
+        public readonly EntityConstructor<InternalEntity> EntityConstructor;
         public readonly Dictionary<MethodInfo, RemoteCall> RemoteCalls = new Dictionary<MethodInfo, RemoteCall>();
         public readonly MethodCallDelegate[] RemoteCallsClient = new MethodCallDelegate[255];
         public readonly MethodCallDelegate[] SyncableRemoteCallsClient = new MethodCallDelegate[255];
@@ -96,11 +98,7 @@ namespace LiteEntitySystem.Internal
             return baseTypes;
         }
         
-        public EntityClassData(
-            int filterId, 
-            Type entType, 
-            ushort classId,
-            Func<EntityParams, InternalEntity> constructor)
+        public EntityClassData(int filterId, Type entType, ushort classId, EntityConstructor<InternalEntity> constructor)
         {
             ClassId = classId;
             IsUpdateable = entType.GetCustomAttribute<UpdateableEntity>() != null;
@@ -240,8 +238,23 @@ namespace LiteEntitySystem.Internal
             FieldsFlagsSize = (FieldsCount-1) / 8 + 1;
             LagCompensatedFields = lagCompensatedFields.ToArray();
         }
+
+        public void PrepareBaseTypes(Dictionary<Type, int> registeredTypeIds, ref ushort singletonCount, ref ushort filterCount)
+        {
+            for (int i = 0; i < BaseIds.Length; i++)
+            {
+                if (!registeredTypeIds.TryGetValue(BaseTypes[i], out BaseIds[i]))
+                {
+                    BaseIds[i] = IsSingleton
+                        ? singletonCount++
+                        : filterCount++;
+                    registeredTypeIds.Add(BaseTypes[i], BaseIds[i]);
+                }
+                //Logger.Log($"Base type of {classData.ClassId} - {baseTypes[i]}");
+            }
+        }
     }
-    
+
     // ReSharper disable once UnusedTypeParameter
     internal static class EntityClassInfo<T>
     {

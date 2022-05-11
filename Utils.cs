@@ -7,7 +7,7 @@ namespace LiteEntitySystem
     internal static class Utils
     {
 #if UNITY_STANDALONE_WIN
-        [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("msvcrt.dll", CallingConvention = CallingConvention.StdCall)]
 #else
         [DllImport("libc", CallingConvention = CallingConvention.Cdecl)]                
 #endif
@@ -45,6 +45,12 @@ namespace LiteEntitySystem
         public static bool IsByteFlagSet<T>(this T flags, T flag) where T : Enum
         {
             return (Unsafe.As<T, byte>(ref flags) & Unsafe.As<T, byte>(ref flag)) != 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Lerp(float a, float b, float t)
+        {
+            return a + (b - a) * t;
         }
     }
 }

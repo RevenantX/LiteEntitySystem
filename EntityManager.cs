@@ -46,6 +46,7 @@ namespace LiteEntitySystem
         private const int MaxSequence = 65536;
         private const int MaxSeq2 = MaxSequence / 2;
         private const int MaxSeq15 = MaxSequence + MaxSeq2;
+        private const int MaxTicksPerUpdate = 5;
         
         public int EntitiesCount { get; private set; }
         public ushort Tick { get; private set; }
@@ -79,7 +80,7 @@ namespace LiteEntitySystem
 
         internal readonly EntityClassData[] ClassDataDict = new EntityClassData[ushort.MaxValue];
 
-        public void RegisterEntity<TEntity, TEnum>(TEnum id, Func<EntityParams, TEntity> constructor)
+        public void RegisterEntityType<TEntity, TEnum>(TEnum id, EntityConstructor<TEntity> constructor)
             where TEntity : InternalEntity where TEnum : Enum
         {
             if (_entityEnumSize == -1)
@@ -93,7 +94,7 @@ namespace LiteEntitySystem
             classData = new EntityClassData(isSingleton ? _singletonRegisteredCount++ : _filterRegisteredCount++, entType, classId, constructor);
             EntityClassInfo<TEntity>.ClassId = classId;
             _registeredTypeIds.Add(entType, classData.FilterId);
-            Logger.Log($"Register entity. Id: {id.ToString()} ({entType}), baseTypes: {classData.BaseTypes.Length}, FilterId: {classData.FilterId}");
+            Logger.Log($"Register: {entType.Name} ClassId: {id.ToString()}({classId})");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -110,7 +111,7 @@ namespace LiteEntitySystem
             FramesPerSecond = framesPerSecond;
             DeltaTime = 1.0f / framesPerSecond;
             _stopwatchFrequency = Stopwatch.Frequency;
-            Interpolation.Register<float>((a, b, t) => a + (b - a) * t);
+            Interpolation.Register<float>(Utils.Lerp);
             Interpolation.Register<FloatAngle>(FloatAngle.Lerp);
         }
 
@@ -239,24 +240,7 @@ namespace LiteEntitySystem
             for (int e = 0; e < _entityEnumSize; e++)
             {
                 //map base ids
-                var classData = ClassDataDict[e];
-                if(classData == null)
-                    continue;
-
-                var baseTypes = classData.BaseTypes;
-                var baseIds = classData.BaseIds;
-                
-                for (int i = 0; i < baseIds.Length; i++)
-                {
-                    if (!_registeredTypeIds.TryGetValue(baseTypes[i], out baseIds[i]))
-                    {
-                        baseIds[i] = classData.IsSingleton
-                            ? _singletonRegisteredCount++
-                            : _filterRegisteredCount++;
-                        _registeredTypeIds.Add(baseTypes[i], baseIds[i]);
-                    }
-                    Logger.Log($"Base type of {classData.ClassId} - {baseTypes[i]}");
-                }
+                ClassDataDict[e]?.PrepareBaseTypes(_registeredTypeIds, ref _singletonRegisteredCount, ref _filterRegisteredCount);
             }
 
             _entityFilters = new EntityFilter[_filterRegisteredCount];
@@ -276,7 +260,7 @@ namespace LiteEntitySystem
             while (_accumulator >= DeltaTime)
             {
                 //Lag
-                if (updates > 5)
+                if (updates >= MaxTicksPerUpdate)
                 {
                     _accumulator = 0;
                     return;
