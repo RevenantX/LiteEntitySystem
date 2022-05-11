@@ -18,8 +18,8 @@ namespace LiteEntitySystem
             Methods[typeof(T)] = (a, b, result, t) =>
             {
                 interpolator(
-                    Unsafe.AsRef<T>(a),
-                    Unsafe.AsRef<T>(b),
+                    Unsafe.Read<T>(a),
+                    Unsafe.Read<T>(b),
                     out Unsafe.AsRef<T>(result),
                     t);
             };
@@ -30,8 +30,8 @@ namespace LiteEntitySystem
             Methods[typeof(T)] = (a, b, result, t) =>
             {
                 Unsafe.AsRef<T>(result) = interpolator(
-                    Unsafe.AsRef<T>(a),
-                    Unsafe.AsRef<T>(b),
+                    Unsafe.Read<T>(a),
+                    Unsafe.Read<T>(b),
                     t);
             };
         }
