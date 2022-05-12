@@ -43,12 +43,6 @@ namespace LiteEntitySystem
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsByteFlagSet<T>(this T flags, T flag) where T : Enum
-        {
-            return (Unsafe.As<T, byte>(ref flags) & Unsafe.As<T, byte>(ref flag)) != 0;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Lerp(float a, float b, float t)
         {
             return a + (b - a) * t;
