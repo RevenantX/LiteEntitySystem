@@ -212,11 +212,10 @@ namespace LiteEntitySystem
             foreach (var aliveEntity in AliveEntities)
                 _savedEntityData[aliveEntity.Id].WriteHistory(ServerTick);
         }
-
-        internal override void RemoveEntity(EntityLogic e)
+        
+        internal void DestroySavedData(EntityLogic entityLogic)
         {
-            base.RemoveEntity(e);
-            _savedEntityData[e.Id].Destroy(ServerTick);
+            _savedEntityData[entityLogic.Id].Destroy(ServerTick);
         }
         
         internal void PoolRpc(RemoteCallPacket rpcNode)
@@ -329,7 +328,9 @@ namespace LiteEntitySystem
                 for (int pidx = 0; pidx < _netPlayersCount; pidx++)
                 {
                     var netPlayer = _netPlayersArray[pidx];
+                    var peer = netPlayer.Peer;
                     int writePosition = 4;
+                    
                     //send all data
                     if (netPlayer.IsNew)
                     {
@@ -358,9 +359,9 @@ namespace LiteEntitySystem
                             Unsafe.CopyBlock(packetBuffer + 7, compressionBuffer, (uint)encodedLength);
                         }
                         Logger.Log(
-                            $"[SEM] SendWorld to player {netPlayer.Id}. orig: {originalLength} bytes, compressed: {encodedLength}, MaxEntityId: {MaxEntityId}");
+                            $"[SEM] SendWorld to player {netPlayer.Id}. orig: {originalLength} bytes, compressed: {encodedLength}");
 
-                        netPlayer.Peer.Send(_packetBuffer, 0, encodedLength + 6, DeliveryMethod.ReliableOrdered);
+                        peer.Send(_packetBuffer, 0, encodedLength + 7, DeliveryMethod.ReliableOrdered);
                         netPlayer.IsNew = false;
                         continue;
                     }
@@ -368,9 +369,10 @@ namespace LiteEntitySystem
                     //waiting to load initial state
                     if (!netPlayer.IsFirstStateReceived)
                         continue;
-
-                    var peer = netPlayer.Peer;
+                    
                     byte* partCount = &packetBuffer[4];
+                    *partCount = 0;
+                    
                     int mtu = peer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable);
 
                     //first part full of data

@@ -56,7 +56,9 @@ namespace LiteEntitySystem
             foreach (var e in Childs)
                 e.DestroyInternal();
             if (EntityManager.IsClient && IsLocalControlled)
-                ((ClientEntityManager)EntityManager).OwnedEntities.Remove(this);
+                ClientManager.OwnedEntities.Remove(this);
+            else if (EntityManager.IsServer)
+                ServerManager.DestroySavedData(this);
         }
 
         public void Destroy()
@@ -68,7 +70,7 @@ namespace LiteEntitySystem
 
         private void OnOwnerChange(ushort prevOwner)
         {
-            var ownedEntities = ((ClientEntityManager)EntityManager).OwnedEntities;
+            var ownedEntities = ClientManager.OwnedEntities;
             if(IsLocalControlled)
                 ownedEntities.Add(this);
             else if(prevOwner == EntityManager.InternalPlayerId)

@@ -9,8 +9,11 @@ namespace LiteEntitySystem.Internal
         public readonly ushort Id;
         public readonly EntityManager EntityManager;
         public readonly byte Version;
+        
         public abstract bool IsLocalControlled { get; }
         public bool IsServerControlled => !IsLocalControlled;
+        public ClientEntityManager ClientManager => (ClientEntityManager)EntityManager;
+        public ServerEntityManager ServerManager => (ServerEntityManager)EntityManager;
 
         internal abstract bool IsControlledBy(byte playerId);
         

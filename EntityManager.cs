@@ -42,7 +42,7 @@ namespace LiteEntitySystem
         internal const byte PacketDiffSyncLast = 5;
             
         protected const int MaxFieldSize = 1024;
-        protected const byte MaxParts = 255;
+        protected const int MaxParts = 256;
         
         private const int MaxTicksPerUpdate = 5;
         
@@ -87,7 +87,6 @@ namespace LiteEntitySystem
                 _entityEnumSize = Enum.GetValues(typeof(TEnum)).Length;
             
             var entType = typeof(TEntity);
-
             ushort classId = (ushort)(object)id;
             ref var classData = ref ClassDataDict[classId];
             bool isSingleton = entType.IsSubclassOf(typeof(SingletonEntityLogic));
@@ -217,7 +216,7 @@ namespace LiteEntitySystem
                 AliveEntities.Add(entity);
         }
 
-        internal virtual void RemoveEntity(EntityLogic e)
+        internal void RemoveEntity(EntityLogic e)
         {
             var classData = ClassDataDict[e.ClassId];
             _entityFilters[classData.FilterId]?.Remove(e);

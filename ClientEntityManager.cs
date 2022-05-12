@@ -390,7 +390,10 @@ namespace LiteEntitySystem
                     {
                         ushort entityId = BitConverter.ToUInt16(_stateA.Data, bytesRead);
                         bytesRead += 2;
-                        bytesRead += ReadEntityState(readerData + bytesRead, entityId, true);
+                        int result = ReadEntityState(readerData + bytesRead, entityId, true);
+                        if (result == -1)
+                            return;
+                        bytesRead += result;
                     }
                 }
                 else
@@ -399,8 +402,10 @@ namespace LiteEntitySystem
                     for (int i = 0; i < _stateA.PreloadDataCount; i++)
                     {
                         ref var preloadData = ref _stateA.PreloadDataArray[i];
-                        ReadEntityState(readerData + preloadData.DataOffset, preloadData.EntityId,
+                        int result = ReadEntityState(readerData + preloadData.DataOffset, preloadData.EntityId,
                             preloadData.EntityFieldsOffset == -1);
+                        if (result == -1)
+                            return;
                     }
                 }
             }
@@ -447,7 +452,12 @@ namespace LiteEntitySystem
         }
 
         private unsafe int ReadEntityState(byte* rawData, ushort entityInstanceId, bool fullSync)
-        { 
+        {
+            if (entityInstanceId >= MaxEntityCount)
+            {
+                Logger.LogError($"Bad data (id > MaxCount) {entityInstanceId} > {MaxEntityCount}");
+                return -1;
+            }
             var entity = EntitiesDict[entityInstanceId];
             int readerPosition = 0;
             
@@ -476,7 +486,7 @@ namespace LiteEntitySystem
             else if (entity == null)
             {
                 Logger.LogError($"EntityNull? : {entityInstanceId}");
-                return 0;
+                return -1;
             }
             
             var classData = ClassDataDict[entity.ClassId];
@@ -569,6 +579,8 @@ namespace LiteEntitySystem
                     IsBaseline = true,
                     Size = reader.GetInt()
                 };
+                InternalPlayerId = reader.GetByte();
+                Logger.Log($"[CEM] Got baseline sync. Assigned player id: {InternalPlayerId}");
                 Utils.ResizeOrCreate(ref _stateA.Data, _stateA.Size);
                 
                 int decodedBytes = LZ4Codec.Decode(
@@ -581,6 +593,7 @@ namespace LiteEntitySystem
                 if (decodedBytes != _stateA.Size)
                 {
                     Logger.LogError("Error on decompress");
+                    return;
                 }
                 _stateA.Tick = BitConverter.ToUInt16(_stateA.Data);
                 _stateA.Offset = 2;
