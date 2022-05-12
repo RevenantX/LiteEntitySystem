@@ -40,7 +40,7 @@ namespace LiteEntitySystem
         public bool IsDestroyed => _isDestroyed;
         public readonly List<EntityLogic> Childs = new List<EntityLogic>();
         public ushort OwnerId => InternalOwnerId;
-        public override bool IsLocalControlled => InternalOwnerId == EntityManager.PlayerId;
+        public override bool IsLocalControlled => InternalOwnerId == EntityManager.InternalPlayerId;
 
         internal override bool IsControlledBy(byte playerId)
         {
@@ -55,6 +55,8 @@ namespace LiteEntitySystem
             EntityManager.GetEntityById(_parentId)?.Childs.Remove(this);
             foreach (var e in Childs)
                 e.DestroyInternal();
+            if (EntityManager.IsClient && IsLocalControlled)
+                ((ClientEntityManager)EntityManager).OwnedEntities.Remove(this);
         }
 
         public void Destroy()
@@ -69,7 +71,7 @@ namespace LiteEntitySystem
             var ownedEntities = ((ClientEntityManager)EntityManager).OwnedEntities;
             if(IsLocalControlled)
                 ownedEntities.Add(this);
-            else if(prevOwner == EntityManager.PlayerId)
+            else if(prevOwner == EntityManager.InternalPlayerId)
                 ownedEntities.Remove(this);
         }
 
@@ -199,7 +201,7 @@ namespace LiteEntitySystem
 
         public byte OwnerId => InternalOwnerId;
         public PawnLogic ControlledEntity => _controlledEntity;
-        public override bool IsLocalControlled => InternalOwnerId == EntityManager.PlayerId;
+        public override bool IsLocalControlled => InternalOwnerId == EntityManager.InternalPlayerId;
 
         internal override bool IsControlledBy(byte playerId)
         {

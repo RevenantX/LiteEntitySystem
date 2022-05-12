@@ -40,8 +40,10 @@ namespace LiteEntitySystem
         internal const byte PacketClientSync = 3;
         internal const byte PacketBaselineSync = 4;
         internal const byte PacketDiffSyncLast = 5;
+            
         protected const int MaxFieldSize = 1024;
         protected const byte MaxParts = 255;
+        
         private const int MaxTicksPerUpdate = 5;
         
         protected readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount];
@@ -58,8 +60,8 @@ namespace LiteEntitySystem
         public readonly bool IsClient;
         public readonly int FramesPerSecond;
         public readonly float DeltaTime;
-        public readonly byte PlayerId;
-        
+        public byte PlayerId => InternalPlayerId;
+
         protected double CurrentDelta { get; private set; }
         protected int MaxEntityId = -1; //current maximum id
 
@@ -76,6 +78,7 @@ namespace LiteEntitySystem
         private int _entityEnumSize = -1;
 
         internal readonly EntityClassData[] ClassDataDict = new EntityClassData[ushort.MaxValue];
+        internal byte InternalPlayerId;
 
         public void RegisterEntityType<TEntity, TEnum>(TEnum id, EntityConstructor<TEntity> constructor)
             where TEntity : InternalEntity where TEnum : Enum
@@ -94,9 +97,8 @@ namespace LiteEntitySystem
             Logger.Log($"Register: {entType.Name} ClassId: {id.ToString()}({classId})");
         }
 
-        protected EntityManager(NetworkMode mode, int framesPerSecond, byte playerId)
+        protected EntityManager(NetworkMode mode, int framesPerSecond)
         {
-            PlayerId = playerId;
             Mode = mode;
             IsServer = Mode == NetworkMode.Server;
             IsClient = Mode == NetworkMode.Client;
@@ -159,6 +161,11 @@ namespace LiteEntitySystem
         public T GetSingletonSafe<T>() where T : SingletonEntityLogic
         {
             return _singletonEntities[ClassDataDict[EntityClassInfo<T>.ClassId].FilterId] as T;
+        }
+
+        public bool HasSingleton<T>() where T : SingletonEntityLogic
+        {
+            return _singletonEntities[ClassDataDict[EntityClassInfo<T>.ClassId].FilterId] != null;
         }
 
         public bool TryGetSingleton<T>(out T singleton) where T : SingletonEntityLogic

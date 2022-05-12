@@ -82,7 +82,7 @@ namespace LiteEntitySystem
         private ushort _lastReceivedInputTick;
 
         public ClientEntityManager(NetPeer localPeer, byte headerByte, int framesPerSecond, IInputGenerator inputGenerator) 
-            : base(NetworkMode.Client, framesPerSecond, (byte)(localPeer.RemoteId + 1))
+            : base(NetworkMode.Client, framesPerSecond)
         {
             _localPeer = localPeer;
             _inputGenerator = inputGenerator;
@@ -374,13 +374,6 @@ namespace LiteEntitySystem
                     _localPeer.NetManager.TriggerUpdate();
                 }
             }
-        }
-
-        internal override void RemoveEntity(EntityLogic e)
-        {
-            base.RemoveEntity(e);
-            if(e.IsLocalControlled)
-                OwnedEntities.Remove(e);
         }
 
         private unsafe void ReadEntityStates()
