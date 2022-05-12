@@ -48,7 +48,7 @@ namespace LiteEntitySystem.Internal
                 type = type.GetElementType();
             return KeywordTypeMap.TryGetValue(type, out var name) 
                 ? name + (isArray ? "[]" : string.Empty)
-                : type.FullName;
+                : type.FullName!.Replace('+', '.');
         }
 
         private static void AppendGenerator(Type entityType, Type valueType)

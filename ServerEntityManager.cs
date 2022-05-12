@@ -405,8 +405,9 @@ namespace LiteEntitySystem
                                 {
                                     _packetBuffer[1] = PacketDiffSync;
                                     peer.Send(_packetBuffer, 0, mtu, DeliveryMethod.Unreliable);
+                                    
                                     (*partCount)++;
-                                    if (*partCount == MaxParts)
+                                    if (*partCount == MaxParts-1)
                                     {
                                         Logger.LogWarning("[SEM] PART COUNT MAX");
                                         //send at next frame
