@@ -42,11 +42,10 @@ namespace LiteEntitySystem
         internal const byte PacketDiffSyncLast = 5;
         protected const int MaxFieldSize = 1024;
         protected const byte MaxParts = 255;
-        
-        private const int MaxSequence = 65536;
-        private const int MaxSeq2 = MaxSequence / 2;
-        private const int MaxSeq15 = MaxSequence + MaxSeq2;
         private const int MaxTicksPerUpdate = 5;
+        
+        protected readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount];
+        protected readonly EntityFilter<InternalEntity> AliveEntities = new EntityFilter<InternalEntity>();
         
         public int EntitiesCount { get; private set; }
         public ushort Tick { get; private set; }
@@ -59,12 +58,10 @@ namespace LiteEntitySystem
         public readonly bool IsClient;
         public readonly int FramesPerSecond;
         public readonly float DeltaTime;
-        public virtual byte PlayerId => 0;
+        public readonly byte PlayerId;
         
         protected double CurrentDelta { get; private set; }
         protected int MaxEntityId = -1; //current maximum id
-        protected readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount];
-        protected readonly EntityFilter<InternalEntity> AliveEntities = new EntityFilter<InternalEntity>();
 
         private double _accumulator;
         private readonly double _stopwatchFrequency;
@@ -97,14 +94,9 @@ namespace LiteEntitySystem
             Logger.Log($"Register: {entType.Name} ClassId: {id.ToString()}({classId})");
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static int SequenceDiff(int newer, int older)
+        protected EntityManager(NetworkMode mode, int framesPerSecond, byte playerId)
         {
-            return (newer - older + MaxSeq15) % MaxSequence - MaxSeq2;
-        }
-
-        protected EntityManager(NetworkMode mode, int framesPerSecond)
-        {
+            PlayerId = playerId;
             Mode = mode;
             IsServer = Mode == NetworkMode.Server;
             IsClient = Mode == NetworkMode.Client;

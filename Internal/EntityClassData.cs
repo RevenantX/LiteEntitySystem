@@ -34,6 +34,30 @@ namespace LiteEntitySystem.Internal
             Interpolator = interpolator;
             FixedOffset = 0;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe void Get(byte* entityPointer, byte* data)
+        {
+            Unsafe.CopyBlock(data, entityPointer + FieldOffset, Size);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe void GetToFixedOffset(byte* entityPointer, byte* data)
+        {
+            Unsafe.CopyBlock(data + FixedOffset, entityPointer + FieldOffset, Size);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe void Set(byte* entityPointer, byte* data)
+        {
+            Unsafe.CopyBlock(entityPointer + FieldOffset, data, Size);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe void SetFromFixedOffset(byte* entityPointer, byte* data)
+        {
+            Unsafe.CopyBlock(entityPointer + FieldOffset, data + FixedOffset, Size);
+        }
     }
     
     public delegate T EntityConstructor<out T>(EntityParams entityParams) where T : InternalEntity;

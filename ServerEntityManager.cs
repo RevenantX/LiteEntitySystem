@@ -13,7 +13,7 @@ namespace LiteEntitySystem
     {
         public int Compare(InputBuffer x, InputBuffer y)
         {
-            return EntityManager.SequenceDiff(x.Tick, y.Tick);
+            return Utils.SequenceDiff(x.Tick, y.Tick);
         }
     }
 
@@ -75,11 +75,11 @@ namespace LiteEntitySystem
         private int _netPlayersCount;
         private ushort _nextId;
         
-        public override byte PlayerId => ServerPlayerId;
         public ServerSendRate SendRate;
         public event Action<bool> OnLagCompensation;
 
-        public ServerEntityManager(byte packetHeader, int framesPerSecond) : base(NetworkMode.Server, framesPerSecond)
+        public ServerEntityManager(byte packetHeader, int framesPerSecond) 
+            : base(NetworkMode.Server, framesPerSecond, ServerPlayerId)
         {
             _packetBuffer[0] = packetHeader;
         }
@@ -436,16 +436,16 @@ namespace LiteEntitySystem
                 input.StateB = reader.GetUShort();
                 input.LerpMsec = reader.GetUShort();
 
-                if (SequenceDiff(input.StateB, player.LastReceivedState) > 0)
+                if (Utils.SequenceDiff(input.StateB, player.LastReceivedState) > 0)
                     player.LastReceivedState = input.StateB;
                     
                 //read input
-                if (!player.AvailableInput.Contains(inputBuffer) && SequenceDiff(inputBuffer.Tick, player.LastProcessedTick) > 0)
+                if (!player.AvailableInput.Contains(inputBuffer) && Utils.SequenceDiff(inputBuffer.Tick, player.LastProcessedTick) > 0)
                 {
                     if (player.AvailableInput.Count >= MaxSavedStateDiff)
                     {
                         var minimal = player.AvailableInput.Min;
-                        if (SequenceDiff(inputBuffer.Tick, minimal.Tick) > 0)
+                        if (Utils.SequenceDiff(inputBuffer.Tick, minimal.Tick) > 0)
                         {
                             _inputPool.Enqueue(minimal.Data);
                             player.AvailableInput.Remove(minimal);
@@ -464,7 +464,7 @@ namespace LiteEntitySystem
                     player.AvailableInput.Add(inputBuffer);
                     
                     //to reduce data
-                    if (SequenceDiff(inputBuffer.Tick, player.LastReceivedTick) > 0)
+                    if (Utils.SequenceDiff(inputBuffer.Tick, player.LastReceivedTick) > 0)
                         player.LastReceivedTick = inputBuffer.Tick;
                 }
                 reader.SkipBytes(inputBuffer.Size);

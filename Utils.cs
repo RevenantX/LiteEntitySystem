@@ -52,5 +52,15 @@ namespace LiteEntitySystem
         {
             return a + (b - a) * t;
         }
+        
+        private const int MaxSequence = 65536;
+        private const int MaxSeq2 = MaxSequence / 2;
+        private const int MaxSeq15 = MaxSequence + MaxSeq2;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int SequenceDiff(ushort newer, ushort older)
+        {
+            return (newer - older + MaxSeq15) % MaxSequence - MaxSeq2;
+        }
     }
 }

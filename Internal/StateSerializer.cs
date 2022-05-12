@@ -41,8 +41,9 @@ namespace LiteEntitySystem.Internal
         private RemoteCallPacket _rpcHead;
         private RemoteCallPacket _rpcTail;
         private ushort _ticksOnDestroy;
-        private ServerEntityManager _entityManager => (ServerEntityManager)_entity.EntityManager;
         private int _filledHistory;
+        
+        private ServerEntityManager Manager => (ServerEntityManager)_entity.EntityManager;
 
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
@@ -82,7 +83,7 @@ namespace LiteEntitySystem.Internal
                 for (int i = 0; i < _classData.SyncableFields.Length; i++)
                 {
                     ref var syncable = ref Unsafe.AsRef<SyncableField>(entityPointer + _classData.SyncableFields[i].FieldOffset);
-                    syncable.EntityManager = _entityManager;
+                    syncable.EntityManager = Manager;
                     syncable.FieldId = (byte)i;
                     syncable.EntityId = e.Id;
                 }
@@ -115,7 +116,7 @@ namespace LiteEntitySystem.Internal
                 for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
                 {
                     ref var field = ref _classData.LagCompensatedFields[i];
-                    Unsafe.CopyBlock(history + historyOffset, entityPointer + field.FieldOffset, field.Size);
+                    field.Get(entityPointer, history + historyOffset);
                     historyOffset += field.IntSize;
                 }
             }
@@ -201,7 +202,7 @@ namespace LiteEntitySystem.Internal
             if (_state == SerializerState.Ignore)
                 return DiffResult.Skip;
             bool canReuse = false;
-            if (_state == SerializerState.Destroyed && EntityManager.SequenceDiff(serverTick, _ticksOnDestroy) >= TicksToDestroy)
+            if (_state == SerializerState.Destroyed && Utils.SequenceDiff(serverTick, _ticksOnDestroy) >= TicksToDestroy)
             {
                 _state = SerializerState.Freed;
                 canReuse = true;
@@ -216,7 +217,7 @@ namespace LiteEntitySystem.Internal
             {
                 ushort* fieldFlagsPtr = (ushort*) (resultData + startPos);
                 //initial state with compression
-                if (EntityManager.SequenceDiff(_versionChangedTick, playerTick) > 0)
+                if (Utils.SequenceDiff(_versionChangedTick, playerTick) > 0)
                 {
                     //write full header here (totalSize + eid)
                     //also all fields
@@ -255,7 +256,7 @@ namespace LiteEntitySystem.Internal
                             fields++;
                             *fields = 0;
                         }
-                        if (EntityManager.SequenceDiff(_fieldChangeTicks[i], playerTick) > 0)
+                        if (Utils.SequenceDiff(_fieldChangeTicks[i], playerTick) > 0)
                         {
                             hasChanges = true;
                             *fields |= (byte)(1 << i%8);
@@ -271,7 +272,7 @@ namespace LiteEntitySystem.Internal
                                      ((rpcNode.Flags & ExecuteFlags.SendToOther) != 0 &&
                                      !_entity.IsControlledBy(playerId));
 
-                        if (send && EntityManager.SequenceDiff(playerTick, rpcNode.Tick) < 0)
+                        if (send && Utils.SequenceDiff(playerTick, rpcNode.Tick) < 0)
                         {
                             hasChanges = true;
                             //put new
@@ -285,10 +286,10 @@ namespace LiteEntitySystem.Internal
                             }
                             position += 6 + rpcNode.Size;
                         }
-                        else if (EntityManager.SequenceDiff(rpcNode.Tick, minimalTick) < 0)
+                        else if (Utils.SequenceDiff(rpcNode.Tick, minimalTick) < 0)
                         {
                             //remove old RPCs
-                            _entityManager.PoolRpc(rpcNode);
+                            Manager.PoolRpc(rpcNode);
                             if (_rpcTail == _rpcHead)
                                 _rpcTail = null;
                             _rpcHead = rpcNode.Next;
@@ -326,20 +327,20 @@ namespace LiteEntitySystem.Internal
         {
             if (_entity.IsControlledBy(player.Id))
                 return;
-            int diff = EntityManager.SequenceDiff(_entityManager.Tick, player.StateATick);
+            int diff = Utils.SequenceDiff(Manager.Tick, player.StateATick);
             if (diff <= 0 || diff >= _filledHistory || _state != SerializerState.Active)
                 return;
             byte* entityPtr = InternalEntity.GetPtr(ref _entity);
             fixed (byte* 
                    historyA = _history[player.StateATick % MaxHistory], 
                    historyB = _history[player.StateBTick % MaxHistory],
-                   current = _history[_entityManager.Tick % MaxHistory])
+                   current = _history[Manager.Tick % MaxHistory])
             {
                 int historyOffset = 0;
                 for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
                 {
                     var field = _classData.LagCompensatedFields[i];
-                    Unsafe.CopyBlock(current + historyOffset, entityPtr + field.FieldOffset, field.Size);
+                    field.Get(entityPtr, current + historyOffset);
                     if (field.Interpolator != null)
                     {
                         field.Interpolator(
@@ -350,7 +351,7 @@ namespace LiteEntitySystem.Internal
                     }
                     else
                     {
-                        Unsafe.CopyBlock(entityPtr + field.FieldOffset, historyA + historyOffset, field.Size);
+                        field.Set(entityPtr, historyA + historyOffset);
                     }
                     historyOffset += field.IntSize;
                 }
@@ -368,13 +369,13 @@ namespace LiteEntitySystem.Internal
             _lagCompensationEnabled = false;
             
             byte* entityPtr = InternalEntity.GetPtr(ref _entity);
-            fixed (byte* history = _history[_entityManager.Tick % MaxHistory])
+            fixed (byte* history = _history[Manager.Tick % MaxHistory])
             {
                 int historyOffset = 0;
                 for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
                 {
                     var field = _classData.LagCompensatedFields[i];
-                    Unsafe.CopyBlock(entityPtr + field.FieldOffset, history + historyOffset, field.Size);
+                    field.Set(entityPtr, history + historyOffset);
                     historyOffset += field.IntSize;
                 }
             }

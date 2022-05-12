@@ -36,7 +36,7 @@ namespace LiteEntitySystem
         {
             public int Compare(ServerStateData x, ServerStateData y)
             {
-                return SequenceDiff(x!.Tick, y!.Tick);
+                return Utils.SequenceDiff(x!.Tick, y!.Tick);
             }
         }
         
