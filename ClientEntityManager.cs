@@ -35,7 +35,7 @@ namespace LiteEntitySystem
         private static readonly int InputHeaderSize = Marshal.SizeOf<InputPacketHeader>();
         
         private readonly NetPeer _localPeer;
-        private readonly SortedList<ushort, ServerStateData> _receivedStates = new SortedList<ushort, ServerStateData>();
+        private readonly SortedList<ushort, ServerStateData> _receivedStates = new SortedList<ushort, ServerStateData>(new SequenceComparer());
         private readonly Queue<ServerStateData> _statesPool = new Queue<ServerStateData>(MaxSavedStateDiff);
         private readonly NetDataReader _inputReader = new NetDataReader();
         private readonly Queue<NetDataWriter> _inputCommands = new Queue<NetDataWriter>(InputBufferSize);

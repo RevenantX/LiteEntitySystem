@@ -32,7 +32,7 @@ namespace LiteEntitySystem
             public int StateReaderOffset;
         }
         
-        private struct ServerStateComparer : IComparer<ServerStateData>
+        private sealed class ServerStateComparer : IComparer<ServerStateData>
         {
             public int Compare(ServerStateData x, ServerStateData y)
             {

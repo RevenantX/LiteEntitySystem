@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -61,6 +62,20 @@ namespace LiteEntitySystem
         public static int SequenceDiff(ushort newer, ushort older)
         {
             return (newer - older + MaxSeq15) % MaxSequence - MaxSeq2;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Minimal<TIndex, T>(this SortedList<TIndex, T> sortedList)
+        {
+            return sortedList[sortedList.Keys[0]];
+        }
+    }
+    
+    internal sealed class SequenceComparer : IComparer<ushort>
+    {
+        public int Compare(ushort x, ushort y)
+        {
+            return Utils.SequenceDiff(x, y);
         }
     }
 }

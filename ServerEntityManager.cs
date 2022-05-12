@@ -9,14 +9,6 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
-    internal struct InputComprarer : IComparer<InputBuffer>
-    {
-        public int Compare(InputBuffer x, InputBuffer y)
-        {
-            return Utils.SequenceDiff(x.Tick, y.Tick);
-        }
-    }
-
     internal struct InputBuffer
     {
         public ushort Tick;
@@ -38,7 +30,7 @@ namespace LiteEntitySystem
         public bool IsFirstStateReceived;
         public bool IsNew;
         
-        internal readonly SortedSet<InputBuffer> AvailableInput = new SortedSet<InputBuffer>(new InputComprarer());
+        internal readonly SortedList<ushort, InputBuffer> AvailableInput = new SortedList<ushort, InputBuffer>(new SequenceComparer());
         
         public NetPlayer(NetPeer peer)
         {
@@ -157,7 +149,7 @@ namespace LiteEntitySystem
             if (player.AvailableInput.Count == 0)
                 return;
             
-            var inputFrame = player.AvailableInput.Min;
+            var inputFrame = player.AvailableInput.Minimal();
             ref var inputData = ref inputFrame.Input;
             _inputReader.SetSource(inputFrame.Data, 0, inputFrame.Size);
             controller.ReadInput(_inputReader);
@@ -165,7 +157,7 @@ namespace LiteEntitySystem
             player.StateATick = inputData.StateA;
             player.StateBTick = inputData.StateB;
             player.LerpTime = inputData.LerpMsec / 1000f;
-            player.AvailableInput.Remove(inputFrame);
+            player.AvailableInput.Remove(inputFrame.Tick);
             _inputPool.Enqueue(inputFrame.Data);
         }
 
@@ -440,15 +432,15 @@ namespace LiteEntitySystem
                     player.LastReceivedState = input.StateB;
                     
                 //read input
-                if (!player.AvailableInput.Contains(inputBuffer) && Utils.SequenceDiff(inputBuffer.Tick, player.LastProcessedTick) > 0)
+                if (!player.AvailableInput.ContainsKey(inputBuffer.Tick) && Utils.SequenceDiff(inputBuffer.Tick, player.LastProcessedTick) > 0)
                 {
                     if (player.AvailableInput.Count >= MaxSavedStateDiff)
                     {
-                        var minimal = player.AvailableInput.Min;
+                        var minimal = player.AvailableInput.Minimal();
                         if (Utils.SequenceDiff(inputBuffer.Tick, minimal.Tick) > 0)
                         {
                             _inputPool.Enqueue(minimal.Data);
-                            player.AvailableInput.Remove(minimal);
+                            player.AvailableInput.Remove(minimal.Tick);
                         }
                         else
                         {
@@ -461,8 +453,8 @@ namespace LiteEntitySystem
                     Utils.ResizeOrCreate(ref inputBuffer.Data, inputBuffer.Size);
                     fixed(byte* inputData = inputBuffer.Data, readerData = reader.RawData)
                         Unsafe.CopyBlock(inputData, readerData + reader.Position, inputBuffer.Size);
-                    player.AvailableInput.Add(inputBuffer);
-                    
+                    player.AvailableInput.Add(inputBuffer.Tick, inputBuffer);
+
                     //to reduce data
                     if (Utils.SequenceDiff(inputBuffer.Tick, player.LastReceivedTick) > 0)
                         player.LastReceivedTick = inputBuffer.Tick;
