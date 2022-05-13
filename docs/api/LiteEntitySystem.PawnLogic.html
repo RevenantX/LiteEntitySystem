@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class PawnLogic
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class PawnLogic
+   ">
+    <meta name="generator" content="docfx 2.59.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.PawnLogic">
+  
+  
+  <h1 id="LiteEntitySystem_PawnLogic" data-uid="LiteEntitySystem.PawnLogic" class="text-break">Class PawnLogic
+  </h1>
+  <div class="markdown level0 summary"><p>Base class for entites that can be controlled by Controller</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></div>
+    <div class="level2"><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></div>
+    <div class="level3"><span class="xref">PawnLogic</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_IsDestroyed">EntityLogic.IsDestroyed</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_Childs">EntityLogic.Childs</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_OwnerId">EntityLogic.OwnerId</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_IsLocalControlled">EntityLogic.IsLocalControlled</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_Destroy">EntityLogic.Destroy()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_SetParent_LiteEntitySystem_EntityLogic_">EntityLogic.SetParent(EntityLogic)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_GetParent__1">EntityLogic.GetParent&lt;T&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_OnLagCompensation_System_Boolean_">EntityLogic.OnLagCompensation(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ClassId">InternalEntity.ClassId</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Id">InternalEntity.Id</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_EntityManager">InternalEntity.EntityManager</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Version">InternalEntity.Version</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsServerControlled">InternalEntity.IsServerControlled</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ClientManager">InternalEntity.ClientManager</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ServerManager">InternalEntity.ServerManager</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_DebugPrint">InternalEntity.DebugPrint()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnConstructed">InternalEntity.OnConstructed()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRemoteCall__1_Action___0____0_">InternalEntity.ExecuteRemoteCall&lt;T&gt;(Action&lt;T&gt;, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRemoteCall__1_Action___0______0___System_Int32_">InternalEntity.ExecuteRemoteCall&lt;T&gt;(Action&lt;T[]&gt;, T[], Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_CompareTo_LiteEntitySystem_Internal_InternalEntity_">InternalEntity.CompareTo(InternalEntity)</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
+  <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
+  <h5 id="LiteEntitySystem_PawnLogic_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class PawnLogic : EntityLogic</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  
+  
+  <a id="LiteEntitySystem_PawnLogic__ctor_" data-uid="LiteEntitySystem.PawnLogic.#ctor*"></a>
+  <h4 id="LiteEntitySystem_PawnLogic__ctor_LiteEntitySystem_EntityParams_" data-uid="LiteEntitySystem.PawnLogic.#ctor(LiteEntitySystem.EntityParams)">PawnLogic(EntityParams)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected PawnLogic(EntityParams entityParams)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.EntityParams.html">EntityParams</a></td>
+        <td><span class="parametername">entityParams</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="LiteEntitySystem_PawnLogic_Controller_" data-uid="LiteEntitySystem.PawnLogic.Controller*"></a>
+  <h4 id="LiteEntitySystem_PawnLogic_Controller" data-uid="LiteEntitySystem.PawnLogic.Controller">Controller</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ControllerLogic Controller { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.ControllerLogic.html">ControllerLogic</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  
+  
+  <a id="LiteEntitySystem_PawnLogic_DisableLagCompensation_" data-uid="LiteEntitySystem.PawnLogic.DisableLagCompensation*"></a>
+  <h4 id="LiteEntitySystem_PawnLogic_DisableLagCompensation" data-uid="LiteEntitySystem.PawnLogic.DisableLagCompensation">DisableLagCompensation()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void DisableLagCompensation()</code></pre>
+  </div>
+  
+  
+  <a id="LiteEntitySystem_PawnLogic_EnableLagCompensation_" data-uid="LiteEntitySystem.PawnLogic.EnableLagCompensation*"></a>
+  <h4 id="LiteEntitySystem_PawnLogic_EnableLagCompensation" data-uid="LiteEntitySystem.PawnLogic.EnableLagCompensation">EnableLagCompensation()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void EnableLagCompensation()</code></pre>
+  </div>
+  
+  
+  <a id="LiteEntitySystem_PawnLogic_OnDestroy_" data-uid="LiteEntitySystem.PawnLogic.OnDestroy*"></a>
+  <h4 id="LiteEntitySystem_PawnLogic_OnDestroy" data-uid="LiteEntitySystem.PawnLogic.OnDestroy">OnDestroy()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void OnDestroy()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_OnDestroy">EntityLogic.OnDestroy()</a></div>
+  
+  
+  <a id="LiteEntitySystem_PawnLogic_Update_" data-uid="LiteEntitySystem.PawnLogic.Update*"></a>
+  <h4 id="LiteEntitySystem_PawnLogic_Update" data-uid="LiteEntitySystem.PawnLogic.Update">Update()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Update()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Update">InternalEntity.Update()</a></div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
