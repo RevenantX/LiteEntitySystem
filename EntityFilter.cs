@@ -9,6 +9,7 @@ namespace LiteEntitySystem
     {
         internal abstract void Add(InternalEntity entity);
         internal abstract void Remove(InternalEntity entity);
+        internal abstract void Clear();
     }
 
     //For usability
@@ -52,7 +53,18 @@ namespace LiteEntitySystem
         private ushort[] _dict;
         private T[] _array = new T[8];
         private ushort _count;
-        
+
+        internal override void Clear()
+        {
+            for (int i = 0; i < _count; i++)
+            {
+                _array[i] = null;
+            }
+            OnAdded = null;
+            OnRemoved = null;
+            _count = 0;
+        }
+
         internal override void Add(InternalEntity entity)
         {
             if (_dict == null)
@@ -78,6 +90,11 @@ namespace LiteEntitySystem
 
         internal override void Remove(InternalEntity entity)
         {
+            if (_count == 0)
+            {
+                Logger.LogError("Remove when count is 0");
+                return;
+            }
             ushort idx = _dict[entity.Id];
             _count--;
             if(idx != _count)

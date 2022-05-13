@@ -52,8 +52,7 @@ namespace LiteEntitySystem
         
         protected readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount];
         protected readonly EntityFilter<InternalEntity> AliveEntities = new EntityFilter<InternalEntity>();
-        protected readonly EntityFilter<InternalEntity> LocalEntities = new EntityFilter<InternalEntity>();
-        
+
         /// <summary>
         /// Total entities count (including local)
         /// </summary>
@@ -158,6 +157,32 @@ namespace LiteEntitySystem
             _stopwatchFrequency = Stopwatch.Frequency;
             Interpolation.Register<float>(Utils.Lerp);
             Interpolation.Register<FloatAngle>(FloatAngle.Lerp);
+        }
+
+        /// <summary>
+        /// Remove all entities and reset all counters and timers
+        /// </summary>
+        public void Reset()
+        {
+            EntitiesCount = 0;
+
+            Tick = 0;
+            CurrentDelta = 0.0;
+            _accumulator = 0.0;
+            _lastTime = 0;
+            InternalPlayerId = 0;
+            _localIdCounter = MaxEntityCount;
+            _localIdQueue.Clear();
+            _stopwatch.Restart();
+
+            AliveEntities.Clear();
+
+            for (int i = 0; i < _singletonEntities.Length; i++)
+                _singletonEntities[i] = null;
+            for (int i = 0; i <= MaxEntityId; i++)
+                EntitiesDict[i] = null;
+            for (int i = 0; i < _entityFilters.Length; i++)
+                _entityFilters[i] = null;
         }
 
         /// <summary>
@@ -317,10 +342,8 @@ namespace LiteEntitySystem
                 foreach (int baseId in classData.BaseIds)
                     _entityFilters[baseId]?.Add(entity);
             }
-            if (classData.IsUpdateable)
+            if (classData.IsUpdateable && (IsServer || (IsClient && classData.IsLocalOnly)))
                 AliveEntities.Add(entity);
-            if (classData.IsLocalOnly)
-                LocalEntities.Add(entity);
         }
 
         internal void RemoveEntity(EntityLogic e)
@@ -329,13 +352,10 @@ namespace LiteEntitySystem
             _entityFilters[classData.FilterId]?.Remove(e);
             foreach (int baseId in classData.BaseIds)
                 _entityFilters[baseId]?.Remove(e);
-            if (classData.IsUpdateable)
+            if (classData.IsUpdateable && (IsServer || (IsClient && classData.IsLocalOnly)))
                 AliveEntities.Remove(e);
             if (classData.IsLocalOnly)
-            {
                 _localIdQueue.Enqueue(e.Id);
-                LocalEntities.Remove(e);
-            }
             EntitiesCount--;
             //Logger.Log($"{Mode} - RemoveEntity: {e.Id}");
         }
