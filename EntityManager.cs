@@ -45,12 +45,13 @@ namespace LiteEntitySystem
         protected const byte PacketBaselineSync = 4;
         protected const byte PacketDiffSyncLast = 5;
         protected const int MaxFieldSize = 1024;
-        protected const int MaxParts = 256;
         protected const int MaxSavedStateDiff = 6;
+        
+        internal const int MaxParts = 256;
         
         private const int MaxTicksPerUpdate = 5;
         
-        protected readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount];
+        internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount];
         protected readonly EntityFilter<InternalEntity> AliveEntities = new EntityFilter<InternalEntity>();
 
         /// <summary>

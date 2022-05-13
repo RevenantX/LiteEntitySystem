@@ -24,7 +24,7 @@ namespace LiteEntitySystem
     /// <summary>
     /// Client entity manager
     /// </summary>
-    public sealed partial class ClientEntityManager : EntityManager
+    public sealed class ClientEntityManager : EntityManager
     {
         /// <summary>
         /// Current interpolated server tick
