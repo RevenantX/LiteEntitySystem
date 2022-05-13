@@ -324,8 +324,38 @@ namespace LiteEntitySystem
     /// </summary>
     public abstract class HumanControllerLogic : ControllerLogic
     {
+        [SyncVar(nameof(OnDestroyChange))] 
+        private bool _isDestroyed;
+        
+        /// <summary>
+        /// Called on client and server to read generated from <see cref="GenerateInput"/> input
+        /// </summary>
+        /// <param name="reader"></param>
         public abstract void ReadInput(NetDataReader reader);
+        
+        /// <summary>
+        /// Called on client to generate input
+        /// </summary>
+        /// <param name="writer"></param>
         public abstract void GenerateInput(NetDataWriter writer);
+
+        internal void DestroyInternal()
+        {
+            _isDestroyed = true;
+            EntityManager.RemoveEntity(this);
+            ServerManager.DestroySavedData(this);
+        }
+        
+        private void OnDestroyChange(bool prevValue)
+        {
+            if(_isDestroyed)
+                OnDestroy();
+        }
+
+        protected virtual void OnDestroy()
+        {
+            
+        }
 
         protected HumanControllerLogic(EntityParams entityParams) : base(entityParams) { }
     }

@@ -137,7 +137,7 @@ namespace LiteEntitySystem
         }
 
         /// <summary>
-        /// Remove player
+        /// Remove player and it's owned entities
         /// </summary>
         /// <param name="player">player to remove</param>
         /// <returns>true if player removed succesfully, false if player not found</returns>
@@ -145,6 +145,23 @@ namespace LiteEntitySystem
         {
             if (player == null || _netPlayersDict[player.Id] == null)
                 return false;
+            
+            for(int i = 0; i < MaxEntityId; i++)
+            {
+                var e = EntitiesDict[i];
+                if (e.IsControlledBy(player.Id))
+                {
+                    switch (e)
+                    {
+                        case HumanControllerLogic controllerLogic:
+                            controllerLogic.DestroyInternal();
+                            break;
+                        case EntityLogic entityLogic:
+                            entityLogic.Destroy();
+                            break;
+                    }
+                }
+            }
             
             _netPlayersDict[player.Id] = null;
             _netPlayersCount--;
@@ -186,6 +203,11 @@ namespace LiteEntitySystem
         public T AddAIController<T>(Action<T> initMethod = null) where T : AiControllerLogic
         {
             return Add(initMethod);
+        }
+
+        public void RemoveAIController<T>(T controller) where T : AiControllerLogic
+        {
+            RemoveEntity(controller);
         }
 
         /// <summary>
@@ -456,7 +478,7 @@ namespace LiteEntitySystem
                 SavedEntityData[aliveEntity.Id].WriteHistory(Tick);
         }
         
-        internal void DestroySavedData(EntityLogic entityLogic)
+        internal void DestroySavedData(InternalEntity entityLogic)
         {
             SavedEntityData[entityLogic.Id].Destroy(Tick);
         }

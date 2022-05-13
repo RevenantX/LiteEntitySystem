@@ -352,7 +352,7 @@ namespace LiteEntitySystem
                 AliveEntities.Add(entity);
         }
 
-        internal void RemoveEntity(EntityLogic e)
+        internal void RemoveEntity(InternalEntity e)
         {
             var classData = ClassDataDict[e.ClassId];
             _entityFilters[classData.FilterId]?.Remove(e);
