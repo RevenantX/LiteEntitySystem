@@ -13,6 +13,11 @@ namespace LiteEntitySystem
         
         internal static readonly Dictionary<Type, InterpolatorDelegate> Methods = new Dictionary<Type, InterpolatorDelegate>();
 
+        /// <summary>
+        /// Register interpolation method for type
+        /// </summary>
+        /// <param name="interpolator">interpolation method</param>
+        /// <typeparam name="T">Type of interpolated value</typeparam>
         public static unsafe void Register<T>(InterpolatorDelegate<T> interpolator) where T : struct
         {
             Methods[typeof(T)] = (a, b, result, t) =>
@@ -25,6 +30,11 @@ namespace LiteEntitySystem
             };
         }
         
+        /// <summary>
+        /// Register interpolation method for type
+        /// </summary>
+        /// <param name="interpolator">interpolation method (eg Vector3.Lerp)</param>
+        /// <typeparam name="T">Type of interpolated value</typeparam>
         public static unsafe void Register<T>(InterpolatorDelegateWithReturn<T> interpolator) where T : struct
         {
             Methods[typeof(T)] = (a, b, result, t) =>

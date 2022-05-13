@@ -79,7 +79,7 @@ namespace LiteEntitySystem.Internal
         public readonly int LagCompensatedSize;
 
         public readonly bool IsUpdateable;
-        public readonly bool IsServerOnly;
+        public readonly bool IsLocalOnly;
         public readonly Type[] BaseTypes;
         public readonly EntityConstructor<InternalEntity> EntityConstructor;
         public readonly Dictionary<MethodInfo, RemoteCall> RemoteCalls = new Dictionary<MethodInfo, RemoteCall>();
@@ -133,9 +133,17 @@ namespace LiteEntitySystem.Internal
                 Logger.LogError($"Method: {methodName} not found in {entityType}");
                 return null;
             }
-
-            return (MethodCallDelegate)
-                MethodCallGenerator.GetGenericMethod(entityType, valueType).Invoke(null, new object[] { method });
+            
+            try
+            {
+                var d = MethodCallGenerator.GetGenericMethod(entityType, valueType)
+                    .Invoke(null, new object[] { method });
+                return (MethodCallDelegate)d;
+            }
+            catch(Exception)
+            {
+                throw new Exception($"{entityType.Name}.{methodName} has invalid argument type {method.GetParameters()[0]?.ParameterType.Name} instead of {valueType.Name}");
+            }
         }
 
         private static List<Type> GetBaseTypes(Type ofType, Type until, bool includeSelf)
@@ -156,7 +164,7 @@ namespace LiteEntitySystem.Internal
         {
             ClassId = classId;
             IsUpdateable = entType.GetCustomAttribute<UpdateableEntity>() != null;
-            IsServerOnly = entType.GetCustomAttribute<ServerOnly>() != null;
+            IsLocalOnly = entType.GetCustomAttribute<LocalOnly>() != null;
             EntityConstructor = constructor;
             IsSingleton = entType.IsSubclassOf(typeof(SingletonEntityLogic));
             FilterId = filterId;
@@ -209,8 +217,8 @@ namespace LiteEntitySystem.Internal
                     
                     var ft = field.FieldType;
                     int offset = Marshal.ReadInt32(field.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
-                    var onSyncMethod = GetOnSyncDelegate(baseType, ft, syncVarAttribute.MethodName);
-                    
+                    MethodCallDelegate onSyncMethod = GetOnSyncDelegate(baseType, ft, syncVarAttribute.MethodName);
+
                     if (ft.IsValueType)
                     {
                         int fieldSize = ft == typeof(bool) ? 1 : Marshal.SizeOf(ft);

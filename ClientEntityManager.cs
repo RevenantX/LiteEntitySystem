@@ -26,12 +26,28 @@ namespace LiteEntitySystem
     /// </summary>
     public sealed partial class ClientEntityManager : EntityManager
     {
+        /// <summary>
+        /// Current interpolated server tick
+        /// </summary>
+        public ushort ServerTick { get; private set; }
+        
+        /// <summary>
+        /// Stored input commands count for prediction correction
+        /// </summary>
         public int StoredCommands => _inputCommands.Count;
+        
+        /// <summary>
+        /// Player tick processed by server
+        /// </summary>
         public int LastProcessedTick => _stateA?.ProcessedTick ?? 0;
+        
+        /// <summary>
+        /// States count in interpolation buffer
+        /// </summary>
         public int LerpBufferCount => _lerpBuffer.Count;
 
         private const int InterpolateBufferSize = 10;
-        private const int InputBufferSize = 32;
+        private const int InputBufferSize = 128;
         private static readonly int InputHeaderSize = Marshal.SizeOf<InputPacketHeader>();
         
         private readonly NetPeer _localPeer;
@@ -51,7 +67,7 @@ namespace LiteEntitySystem
         private float _lerpTime;
         private double _timer;
         private bool _isSyncReceived;
-        private bool _inputGenerated;
+        private bool _isLogicTicked;
 
         private struct SyncCallInfo
         {
@@ -81,7 +97,14 @@ namespace LiteEntitySystem
         private ushort _remoteCallsTick;
         private ushort _lastReceivedInputTick;
 
-        public ClientEntityManager(NetPeer localPeer, byte headerByte, int framesPerSecond, IInputGenerator inputGenerator) 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="localPeer">Local NetPeer</param>
+        /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
+        /// <param name="framesPerSecond">Fixed framerate of game logic</param>
+        /// <param name="inputGenerator"></param>
+        public ClientEntityManager(NetPeer localPeer, byte headerByte, byte framesPerSecond, IInputGenerator inputGenerator) 
             : base(NetworkMode.Client, framesPerSecond)
         {
             _localPeer = localPeer;
@@ -91,95 +114,120 @@ namespace LiteEntitySystem
             _sendBuffer[1] = PacketClientSync;
         }
 
-        private unsafe void OnOwnedAdded(EntityLogic entity)
+        /// <summary>
+        /// Read incoming data in case of first byte is == headerByte
+        /// </summary>
+        /// <param name="reader">Reader with data (will be recycled inside, also works with autorecycle)</param>
+        /// <returns>true if first byte is == headerByte</returns>
+        public bool DeserializeWithHeaderCheck(NetPacketReader reader)
         {
-            ref var predictedData = ref _predictedEntities[entity.Id];
-            var classData = ClassDataDict[entity.ClassId];
-            byte* entityPtr = InternalEntity.GetPtr(ref entity);
-            
-            Utils.ResizeOrCreate(ref predictedData, classData.FixedFieldsSize);
-            fixed (byte* predictedPtr = predictedData)
+            if (reader.PeekByte() == _sendBuffer[0])
             {
-                for (int i = 0; i < classData.FieldsCount; i++)
-                {
-                    var fieldInfo = classData.Fields[i];
-                    if(!fieldInfo.IsEntity)
-                        fieldInfo.GetToFixedOffset(entityPtr, predictedPtr);
-                }
+                reader.SkipBytes(1);
+                Deserialize(reader);
+                return true;
             }
-            Utils.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
+
+            return false;
         }
-
-        protected override unsafe void OnLogicTick()
+        
+        /// <summary>
+        /// Read incoming data omitting header byte
+        /// </summary>
+        /// <param name="reader"></param>
+        public void Deserialize(NetPacketReader reader)
         {
-            ServerTick++;
-            if (_stateB != null)
+            byte packetType = reader.GetByte();
+            if(packetType == PacketBaselineSync)
             {
-                fixed (byte* rawData = _stateB.Data)
+                _stateA = new ServerStateData
                 {
-                    for (int i = _stateB.RemoteCallsProcessed; i < _stateB.RemoteCallsCount; i++)
-                    {
-                        ref var rpcCache = ref _stateB.RemoteCallsCaches[i];
-                        if (Utils.SequenceDiff(rpcCache.Tick, _remoteCallsTick) >= 0 && Utils.SequenceDiff(rpcCache.Tick, ServerTick) <= 0)
-                        {
-                            _remoteCallsTick = rpcCache.Tick;
-                            var entity = EntitiesDict[rpcCache.EntityId];
-                            rpcCache.Delegate(Unsafe.AsPointer(ref entity), rawData + rpcCache.Offset);
-                            _stateB.RemoteCallsProcessed++;
-                        }
-                    }
-                }        
-            }
-
-            if (_inputCommands.Count > InputBufferSize)
-                _inputCommands.Dequeue();
-            var inputWriter = _inputPool.Count > 0 ? _inputPool.Dequeue() : new NetDataWriter(true, InputHeaderSize);
-            InputPacketHeader inputPacketHeader = new InputPacketHeader
-            {
-                StateA   = _stateA.Tick,
-                StateB   = _stateB?.Tick ?? _stateA.Tick,
-                LerpMsec = _lerpMsec
-            };
-            fixed(void* writerData = inputWriter.Data)
-                Unsafe.Copy(writerData, ref inputPacketHeader);
-            inputWriter.SetPosition(InputHeaderSize);
-            
-            _inputGenerator.GenerateInput(inputWriter);
-            if (inputWriter.Length > NetConstants.MaxUnreliableDataSize - 2)
-            {
-                Logger.LogError($"Input too large: {inputWriter.Length-InputHeaderSize} bytes");
+                    IsBaseline = true,
+                    Size = reader.GetInt()
+                };
+                InternalPlayerId = reader.GetByte();
+                Logger.Log($"[CEM] Got baseline sync. Assigned player id: {InternalPlayerId}");
+                Utils.ResizeOrCreate(ref _stateA.Data, _stateA.Size);
+                
+                int decodedBytes = LZ4Codec.Decode(
+                    reader.RawData,
+                    reader.Position,
+                    reader.AvailableBytes,
+                    _stateA.Data,
+                    0,
+                    _stateA.Size);
+                if (decodedBytes != _stateA.Size)
+                {
+                    Logger.LogError("Error on decompress");
+                    return;
+                }
+                _stateA.Tick = BitConverter.ToUInt16(_stateA.Data);
+                _stateA.Offset = 2;
+                ReadEntityStates();
+                _isSyncReceived = true;
             }
             else
             {
-                _inputCommands.Enqueue(inputWriter);
-                _inputGenerated = true;
-                _inputReader.SetSource(inputWriter.Data, InputHeaderSize, inputWriter.Length);
-                foreach(var controller in GetControllers<HumanControllerLogic>())
+                bool isLastPart = packetType == PacketDiffSyncLast;
+                ushort newServerTick = reader.GetUShort();
+                if (Utils.SequenceDiff(newServerTick, _stateA.Tick) <= 0)
                 {
-                    controller.ReadInput(_inputReader);
+                    reader.Recycle();
+                    return;
                 }
-            }
-
-            //local update
-            foreach (var entity in OwnedEntities)
-            {
-                //save data for interpolation before update
-                var classData = ClassDataDict[entity.ClassId];
-                var entityLocal = entity;
-                byte* entityPtr = InternalEntity.GetPtr(ref entityLocal);
-                fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
-                       prevDataPtr = _interpolatePrevData[entity.Id])
-                {
-                    Unsafe.CopyBlock(prevDataPtr, currentDataPtr, (uint)classData.InterpolatedFieldsSize);
-                                        
-                    //update
-                    entity.Update();
                 
-                    //save current
-                    for(int i = 0; i < classData.InterpolatedCount; i++)
+                if(!_receivedStates.TryGetValue(newServerTick, out var serverState))
+                {
+                    if (_receivedStates.Count > MaxSavedStateDiff)
                     {
-                        var field = classData.Fields[i];
-                        field.GetToFixedOffset(entityPtr, currentDataPtr);
+                        var minimal = _receivedStates.Keys[0];
+                        if (Utils.SequenceDiff(newServerTick, minimal) > 0)
+                        {
+                            serverState = _receivedStates[minimal];
+                            _receivedStates.Remove(minimal);
+                            serverState.Reset(newServerTick);
+                        }
+                        else
+                        {
+                            reader.Recycle();
+                            return;
+                        }
+                    }
+                    else if (_statesPool.Count > 0)
+                    {
+                        serverState = _statesPool.Dequeue();
+                        serverState.Reset(newServerTick);
+                    }
+                    else
+                    {
+                        serverState = new ServerStateData { Tick = newServerTick };
+                    }
+                    _receivedStates.Add(newServerTick, serverState);
+                }
+                
+                //if got full state - add to lerp buffer
+                if(serverState.ReadPart(isLastPart, reader))
+                {
+                    if (Utils.SequenceDiff(serverState.LastReceivedTick, _lastReceivedInputTick) > 0)
+                        _lastReceivedInputTick = serverState.LastReceivedTick;
+                    
+                    _receivedStates.Remove(serverState.Tick);
+                    
+                    if (_lerpBuffer.Count >= InterpolateBufferSize)
+                    {
+                        if (Utils.SequenceDiff(serverState.Tick, _lerpBuffer.Min.Tick) > 0)
+                        {
+                            _lerpBuffer.Remove(_lerpBuffer.Min);
+                            _lerpBuffer.Add(serverState);
+                        }
+                        else
+                        {
+                            _statesPool.Enqueue(serverState);
+                        }
+                    }
+                    else
+                    {
+                        _lerpBuffer.Add(serverState);
                     }
                 }
             }
@@ -327,9 +375,9 @@ namespace LiteEntitySystem
             }
 
             //send input
-            if (_inputGenerated)
+            if (_isLogicTicked)
             {
-                _inputGenerated = false;
+                _isLogicTicked = false;
                 
                 //pack tick first
                 int offset = 4;
@@ -372,6 +420,100 @@ namespace LiteEntitySystem
                     Unsafe.Write(sendBuffer + 2, currentTick);
                     _localPeer.Send(_sendBuffer, 0, offset, DeliveryMethod.Unreliable);
                     _localPeer.NetManager.TriggerUpdate();
+                }
+            }
+        }
+        
+        private unsafe void OnOwnedAdded(EntityLogic entity)
+        {
+            ref var predictedData = ref _predictedEntities[entity.Id];
+            var classData = ClassDataDict[entity.ClassId];
+            byte* entityPtr = InternalEntity.GetPtr(ref entity);
+            
+            Utils.ResizeOrCreate(ref predictedData, classData.FixedFieldsSize);
+            fixed (byte* predictedPtr = predictedData)
+            {
+                for (int i = 0; i < classData.FieldsCount; i++)
+                {
+                    var fieldInfo = classData.Fields[i];
+                    if(!fieldInfo.IsEntity)
+                        fieldInfo.GetToFixedOffset(entityPtr, predictedPtr);
+                }
+            }
+            Utils.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
+        }
+
+        protected override unsafe void OnLogicTick()
+        {
+            ServerTick++;
+            if (_stateB != null)
+            {
+                fixed (byte* rawData = _stateB.Data)
+                {
+                    for (int i = _stateB.RemoteCallsProcessed; i < _stateB.RemoteCallsCount; i++)
+                    {
+                        ref var rpcCache = ref _stateB.RemoteCallsCaches[i];
+                        if (Utils.SequenceDiff(rpcCache.Tick, _remoteCallsTick) >= 0 && Utils.SequenceDiff(rpcCache.Tick, ServerTick) <= 0)
+                        {
+                            _remoteCallsTick = rpcCache.Tick;
+                            var entity = EntitiesDict[rpcCache.EntityId];
+                            rpcCache.Delegate(Unsafe.AsPointer(ref entity), rawData + rpcCache.Offset);
+                            _stateB.RemoteCallsProcessed++;
+                        }
+                    }
+                }        
+            }
+
+            if (_inputCommands.Count > InputBufferSize)
+                _inputCommands.Dequeue();
+            var inputWriter = _inputPool.Count > 0 ? _inputPool.Dequeue() : new NetDataWriter(true, InputHeaderSize);
+            InputPacketHeader inputPacketHeader = new InputPacketHeader
+            {
+                StateA   = _stateA.Tick,
+                StateB   = _stateB?.Tick ?? _stateA.Tick,
+                LerpMsec = _lerpMsec
+            };
+            fixed(void* writerData = inputWriter.Data)
+                Unsafe.Copy(writerData, ref inputPacketHeader);
+            inputWriter.SetPosition(InputHeaderSize);
+            
+            _inputGenerator.GenerateInput(inputWriter);
+            if (inputWriter.Length > NetConstants.MaxUnreliableDataSize - 2)
+            {
+                Logger.LogError($"Input too large: {inputWriter.Length-InputHeaderSize} bytes");
+            }
+            else
+            {
+                _inputCommands.Enqueue(inputWriter);
+                _isLogicTicked = true;
+                _inputReader.SetSource(inputWriter.Data, InputHeaderSize, inputWriter.Length);
+                foreach(var controller in GetControllers<HumanControllerLogic>())
+                {
+                    controller.ReadInput(_inputReader);
+                }
+            }
+
+            //local update
+            foreach (var entity in OwnedEntities)
+            {
+                //save data for interpolation before update
+                var classData = ClassDataDict[entity.ClassId];
+                var entityLocal = entity;
+                byte* entityPtr = InternalEntity.GetPtr(ref entityLocal);
+                fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
+                       prevDataPtr = _interpolatePrevData[entity.Id])
+                {
+                    Unsafe.CopyBlock(prevDataPtr, currentDataPtr, (uint)classData.InterpolatedFieldsSize);
+                                        
+                    //update
+                    entity.Update();
+                
+                    //save current
+                    for(int i = 0; i < classData.InterpolatedCount; i++)
+                    {
+                        var field = classData.Fields[i];
+                        field.GetToFixedOffset(entityPtr, currentDataPtr);
+                    }
                 }
             }
         }
@@ -455,7 +597,7 @@ namespace LiteEntitySystem
         {
             if (entityInstanceId >= MaxEntityCount)
             {
-                Logger.LogError($"Bad data (id > MaxCount) {entityInstanceId} > {MaxEntityCount}");
+                Logger.LogError($"Bad data (id > MaxEntityCount) {entityInstanceId} >= {MaxEntityCount}");
                 return -1;
             }
             var entity = EntitiesDict[entityInstanceId];
@@ -567,104 +709,6 @@ namespace LiteEntitySystem
             }
 
             return readerPosition;
-        }
-
-        public void Deserialize(NetPacketReader reader)
-        {
-            byte packetType = reader.GetByte();
-            if(packetType == PacketBaselineSync)
-            {
-                _stateA = new ServerStateData
-                {
-                    IsBaseline = true,
-                    Size = reader.GetInt()
-                };
-                InternalPlayerId = reader.GetByte();
-                Logger.Log($"[CEM] Got baseline sync. Assigned player id: {InternalPlayerId}");
-                Utils.ResizeOrCreate(ref _stateA.Data, _stateA.Size);
-                
-                int decodedBytes = LZ4Codec.Decode(
-                    reader.RawData,
-                    reader.Position,
-                    reader.AvailableBytes,
-                    _stateA.Data,
-                    0,
-                    _stateA.Size);
-                if (decodedBytes != _stateA.Size)
-                {
-                    Logger.LogError("Error on decompress");
-                    return;
-                }
-                _stateA.Tick = BitConverter.ToUInt16(_stateA.Data);
-                _stateA.Offset = 2;
-                ReadEntityStates();
-                _isSyncReceived = true;
-            }
-            else
-            {
-                bool isLastPart = packetType == PacketDiffSyncLast;
-                ushort newServerTick = reader.GetUShort();
-                if (Utils.SequenceDiff(newServerTick, _stateA.Tick) <= 0)
-                {
-                    reader.Recycle();
-                    return;
-                }
-                
-                if(!_receivedStates.TryGetValue(newServerTick, out var serverState))
-                {
-                    if (_receivedStates.Count > MaxSavedStateDiff)
-                    {
-                        var minimal = _receivedStates.Keys[0];
-                        if (Utils.SequenceDiff(newServerTick, minimal) > 0)
-                        {
-                            serverState = _receivedStates[minimal];
-                            _receivedStates.Remove(minimal);
-                            serverState.Reset(newServerTick);
-                        }
-                        else
-                        {
-                            reader.Recycle();
-                            return;
-                        }
-                    }
-                    else if (_statesPool.Count > 0)
-                    {
-                        serverState = _statesPool.Dequeue();
-                        serverState.Reset(newServerTick);
-                    }
-                    else
-                    {
-                        serverState = new ServerStateData { Tick = newServerTick };
-                    }
-                    _receivedStates.Add(newServerTick, serverState);
-                }
-                
-                //if got full state - add to lerp buffer
-                if(serverState.ReadPart(isLastPart, reader))
-                {
-                    if (Utils.SequenceDiff(serverState.LastReceivedTick, _lastReceivedInputTick) > 0)
-                        _lastReceivedInputTick = serverState.LastReceivedTick;
-                    
-                    _receivedStates.Remove(serverState.Tick);
-                    
-                    if (_lerpBuffer.Count >= InterpolateBufferSize)
-                    {
-                        if (Utils.SequenceDiff(serverState.Tick, _lerpBuffer.Min.Tick) > 0)
-                        {
-                            _lerpBuffer.Remove(_lerpBuffer.Min);
-                            _lerpBuffer.Add(serverState);
-                        }
-                        else
-                        {
-                            _statesPool.Enqueue(serverState);
-                        }
-                    }
-                    else
-                    {
-                        _lerpBuffer.Add(serverState);
-                    }
-                }
-            }
         }
     }
 }

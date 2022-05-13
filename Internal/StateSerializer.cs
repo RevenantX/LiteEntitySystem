@@ -13,7 +13,6 @@ namespace LiteEntitySystem.Internal
 
     internal enum SerializerState
     {
-        Ignore,
         Active,
         Destroyed,
         Freed
@@ -25,6 +24,7 @@ namespace LiteEntitySystem.Internal
         private const int HeaderSize = 5;
         private const int HeaderWithTotalSize = 7;
         private const int TicksToDestroy = 32;
+        
         public const int DiffHeaderSize = 4;
         
         private byte _version;
@@ -42,6 +42,7 @@ namespace LiteEntitySystem.Internal
         private RemoteCallPacket _rpcTail;
         private ushort _ticksOnDestroy;
         private int _filledHistory;
+        private bool _lagCompensationEnabled;
         
         private ServerEntityManager Manager => (ServerEntityManager)_entity.EntityManager;
 
@@ -65,11 +66,6 @@ namespace LiteEntitySystem.Internal
         {
             _classData = classData;
             _entity = e;
-            if (classData.IsServerOnly)
-            {
-                _state = SerializerState.Ignore;
-                return;
-            }
             _state = SerializerState.Active;
             _filledHistory = 0;
 
@@ -141,6 +137,11 @@ namespace LiteEntitySystem.Internal
                     if(field.IsEntity)
                     {
                         ushort entityId = Unsafe.AsRef<InternalEntity>(fieldPtr)?.Id ?? EntityManager.InvalidEntityId;
+                        
+                        //local
+                        if (entityId >= EntityManager.MaxEntityCount)
+                            entityId = EntityManager.InvalidEntityId;
+
                         ushort *ushortPtr = (ushort*)latestDataPtr;
                         if (*ushortPtr != entityId)
                         {
@@ -199,8 +200,6 @@ namespace LiteEntitySystem.Internal
 
         public unsafe DiffResult MakeDiff(byte playerId, ushort minimalTick, ushort serverTick, ushort playerTick, byte* resultData, ref int position)
         {
-            if (_state == SerializerState.Ignore)
-                return DiffResult.Skip;
             bool canReuse = false;
             if (_state == SerializerState.Destroyed && Utils.SequenceDiff(serverTick, _ticksOnDestroy) >= TicksToDestroy)
             {
@@ -321,8 +320,6 @@ namespace LiteEntitySystem.Internal
             return canReuse ? DiffResult.DoneAndDestroy : DiffResult.Done;
         }
 
-        private bool _lagCompensationEnabled;
-        
         public unsafe void EnableLagCompensation(NetPlayer player)
         {
             if (_entity.IsControlledBy(player.Id))
