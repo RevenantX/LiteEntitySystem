@@ -22,10 +22,10 @@ namespace LiteEntitySystem.Internal
     {
         private const int MaxHistory = 32; //should be power of two
         private const int HeaderSize = 5;
-        private const int HeaderWithTotalSize = 7;
         private const int TicksToDestroy = 32;
         
         public const int DiffHeaderSize = 4;
+        public const int HeaderWithTotalSize = 7;
         
         private byte _version;
         private EntityClassData _classData;
@@ -43,6 +43,8 @@ namespace LiteEntitySystem.Internal
         private ushort _ticksOnDestroy;
         private int _filledHistory;
         private bool _lagCompensationEnabled;
+
+        public byte ControllerOwner;
         
         private ServerEntityManager Manager => (ServerEntityManager)_entity.EntityManager;
 
@@ -91,7 +93,7 @@ namespace LiteEntitySystem.Internal
                     Unsafe.Write(data + 3, e.ClassId);
                 }
             }
-            
+
             _history ??= new byte[MaxHistory][];
             if(classData.LagCompensatedSize > 0)
             {
@@ -123,6 +125,11 @@ namespace LiteEntitySystem.Internal
             //write if there new tick
             if (serverTick == _lastWriteTick || _state != SerializerState.Active) 
                 return;
+
+            ControllerOwner = _entity is ControllerLogic controller
+                ? controller.InternalOwnerId
+                : ServerEntityManager.ServerPlayerId;
+
             _lastWriteTick = serverTick;
             byte* entityPointer = InternalEntity.GetPtr(ref _entity);
             fixed (byte* latestEntityData = _latestEntityData)
@@ -165,11 +172,13 @@ namespace LiteEntitySystem.Internal
             _ticksOnDestroy = serverTick;
         }
 
-        public unsafe void MakeBaseline(ushort serverTick, byte* resultData, ref int position)
+        public unsafe void MakeBaseline(byte playerId, ushort serverTick, byte* resultData, ref int position)
         {
             if (_state != SerializerState.Active)
                 return;
             Write(serverTick);
+            if (ControllerOwner != ServerEntityManager.ServerPlayerId && playerId != ControllerOwner)
+                return;
             
             //make diff
             fixed (byte* lastEntityData = _latestEntityData)
@@ -207,6 +216,8 @@ namespace LiteEntitySystem.Internal
                 canReuse = true;
             }
             Write(serverTick);
+            if(ControllerOwner != ServerEntityManager.ServerPlayerId && playerId != ControllerOwner)
+                return DiffResult.Skip;
 
             //make diff
             int startPos = position;
@@ -214,23 +225,26 @@ namespace LiteEntitySystem.Internal
 
             fixed (byte* lastEntityData = _latestEntityData)
             {
-                ushort* fieldFlagsPtr = (ushort*) (resultData + startPos);
+                //at 0 ushort
+                ushort* fieldFlagAndSize = (ushort*) (resultData + startPos);
+                position += 2;
+                
                 //initial state with compression
                 if (Utils.SequenceDiff(_versionChangedTick, playerTick) > 0)
                 {
                     //write full header here (totalSize + eid)
                     //also all fields
-                    *fieldFlagsPtr = 1;
-                    Unsafe.CopyBlock(resultData + startPos + sizeof(ushort), lastEntityData, HeaderSize);
-                    position += HeaderWithTotalSize;
+                    *fieldFlagAndSize = 1;
+                    Unsafe.CopyBlock(resultData + position, lastEntityData, HeaderSize);
+                    position += HeaderSize;
                     for (int i = 0; i < _classData.FieldsCount; i++)
                     {
-                        ref var fixedFieldInfo = ref _classData.Fields[i];
+                        ref var field = ref _classData.Fields[i];
                         Unsafe.CopyBlock(
                             resultData + position, 
-                            lastEntityData + HeaderSize + fixedFieldInfo.FieldOffset,
-                            fixedFieldInfo.Size);
-                        position += fixedFieldInfo.IntSize;
+                            lastEntityData + HeaderSize + field.FixedOffset,
+                            field.Size);
+                        position += field.IntSize;
                     }
                     for (int i = 0; i < _classData.SyncableFields.Length; i++)
                     {
@@ -242,10 +256,10 @@ namespace LiteEntitySystem.Internal
                     bool hasChanges = false;
                     // -1 for cycle
                     byte* fields = resultData + startPos + DiffHeaderSize - 1;
-                    //put entity id
-                    *(ushort*)(resultData + startPos + sizeof(ushort)) = *(ushort*)lastEntityData;
-                    *fieldFlagsPtr = 0;
-                    position += DiffHeaderSize + _classData.FieldsFlagsSize;
+                    //put entity id at 2
+                    *(ushort*)(resultData + position) = *(ushort*)lastEntityData;
+                    *fieldFlagAndSize = 0;
+                    position += sizeof(ushort) + _classData.FieldsFlagsSize;
                     
                     for (int i = 0; i < _classData.FieldsCount; i++)
                     {
@@ -315,7 +329,7 @@ namespace LiteEntitySystem.Internal
                     return DiffResult.RequestBaselineSync;
                 }
                 
-                *fieldFlagsPtr |= (ushort)(resultSize  << 1);
+                *fieldFlagAndSize |= (ushort)(resultSize << 1);
             }
             return canReuse ? DiffResult.DoneAndDestroy : DiffResult.Done;
         }

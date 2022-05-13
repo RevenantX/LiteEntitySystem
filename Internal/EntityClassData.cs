@@ -59,9 +59,7 @@ namespace LiteEntitySystem.Internal
             Unsafe.CopyBlock(entityPointer + FieldOffset, data + FixedOffset, Size);
         }
     }
-    
-    public delegate T EntityConstructor<out T>(EntityParams entityParams) where T : InternalEntity;
-    
+
     internal sealed class EntityClassData
     {
         public readonly ushort ClassId;
@@ -222,11 +220,11 @@ namespace LiteEntitySystem.Internal
                     if (ft.IsValueType)
                     {
                         int fieldSize = ft == typeof(bool) ? 1 : Marshal.SizeOf(ft);
-                        bool hasInterpolator = Interpolation.Methods.TryGetValue(ft, out var interpolator);
+                        InterpolatorDelegate interpolator = null;
                         
                         if (syncVarAttribute.Flags.HasFlag(SyncFlags.Interpolated))
                         {
-                            if (!hasInterpolator)
+                            if (!Interpolation.Methods.TryGetValue(ft, out interpolator))
                                 throw new Exception($"No info how to interpolate: {ft}");
                             InterpolatedFieldsSize += fieldSize;
                             InterpolatedCount++;

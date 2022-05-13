@@ -58,6 +58,7 @@ namespace LiteEntitySystem
         private readonly Queue<NetDataWriter> _inputPool = new Queue<NetDataWriter>(InputBufferSize);
         private readonly IInputGenerator _inputGenerator;
         private readonly SortedSet<ServerStateData> _lerpBuffer = new SortedSet<ServerStateData>(new ServerStateComparer());
+        private readonly Queue<(ushort, EntityLogic)> _spawnPredictedEntities = new Queue<(ushort, EntityLogic)>();
         private readonly byte[][] _interpolatedInitialData = new byte[MaxEntityCount][];
         private readonly byte[][] _interpolatePrevData = new byte[MaxEntityCount][];
         private readonly byte[][] _predictedEntities = new byte[MaxEntityCount][];
@@ -129,6 +130,19 @@ namespace LiteEntitySystem
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
+        /// </summary>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <returns>Created predicted local entity</returns>
+        public T AddPredictedEntity<T>() where T : EntityLogic
+        {
+            var classData = ClassDataDict[EntityClassInfo<T>.ClassId];
+            var entity = (T)AddLocalEntity(classData.ClassId);
+            _spawnPredictedEntities.Enqueue((Tick, entity));
+            return entity;
         }
         
         /// <summary>
@@ -532,10 +546,9 @@ namespace LiteEntitySystem
                     {
                         ushort entityId = BitConverter.ToUInt16(_stateA.Data, bytesRead);
                         bytesRead += 2;
-                        int result = ReadEntityState(readerData + bytesRead, entityId, true);
-                        if (result == -1)
+                        ReadEntityState(readerData, ref bytesRead, entityId, true);
+                        if (bytesRead == -1)
                             return;
-                        bytesRead += result;
                     }
                 }
                 else
@@ -544,11 +557,22 @@ namespace LiteEntitySystem
                     for (int i = 0; i < _stateA.PreloadDataCount; i++)
                     {
                         ref var preloadData = ref _stateA.PreloadDataArray[i];
-                        int result = ReadEntityState(readerData + preloadData.DataOffset, preloadData.EntityId,
+                        int offset = preloadData.DataOffset;
+                        ReadEntityState(readerData, ref offset, preloadData.EntityId,
                             preloadData.EntityFieldsOffset == -1);
-                        if (result == -1)
+                        if (offset == -1)
                             return;
                     }
+                }
+            }
+            
+            //delete predicted
+            while (_spawnPredictedEntities.TryPeek(out var info))
+            {
+                if (Utils.SequenceDiff(ServerTick, info.Item1) >= 0)
+                {
+                    _spawnPredictedEntities.Dequeue();
+                    info.Item2.Destroy();
                 }
             }
 
@@ -593,21 +617,21 @@ namespace LiteEntitySystem
             _entitiesToConstructCount = 0;
         }
 
-        private unsafe int ReadEntityState(byte* rawData, ushort entityInstanceId, bool fullSync)
+        private unsafe void ReadEntityState(byte* rawData, ref int readerPosition, ushort entityInstanceId, bool fullSync)
         {
             if (entityInstanceId >= MaxEntityCount)
             {
                 Logger.LogError($"Bad data (id > MaxEntityCount) {entityInstanceId} >= {MaxEntityCount}");
-                return -1;
+                readerPosition = -1;
+                return;
             }
             var entity = EntitiesDict[entityInstanceId];
-            int readerPosition = 0;
-            
+
             //full sync
             if (fullSync)
             {
-                byte version = rawData[0];
-                ushort classId = *(ushort*)(rawData + 1);
+                byte version = rawData[readerPosition];
+                ushort classId = Unsafe.Read<ushort>(rawData + readerPosition + 1);
                 readerPosition += 3;
 
                 //remove old entity
@@ -618,17 +642,22 @@ namespace LiteEntitySystem
                     var entityLogic = (EntityLogic) entity;
                     if(!entityLogic.IsDestroyed)
                         entityLogic.DestroyInternal();
+                    entity = null;
                 }
-
-                //create new
-                entity = AddEntity(new EntityParams(classId, entityInstanceId, version, this));
-                Utils.ResizeIfFull(ref _entitiesToConstruct, _entitiesToConstructCount);
-                _entitiesToConstruct[_entitiesToConstructCount++] = entity;
+                if(entity == null)
+                {
+                    //create new
+                    entity = AddEntity(new EntityParams(classId, entityInstanceId, version, this));
+                    Utils.ResizeIfFull(ref _entitiesToConstruct, _entitiesToConstructCount);
+                    _entitiesToConstruct[_entitiesToConstructCount++] = entity;
+                    Logger.Log($"[CEM] Add entity: {entity.GetType()}");
+                }
             }
             else if (entity == null)
             {
                 Logger.LogError($"EntityNull? : {entityInstanceId}");
-                return -1;
+                readerPosition = -1;
+                return;
             }
             
             var classData = ClassDataDict[entity.ClassId];
@@ -658,17 +687,17 @@ namespace LiteEntitySystem
                     if (field.IsEntity)
                     {
                         ushort prevId = Unsafe.AsRef<InternalEntity>(fieldPtr)?.Id ?? InvalidEntityId;
-                        if (Utils.memcmp(readDataPtr, &prevId, field.PtrSize) != 0)
+                        ushort *nextId = (ushort*)readDataPtr;
+                        if (prevId != *nextId)
                         {
                             _setEntityIds[_setEntityIdsCount++] = new SetEntityIdInfo
                             {
                                 Entity = entity,
                                 FieldOffset = field.FieldOffset,
-                                Id = *(ushort*)readDataPtr
+                                Id = *nextId
                             };
-                            
                             //put prev data into reader for SyncCalls
-                            Unsafe.CopyBlock(readDataPtr, &prevId, field.Size);
+                            *nextId = prevId;
                             hasChanges = true;
                         }
                     }
@@ -707,8 +736,6 @@ namespace LiteEntitySystem
                     }
                 }
             }
-
-            return readerPosition;
         }
     }
 }

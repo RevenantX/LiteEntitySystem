@@ -6,6 +6,9 @@ namespace LiteEntitySystem
 {
     internal unsafe delegate void InterpolatorDelegate(byte* prev, byte* current, byte* result, float t);
     
+    /// <summary>
+    /// Class for registering interpolation methods for different types
+    /// </summary>
     public static class Interpolation
     {
         public delegate void InterpolatorDelegate<T>(T prev, T current, out T result, float t) where T : struct;

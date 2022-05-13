@@ -69,10 +69,11 @@ namespace LiteEntitySystem
         private readonly Queue<RemoteCallPacket> _rpcPool = new Queue<RemoteCallPacket>();
         private readonly Queue<byte[]> _inputPool = new Queue<byte[]>();
         private readonly byte[] _packetBuffer = new byte[NetConstants.MaxPacketSize*(MaxParts+1)];
-        private readonly StateSerializer[] _savedEntityData = new StateSerializer[MaxEntityCount];
         private readonly NetPlayer[] _netPlayersArray = new NetPlayer[MaxPlayers];
         private readonly NetPlayer[] _netPlayersDict = new NetPlayer[MaxPlayers];
         private readonly NetDataReader _inputReader = new NetDataReader();
+        
+        internal readonly StateSerializer[] SavedEntityData = new StateSerializer[MaxEntityCount];
 
         private byte[] _compressionBuffer;
         private int _netPlayersCount;
@@ -275,6 +276,7 @@ namespace LiteEntitySystem
             {
                 //header byte, packet type (2 bytes)
                 Unsafe.Write(packetBuffer + 2, Tick);
+                
                 for (int pidx = 0; pidx < _netPlayersCount; pidx++)
                 {
                     var netPlayer = _netPlayersArray[pidx];
@@ -284,10 +286,9 @@ namespace LiteEntitySystem
                     //send all data
                     if (netPlayer.IsNew)
                     {
-                        packetBuffer[1] = PacketBaselineSync;
                         for (int i = 0; i <= MaxEntityId; i++)
                         {
-                            _savedEntityData[i].MakeBaseline(Tick, packetBuffer, ref writePosition);
+                            SavedEntityData[i].MakeBaseline(netPlayer.Id, Tick, packetBuffer, ref writePosition);
                         }
 
                         Utils.ResizeOrCreate(ref _compressionBuffer, writePosition);
@@ -311,7 +312,9 @@ namespace LiteEntitySystem
                         Logger.Log(
                             $"[SEM] SendWorld to player {netPlayer.Id}. orig: {originalLength} bytes, compressed: {encodedLength}");
 
+                        packetBuffer[1] = PacketBaselineSync;
                         peer.Send(_packetBuffer, 0, encodedLength + 7, DeliveryMethod.ReliableOrdered);
+                        
                         netPlayer.IsNew = false;
                         continue;
                     }
@@ -332,7 +335,7 @@ namespace LiteEntitySystem
 
                     for (ushort eId = 0; eId <= MaxEntityId; eId++)
                     {
-                        var diffResult = _savedEntityData[eId].MakeDiff(
+                        var diffResult = SavedEntityData[eId].MakeDiff(
                             netPlayer.Id,
                             minimalTick,
                             Tick,
@@ -368,9 +371,12 @@ namespace LiteEntitySystem
                         //else skip
                     }
 
-                    //Debug.Log($"PARTS: {partCount} {_netDataWriter.Data[4]}");
-                    packetBuffer[1] = PacketDiffSyncLast; //lastPart flag
-                    peer.Send(_packetBuffer, 0, writePosition, DeliveryMethod.Unreliable);
+                    if (writePosition > 9 || *partCount > 0)
+                    {
+                        //Debug.Log($"PARTS: {partCount} {_netDataWriter.Data[4]}");
+                        packetBuffer[1] = PacketDiffSyncLast; //lastPart flag
+                        peer.Send(_packetBuffer, 0, writePosition, DeliveryMethod.Unreliable);
+                    }
                 }
             }
 
@@ -397,7 +403,7 @@ namespace LiteEntitySystem
                     return null;
                 }
                 ushort entityId =_entityIdQueue.Dequeue();
-                ref var stateSerializer = ref _savedEntityData[entityId];
+                ref var stateSerializer = ref SavedEntityData[entityId];
 
                 entity = (T)AddEntity(new EntityParams(
                     classData.ClassId, 
@@ -447,12 +453,12 @@ namespace LiteEntitySystem
             
             //write history
             foreach (var aliveEntity in AliveEntities)
-                _savedEntityData[aliveEntity.Id].WriteHistory(Tick);
+                SavedEntityData[aliveEntity.Id].WriteHistory(Tick);
         }
         
         internal void DestroySavedData(EntityLogic entityLogic)
         {
-            _savedEntityData[entityLogic.Id].Destroy(Tick);
+            SavedEntityData[entityLogic.Id].Destroy(Tick);
         }
         
         internal void PoolRpc(RemoteCallPacket rpcNode)
@@ -467,7 +473,7 @@ namespace LiteEntitySystem
             rpc.Tick = Tick;
             fixed (byte* rawData = rpc.Data)
                 Unsafe.Copy(rawData, ref value);
-            _savedEntityData[entityId].AddRpcPacket(rpc);
+            SavedEntityData[entityId].AddRpcPacket(rpc);
         }
         
         internal unsafe void AddRemoteCall<T>(ushort entityId, T[] value, int count, RemoteCall remoteCallInfo) where T : struct
@@ -477,7 +483,7 @@ namespace LiteEntitySystem
             rpc.Tick = Tick;
             fixed (byte* rawData = rpc.Data, rawValue = Unsafe.As<byte[]>(value))
                 Unsafe.CopyBlock(rawData, rawValue, rpc.Size);
-            _savedEntityData[entityId].AddRpcPacket(rpc);
+            SavedEntityData[entityId].AddRpcPacket(rpc);
         }
         
         internal unsafe void AddSyncableCall<T>(SyncableField field, T value, MethodInfo method) where T : struct
@@ -490,7 +496,7 @@ namespace LiteEntitySystem
             rpc.Flags = ExecuteFlags.ExecuteOnServer | ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner;
             fixed (byte* rawData = rpc.Data)
                 Unsafe.Copy(rawData, ref value);
-            _savedEntityData[field.EntityId].AddRpcPacket(rpc);
+            SavedEntityData[field.EntityId].AddRpcPacket(rpc);
         }
         
         internal unsafe void AddSyncableCall<T>(SyncableField field, T[] value, int count, MethodInfo method) where T : struct
@@ -503,7 +509,7 @@ namespace LiteEntitySystem
             rpc.Flags = ExecuteFlags.ExecuteOnServer | ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner;
             fixed (byte* rawData = rpc.Data, rawValue = Unsafe.As<byte[]>(value))
                 Unsafe.CopyBlock(rawData, rawValue, rpc.Size);
-            _savedEntityData[field.EntityId].AddRpcPacket(rpc);
+            SavedEntityData[field.EntityId].AddRpcPacket(rpc);
         }
 
         internal void EnableLagCompensation(PawnLogic pawn)
@@ -519,7 +525,7 @@ namespace LiteEntitySystem
             //Logger.Log($"compensated: {player.ServerInterpolatedTick} =====");
             foreach (var entity in AliveEntities)
             {
-                _savedEntityData[entity.Id].EnableLagCompensation(player);
+                SavedEntityData[entity.Id].EnableLagCompensation(player);
                 //entity.DebugPrint();
             }
             OnLagCompensation?.Invoke(true);
@@ -533,7 +539,7 @@ namespace LiteEntitySystem
             //Logger.Log($"restored: {Tick} =====");
             foreach (var entity in AliveEntities)
             {
-                _savedEntityData[entity.Id].DisableLagCompensation();
+                SavedEntityData[entity.Id].DisableLagCompensation();
                 //entity.DebugPrint();
             }
             OnLagCompensation?.Invoke(false);

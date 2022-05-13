@@ -5,6 +5,8 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
+    public delegate T EntityConstructor<out T>(EntityParams entityParams) where T : InternalEntity;
+    
     [Flags]
     public enum ExecuteFlags : byte
     {
@@ -27,6 +29,9 @@ namespace LiteEntitySystem
         PredictionRollback
     }
     
+    /// <summary>
+    /// Base class for client and server manager
+    /// </summary>
     public abstract class EntityManager
     {
         /// <summary>

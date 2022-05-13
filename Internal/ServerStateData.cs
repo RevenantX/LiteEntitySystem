@@ -89,13 +89,15 @@ namespace LiteEntitySystem.Internal
             //preload some data
             while (bytesRead < Size)
             {
+                int initialReaderPosition = bytesRead;
+                
                 Utils.ResizeIfFull(ref PreloadDataArray, PreloadDataCount);
                 ref var preloadData = ref PreloadDataArray[PreloadDataCount++];
                 ushort fullSyncAndTotalSize = BitConverter.ToUInt16(Data, bytesRead);
+                
                 preloadData.TotalSize = (ushort)(fullSyncAndTotalSize >> 1);
                 preloadData.EntityId = BitConverter.ToUInt16(Data, bytesRead + 2);
                 preloadData.InterpolatedCachesCount = 0;
-                int initialReaderPosition = bytesRead;
                 bytesRead += preloadData.TotalSize;
                 
                 if (preloadData.EntityId > EntityManager.MaxEntityCount)
@@ -108,12 +110,17 @@ namespace LiteEntitySystem.Internal
                 if ((fullSyncAndTotalSize & 1) == 1)
                 {
                     preloadData.EntityFieldsOffset = -1;
-                    preloadData.DataOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
+                    preloadData.DataOffset = initialReaderPosition + 4;
                 }
                 else
                 {
                     //it should be here at preload
                     var entity = entityManager.EntitiesDict[preloadData.EntityId];
+                    if (entity == null)
+                    {
+                        Logger.LogError($"Preload entity: {preloadData.EntityId} == null");
+                        return;
+                    }
                     var classData = entityManager.ClassDataDict[entity.ClassId];
                     var fields = classData.Fields;
                     preloadData.EntityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;

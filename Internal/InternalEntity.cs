@@ -23,15 +23,32 @@ namespace LiteEntitySystem.Internal
             return (byte*)Unsafe.As<T, IntPtr>(ref entity);
         }
 
+        /// <summary>
+        /// Called when entity manager is resetted
+        /// </summary>
+        public virtual void Free()
+        {
+            
+        }
+
+        /// <summary>
+        /// For debug purposes
+        /// </summary>
         public virtual void DebugPrint()
         {
             
         }
 
+        /// <summary>
+        /// Called if entity has attribue <see cref="UpdateableEntity"/>
+        /// </summary>
         public virtual void Update()
         {
         }
 
+        /// <summary>
+        /// Called when entity constructed
+        /// </summary>
         public virtual void OnConstructed()
         {
         }
@@ -82,7 +99,7 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        public int CompareTo(InternalEntity other)
+        int IComparable<InternalEntity>.CompareTo(InternalEntity other)
         {
             return Id - other.Id;
         }

@@ -160,8 +160,8 @@ namespace LiteEntitySystem
 
         private void OnParentChange(ushort oldId)
         {
-            EntityManager.GetEntityById<EntityLogic>(oldId)?.Childs.Remove(this);
-            var newParent = EntityManager.GetEntityById<EntityLogic>(_parentId);
+            EntityManager.GetEntityByIdSafe<EntityLogic>(oldId)?.Childs.Remove(this);
+            var newParent = EntityManager.GetEntityByIdSafe<EntityLogic>(_parentId);
             newParent?.Childs.Add(this);
         }
 
