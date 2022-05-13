@@ -9,7 +9,17 @@ namespace LiteEntitySystem
     /// Entity has update method
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class UpdateableEntity : Attribute { }
+    public class UpdateableEntity : Attribute
+    {
+        public readonly bool UpdateOnClient;
+
+        public UpdateableEntity() { }
+        
+        public UpdateableEntity(bool updateOnClient)
+        {
+            UpdateOnClient = updateOnClient;
+        }
+    }
 
     /// <summary>
     /// Entity is local only (only on server or client no difference)

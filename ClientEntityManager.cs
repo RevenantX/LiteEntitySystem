@@ -530,6 +530,12 @@ namespace LiteEntitySystem
                     }
                 }
             }
+
+            //local only and UpdateOnClient
+            foreach (var entity in AliveEntities)
+            {
+                entity.Update();
+            }
         }
 
         private unsafe void ReadEntityStates()

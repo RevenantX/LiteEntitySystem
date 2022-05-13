@@ -37,7 +37,7 @@ namespace LiteEntitySystem.Internal
         }
     }
     
-    internal class ServerStateData
+    internal sealed class ServerStateData
     {
         public byte[] Data;
         public int Size;

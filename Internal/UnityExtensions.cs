@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace LiteEntitySystem.Internal
 {
-    internal class EntitySystemBuildProcessor : IPreprocessBuildWithReport
+    internal sealed class EntitySystemBuildProcessor : IPreprocessBuildWithReport
     {
         private static readonly Type EntityLogicType = typeof(InternalEntity);
         private const BindingFlags BindFlags = BindingFlags.Instance | BindingFlags.Public |

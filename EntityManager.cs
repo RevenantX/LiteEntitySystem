@@ -348,7 +348,7 @@ namespace LiteEntitySystem
                 foreach (int baseId in classData.BaseIds)
                     _entityFilters[baseId]?.Add(entity);
             }
-            if (classData.IsUpdateable && (IsServer || (IsClient && classData.IsLocalOnly)))
+            if (classData.IsUpdateable && (IsServer || (IsClient && (classData.IsLocalOnly || classData.UpdateOnClient))))
                 AliveEntities.Add(entity);
         }
 
@@ -358,7 +358,7 @@ namespace LiteEntitySystem
             _entityFilters[classData.FilterId]?.Remove(e);
             foreach (int baseId in classData.BaseIds)
                 _entityFilters[baseId]?.Remove(e);
-            if (classData.IsUpdateable && (IsServer || (IsClient && classData.IsLocalOnly)))
+            if (classData.IsUpdateable && (IsServer || (IsClient && (classData.IsLocalOnly || classData.UpdateOnClient))))
                 AliveEntities.Remove(e);
             if (classData.IsLocalOnly)
                 _localIdQueue.Enqueue(e.Id);

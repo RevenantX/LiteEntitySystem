@@ -76,6 +76,7 @@ namespace LiteEntitySystem.Internal
         public readonly EntityFieldInfo[] LagCompensatedFields;
         public readonly int LagCompensatedSize;
 
+        public readonly bool UpdateOnClient;
         public readonly bool IsUpdateable;
         public readonly bool IsLocalOnly;
         public readonly Type[] BaseTypes;
@@ -161,7 +162,14 @@ namespace LiteEntitySystem.Internal
         public EntityClassData(int filterId, Type entType, ushort classId, EntityConstructor<InternalEntity> constructor)
         {
             ClassId = classId;
-            IsUpdateable = entType.GetCustomAttribute<UpdateableEntity>() != null;
+
+            var updateAttribute = entType.GetCustomAttribute<UpdateableEntity>();
+            if (updateAttribute != null)
+            {
+                IsUpdateable = true;
+                UpdateOnClient = updateAttribute.UpdateOnClient;
+            }
+
             IsLocalOnly = entType.GetCustomAttribute<LocalOnly>() != null;
             EntityConstructor = constructor;
             IsSingleton = entType.IsSubclassOf(typeof(SingletonEntityLogic));
