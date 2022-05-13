@@ -40,10 +40,18 @@ namespace LiteEntitySystem.Internal
         }
 
         /// <summary>
-        /// Called if entity has attribue <see cref="UpdateableEntity"/>
+        /// Fixed update. Called if entity has attribue <see cref="UpdateableEntity"/>
         /// </summary>
         public virtual void Update()
         {
+        }
+
+        /// <summary>
+        /// Called only on <see cref="ClientEntityManager.Update"/> and if entity has attribue <see cref="UpdateableEntity"/>
+        /// </summary>
+        public virtual void VisualUpdate()
+        {
+            
         }
 
         /// <summary>

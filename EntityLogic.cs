@@ -324,7 +324,8 @@ namespace LiteEntitySystem
     /// </summary>
     public abstract class HumanControllerLogic : ControllerLogic
     {
-        public virtual void ReadInput(NetDataReader reader) { }
+        public abstract void ReadInput(NetDataReader reader);
+        public abstract void GenerateInput(NetDataWriter writer);
 
         protected HumanControllerLogic(EntityParams entityParams) : base(entityParams) { }
     }

@@ -9,11 +9,6 @@ using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
 {
-    public interface IInputGenerator
-    {
-        void GenerateInput(NetDataWriter writer);
-    }
-
     internal struct InputPacketHeader
     {
         public ushort StateA;
@@ -56,7 +51,6 @@ namespace LiteEntitySystem
         private readonly NetDataReader _inputReader = new NetDataReader();
         private readonly Queue<NetDataWriter> _inputCommands = new Queue<NetDataWriter>(InputBufferSize);
         private readonly Queue<NetDataWriter> _inputPool = new Queue<NetDataWriter>(InputBufferSize);
-        private readonly IInputGenerator _inputGenerator;
         private readonly SortedSet<ServerStateData> _lerpBuffer = new SortedSet<ServerStateData>(new ServerStateComparer());
         private readonly Queue<(ushort, EntityLogic)> _spawnPredictedEntities = new Queue<(ushort, EntityLogic)>();
         private readonly byte[][] _interpolatedInitialData = new byte[MaxEntityCount][];
@@ -104,12 +98,9 @@ namespace LiteEntitySystem
         /// <param name="localPeer">Local NetPeer</param>
         /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
         /// <param name="framesPerSecond">Fixed framerate of game logic</param>
-        /// <param name="inputGenerator"></param>
-        public ClientEntityManager(NetPeer localPeer, byte headerByte, byte framesPerSecond, IInputGenerator inputGenerator) 
-            : base(NetworkMode.Client, framesPerSecond)
+        public ClientEntityManager(NetPeer localPeer, byte headerByte, byte framesPerSecond) : base(NetworkMode.Client, framesPerSecond)
         {
             _localPeer = localPeer;
-            _inputGenerator = inputGenerator;
             OwnedEntities.OnAdded += OnOwnedAdded;
             _sendBuffer[0] = headerByte;
             _sendBuffer[1] = PacketClientSync;
@@ -436,6 +427,22 @@ namespace LiteEntitySystem
                     _localPeer.NetManager.TriggerUpdate();
                 }
             }
+            
+            //local only and UpdateOnClient
+            foreach (var entity in AliveEntities)
+            {
+                entity.VisualUpdate();
+            }
+            //owned
+            foreach (var entity in OwnedEntities)
+            {
+                entity.VisualUpdate();
+            }
+            //controllers
+            foreach (var entity in GetControllers<HumanControllerLogic>())
+            {
+                entity.VisualUpdate();
+            }
         }
         
         private unsafe void OnOwnedAdded(EntityLogic entity)
@@ -491,20 +498,21 @@ namespace LiteEntitySystem
                 Unsafe.Copy(writerData, ref inputPacketHeader);
             inputWriter.SetPosition(InputHeaderSize);
             
-            _inputGenerator.GenerateInput(inputWriter);
-            if (inputWriter.Length > NetConstants.MaxUnreliableDataSize - 2)
+            //generate inputs
+            foreach(var controller in GetControllers<HumanControllerLogic>())
             {
-                Logger.LogError($"Input too large: {inputWriter.Length-InputHeaderSize} bytes");
-            }
-            else
-            {
+                controller.GenerateInput(inputWriter);
+                if (inputWriter.Length > NetConstants.MaxUnreliableDataSize - 2)
+                {
+                    Logger.LogError($"Input too large: {inputWriter.Length-InputHeaderSize} bytes");
+                    break;
+                }
+                
                 _inputCommands.Enqueue(inputWriter);
                 _isLogicTicked = true;
                 _inputReader.SetSource(inputWriter.Data, InputHeaderSize, inputWriter.Length);
-                foreach(var controller in GetControllers<HumanControllerLogic>())
-                {
-                    controller.ReadInput(_inputReader);
-                }
+                
+                controller.ReadInput(_inputReader);
             }
 
             //local update
