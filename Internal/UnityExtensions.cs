@@ -63,7 +63,7 @@ namespace LiteEntitySystem.Internal
         {
             AddedTypes.Clear();
             GenCode.Append(@$"//auto generated on {DateTime.UtcNow} UTC
-namespace LiteEntitySystem
+namespace LiteEntitySystem.Internal
 {{
     using G = MethodCallGenerator;
     public static class LES_IL2CPP_AOT

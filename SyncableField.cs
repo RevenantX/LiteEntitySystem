@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Text;
+using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {

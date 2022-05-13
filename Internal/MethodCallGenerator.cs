@@ -2,13 +2,13 @@ using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace LiteEntitySystem
+namespace LiteEntitySystem.Internal
 {
     public unsafe delegate void MethodCallDelegate(void* ent, void* previousValue);
     
+    //public for AOT
     public static class MethodCallGenerator
     {
-        //public for AOT
         public static unsafe MethodCallDelegate Generate<TEnt, TValue>(MethodInfo method)
         {
             var d = (Action<TEnt, TValue>)method.CreateDelegate(typeof(Action<TEnt, TValue>));
