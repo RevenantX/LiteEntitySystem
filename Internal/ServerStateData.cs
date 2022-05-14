@@ -18,6 +18,7 @@ namespace LiteEntitySystem.Internal
     internal struct RemoteCallsCache
     {
         public ushort EntityId;
+        public byte FieldId;
         public MethodCallDelegate Delegate;
         public ushort Tick;
         public int Offset;
@@ -160,11 +161,15 @@ namespace LiteEntitySystem.Internal
                         var rpcCache = new RemoteCallsCache
                         {
                             EntityId = preloadData.EntityId,
-                            Delegate = classData.RemoteCallsClient[rpcId],
-                            //FieldId = readerData[stateReaderOffset + 1],
+                            FieldId = Data[stateReaderOffset + 1],
                             Tick = BitConverter.ToUInt16(Data, stateReaderOffset + 2),
                             Offset = stateReaderOffset + 6
                         };
+                        
+                        rpcCache.Delegate = rpcCache.FieldId == byte.MaxValue 
+                            ? classData.RemoteCallsClient[rpcId] 
+                            : classData.SyncableRemoteCallsClient[rpcId];
+                        
                         ushort size = BitConverter.ToUInt16(Data, stateReaderOffset + 4);
                         Utils.ResizeOrCreate(ref RemoteCallsCaches, RemoteCallsCount);
                         RemoteCallsCaches[RemoteCallsCount++] = rpcCache;

@@ -294,9 +294,7 @@ namespace LiteEntitySystem.Internal
                             Unsafe.Write(resultData + position + 2, rpcNode.Tick);
                             Unsafe.Write(resultData + position + 4, rpcNode.Size);
                             fixed (byte* rpcData = rpcNode.Data)
-                            {
                                 Unsafe.CopyBlock(resultData + position + 6, rpcData, rpcNode.Size);
-                            }
                             position += 6 + rpcNode.Size;
                         }
                         else if (Utils.SequenceDiff(rpcNode.Tick, minimalTick) < 0)

@@ -116,12 +116,12 @@ namespace LiteEntitySystem.Internal
                 Logger.Log("Unknown native field offset");
         }
         
-        private static MethodCallDelegate GetOnSyncDelegate(Type entityType, Type valueType, string methodName)
+        private static MethodCallDelegate GetOnSyncDelegate(Type classType, Type valueType, string methodName)
         {
             if (string.IsNullOrEmpty(methodName))
                 return null;
             
-            var method = entityType.GetMethod(
+            var method = classType.GetMethod(
                 methodName,
                 BindingFlags.Instance |
                 BindingFlags.Public |
@@ -129,19 +129,23 @@ namespace LiteEntitySystem.Internal
                 BindingFlags.NonPublic);
             if (method == null)
             {
-                Logger.LogError($"Method: {methodName} not found in {entityType}");
+                Logger.LogError($"Method: {methodName} not found in {classType}");
                 return null;
             }
-            
+
+            return GetOnSyncDelegate(classType, valueType, method);
+        }
+
+        private static MethodCallDelegate GetOnSyncDelegate(Type classType, Type valueType, MethodInfo method)
+        {
             try
             {
-                var d = MethodCallGenerator.GetGenericMethod(entityType, valueType)
-                    .Invoke(null, new object[] { method });
+                var d = MethodCallGenerator.GetGenericMethod(classType, valueType).Invoke(null, new object[] { method });
                 return (MethodCallDelegate)d;
             }
             catch(Exception)
             {
-                throw new Exception($"{entityType.Name}.{methodName} has invalid argument type {method.GetParameters()[0]?.ParameterType.Name} instead of {valueType.Name}");
+                throw new Exception($"{classType.Name}.{method.Name} has invalid argument type {method.GetParameters()[0]?.ParameterType.Name} instead of {valueType.Name}");
             }
         }
 
@@ -212,8 +216,7 @@ namespace LiteEntitySystem.Internal
                             throw new Exception("254 is max RemoteCall methods");
                     }
                     RemoteCalls.Add(method, remoteCallAttribute);
-                    RemoteCallsClient[remoteCallAttribute.Id] =
-                        GetOnSyncDelegate(baseType, parametrType, method.Name);
+                    RemoteCallsClient[remoteCallAttribute.Id] = GetOnSyncDelegate(baseType, parametrType, method);
                 }
                 foreach (var field in baseType.GetFields(bindingFlags))
                 {
@@ -227,10 +230,13 @@ namespace LiteEntitySystem.Internal
 
                     if (ft.IsValueType)
                     {
+                        if (ft.IsEnum)
+                            ft = ft.GetEnumUnderlyingType();
+                        
                         int fieldSize = ft == typeof(bool) ? 1 : Marshal.SizeOf(ft);
                         InterpolatorDelegate interpolator = null;
                         
-                        if (syncVarAttribute.Flags.HasFlag(SyncFlags.Interpolated))
+                        if (syncVarAttribute.Flags.HasFlag(SyncFlags.Interpolated) && !ft.IsArray && !ft.IsEnum)
                         {
                             if (!Interpolation.Methods.TryGetValue(ft, out interpolator))
                                 throw new Exception($"No info how to interpolate: {ft}");
@@ -266,16 +272,22 @@ namespace LiteEntitySystem.Internal
                                 var rcAttribute = method.GetCustomAttribute<SyncableRemoteCall>();
                                 if(rcAttribute == null)
                                     continue;
-                                var parameterType = method.GetParameters()[0].ParameterType;
+
+                                var parameters = method.GetParameters();
+                                var parameterType = parameters.Length == 0 ? null : parameters[0].ParameterType;
                                 if (rcAttribute.Id == byte.MaxValue)
                                 {
                                     rcAttribute.Id = syncableRpcIndex++;
-                                    rcAttribute.DataSize = Marshal.SizeOf(parameterType.HasElementType ? parameterType.GetElementType() : parameterType);
+                                    if (syncableRpcIndex == byte.MaxValue)
+                                        throw new Exception("254 is max RemoteCall methods");
+                                    
+                                    rcAttribute.DataSize = parameterType == null 
+                                        ? 0 
+                                        : Marshal.SizeOf(parameterType.HasElementType ? parameterType.GetElementType() : parameterType);
                                 }
-                                if (syncableRpcIndex == byte.MaxValue)
-                                    throw new Exception("254 is max RemoteCall methods");
+                                
                                 SyncableRemoteCalls[method] = rcAttribute;
-                                SyncableRemoteCallsClient[rcAttribute.Id] = GetOnSyncDelegate(syncableType, parameterType, method.Name);
+                                SyncableRemoteCallsClient[rcAttribute.Id] = GetOnSyncDelegate(syncableType, parameterType, method);
                             }
                         }
                     }

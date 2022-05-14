@@ -478,7 +478,15 @@ namespace LiteEntitySystem
                         {
                             _remoteCallsTick = rpcCache.Tick;
                             var entity = EntitiesDict[rpcCache.EntityId];
-                            rpcCache.Delegate(Unsafe.AsPointer(ref entity), rawData + rpcCache.Offset);
+                            if (rpcCache.FieldId == byte.MaxValue)
+                            {
+                                rpcCache.Delegate(Unsafe.AsPointer(ref entity), rawData + rpcCache.Offset);
+                            }
+                            else
+                            {
+                                var fieldPtr = InternalEntity.GetPtr(ref entity) + ClassDataDict[entity.ClassId].SyncableFields[rpcCache.FieldId].FieldOffset;
+                                rpcCache.Delegate(fieldPtr, rawData + rpcCache.Offset);
+                            }
                             _stateB.RemoteCallsProcessed++;
                         }
                     }

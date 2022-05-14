@@ -10,8 +10,9 @@ namespace LiteEntitySystem.Internal
         public ExecuteFlags Flags;
         public RemoteCallPacket Next;
 
-        public void Init(RemoteCall rc)
+        public void Init(ushort tick, RemoteCall rc)
         {
+            Tick = tick;
             Id = rc.Id;
             FieldId = byte.MaxValue;
             Flags = rc.Flags;
@@ -19,8 +20,9 @@ namespace LiteEntitySystem.Internal
             Utils.ResizeOrCreate(ref Data, Size);
         }
         
-        public void Init(RemoteCall rc, int count)
+        public void Init(ushort tick, RemoteCall rc, int count)
         {
+            Tick = tick;
             Id = rc.Id;
             FieldId = byte.MaxValue;
             Flags = rc.Flags;
@@ -28,20 +30,24 @@ namespace LiteEntitySystem.Internal
             Utils.ResizeOrCreate(ref Data, Size);
         }
         
-        public void Init(SyncableRemoteCall rc, byte fieldId)
+        public void Init(ushort tick, SyncableRemoteCall rc, byte fieldId)
         {
+            Tick = tick;
             Id = rc.Id;
             FieldId = fieldId;
             Size = (ushort)rc.DataSize;
             Utils.ResizeOrCreate(ref Data, Size);
+            Flags = ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner;
         }
         
-        public void Init(SyncableRemoteCall rc, byte fieldId, int count)
+        public void Init(ushort tick, SyncableRemoteCall rc, byte fieldId, int count)
         {
+            Tick = tick;
             Id = rc.Id;
             FieldId = fieldId;
             Size = (ushort)(rc.DataSize * count);
             Utils.ResizeOrCreate(ref Data, Size);
+            Flags = ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner;
         }
     }
 }
