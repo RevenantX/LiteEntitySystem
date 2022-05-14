@@ -41,22 +41,24 @@ namespace LiteEntitySystem.Internal
 
         private static string GetTypeName(Type type)
         {
-            if( type.Namespace == nameof(LiteEntitySystem) )
-                return type.Name;
+            string fullName = type.Namespace == nameof(LiteEntitySystem) ? type.Name : type.FullName;
             bool isArray = type.IsArray && type.HasElementType;
             if (isArray)
                 type = type.GetElementType();
             return KeywordTypeMap.TryGetValue(type, out var name) 
                 ? name + (isArray ? "[]" : string.Empty)
-                : type.FullName!.Replace('+', '.');
+                : fullName!.Replace('+', '.').Replace("`1", "<") + (type.IsGenericType ? $"{GetTypeName(type.GetGenericArguments()[0])}>" : "");
         }
 
-        private static void AppendGenerator(Type entityType, Type valueType)
+        private static void AppendGenerator(Type classType, Type valueType)
         {
-            if (!AddedTypes.Add((entityType, valueType)))
+            if (!AddedTypes.Add((classType, valueType)))
                 return;
             GenCode.Append(' ', 12);
-            GenCode.AppendLine($"G.Generate<{GetTypeName(entityType)},{GetTypeName(valueType)}>(null);");
+            if(valueType == null)
+                GenCode.AppendLine($"G.GenerateNoParams<{GetTypeName(classType)}>(null);");
+            else
+                GenCode.AppendLine($"G.Generate<{GetTypeName(classType)},{GetTypeName(valueType)}>(null);");
         }
 
         public void OnPreprocessBuild(BuildReport report)
@@ -87,7 +89,10 @@ namespace LiteEntitySystem.Internal
                             foreach (var methodInfo in fieldInfo.FieldType.GetMethods(BindFlags))
                             {
                                 if (methodInfo.GetCustomAttribute<SyncableRemoteCall>() != null)
-                                    AppendGenerator(fieldInfo.FieldType, methodInfo.GetParameters()[0].ParameterType);
+                                {
+                                    var parameters = methodInfo.GetParameters();
+                                    AppendGenerator(fieldInfo.FieldType, parameters.Length == 0 ? null : parameters[0].ParameterType);
+                                }
                             }
                         }
                         else

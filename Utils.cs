@@ -7,8 +7,8 @@ namespace LiteEntitySystem
 {
     internal static class Utils
     {
-#if UNITY_STANDALONE_WIN
-        [DllImport("msvcrt.dll", CallingConvention = CallingConvention.StdCall)]
+#if UNITY_STANDALONE_WIN || _WINDOWS
+        [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
 #else
         [DllImport("libc", CallingConvention = CallingConvention.Cdecl)]                
 #endif
