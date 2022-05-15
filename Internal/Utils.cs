@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace LiteEntitySystem
+namespace LiteEntitySystem.Internal
 {
     internal static class Utils
     {
