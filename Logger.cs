@@ -1,5 +1,8 @@
 namespace LiteEntitySystem
 {
+    /// <summary>
+    /// Logger implementation for different situations (client/server/different engine)
+    /// </summary>
     public interface ILogger
     {
         void Log(string log);

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using K4os.Compression.LZ4;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
@@ -165,6 +166,11 @@ namespace LiteEntitySystem
 
         protected EntityManager(EntityTypesMap typesMap, NetworkMode mode, byte framesPerSecond)
         {
+#if UNITY_ANDROID
+            if (IntPtr.Size == 4)
+                LZ4Codec.Enforce32 = true;
+#endif
+
             Interpolation.Register<float>(Utils.Lerp);
             Interpolation.Register<FloatAngle>(FloatAngle.Lerp);
             ClassDataDict = new EntityClassData[typesMap.MaxId+1];
