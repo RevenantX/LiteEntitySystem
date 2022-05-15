@@ -28,6 +28,45 @@ namespace LiteEntitySystem
         Normal,
         PredictionRollback
     }
+
+    public abstract class EntityTypesMap
+    {
+        internal ushort MaxId;
+        internal readonly int EntityEnumSize;
+        internal readonly Dictionary<Type, (ushort, EntityConstructor<InternalEntity>)> RegisteredTypes = new Dictionary<Type, (ushort, EntityConstructor<InternalEntity>)>();
+
+        internal EntityTypesMap(int enumSize)
+        {
+            EntityEnumSize = enumSize;
+        }
+    }
+
+    /// <summary>
+    /// Entity types map that will be used for EntityManager
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public sealed class EntityTypesMap<T> : EntityTypesMap where T : Enum
+    {
+        public EntityTypesMap() : base(Enum.GetValues(typeof(T)).Length)
+        {
+
+        }
+        
+        /// <summary>
+        /// Register new entity type that will be used in game
+        /// </summary>
+        /// <param name="id">Enum value that will describe entity class id</param>
+        /// <param name="constructor">Constructor of entity</param>
+        /// <typeparam name="TEntity">Type of entity</typeparam>
+        public EntityTypesMap<T> Register<TEntity>(T id, EntityConstructor<TEntity> constructor) where TEntity : InternalEntity 
+        {
+            ushort classId = (ushort)(object)id;
+            EntityClassInfo<TEntity>.ClassId = classId;
+            RegisteredTypes.Add(typeof(TEntity), (classId, constructor));
+            MaxId = Math.Max(MaxId, classId);
+            return this;
+        }
+    }
     
     /// <summary>
     /// Base class for client and server manager
@@ -44,21 +83,6 @@ namespace LiteEntitySystem
         /// </summary>
         public const ushort InvalidEntityId = ushort.MaxValue;
         
-        protected const byte PacketDiffSync = 1;
-        protected const byte PacketEntityCall = 2;
-        protected const byte PacketClientSync = 3;
-        protected const byte PacketBaselineSync = 4;
-        protected const byte PacketDiffSyncLast = 5;
-        protected const int MaxFieldSize = 1024;
-        protected const int MaxSavedStateDiff = 6;
-        
-        internal const int MaxParts = 256;
-        
-        private const int MaxTicksPerUpdate = 5;
-        
-        internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount];
-        protected readonly EntityFilter<InternalEntity> AliveEntities = new EntityFilter<InternalEntity>();
-
         /// <summary>
         /// Total entities count (including local)
         /// </summary>
@@ -108,54 +132,72 @@ namespace LiteEntitySystem
         /// Local player id (0 on server)
         /// </summary>
         public byte PlayerId => InternalPlayerId;
+        
+        protected const byte PacketDiffSync = 1;
+        protected const byte PacketEntityCall = 2;
+        protected const byte PacketClientSync = 3;
+        protected const byte PacketBaselineSync = 4;
+        protected const byte PacketDiffSyncLast = 5;
+        protected const int MaxFieldSize = 1024;
+        protected const int MaxSavedStateDiff = 6;
+        internal const int MaxParts = 256;
+        private const int MaxTicksPerUpdate = 5;
 
         protected double CurrentDelta { get; private set; }
         protected int MaxEntityId = -1; //current maximum id
+        
+        protected readonly EntityFilter<InternalEntity> AliveEntities = new EntityFilter<InternalEntity>();
 
         private readonly double _stopwatchFrequency;
         private readonly Stopwatch _stopwatch = new Stopwatch();
-        private readonly Dictionary<Type, int> _registeredTypeIds = new Dictionary<Type, int>();
         private readonly Queue<ushort> _localIdQueue = new Queue<ushort>();
+        private readonly SingletonEntityLogic[] _singletonEntities;
+        private readonly EntityFilter[] _entityFilters;
+        private readonly Dictionary<Type, ushort> _registeredTypeIds = new Dictionary<Type, ushort>();
+        internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount];
+        internal readonly EntityClassData[] ClassDataDict;
         
         private double _accumulator;
         private long _lastTime;
-        private bool _isStarted;
-        private SingletonEntityLogic[] _singletonEntities;
-        private EntityFilter[] _entityFilters;
-        private ushort _filterRegisteredCount;
-        private ushort _singletonRegisteredCount;
-        private int _entityEnumSize = -1;
         private ushort _localIdCounter = MaxEntityCount;
 
-        internal readonly EntityClassData[] ClassDataDict = new EntityClassData[ushort.MaxValue];
         internal byte InternalPlayerId;
-        
-        protected void RegisterEntityType<TEntity, TEnum>(TEnum id, EntityConstructor<TEntity> constructor)
-            where TEntity : InternalEntity where TEnum : Enum
-        {
-            if (_entityEnumSize == -1)
-                _entityEnumSize = Enum.GetValues(typeof(TEnum)).Length;
-            
-            var entType = typeof(TEntity);
-            ushort classId = (ushort)(object)id;
-            ref var classData = ref ClassDataDict[classId];
-            bool isSingleton = entType.IsSubclassOf(typeof(SingletonEntityLogic));
-            classData = new EntityClassData(isSingleton ? _singletonRegisteredCount++ : _filterRegisteredCount++, entType, classId, constructor);
-            EntityClassInfo<TEntity>.ClassId = classId;
-            _registeredTypeIds.Add(entType, classData.FilterId);
-            Logger.Log($"Register: {entType.Name} ClassId: {id.ToString()}({classId})");
-        }
 
-        protected EntityManager(NetworkMode mode, byte framesPerSecond)
+        protected EntityManager(EntityTypesMap typesMap, NetworkMode mode, byte framesPerSecond)
         {
+            Interpolation.Register<float>(Utils.Lerp);
+            Interpolation.Register<FloatAngle>(FloatAngle.Lerp);
+            ClassDataDict = new EntityClassData[typesMap.MaxId+1];
+
+            ushort filterCount = 0;
+            ushort singletonCount = 0;
+            foreach ((Type entType, (var classId, EntityConstructor<InternalEntity> entityConstructor)) in typesMap.RegisteredTypes)
+            {
+                ClassDataDict[classId] = new EntityClassData(
+                    entType.IsSubclassOf(typeof(SingletonEntityLogic)) ? filterCount++ : singletonCount++, 
+                    entType, 
+                    classId, 
+                    entityConstructor);
+                _registeredTypeIds.Add(entType, ClassDataDict[classId].FilterId);
+                Logger.Log($"Register: {entType.Name} ClassId: {classId})");
+            }
+
+            for (int e = 0; e < typesMap.EntityEnumSize; e++)
+            {
+                //map base ids
+                if(ClassDataDict[e].IsCreated)
+                    ClassDataDict[e].PrepareBaseTypes(_registeredTypeIds, ref singletonCount, ref filterCount);
+            }
+
+            _entityFilters = new EntityFilter[filterCount];
+            _singletonEntities = new SingletonEntityLogic[singletonCount];
+            
             Mode = mode;
             IsServer = Mode == NetworkMode.Server;
             IsClient = Mode == NetworkMode.Client;
             FramesPerSecond = framesPerSecond;
             DeltaTime = 1.0f / framesPerSecond;
             _stopwatchFrequency = Stopwatch.Frequency;
-            Interpolation.Register<float>(Utils.Lerp);
-            Interpolation.Register<FloatAngle>(FloatAngle.Lerp);
         }
 
         /// <summary>
@@ -212,8 +254,6 @@ namespace LiteEntitySystem
         /// <returns>Entity filter that can be used in foreach</returns>
         public EntityFilter<T> GetEntities<T>() where T : EntityLogic
         {
-            CheckStart();
-            
             ref var entityFilter = ref _entityFilters[_registeredTypeIds[typeof(T)]];
             if (entityFilter != null)
                 return (EntityFilter<T>)entityFilter;
@@ -237,8 +277,6 @@ namespace LiteEntitySystem
         /// <returns>Entity filter that can be used in foreach</returns>
         public EntityFilter<T> GetControllers<T>() where T : ControllerLogic
         {
-            CheckStart();
-            
             ref var entityFilter = ref _entityFilters[_registeredTypeIds[typeof(T)]];
             if (entityFilter != null)
                 return (EntityFilter<T>)entityFilter;
@@ -261,7 +299,7 @@ namespace LiteEntitySystem
         /// <returns>Singleton entity, can throw exceptions on invalid type</returns>
         public T GetSingleton<T>() where T : SingletonEntityLogic
         {
-            return (T)_singletonEntities[ClassDataDict[EntityClassInfo<T>.ClassId].FilterId];
+            return (T)_singletonEntities[_registeredTypeIds[typeof(T)]];
         }
 
         /// <summary>
@@ -271,7 +309,7 @@ namespace LiteEntitySystem
         /// <returns>Singleton entity or null if it didn't exists</returns>
         public T GetSingletonSafe<T>() where T : SingletonEntityLogic
         {
-            return _singletonEntities[ClassDataDict[EntityClassInfo<T>.ClassId].FilterId] as T;
+            return _singletonEntities[_registeredTypeIds[typeof(T)]] as T;
         }
 
         /// <summary>
@@ -281,7 +319,7 @@ namespace LiteEntitySystem
         /// <returns></returns>
         public bool HasSingleton<T>() where T : SingletonEntityLogic
         {
-            return _singletonEntities[ClassDataDict[EntityClassInfo<T>.ClassId].FilterId] is T;
+            return _singletonEntities[_registeredTypeIds[typeof(T)]] is T;
         }
 
         /// <summary>
@@ -292,7 +330,7 @@ namespace LiteEntitySystem
         /// <returns>true if entity exists</returns>
         public bool TryGetSingleton<T>(out T singleton) where T : SingletonEntityLogic
         {
-            var s = _singletonEntities[ClassDataDict[EntityClassInfo<T>.ClassId].FilterId];
+            var s = _singletonEntities[_registeredTypeIds[typeof(T)]];
             if (s != null)
             {
                 singleton = (T)s;
@@ -304,9 +342,8 @@ namespace LiteEntitySystem
 
         protected InternalEntity AddLocalEntity(ushort classId)
         {
-            var classData = ClassDataDict[classId];
             var entityParams = new EntityParams(classId, _localIdQueue.Count > 0 ? _localIdQueue.Dequeue() : _localIdCounter++, 0, this);
-            var entity = classData.EntityConstructor(entityParams);
+            var entity = ClassDataDict[classId].EntityConstructor(entityParams);
             EntitiesCount++;
             return entity;
         }
@@ -317,8 +354,7 @@ namespace LiteEntitySystem
             {
                 throw new ArgumentException($"Invalid entity id: {entityParams.Id}");
             }
-            var classData = ClassDataDict[entityParams.ClassId];
-            var entity = classData.EntityConstructor(entityParams);
+            var entity = ClassDataDict[entityParams.ClassId].EntityConstructor(entityParams);
             MaxEntityId = MaxEntityId < entityParams.Id ? entityParams.Id : MaxEntityId;
             EntitiesDict[entity.Id] = entity;
             EntitiesCount++;
@@ -328,7 +364,7 @@ namespace LiteEntitySystem
         protected void ConstructEntity(InternalEntity entity)
         {
             entity.OnConstructed();
-            var classData = ClassDataDict[entity.ClassId];
+            ref var classData = ref ClassDataDict[entity.ClassId];
             if (classData.IsSingleton)
             {
                 _singletonEntities[classData.FilterId] = (SingletonEntityLogic)entity;
@@ -347,7 +383,7 @@ namespace LiteEntitySystem
 
         internal void RemoveEntity(InternalEntity e)
         {
-            var classData = ClassDataDict[e.ClassId];
+            ref var classData = ref ClassDataDict[e.ClassId];
             _entityFilters[classData.FilterId]?.Remove(e);
             foreach (int baseId in classData.BaseIds)
                 _entityFilters[baseId]?.Remove(e);
@@ -361,28 +397,14 @@ namespace LiteEntitySystem
 
         protected abstract void OnLogicTick();
 
-        protected void CheckStart()
-        {
-            if (_isStarted)
-                return;
-
-            for (int e = 0; e < _entityEnumSize; e++)
-            {
-                //map base ids
-                ClassDataDict[e]?.PrepareBaseTypes(_registeredTypeIds, ref _singletonRegisteredCount, ref _filterRegisteredCount);
-            }
-
-            _entityFilters = new EntityFilter[_filterRegisteredCount];
-            _singletonEntities = new SingletonEntityLogic[_singletonRegisteredCount];
-            _stopwatch.Start();
-            _isStarted = true;
-        }
-
         /// <summary>
         /// Main update method, updates internal fixed timer and do all other stuff
         /// </summary>
         public virtual void Update()
         {
+            if(!_stopwatch.IsRunning)
+                _stopwatch.Start();
+            
             long elapsedTicks = _stopwatch.ElapsedTicks;
             CurrentDelta = (elapsedTicks - _lastTime) / _stopwatchFrequency;
             _accumulator += CurrentDelta;

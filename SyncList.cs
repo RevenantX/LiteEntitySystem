@@ -7,10 +7,24 @@ namespace LiteEntitySystem
 {
     public class SyncList<T> : SyncableField, IList<T> where T : struct
     {
-        private T[] _data;
-        private int _count;
         public int Count => _count;
         public bool IsReadOnly => false;
+
+        private T[] _data;
+        private int _count;
+
+        private Action<T> _addAction;
+        private Action _clearAction;
+        private Action _fullClearAction;
+        private Action<int> _remoteAtAction;
+
+        public override void OnServerInitialized()
+        {
+            CreateClientAction(Add, out _addAction);
+            CreateClientAction(Clear, out _clearAction);
+            CreateClientAction(FullClear, out _fullClearAction);
+            CreateClientAction(RemoveAt, out _remoteAtAction);
+        }
 
         public SyncList()
         {
@@ -36,14 +50,14 @@ namespace LiteEntitySystem
                 Array.Resize(ref _data, Math.Min(_data.Length * 2, ushort.MaxValue));
             _data[_count] = item;
             _count++;
-            ExecuteOnClient(Add, item);
+            _addAction?.Invoke(item);
         }
 
         [SyncableRemoteCall]
         public void Clear()
         {
             _count = 0;
-            ExecuteOnClient(Clear);
+            _clearAction?.Invoke();
         }
 
         [SyncableRemoteCall]
@@ -53,7 +67,7 @@ namespace LiteEntitySystem
                 return;
             Array.Clear(_data, 0, _count);
             _count = 0;
-            ExecuteOnClient(FullClear);
+            _fullClearAction?.Invoke();
         }
 
         public bool Contains(T item)
@@ -105,7 +119,7 @@ namespace LiteEntitySystem
             _data[index] = _data[_count - 1];
             _data[_count - 1] = default;
             _count--;
-            ExecuteOnClient(RemoveAt, index);
+            _remoteAtAction?.Invoke(index);
         }
 
         T IList<T>.this[int index]

@@ -15,19 +15,37 @@ namespace LiteEntitySystem.Internal
         public InterpolatedCache[] InterpolatedCaches;
     }
 
-    internal struct RemoteCallsCache
+    internal readonly struct RemoteCallsCache
     {
-        public ushort EntityId;
-        public byte FieldId;
-        public MethodCallDelegate Delegate;
-        public ushort Tick;
-        public int Offset;
+        public readonly ushort EntityId;
+        public readonly byte FieldId;
+        public readonly MethodCallDelegate Delegate;
+        public readonly ushort Tick;
+        public readonly int Offset;
+        public readonly ushort Count;
+
+        public RemoteCallsCache(ushort entityId, byte fieldId, MethodCallDelegate callDelegate, ushort tick, int offset,
+            ushort count)
+        {
+            EntityId = entityId;
+            FieldId = fieldId;
+            Delegate = callDelegate;
+            Tick = tick;
+            Offset = offset;
+            Count = count;
+        }
     }
 
-    internal struct InterpolatedCache
+    internal readonly struct InterpolatedCache
     {
-        public int Field;
-        public int StateReaderOffset;
+        public readonly int Field;
+        public readonly int StateReaderOffset;
+
+        public InterpolatedCache(int fieldId, int offset)
+        {
+            Field = fieldId;
+            StateReaderOffset = offset;
+        }
     }
     
     internal sealed class ServerStateComparer : IComparer<ServerStateData>
@@ -122,7 +140,7 @@ namespace LiteEntitySystem.Internal
                         Logger.LogError($"Preload entity: {preloadData.EntityId} == null");
                         return;
                     }
-                    var classData = entityManager.ClassDataDict[entity.ClassId];
+                    ref var classData = ref entityManager.ClassDataDict[entity.ClassId];
                     var fields = classData.Fields;
                     preloadData.EntityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
                     preloadData.DataOffset = 
@@ -146,10 +164,10 @@ namespace LiteEntitySystem.Internal
                         if (!entity.IsLocalControlled && field.Interpolator != null)
                         {
                             preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
-                            {
-                                Field = fieldIndex,
-                                StateReaderOffset = stateReaderOffset
-                            };
+                            (
+                                fieldIndex,
+                                stateReaderOffset
+                            );
                         }
                         stateReaderOffset += field.IntSize;
                     }
@@ -158,19 +176,20 @@ namespace LiteEntitySystem.Internal
                     while(stateReaderOffset < initialReaderPosition + preloadData.TotalSize)
                     {
                         byte rpcId = Data[stateReaderOffset];
-                        var rpcCache = new RemoteCallsCache
-                        {
-                            EntityId = preloadData.EntityId,
-                            FieldId = Data[stateReaderOffset + 1],
-                            Tick = BitConverter.ToUInt16(Data, stateReaderOffset + 2),
-                            Offset = stateReaderOffset + 6
-                        };
-                        
-                        rpcCache.Delegate = rpcCache.FieldId == byte.MaxValue 
-                            ? classData.RemoteCallsClient[rpcId] 
-                            : classData.SyncableRemoteCallsClient[rpcId];
-                        
+                        byte fieldId = Data[stateReaderOffset + 1];
                         ushort size = BitConverter.ToUInt16(Data, stateReaderOffset + 4);
+                        
+                        var rpcCache = new RemoteCallsCache(
+                            preloadData.EntityId,
+                            fieldId,
+                            fieldId == byte.MaxValue
+                                ? classData.RemoteCallsClient[rpcId]
+                                : classData.SyncableRemoteCallsClient[rpcId],
+                            BitConverter.ToUInt16(Data, stateReaderOffset + 2),
+                            stateReaderOffset + 6,
+                            1 //TODO: count!!!
+                            );
+                        
                         Utils.ResizeOrCreate(ref RemoteCallsCaches, RemoteCallsCount);
                         RemoteCallsCaches[RemoteCallsCount++] = rpcCache;
                         stateReaderOffset += 6 + size;

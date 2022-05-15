@@ -15,41 +15,11 @@ namespace LiteEntitySystem
         public ushort StateB;
         public ushort LerpMsec;
     }
-    
-    /// <summary>
-    /// Server entity manager
-    /// </summary>
-    public sealed class ClientEntityManager<TEnum> : ClientEntityManager where TEnum : Enum
-    {
-        /// <summary>
-        /// Register new entity type that will be used in game
-        /// </summary>
-        /// <param name="id">Enum value that will describe entity class id</param>
-        /// <param name="constructor">Constructor of entity</param>
-        /// <typeparam name="TEntity">Type of entity</typeparam>
-        /// <typeparam name="TEnum">Enum used as classId</typeparam>
-        public void RegisterEntityType<TEntity>(TEnum id, EntityConstructor<TEntity> constructor)
-            where TEntity : InternalEntity
-        {
-            RegisterEntityType<TEntity, TEnum>(id, constructor);
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localPeer">Local NetPeer</param>
-        /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
-        /// <param name="framesPerSecond">Fixed framerate of game logic</param>
-        public ClientEntityManager(NetPeer localPeer, byte headerByte, byte framesPerSecond) : base(localPeer, headerByte, framesPerSecond)
-        {
-            
-        }
-    }
 
     /// <summary>
     /// Client entity manager
     /// </summary>
-    public abstract class ClientEntityManager : EntityManager
+    public sealed class ClientEntityManager : EntityManager
     {
         /// <summary>
         /// Current interpolated server tick
@@ -122,7 +92,13 @@ namespace LiteEntitySystem
         private ushort _remoteCallsTick;
         private ushort _lastReceivedInputTick;
         
-        protected ClientEntityManager(NetPeer localPeer, byte headerByte, byte framesPerSecond) : base(NetworkMode.Client, framesPerSecond)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="localPeer">Local NetPeer</param>
+        /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
+        /// <param name="framesPerSecond">Fixed framerate of game logic</param>
+        public ClientEntityManager(EntityTypesMap typesMap, NetPeer localPeer, byte headerByte, byte framesPerSecond) : base(typesMap, NetworkMode.Client, framesPerSecond)
         {
             _localPeer = localPeer;
             OwnedEntities.OnAdded += OnOwnedAdded;
@@ -154,8 +130,7 @@ namespace LiteEntitySystem
         /// <returns>Created predicted local entity</returns>
         public T AddPredictedEntity<T>() where T : EntityLogic
         {
-            var classData = ClassDataDict[EntityClassInfo<T>.ClassId];
-            var entity = (T)AddLocalEntity(classData.ClassId);
+            var entity = (T)AddLocalEntity(ClassDataDict[EntityClassInfo<T>.ClassId].ClassId);
             _spawnPredictedEntities.Enqueue((Tick, entity));
             return entity;
         }
@@ -264,8 +239,6 @@ namespace LiteEntitySystem
 
         public override unsafe void Update()
         {
-            CheckStart();
-
             if (!_isSyncReceived)
                 return;
             
@@ -338,7 +311,7 @@ namespace LiteEntitySystem
                         var localEntity = entity;
                         fixed (byte* latestEntityData = _predictedEntities[entity.Id])
                         {
-                            var classData = ClassDataDict[entity.ClassId];
+                            ref var classData = ref ClassDataDict[entity.ClassId];
                             byte* entityPtr = InternalEntity.GetPtr(ref localEntity);
                             for (int i = 0; i < classData.FieldsCount; i++)
                             {
@@ -368,7 +341,7 @@ namespace LiteEntitySystem
                     //update interpolated position
                     foreach (var entity in OwnedEntities)
                     {
-                        var classData = ClassDataDict[entity.ClassId];
+                        ref var classData = ref ClassDataDict[entity.ClassId];
                         var localEntity = entity;
                         byte* entityPtr = InternalEntity.GetPtr(ref localEntity);
                         
@@ -386,7 +359,7 @@ namespace LiteEntitySystem
             foreach (var entity in OwnedEntities)
             {
                 var entityLocal = entity;
-                var classData = ClassDataDict[entity.ClassId];
+                ref var classData = ref ClassDataDict[entity.ClassId];
                 byte* entityPtr = InternalEntity.GetPtr(ref entityLocal);
                 fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
                        prevDataPtr = _interpolatePrevData[entity.Id])
@@ -472,7 +445,7 @@ namespace LiteEntitySystem
         private unsafe void OnOwnedAdded(EntityLogic entity)
         {
             ref var predictedData = ref _predictedEntities[entity.Id];
-            var classData = ClassDataDict[entity.ClassId];
+            ref var classData = ref ClassDataDict[entity.ClassId];
             byte* entityPtr = InternalEntity.GetPtr(ref entity);
             
             Utils.ResizeOrCreate(ref predictedData, classData.FixedFieldsSize);
@@ -504,12 +477,12 @@ namespace LiteEntitySystem
                             var entity = EntitiesDict[rpcCache.EntityId];
                             if (rpcCache.FieldId == byte.MaxValue)
                             {
-                                rpcCache.Delegate(Unsafe.AsPointer(ref entity), rawData + rpcCache.Offset);
+                                rpcCache.Delegate(Unsafe.AsPointer(ref entity), rawData + rpcCache.Offset, rpcCache.Count);
                             }
                             else
                             {
                                 var fieldPtr = InternalEntity.GetPtr(ref entity) + ClassDataDict[entity.ClassId].SyncableFields[rpcCache.FieldId].FieldOffset;
-                                rpcCache.Delegate(fieldPtr, rawData + rpcCache.Offset);
+                                rpcCache.Delegate(fieldPtr, rawData + rpcCache.Offset, rpcCache.Count);
                             }
                             _stateB.RemoteCallsProcessed++;
                         }
@@ -551,7 +524,7 @@ namespace LiteEntitySystem
             foreach (var entity in OwnedEntities)
             {
                 //save data for interpolation before update
-                var classData = ClassDataDict[entity.ClassId];
+                ref var classData = ref ClassDataDict[entity.ClassId];
                 var entityLocal = entity;
                 byte* entityPtr = InternalEntity.GetPtr(ref entityLocal);
                 fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
@@ -643,13 +616,15 @@ namespace LiteEntitySystem
                         var prevEntity = prevId == InvalidEntityId ? null : EntitiesDict[prevId];
                         syncCall.OnSync(
                             Unsafe.AsPointer(ref syncCall.Entity),
-                            prevEntity != null ? Unsafe.AsPointer(ref prevEntity) : null);
+                            prevEntity != null ? Unsafe.AsPointer(ref prevEntity) : null,
+                            1); //TODO: count!!!
                     }
                     else
                     {
                         syncCall.OnSync(
                             Unsafe.AsPointer(ref syncCall.Entity),
-                            readerData + syncCall.PrevDataPos);
+                            readerData + syncCall.PrevDataPos,
+                            1); //TODO: count!!!
                     }
                 }
             }
@@ -706,7 +681,7 @@ namespace LiteEntitySystem
                 return;
             }
             
-            var classData = ClassDataDict[entity.ClassId];
+            ref var classData = ref ClassDataDict[entity.ClassId];
 
             //create interpolation buffers
             ref byte[] interpolatedInitialData = ref _interpolatedInitialData[entity.Id];

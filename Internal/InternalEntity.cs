@@ -68,42 +68,76 @@ namespace LiteEntitySystem.Internal
             ClassId = entityParams.ClassId;
             Version = entityParams.Version;
         }
-
-        protected void ExecuteRemoteCall<T>(Action<T> methodToCall, T value) where T : struct
+        
+        protected void CreateRPCAction(Action methodToCall, out Action cachedAction)
         {
             if (methodToCall.Target != this)
                 throw new Exception("You can call this only on this class methods");
-            var classData = EntityManager.ClassDataDict[ClassId];
-            if(!classData.RemoteCalls.TryGetValue(methodToCall.Method, out var remoteCallInfo))
+            if(!EntityManager.ClassDataDict[ClassId].RemoteCalls.TryGetValue(methodToCall.Method, out var rpcInfo))
                 throw new Exception($"{methodToCall.Method.Name} is not [RemoteCall] method");
+
             if (EntityManager.IsServer)
             {
-                if ((remoteCallInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
-                    methodToCall(value);
-                ((ServerEntityManager)EntityManager).AddRemoteCall(Id, value, remoteCallInfo);
+                if ((rpcInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
+                    cachedAction = () => { methodToCall(); ServerManager.AddRemoteCall(Id, rpcInfo); };
+                else
+                    cachedAction = () => ServerManager.AddRemoteCall(Id, rpcInfo);
             }
-            else if(IsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
+            else
             {
-                methodToCall(value);
+                cachedAction = () =>
+                {
+                    if (IsLocalControlled && (rpcInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
+                        methodToCall();
+                };
             }
         }
         
-        protected void ExecuteRemoteCall<T>(Action<T[]> methodToCall, T[] value, int count) where T : struct
+        protected void CreateRPCAction<T>(Action<T> methodToCall, out Action<T> cachedAction) where T : struct
         {
             if (methodToCall.Target != this)
                 throw new Exception("You can call this only on this class methods");
-            var classData = EntityManager.ClassDataDict[ClassId];
-            if(!classData.RemoteCalls.TryGetValue(methodToCall.Method, out var remoteCallInfo))
+            if(!EntityManager.ClassDataDict[ClassId].RemoteCalls.TryGetValue(methodToCall.Method, out var rpcInfo))
                 throw new Exception($"{methodToCall.Method.Name} is not [RemoteCall] method");
+
             if (EntityManager.IsServer)
             {
-                if ((remoteCallInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
-                    methodToCall(value);
-                ((ServerEntityManager)EntityManager).AddRemoteCall(Id, value, count, remoteCallInfo);
+                if ((rpcInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
+                    cachedAction = value => { methodToCall(value); ServerManager.AddRemoteCall(Id, value, rpcInfo); };
+                else
+                    cachedAction = value => ServerManager.AddRemoteCall(Id, value, rpcInfo);
             }
-            else if(IsLocalControlled && (remoteCallInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
+            else
             {
-                methodToCall(value);
+                cachedAction = value =>
+                {
+                    if (IsLocalControlled && (rpcInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
+                        methodToCall(value);
+                };
+            }
+        }
+        
+        protected void CreateRPCAction<T>(Action<T[], ushort> methodToCall, out Action<T[], ushort> cachedAction) where T : struct
+        {
+            if (methodToCall.Target != this)
+                throw new Exception("You can call this only on this class methods");
+            if(!EntityManager.ClassDataDict[ClassId].RemoteCalls.TryGetValue(methodToCall.Method, out var rpcInfo))
+                throw new Exception($"{methodToCall.Method.Name} is not [RemoteCall] method");
+            
+            if (EntityManager.IsServer)
+            {
+                if ((rpcInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
+                    cachedAction = (value, count) => { methodToCall(value, count); ServerManager.AddRemoteCall(Id, value, count, rpcInfo); };
+                else
+                    cachedAction = (value, count) => ServerManager.AddRemoteCall(Id, value, count, rpcInfo);
+            }
+            else
+            {
+                cachedAction = (value, count) =>
+                {
+                    if (IsLocalControlled && (rpcInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
+                        methodToCall(value, count);
+                };
             }
         }
 

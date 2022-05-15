@@ -58,33 +58,7 @@ namespace LiteEntitySystem
     /// <summary>
     /// Server entity manager
     /// </summary>
-    public sealed class ServerEntityManager<TEnum> : ServerEntityManager where TEnum : Enum
-    {
-        /// <summary>
-        /// Register new entity type that will be used in game
-        /// </summary>
-        /// <param name="id">Enum value that will describe entity class id</param>
-        /// <param name="constructor">Constructor of entity</param>
-        /// <typeparam name="TEntity">Type of entity</typeparam>
-        /// <typeparam name="TEnum">Enum used as classId</typeparam>
-        public void RegisterEntityType<TEntity>(TEnum id, EntityConstructor<TEntity> constructor)
-            where TEntity : InternalEntity
-        {
-            RegisterEntityType<TEntity, TEnum>(id, constructor);
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="packetHeader">Header byte that will be used for packets (to distinguish entity system packets)</param>
-        /// <param name="framesPerSecond">Fixed framerate of game logic</param>
-        public ServerEntityManager(byte packetHeader, byte framesPerSecond) : base(packetHeader, framesPerSecond)
-        {
-            
-        }
-    }
-    
-    public abstract class ServerEntityManager : EntityManager
+    public sealed class ServerEntityManager : EntityManager
     {
         public const byte ServerPlayerId = 0;
         
@@ -115,8 +89,13 @@ namespace LiteEntitySystem
         /// </summary>
         public event Action<bool> OnLagCompensation;
 
-        protected ServerEntityManager(byte packetHeader, byte framesPerSecond) 
-            : base(NetworkMode.Server, framesPerSecond)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="packetHeader">Header byte that will be used for packets (to distinguish entity system packets)</param>
+        /// <param name="framesPerSecond">Fixed framerate of game logic</param>
+        public ServerEntityManager(EntityTypesMap typesMap, byte packetHeader, byte framesPerSecond) 
+            : base(typesMap, NetworkMode.Server, framesPerSecond)
         {
             InternalPlayerId = ServerPlayerId;
             for (int i = 1; i <= byte.MaxValue; i++)
@@ -298,7 +277,6 @@ namespace LiteEntitySystem
 
         public override unsafe void Update()
         {
-            CheckStart();
             ushort prevTick = Tick;
             base.Update();
             
@@ -430,8 +408,7 @@ namespace LiteEntitySystem
         private T Add<T>(Action<T> initMethod) where T : InternalEntity
         {
             //create entity data and filters
-            CheckStart();
-            var classData = ClassDataDict[EntityClassInfo<T>.ClassId];
+            ref var classData = ref ClassDataDict[EntityClassInfo<T>.ClassId];
             T entity;
             
             if (classData.IsLocalOnly)
@@ -453,7 +430,7 @@ namespace LiteEntitySystem
                     entityId,
                     stateSerializer.IncrementVersion(Tick),
                     this));
-                stateSerializer.Init(classData, entity);
+                stateSerializer.Init(ref classData, entity);
             }
             initMethod?.Invoke(entity);
             ConstructEntity(entity);
@@ -507,6 +484,13 @@ namespace LiteEntitySystem
         internal void PoolRpc(RemoteCallPacket rpcNode)
         {
             _rpcPool.Enqueue(rpcNode);
+        }
+        
+        internal void AddRemoteCall(ushort entityId, RemoteCall remoteCallInfo) 
+        {
+            var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
+            rpc.Init(Tick, remoteCallInfo);
+            SavedEntityData[entityId].AddRpcPacket(rpc);
         }
         
         internal unsafe void AddRemoteCall<T>(ushort entityId, T value, RemoteCall remoteCallInfo) where T : struct

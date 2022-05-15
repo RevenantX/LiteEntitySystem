@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -9,7 +10,9 @@ namespace LiteEntitySystem
         private byte[] _stringData;
         private string _string;
         private int _size;
-        
+
+        private Action<byte[], ushort> _setStringClientCall;
+
         public string Value
         {
             get => _string;
@@ -20,8 +23,13 @@ namespace LiteEntitySystem
                 _string = value;
                 Utils.ResizeOrCreate(ref _stringData, Encoding.GetMaxByteCount(_string.Length));
                 _size = Encoding.GetBytes(_string, 0, _string.Length, _stringData, 0);
-                ExecuteOnClient(SetNewString, _stringData, _size);
+                _setStringClientCall(_stringData, (ushort)_size);
             }
+        }
+
+        public override void OnServerInitialized()
+        {
+            CreateClientAction(SetNewString, out _setStringClientCall);
         }
 
         public override string ToString()
@@ -35,9 +43,9 @@ namespace LiteEntitySystem
         }
 
         [SyncableRemoteCall]
-        private void SetNewString(byte[] data)
+        private void SetNewString(byte[] data, ushort count)
         {
-            _string = Encoding.GetString(data, 0, data.Length);
+            _string = Encoding.GetString(data, 0, count);
         }
 
         public override unsafe void FullSyncRead(byte* data, ref int position)

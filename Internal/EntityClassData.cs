@@ -60,12 +60,14 @@ namespace LiteEntitySystem.Internal
         }
     }
 
-    internal sealed class EntityClassData
+    internal readonly struct EntityClassData
     {
+        public readonly bool IsCreated;
+        
         public readonly ushort ClassId;
-        public readonly int FilterId;
+        public readonly ushort FilterId;
         public readonly bool IsSingleton;
-        public readonly int[] BaseIds;
+        public readonly ushort[] BaseIds;
         public readonly int FieldsCount;
         public readonly int FieldsFlagsSize;
         public readonly int FixedFieldsSize;
@@ -81,11 +83,10 @@ namespace LiteEntitySystem.Internal
         public readonly bool IsLocalOnly;
         public readonly Type[] BaseTypes;
         public readonly EntityConstructor<InternalEntity> EntityConstructor;
-        public readonly Dictionary<MethodInfo, RemoteCall> RemoteCalls = new Dictionary<MethodInfo, RemoteCall>();
-        public readonly MethodCallDelegate[] RemoteCallsClient = new MethodCallDelegate[255];
-        public readonly MethodCallDelegate[] SyncableRemoteCallsClient = new MethodCallDelegate[255];
-        public readonly Dictionary<MethodInfo, SyncableRemoteCall> SyncableRemoteCalls =
-            new Dictionary<MethodInfo, SyncableRemoteCall>();
+        public readonly Dictionary<MethodInfo, RemoteCall> RemoteCalls;
+        public readonly MethodCallDelegate[] RemoteCallsClient;
+        public readonly MethodCallDelegate[] SyncableRemoteCallsClient;
+        public readonly Dictionary<MethodInfo, SyncableRemoteCall> SyncableRemoteCalls;
 
         private static readonly int NativeFieldOffset;
 
@@ -163,8 +164,17 @@ namespace LiteEntitySystem.Internal
             return baseTypes;
         }
         
-        public EntityClassData(int filterId, Type entType, ushort classId, EntityConstructor<InternalEntity> constructor)
+        public EntityClassData(ushort filterId, Type entType, ushort classId, EntityConstructor<InternalEntity> constructor)
         {
+            FixedFieldsSize = 0;
+            LagCompensatedSize = 0;
+            InterpolatedCount = 0;
+            InterpolatedFieldsSize = 0;
+            RemoteCalls = new Dictionary<MethodInfo, RemoteCall>();
+            RemoteCallsClient = new MethodCallDelegate[255];
+            SyncableRemoteCallsClient = new MethodCallDelegate[255];
+            SyncableRemoteCalls = new Dictionary<MethodInfo, SyncableRemoteCall>();
+            
             ClassId = classId;
 
             var updateAttribute = entType.GetCustomAttribute<UpdateableEntity>();
@@ -172,6 +182,11 @@ namespace LiteEntitySystem.Internal
             {
                 IsUpdateable = true;
                 UpdateOnClient = updateAttribute.UpdateOnClient;
+            }
+            else
+            {
+                IsUpdateable = false;
+                UpdateOnClient = false;
             }
 
             IsLocalOnly = entType.GetCustomAttribute<LocalOnly>() != null;
@@ -181,7 +196,7 @@ namespace LiteEntitySystem.Internal
 
             var baseTypes = GetBaseTypes(entType, typeof(InternalEntity), false);
             BaseTypes = baseTypes.ToArray();
-            BaseIds = new int[baseTypes.Count];
+            BaseIds = new ushort[baseTypes.Count];
             
             var fields = new List<EntityFieldInfo>();
             var syncableFields = new List<EntityFieldInfo>();
@@ -317,9 +332,11 @@ namespace LiteEntitySystem.Internal
             FieldsCount = Fields.Length;
             FieldsFlagsSize = (FieldsCount-1) / 8 + 1;
             LagCompensatedFields = lagCompensatedFields.ToArray();
+            
+            IsCreated = true;
         }
 
-        public void PrepareBaseTypes(Dictionary<Type, int> registeredTypeIds, ref ushort singletonCount, ref ushort filterCount)
+        public void PrepareBaseTypes(Dictionary<Type, ushort> registeredTypeIds, ref ushort singletonCount, ref ushort filterCount)
         {
             for (int i = 0; i < BaseIds.Length; i++)
             {

@@ -64,7 +64,7 @@ namespace LiteEntitySystem.Internal
             return _version++;
         }
 
-        public void Init(EntityClassData classData, InternalEntity e)
+        public void Init(ref EntityClassData classData, InternalEntity e)
         {
             _classData = classData;
             _entity = e;
@@ -84,6 +84,7 @@ namespace LiteEntitySystem.Internal
                     syncable.EntityManager = Manager;
                     syncable.FieldId = (byte)i;
                     syncable.EntityId = e.Id;
+                    syncable.OnServerInitialized();
                 }
                 
                 fixed (byte* data = _latestEntityData)

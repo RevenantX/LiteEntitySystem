@@ -23,26 +23,27 @@ namespace LiteEntitySystem
         
         public abstract unsafe void FullSyncWrite(byte* data, ref int position);
         public abstract unsafe void FullSyncRead(byte* data, ref int position);
+        public abstract void OnServerInitialized();
 
-        protected void ExecuteOnClient(Action methodToCall)
+        protected void CreateClientAction(Action methodToCall, out Action cachedAction)
         {
             if (methodToCall.Target != this)
                 throw new Exception("You can call this only on this class methods");
-            EntityManager?.AddSyncableCall(this, methodToCall.Method);
+            cachedAction = () => EntityManager?.AddSyncableCall(this, methodToCall.Method);
         }
 
-        protected void ExecuteOnClient<T>(Action<T> methodToCall, T value) where T : struct
+        protected void CreateClientAction<T>(Action<T> methodToCall, out Action<T> cachedAction) where T : struct
         {
             if (methodToCall.Target != this)
                 throw new Exception("You can call this only on this class methods");
-            EntityManager?.AddSyncableCall(this, value, methodToCall.Method);
+            cachedAction = value => EntityManager?.AddSyncableCall(this, value, methodToCall.Method);
         }
         
-        protected void ExecuteOnClient<T>(Action<T[]> methodToCall, T[] value, int count) where T : struct
+        protected void CreateClientAction<T>(Action<T[], ushort> methodToCall, out Action<T[], ushort> cachedAction) where T : struct
         {
             if (methodToCall.Target != this)
                 throw new Exception("You can call this only on this class methods");
-            EntityManager?.AddSyncableCall(this, value, count, methodToCall.Method);
+            cachedAction = (value, count) => EntityManager?.AddSyncableCall(this, value, count, methodToCall.Method);
         }
     }
 }
