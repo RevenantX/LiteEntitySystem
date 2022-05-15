@@ -12,8 +12,11 @@ using UnityEngine;
 
 namespace LiteEntitySystem.Internal
 {
-    internal sealed class EntitySystemBuildProcessor : IPreprocessBuildWithReport
+    internal sealed class EntitySystemBuildProcessor : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
+        private static readonly string GeneratedFilePath = Path.Combine(Application.dataPath, "LES_IL2CPP_AOT.cs");
+        private static readonly string GeneratedMetaFilePath = Path.Combine(Application.dataPath, "LES_IL2CPP_AOT.meta");
+        
         private static readonly Type EntityLogicType = typeof(InternalEntity);
         private const BindingFlags BindFlags = BindingFlags.Instance | BindingFlags.Public |
                                                      BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
@@ -38,6 +41,12 @@ namespace LiteEntitySystem.Internal
         };
 
         public int callbackOrder => 0;
+
+        public EntitySystemBuildProcessor()
+        {
+            File.Delete(GeneratedFilePath);
+            File.Delete(GeneratedMetaFilePath);
+        }
 
         private static string GetTypeName(Type type)
         {
@@ -112,16 +121,17 @@ namespace LiteEntitySystem.Internal
                     }
                 }
             }
-
-            if(!AssetDatabase.IsValidFolder("Assets/Code"))
-                AssetDatabase.CreateFolder("Assets", "Code");
-            else
-                AssetDatabase.DeleteAsset("Assets/Code/Generated");
-            AssetDatabase.CreateFolder("Assets/Code", "Generated");
+            
             GenCode.Append("        }\n    }\n}\n");
-            File.WriteAllText(Path.Combine(Application.dataPath, $"Code/Generated/LES_IL2CPP_AOT.cs"), GenCode.ToString().Replace("\r\n", "\n"));
+            File.WriteAllText(GeneratedFilePath, GenCode.ToString().Replace("\r\n", "\n"));
             GenCode.Clear();
             AssetDatabase.Refresh();
+        }
+        
+        public void OnPostprocessBuild(BuildReport report)
+        {
+            File.Delete(GeneratedFilePath);
+            File.Delete(GeneratedMetaFilePath);
         }
     }
 }
