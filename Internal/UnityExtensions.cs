@@ -57,6 +57,8 @@ namespace LiteEntitySystem.Internal
             GenCode.Append(' ', 12);
             if(valueType == null)
                 GenCode.AppendLine($"G.GenerateNoParams<{GetTypeName(classType)}>(null);");
+            else if(valueType.IsArray)
+                GenCode.AppendLine($"G.GenerateArray<{GetTypeName(classType)},{GetTypeName(valueType)}>(null);");
             else
                 GenCode.AppendLine($"G.Generate<{GetTypeName(classType)},{GetTypeName(valueType)}>(null);");
         }
@@ -103,7 +105,10 @@ namespace LiteEntitySystem.Internal
                     foreach (var methodInfo in entity.GetMethods(BindFlags))
                     {
                         if (methodInfo.GetCustomAttribute<RemoteCall>() != null)
-                            AppendGenerator(entity, methodInfo.GetParameters()[0].ParameterType);
+                        {
+                            var parameters = methodInfo.GetParameters();
+                            AppendGenerator(entity, parameters.Length == 0 ? null : parameters[0].ParameterType);
+                        }
                     }
                 }
             }
