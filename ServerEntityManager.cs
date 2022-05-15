@@ -54,11 +54,37 @@ namespace LiteEntitySystem
         HalfOfFPS = 2,
         ThirdOfFPS = 3
     }
-    
+
     /// <summary>
     /// Server entity manager
     /// </summary>
-    public sealed class ServerEntityManager : EntityManager
+    public sealed class ServerEntityManager<TEnum> : ServerEntityManager where TEnum : Enum
+    {
+        /// <summary>
+        /// Register new entity type that will be used in game
+        /// </summary>
+        /// <param name="id">Enum value that will describe entity class id</param>
+        /// <param name="constructor">Constructor of entity</param>
+        /// <typeparam name="TEntity">Type of entity</typeparam>
+        /// <typeparam name="TEnum">Enum used as classId</typeparam>
+        public void RegisterEntityType<TEntity>(TEnum id, EntityConstructor<TEntity> constructor)
+            where TEntity : InternalEntity
+        {
+            RegisterEntityType<TEntity, TEnum>(id, constructor);
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="packetHeader">Header byte that will be used for packets (to distinguish entity system packets)</param>
+        /// <param name="framesPerSecond">Fixed framerate of game logic</param>
+        public ServerEntityManager(byte packetHeader, byte framesPerSecond) : base(packetHeader, framesPerSecond)
+        {
+            
+        }
+    }
+    
+    public abstract class ServerEntityManager : EntityManager
     {
         public const byte ServerPlayerId = 0;
         
@@ -89,12 +115,7 @@ namespace LiteEntitySystem
         /// </summary>
         public event Action<bool> OnLagCompensation;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="packetHeader">Header byte that will be used for packets (to distinguish entity system packets)</param>
-        /// <param name="framesPerSecond">Fixed framerate of game logic</param>
-        public ServerEntityManager(byte packetHeader, byte framesPerSecond) 
+        protected ServerEntityManager(byte packetHeader, byte framesPerSecond) 
             : base(NetworkMode.Server, framesPerSecond)
         {
             InternalPlayerId = ServerPlayerId;

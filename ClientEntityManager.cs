@@ -15,11 +15,41 @@ namespace LiteEntitySystem
         public ushort StateB;
         public ushort LerpMsec;
     }
+    
+    /// <summary>
+    /// Server entity manager
+    /// </summary>
+    public sealed class ClientEntityManager<TEnum> : ClientEntityManager where TEnum : Enum
+    {
+        /// <summary>
+        /// Register new entity type that will be used in game
+        /// </summary>
+        /// <param name="id">Enum value that will describe entity class id</param>
+        /// <param name="constructor">Constructor of entity</param>
+        /// <typeparam name="TEntity">Type of entity</typeparam>
+        /// <typeparam name="TEnum">Enum used as classId</typeparam>
+        public void RegisterEntityType<TEntity>(TEnum id, EntityConstructor<TEntity> constructor)
+            where TEntity : InternalEntity
+        {
+            RegisterEntityType<TEntity, TEnum>(id, constructor);
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="localPeer">Local NetPeer</param>
+        /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
+        /// <param name="framesPerSecond">Fixed framerate of game logic</param>
+        public ClientEntityManager(NetPeer localPeer, byte headerByte, byte framesPerSecond) : base(localPeer, headerByte, framesPerSecond)
+        {
+            
+        }
+    }
 
     /// <summary>
     /// Client entity manager
     /// </summary>
-    public sealed class ClientEntityManager : EntityManager
+    public abstract class ClientEntityManager : EntityManager
     {
         /// <summary>
         /// Current interpolated server tick
@@ -91,14 +121,8 @@ namespace LiteEntitySystem
         private ushort _lerpMsec;
         private ushort _remoteCallsTick;
         private ushort _lastReceivedInputTick;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localPeer">Local NetPeer</param>
-        /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
-        /// <param name="framesPerSecond">Fixed framerate of game logic</param>
-        public ClientEntityManager(NetPeer localPeer, byte headerByte, byte framesPerSecond) : base(NetworkMode.Client, framesPerSecond)
+        
+        protected ClientEntityManager(NetPeer localPeer, byte headerByte, byte framesPerSecond) : base(NetworkMode.Client, framesPerSecond)
         {
             _localPeer = localPeer;
             OwnedEntities.OnAdded += OnOwnedAdded;

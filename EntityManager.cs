@@ -129,15 +129,8 @@ namespace LiteEntitySystem
 
         internal readonly EntityClassData[] ClassDataDict = new EntityClassData[ushort.MaxValue];
         internal byte InternalPlayerId;
-
-        /// <summary>
-        /// Register new entity type that will be used in game
-        /// </summary>
-        /// <param name="id">Enum value that will describe entity class id</param>
-        /// <param name="constructor">Constructor of entity</param>
-        /// <typeparam name="TEntity">Type of entity</typeparam>
-        /// <typeparam name="TEnum">Enum used as classId</typeparam>
-        public void RegisterEntityType<TEntity, TEnum>(TEnum id, EntityConstructor<TEntity> constructor)
+        
+        protected void RegisterEntityType<TEntity, TEnum>(TEnum id, EntityConstructor<TEntity> constructor)
             where TEntity : InternalEntity where TEnum : Enum
         {
             if (_entityEnumSize == -1)
