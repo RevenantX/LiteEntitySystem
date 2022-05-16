@@ -85,6 +85,31 @@ namespace LiteEntitySystem
                 return;
             DestroyInternal();
         }
+        
+        /// <summary>
+        /// Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
+        /// </summary>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <param name="initMethod">Method that will be called after entity constructed</param>
+        /// <returns>Created predicted local entity</returns>
+        public T AddPredictedEntity<T>(Action<T> initMethod = null) where T : EntityLogic
+        {
+            if (EntityManager.IsServer)
+            {
+                if (OwnerId == ServerEntityManager.ServerPlayerId)
+                {
+                    return ServerManager.AddEntity(initMethod);
+                }
+                else
+                {
+                    //ServerManager.GetPlayer()
+                }
+            }
+            var entity = EntityManager.AddLocalEntity<T>();
+            initMethod?.Invoke(entity);
+            ClientManager.AddPredictedInfo(entity);
+            return entity;
+        }
 
         /// <summary>
         /// Set parent entity

@@ -75,7 +75,7 @@ namespace LiteEntitySystem
     public abstract class EntityManager
     {
         /// <summary>
-        /// Maximum synchronized (without LocalOnly) entites
+        /// Maximum synchronized (without LocalOnly) entities
         /// </summary>
         public const int MaxEntityCount = 8192;
         
@@ -100,7 +100,7 @@ namespace LiteEntitySystem
         public float LerpFactor => (float)(_accumulator / DeltaTime);
         
         /// <summary>
-        /// Current update mode (can be used inside entites to separate logic for rollbacks)
+        /// Current update mode (can be used inside entities to separate logic for rollbacks)
         /// </summary>
         public UpdateMode UpdateMode { get; protected set; }
         
@@ -135,10 +135,9 @@ namespace LiteEntitySystem
         public byte PlayerId => InternalPlayerId;
         
         protected const byte PacketDiffSync = 1;
-        protected const byte PacketEntityCall = 2;
-        protected const byte PacketClientSync = 3;
-        protected const byte PacketBaselineSync = 4;
-        protected const byte PacketDiffSyncLast = 5;
+        protected const byte PacketClientSync = 2;
+        protected const byte PacketBaselineSync = 3;
+        protected const byte PacketDiffSyncLast = 4;
         protected const int MaxFieldSize = 1024;
         protected const int MaxSavedStateDiff = 6;
         internal const int MaxParts = 256;
@@ -252,7 +251,7 @@ namespace LiteEntitySystem
         {
             return id == InvalidEntityId ? null : EntitiesDict[id] as T;
         }
-        
+
         /// <summary>
         /// Get all entities with type
         /// </summary>
@@ -345,11 +344,12 @@ namespace LiteEntitySystem
             singleton = null;
             return false;
         }
-
-        protected InternalEntity AddLocalEntity(ushort classId)
+        
+        public T AddLocalEntity<T>() where T : InternalEntity
         {
+            ushort classId = EntityClassInfo<T>.ClassId;
             var entityParams = new EntityParams(classId, _localIdQueue.Count > 0 ? _localIdQueue.Dequeue() : _localIdCounter++, 0, this);
-            var entity = ClassDataDict[classId].EntityConstructor(entityParams);
+            var entity = (T)ClassDataDict[classId].EntityConstructor(entityParams);
             EntitiesCount++;
             return entity;
         }

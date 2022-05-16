@@ -72,8 +72,7 @@ namespace LiteEntitySystem
         private readonly NetPlayer[] _netPlayersArray = new NetPlayer[MaxPlayers];
         private readonly NetPlayer[] _netPlayersDict = new NetPlayer[MaxPlayers];
         private readonly NetDataReader _inputReader = new NetDataReader();
-        
-        internal readonly StateSerializer[] SavedEntityData = new StateSerializer[MaxEntityCount];
+        private readonly StateSerializer[] _savedEntityData = new StateSerializer[MaxEntityCount];
 
         private byte[] _compressionBuffer;
         private int _netPlayersCount;
@@ -92,6 +91,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="typesMap">EntityTypesMap with registered entity types</param>
         /// <param name="packetHeader">Header byte that will be used for packets (to distinguish entity system packets)</param>
         /// <param name="framesPerSecond">Fixed framerate of game logic</param>
         public ServerEntityManager(EntityTypesMap typesMap, byte packetHeader, byte framesPerSecond) 
@@ -130,7 +130,7 @@ namespace LiteEntitySystem
         /// Remove player using NetPeer.Tag (is you assigned it or used <see cref="AddPlayer"/> with assignToTag)
         /// </summary>
         /// <param name="player">player to remove</param>
-        /// <returns>true if player removed succesfully, false if player not found</returns>
+        /// <returns>true if player removed successfully, false if player not found</returns>
         public bool RemovePlayerFromPeerTag(NetPeer player)
         {
             return RemovePlayer(player.Tag as NetPlayer);
@@ -140,7 +140,7 @@ namespace LiteEntitySystem
         /// Remove player and it's owned entities
         /// </summary>
         /// <param name="player">player to remove</param>
-        /// <returns>true if player removed succesfully, false if player not found</returns>
+        /// <returns>true if player removed successfully, false if player not found</returns>
         public bool RemovePlayer(NetPlayer player)
         {
             if (player == null || _netPlayersDict[player.Id] == null)
@@ -233,7 +233,7 @@ namespace LiteEntitySystem
         }
         
         /// <summary>
-        /// Read data from NetPeer with assigne NetPlayer to NetPeer.Tag
+        /// Read data from NetPeer with assigned NetPlayer to NetPeer.Tag
         /// </summary>
         /// <param name="peer">Player that sent input</param>
         /// <param name="reader">Reader with data</param>
@@ -261,13 +261,7 @@ namespace LiteEntitySystem
                 case PacketClientSync:
                     ReadInput(player, reader);
                     break;
-                
-                case PacketEntityCall:
-                    ushort entityId = reader.GetUShort();
-                    byte packetId = reader.GetByte();
-                    //GetEntityById(entityId)?.ProcessPacket(packetId, reader);
-                    break;
-                
+
                 default:
                     Logger.LogWarning($"[SEM] Unknown packet type: {packetType}");
                     break;
@@ -309,7 +303,7 @@ namespace LiteEntitySystem
                     {
                         for (int i = 0; i <= MaxEntityId; i++)
                         {
-                            SavedEntityData[i].MakeBaseline(netPlayer.Id, Tick, packetBuffer, ref writePosition);
+                            _savedEntityData[i].MakeBaseline(netPlayer.Id, Tick, packetBuffer, ref writePosition);
                         }
 
                         Utils.ResizeOrCreate(ref _compressionBuffer, writePosition);
@@ -356,7 +350,7 @@ namespace LiteEntitySystem
 
                     for (ushort eId = 0; eId <= MaxEntityId; eId++)
                     {
-                        var diffResult = SavedEntityData[eId].MakeDiff(
+                        var diffResult = _savedEntityData[eId].MakeDiff(
                             netPlayer.Id,
                             minimalTick,
                             Tick,
@@ -413,7 +407,7 @@ namespace LiteEntitySystem
             
             if (classData.IsLocalOnly)
             {
-                entity = (T)AddLocalEntity(classData.ClassId);
+                entity = AddLocalEntity<T>();
             }
             else
             {
@@ -423,7 +417,7 @@ namespace LiteEntitySystem
                     return null;
                 }
                 ushort entityId =_entityIdQueue.Dequeue();
-                ref var stateSerializer = ref SavedEntityData[entityId];
+                ref var stateSerializer = ref _savedEntityData[entityId];
 
                 entity = (T)AddEntity(new EntityParams(
                     classData.ClassId, 
@@ -473,12 +467,12 @@ namespace LiteEntitySystem
             
             //write history
             foreach (var aliveEntity in AliveEntities)
-                SavedEntityData[aliveEntity.Id].WriteHistory(Tick);
+                _savedEntityData[aliveEntity.Id].WriteHistory(Tick);
         }
         
         internal void DestroySavedData(InternalEntity entityLogic)
         {
-            SavedEntityData[entityLogic.Id].Destroy(Tick);
+            _savedEntityData[entityLogic.Id].Destroy(Tick);
         }
         
         internal void PoolRpc(RemoteCallPacket rpcNode)
@@ -490,7 +484,7 @@ namespace LiteEntitySystem
         {
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             rpc.Init(Tick, remoteCallInfo);
-            SavedEntityData[entityId].AddRpcPacket(rpc);
+            _savedEntityData[entityId].AddRpcPacket(rpc);
         }
         
         internal unsafe void AddRemoteCall<T>(ushort entityId, T value, RemoteCall remoteCallInfo) where T : struct
@@ -499,7 +493,7 @@ namespace LiteEntitySystem
             rpc.Init(Tick, remoteCallInfo);
             fixed (byte* rawData = rpc.Data)
                 Unsafe.Copy(rawData, ref value);
-            SavedEntityData[entityId].AddRpcPacket(rpc);
+            _savedEntityData[entityId].AddRpcPacket(rpc);
         }
         
         internal unsafe void AddRemoteCall<T>(ushort entityId, T[] value, int count, RemoteCall remoteCallInfo) where T : struct
@@ -508,7 +502,7 @@ namespace LiteEntitySystem
             rpc.Init(Tick, remoteCallInfo, count);
             fixed (byte* rawData = rpc.Data, rawValue = Unsafe.As<byte[]>(value))
                 Unsafe.CopyBlock(rawData, rawValue, rpc.Size);
-            SavedEntityData[entityId].AddRpcPacket(rpc);
+            _savedEntityData[entityId].AddRpcPacket(rpc);
         }
         
         internal void AddSyncableCall(SyncableField field, MethodInfo method)
@@ -517,7 +511,7 @@ namespace LiteEntitySystem
             var remoteCallInfo = ClassDataDict[entity.ClassId].SyncableRemoteCalls[method];
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             rpc.Init(Tick, remoteCallInfo, field.FieldId);
-            SavedEntityData[field.EntityId].AddRpcPacket(rpc);
+            _savedEntityData[field.EntityId].AddRpcPacket(rpc);
         }
         
         internal unsafe void AddSyncableCall<T>(SyncableField field, T value, MethodInfo method) where T : struct
@@ -528,7 +522,7 @@ namespace LiteEntitySystem
             rpc.Init(Tick, remoteCallInfo, field.FieldId);
             fixed (byte* rawData = rpc.Data)
                 Unsafe.Copy(rawData, ref value);
-            SavedEntityData[field.EntityId].AddRpcPacket(rpc);
+            _savedEntityData[field.EntityId].AddRpcPacket(rpc);
         }
         
         internal unsafe void AddSyncableCall<T>(SyncableField field, T[] value, int count, MethodInfo method) where T : struct
@@ -539,7 +533,7 @@ namespace LiteEntitySystem
             rpc.Init(Tick, remoteCallInfo, field.FieldId, count);
             fixed (byte* rawData = rpc.Data, rawValue = Unsafe.As<byte[]>(value))
                 Unsafe.CopyBlock(rawData, rawValue, rpc.Size);
-            SavedEntityData[field.EntityId].AddRpcPacket(rpc);
+            _savedEntityData[field.EntityId].AddRpcPacket(rpc);
         }
 
         internal void EnableLagCompensation(PawnLogic pawn)
@@ -555,7 +549,7 @@ namespace LiteEntitySystem
             //Logger.Log($"compensated: {player.ServerInterpolatedTick} =====");
             foreach (var entity in AliveEntities)
             {
-                SavedEntityData[entity.Id].EnableLagCompensation(player);
+                _savedEntityData[entity.Id].EnableLagCompensation(player);
                 //entity.DebugPrint();
             }
             OnLagCompensation?.Invoke(true);
@@ -569,7 +563,7 @@ namespace LiteEntitySystem
             //Logger.Log($"restored: {Tick} =====");
             foreach (var entity in AliveEntities)
             {
-                SavedEntityData[entity.Id].DisableLagCompensation();
+                _savedEntityData[entity.Id].DisableLagCompensation();
                 //entity.DebugPrint();
             }
             OnLagCompensation?.Invoke(false);

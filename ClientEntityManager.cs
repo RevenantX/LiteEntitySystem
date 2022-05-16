@@ -91,10 +91,11 @@ namespace LiteEntitySystem
         private ushort _lerpMsec;
         private ushort _remoteCallsTick;
         private ushort _lastReceivedInputTick;
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="typesMap">EntityTypesMap with registered entity types</param>
         /// <param name="localPeer">Local NetPeer</param>
         /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
         /// <param name="framesPerSecond">Fixed framerate of game logic</param>
@@ -123,18 +124,6 @@ namespace LiteEntitySystem
             return false;
         }
 
-        /// <summary>
-        /// Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
-        /// </summary>
-        /// <typeparam name="T">Entity type</typeparam>
-        /// <returns>Created predicted local entity</returns>
-        public T AddPredictedEntity<T>() where T : EntityLogic
-        {
-            var entity = (T)AddLocalEntity(ClassDataDict[EntityClassInfo<T>.ClassId].ClassId);
-            _spawnPredictedEntities.Enqueue((Tick, entity));
-            return entity;
-        }
-        
         /// <summary>
         /// Read incoming data omitting header byte
         /// </summary>
@@ -460,6 +449,11 @@ namespace LiteEntitySystem
             }
             Utils.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
         }
+        
+        internal void AddPredictedInfo(EntityLogic e)
+        {
+            _spawnPredictedEntities.Enqueue((Tick, e));
+        }
 
         protected override unsafe void OnLogicTick()
         {
@@ -584,16 +578,6 @@ namespace LiteEntitySystem
                     }
                 }
             }
-            
-            //delete predicted
-            while (_spawnPredictedEntities.TryPeek(out var info))
-            {
-                if (Utils.SequenceDiff(ServerTick, info.Item1) >= 0)
-                {
-                    _spawnPredictedEntities.Dequeue();
-                    info.Item2.Destroy();
-                }
-            }
 
             //SetEntityIds
             for (int i = 0; i < _setEntityIdsCount; i++)
@@ -636,6 +620,20 @@ namespace LiteEntitySystem
                 ConstructEntity(_entitiesToConstruct[i]);
             }
             _entitiesToConstructCount = 0;
+            
+            //delete predicted
+            while (_spawnPredictedEntities.TryPeek(out var info))
+            {
+                if (Utils.SequenceDiff(_stateA.ProcessedTick, info.Item1) >= 0)
+                {
+                    _spawnPredictedEntities.Dequeue();
+                    info.Item2.Destroy();
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
 
         private unsafe void ReadEntityState(byte* rawData, ref int readerPosition, ushort entityInstanceId, bool fullSync)

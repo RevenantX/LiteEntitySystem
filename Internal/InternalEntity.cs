@@ -24,7 +24,7 @@ namespace LiteEntitySystem.Internal
         }
 
         /// <summary>
-        /// Called when entity manager is resetted
+        /// Called when entity manager is reset
         /// </summary>
         public virtual void Free()
         {
@@ -40,14 +40,14 @@ namespace LiteEntitySystem.Internal
         }
 
         /// <summary>
-        /// Fixed update. Called if entity has attribue <see cref="UpdateableEntity"/>
+        /// Fixed update. Called if entity has attribute <see cref="UpdateableEntity"/>
         /// </summary>
         public virtual void Update()
         {
         }
 
         /// <summary>
-        /// Called only on <see cref="ClientEntityManager.Update"/> and if entity has attribue <see cref="UpdateableEntity"/>
+        /// Called only on <see cref="ClientEntityManager.Update"/> and if entity has attribute <see cref="UpdateableEntity"/>
         /// </summary>
         public virtual void VisualUpdate()
         {
