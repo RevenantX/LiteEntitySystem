@@ -53,9 +53,9 @@ namespace LiteEntitySystem
         private readonly Queue<NetDataWriter> _inputPool = new Queue<NetDataWriter>(InputBufferSize);
         private readonly SortedSet<ServerStateData> _lerpBuffer = new SortedSet<ServerStateData>(new ServerStateComparer());
         private readonly Queue<(ushort, EntityLogic)> _spawnPredictedEntities = new Queue<(ushort, EntityLogic)>();
-        private readonly byte[][] _interpolatedInitialData = new byte[MaxEntityCount][];
-        private readonly byte[][] _interpolatePrevData = new byte[MaxEntityCount][];
-        private readonly byte[][] _predictedEntities = new byte[MaxEntityCount][];
+        private readonly byte[][] _interpolatedInitialData = new byte[ushort.MaxValue][];
+        private readonly byte[][] _interpolatePrevData = new byte[ushort.MaxValue][];
+        private readonly byte[][] _predictedEntities = new byte[ushort.MaxValue][];
 
         private ServerStateData _stateA;
         private ServerStateData _stateB;
@@ -262,7 +262,7 @@ namespace LiteEntitySystem
             if (_stateB != null)
             {
                 float fTimer = (float)(_timer/_lerpTime);
-                _lerpMsec = (ushort)(fTimer * 1000f);
+                _lerpMsec = (ushort)(fTimer * 10000f);
                 for(int i = 0; i < _stateB.InterpolatedCount; i++)
                 {
                     ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
@@ -297,6 +297,10 @@ namespace LiteEntitySystem
                     //reset entities
                     foreach (var entity in OwnedEntities)
                     {
+                        //skip local
+                        if (entity.Id >= MaxEntityCount)
+                            continue;
+                        
                         var localEntity = entity;
                         fixed (byte* latestEntityData = _predictedEntities[entity.Id])
                         {
@@ -322,6 +326,9 @@ namespace LiteEntitySystem
                         }
                         foreach (var entity in OwnedEntities)
                         {
+                            //skip local
+                            if (entity.Id >= MaxEntityCount)
+                                continue;
                             entity.Update();
                         }
                     }
@@ -330,6 +337,10 @@ namespace LiteEntitySystem
                     //update interpolated position
                     foreach (var entity in OwnedEntities)
                     {
+                        //skip local
+                        if (entity.Id >= MaxEntityCount)
+                            continue;
+                        
                         ref var classData = ref ClassDataDict[entity.ClassId];
                         var localEntity = entity;
                         byte* entityPtr = InternalEntity.GetPtr(ref localEntity);
@@ -430,29 +441,34 @@ namespace LiteEntitySystem
                 entity.VisualUpdate();
             }
         }
-        
+
         private unsafe void OnOwnedAdded(EntityLogic entity)
         {
             ref var predictedData = ref _predictedEntities[entity.Id];
             ref var classData = ref ClassDataDict[entity.ClassId];
             byte* entityPtr = InternalEntity.GetPtr(ref entity);
-            
+
             Utils.ResizeOrCreate(ref predictedData, classData.FixedFieldsSize);
-            fixed (byte* predictedPtr = predictedData)
+            Utils.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
+            Utils.ResizeOrCreate(ref _interpolatedInitialData[entity.Id], classData.InterpolatedFieldsSize);
+            
+            fixed (byte* predictedPtr = predictedData, interpDataPtr = _interpolatedInitialData[entity.Id])
             {
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
-                    var fieldInfo = classData.Fields[i];
-                    if(!fieldInfo.IsEntity)
-                        fieldInfo.GetToFixedOffset(entityPtr, predictedPtr);
+                    var field = classData.Fields[i];
+                    if (!field.IsEntity)
+                        field.GetToFixedOffset(entityPtr, predictedPtr);
+                    if (field.Interpolator != null)
+                        field.GetToFixedOffset(entityPtr, interpDataPtr);
                 }
             }
-            Utils.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
         }
-        
+
         internal void AddPredictedInfo(EntityLogic e)
         {
             _spawnPredictedEntities.Enqueue((Tick, e));
+            OwnedEntities.Add(e);
         }
 
         protected override unsafe void OnLogicTick()

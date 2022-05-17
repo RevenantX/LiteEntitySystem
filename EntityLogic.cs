@@ -96,15 +96,24 @@ namespace LiteEntitySystem
         {
             if (EntityManager.IsServer)
             {
-                if (OwnerId == ServerEntityManager.ServerPlayerId)
+                if (InternalOwnerId == ServerEntityManager.ServerPlayerId)
                 {
                     return ServerManager.AddEntity(initMethod);
                 }
-                else
+
+                var predictedEntity = ServerManager.AddEntity(initMethod);
+                var player = ServerManager.GetPlayer(InternalOwnerId);
+                int diff = Utils.SequenceDiff(player.StateBTick, player.StateATick);
+                ushort playerServerTick = (ushort)(player.StateATick + Math.Ceiling(diff * player.LerpTime));
+                while (playerServerTick != ServerManager.Tick)
                 {
-                    //ServerManager.GetPlayer()
+                    predictedEntity.Update();
+                    playerServerTick++;
                 }
+
+                return predictedEntity;
             }
+            
             var entity = EntityManager.AddLocalEntity<T>();
             initMethod?.Invoke(entity);
             ClientManager.AddPredictedInfo(entity);

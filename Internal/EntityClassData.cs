@@ -338,6 +338,8 @@ namespace LiteEntitySystem.Internal
 
         public void PrepareBaseTypes(Dictionary<Type, ushort> registeredTypeIds, ref ushort singletonCount, ref ushort filterCount)
         {
+            if (!IsCreated)
+                return;
             for (int i = 0; i < BaseIds.Length; i++)
             {
                 if (!registeredTypeIds.TryGetValue(BaseTypes[i], out BaseIds[i]))

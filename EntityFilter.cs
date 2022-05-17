@@ -73,12 +73,12 @@ namespace LiteEntitySystem
             }
             else if (entity.Id >= _dict.Length)
             {
-                Array.Resize(ref _dict, Math.Min(entity.Id * 2, EntityManager.MaxEntityCount));
+                Array.Resize(ref _dict, Math.Min(entity.Id * 2, ushort.MaxValue));
             }
 
             if (_count == _array.Length)
             {
-                Array.Resize(ref _array, Math.Min(_count * 2, EntityManager.MaxEntityCount));
+                Array.Resize(ref _array, Math.Min(_count * 2, ushort.MaxValue));
             }
 
             _array[_count] = (T)entity;

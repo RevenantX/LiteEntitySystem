@@ -432,6 +432,11 @@ namespace LiteEntitySystem
             return entity;
         }
         
+        internal NetPlayer GetPlayer(byte ownerId)
+        {
+            return _netPlayersDict[ownerId];
+        }
+        
         protected override void OnLogicTick()
         {
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
@@ -451,11 +456,11 @@ namespace LiteEntitySystem
                         var inputFrame = player.AvailableInput.Minimal();
                         ref var inputData = ref inputFrame.Input;
                         _inputReader.SetSource(inputFrame.Data, 0, inputFrame.Size);
-                        controller.ReadInput(_inputReader);
                         player.LastProcessedTick = inputFrame.Tick;
                         player.StateATick = inputData.StateA;
                         player.StateBTick = inputData.StateB;
-                        player.LerpTime = inputData.LerpMsec / 1000f;
+                        player.LerpTime = inputData.LerpMsec / 10000f;
+                        controller.ReadInput(_inputReader);
                         player.AvailableInput.Remove(inputFrame.Tick);
                         _inputPool.Enqueue(inputFrame.Data);
                     }

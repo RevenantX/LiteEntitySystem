@@ -87,7 +87,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Total entities count (including local)
         /// </summary>
-        public int EntitiesCount { get; private set; }
+        public ushort EntitiesCount { get; private set; }
         
         /// <summary>
         /// Current tick
@@ -179,7 +179,7 @@ namespace LiteEntitySystem
             foreach ((Type entType, (var classId, EntityConstructor<InternalEntity> entityConstructor)) in typesMap.RegisteredTypes)
             {
                 ClassDataDict[classId] = new EntityClassData(
-                    entType.IsSubclassOf(typeof(SingletonEntityLogic)) ? filterCount++ : singletonCount++, 
+                    entType.IsSubclassOf(typeof(SingletonEntityLogic)) ? singletonCount++ : filterCount++, 
                     entType, 
                     classId, 
                     entityConstructor);
@@ -190,8 +190,7 @@ namespace LiteEntitySystem
             for (int e = 0; e < typesMap.EntityEnumSize; e++)
             {
                 //map base ids
-                if(ClassDataDict[e].IsCreated)
-                    ClassDataDict[e].PrepareBaseTypes(_registeredTypeIds, ref singletonCount, ref filterCount);
+                ClassDataDict[e].PrepareBaseTypes(_registeredTypeIds, ref singletonCount, ref filterCount);
             }
 
             _entityFilters = new EntityFilter[filterCount];
@@ -345,12 +344,30 @@ namespace LiteEntitySystem
             return false;
         }
         
+        /// <summary>
+        /// Add local entity that will be not syncronized
+        /// </summary>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <returns>Created entity or null if entities limit is reached (65535 - <see cref="MaxEntityCount"/>)</returns>
         public T AddLocalEntity<T>() where T : InternalEntity
         {
-            ushort classId = EntityClassInfo<T>.ClassId;
+            if (_localIdCounter == 0)
+            {
+                Logger.LogError("Max local entities count reached");
+                return null;
+            }
+
+            var classId = EntityClassInfo<T>.ClassId;
             var entityParams = new EntityParams(classId, _localIdQueue.Count > 0 ? _localIdQueue.Dequeue() : _localIdCounter++, 0, this);
             var entity = (T)ClassDataDict[classId].EntityConstructor(entityParams);
             EntitiesCount++;
+
+            if (IsClient && entity is EntityLogic logic)
+            {
+                logic.InternalOwnerId = InternalPlayerId;
+            }
+            
+            ConstructEntity(entity);
             return entity;
         }
 
