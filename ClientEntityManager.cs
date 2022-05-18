@@ -262,7 +262,9 @@ namespace LiteEntitySystem
             if (_stateB != null)
             {
                 float fTimer = (float)(_timer/_lerpTime);
-                _lerpMsec = (ushort)(fTimer * 10000f);
+                if (fTimer > 1f)
+                    fTimer = 1f;
+                _lerpMsec = (ushort)(fTimer * 65535f);
                 for(int i = 0; i < _stateB.InterpolatedCount; i++)
                 {
                     ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
@@ -349,6 +351,20 @@ namespace LiteEntitySystem
                         {
                             fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id])
                                 classData.Fields[i].GetToFixedOffset(entityPtr, currentDataPtr);
+                        }
+                    }
+                    
+                    //delete predicted
+                    while (_spawnPredictedEntities.TryPeek(out var info))
+                    {
+                        if (Utils.SequenceDiff(_stateA.ProcessedTick, info.Item1) >= 0)
+                        {
+                            _spawnPredictedEntities.Dequeue();
+                            info.Item2.DestroyInternal();
+                        }
+                        else
+                        {
+                            break;
                         }
                     }
                 }
@@ -636,20 +652,6 @@ namespace LiteEntitySystem
                 ConstructEntity(_entitiesToConstruct[i]);
             }
             _entitiesToConstructCount = 0;
-            
-            //delete predicted
-            while (_spawnPredictedEntities.TryPeek(out var info))
-            {
-                if (Utils.SequenceDiff(_stateA.ProcessedTick, info.Item1) >= 0)
-                {
-                    _spawnPredictedEntities.Dequeue();
-                    info.Item2.Destroy();
-                }
-                else
-                {
-                    break;
-                }
-            }
         }
 
         private unsafe void ReadEntityState(byte* rawData, ref int readerPosition, ushort entityInstanceId, bool fullSync)

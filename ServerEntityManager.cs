@@ -459,7 +459,7 @@ namespace LiteEntitySystem
                         player.LastProcessedTick = inputFrame.Tick;
                         player.StateATick = inputData.StateA;
                         player.StateBTick = inputData.StateB;
-                        player.LerpTime = inputData.LerpMsec / 10000f;
+                        player.LerpTime = inputData.LerpMsec / 65535f;
                         controller.ReadInput(_inputReader);
                         player.AvailableInput.Remove(inputFrame.Tick);
                         _inputPool.Enqueue(inputFrame.Data);
