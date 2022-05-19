@@ -102,7 +102,7 @@ namespace LiteEntitySystem.Internal
             Offset = 0;
         }
 
-        public void Preload(ClientEntityManager entityManager)
+        public void Preload(InternalEntity[] entityDict)
         {
             int bytesRead = 0;
             //preload some data
@@ -134,13 +134,13 @@ namespace LiteEntitySystem.Internal
                 else
                 {
                     //it should be here at preload
-                    var entity = entityManager.EntitiesDict[preloadData.EntityId];
+                    var entity = entityDict[preloadData.EntityId];
                     if (entity == null)
                     {
                         Logger.LogError($"Preload entity: {preloadData.EntityId} == null");
                         return;
                     }
-                    ref var classData = ref entityManager.ClassDataDict[entity.ClassId];
+                    ref var classData = ref entity.GetClassData();
                     var fields = classData.Fields;
                     preloadData.EntityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
                     preloadData.DataOffset = 
@@ -150,23 +150,22 @@ namespace LiteEntitySystem.Internal
 
                     int stateReaderOffset = preloadData.DataOffset;
                     //preload interpolation info
-                    if (!entity.IsLocalControlled && classData.InterpolatedCount > 0)
+                    if (entity.IsServerControlled && classData.InterpolatedCount > 0)
                     {
                         Utils.ResizeIfFull(ref InterpolatedFields, InterpolatedCount);
                         Utils.ResizeOrCreate(ref preloadData.InterpolatedCaches, classData.InterpolatedCount);
                         InterpolatedFields[InterpolatedCount++] = PreloadDataCount - 1;
                     }
-                    for (int fieldIndex = 0; fieldIndex < classData.FieldsCount; fieldIndex++)
+                    for (int i = 0; i < classData.FieldsCount; i++)
                     {
-                        if (!Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, fieldIndex))
+                        if (!Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, i))
                             continue;
-                        var field = fields[fieldIndex];
-                        if (!entity.IsLocalControlled && field.Interpolator != null)
+                        var field = fields[i];
+                        if (entity.IsServerControlled && field.Interpolator != null)
                         {
                             preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
                             (
-                                fieldIndex,
-                                stateReaderOffset
+                                i, stateReaderOffset
                             );
                         }
                         stateReaderOffset += field.IntSize;

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using K4os.Compression.LZ4;
 using LiteEntitySystem.Internal;
 using LiteNetLib;
@@ -13,6 +12,7 @@ namespace LiteEntitySystem
     {
         public ushort StateA;
         public ushort StateB;
+        public ushort SimulatedServerTick;
         public ushort LerpMsec;
     }
 
@@ -43,7 +43,7 @@ namespace LiteEntitySystem
 
         private const int InterpolateBufferSize = 10;
         private const int InputBufferSize = 128;
-        private static readonly int InputHeaderSize = Marshal.SizeOf<InputPacketHeader>();
+        private static readonly int InputHeaderSize = Unsafe.SizeOf<InputPacketHeader>();
         
         private readonly NetPeer _localPeer;
         private readonly SortedList<ushort, ServerStateData> _receivedStates = new SortedList<ushort, ServerStateData>(new SequenceComparer());
@@ -226,6 +226,32 @@ namespace LiteEntitySystem
             }
         }
 
+        private void PreloadNextState()
+        {
+            if (_stateB != null || _lerpBuffer.Count < 8) 
+                return;
+            
+            _stateB = _lerpBuffer.Min;
+            _lerpBuffer.Remove(_stateB);
+            _lerpTime = Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTime;
+            _stateB.Preload(EntitiesDict);
+
+            //remove processed inputs
+            while (_inputCommands.Count > 0)
+            {
+                if (Utils.SequenceDiff(_stateB.ProcessedTick, (ushort)(Tick - _inputCommands.Count + 1)) >= 0)
+                {
+                    var inputWriter = _inputCommands.Dequeue();
+                    inputWriter.Reset();
+                    _inputPool.Enqueue(inputWriter);
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
         public override unsafe void Update()
         {
             if (!_isSyncReceived)
@@ -234,57 +260,10 @@ namespace LiteEntitySystem
             //logic update
             base.Update();
 
-            //preload next state
-            if (_stateB == null && _lerpBuffer.Count > 0)
-            {
-                _stateB = _lerpBuffer.Min;
-                _lerpBuffer.Remove(_stateB);
-                _lerpTime = Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTime * (1.04f - 0.02f * _lerpBuffer.Count);
-                _stateB.Preload(this);
-
-                //remove processed inputs
-                while (_inputCommands.Count > 0)
-                {
-                    if (Utils.SequenceDiff(_stateB.ProcessedTick, (ushort)(Tick - _inputCommands.Count + 1)) >= 0)
-                    {
-                        var inputWriter = _inputCommands.Dequeue();
-                        inputWriter.Reset();
-                        _inputPool.Enqueue(inputWriter);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
+            PreloadNextState();
             
-            //remote interpolation
             if (_stateB != null)
             {
-                float fTimer = (float)(_timer/_lerpTime);
-                if (fTimer > 1f)
-                    fTimer = 1f;
-                _lerpMsec = (ushort)(fTimer * 65535f);
-                for(int i = 0; i < _stateB.InterpolatedCount; i++)
-                {
-                    ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
-                    var entity = EntitiesDict[preloadData.EntityId];
-                    var fields = ClassDataDict[entity.ClassId].Fields;
-                    byte* entityPtr = InternalEntity.GetPtr(ref entity);
-                    fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr = _stateB.Data)
-                    {
-                        for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
-                        {
-                            var interpolatedCache = preloadData.InterpolatedCaches[j];
-                            var field = fields[interpolatedCache.Field];
-                            field.Interpolator(
-                                initialDataPtr + field.FixedOffset,
-                                nextDataPtr + interpolatedCache.StateReaderOffset,
-                                entityPtr + fields[interpolatedCache.Field].FieldOffset,
-                                fTimer);
-                        }
-                    }
-                }
                 _timer += CurrentDelta;
                 if (_timer >= _lerpTime)
                 {
@@ -296,7 +275,7 @@ namespace LiteEntitySystem
                     
                     _timer -= _lerpTime;
                     
-                    //reset entities
+                    //reset owned entities
                     foreach (var entity in OwnedEntities)
                     {
                         //skip local
@@ -306,7 +285,7 @@ namespace LiteEntitySystem
                         var localEntity = entity;
                         fixed (byte* latestEntityData = _predictedEntities[entity.Id])
                         {
-                            ref var classData = ref ClassDataDict[entity.ClassId];
+                            ref var classData = ref entity.GetClassData();
                             byte* entityPtr = InternalEntity.GetPtr(ref localEntity);
                             for (int i = 0; i < classData.FieldsCount; i++)
                             {
@@ -316,6 +295,7 @@ namespace LiteEntitySystem
                             }
                         }
                     }
+                    
                     //reapply input
                     UpdateMode = UpdateMode.PredictionRollback;
                     foreach (var inputCommand in _inputCommands)
@@ -343,7 +323,7 @@ namespace LiteEntitySystem
                         if (entity.Id >= MaxEntityCount)
                             continue;
                         
-                        ref var classData = ref ClassDataDict[entity.ClassId];
+                        ref var classData = ref entity.GetClassData();
                         var localEntity = entity;
                         byte* entityPtr = InternalEntity.GetPtr(ref localEntity);
                         
@@ -368,6 +348,31 @@ namespace LiteEntitySystem
                         }
                     }
                 }
+                else //remote interpolation
+                {
+                    float fTimer = (float)(_timer/_lerpTime);
+                    _lerpMsec = (ushort)(fTimer * 65535f);
+                    for(int i = 0; i < _stateB.InterpolatedCount; i++)
+                    {
+                        ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
+                        var entity = EntitiesDict[preloadData.EntityId];
+                        var fields = entity.GetClassData().Fields;
+                        byte* entityPtr = InternalEntity.GetPtr(ref entity);
+                        fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr = _stateB.Data)
+                        {
+                            for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
+                            {
+                                var interpolatedCache = preloadData.InterpolatedCaches[j];
+                                var field = fields[interpolatedCache.Field];
+                                field.Interpolator(
+                                    initialDataPtr + field.FixedOffset,
+                                    nextDataPtr + interpolatedCache.StateReaderOffset,
+                                    entityPtr + field.FieldOffset,
+                                    fTimer);
+                            }
+                        }
+                    }
+                }
             }
 
             //local interpolation
@@ -375,7 +380,7 @@ namespace LiteEntitySystem
             foreach (var entity in OwnedEntities)
             {
                 var entityLocal = entity;
-                ref var classData = ref ClassDataDict[entity.ClassId];
+                ref var classData = ref entity.GetClassData();
                 byte* entityPtr = InternalEntity.GetPtr(ref entityLocal);
                 fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
                        prevDataPtr = _interpolatePrevData[entity.Id])
@@ -460,7 +465,7 @@ namespace LiteEntitySystem
 
         private unsafe void OnOwnedAdded(EntityLogic entity)
         {
-            ref var predictedData = ref _predictedEntities[entity.Id];
+            ref byte[] predictedData = ref _predictedEntities[entity.Id];
             ref var classData = ref ClassDataDict[entity.ClassId];
             byte* entityPtr = InternalEntity.GetPtr(ref entity);
 
@@ -519,11 +524,12 @@ namespace LiteEntitySystem
             if (_inputCommands.Count > InputBufferSize)
                 _inputCommands.Dequeue();
             var inputWriter = _inputPool.Count > 0 ? _inputPool.Dequeue() : new NetDataWriter(true, InputHeaderSize);
-            InputPacketHeader inputPacketHeader = new InputPacketHeader
+            var inputPacketHeader = new InputPacketHeader
             {
                 StateA   = _stateA.Tick,
                 StateB   = _stateB?.Tick ?? _stateA.Tick,
-                LerpMsec = _lerpMsec
+                LerpMsec = _lerpMsec,
+                SimulatedServerTick = ServerTick
             };
             fixed(void* writerData = inputWriter.Data)
                 Unsafe.Copy(writerData, ref inputPacketHeader);

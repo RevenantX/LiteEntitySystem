@@ -16,6 +16,12 @@ namespace LiteEntitySystem.Internal
         public ServerEntityManager ServerManager => (ServerEntityManager)EntityManager;
 
         internal abstract bool IsControlledBy(byte playerId);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal ref EntityClassData GetClassData()
+        {
+            return ref EntityManager.ClassDataDict[ClassId];
+        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static unsafe byte* GetPtr<T>(ref T entity) where T : InternalEntity

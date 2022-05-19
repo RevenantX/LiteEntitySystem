@@ -27,6 +27,7 @@ namespace LiteEntitySystem
         internal ushort LastReceivedState;
         internal ushort StateATick;
         internal ushort StateBTick;
+        internal ushort SimulatedServerTick;
         internal float LerpTime;
         internal bool IsFirstStateReceived;
         internal bool IsNew;
@@ -455,11 +456,14 @@ namespace LiteEntitySystem
             
                         var inputFrame = player.AvailableInput.Minimal();
                         ref var inputData = ref inputFrame.Input;
-                        _inputReader.SetSource(inputFrame.Data, 0, inputFrame.Size);
+                        
                         player.LastProcessedTick = inputFrame.Tick;
                         player.StateATick = inputData.StateA;
                         player.StateBTick = inputData.StateB;
                         player.LerpTime = inputData.LerpMsec / 65535f;
+                        player.SimulatedServerTick = inputData.SimulatedServerTick;
+                        
+                        _inputReader.SetSource(inputFrame.Data, 0, inputFrame.Size);
                         controller.ReadInput(_inputReader);
                         player.AvailableInput.Remove(inputFrame.Tick);
                         _inputPool.Enqueue(inputFrame.Data);
@@ -580,7 +584,7 @@ namespace LiteEntitySystem
 
             while (reader.AvailableBytes >= 8)
             {
-                InputBuffer inputBuffer = new InputBuffer
+                var inputBuffer = new InputBuffer
                 {
                     Size = reader.GetUShort(),
                     Tick = clientTick
@@ -593,9 +597,11 @@ namespace LiteEntitySystem
                 clientTick++;
                 
                 ref var input = ref inputBuffer.Input;
-                input.StateA = reader.GetUShort();
-                input.StateB = reader.GetUShort();
-                input.LerpMsec = reader.GetUShort();
+                fixed (byte* rawData = reader.RawData)
+                {
+                    Unsafe.Copy(ref input, rawData + reader.Position);
+                }
+                reader.SkipBytes(Unsafe.SizeOf<InputPacketHeader>());
 
                 if (Utils.SequenceDiff(input.StateB, player.LastReceivedState) > 0)
                     player.LastReceivedState = input.StateB;
