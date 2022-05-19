@@ -228,12 +228,12 @@ namespace LiteEntitySystem
 
         private void PreloadNextState()
         {
-            if (_stateB != null || _lerpBuffer.Count < 8) 
+            if (_stateB != null || _lerpBuffer.Count == 0) 
                 return;
             
             _stateB = _lerpBuffer.Min;
             _lerpBuffer.Remove(_stateB);
-            _lerpTime = Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTime;
+            _lerpTime = Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTime * (1.04f - _lerpBuffer.Count * 0.02f);
             _stateB.Preload(EntitiesDict);
 
             //remove processed inputs
@@ -252,6 +252,122 @@ namespace LiteEntitySystem
             }
         }
 
+        private unsafe void ProcessNextState()
+        {
+            if (_stateB == null)
+                return;
+            
+            _timer += CurrentDelta;
+            if (_timer >= _lerpTime)
+            {
+                _statesPool.Enqueue(_stateA);
+                _stateA = _stateB;
+                _stateB = null;
+
+                ReadEntityStates();
+                
+                _timer -= _lerpTime;
+                
+                //reset owned entities
+                foreach (var entity in OwnedEntities)
+                {
+                    //skip local
+                    if (entity.Id >= MaxEntityCount)
+                        continue;
+                    
+                    var localEntity = entity;
+                    fixed (byte* latestEntityData = _predictedEntities[entity.Id])
+                    {
+                        ref var classData = ref entity.GetClassData();
+                        byte* entityPtr = InternalEntity.GetPtr(ref localEntity);
+                        for (int i = 0; i < classData.FieldsCount; i++)
+                        {
+                            ref var field = ref classData.Fields[i];
+                            if (!field.IsEntity)
+                                field.SetFromFixedOffset(entityPtr, latestEntityData);
+                        }
+                    }
+                }
+                
+                //reapply input
+                UpdateMode = UpdateMode.PredictionRollback;
+                foreach (var inputCommand in _inputCommands)
+                {
+                    //reapply input data
+                    _inputReader.SetSource(inputCommand.Data, InputHeaderSize, inputCommand.Length);
+                    foreach(var controller in GetControllers<HumanControllerLogic>())
+                    {
+                        controller.ReadInput(_inputReader);
+                    }
+                    foreach (var entity in OwnedEntities)
+                    {
+                        //skip local
+                        if (entity.Id >= MaxEntityCount)
+                            continue;
+                        entity.Update();
+                    }
+                }
+                UpdateMode = UpdateMode.Normal;
+                
+                //update interpolated position
+                foreach (var entity in OwnedEntities)
+                {
+                    //skip local
+                    if (entity.Id >= MaxEntityCount)
+                        continue;
+                    
+                    ref var classData = ref entity.GetClassData();
+                    var localEntity = entity;
+                    byte* entityPtr = InternalEntity.GetPtr(ref localEntity);
+                    
+                    for(int i = 0; i < classData.InterpolatedCount; i++)
+                    {
+                        fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id])
+                            classData.Fields[i].GetToFixedOffset(entityPtr, currentDataPtr);
+                    }
+                }
+                
+                //delete predicted
+                while (_spawnPredictedEntities.TryPeek(out var info))
+                {
+                    if (Utils.SequenceDiff(_stateA.ProcessedTick, info.Item1) >= 0)
+                    {
+                        _spawnPredictedEntities.Dequeue();
+                        info.Item2.DestroyInternal();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            else //remote interpolation
+            {
+                float fTimer = (float)(_timer/_lerpTime);
+                _lerpMsec = (ushort)(fTimer * 65535f);
+                for(int i = 0; i < _stateB.InterpolatedCount; i++)
+                {
+                    ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
+                    var entity = EntitiesDict[preloadData.EntityId];
+                    var fields = entity.GetClassData().Fields;
+                    byte* entityPtr = InternalEntity.GetPtr(ref entity);
+                    fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr = _stateB.Data)
+                    {
+                        for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
+                        {
+                            var interpolatedCache = preloadData.InterpolatedCaches[j];
+                            var field = fields[interpolatedCache.Field];
+                            field.Interpolator(
+                                initialDataPtr + field.FixedOffset,
+                                nextDataPtr + interpolatedCache.StateReaderOffset,
+                                entityPtr + field.FieldOffset,
+                                fTimer);
+                        }
+                    }
+                }
+            }
+        }
+
         public override unsafe void Update()
         {
             if (!_isSyncReceived)
@@ -259,121 +375,9 @@ namespace LiteEntitySystem
             
             //logic update
             base.Update();
-
-            PreloadNextState();
             
-            if (_stateB != null)
-            {
-                _timer += CurrentDelta;
-                if (_timer >= _lerpTime)
-                {
-                    _statesPool.Enqueue(_stateA);
-                    _stateA = _stateB;
-                    _stateB = null;
-
-                    ReadEntityStates();
-                    
-                    _timer -= _lerpTime;
-                    
-                    //reset owned entities
-                    foreach (var entity in OwnedEntities)
-                    {
-                        //skip local
-                        if (entity.Id >= MaxEntityCount)
-                            continue;
-                        
-                        var localEntity = entity;
-                        fixed (byte* latestEntityData = _predictedEntities[entity.Id])
-                        {
-                            ref var classData = ref entity.GetClassData();
-                            byte* entityPtr = InternalEntity.GetPtr(ref localEntity);
-                            for (int i = 0; i < classData.FieldsCount; i++)
-                            {
-                                ref var field = ref classData.Fields[i];
-                                if (!field.IsEntity)
-                                    field.SetFromFixedOffset(entityPtr, latestEntityData);
-                            }
-                        }
-                    }
-                    
-                    //reapply input
-                    UpdateMode = UpdateMode.PredictionRollback;
-                    foreach (var inputCommand in _inputCommands)
-                    {
-                        //reapply input data
-                        _inputReader.SetSource(inputCommand.Data, InputHeaderSize, inputCommand.Length);
-                        foreach(var controller in GetControllers<HumanControllerLogic>())
-                        {
-                            controller.ReadInput(_inputReader);
-                        }
-                        foreach (var entity in OwnedEntities)
-                        {
-                            //skip local
-                            if (entity.Id >= MaxEntityCount)
-                                continue;
-                            entity.Update();
-                        }
-                    }
-                    UpdateMode = UpdateMode.Normal;
-                    
-                    //update interpolated position
-                    foreach (var entity in OwnedEntities)
-                    {
-                        //skip local
-                        if (entity.Id >= MaxEntityCount)
-                            continue;
-                        
-                        ref var classData = ref entity.GetClassData();
-                        var localEntity = entity;
-                        byte* entityPtr = InternalEntity.GetPtr(ref localEntity);
-                        
-                        for(int i = 0; i < classData.InterpolatedCount; i++)
-                        {
-                            fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id])
-                                classData.Fields[i].GetToFixedOffset(entityPtr, currentDataPtr);
-                        }
-                    }
-                    
-                    //delete predicted
-                    while (_spawnPredictedEntities.TryPeek(out var info))
-                    {
-                        if (Utils.SequenceDiff(_stateA.ProcessedTick, info.Item1) >= 0)
-                        {
-                            _spawnPredictedEntities.Dequeue();
-                            info.Item2.DestroyInternal();
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                }
-                else //remote interpolation
-                {
-                    float fTimer = (float)(_timer/_lerpTime);
-                    _lerpMsec = (ushort)(fTimer * 65535f);
-                    for(int i = 0; i < _stateB.InterpolatedCount; i++)
-                    {
-                        ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
-                        var entity = EntitiesDict[preloadData.EntityId];
-                        var fields = entity.GetClassData().Fields;
-                        byte* entityPtr = InternalEntity.GetPtr(ref entity);
-                        fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr = _stateB.Data)
-                        {
-                            for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
-                            {
-                                var interpolatedCache = preloadData.InterpolatedCaches[j];
-                                var field = fields[interpolatedCache.Field];
-                                field.Interpolator(
-                                    initialDataPtr + field.FixedOffset,
-                                    nextDataPtr + interpolatedCache.StateReaderOffset,
-                                    entityPtr + field.FieldOffset,
-                                    fTimer);
-                            }
-                        }
-                    }
-                }
-            }
+            PreloadNextState();
+            ProcessNextState();
 
             //local interpolation
             float localLerpT = LerpFactor;

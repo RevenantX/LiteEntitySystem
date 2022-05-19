@@ -15,7 +15,7 @@ namespace LiteEntitySystem.Internal
     internal sealed class EntitySystemBuildProcessor : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
         private static readonly string GeneratedFilePath = Path.Combine(Application.dataPath, "LES_IL2CPP_AOT.cs");
-        private static readonly string GeneratedMetaFilePath = Path.Combine(Application.dataPath, "LES_IL2CPP_AOT.meta");
+        private static readonly string GeneratedMetaFilePath = Path.Combine(Application.dataPath, "LES_IL2CPP_AOT.cs.meta");
         
         private static readonly Type EntityLogicType = typeof(InternalEntity);
         private const BindingFlags BindFlags = BindingFlags.Instance | BindingFlags.Public |

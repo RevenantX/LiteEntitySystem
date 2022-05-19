@@ -112,8 +112,7 @@ namespace LiteEntitySystem
 
                 return predictedEntity;
             }
-
-            return null;
+            
             var entity = EntityManager.AddLocalEntity<T>();
             initMethod?.Invoke(entity);
             ClientManager.AddPredictedInfo(entity);

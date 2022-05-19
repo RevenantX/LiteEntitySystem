@@ -113,7 +113,8 @@ namespace LiteEntitySystem.Internal
                 Utils.ResizeIfFull(ref PreloadDataArray, PreloadDataCount);
                 ref var preloadData = ref PreloadDataArray[PreloadDataCount++];
                 ushort fullSyncAndTotalSize = BitConverter.ToUInt16(Data, bytesRead);
-                
+
+                bool fullSync = (fullSyncAndTotalSize & 1) == 1;
                 preloadData.TotalSize = (ushort)(fullSyncAndTotalSize >> 1);
                 preloadData.EntityId = BitConverter.ToUInt16(Data, bytesRead + 2);
                 preloadData.InterpolatedCachesCount = 0;
@@ -126,7 +127,8 @@ namespace LiteEntitySystem.Internal
                     return;
                 }
 
-                if ((fullSyncAndTotalSize & 1) == 1)
+                InternalEntity entity = entityDict[preloadData.EntityId];
+                if (fullSync)
                 {
                     preloadData.EntityFieldsOffset = -1;
                     preloadData.DataOffset = initialReaderPosition + 4;
@@ -134,21 +136,30 @@ namespace LiteEntitySystem.Internal
                 else
                 {
                     //it should be here at preload
-                    var entity = entityDict[preloadData.EntityId];
+                    entity = entityDict[preloadData.EntityId];
                     if (entity == null)
                     {
                         Logger.LogError($"Preload entity: {preloadData.EntityId} == null");
                         return;
                     }
+                    
+                    preloadData.EntityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
+                    preloadData.DataOffset =
+                        initialReaderPosition +
+                        StateSerializer.DiffHeaderSize +
+                        entity.GetClassData().FieldsFlagsSize;
+                }
+
+                if (entity != null)
+                {
                     ref var classData = ref entity.GetClassData();
                     var fields = classData.Fields;
-                    preloadData.EntityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
-                    preloadData.DataOffset = 
-                        initialReaderPosition + 
-                        StateSerializer.DiffHeaderSize + 
-                        classData.FieldsFlagsSize;
-
+                    
                     int stateReaderOffset = preloadData.DataOffset;
+                    if (fullSync)
+                        //version(byte) + classId(ushort)
+                        stateReaderOffset += 3;
+                    
                     //preload interpolation info
                     if (entity.IsServerControlled && classData.InterpolatedCount > 0)
                     {
@@ -158,7 +169,7 @@ namespace LiteEntitySystem.Internal
                     }
                     for (int i = 0; i < classData.FieldsCount; i++)
                     {
-                        if (!Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, i))
+                        if (!fullSync && !Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, i))
                             continue;
                         var field = fields[i];
                         if (entity.IsServerControlled && field.Interpolator != null)
