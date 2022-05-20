@@ -143,7 +143,8 @@ namespace LiteEntitySystem
         internal const int MaxParts = 256;
         private const int MaxTicksPerUpdate = 5;
 
-        protected double CurrentDelta { get; private set; }
+        public double VisualDeltaTime { get; private set; }
+        
         protected int MaxEntityId = -1; //current maximum id
         
         protected readonly EntityFilter<InternalEntity> AliveEntities = new EntityFilter<InternalEntity>();
@@ -212,7 +213,7 @@ namespace LiteEntitySystem
             EntitiesCount = 0;
 
             Tick = 0;
-            CurrentDelta = 0.0;
+            VisualDeltaTime = 0.0;
             _accumulator = 0.0;
             _lastTime = 0;
             InternalPlayerId = 0;
@@ -349,7 +350,7 @@ namespace LiteEntitySystem
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Created entity or null if entities limit is reached (65535 - <see cref="MaxEntityCount"/>)</returns>
-        public T AddLocalEntity<T>() where T : InternalEntity
+        public T AddLocalEntity<T>(Action<T> initMethod = null) where T : InternalEntity
         {
             if (_localIdCounter == 0)
             {
@@ -366,7 +367,7 @@ namespace LiteEntitySystem
             {
                 logic.InternalOwnerId = InternalPlayerId;
             }
-            
+            initMethod?.Invoke(entity);
             ConstructEntity(entity);
             return entity;
         }
@@ -384,24 +385,24 @@ namespace LiteEntitySystem
             return entity;
         }
 
-        protected void ConstructEntity(InternalEntity entity)
+        protected void ConstructEntity(InternalEntity e)
         {
-            entity.OnConstructed();
-            ref var classData = ref ClassDataDict[entity.ClassId];
+            e.OnConstructed();
+            ref var classData = ref ClassDataDict[e.ClassId];
             if (classData.IsSingleton)
             {
-                _singletonEntities[classData.FilterId] = (SingletonEntityLogic)entity;
+                _singletonEntities[classData.FilterId] = (SingletonEntityLogic)e;
                 foreach (int baseId in classData.BaseIds)
-                    _singletonEntities[baseId] = (SingletonEntityLogic)entity;
+                    _singletonEntities[baseId] = (SingletonEntityLogic)e;
             }
             else
             {
-                _entityFilters[classData.FilterId]?.Add(entity);
+                _entityFilters[classData.FilterId]?.Add(e);
                 foreach (int baseId in classData.BaseIds)
-                    _entityFilters[baseId]?.Add(entity);
+                    _entityFilters[baseId]?.Add(e);
             }
-            if (classData.IsUpdateable && (IsServer || (IsClient && (classData.IsLocalOnly || classData.UpdateOnClient))))
-                AliveEntities.Add(entity);
+            if (classData.IsUpdateable && (IsServer || e.IsLocal || (IsClient && classData.UpdateOnClient)))
+                AliveEntities.Add(e);
         }
 
         internal void RemoveEntity(InternalEntity e)
@@ -410,7 +411,7 @@ namespace LiteEntitySystem
             _entityFilters[classData.FilterId]?.Remove(e);
             foreach (int baseId in classData.BaseIds)
                 _entityFilters[baseId]?.Remove(e);
-            if (classData.IsUpdateable && (IsServer || (IsClient && (classData.IsLocalOnly || classData.UpdateOnClient))))
+            if (classData.IsUpdateable && (IsServer || e.IsLocal || (IsClient && classData.UpdateOnClient)))
                 AliveEntities.Remove(e);
             if (classData.IsLocalOnly)
                 _localIdQueue.Enqueue(e.Id);
@@ -429,8 +430,8 @@ namespace LiteEntitySystem
                 _stopwatch.Start();
             
             long elapsedTicks = _stopwatch.ElapsedTicks;
-            CurrentDelta = (elapsedTicks - _lastTime) / _stopwatchFrequency;
-            _accumulator += CurrentDelta;
+            VisualDeltaTime = (elapsedTicks - _lastTime) / _stopwatchFrequency;
+            _accumulator += VisualDeltaTime;
             _lastTime = elapsedTicks;
 
             int updates = 0;

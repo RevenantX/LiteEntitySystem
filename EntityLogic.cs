@@ -113,8 +113,7 @@ namespace LiteEntitySystem
                 return predictedEntity;
             }
             
-            var entity = EntityManager.AddLocalEntity<T>();
-            initMethod?.Invoke(entity);
+            var entity = EntityManager.AddLocalEntity(initMethod);
             ClientManager.AddPredictedInfo(entity);
             return entity;
         }
@@ -174,9 +173,9 @@ namespace LiteEntitySystem
             OnDestroy();
             EntityManager.RemoveEntity(this);
             EntityManager.GetEntityByIdSafe<EntityLogic>(_parentId)?.Childs.Remove(this);
-            if (EntityManager.IsClient && IsLocalControlled)
+            if (EntityManager.IsClient && IsLocalControlled && !IsLocal)
             {
-                ClientManager.OwnedEntities.Remove(this);
+                ClientManager.RemoveOwned(this);
             }
             else if (EntityManager.IsServer)
             {
@@ -188,11 +187,10 @@ namespace LiteEntitySystem
         
         private void OnOwnerChange(byte prevOwner)
         {
-            var ownedEntities = ClientManager.OwnedEntities;
-            if(IsLocalControlled)
-                ownedEntities.Add(this);
-            else if(prevOwner == EntityManager.InternalPlayerId)
-                ownedEntities.Remove(this);
+            if(IsLocalControlled && !IsLocal)
+                ClientManager.AddOwned(this);
+            else if(prevOwner == EntityManager.InternalPlayerId && !IsLocal)
+                ClientManager.RemoveOwned(this);
         }
 
         private void OnDestroyChange(bool prevValue)

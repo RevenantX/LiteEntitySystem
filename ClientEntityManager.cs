@@ -87,7 +87,7 @@ namespace LiteEntitySystem
         private readonly byte[] _tempData = new byte[MaxFieldSize];
         private readonly byte[] _sendBuffer = new byte[NetConstants.MaxPacketSize];
         
-        internal readonly EntityFilter<EntityLogic> OwnedEntities = new EntityFilter<EntityLogic>();
+        private readonly EntityFilter<EntityLogic> _ownedEntities = new EntityFilter<EntityLogic>();
         private ushort _lerpMsec;
         private ushort _remoteCallsTick;
         private ushort _lastReceivedInputTick;
@@ -102,9 +102,9 @@ namespace LiteEntitySystem
         public ClientEntityManager(EntityTypesMap typesMap, NetPeer localPeer, byte headerByte, byte framesPerSecond) : base(typesMap, NetworkMode.Client, framesPerSecond)
         {
             _localPeer = localPeer;
-            OwnedEntities.OnAdded += OnOwnedAdded;
             _sendBuffer[0] = headerByte;
             _sendBuffer[1] = PacketClientSync;
+            AliveEntities.OnAdded += InitInterpolation;
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace LiteEntitySystem
             if (_stateB == null)
                 return;
             
-            _timer += CurrentDelta;
+            _timer += VisualDeltaTime;
             if (_timer >= _lerpTime)
             {
                 _statesPool.Enqueue(_stateA);
@@ -269,12 +269,8 @@ namespace LiteEntitySystem
                 _timer -= _lerpTime;
                 
                 //reset owned entities
-                foreach (var entity in OwnedEntities)
+                foreach (var entity in _ownedEntities)
                 {
-                    //skip local
-                    if (entity.Id >= MaxEntityCount)
-                        continue;
-                    
                     var localEntity = entity;
                     fixed (byte* latestEntityData = _predictedEntities[entity.Id])
                     {
@@ -299,23 +295,16 @@ namespace LiteEntitySystem
                     {
                         controller.ReadInput(_inputReader);
                     }
-                    foreach (var entity in OwnedEntities)
+                    foreach (var entity in _ownedEntities)
                     {
-                        //skip local
-                        if (entity.Id >= MaxEntityCount)
-                            continue;
                         entity.Update();
                     }
                 }
                 UpdateMode = UpdateMode.Normal;
                 
                 //update interpolated position
-                foreach (var entity in OwnedEntities)
+                foreach (var entity in _ownedEntities)
                 {
-                    //skip local
-                    if (entity.Id >= MaxEntityCount)
-                        continue;
-                    
                     ref var classData = ref entity.GetClassData();
                     var localEntity = entity;
                     byte* entityPtr = InternalEntity.GetPtr(ref localEntity);
@@ -381,8 +370,11 @@ namespace LiteEntitySystem
 
             //local interpolation
             float localLerpT = LerpFactor;
-            foreach (var entity in OwnedEntities)
+            foreach (var entity in AliveEntities)
             {
+                if (!entity.IsLocalControlled && !entity.IsLocal)
+                    continue;
+                
                 var entityLocal = entity;
                 ref var classData = ref entity.GetClassData();
                 byte* entityPtr = InternalEntity.GetPtr(ref entityLocal);
@@ -455,11 +447,6 @@ namespace LiteEntitySystem
             {
                 entity.VisualUpdate();
             }
-            //owned
-            foreach (var entity in OwnedEntities)
-            {
-                entity.VisualUpdate();
-            }
             //controllers
             foreach (var entity in GetControllers<HumanControllerLogic>())
             {
@@ -467,13 +454,20 @@ namespace LiteEntitySystem
             }
         }
 
-        private unsafe void OnOwnedAdded(EntityLogic entity)
+        internal void AddOwned(EntityLogic entity)
+        {
+            _ownedEntities.Add(entity);
+            if(entity.GetClassData().IsUpdateable)
+                AliveEntities.Add(entity);
+        }
+
+        private unsafe void InitInterpolation(InternalEntity entity)
         {
             ref byte[] predictedData = ref _predictedEntities[entity.Id];
             ref var classData = ref ClassDataDict[entity.ClassId];
             byte* entityPtr = InternalEntity.GetPtr(ref entity);
-
-            Utils.ResizeOrCreate(ref predictedData, classData.FixedFieldsSize);
+            if(!entity.IsLocal)
+                Utils.ResizeOrCreate(ref predictedData, classData.FixedFieldsSize);
             Utils.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
             Utils.ResizeOrCreate(ref _interpolatedInitialData[entity.Id], classData.InterpolatedFieldsSize);
             
@@ -482,7 +476,7 @@ namespace LiteEntitySystem
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
                     var field = classData.Fields[i];
-                    if (!field.IsEntity)
+                    if (!entity.IsLocal && !field.IsEntity)
                         field.GetToFixedOffset(entityPtr, predictedPtr);
                     if (field.Interpolator != null)
                         field.GetToFixedOffset(entityPtr, interpDataPtr);
@@ -490,10 +484,14 @@ namespace LiteEntitySystem
             }
         }
 
+        internal void RemoveOwned(EntityLogic entity)
+        {
+            _ownedEntities.Remove(entity);
+        }
+
         internal void AddPredictedInfo(EntityLogic e)
         {
             _spawnPredictedEntities.Enqueue((Tick, e));
-            OwnedEntities.Add(e);
         }
 
         protected override unsafe void OnLogicTick()
@@ -556,34 +554,35 @@ namespace LiteEntitySystem
                 controller.ReadInput(_inputReader);
             }
 
-            //local update
-            foreach (var entity in OwnedEntities)
-            {
-                //save data for interpolation before update
-                ref var classData = ref ClassDataDict[entity.ClassId];
-                var entityLocal = entity;
-                byte* entityPtr = InternalEntity.GetPtr(ref entityLocal);
-                fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
-                       prevDataPtr = _interpolatePrevData[entity.Id])
-                {
-                    Unsafe.CopyBlock(prevDataPtr, currentDataPtr, (uint)classData.InterpolatedFieldsSize);
-                                        
-                    //update
-                    entity.Update();
-                
-                    //save current
-                    for(int i = 0; i < classData.InterpolatedCount; i++)
-                    {
-                        var field = classData.Fields[i];
-                        field.GetToFixedOffset(entityPtr, currentDataPtr);
-                    }
-                }
-            }
-
             //local only and UpdateOnClient
             foreach (var entity in AliveEntities)
             {
-                entity.Update();
+                if (entity.IsLocal || entity.IsLocalControlled)
+                {
+                    //save data for interpolation before update
+                    ref var classData = ref ClassDataDict[entity.ClassId];
+                    var entityLocal = entity;
+                    byte* entityPtr = InternalEntity.GetPtr(ref entityLocal);
+                    fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
+                           prevDataPtr = _interpolatePrevData[entity.Id])
+                    {
+                        Unsafe.CopyBlock(prevDataPtr, currentDataPtr, (uint)classData.InterpolatedFieldsSize);
+                                        
+                        //update
+                        entity.Update();
+                
+                        //save current
+                        for(int i = 0; i < classData.InterpolatedCount; i++)
+                        {
+                            var field = classData.Fields[i];
+                            field.GetToFixedOffset(entityPtr, currentDataPtr);
+                        }
+                    }
+                }
+                else
+                {
+                    entity.Update();
+                }
             }
         }
 
