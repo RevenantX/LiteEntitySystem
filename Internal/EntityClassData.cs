@@ -220,13 +220,17 @@ namespace LiteEntitySystem.Internal
                     var remoteCallAttribute = method.GetCustomAttribute<RemoteCall>();
                     if(remoteCallAttribute == null)
                         continue;
-                    
-                    var parametrType = method.GetParameters()[0].ParameterType;
+
+                    var methodParams = method.GetParameters();
+                    var parametrType = methodParams.Length > 0 ? methodParams[0].ParameterType : null;
                     if (remoteCallAttribute.Id == byte.MaxValue)
                     {
                         remoteCallAttribute.Id = rpcIndex++;
-                        remoteCallAttribute.DataSize = Marshal.SizeOf(parametrType);
-                        remoteCallAttribute.IsArray = parametrType.IsArray;
+                        if (parametrType != null)
+                        {
+                            remoteCallAttribute.DataSize = Marshal.SizeOf(parametrType);
+                            remoteCallAttribute.IsArray = parametrType.IsArray;
+                        }
                         if (rpcIndex == byte.MaxValue)
                             throw new Exception("254 is max RemoteCall methods");
                     }

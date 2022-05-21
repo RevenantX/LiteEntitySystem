@@ -82,7 +82,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Rate at which server will make and send packets
         /// </summary>
-        public ServerSendRate SendRate;
+        public ServerSendRate SendRate = ServerSendRate.ThirdOfFPS;
         
         /// <summary>
         /// Event that called when entity is enabling/disabling lag compensation

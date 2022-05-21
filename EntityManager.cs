@@ -177,7 +177,11 @@ namespace LiteEntitySystem
 
             ushort filterCount = 0;
             ushort singletonCount = 0;
-            foreach ((Type entType, (var classId, EntityConstructor<InternalEntity> entityConstructor)) in typesMap.RegisteredTypes)
+            
+            //preregister some types
+            _registeredTypeIds.Add(typeof(HumanControllerLogic), filterCount++);
+            
+            foreach ((Type entType, (ushort classId, var entityConstructor)) in typesMap.RegisteredTypes)
             {
                 ClassDataDict[classId] = new EntityClassData(
                     entType.IsSubclassOf(typeof(SingletonEntityLogic)) ? singletonCount++ : filterCount++, 
