@@ -147,7 +147,7 @@ namespace LiteEntitySystem.Internal
                         ushort entityId = Unsafe.AsRef<InternalEntity>(fieldPtr)?.Id ?? EntityManager.InvalidEntityId;
                         
                         //local
-                        if (entityId >= EntityManager.MaxEntityCount)
+                        if (entityId >= EntityManager.MaxSyncedEntityCount)
                             entityId = EntityManager.InvalidEntityId;
 
                         ushort *ushortPtr = (ushort*)latestDataPtr;

@@ -120,7 +120,7 @@ namespace LiteEntitySystem.Internal
                 preloadData.InterpolatedCachesCount = 0;
                 bytesRead += preloadData.TotalSize;
                 
-                if (preloadData.EntityId > EntityManager.MaxEntityCount)
+                if (preloadData.EntityId > EntityManager.MaxSyncedEntityCount)
                 {
                     //Should remove at all
                     Logger.LogError($"[CEM] Invalid entity id: {preloadData.EntityId}");

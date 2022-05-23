@@ -15,6 +15,7 @@ namespace LiteEntitySystem
         SendToOther = 1 << 1,
         ExecuteOnPrediction = 1 << 2,
         ExecuteOnServer = 1 << 3,
+        ExecuteOnClinet = 1 << 4,
         All = SendToOther | SendToOwner | ExecuteOnPrediction | ExecuteOnServer
     }
 
@@ -33,13 +34,7 @@ namespace LiteEntitySystem
     public abstract class EntityTypesMap
     {
         internal ushort MaxId;
-        internal readonly int EntityEnumSize;
         internal readonly Dictionary<Type, (ushort, EntityConstructor<InternalEntity>)> RegisteredTypes = new Dictionary<Type, (ushort, EntityConstructor<InternalEntity>)>();
-
-        internal EntityTypesMap(int enumSize)
-        {
-            EntityEnumSize = enumSize;
-        }
     }
 
     /// <summary>
@@ -48,11 +43,6 @@ namespace LiteEntitySystem
     /// <typeparam name="T"></typeparam>
     public sealed class EntityTypesMap<T> : EntityTypesMap where T : Enum
     {
-        public EntityTypesMap() : base(Enum.GetValues(typeof(T)).Length)
-        {
-
-        }
-        
         /// <summary>
         /// Register new entity type that will be used in game
         /// </summary>
@@ -77,7 +67,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Maximum synchronized (without LocalOnly) entities
         /// </summary>
-        public const int MaxEntityCount = 8192;
+        public const int MaxSyncedEntityCount = 8192;
         
         /// <summary>
         /// Invalid entity id
@@ -155,12 +145,12 @@ namespace LiteEntitySystem
         private readonly SingletonEntityLogic[] _singletonEntities;
         private readonly EntityFilter[] _entityFilters;
         private readonly Dictionary<Type, ushort> _registeredTypeIds = new Dictionary<Type, ushort>();
-        internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount];
+        internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxSyncedEntityCount];
         internal readonly EntityClassData[] ClassDataDict;
         
         private double _accumulator;
         private long _lastTime;
-        private ushort _localIdCounter = MaxEntityCount;
+        private ushort _localIdCounter = MaxSyncedEntityCount;
 
         internal byte InternalPlayerId;
 
@@ -192,10 +182,10 @@ namespace LiteEntitySystem
                 Logger.Log($"Register: {entType.Name} ClassId: {classId})");
             }
 
-            for (int e = 0; e < typesMap.EntityEnumSize; e++)
+            foreach (var registeredType in typesMap.RegisteredTypes.Values)
             {
                 //map base ids
-                ClassDataDict[e].PrepareBaseTypes(_registeredTypeIds, ref singletonCount, ref filterCount);
+                ClassDataDict[registeredType.Item1].PrepareBaseTypes(_registeredTypeIds, ref singletonCount, ref filterCount);
             }
 
             _entityFilters = new EntityFilter[filterCount];
@@ -221,7 +211,7 @@ namespace LiteEntitySystem
             _accumulator = 0.0;
             _lastTime = 0;
             InternalPlayerId = 0;
-            _localIdCounter = MaxEntityCount;
+            _localIdCounter = MaxSyncedEntityCount;
             _localIdQueue.Clear();
             _stopwatch.Restart();
 
@@ -353,7 +343,7 @@ namespace LiteEntitySystem
         /// Add local entity that will be not syncronized
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
-        /// <returns>Created entity or null if entities limit is reached (65535 - <see cref="MaxEntityCount"/>)</returns>
+        /// <returns>Created entity or null if entities limit is reached (65535 - <see cref="MaxSyncedEntityCount"/>)</returns>
         public T AddLocalEntity<T>(Action<T> initMethod = null) where T : InternalEntity
         {
             if (_localIdCounter == 0)

@@ -222,20 +222,20 @@ namespace LiteEntitySystem.Internal
                         continue;
 
                     var methodParams = method.GetParameters();
-                    var parametrType = methodParams.Length > 0 ? methodParams[0].ParameterType : null;
+                    var parameterType = methodParams.Length > 0 ? methodParams[0].ParameterType : null;
                     if (remoteCallAttribute.Id == byte.MaxValue)
                     {
                         remoteCallAttribute.Id = rpcIndex++;
-                        if (parametrType != null)
+                        if (parameterType != null)
                         {
-                            remoteCallAttribute.DataSize = Marshal.SizeOf(parametrType);
-                            remoteCallAttribute.IsArray = parametrType.IsArray;
+                            remoteCallAttribute.IsArray = parameterType.IsArray;
+                            remoteCallAttribute.DataSize = Marshal.SizeOf(parameterType.HasElementType ? parameterType.GetElementType() : parameterType);
                         }
                         if (rpcIndex == byte.MaxValue)
                             throw new Exception("254 is max RemoteCall methods");
                     }
                     RemoteCalls.Add(method, remoteCallAttribute);
-                    RemoteCallsClient[remoteCallAttribute.Id] = GetOnSyncDelegate(baseType, parametrType, method);
+                    RemoteCallsClient[remoteCallAttribute.Id] = GetOnSyncDelegate(baseType, parameterType, method);
                 }
                 foreach (var field in baseType.GetFields(bindingFlags))
                 {

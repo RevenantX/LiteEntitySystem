@@ -333,7 +333,7 @@ namespace LiteEntitySystem
     /// <summary>
     /// Base class for AI Controller entities
     /// </summary>
-    [LocalOnly]
+    [LocalOnly, UpdateableEntity]
     public abstract class AiControllerLogic : ControllerLogic
     {
         protected AiControllerLogic(EntityParams entityParams) : base(entityParams) { }
@@ -342,7 +342,7 @@ namespace LiteEntitySystem
     /// <summary>
     /// Base class for AI Controller entities with typed ControlledEntity field
     /// </summary>
-    [LocalOnly]
+    [LocalOnly, UpdateableEntity]
     public abstract class AiControllerLogic<T> : AiControllerLogic where T : PawnLogic
     {
         public new T ControlledEntity => base.ControlledEntity as T;

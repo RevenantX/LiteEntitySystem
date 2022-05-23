@@ -29,7 +29,7 @@ namespace LiteEntitySystem.Internal
             return (byte*)Unsafe.As<T, IntPtr>(ref entity);
         }
 
-        public bool IsLocal => Id >= EntityManager.MaxEntityCount;
+        public bool IsLocal => Id >= EntityManager.MaxSyncedEntityCount;
 
         /// <summary>
         /// Called when entity manager is reset

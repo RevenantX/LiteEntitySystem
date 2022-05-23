@@ -65,7 +65,7 @@ namespace LiteEntitySystem
         
         private const int MaxPlayers = byte.MaxValue-1;
 
-        private readonly Queue<ushort> _entityIdQueue = new Queue<ushort>(MaxEntityCount);
+        private readonly Queue<ushort> _entityIdQueue = new Queue<ushort>(MaxSyncedEntityCount);
         private readonly Queue<byte> _playerIdQueue = new Queue<byte>(MaxPlayers);
         private readonly Queue<RemoteCallPacket> _rpcPool = new Queue<RemoteCallPacket>();
         private readonly Queue<byte[]> _inputPool = new Queue<byte[]>();
@@ -73,7 +73,7 @@ namespace LiteEntitySystem
         private readonly NetPlayer[] _netPlayersArray = new NetPlayer[MaxPlayers];
         private readonly NetPlayer[] _netPlayersDict = new NetPlayer[MaxPlayers];
         private readonly NetDataReader _inputReader = new NetDataReader();
-        private readonly StateSerializer[] _savedEntityData = new StateSerializer[MaxEntityCount];
+        private readonly StateSerializer[] _savedEntityData = new StateSerializer[ushort.MaxValue];
 
         private byte[] _compressionBuffer;
         private int _netPlayersCount;
@@ -101,7 +101,7 @@ namespace LiteEntitySystem
             InternalPlayerId = ServerPlayerId;
             for (int i = 1; i <= byte.MaxValue; i++)
                 _playerIdQueue.Enqueue((byte)i);
-            for (ushort i = 0; i < MaxEntityCount; i++)
+            for (ushort i = 0; i < MaxSyncedEntityCount; i++)
                 _entityIdQueue.Enqueue(i);
 
             _packetBuffer[0] = packetHeader;
@@ -414,7 +414,7 @@ namespace LiteEntitySystem
             {
                 if (_entityIdQueue.Count == 0)
                 {
-                    Logger.Log($"Cannot add entity. Max entity count reached: {MaxEntityCount}");
+                    Logger.Log($"Cannot add entity. Max entity count reached: {MaxSyncedEntityCount}");
                     return null;
                 }
                 ushort entityId =_entityIdQueue.Dequeue();

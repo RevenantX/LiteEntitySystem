@@ -665,9 +665,9 @@ namespace LiteEntitySystem
 
         private unsafe void ReadEntityState(byte* rawData, ref int readerPosition, ushort entityInstanceId, bool fullSync)
         {
-            if (entityInstanceId >= MaxEntityCount)
+            if (entityInstanceId >= MaxSyncedEntityCount)
             {
-                Logger.LogError($"Bad data (id > MaxEntityCount) {entityInstanceId} >= {MaxEntityCount}");
+                Logger.LogError($"Bad data (id > MaxEntityCount) {entityInstanceId} >= {MaxSyncedEntityCount}");
                 readerPosition = -1;
                 return;
             }
