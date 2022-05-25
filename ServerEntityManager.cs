@@ -78,6 +78,11 @@ namespace LiteEntitySystem
         private byte[] _compressionBuffer;
         private int _netPlayersCount;
         private bool _lagCompensationEnabled;
+
+        /// <summary>
+        /// Network players count
+        /// </summary>
+        public int PlayersCount => _netPlayersCount;
         
         /// <summary>
         /// Rate at which server will make and send packets
