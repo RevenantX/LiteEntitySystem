@@ -1,5 +1,4 @@
 using System;
-using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
@@ -8,7 +7,6 @@ namespace LiteEntitySystem
     {
         internal byte Id = byte.MaxValue;
         internal int DataSize;
-        internal MethodCallDelegate MethodDelegate;
     }
     
     public abstract class SyncableField

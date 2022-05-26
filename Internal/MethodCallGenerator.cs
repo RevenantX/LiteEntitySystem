@@ -29,7 +29,7 @@ namespace LiteEntitySystem.Internal
         public static unsafe MethodCallDelegate GenerateNoParams<TClass>(MethodInfo method)
         {
             var d = (Action<TClass>)method.CreateDelegate(typeof(Action<TClass>));
-            return (classPtr, _, _) => d(Unsafe.AsRef<TClass>(classPtr));
+            return (classPtr, value, count) => d(Unsafe.AsRef<TClass>(classPtr));
         }
 
         internal static MethodInfo GetGenericMethod(Type entityType, Type valueType)

@@ -154,7 +154,7 @@ namespace LiteEntitySystem
                     Logger.LogError("Error on decompress");
                     return;
                 }
-                _stateA.Tick = BitConverter.ToUInt16(_stateA.Data);
+                _stateA.Tick = BitConverter.ToUInt16(_stateA.Data, 0);
                 _stateA.Offset = 2;
                 ReadEntityStates();
                 _isSyncReceived = true;

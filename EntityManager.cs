@@ -171,8 +171,11 @@ namespace LiteEntitySystem
             //preregister some types
             _registeredTypeIds.Add(typeof(HumanControllerLogic), filterCount++);
             
-            foreach ((Type entType, (ushort classId, var entityConstructor)) in typesMap.RegisteredTypes)
+            foreach (var kv in typesMap.RegisteredTypes)
             {
+                var entType = kv.Key;
+                (ushort classId, var entityConstructor) = kv.Value;
+
                 ClassDataDict[classId] = new EntityClassData(
                     entType.IsSubclassOf(typeof(SingletonEntityLogic)) ? singletonCount++ : filterCount++, 
                     entType, 
