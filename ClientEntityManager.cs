@@ -415,7 +415,7 @@ namespace LiteEntitySystem
                         
                         fixed (byte* inputData = inputCommand.Data)
                         {
-                            if (offset + inputCommand.Length + sizeof(ushort) > NetConstants.MaxUnreliableDataSize)
+                            if (offset + inputCommand.Length + sizeof(ushort) > _localPeer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable))
                             {
                                 Unsafe.Write(sendBuffer + 2, currentTick);
                                 _localPeer.Send(_sendBuffer, 0, offset, DeliveryMethod.Unreliable);

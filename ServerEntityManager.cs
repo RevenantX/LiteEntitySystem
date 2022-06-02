@@ -247,7 +247,7 @@ namespace LiteEntitySystem
         {
             Deserialize((NetPlayer)peer.Tag, reader);
         }
-        
+
         /// <summary>
         /// Read data from NetPlayer
         /// </summary>
@@ -273,6 +273,42 @@ namespace LiteEntitySystem
                     break;
             }
             reader.Recycle();
+        }
+        
+        /// <summary>
+        /// Read incoming data in case of first byte is == headerByte
+        /// </summary>
+        /// <param name="player">Player that sent input</param>
+        /// <param name="reader">Reader with data (will be recycled inside, also works with autorecycle)</param>
+        /// <returns>true if first byte is == headerByte</returns>
+        public bool DeserializeWithHeaderCheck(NetPlayer player, NetPacketReader reader)
+        {
+            if (reader.PeekByte() == _packetBuffer[0])
+            {
+                reader.SkipBytes(1);
+                Deserialize(player, reader);
+                return true;
+            }
+
+            return false;
+        }
+        
+        /// <summary>
+        /// Read incoming data in case of first byte is == headerByte from NetPeer with assigned NetPlayer to NetPeer.Tag
+        /// </summary>
+        /// <param name="peer">Player that sent input</param>
+        /// <param name="reader">Reader with data (will be recycled inside, also works with autorecycle)</param>
+        /// <returns>true if first byte is == headerByte</returns>
+        public bool DeserializeWithHeaderCheck(NetPeer peer, NetPacketReader reader)
+        {
+            if (reader.PeekByte() == _packetBuffer[0])
+            {
+                reader.SkipBytes(1);
+                Deserialize((NetPlayer)peer.Tag, reader);
+                return true;
+            }
+
+            return false;
         }
 
         public override unsafe void Update()
@@ -413,7 +449,7 @@ namespace LiteEntitySystem
             
             if (classData.IsLocalOnly)
             {
-                entity = AddLocalEntity<T>();
+                entity = AddLocalEntity(initMethod);
             }
             else
             {
@@ -431,9 +467,10 @@ namespace LiteEntitySystem
                     stateSerializer.IncrementVersion(Tick),
                     this));
                 stateSerializer.Init(ref classData, entity);
+                
+                initMethod?.Invoke(entity);
+                ConstructEntity(entity);
             }
-            initMethod?.Invoke(entity);
-            ConstructEntity(entity);
             //Debug.Log($"[SEM] Entity create. clsId: {classData.ClassId}, id: {entityId}, v: {version}");
             return entity;
         }
