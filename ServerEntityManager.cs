@@ -428,12 +428,9 @@ namespace LiteEntitySystem
                         //else skip
                     }
 
-                    if (writePosition > 9 || *partCount > 0)
-                    {
-                        //Debug.Log($"PARTS: {partCount} {_netDataWriter.Data[4]}");
-                        packetBuffer[1] = PacketDiffSyncLast; //lastPart flag
-                        peer.Send(_packetBuffer, 0, writePosition, DeliveryMethod.Unreliable);
-                    }
+                    //Debug.Log($"PARTS: {partCount} {_netDataWriter.Data[4]}");
+                    packetBuffer[1] = PacketDiffSyncLast; //lastPart flag
+                    peer.Send(_packetBuffer, 0, writePosition, DeliveryMethod.Unreliable);
                 }
             }
 
