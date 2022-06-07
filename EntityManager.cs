@@ -87,7 +87,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Interpolation time between logic and render
         /// </summary>
-        public float LerpFactor => (float)(_accumulator / DeltaTime);
+        public float LerpFactor => _accumulator / (float)_deltaTimeTicks;
         
         /// <summary>
         /// Current update mode (can be used inside entities to separate logic for rollbacks)
@@ -206,7 +206,7 @@ namespace LiteEntitySystem
             FramesPerSecond = framesPerSecond;
             DeltaTime = 1.0 / framesPerSecond;
             DeltaTimeF = (float) DeltaTime;
-            _stopwatchFrequency = Stopwatch.Frequency;
+            _stopwatchFrequency = 1.0 / Stopwatch.Frequency;
             _deltaTimeTicks = (long)(DeltaTime * Stopwatch.Frequency);
         }
 
@@ -436,7 +436,7 @@ namespace LiteEntitySystem
             
             long elapsedTicks = _stopwatch.ElapsedTicks;
             long ticksDelta = elapsedTicks - _lastTime;
-            VisualDeltaTime = (elapsedTicks - _lastTime) / _stopwatchFrequency;
+            VisualDeltaTime = ticksDelta * _stopwatchFrequency;
             _accumulator += ticksDelta;
             _lastTime = elapsedTicks;
 

@@ -226,10 +226,10 @@ namespace LiteEntitySystem
             }
         }
 
-        private void PreloadNextState()
+        private bool PreloadNextState()
         {
-            if (_stateB != null || _lerpBuffer.Count == 0) 
-                return;
+            if (_lerpBuffer.Count == 0) 
+                return false;
             
             _stateB = _lerpBuffer.Min;
             _lerpBuffer.Remove(_stateB);
@@ -250,13 +250,15 @@ namespace LiteEntitySystem
                     break;
                 }
             }
+
+            return true;
         }
 
         private unsafe void ProcessNextState()
         {
-            if (_stateB == null)
+            if (_stateB == null && !PreloadNextState())
                 return;
-            
+
             _timer += VisualDeltaTime;
             if (_timer >= _lerpTime)
             {
@@ -329,29 +331,41 @@ namespace LiteEntitySystem
                         break;
                     }
                 }
-            }
-            else //remote interpolation
-            {
-                float fTimer = (float)(_timer/_lerpTime);
-                _lerpMsec = (ushort)(fTimer * 65535f);
-                for(int i = 0; i < _stateB.InterpolatedCount; i++)
+                
+                //load next state
+                double prevLerpTime = _lerpTime;
+                if (PreloadNextState())
                 {
-                    ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
-                    var entity = EntitiesDict[preloadData.EntityId];
-                    var fields = entity.GetClassData().Fields;
-                    byte* entityPtr = InternalEntity.GetPtr(ref entity);
-                    fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr = _stateB.Data)
+                    //adjust lerp timer
+                    _timer *= (prevLerpTime / _lerpTime);
+                }
+                else
+                {
+                    //skip interpolation code
+                    return;
+                }
+            }
+            
+            //remote interpolation
+            float fTimer = (float)(_timer/_lerpTime);
+            _lerpMsec = (ushort)(fTimer * 65535f);
+            for(int i = 0; i < _stateB.InterpolatedCount; i++)
+            {
+                ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
+                var entity = EntitiesDict[preloadData.EntityId];
+                var fields = entity.GetClassData().Fields;
+                byte* entityPtr = InternalEntity.GetPtr(ref entity);
+                fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr = _stateB.Data)
+                {
+                    for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
                     {
-                        for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
-                        {
-                            var interpolatedCache = preloadData.InterpolatedCaches[j];
-                            var field = fields[interpolatedCache.Field];
-                            field.Interpolator(
-                                initialDataPtr + field.FixedOffset,
-                                nextDataPtr + interpolatedCache.StateReaderOffset,
-                                entityPtr + field.FieldOffset,
-                                fTimer);
-                        }
+                        var interpolatedCache = preloadData.InterpolatedCaches[j];
+                        var field = fields[interpolatedCache.Field];
+                        field.Interpolator(
+                            initialDataPtr + field.FixedOffset,
+                            nextDataPtr + interpolatedCache.StateReaderOffset,
+                            entityPtr + field.FieldOffset,
+                            fTimer);
                     }
                 }
             }
@@ -365,7 +379,6 @@ namespace LiteEntitySystem
             //logic update
             base.Update();
             
-            PreloadNextState();
             ProcessNextState();
 
             //local interpolation
@@ -566,12 +579,18 @@ namespace LiteEntitySystem
                     fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
                            prevDataPtr = _interpolatePrevData[entity.Id])
                     {
-                        Unsafe.CopyBlock(prevDataPtr, currentDataPtr, (uint)classData.InterpolatedFieldsSize);
-                                        
+                        //restore previous
+                        for(int i = 0; i < classData.InterpolatedCount; i++)
+                        {
+                            var field = classData.Fields[i];
+                            field.SetFromFixedOffset(entityPtr, currentDataPtr);
+                        }
+
                         //update
                         entity.Update();
                 
                         //save current
+                        Unsafe.CopyBlock(prevDataPtr, currentDataPtr, (uint)classData.InterpolatedFieldsSize);
                         for(int i = 0; i < classData.InterpolatedCount; i++)
                         {
                             var field = classData.Fields[i];
@@ -583,6 +602,12 @@ namespace LiteEntitySystem
                 {
                     entity.Update();
                 }
+            }
+            //controllers
+            foreach (var entity in GetControllers<HumanControllerLogic>())
+            {
+                if(ClassDataDict[entity.ClassId].IsUpdateable)
+                    entity.Update();
             }
         }
 
