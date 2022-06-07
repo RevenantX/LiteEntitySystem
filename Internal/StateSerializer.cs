@@ -339,7 +339,7 @@ namespace LiteEntitySystem.Internal
 
         public unsafe void EnableLagCompensation(NetPlayer player)
         {
-            if (_entity.IsControlledBy(player.Id))
+            if (_entity == null || _entity.IsControlledBy(player.Id))
                 return;
             int diff = Utils.SequenceDiff(Manager.Tick, player.StateATick);
             if (diff <= 0 || diff >= _filledHistory || _state != SerializerState.Active)
