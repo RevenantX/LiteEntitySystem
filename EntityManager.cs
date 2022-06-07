@@ -51,7 +51,7 @@ namespace LiteEntitySystem
         /// <typeparam name="TEntity">Type of entity</typeparam>
         public EntityTypesMap<T> Register<TEntity>(T id, EntityConstructor<TEntity> constructor) where TEntity : InternalEntity 
         {
-            ushort classId = (ushort)(object)id;
+            ushort classId = (ushort)((ushort)(object)id + 1);
             EntityClassInfo<TEntity>.ClassId = classId;
             RegisteredTypes.Add(typeof(TEntity), (classId, constructor));
             MaxId = Math.Max(MaxId, classId);
@@ -117,13 +117,18 @@ namespace LiteEntitySystem
         /// <summary>
         /// Fixed delta time
         /// </summary>
-        public readonly float DeltaTime;
-        
+        public readonly double DeltaTime;
+
+        /// <summary>
+        /// Fixed delta time (float for less precision)
+        /// </summary>
+        public readonly float DeltaTimeF;
+
         /// <summary>
         /// Local player id (0 on server)
         /// </summary>
         public byte PlayerId => InternalPlayerId;
-        
+
         protected const byte PacketDiffSync = 1;
         protected const byte PacketClientSync = 2;
         protected const byte PacketBaselineSync = 3;
@@ -147,8 +152,9 @@ namespace LiteEntitySystem
         private readonly Dictionary<Type, ushort> _registeredTypeIds = new Dictionary<Type, ushort>();
         internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxSyncedEntityCount];
         internal readonly EntityClassData[] ClassDataDict;
-        
-        private double _accumulator;
+
+        private readonly long _deltaTimeTicks;
+        private long _accumulator;
         private long _lastTime;
         private ushort _localIdCounter = MaxSyncedEntityCount;
 
@@ -198,8 +204,10 @@ namespace LiteEntitySystem
             IsServer = Mode == NetworkMode.Server;
             IsClient = Mode == NetworkMode.Client;
             FramesPerSecond = framesPerSecond;
-            DeltaTime = 1.0f / framesPerSecond;
+            DeltaTime = 1.0 / framesPerSecond;
+            DeltaTimeF = (float) DeltaTime;
             _stopwatchFrequency = Stopwatch.Frequency;
+            _deltaTimeTicks = (long)(DeltaTime * Stopwatch.Frequency);
         }
 
         /// <summary>
@@ -211,7 +219,7 @@ namespace LiteEntitySystem
 
             Tick = 0;
             VisualDeltaTime = 0.0;
-            _accumulator = 0.0;
+            _accumulator = 0;
             _lastTime = 0;
             InternalPlayerId = 0;
             _localIdCounter = MaxSyncedEntityCount;
@@ -427,12 +435,13 @@ namespace LiteEntitySystem
                 _stopwatch.Start();
             
             long elapsedTicks = _stopwatch.ElapsedTicks;
+            long ticksDelta = elapsedTicks - _lastTime;
             VisualDeltaTime = (elapsedTicks - _lastTime) / _stopwatchFrequency;
-            _accumulator += VisualDeltaTime;
+            _accumulator += ticksDelta;
             _lastTime = elapsedTicks;
 
             int updates = 0;
-            while (_accumulator >= DeltaTime)
+            while (_accumulator >= _deltaTimeTicks)
             {
                 //Lag
                 if (updates >= MaxTicksPerUpdate)
@@ -442,7 +451,7 @@ namespace LiteEntitySystem
                 }
                 Tick++;
                 OnLogicTick();
-                _accumulator -= DeltaTime;
+                _accumulator -= _deltaTimeTicks;
                 updates++;
             }
         }

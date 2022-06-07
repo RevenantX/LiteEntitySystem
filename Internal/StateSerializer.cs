@@ -254,6 +254,7 @@ namespace LiteEntitySystem.Internal
                 }
                 else //make diff
                 {
+                    bool localControlled = _entity.IsControlledBy(playerId);
                     bool hasChanges = false;
                     // -1 for cycle
                     byte* fields = resultData + startPos + DiffHeaderSize - 1;
@@ -264,27 +265,30 @@ namespace LiteEntitySystem.Internal
                     
                     for (int i = 0; i < _classData.FieldsCount; i++)
                     {
-                        ref var fixedFieldInfo = ref _classData.Fields[i];
+                        ref var fieldInfo = ref _classData.Fields[i];
                         if (i % 8 == 0)
                         {
                             fields++;
                             *fields = 0;
                         }
+                        
+                        if((fieldInfo.Flags.HasFlag(SyncFlags.OnlyForLocal) && !localControlled) ||
+                           (fieldInfo.Flags.HasFlag(SyncFlags.OnlyForRemote) && localControlled))
+                            continue;
+                        
                         if (Utils.SequenceDiff(_fieldChangeTicks[i], playerTick) > 0)
                         {
                             hasChanges = true;
                             *fields |= (byte)(1 << i%8);
-                            Unsafe.CopyBlock(resultData + position, lastEntityData + HeaderSize + fixedFieldInfo.FixedOffset, fixedFieldInfo.Size);
-                            position += fixedFieldInfo.IntSize;
+                            Unsafe.CopyBlock(resultData + position, lastEntityData + HeaderSize + fieldInfo.FixedOffset, fieldInfo.Size);
+                            position += fieldInfo.IntSize;
                         }
                     }
                     var rpcNode = _rpcHead;
                     while (rpcNode != null)
                     {
-                        bool send = ((rpcNode.Flags & ExecuteFlags.SendToOwner) != 0 &&
-                                     _entity.IsControlledBy(playerId)) ||
-                                     ((rpcNode.Flags & ExecuteFlags.SendToOther) != 0 &&
-                                     !_entity.IsControlledBy(playerId));
+                        bool send = (rpcNode.Flags.HasFlag(ExecuteFlags.SendToOwner) && localControlled) ||
+                                     (rpcNode.Flags.HasFlag(ExecuteFlags.SendToOther) && !localControlled);
 
                         if (send && Utils.SequenceDiff(playerTick, rpcNode.Tick) < 0)
                         {

@@ -59,7 +59,7 @@ namespace LiteEntitySystem
 
         private ServerStateData _stateA;
         private ServerStateData _stateB;
-        private float _lerpTime;
+        private double _lerpTime;
         private double _timer;
         private bool _isSyncReceived;
         private bool _isLogicTicked;
@@ -233,7 +233,7 @@ namespace LiteEntitySystem
             
             _stateB = _lerpBuffer.Min;
             _lerpBuffer.Remove(_stateB);
-            _lerpTime = Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTime * (1.04f - _lerpBuffer.Count * 0.02f);
+            _lerpTime = (float)(Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTime * (1.04 - _lerpBuffer.Count * 0.02));
             _stateB.Preload(EntitiesDict);
 
             //remove processed inputs

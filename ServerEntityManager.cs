@@ -427,7 +427,7 @@ namespace LiteEntitySystem
                         }
                         //else skip
                     }
-
+                    
                     //Debug.Log($"PARTS: {partCount} {_netDataWriter.Data[4]}");
                     packetBuffer[1] = PacketDiffSyncLast; //lastPart flag
                     peer.Send(_packetBuffer, 0, writePosition, DeliveryMethod.Unreliable);
@@ -440,6 +440,10 @@ namespace LiteEntitySystem
         
         private T Add<T>(Action<T> initMethod) where T : InternalEntity
         {
+            if (EntityClassInfo<T>.ClassId == 0)
+            {
+                throw new Exception($"Unregistered entity type: {typeof(T)}");
+            }
             //create entity data and filters
             ref var classData = ref ClassDataDict[EntityClassInfo<T>.ClassId];
             T entity;

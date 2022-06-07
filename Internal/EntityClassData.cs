@@ -15,6 +15,7 @@ namespace LiteEntitySystem.Internal
         public readonly bool IsEntity;
         public readonly MethodCallDelegate OnSync;
         public readonly InterpolatorDelegate Interpolator;
+        public readonly SyncFlags Flags;
 
         public int FixedOffset;
 
@@ -23,7 +24,8 @@ namespace LiteEntitySystem.Internal
             InterpolatorDelegate interpolator,
             int offset,
             int size,
-            bool isEntity)
+            bool isEntity,
+            SyncFlags flags)
         {
             FieldOffset = offset;
             Size = (uint)size;
@@ -33,6 +35,7 @@ namespace LiteEntitySystem.Internal
             OnSync = onSync;
             Interpolator = interpolator;
             FixedOffset = 0;
+            Flags = flags;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -263,7 +266,7 @@ namespace LiteEntitySystem.Internal
                             InterpolatedCount++;
                         }
 
-                        var fieldInfo = new EntityFieldInfo(onSyncMethod, interpolator, offset, fieldSize, false);
+                        var fieldInfo = new EntityFieldInfo(onSyncMethod, interpolator, offset, fieldSize, false, syncVarAttribute.Flags);
                         if (syncVarAttribute.Flags.HasFlag(SyncFlags.LagCompensated))
                         {
                             lagCompensatedFields.Add(fieldInfo);
@@ -274,7 +277,7 @@ namespace LiteEntitySystem.Internal
                     }
                     else if (ft == typeof(EntityLogic) || ft.IsSubclassOf(typeof(InternalEntity)))
                     {
-                        fields.Add(new EntityFieldInfo(onSyncMethod, null, offset, sizeof(ushort), true));
+                        fields.Add(new EntityFieldInfo(onSyncMethod, null, offset, sizeof(ushort), true, syncVarAttribute.Flags));
                         FixedFieldsSize += 2;
                     }
                     else if (ft.IsSubclassOf(typeof(SyncableField)))
@@ -283,7 +286,7 @@ namespace LiteEntitySystem.Internal
                             throw new Exception("Syncable fields should be readonly!");
 
                         //syncable rpcs
-                        syncableFields.Add(new EntityFieldInfo(onSyncMethod, null, offset, 0, false));
+                        syncableFields.Add(new EntityFieldInfo(onSyncMethod, null, offset, 0, false, syncVarAttribute.Flags));
                         foreach (var syncableType in GetBaseTypes(ft, typeof(SyncableField), true))
                         {
                             foreach (var method in syncableType.GetMethods(bindingFlags))
