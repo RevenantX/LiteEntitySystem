@@ -386,7 +386,18 @@ namespace LiteEntitySystem
             {
                 throw new ArgumentException($"Invalid entity id: {entityParams.Id}");
             }
-            var entity = ClassDataDict[entityParams.ClassId].EntityConstructor(entityParams);
+
+            if (entityParams.ClassId >= ClassDataDict.Length)
+            {
+                throw new Exception($"Unregistered entity class: {entityParams.ClassId}");
+            }
+            
+            var classData = ClassDataDict[entityParams.ClassId];
+            if (classData.EntityConstructor == null)
+            {
+                throw new Exception($"Unregistered entity class: {entityParams.ClassId}");
+            }
+            var entity = classData.EntityConstructor(entityParams);
             MaxEntityId = MaxEntityId < entityParams.Id ? entityParams.Id : MaxEntityId;
             EntitiesDict[entity.Id] = entity;
             EntitiesCount++;
