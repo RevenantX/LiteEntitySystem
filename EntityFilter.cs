@@ -47,9 +47,23 @@ namespace LiteEntitySystem
             }
         }
 
+        /// <summary>
+        /// Called when entity created and synced
+        /// </summary>
         public event Action<T> OnAdded;
-        public event Action<T> OnRemoved;
         
+        /// <summary>
+        /// Called when entity is removed/destroyed
+        /// </summary>
+        public event Action<T> OnRemoved;
+
+        /// <summary>
+        /// Entities count of type <typeparamref name="T"/>
+        /// </summary>
+        public int Count => _count;
+
+        public T this[int i] => _array[i];
+
         private ushort[] _dict;
         private T[] _array = new T[8];
         private ushort _count;

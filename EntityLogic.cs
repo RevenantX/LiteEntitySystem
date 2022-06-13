@@ -72,11 +72,6 @@ namespace LiteEntitySystem
         public byte OwnerId => InternalOwnerId;
         
         /// <summary>
-        /// Is entity is local controlled
-        /// </summary>
-        public override bool IsLocalControlled => InternalOwnerId == EntityManager.InternalPlayerId;
-
-        /// <summary>
         /// Destroy entity
         /// </summary>
         public void Destroy()
@@ -228,8 +223,6 @@ namespace LiteEntitySystem
     /// </summary>
     public abstract class SingletonEntityLogic : InternalEntity
     {
-        public override bool IsLocalControlled => false;
-        
         internal override bool IsControlledBy(byte playerId)
         {
             return false;
@@ -295,7 +288,6 @@ namespace LiteEntitySystem
 
         public byte OwnerId => InternalOwnerId;
         public PawnLogic ControlledEntity => _controlledEntity;
-        public override bool IsLocalControlled => InternalOwnerId == EntityManager.InternalPlayerId;
 
         internal override bool IsControlledBy(byte playerId)
         {

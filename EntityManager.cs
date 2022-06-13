@@ -188,7 +188,7 @@ namespace LiteEntitySystem
                     classId, 
                     entityConstructor);
                 _registeredTypeIds.Add(entType, ClassDataDict[classId].FilterId);
-                Logger.Log($"Register: {entType.Name} ClassId: {classId})");
+                Logger.Log($"Register: {entType.Name} ClassId: {classId}");
             }
 
             foreach (var registeredType in typesMap.RegisteredTypes.Values)
@@ -264,7 +264,10 @@ namespace LiteEntitySystem
         /// <returns>Entity filter that can be used in foreach</returns>
         public EntityFilter<T> GetEntities<T>() where T : EntityLogic
         {
-            ref var entityFilter = ref _entityFilters[_registeredTypeIds[typeof(T)]];
+            if (!_registeredTypeIds.TryGetValue(typeof(T), out ushort typeId))
+                throw new Exception($"Unregistered type: {typeof(T)}");
+
+            ref var entityFilter = ref _entityFilters[typeId];
             if (entityFilter != null)
                 return (EntityFilter<T>)entityFilter;
 

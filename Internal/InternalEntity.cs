@@ -5,14 +5,41 @@ namespace LiteEntitySystem.Internal
 {
     public abstract class InternalEntity : IComparable<InternalEntity>
     {
+        /// <summary>
+        /// Entity class id
+        /// </summary>
         public readonly ushort ClassId;
-        public readonly ushort Id;
-        public readonly EntityManager EntityManager;
-        public readonly byte Version;
         
-        public abstract bool IsLocalControlled { get; }
+        /// <summary>
+        /// Entity instance id
+        /// </summary>
+        public readonly ushort Id;
+        
+        /// <summary>
+        /// Entity manager
+        /// </summary>
+        public readonly EntityManager EntityManager;
+        
+        internal readonly byte Version;
+
+        /// <summary>
+        /// Is entity is local controlled
+        /// </summary>
+        public bool IsLocalControlled => IsControlledBy(EntityManager.InternalPlayerId);
+        
+        /// <summary>
+        /// Is entity is controlled by server
+        /// </summary>
         public bool IsServerControlled => !IsLocalControlled;
+        
+        /// <summary>
+        /// ClientEntityManager that available only on client. Will throw exception if called on server
+        /// </summary>
         public ClientEntityManager ClientManager => (ClientEntityManager)EntityManager;
+        
+        /// <summary>
+        /// ServerEntityManager that available only on server. Will throw exception if called on client
+        /// </summary>
         public ServerEntityManager ServerManager => (ServerEntityManager)EntityManager;
 
         internal abstract bool IsControlledBy(byte playerId);
@@ -29,20 +56,15 @@ namespace LiteEntitySystem.Internal
             return (byte*)Unsafe.As<T, IntPtr>(ref entity);
         }
 
+        /// <summary>
+        /// Is locally created entity
+        /// </summary>
         public bool IsLocal => Id >= EntityManager.MaxSyncedEntityCount;
 
         /// <summary>
         /// Called when entity manager is reset
         /// </summary>
         public virtual void Free()
-        {
-            
-        }
-
-        /// <summary>
-        /// For debug purposes
-        /// </summary>
-        public virtual void DebugPrint()
         {
             
         }
@@ -77,6 +99,11 @@ namespace LiteEntitySystem.Internal
             Version = entityParams.Version;
         }
         
+        /// <summary>
+        /// Creates cached rpc action
+        /// </summary>
+        /// <param name="methodToCall">RPC method to call (must have <see cref="RemoteCall"/> attribute)</param>
+        /// <param name="cachedAction">output action that should be used to call rpc</param>
         protected void CreateRPCAction(Action methodToCall, out Action cachedAction)
         {
             if (methodToCall.Target != this)
@@ -101,6 +128,11 @@ namespace LiteEntitySystem.Internal
             }
         }
         
+        /// <summary>
+        /// Creates cached rpc action
+        /// </summary>
+        /// <param name="methodToCall">RPC method to call (must have <see cref="RemoteCall"/> attribute)</param>
+        /// <param name="cachedAction">output action that should be used to call rpc</param>
         protected void CreateRPCAction<T>(Action<T> methodToCall, out Action<T> cachedAction) where T : struct
         {
             if (methodToCall.Target != this)
@@ -125,6 +157,11 @@ namespace LiteEntitySystem.Internal
             }
         }
         
+        /// <summary>
+        /// Creates cached rpc action
+        /// </summary>
+        /// <param name="methodToCall">RPC method to call (must have <see cref="RemoteCall"/> attribute)</param>
+        /// <param name="cachedAction">output action that should be used to call rpc</param>
         protected void CreateRPCAction<T>(Action<T[], ushort> methodToCall, out Action<T[], ushort> cachedAction) where T : struct
         {
             if (methodToCall.Target != this)
