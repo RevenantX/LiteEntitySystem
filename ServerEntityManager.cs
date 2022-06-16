@@ -56,6 +56,14 @@ namespace LiteEntitySystem
         ThirdOfFPS = 3
     }
 
+    public enum MaxHistorySize : byte
+    {
+        Size16 = 16,
+        Size32 = 32,
+        Size64 = 64,
+        Size128 = 128
+    }
+
     /// <summary>
     /// Server entity manager
     /// </summary>
@@ -93,6 +101,11 @@ namespace LiteEntitySystem
         /// Event that called when entity is enabling/disabling lag compensation
         /// </summary>
         public event Action<bool> OnLagCompensation;
+
+        /// <summary>
+        /// Size of history (in ticks) for lag compensation. Tune for your game fps 
+        /// </summary>
+        public MaxHistorySize MaxHistorySize = MaxHistorySize.Size32;
 
         /// <summary>
         /// Constructor
@@ -601,7 +614,7 @@ namespace LiteEntitySystem
             //Logger.Log($"compensated: {player.ServerInterpolatedTick} =====");
             foreach (var entity in AliveEntities)
             {
-                _savedEntityData[entity.Id].EnableLagCompensation(player);
+                _savedEntityData[entity.Id].EnableLagCompensation(player, _tick);
                 //entity.DebugPrint();
             }
             OnLagCompensation?.Invoke(true);
@@ -615,7 +628,7 @@ namespace LiteEntitySystem
             //Logger.Log($"restored: {Tick} =====");
             foreach (var entity in AliveEntities)
             {
-                _savedEntityData[entity.Id].DisableLagCompensation();
+                _savedEntityData[entity.Id].DisableLagCompensation(_tick);
                 //entity.DebugPrint();
             }
             OnLagCompensation?.Invoke(false);

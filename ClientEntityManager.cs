@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using K4os.Compression.LZ4;
 using LiteEntitySystem.Internal;
@@ -40,7 +41,7 @@ namespace LiteEntitySystem
         /// States count in interpolation buffer
         /// </summary>
         public int LerpBufferCount => _lerpBuffer.Count;
-
+        
         private const int InterpolateBufferSize = 10;
         private const int InputBufferSize = 128;
         private static readonly int InputHeaderSize = Unsafe.SizeOf<InputPacketHeader>();
@@ -56,10 +57,13 @@ namespace LiteEntitySystem
         private readonly byte[][] _interpolatedInitialData = new byte[ushort.MaxValue][];
         private readonly byte[][] _interpolatePrevData = new byte[ushort.MaxValue][];
         private readonly byte[][] _predictedEntities = new byte[ushort.MaxValue][];
+        private readonly byte[] _tempData = new byte[MaxFieldSize];
+        private readonly byte[] _sendBuffer = new byte[NetConstants.MaxPacketSize];
+        private readonly EntityFilter<EntityLogic> _ownedEntities = new EntityFilter<EntityLogic>();
 
         private ServerStateData _stateA;
         private ServerStateData _stateB;
-        private double _lerpTime;
+        private float _lerpTime;
         private double _timer;
         private bool _isSyncReceived;
         private bool _isLogicTicked;
@@ -84,13 +88,16 @@ namespace LiteEntitySystem
         private int _setEntityIdsCount;
         private InternalEntity[] _entitiesToConstruct = new InternalEntity[64];
         private int _entitiesToConstructCount;
-        private readonly byte[] _tempData = new byte[MaxFieldSize];
-        private readonly byte[] _sendBuffer = new byte[NetConstants.MaxPacketSize];
-        
-        private readonly EntityFilter<EntityLogic> _ownedEntities = new EntityFilter<EntityLogic>();
         private ushort _lerpMsec;
         private ushort _remoteCallsTick;
         private ushort _lastReceivedInputTick;
+        
+        //adaptive lerp vars
+        private float _adaptiveMiddlePoint = 3f;
+        private float _packetJitter;
+        private readonly float[] _jitterSamples = new float[10];
+        private int _jitterSampleIdx;
+        private readonly Stopwatch _jitterTimer = new Stopwatch();
 
         /// <summary>
         /// Constructor
@@ -158,6 +165,7 @@ namespace LiteEntitySystem
                 _stateA.Offset = 2;
                 ReadEntityStates();
                 _isSyncReceived = true;
+                _jitterTimer.Restart();
             }
             else
             {
@@ -168,6 +176,12 @@ namespace LiteEntitySystem
                     reader.Recycle();
                     return;
                 }
+                
+                //sample jitter
+                _jitterSamples[_jitterSampleIdx] = _jitterTimer.ElapsedMilliseconds / 1000f;
+                _jitterSampleIdx = (_jitterSampleIdx + 1) % _jitterSamples.Length;
+                //reset timer
+                _jitterTimer.Reset();
                 
                 if(!_receivedStates.TryGetValue(newServerTick, out var serverState))
                 {
@@ -230,10 +244,31 @@ namespace LiteEntitySystem
         {
             if (_lerpBuffer.Count == 0) 
                 return false;
-            
+
+            float jitterSum = 0f;
+            bool adaptiveIncreased = false;
+            for (int i = 0; i < _jitterSamples.Length - 1; i++)
+            {
+                float jitter = Math.Abs(_jitterSamples[i] - _jitterSamples[i + 1]) * FramesPerSecond;
+                jitterSum += jitter;
+                if (jitter > _adaptiveMiddlePoint)
+                {
+                    _adaptiveMiddlePoint = jitter;
+                    adaptiveIncreased = true;
+                }
+            }
+
+            if (!adaptiveIncreased)
+            {
+                jitterSum /= _jitterSamples.Length;
+                _adaptiveMiddlePoint = Utils.Lerp(_adaptiveMiddlePoint, Math.Max(1f, jitterSum), 0.05f);
+            }
+
             _stateB = _lerpBuffer.Min;
             _lerpBuffer.Remove(_stateB);
-            _lerpTime = (float)(Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTime * (1.04 - _lerpBuffer.Count * 0.02));
+            _lerpTime = 
+                Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTimeF *
+                (1f - (_lerpBuffer.Count - _adaptiveMiddlePoint) * 0.02f);
             _stateB.Preload(EntitiesDict);
 
             //remove processed inputs
@@ -510,6 +545,7 @@ namespace LiteEntitySystem
         protected override unsafe void OnLogicTick()
         {
             ServerTick++;
+            
             if (_stateB != null)
             {
                 fixed (byte* rawData = _stateB.Data)

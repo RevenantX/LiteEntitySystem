@@ -78,11 +78,11 @@ namespace LiteEntitySystem
         /// Total entities count (including local)
         /// </summary>
         public ushort EntitiesCount { get; private set; }
-        
+
         /// <summary>
         /// Current tick
         /// </summary>
-        public ushort Tick { get; private set; }
+        public ushort Tick => _tick;
 
         /// <summary>
         /// Interpolation time between logic and render
@@ -141,6 +141,7 @@ namespace LiteEntitySystem
         public double VisualDeltaTime { get; private set; }
         
         protected int MaxEntityId = -1; //current maximum id
+        protected ushort _tick;
         
         protected readonly EntityFilter<InternalEntity> AliveEntities = new EntityFilter<InternalEntity>();
 
@@ -217,7 +218,7 @@ namespace LiteEntitySystem
         {
             EntitiesCount = 0;
 
-            Tick = 0;
+            _tick = 0;
             VisualDeltaTime = 0.0;
             _accumulator = 0;
             _lastTime = 0;
@@ -463,7 +464,7 @@ namespace LiteEntitySystem
                     _accumulator = 0;
                     return;
                 }
-                Tick++;
+                _tick++;
                 OnLogicTick();
                 _accumulator -= _deltaTimeTicks;
                 updates++;

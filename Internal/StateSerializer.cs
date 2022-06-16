@@ -20,13 +20,10 @@ namespace LiteEntitySystem.Internal
 
     internal struct StateSerializer
     {
-        private const int MaxHistory = 32; //should be power of two
         private const int HeaderSize = 5;
         private const int TicksToDestroy = 32;
-        
         public const int DiffHeaderSize = 4;
-        public const int HeaderWithTotalSize = 7;
-        
+
         private byte _version;
         private EntityClassData _classData;
         private InternalEntity _entity;
@@ -43,11 +40,9 @@ namespace LiteEntitySystem.Internal
         private ushort _ticksOnDestroy;
         private int _filledHistory;
         private bool _lagCompensationEnabled;
-
-        public byte ControllerOwner;
+        private byte _controllerOwner;
+        private byte _maxHistory; //should be power of two
         
-        private ServerEntityManager Manager => (ServerEntityManager)_entity.EntityManager;
-
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
             if (_rpcHead == null)
@@ -70,6 +65,7 @@ namespace LiteEntitySystem.Internal
             _entity = e;
             _state = SerializerState.Active;
             _filledHistory = 0;
+            _maxHistory = (byte)e.ServerManager.MaxHistorySize;
 
             int minimalDataSize = HeaderSize + _classData.FieldsFlagsSize + _classData.FixedFieldsSize;
             Utils.ResizeOrCreate(ref _latestEntityData, minimalDataSize);
@@ -81,7 +77,7 @@ namespace LiteEntitySystem.Internal
                 for (int i = 0; i < _classData.SyncableFields.Length; i++)
                 {
                     ref var syncable = ref Unsafe.AsRef<SyncableField>(entityPointer + _classData.SyncableFields[i].FieldOffset);
-                    syncable.EntityManager = Manager;
+                    syncable.EntityManager = e.ServerManager;
                     syncable.FieldId = (byte)i;
                     syncable.EntityId = e.Id;
                     syncable.OnServerInitialized();
@@ -95,10 +91,10 @@ namespace LiteEntitySystem.Internal
                 }
             }
 
-            _history ??= new byte[MaxHistory][];
+            _history ??= new byte[_maxHistory][];
             if(classData.LagCompensatedSize > 0)
             {
-                for (int i = 0; i < MaxHistory; i++)
+                for (int i = 0; i < _maxHistory; i++)
                     Utils.ResizeOrCreate(ref _history[i], classData.LagCompensatedSize);
             } 
         }
@@ -107,10 +103,10 @@ namespace LiteEntitySystem.Internal
         {
             if (_classData.LagCompensatedSize == 0)
                 return;
-            _filledHistory = Math.Min(_filledHistory + 1, MaxHistory);
+            _filledHistory = Math.Min(_filledHistory + 1, _maxHistory);
             byte* entityPointer = InternalEntity.GetPtr(ref _entity);
             int historyOffset = 0;
-            fixed (byte* history = _history[tick % MaxHistory])
+            fixed (byte* history = _history[tick % _maxHistory])
             {
                 for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
                 {
@@ -127,7 +123,7 @@ namespace LiteEntitySystem.Internal
             if (serverTick == _lastWriteTick || _state != SerializerState.Active) 
                 return;
 
-            ControllerOwner = _entity is ControllerLogic controller
+            _controllerOwner = _entity is ControllerLogic controller
                 ? controller.InternalOwnerId
                 : ServerEntityManager.ServerPlayerId;
 
@@ -178,7 +174,7 @@ namespace LiteEntitySystem.Internal
             if (_state != SerializerState.Active)
                 return;
             Write(serverTick);
-            if (ControllerOwner != ServerEntityManager.ServerPlayerId && playerId != ControllerOwner)
+            if (_controllerOwner != ServerEntityManager.ServerPlayerId && playerId != _controllerOwner)
                 return;
             
             //make diff
@@ -217,7 +213,7 @@ namespace LiteEntitySystem.Internal
                 canReuse = true;
             }
             Write(serverTick);
-            if(ControllerOwner != ServerEntityManager.ServerPlayerId && playerId != ControllerOwner)
+            if(_controllerOwner != ServerEntityManager.ServerPlayerId && playerId != _controllerOwner)
                 return DiffResult.Skip;
 
             //make diff
@@ -305,7 +301,7 @@ namespace LiteEntitySystem.Internal
                         else if (Utils.SequenceDiff(rpcNode.Tick, minimalTick) < 0)
                         {
                             //remove old RPCs
-                            Manager.PoolRpc(rpcNode);
+                            _entity.ServerManager.PoolRpc(rpcNode);
                             if (_rpcTail == _rpcHead)
                                 _rpcTail = null;
                             _rpcHead = rpcNode.Next;
@@ -337,18 +333,18 @@ namespace LiteEntitySystem.Internal
             return canReuse ? DiffResult.DoneAndDestroy : DiffResult.Done;
         }
 
-        public unsafe void EnableLagCompensation(NetPlayer player)
+        public unsafe void EnableLagCompensation(NetPlayer player, ushort tick)
         {
             if (_entity == null || _entity.IsControlledBy(player.Id))
                 return;
-            int diff = Utils.SequenceDiff(Manager.Tick, player.StateATick);
+            int diff = Utils.SequenceDiff(tick, player.StateATick);
             if (diff <= 0 || diff >= _filledHistory || _state != SerializerState.Active)
                 return;
             byte* entityPtr = InternalEntity.GetPtr(ref _entity);
             fixed (byte* 
-                   historyA = _history[player.StateATick % MaxHistory], 
-                   historyB = _history[player.StateBTick % MaxHistory],
-                   current = _history[Manager.Tick % MaxHistory])
+                   historyA = _history[player.StateATick % _maxHistory], 
+                   historyB = _history[player.StateBTick % _maxHistory],
+                   current = _history[tick % _maxHistory])
             {
                 int historyOffset = 0;
                 for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
@@ -376,14 +372,14 @@ namespace LiteEntitySystem.Internal
             _lagCompensationEnabled = true;
         }
 
-        public unsafe void DisableLagCompensation()
+        public unsafe void DisableLagCompensation(ushort tick)
         {
             if (!_lagCompensationEnabled)
                 return;
             _lagCompensationEnabled = false;
             
             byte* entityPtr = InternalEntity.GetPtr(ref _entity);
-            fixed (byte* history = _history[Manager.Tick % MaxHistory])
+            fixed (byte* history = _history[tick % _maxHistory])
             {
                 int historyOffset = 0;
                 for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
