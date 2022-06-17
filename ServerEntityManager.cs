@@ -268,7 +268,7 @@ namespace LiteEntitySystem
         /// <param name="reader">Reader with data</param>
         public void Deserialize(NetPlayer player, NetPacketReader reader)
         {
-            if (reader.AvailableBytes <= 3)
+            if (reader.AvailableBytes < 3)
             {
                 Logger.LogWarning($"Invalid data received: {reader.AvailableBytes}");
                 reader.Recycle();
@@ -638,7 +638,7 @@ namespace LiteEntitySystem
         {
             ushort clientTick = reader.GetUShort();
 
-            while (reader.AvailableBytes >= 8)
+            while (reader.AvailableBytes >= sizeof(ushort))
             {
                 var inputBuffer = new InputBuffer
                 {

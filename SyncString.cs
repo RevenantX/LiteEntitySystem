@@ -19,7 +19,7 @@ namespace LiteEntitySystem
             get => _string;
             set
             {
-                if (_string == value)
+                if (_string == value || EntityManager == null)
                     return;
                 _string = value;
                 Utils.ResizeOrCreate(ref _stringData, Encoding.GetMaxByteCount(_string.Length));

@@ -32,5 +32,11 @@ namespace LiteEntitySystem
         {
             MethodName = methodName;
         }
+        
+        public SyncVar(SyncFlags syncFlags, string methodName)
+        {
+            Flags = syncFlags;
+            MethodName = methodName;
+        }
     }
 }

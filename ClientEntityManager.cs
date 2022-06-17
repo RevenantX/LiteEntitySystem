@@ -441,7 +441,7 @@ namespace LiteEntitySystem
                 }
             }
 
-            //send input
+            //send buffered input
             if (_isLogicTicked)
             {
                 _isLogicTicked = false;
@@ -545,6 +545,7 @@ namespace LiteEntitySystem
         protected override unsafe void OnLogicTick()
         {
             ServerTick++;
+            _isLogicTicked = true;
             
             if (_stateB != null)
             {
@@ -595,13 +596,8 @@ namespace LiteEntitySystem
                     Logger.LogError($"Input too large: {inputWriter.Length-InputHeaderSize} bytes");
                     break;
                 }
-                
-                _inputCommands.Enqueue(inputWriter);
-                _isLogicTicked = true;
-                _inputReader.SetSource(inputWriter.Data, InputHeaderSize, inputWriter.Length);
-                
-                controller.ReadInput(_inputReader);
             }
+            _inputCommands.Enqueue(inputWriter);
 
             //local only and UpdateOnClient
             foreach (var entity in AliveEntities)
@@ -639,11 +635,13 @@ namespace LiteEntitySystem
                     entity.Update();
                 }
             }
-            //controllers
-            foreach (var entity in GetControllers<HumanControllerLogic>())
+
+            _inputReader.SetSource(inputWriter.Data, InputHeaderSize, inputWriter.Length);
+            foreach (var controller in GetControllers<HumanControllerLogic>())
             {
-                if(ClassDataDict[entity.ClassId].IsUpdateable)
-                    entity.Update();
+                controller.ReadInput(_inputReader);
+                if(ClassDataDict[controller.ClassId].IsUpdateable)
+                    controller.Update();
             }
         }
 
