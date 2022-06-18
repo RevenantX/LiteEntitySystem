@@ -322,7 +322,7 @@ namespace LiteEntitySystem
                         for (int i = 0; i < classData.FieldsCount; i++)
                         {
                             ref var field = ref classData.Fields[i];
-                            if (!field.IsEntity)
+                            if (!field.IsEntity && !field.Flags.HasFlagFast(SyncFlags.OnlyForRemote))
                                 field.SetFromFixedOffset(entityPtr, latestEntityData);
                         }
                     }

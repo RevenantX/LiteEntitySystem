@@ -167,7 +167,6 @@ namespace LiteEntitySystem
             _isDestroyed = true;
             OnDestroy();
             EntityManager.RemoveEntity(this);
-            EntityManager.GetEntityByIdSafe<EntityLogic>(_parentId)?.Childs.Remove(this);
             if (EntityManager.IsClient && IsLocalControlled && !IsLocal)
             {
                 ClientManager.RemoveOwned(this);
@@ -178,6 +177,7 @@ namespace LiteEntitySystem
                     e.DestroyInternal();
                 ServerManager.DestroySavedData(this);
             }
+            EntityManager.GetEntityByIdSafe<EntityLogic>(_parentId)?.Childs.Remove(this);
         }
         
         private void OnOwnerChange(byte prevOwner)
