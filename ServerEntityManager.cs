@@ -499,32 +499,31 @@ namespace LiteEntitySystem
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
             {
                 var player = _netPlayersArray[pidx];
-                if (!player.IsFirstStateReceived) 
+                if (!player.IsFirstStateReceived || player.AvailableInput.Count == 0) 
                     continue;
+                
+                var inputFrame = player.AvailableInput.Minimal();
+                ref var inputData = ref inputFrame.Input;
+                        
+                player.LastProcessedTick = inputFrame.Tick;
+                player.StateATick = inputData.StateA;
+                player.StateBTick = inputData.StateB;
+                player.LerpTime = inputData.LerpMsec / 65535f;
+                player.SimulatedServerTick = inputData.SimulatedServerTick;
+                        
+                _inputReader.SetSource(inputFrame.Data, 0, inputFrame.Size);
                 
                 //process input
                 foreach (var controller in GetControllers<HumanControllerLogic>())
                 {
                     if (player.Id == controller.OwnerId)
                     {
-                        if (player.AvailableInput.Count == 0)
-                            continue;
-            
-                        var inputFrame = player.AvailableInput.Minimal();
-                        ref var inputData = ref inputFrame.Input;
-                        
-                        player.LastProcessedTick = inputFrame.Tick;
-                        player.StateATick = inputData.StateA;
-                        player.StateBTick = inputData.StateB;
-                        player.LerpTime = inputData.LerpMsec / 65535f;
-                        player.SimulatedServerTick = inputData.SimulatedServerTick;
-                        
-                        _inputReader.SetSource(inputFrame.Data, 0, inputFrame.Size);
                         controller.ReadInput(_inputReader);
-                        player.AvailableInput.Remove(inputFrame.Tick);
-                        _inputPool.Enqueue(inputFrame.Data);
                     }
                 }
+                
+                player.AvailableInput.Remove(inputFrame.Tick);
+                _inputPool.Enqueue(inputFrame.Data);
             }
             
             foreach (var aliveEntity in AliveEntities)
@@ -638,7 +637,7 @@ namespace LiteEntitySystem
         {
             ushort clientTick = reader.GetUShort();
 
-            while (reader.AvailableBytes >= sizeof(ushort))
+            while (reader.AvailableBytes >= sizeof(ushort) + Unsafe.SizeOf<InputPacketHeader>())
             {
                 var inputBuffer = new InputBuffer
                 {

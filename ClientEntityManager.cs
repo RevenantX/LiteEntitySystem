@@ -242,8 +242,12 @@ namespace LiteEntitySystem
 
         private bool PreloadNextState()
         {
-            if (_lerpBuffer.Count == 0) 
+            if (_lerpBuffer.Count == 0)
+            {
+                if (_adaptiveMiddlePoint < 3f)
+                    _adaptiveMiddlePoint = 3f;
                 return false;
+            }
 
             float jitterSum = 0f;
             bool adaptiveIncreased = false;

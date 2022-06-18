@@ -268,8 +268,8 @@ namespace LiteEntitySystem.Internal
                             *fields = 0;
                         }
                         
-                        if((fieldInfo.Flags.HasFlag(SyncFlags.OnlyForLocal) && !localControlled) ||
-                           (fieldInfo.Flags.HasFlag(SyncFlags.OnlyForRemote) && localControlled))
+                        if((fieldInfo.Flags.HasFlagFast(SyncFlags.OnlyForLocal) && !localControlled) ||
+                           (fieldInfo.Flags.HasFlagFast(SyncFlags.OnlyForRemote) && localControlled))
                             continue;
                         
                         if (Utils.SequenceDiff(_fieldChangeTicks[i], playerTick) > 0)
@@ -283,8 +283,8 @@ namespace LiteEntitySystem.Internal
                     var rpcNode = _rpcHead;
                     while (rpcNode != null)
                     {
-                        bool send = (rpcNode.Flags.HasFlag(ExecuteFlags.SendToOwner) && localControlled) ||
-                                     (rpcNode.Flags.HasFlag(ExecuteFlags.SendToOther) && !localControlled);
+                        bool send = (rpcNode.Flags.HasFlagFast(ExecuteFlags.SendToOwner) && localControlled) ||
+                                     (rpcNode.Flags.HasFlagFast(ExecuteFlags.SendToOther) && !localControlled);
 
                         if (send && Utils.SequenceDiff(playerTick, rpcNode.Tick) < 0)
                         {

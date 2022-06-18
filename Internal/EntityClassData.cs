@@ -258,7 +258,7 @@ namespace LiteEntitySystem.Internal
                         int fieldSize = ft == typeof(bool) ? 1 : Marshal.SizeOf(ft);
                         InterpolatorDelegate interpolator = null;
                         
-                        if (syncVarAttribute.Flags.HasFlag(SyncFlags.Interpolated) && !ft.IsArray && !ft.IsEnum)
+                        if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.Interpolated) && !ft.IsArray && !ft.IsEnum)
                         {
                             if (!Interpolation.Methods.TryGetValue(ft, out interpolator))
                                 throw new Exception($"No info how to interpolate: {ft}");
@@ -267,7 +267,7 @@ namespace LiteEntitySystem.Internal
                         }
 
                         var fieldInfo = new EntityFieldInfo(onSyncMethod, interpolator, offset, fieldSize, false, syncVarAttribute.Flags);
-                        if (syncVarAttribute.Flags.HasFlag(SyncFlags.LagCompensated))
+                        if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.LagCompensated))
                         {
                             lagCompensatedFields.Add(fieldInfo);
                             LagCompensatedSize += fieldSize;
