@@ -255,7 +255,7 @@ namespace LiteEntitySystem.Internal
                         if (ft.IsEnum)
                             ft = ft.GetEnumUnderlyingType();
                         
-                        int fieldSize = ft == typeof(bool) ? 1 : Marshal.SizeOf(ft);
+                        int fieldSize = (int)typeof(Unsafe).GetMethod("SizeOf").MakeGenericMethod(ft).Invoke(null, null);
                         InterpolatorDelegate interpolator = null;
                         
                         if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.Interpolated) && !ft.IsArray && !ft.IsEnum)

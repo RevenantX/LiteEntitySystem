@@ -19,12 +19,12 @@ namespace LiteEntitySystem
             get => _string;
             set
             {
-                if (_string == value || EntityManager == null)
+                if (_string == value)
                     return;
                 _string = value;
                 Utils.ResizeOrCreate(ref _stringData, Encoding.GetMaxByteCount(_string.Length));
                 _size = Encoding.GetBytes(_string, 0, _string.Length, _stringData, 0);
-                _setStringClientCall(_stringData, (ushort)_size);
+                _setStringClientCall?.Invoke(_stringData, (ushort)_size);
             }
         }
 
