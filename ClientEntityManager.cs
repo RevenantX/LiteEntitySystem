@@ -59,7 +59,6 @@ namespace LiteEntitySystem
         private readonly byte[][] _predictedEntities = new byte[ushort.MaxValue][];
         private readonly byte[] _tempData = new byte[MaxFieldSize];
         private readonly byte[] _sendBuffer = new byte[NetConstants.MaxPacketSize];
-        private readonly EntityFilter<EntityLogic> _ownedEntities = new EntityFilter<EntityLogic>();
 
         private ServerStateData _stateA;
         private ServerStateData _stateB;
@@ -310,7 +309,7 @@ namespace LiteEntitySystem
                 _timer -= _lerpTime;
                 
                 //reset owned entities
-                foreach (var entity in _ownedEntities)
+                foreach (var entity in AliveEntities)
                 {
                     var localEntity = entity;
                     fixed (byte* latestEntityData = _predictedEntities[entity.Id])
@@ -336,7 +335,7 @@ namespace LiteEntitySystem
                     {
                         controller.ReadInput(_inputReader);
                     }
-                    foreach (var entity in _ownedEntities)
+                    foreach (var entity in AliveEntities)
                     {
                         entity.Update();
                     }
@@ -344,7 +343,7 @@ namespace LiteEntitySystem
                 UpdateMode = UpdateMode.Normal;
                 
                 //update interpolated position
-                foreach (var entity in _ownedEntities)
+                foreach (var entity in AliveEntities)
                 {
                     ref var classData = ref entity.GetClassData();
                     var localEntity = entity;
@@ -508,7 +507,6 @@ namespace LiteEntitySystem
 
         internal void AddOwned(EntityLogic entity)
         {
-            _ownedEntities.Add(entity);
             if(entity.GetClassData().IsUpdateable)
                 AliveEntities.Add(entity);
         }
@@ -538,7 +536,7 @@ namespace LiteEntitySystem
 
         internal void RemoveOwned(EntityLogic entity)
         {
-            _ownedEntities.Remove(entity);
+            AliveEntities.Remove(entity);
         }
 
         internal void AddPredictedInfo(EntityLogic e)
