@@ -170,15 +170,10 @@ namespace LiteEntitySystem
                 var e = EntitiesDict[i];
                 if (e.IsControlledBy(player.Id))
                 {
-                    switch (e)
-                    {
-                        case HumanControllerLogic controllerLogic:
-                            controllerLogic.DestroyInternal();
-                            break;
-                        case EntityLogic entityLogic:
-                            entityLogic.Destroy();
-                            break;
-                    }
+                    if (e is HumanControllerLogic controllerLogic)
+                        controllerLogic.DestroyInternal();
+                    else if (e is EntityLogic entityLogic) 
+                        entityLogic.Destroy();
                 }
             }
             
