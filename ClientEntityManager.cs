@@ -311,6 +311,9 @@ namespace LiteEntitySystem
                 //reset owned entities
                 foreach (var entity in AliveEntities)
                 {
+                    if(entity.IsLocal || !entity.IsLocalControlled)
+                        continue;
+                    
                     var localEntity = entity;
                     fixed (byte* latestEntityData = _predictedEntities[entity.Id])
                     {
@@ -337,6 +340,8 @@ namespace LiteEntitySystem
                     }
                     foreach (var entity in AliveEntities)
                     {
+                        if(entity.IsLocal || !entity.IsLocalControlled)
+                            continue;
                         entity.Update();
                     }
                 }
@@ -345,6 +350,8 @@ namespace LiteEntitySystem
                 //update interpolated position
                 foreach (var entity in AliveEntities)
                 {
+                    if(entity.IsLocal || !entity.IsLocalControlled)
+                        continue;
                     ref var classData = ref entity.GetClassData();
                     var localEntity = entity;
                     byte* entityPtr = InternalEntity.GetPtr(ref localEntity);
@@ -518,9 +525,13 @@ namespace LiteEntitySystem
             byte* entityPtr = InternalEntity.GetPtr(ref entity);
             if(!entity.IsLocal)
                 Utils.ResizeOrCreate(ref predictedData, classData.FixedFieldsSize);
-            Utils.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
-            Utils.ResizeOrCreate(ref _interpolatedInitialData[entity.Id], classData.InterpolatedFieldsSize);
-            
+
+            if (classData.InterpolatedFieldsSize > 0)
+            {
+                Utils.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
+                Utils.ResizeOrCreate(ref _interpolatedInitialData[entity.Id], classData.InterpolatedFieldsSize);
+            }
+
             fixed (byte* predictedPtr = predictedData, interpDataPtr = _interpolatedInitialData[entity.Id])
             {
                 for (int i = 0; i < classData.FieldsCount; i++)
