@@ -505,11 +505,6 @@ namespace LiteEntitySystem
             {
                 entity.VisualUpdate();
             }
-            //controllers
-            foreach (var entity in GetControllers<HumanControllerLogic>())
-            {
-                entity.VisualUpdate();
-            }
         }
 
         internal void AddOwned(EntityLogic entity)

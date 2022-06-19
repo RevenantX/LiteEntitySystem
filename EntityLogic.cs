@@ -345,6 +345,7 @@ namespace LiteEntitySystem
     /// <summary>
     /// Base class for human Controller entities
     /// </summary>
+    [UpdateableEntity(true)]
     public abstract class HumanControllerLogic : ControllerLogic
     {
         [SyncVar(nameof(OnDestroyChange))] 
