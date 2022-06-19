@@ -610,6 +610,13 @@ namespace LiteEntitySystem
                     break;
                 }
             }
+            
+            //read
+            _inputReader.SetSource(inputWriter.Data, InputHeaderSize, inputWriter.Length);
+            foreach (var controller in GetControllers<HumanControllerLogic>())
+            {
+                controller.ReadInput(_inputReader);
+            }
             _inputCommands.Enqueue(inputWriter);
 
             //local only and UpdateOnClient
@@ -647,14 +654,6 @@ namespace LiteEntitySystem
                 {
                     entity.Update();
                 }
-            }
-
-            _inputReader.SetSource(inputWriter.Data, InputHeaderSize, inputWriter.Length);
-            foreach (var controller in GetControllers<HumanControllerLogic>())
-            {
-                controller.ReadInput(_inputReader);
-                if(ClassDataDict[controller.ClassId].IsUpdateable)
-                    controller.Update();
             }
         }
 
