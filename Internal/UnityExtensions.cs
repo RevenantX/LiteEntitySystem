@@ -63,19 +63,24 @@ namespace LiteEntitySystem.Internal
         {
             if (!AddedTypes.Add((classType, valueType)))
                 return;
+
+            var valueTypeName = valueType != null ? GetTypeName(valueType) : string.Empty;
+            var classTypeName = GetTypeName(classType);
+            
             GenCode.Append(' ', 12);
             if(valueType == null)
-                GenCode.AppendLine($"G.GenerateNoParams<{GetTypeName(classType)}>(null);");
+                GenCode.AppendLine($"G.GenerateNoParams<{classTypeName}>(null);");
             else if(valueType.IsArray)
-                GenCode.AppendLine($"G.GenerateArray<{GetTypeName(classType)},{GetTypeName(valueType)}>(null);");
+                GenCode.AppendLine($"G.GenerateArray<{classTypeName},{valueTypeName}>(null); Unsafe.SizeOf<{valueTypeName}>();");
             else
-                GenCode.AppendLine($"G.Generate<{GetTypeName(classType)},{GetTypeName(valueType)}>(null);");
+                GenCode.AppendLine($"G.Generate<{classTypeName},{valueTypeName}>(null); Unsafe.SizeOf<{valueTypeName}>();");
         }
 
         public void OnPreprocessBuild(BuildReport report)
         {
             AddedTypes.Clear();
             GenCode.Append(@$"//auto generated on {DateTime.UtcNow} UTC
+using System.Runtime.CompilerServices;
 namespace LiteEntitySystem.Internal
 {{
     using G = MethodCallGenerator;
