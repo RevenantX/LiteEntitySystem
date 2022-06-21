@@ -64,9 +64,18 @@ namespace LiteEntitySystem
             return value.Degrees;
         }
 
+        private static float Repeat(float t, float max)
+        {
+            float res = t - (float)Math.Floor(t / max) * max;
+            return res > 0.0f ? (res < max ? res : max) : 0.0f;
+        }
+
         public static FloatAngle Lerp(FloatAngle a, FloatAngle b, float t)
         {
-            return Utils.Lerp(a.Degrees, b.Degrees, t);
+            float num = Repeat(b - a, 360f);
+            if (num > 180.0)
+                num -= 360f;
+            return a + num * t;
         }
     }
 }
