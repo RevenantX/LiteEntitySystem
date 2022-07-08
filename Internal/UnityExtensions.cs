@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace LiteEntitySystem.Internal
 {
-    internal sealed class EntitySystemBuildProcessor : IPreprocessBuildWithReport, IPostprocessBuildWithReport
+    internal sealed class EntitySystemBuildProcessor : IPreprocessBuildWithReport
     {
         private static readonly string GeneratedFilePath = Path.Combine(Application.dataPath, "LES_IL2CPP_AOT.cs");
         private static readonly string GeneratedMetaFilePath = Path.Combine(Application.dataPath, "LES_IL2CPP_AOT.cs.meta");
@@ -41,12 +41,6 @@ namespace LiteEntitySystem.Internal
         };
 
         public int callbackOrder => 0;
-
-        public EntitySystemBuildProcessor()
-        {
-            File.Delete(GeneratedFilePath);
-            File.Delete(GeneratedMetaFilePath);
-        }
 
         private static string GetTypeName(Type type)
         {
@@ -131,12 +125,6 @@ namespace LiteEntitySystem.Internal
             File.WriteAllText(GeneratedFilePath, GenCode.ToString().Replace("\r\n", "\n"));
             GenCode.Clear();
             AssetDatabase.Refresh();
-        }
-        
-        public void OnPostprocessBuild(BuildReport report)
-        {
-            File.Delete(GeneratedFilePath);
-            File.Delete(GeneratedMetaFilePath);
         }
     }
 }

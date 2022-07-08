@@ -42,6 +42,7 @@ namespace LiteEntitySystem.Internal
         private bool _lagCompensationEnabled;
         private byte _controllerOwner;
         private byte _maxHistory; //should be power of two
+        private uint _fullDataSize;
         
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
@@ -59,7 +60,7 @@ namespace LiteEntitySystem.Internal
             return _version++;
         }
 
-        public void Init(ref EntityClassData classData, InternalEntity e)
+        public unsafe void Init(ref EntityClassData classData, InternalEntity e)
         {
             _classData = classData;
             _entity = e;
@@ -67,28 +68,25 @@ namespace LiteEntitySystem.Internal
             _filledHistory = 0;
             _maxHistory = (byte)e.ServerManager.MaxHistorySize;
 
-            int minimalDataSize = HeaderSize + _classData.FieldsFlagsSize + _classData.FixedFieldsSize;
-            Utils.ResizeOrCreate(ref _latestEntityData, minimalDataSize);
+            _fullDataSize = (uint)(HeaderSize + _classData.FixedFieldsSize);
+            Utils.ResizeOrCreate(ref _latestEntityData, (int)_fullDataSize);
             Utils.ResizeOrCreate(ref _fieldChangeTicks, classData.FieldsCount);
-
-            unsafe
+            
+            byte* entityPointer = Utils.GetPtr(ref _entity);
+            for (int i = 0; i < _classData.SyncableFields.Length; i++)
             {
-                byte* entityPointer = InternalEntity.GetPtr(ref _entity);
-                for (int i = 0; i < _classData.SyncableFields.Length; i++)
-                {
-                    ref var syncable = ref Unsafe.AsRef<SyncableField>(entityPointer + _classData.SyncableFields[i].FieldOffset);
-                    syncable.EntityManager = e.ServerManager;
-                    syncable.FieldId = (byte)i;
-                    syncable.EntityId = e.Id;
-                    syncable.OnServerInitialized();
-                }
-                
-                fixed (byte* data = _latestEntityData)
-                {
-                    Unsafe.Write(data, e.Id);
-                    data[2] = e.Version;
-                    Unsafe.Write(data + 3, e.ClassId);
-                }
+                ref var syncable = ref Unsafe.AsRef<SyncableField>(entityPointer + _classData.SyncableFields[i].Offset);
+                syncable.EntityManager = e.ServerManager;
+                syncable.FieldId = (byte)i;
+                syncable.EntityId = e.Id;
+                syncable.OnServerInitialized();
+            }
+            
+            fixed (byte* data = _latestEntityData)
+            {
+                Unsafe.Write(data, e.Id);
+                data[2] = e.Version;
+                Unsafe.Write(data + 3, e.ClassId);
             }
 
             _history ??= new byte[_maxHistory][];
@@ -104,14 +102,14 @@ namespace LiteEntitySystem.Internal
             if (_classData.LagCompensatedSize == 0)
                 return;
             _filledHistory = Math.Min(_filledHistory + 1, _maxHistory);
-            byte* entityPointer = InternalEntity.GetPtr(ref _entity);
+            byte* entityPointer = Utils.GetPtr(ref _entity);
             int historyOffset = 0;
             fixed (byte* history = _history[tick % _maxHistory])
             {
                 for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
                 {
                     ref var field = ref _classData.LagCompensatedFields[i];
-                    field.Get(entityPointer, history + historyOffset);
+                    Unsafe.CopyBlock(history + historyOffset, entityPointer + field.Offset, field.Size);
                     historyOffset += field.IntSize;
                 }
             }
@@ -128,17 +126,17 @@ namespace LiteEntitySystem.Internal
                 : ServerEntityManager.ServerPlayerId;
 
             _lastWriteTick = serverTick;
-            byte* entityPointer = InternalEntity.GetPtr(ref _entity);
+            byte* entityPointer = Utils.GetPtr(ref _entity);
             fixed (byte* latestEntityData = _latestEntityData)
             {
                 for (int i = 0; i < _classData.FieldsCount; i++)
                 {
                     ref var field = ref _classData.Fields[i];
-                    byte* fieldPtr = entityPointer + field.FieldOffset;
+                    byte* fieldPtr = entityPointer + field.Offset;
                     byte* latestDataPtr = latestEntityData + HeaderSize + field.FixedOffset;
 
                     //update only changed fields
-                    if(field.IsEntity)
+                    if(field.FieldType == FieldType.Entity)
                     {
                         ushort entityId = Unsafe.AsRef<InternalEntity>(fieldPtr)?.Id ?? EntityManager.InvalidEntityId;
                         
@@ -150,6 +148,16 @@ namespace LiteEntitySystem.Internal
                         if (*ushortPtr != entityId)
                         {
                             *ushortPtr = entityId;
+                            _fieldChangeTicks[i] = serverTick;
+                        }
+                    }
+                    else if (field.FieldType == FieldType.SyncableSyncVar)
+                    {
+                        ref var syncable = ref Unsafe.AsRef<SyncableField>(fieldPtr);
+                        byte* syncVarPtr = Utils.GetPtr(ref syncable) + field.SyncableSyncVarOffset;
+                        if (Utils.memcmp(latestDataPtr, syncVarPtr, field.PtrSize) != 0)
+                        {
+                            Unsafe.CopyBlock(latestDataPtr, syncVarPtr, field.Size);
                             _fieldChangeTicks[i] = serverTick;
                         }
                     }
@@ -169,6 +177,16 @@ namespace LiteEntitySystem.Internal
             _ticksOnDestroy = serverTick;
         }
 
+        private unsafe void WriteFull(byte* resultData, byte *lastEntityData, ref int position)
+        {
+            Unsafe.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
+            position += (int)_fullDataSize;
+            for (int i = 0; i < _classData.SyncableFields.Length; i++)
+            {
+                Unsafe.AsRef<SyncableField>(Utils.GetPtr(ref _entity) + _classData.SyncableFields[i].Offset).FullSyncWrite(resultData, ref position);
+            }
+        }
+
         public unsafe void MakeBaseline(byte playerId, ushort serverTick, byte* resultData, ref int position)
         {
             if (_state != SerializerState.Active)
@@ -182,25 +200,7 @@ namespace LiteEntitySystem.Internal
             {
                 //initial state with compression
                 //don't write total size in full sync and fields
-                //totalSizePos here equal to EID position
-                //set fields to sync all
-                Unsafe.CopyBlock(resultData + position, lastEntityData, HeaderSize);
-                position += HeaderSize;
-                for (int i = 0; i < _classData.FieldsCount; i++)
-                {
-                    ref var field = ref _classData.Fields[i];
-                    Unsafe.CopyBlock(
-                        resultData + position, 
-                        lastEntityData + HeaderSize + field.FixedOffset,
-                        field.Size);
-                    position += field.IntSize;
-                }
-
-                byte* entityPointer = InternalEntity.GetPtr(ref _entity);
-                for (int i = 0; i < _classData.SyncableFields.Length; i++)
-                {
-                    Unsafe.AsRef<SyncableField>(entityPointer + _classData.SyncableFields[i].FieldOffset).FullSyncWrite(resultData, ref position);
-                }
+                WriteFull(resultData, lastEntityData, ref position);
             }
         }
 
@@ -218,7 +218,6 @@ namespace LiteEntitySystem.Internal
 
             //make diff
             int startPos = position;
-            byte* entityPointer = InternalEntity.GetPtr(ref _entity);
 
             fixed (byte* lastEntityData = _latestEntityData)
             {
@@ -232,24 +231,11 @@ namespace LiteEntitySystem.Internal
                     //write full header here (totalSize + eid)
                     //also all fields
                     *fieldFlagAndSize = 1;
-                    Unsafe.CopyBlock(resultData + position, lastEntityData, HeaderSize);
-                    position += HeaderSize;
-                    for (int i = 0; i < _classData.FieldsCount; i++)
-                    {
-                        ref var field = ref _classData.Fields[i];
-                        Unsafe.CopyBlock(
-                            resultData + position, 
-                            lastEntityData + HeaderSize + field.FixedOffset,
-                            field.Size);
-                        position += field.IntSize;
-                    }
-                    for (int i = 0; i < _classData.SyncableFields.Length; i++)
-                    {
-                        Unsafe.AsRef<SyncableField>(entityPointer + _classData.SyncableFields[i].FieldOffset).FullSyncWrite(resultData, ref position);
-                    }
+                    WriteFull(resultData, lastEntityData, ref position);
                 }
                 else //make diff
                 {
+                    byte* entityDataAfterHeader = lastEntityData + HeaderSize;
                     bool localControlled = _entity.IsControlledBy(playerId);
                     bool hasChanges = false;
                     // -1 for cycle
@@ -276,10 +262,11 @@ namespace LiteEntitySystem.Internal
                         {
                             hasChanges = true;
                             *fields |= (byte)(1 << i%8);
-                            Unsafe.CopyBlock(resultData + position, lastEntityData + HeaderSize + fieldInfo.FixedOffset, fieldInfo.Size);
+                            Unsafe.CopyBlock(resultData + position, entityDataAfterHeader + fieldInfo.FixedOffset, fieldInfo.Size);
                             position += fieldInfo.IntSize;
                         }
                     }
+
                     var rpcNode = _rpcHead;
                     while (rpcNode != null)
                     {
@@ -335,12 +322,12 @@ namespace LiteEntitySystem.Internal
 
         public unsafe void EnableLagCompensation(NetPlayer player, ushort tick)
         {
-            if (_entity == null || _entity.IsControlledBy(player.Id))
+            if (_entity == null || _entity.IsControlledBy(player.Id) || _entity is not EntityLogic)
                 return;
             int diff = Utils.SequenceDiff(tick, player.StateATick);
             if (diff <= 0 || diff >= _filledHistory || _state != SerializerState.Active)
                 return;
-            byte* entityPtr = InternalEntity.GetPtr(ref _entity);
+            byte* entityPtr = Utils.GetPtr(ref _entity);
             fixed (byte* 
                    historyA = _history[player.StateATick % _maxHistory], 
                    historyB = _history[player.StateBTick % _maxHistory],
@@ -350,25 +337,24 @@ namespace LiteEntitySystem.Internal
                 for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
                 {
                     var field = _classData.LagCompensatedFields[i];
-                    field.Get(entityPtr, current + historyOffset);
+                    Unsafe.CopyBlock(current + historyOffset, entityPtr + field.Offset, field.Size);
                     if (field.Interpolator != null)
                     {
                         field.Interpolator(
                             historyA + historyOffset,
                             historyB + historyOffset,
-                            entityPtr + field.FieldOffset,
+                            entityPtr + field.Offset,
                             player.LerpTime);
                     }
                     else
                     {
-                        field.Set(entityPtr, historyA + historyOffset);
+                        Unsafe.CopyBlock(entityPtr + field.Offset, historyA + historyOffset, field.Size);
                     }
                     historyOffset += field.IntSize;
                 }
             }
-
-            if (_entity is EntityLogic entityLogic)
-                entityLogic.OnLagCompensation(true);
+            
+            ((EntityLogic)_entity).OnLagCompensationStart();
             _lagCompensationEnabled = true;
         }
 
@@ -378,20 +364,18 @@ namespace LiteEntitySystem.Internal
                 return;
             _lagCompensationEnabled = false;
             
-            byte* entityPtr = InternalEntity.GetPtr(ref _entity);
+            byte* entityPtr = Utils.GetPtr(ref _entity);
             fixed (byte* history = _history[tick % _maxHistory])
             {
                 int historyOffset = 0;
                 for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
                 {
                     var field = _classData.LagCompensatedFields[i];
-                    field.Set(entityPtr, history + historyOffset);
+                    Unsafe.CopyBlock(entityPtr + field.Offset, history + historyOffset, field.Size);
                     historyOffset += field.IntSize;
                 }
             }
-            
-            if (_entity is EntityLogic entityLogic)
-                entityLogic.OnLagCompensation(false);
+            ((EntityLogic)_entity).OnLagCompensationEnd();
         }
     }
 }

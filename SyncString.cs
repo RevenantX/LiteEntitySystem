@@ -51,7 +51,7 @@ namespace LiteEntitySystem
 
         public override unsafe void FullSyncRead(byte* data, ref int position)
         {
-            int length = *(ushort*)(data + position);
+            int length = Unsafe.Read<ushort>(data + position);
             Utils.ResizeOrCreate(ref _stringData, length);
             _string = Encoding.GetString(data + position + sizeof(ushort), length);
             position += sizeof(ushort) + length;
@@ -59,7 +59,7 @@ namespace LiteEntitySystem
 
         public override unsafe void FullSyncWrite(byte* data, ref int position)
         {
-            *(ushort*)(data + position) = (ushort)_size;
+            Unsafe.Write(data + position, (ushort)_size);
             fixed (byte* stringData = _stringData)
             {
                 Unsafe.CopyBlock(data + position + sizeof(ushort), stringData, (uint)_size);

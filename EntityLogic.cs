@@ -55,17 +55,17 @@ namespace LiteEntitySystem
         
         [SyncVar(nameof(OnOwnerChange))]
         internal byte InternalOwnerId;
-
+        
         /// <summary>
         /// Is entity is destroyed
         /// </summary>
         public bool IsDestroyed => _isDestroyed;
-        
+
         /// <summary>
         /// Child entities (can be used for transforms or as components)
         /// </summary>
         public readonly HashSet<EntityLogic> Childs = new HashSet<EntityLogic>();
-        
+
         /// <summary>
         /// Owner player id
         /// </summary>
@@ -149,10 +149,17 @@ namespace LiteEntitySystem
         }
         
         /// <summary>
-        /// Called when lag compensation was enabled for this entity
+        /// Called when lag compensation was started for this entity
         /// </summary>
-        /// <param name="enabled">is enabled</param>
-        public virtual void OnLagCompensation(bool enabled)
+        public virtual void OnLagCompensationStart()
+        {
+            
+        }
+        
+        /// <summary>
+        /// Called when lag compensation ended for this entity
+        /// </summary>
+        public virtual void OnLagCompensationEnd()
         {
             
         }
@@ -177,7 +184,12 @@ namespace LiteEntitySystem
                     e.DestroyInternal();
                 ServerManager.DestroySavedData(this);
             }
-            EntityManager.GetEntityByIdSafe<EntityLogic>(_parentId)?.Childs.Remove(this);
+
+            var parent = EntityManager.GetEntityByIdSafe<EntityLogic>(_parentId);
+            if (parent != null && !parent._isDestroyed)
+            {
+                parent.Childs.Remove(this);
+            }
         }
         
         private void OnOwnerChange(byte prevOwner)
@@ -197,11 +209,10 @@ namespace LiteEntitySystem
         private void OnParentChange(ushort oldId)
         {
             EntityManager.GetEntityByIdSafe<EntityLogic>(oldId)?.Childs.Remove(this);
-            var newParent = EntityManager.GetEntityByIdSafe<EntityLogic>(_parentId);
-            newParent?.Childs.Add(this);
+            EntityManager.GetEntityByIdSafe<EntityLogic>(_parentId)?.Childs.Add(this);
         }
 
-        private static void SetOwner(EntityLogic entity, byte ownerId)
+        internal static void SetOwner(EntityLogic entity, byte ownerId)
         {
             foreach (var child in entity.Childs)
             {
@@ -245,7 +256,8 @@ namespace LiteEntitySystem
             get => _controller;
             internal set
             {
-                InternalOwnerId = value?.InternalOwnerId ?? (GetParent<EntityLogic>()?.InternalOwnerId ?? 0);
+                InternalOwnerId = value?.InternalOwnerId ?? (GetParent<EntityLogic>()?.InternalOwnerId ?? ServerEntityManager.ServerPlayerId);
+                SetOwner(this, InternalOwnerId);
                 _controller = value;
             }
         }

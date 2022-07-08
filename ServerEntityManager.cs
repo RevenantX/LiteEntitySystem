@@ -428,7 +428,7 @@ namespace LiteEntitySystem
                                 writePosition -= mtu - 5;
                             }
                         }
-                        if (diffResult == DiffResult.RequestBaselineSync)
+                        else if (diffResult == DiffResult.RequestBaselineSync)
                         {
                             netPlayer.RequestBaselineSync();
                             break;

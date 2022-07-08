@@ -7,7 +7,7 @@ namespace LiteEntitySystem.Internal
 {
     internal static class Utils
     {
-#if UNITY_STANDALONE_WIN || _WINDOWS
+#if UNITY_STANDALONE_WIN || _WINDOWS || UNITY_EDITOR_WIN
         [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
 #else
         [DllImport("libc", CallingConvention = CallingConvention.Cdecl)]                
@@ -62,6 +62,12 @@ namespace LiteEntitySystem.Internal
         public static T Minimal<TIndex, T>(this SortedList<TIndex, T> sortedList)
         {
             return sortedList[sortedList.Keys[0]];
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static unsafe byte* GetPtr<T>(ref T value) where T : class
+        {
+            return (byte*)Unsafe.As<T, IntPtr>(ref value);
         }
 
 #if NETSTANDARD2_0

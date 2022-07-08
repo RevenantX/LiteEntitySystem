@@ -49,12 +49,6 @@ namespace LiteEntitySystem.Internal
         {
             return ref EntityManager.ClassDataDict[ClassId];
         }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static unsafe byte* GetPtr<T>(ref T entity) where T : InternalEntity
-        {
-            return (byte*)Unsafe.As<T, IntPtr>(ref entity);
-        }
 
         /// <summary>
         /// Is locally created entity
@@ -89,6 +83,16 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         public virtual void OnConstructed()
         {
+        }
+
+        public virtual void OnSyncStart()
+        {
+            
+        }
+
+        public virtual void OnSyncEnd()
+        {
+            
         }
 
         protected InternalEntity(EntityParams entityParams)

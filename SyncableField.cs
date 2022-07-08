@@ -1,4 +1,6 @@
 using System;
+using System.Runtime.CompilerServices;
+using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
@@ -8,6 +10,12 @@ namespace LiteEntitySystem
         internal byte Id = byte.MaxValue;
         internal int DataSize;
     }
+
+    [AttributeUsage(AttributeTargets.Field)]
+    public class SyncableSyncVar : Attribute
+    {
+        
+    }
     
     public abstract class SyncableField
     {
@@ -16,12 +24,16 @@ namespace LiteEntitySystem
         internal byte FieldId;
         internal ushort EntityId;
 
-        public bool IsClient => EntityManager == null;
-        public bool IsServer => EntityManager != null;
+        protected bool IsClient => EntityManager == null;
+        protected bool IsServer => EntityManager != null;
         
         public abstract unsafe void FullSyncWrite(byte* data, ref int position);
         public abstract unsafe void FullSyncRead(byte* data, ref int position);
-        public abstract void OnServerInitialized();
+
+        public virtual void OnServerInitialized()
+        {
+            
+        }
 
         protected void CreateClientAction(Action methodToCall, out Action cachedAction)
         {
