@@ -26,6 +26,8 @@ namespace LiteEntitySystem
         /// Current interpolated server tick
         /// </summary>
         public ushort ServerTick { get; private set; }
+
+        public ushort RawServerTick => (ushort)(_stateA != null ? _stateA.Tick : 0);
         
         /// <summary>
         /// Stored input commands count for prediction correction
@@ -41,7 +43,7 @@ namespace LiteEntitySystem
         /// States count in interpolation buffer
         /// </summary>
         public int LerpBufferCount => _lerpBuffer.Count;
-        
+
         private const int InterpolateBufferSize = 10;
         private const int InputBufferSize = 128;
         private static readonly int InputHeaderSize = Unsafe.SizeOf<InputPacketHeader>();
@@ -65,7 +67,6 @@ namespace LiteEntitySystem
         private float _lerpTime;
         private double _timer;
         private bool _isSyncReceived;
-        private bool _isLogicTicked;
 
         private struct SyncCallInfo
         {
@@ -432,6 +433,7 @@ namespace LiteEntitySystem
                 return;
             
             //logic update
+            ushort prevTick = Tick;
             base.Update();
             
             ProcessNextState();
@@ -462,10 +464,8 @@ namespace LiteEntitySystem
             }
 
             //send buffered input
-            if (_isLogicTicked)
+            if (Tick != prevTick)
             {
-                _isLogicTicked = false;
-                
                 //pack tick first
                 int offset = 4;
                 fixed (byte* sendBuffer = _sendBuffer)
@@ -519,8 +519,13 @@ namespace LiteEntitySystem
 
         internal void AddOwned(EntityLogic entity)
         {
-            if(entity.GetClassData().IsUpdateable)
+            if(entity.GetClassData().IsUpdateable && !entity.GetClassData().UpdateOnClient)
                 AliveEntities.Add(entity);
+        }
+        
+        internal void RemoveOwned(EntityLogic entity)
+        {
+            AliveEntities.Remove(entity);
         }
 
         private unsafe void InitInterpolation(InternalEntity entity)
@@ -566,11 +571,6 @@ namespace LiteEntitySystem
             }
         }
 
-        internal void RemoveOwned(EntityLogic entity)
-        {
-            AliveEntities.Remove(entity);
-        }
-
         internal void AddPredictedInfo(EntityLogic e)
         {
             _spawnPredictedEntities.Enqueue((Tick, e));
@@ -579,8 +579,7 @@ namespace LiteEntitySystem
         protected override unsafe void OnLogicTick()
         {
             ServerTick++;
-            _isLogicTicked = true;
-            
+
             if (_stateB != null)
             {
                 fixed (byte* rawData = _stateB.Data)
@@ -608,7 +607,9 @@ namespace LiteEntitySystem
             }
 
             if (_inputCommands.Count > InputBufferSize)
-                _inputCommands.Dequeue();
+            {
+                _inputCommands.Clear();
+            }
             var inputWriter = _inputPool.Count > 0 ? _inputPool.Dequeue() : new NetDataWriter(true, InputHeaderSize);
             var inputPacketHeader = new InputPacketHeader
             {

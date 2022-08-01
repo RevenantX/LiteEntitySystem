@@ -595,12 +595,12 @@ namespace LiteEntitySystem
             _savedEntityData[field.EntityId].AddRpcPacket(rpc);
         }
 
-        internal void EnableLagCompensation(PawnLogic pawn)
+        public void EnableLagCompensation(byte playerId)
         {
-            if (_lagCompensationEnabled || pawn.OwnerId == ServerPlayerId)
+            if (_lagCompensationEnabled || playerId == ServerPlayerId)
                 return;
 
-            NetPlayer player = _netPlayersDict[pawn.OwnerId];
+            NetPlayer player = _netPlayersDict[playerId];
             if (!player.IsFirstStateReceived)
                 return;
             
@@ -614,7 +614,7 @@ namespace LiteEntitySystem
             OnLagCompensation?.Invoke(true);
         }
 
-        internal void DisableLagCompensation()
+        public void DisableLagCompensation()
         {
             if(!_lagCompensationEnabled)
                 return;

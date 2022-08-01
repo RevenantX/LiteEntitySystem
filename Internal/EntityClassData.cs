@@ -224,7 +224,6 @@ namespace LiteEntitySystem.Internal
                     
                     var ft = field.FieldType;
                     int offset = Marshal.ReadInt32(field.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
-                    MethodCallDelegate onSyncMethod = GetOnSyncDelegate(baseType, ft, syncVarAttribute.MethodName);
 
                     if (ft.IsValueType)
                     {
@@ -242,6 +241,7 @@ namespace LiteEntitySystem.Internal
                             InterpolatedCount++;
                         }
 
+                        MethodCallDelegate onSyncMethod = GetOnSyncDelegate(baseType, ft, syncVarAttribute.MethodName);
                         var fieldInfo = new EntityFieldInfo(onSyncMethod, interpolator, offset, fieldSize, syncVarAttribute.Flags);
                         if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.LagCompensated))
                         {
@@ -253,6 +253,7 @@ namespace LiteEntitySystem.Internal
                     }
                     else if (ft == EntityLogicType || ft.IsSubclassOf(InternalEntityType))
                     {
+                        MethodCallDelegate onSyncMethod = GetOnSyncDelegate(baseType, ft, syncVarAttribute.MethodName);
                         fields.Add(new EntityFieldInfo(onSyncMethod, offset, sizeof(ushort), syncVarAttribute.Flags));
                         FixedFieldsSize += sizeof(ushort);
                     }
@@ -260,9 +261,7 @@ namespace LiteEntitySystem.Internal
                     {
                         if (!field.IsInitOnly)
                             throw new Exception("Syncable fields should be readonly!");
-                        if (onSyncMethod != null)
-                            throw new Exception("Syncable fields cannot have OnSync");
-                        
+
                         syncableFields.Add(new EntityFieldInfo(offset, syncVarAttribute.Flags));
                         foreach (var syncableType in GetBaseTypes(ft, typeof(SyncableField), true))
                         {

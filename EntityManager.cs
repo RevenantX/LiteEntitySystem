@@ -128,6 +128,8 @@ namespace LiteEntitySystem
         /// Local player id (0 on server)
         /// </summary>
         public byte PlayerId => InternalPlayerId;
+        
+        public bool InRollBackState => UpdateMode == UpdateMode.PredictionRollback;
 
         protected const byte PacketDiffSync = 1;
         protected const byte PacketClientSync = 2;

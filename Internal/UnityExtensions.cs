@@ -15,13 +15,14 @@ namespace LiteEntitySystem.Internal
     internal sealed class EntitySystemBuildProcessor : IPreprocessBuildWithReport
     {
         private static readonly string GeneratedFilePath = Path.Combine(Application.dataPath, "LES_IL2CPP_AOT.cs");
-        private static readonly string GeneratedMetaFilePath = Path.Combine(Application.dataPath, "LES_IL2CPP_AOT.cs.meta");
+        private static readonly string GeneratedMetaFilePath = GeneratedFilePath + ".meta";
         
         private static readonly Type EntityLogicType = typeof(InternalEntity);
         private const BindingFlags BindFlags = BindingFlags.Instance | BindingFlags.Public |
                                                      BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
         private static readonly StringBuilder GenCode = new StringBuilder();
         private static readonly HashSet<(Type, Type)> AddedTypes = new HashSet<(Type, Type)>();
+        private static readonly HashSet<Type> AddedSizeofs = new HashSet<Type>();
         private static readonly Dictionary<Type, string> KeywordTypeMap = new Dictionary<Type, string>()
         {
             { typeof(string), "string" },
@@ -44,13 +45,19 @@ namespace LiteEntitySystem.Internal
 
         private static string GetTypeName(Type type)
         {
-            string fullName = type.Namespace == nameof(LiteEntitySystem) ? type.Name : type.FullName;
+            string fullName = $"{type}";
             bool isArray = type.IsArray && type.HasElementType;
             if (isArray)
                 type = type.GetElementType();
+            if (type.IsGenericType)
+            {
+                fullName = fullName
+                    .Substring(0, fullName.IndexOf("[", StringComparison.InvariantCulture))
+                    .Replace("`1", $"<{GetTypeName(type.GetGenericArguments()[0])}>");
+            }
             return KeywordTypeMap.TryGetValue(type, out var name) 
                 ? name + (isArray ? "[]" : string.Empty)
-                : fullName!.Replace('+', '.').Replace("`1", "<") + (type.IsGenericType ? $"{GetTypeName(type.GetGenericArguments()[0])}>" : "");
+                : fullName!.Replace('+', '.');
         }
 
         private static void AppendGenerator(Type classType, Type valueType)
@@ -61,18 +68,27 @@ namespace LiteEntitySystem.Internal
             var valueTypeName = valueType != null ? GetTypeName(valueType) : string.Empty;
             var classTypeName = GetTypeName(classType);
             
+            //Debug.Log($"vf: {(valueType != null ? valueType.Name : string.Empty)} vtn: {valueTypeName}, ctn: {classTypeName}");
+
             GenCode.Append(' ', 12);
             if(valueType == null)
                 GenCode.AppendLine($"G.GenerateNoParams<{classTypeName}>(null);");
             else if(valueType.IsArray)
-                GenCode.AppendLine($"G.GenerateArray<{classTypeName},{valueTypeName}>(null); Unsafe.SizeOf<{valueTypeName}>();");
+                GenCode.AppendLine($"G.GenerateArray<{classTypeName},{valueTypeName}>(null);");
             else
-                GenCode.AppendLine($"G.Generate<{classTypeName},{valueTypeName}>(null); Unsafe.SizeOf<{valueTypeName}>();");
+                GenCode.AppendLine($"G.Generate<{classTypeName},{valueTypeName}>(null);");
+            if (valueType != null && valueType.IsValueType && AddedSizeofs.Add(valueType))
+            {
+                GenCode.Append(' ', 12);
+                GenCode.AppendLine($"Unsafe.SizeOf<{valueTypeName}>();");
+            }
         }
-
-        public void OnPreprocessBuild(BuildReport report)
+        
+        [MenuItem("LiteEntitySystem/GenerateAOTCode")]
+        private static void GenerateCode()
         {
             AddedTypes.Clear();
+            AddedSizeofs.Clear();
             GenCode.Append(@$"//auto generated on {DateTime.UtcNow} UTC
 using System.Runtime.CompilerServices;
 namespace LiteEntitySystem.Internal
@@ -126,7 +142,11 @@ namespace LiteEntitySystem.Internal
             GenCode.Clear();
             AssetDatabase.Refresh();
         }
+
+        public void OnPreprocessBuild(BuildReport report)
+        {
+            GenerateCode();
+        }
     }
 }
-
 #endif

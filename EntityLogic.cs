@@ -82,6 +82,24 @@ namespace LiteEntitySystem
         }
         
         /// <summary>
+        /// Enable lag compensation for player that owns this entity
+        /// </summary>
+        public void EnableLagCompensation()
+        {
+            if (EntityManager.IsServer)
+                ServerManager.EnableLagCompensation(InternalOwnerId);
+        }
+
+        /// <summary>
+        /// Disable lag compensation for player that owns this entity
+        /// </summary>
+        public void DisableLagCompensation()
+        {
+            if (EntityManager.IsServer)
+                ServerManager.DisableLagCompensation();
+        }
+        
+        /// <summary>
         /// Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
@@ -260,18 +278,6 @@ namespace LiteEntitySystem
                 SetOwner(this, InternalOwnerId);
                 _controller = value;
             }
-        }
-        
-        protected void EnableLagCompensation()
-        {
-            if (EntityManager.IsServer)
-                ((ServerEntityManager)EntityManager).EnableLagCompensation(this);
-        }
-
-        protected void DisableLagCompensation()
-        {
-            if (EntityManager.IsServer)
-                ((ServerEntityManager)EntityManager).DisableLagCompensation();
         }
 
         public override void Update()
