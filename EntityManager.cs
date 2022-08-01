@@ -357,7 +357,7 @@ namespace LiteEntitySystem
         }
         
         /// <summary>
-        /// Add local entity that will be not syncronized
+        /// Add local entity that will be not synchronized
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Created entity or null if entities limit is reached (65535 - <see cref="MaxSyncedEntityCount"/>)</returns>

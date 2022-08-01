@@ -322,8 +322,12 @@ namespace LiteEntitySystem.Internal
 
         public unsafe void EnableLagCompensation(NetPlayer player, ushort tick)
         {
-            if (_entity == null || _entity.IsControlledBy(player.Id) || _entity is not EntityLogic)
+            if (_entity == null || _entity.IsControlledBy(player.Id))
                 return;
+            var entityLogic = _entity as EntityLogic;
+            if (entityLogic == null)
+                return;
+
             int diff = Utils.SequenceDiff(tick, player.StateATick);
             if (diff <= 0 || diff >= _filledHistory || _state != SerializerState.Active)
                 return;
@@ -353,8 +357,8 @@ namespace LiteEntitySystem.Internal
                     historyOffset += field.IntSize;
                 }
             }
-            
-            ((EntityLogic)_entity).OnLagCompensationStart();
+
+            entityLogic.OnLagCompensationStart();
             _lagCompensationEnabled = true;
         }
 

@@ -69,39 +69,5 @@ namespace LiteEntitySystem.Internal
         {
             return (byte*)Unsafe.As<T, IntPtr>(ref value);
         }
-
-#if NETSTANDARD2_0
-        public static bool TryPeek<T>(this Queue<T> queue, out T value)
-        {
-            if (queue.Count == 0)
-            {
-                value = default;
-                return false;
-            }
-
-            value = queue.Peek();
-            return true;
-        }
-
-        public static bool TryDequeue<T>(this Queue<T> queue, out T value)
-        {
-            if (queue.Count == 0)
-            {
-                value = default;
-                return false;
-            }
-
-            value = queue.Dequeue();
-            return true;
-        }
-#endif
-    }
-    
-    internal sealed class SequenceComparer : IComparer<ushort>
-    {
-        public int Compare(ushort x, ushort y)
-        {
-            return Utils.SequenceDiff(x, y);
-        }
     }
 }

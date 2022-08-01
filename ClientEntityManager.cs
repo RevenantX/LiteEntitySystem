@@ -94,7 +94,6 @@ namespace LiteEntitySystem
         
         //adaptive lerp vars
         private float _adaptiveMiddlePoint = 3f;
-        private float _packetJitter;
         private readonly float[] _jitterSamples = new float[10];
         private int _jitterSampleIdx;
         private readonly Stopwatch _jitterTimer = new Stopwatch();
@@ -187,6 +186,7 @@ namespace LiteEntitySystem
                 {
                     if (_receivedStates.Count > MaxSavedStateDiff)
                     {
+                        Logger.LogWarning("[CEM] Too much states received: this should be rare thing");
                         var minimal = _receivedStates.Keys[0];
                         if (Utils.SequenceDiff(newServerTick, minimal) > 0)
                         {
