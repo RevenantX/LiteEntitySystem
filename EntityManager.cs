@@ -191,7 +191,7 @@ namespace LiteEntitySystem
                     classId, 
                     entityConstructor);
                 _registeredTypeIds.Add(entType, ClassDataDict[classId].FilterId);
-                Logger.Log($"Register: {entType.Name} ClassId: {classId}");
+                //Logger.Log($"Register: {entType.Name} ClassId: {classId}");
             }
 
             foreach (var registeredType in typesMap.RegisteredTypes.Values)
