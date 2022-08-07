@@ -429,7 +429,7 @@ namespace LiteEntitySystem
                                     break;
                                 }
                                 _packetBuffer[1] = PacketDiffSync;
-                                Logger.LogWarning($"P:{pidx} Sending diff part {*partCount}: {Tick}");
+                                //Logger.LogWarning($"P:{pidx} Sending diff part {*partCount}: {Tick}");
                                 peer.Send(_packetBuffer, 0, mtu, DeliveryMethod.Unreliable);
                                 (*partCount)++;
 
