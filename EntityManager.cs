@@ -136,7 +136,7 @@ namespace LiteEntitySystem
         protected const byte PacketBaselineSync = 3;
         protected const byte PacketDiffSyncLast = 4;
         protected const int MaxFieldSize = 1024;
-        protected const int MaxSavedStateDiff = 6;
+        protected const int MaxSavedStateDiff = 30;
         internal const int MaxParts = 256;
         private const int MaxTicksPerUpdate = 5;
 
@@ -293,7 +293,10 @@ namespace LiteEntitySystem
         /// <returns>Entity filter that can be used in foreach</returns>
         public EntityFilter<T> GetControllers<T>() where T : ControllerLogic
         {
-            ref var entityFilter = ref _entityFilters[_registeredTypeIds[typeof(T)]];
+            if (!_registeredTypeIds.TryGetValue(typeof(T), out ushort typeId))
+                throw new Exception($"Unregistered type: {typeof(T)}");
+            
+            ref var entityFilter = ref _entityFilters[typeId];
             if (entityFilter != null)
                 return (EntityFilter<T>)entityFilter;
             

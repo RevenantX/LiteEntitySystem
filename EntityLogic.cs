@@ -99,6 +99,13 @@ namespace LiteEntitySystem
                 ServerManager.DisableLagCompensation();
         }
         
+        public int GetFrameSeed()
+        {
+            return EntityManager.IsClient || InternalOwnerId == ServerEntityManager.ServerPlayerId 
+                ? EntityManager.Tick 
+                : ServerManager.GetPlayer(InternalOwnerId).LastProcessedTick;
+        }
+        
         /// <summary>
         /// Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
         /// </summary>

@@ -13,8 +13,7 @@ namespace LiteEntitySystem
     {
         public ushort StateA;
         public ushort StateB;
-        public ushort SimulatedServerTick;
-        public ushort LerpMsec;
+        public float LerpMsec;
     }
 
     /// <summary>
@@ -27,7 +26,9 @@ namespace LiteEntitySystem
         /// </summary>
         public ushort ServerTick { get; private set; }
 
-        public ushort RawServerTick => (ushort)(_stateA != null ? _stateA.Tick : 0);
+        public ushort RawServerTick => _stateA != null ? _stateA.Tick : (ushort)0;
+
+        public ushort RawTargetServerTick => _stateB != null ? _stateB.Tick : RawServerTick;
         
         /// <summary>
         /// Stored input commands count for prediction correction
@@ -37,7 +38,9 @@ namespace LiteEntitySystem
         /// <summary>
         /// Player tick processed by server
         /// </summary>
-        public int LastProcessedTick => _stateA?.ProcessedTick ?? 0;
+        public ushort LastProcessedTick => _stateA?.ProcessedTick ?? 0;
+
+        public ushort LastReceivedTick => _stateA?.LastReceivedTick ?? 0;
         
         /// <summary>
         /// States count in interpolation buffer
@@ -88,10 +91,10 @@ namespace LiteEntitySystem
         private int _setEntityIdsCount;
         private InternalEntity[] _entitiesToConstruct = new InternalEntity[64];
         private int _entitiesToConstructCount;
-        private ushort _lerpMsec;
         private ushort _remoteCallsTick;
         private ushort _lastReceivedInputTick;
-        
+        private float _logicLerpMsec;
+
         //adaptive lerp vars
         private float _adaptiveMiddlePoint = 3f;
         private readonly float[] _jitterSamples = new float[10];
@@ -224,7 +227,8 @@ namespace LiteEntitySystem
                     {
                         if (Utils.SequenceDiff(serverState.Tick, _lerpBuffer.Min.Tick) > 0)
                         {
-                            _lerpBuffer.Remove(_lerpBuffer.Min);
+                            _timer = _lerpTime;
+                            GoToNextState();
                             _lerpBuffer.Add(serverState);
                         }
                         else
@@ -293,137 +297,101 @@ namespace LiteEntitySystem
             return true;
         }
 
-        private unsafe void ProcessNextState()
+        private unsafe void GoToNextState()
         {
-            if (_stateB == null && !PreloadNextState())
-                return;
+            _statesPool.Enqueue(_stateA);
+            _stateA = _stateB;
+            _stateB = null;
 
-            _timer += VisualDeltaTime;
-            if (_timer >= _lerpTime)
+            ReadEntityStates();
+            
+            _timer -= _lerpTime;
+            
+            //reset owned entities
+            foreach (var entity in AliveEntities)
             {
-                _statesPool.Enqueue(_stateA);
-                _stateA = _stateB;
-                _stateB = null;
-
-                ReadEntityStates();
+                if(entity.IsLocal || !entity.IsLocalControlled)
+                    continue;
                 
-                _timer -= _lerpTime;
-                
-                //reset owned entities
-                foreach (var entity in AliveEntities)
+                var localEntity = entity;
+                fixed (byte* latestEntityData = _predictedEntities[entity.Id])
                 {
-                    if(entity.IsLocal || !entity.IsLocalControlled)
-                        continue;
-                    
-                    var localEntity = entity;
-                    fixed (byte* latestEntityData = _predictedEntities[entity.Id])
+                    ref var classData = ref entity.GetClassData();
+                    byte* entityPtr = Utils.GetPtr(ref localEntity);
+                    for (int i = 0; i < classData.FieldsCount; i++)
                     {
-                        ref var classData = ref entity.GetClassData();
-                        byte* entityPtr = Utils.GetPtr(ref localEntity);
-                        for (int i = 0; i < classData.FieldsCount; i++)
+                        ref var field = ref classData.Fields[i];
+                        if (field.Flags.HasFlagFast(SyncFlags.OnlyForRemote))
+                            continue;
+                        if (field.FieldType == FieldType.Value)
                         {
-                            ref var field = ref classData.Fields[i];
-                            if (field.Flags.HasFlagFast(SyncFlags.OnlyForRemote))
-                                continue;
-                            if (field.FieldType == FieldType.Value)
-                            {
-                                Unsafe.CopyBlock(entityPtr + field.Offset, latestEntityData + field.FixedOffset, field.Size);
-                            }
-                            else if (field.FieldType == FieldType.SyncableSyncVar)
-                            {
-                                ref var syncableField = ref Unsafe.AsRef<SyncableField>(entityPtr + field.Offset);
-                                byte* syncVarPtr = Utils.GetPtr(ref syncableField) + field.SyncableSyncVarOffset;
-                                Unsafe.CopyBlock(syncVarPtr, latestEntityData + field.FixedOffset, field.Size);
-                            }
+                            Unsafe.CopyBlock(entityPtr + field.Offset, latestEntityData + field.FixedOffset, field.Size);
+                        }
+                        else if (field.FieldType == FieldType.SyncableSyncVar)
+                        {
+                            ref var syncableField = ref Unsafe.AsRef<SyncableField>(entityPtr + field.Offset);
+                            byte* syncVarPtr = Utils.GetPtr(ref syncableField) + field.SyncableSyncVarOffset;
+                            Unsafe.CopyBlock(syncVarPtr, latestEntityData + field.FixedOffset, field.Size);
                         }
                     }
                 }
-                
-                //reapply input
-                UpdateMode = UpdateMode.PredictionRollback;
-                foreach (var inputCommand in _inputCommands)
+            }
+            
+            //reapply input
+            UpdateMode = UpdateMode.PredictionRollback;
+            foreach (var inputCommand in _inputCommands)
+            {
+                //reapply input data
+                _inputReader.SetSource(inputCommand.Data, InputHeaderSize, inputCommand.Length);
+                foreach(var controller in GetControllers<HumanControllerLogic>())
                 {
-                    //reapply input data
-                    _inputReader.SetSource(inputCommand.Data, InputHeaderSize, inputCommand.Length);
-                    foreach(var controller in GetControllers<HumanControllerLogic>())
-                    {
-                        controller.ReadInput(_inputReader);
-                    }
-                    foreach (var entity in AliveEntities)
-                    {
-                        if(entity.IsLocal || !entity.IsLocalControlled)
-                            continue;
-                        entity.Update();
-                    }
+                    controller.ReadInput(_inputReader);
                 }
-                UpdateMode = UpdateMode.Normal;
-                
-                //update interpolated position
                 foreach (var entity in AliveEntities)
                 {
                     if(entity.IsLocal || !entity.IsLocalControlled)
                         continue;
-                    ref var classData = ref entity.GetClassData();
-                    var localEntity = entity;
-                    byte* entityPtr = Utils.GetPtr(ref localEntity);
-                    
-                    for(int i = 0; i < classData.InterpolatedCount; i++)
-                    {
-                        fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id])
-                            classData.Fields[i].GetToFixedOffset(entityPtr, currentDataPtr);
-                    }
+                    entity.Update();
                 }
+            }
+            UpdateMode = UpdateMode.Normal;
+            
+            //update interpolated position
+            foreach (var entity in AliveEntities)
+            {
+                if(entity.IsLocal || !entity.IsLocalControlled)
+                    continue;
+                ref var classData = ref entity.GetClassData();
+                var localEntity = entity;
+                byte* entityPtr = Utils.GetPtr(ref localEntity);
                 
-                //delete predicted
-                while (_spawnPredictedEntities.TryPeek(out var info))
+                for(int i = 0; i < classData.InterpolatedCount; i++)
                 {
-                    if (Utils.SequenceDiff(_stateA.ProcessedTick, info.Item1) >= 0)
-                    {
-                        _spawnPredictedEntities.Dequeue();
-                        info.Item2.DestroyInternal();
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                
-                //load next state
-                double prevLerpTime = _lerpTime;
-                if (PreloadNextState())
-                {
-                    //adjust lerp timer
-                    _timer *= (prevLerpTime / _lerpTime);
-                }
-                else
-                {
-                    //skip interpolation code
-                    return;
+                    fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id])
+                        classData.Fields[i].GetToFixedOffset(entityPtr, currentDataPtr);
                 }
             }
             
-            //remote interpolation
-            float fTimer = (float)(_timer/_lerpTime);
-            _lerpMsec = (ushort)(fTimer * 65535f);
-            for(int i = 0; i < _stateB.InterpolatedCount; i++)
+            //delete predicted
+            while (_spawnPredictedEntities.TryPeek(out var info))
             {
-                ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
-                var entity = EntitiesDict[preloadData.EntityId];
-                var fields = entity.GetClassData().Fields;
-                byte* entityPtr = Utils.GetPtr(ref entity);
-                fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr = _stateB.Data)
+                if (Utils.SequenceDiff(_stateA.ProcessedTick, info.Item1) >= 0)
                 {
-                    for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
-                    {
-                        var interpolatedCache = preloadData.InterpolatedCaches[j];
-                        var field = fields[interpolatedCache.Field];
-                        field.Interpolator(
-                            initialDataPtr + field.FixedOffset,
-                            nextDataPtr + interpolatedCache.StateReaderOffset,
-                            entityPtr + field.Offset,
-                            fTimer);
-                    }
+                    _spawnPredictedEntities.Dequeue();
+                    info.Item2.DestroyInternal();
                 }
+                else
+                {
+                    break;
+                }
+            }
+            
+            //load next state
+            double prevLerpTime = _lerpTime;
+            if (PreloadNextState())
+            {
+                //adjust lerp timer
+                _timer *= (prevLerpTime / _lerpTime);
             }
         }
 
@@ -436,7 +404,40 @@ namespace LiteEntitySystem
             ushort prevTick = Tick;
             base.Update();
             
-            ProcessNextState();
+            if (_stateB != null || PreloadNextState())
+            {
+                _timer += VisualDeltaTime;
+                if (_timer >= _lerpTime)
+                {
+                    GoToNextState();
+                }
+            }
+
+            if (_stateB != null)
+            {
+                //remote interpolation
+                float fTimer = (float)(_timer/_lerpTime);
+                for(int i = 0; i < _stateB.InterpolatedCount; i++)
+                {
+                    ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
+                    var entity = EntitiesDict[preloadData.EntityId];
+                    var fields = entity.GetClassData().Fields;
+                    byte* entityPtr = Utils.GetPtr(ref entity);
+                    fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr = _stateB.Data)
+                    {
+                        for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
+                        {
+                            var interpolatedCache = preloadData.InterpolatedCaches[j];
+                            var field = fields[interpolatedCache.Field];
+                            field.Interpolator(
+                                initialDataPtr + field.FixedOffset,
+                                nextDataPtr + interpolatedCache.StateReaderOffset,
+                                entityPtr + field.Offset,
+                                fTimer);
+                        }
+                    }
+                }
+            }
 
             //local interpolation
             float localLerpT = LerpFactor;
@@ -503,6 +504,10 @@ namespace LiteEntitySystem
                         }
 
                         tickIndex++;
+                        if (tickIndex == MaxSavedStateDiff)
+                        {
+                            break;
+                        }
                     }
                     Unsafe.Write(sendBuffer + 2, currentTick);
                     _localPeer.Send(_sendBuffer, 0, offset, DeliveryMethod.Unreliable);
@@ -578,10 +583,10 @@ namespace LiteEntitySystem
 
         protected override unsafe void OnLogicTick()
         {
-            ServerTick++;
-
             if (_stateB != null)
             {
+                _logicLerpMsec = (float)(_timer / _lerpTime);
+                ServerTick = (ushort)(_stateA.Tick + Math.Round(Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * _logicLerpMsec));
                 fixed (byte* rawData = _stateB.Data)
                 {
                     for (int i = _stateB.RemoteCallsProcessed; i < _stateB.RemoteCallsCount; i++)
@@ -615,8 +620,7 @@ namespace LiteEntitySystem
             {
                 StateA   = _stateA.Tick,
                 StateB   = _stateB?.Tick ?? _stateA.Tick,
-                LerpMsec = _lerpMsec,
-                SimulatedServerTick = ServerTick
+                LerpMsec = _logicLerpMsec
             };
             fixed(void* writerData = inputWriter.Data)
                 Unsafe.Copy(writerData, ref inputPacketHeader);
@@ -681,8 +685,6 @@ namespace LiteEntitySystem
 
         private unsafe void ReadEntityStates()
         {
-            ServerTick = _stateA.Tick;
-
             fixed (byte* readerData = _stateA.Data)
             {
                 if (_stateA.IsBaseline)

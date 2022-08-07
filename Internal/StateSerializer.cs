@@ -322,14 +322,14 @@ namespace LiteEntitySystem.Internal
 
         public unsafe void EnableLagCompensation(NetPlayer player, ushort tick)
         {
-            if (_entity == null || _entity.IsControlledBy(player.Id))
+            if (_entity == null || _state != SerializerState.Active || _entity.IsControlledBy(player.Id))
                 return;
             var entityLogic = _entity as EntityLogic;
             if (entityLogic == null)
                 return;
 
             int diff = Utils.SequenceDiff(tick, player.StateATick);
-            if (diff <= 0 || diff >= _filledHistory || _state != SerializerState.Active)
+            if (diff <= 0 || diff >= _filledHistory)
                 return;
             byte* entityPtr = Utils.GetPtr(ref _entity);
             fixed (byte* 

@@ -182,6 +182,10 @@ namespace LiteEntitySystem.Internal
                         stateReaderOffset += field.IntSize;
                     }
 
+                    //in full sync there is no rpcs, only full data
+                    if (fullSync)
+                        continue;
+
                     //preload rpcs
                     while(stateReaderOffset < initialReaderPosition + preloadData.TotalSize)
                     {
@@ -199,10 +203,19 @@ namespace LiteEntitySystem.Internal
                             stateReaderOffset + 6,
                             1 //TODO: count!!!
                             );
+                        if (rpcCache.Delegate == null)
+                        {
+                            Logger.LogError($"ZeroRPC: {rpcId}, FieldId: {fieldId}");
+                        }
                         
                         Utils.ResizeOrCreate(ref RemoteCallsCaches, RemoteCallsCount);
                         RemoteCallsCaches[RemoteCallsCount++] = rpcCache;
                         stateReaderOffset += 6 + size;
+                    }
+
+                    if (stateReaderOffset != initialReaderPosition + preloadData.TotalSize)
+                    {
+                        Logger.LogError($"Missread! {stateReaderOffset} > {initialReaderPosition + preloadData.TotalSize}");
                     }
                 }
             }

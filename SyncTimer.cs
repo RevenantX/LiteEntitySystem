@@ -78,6 +78,16 @@ namespace LiteEntitySystem
             return IsTimeElapsed;
         }
 
+        public bool CheckAndReset()
+        {
+            if (_time >= _maxTime)
+            {
+                _time -= _maxTime;
+                return true;
+            }
+            return false;
+        }
+
         public bool UpdateAndReset(float delta)
         {
             if (Update(delta))

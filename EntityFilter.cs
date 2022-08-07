@@ -39,7 +39,7 @@ namespace LiteEntitySystem
 
             public T Current => _filter._array[_idx];
 
-            object IEnumerator.Current => Current;
+            object IEnumerator.Current => _filter._array[_idx];
 
             public void Dispose()
             {

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
 {
-    internal static class Utils
+    public static class Utils
     {
 #if UNITY_STANDALONE_WIN || _WINDOWS || UNITY_EDITOR_WIN
         [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]

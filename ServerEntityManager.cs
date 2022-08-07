@@ -17,6 +17,14 @@ namespace LiteEntitySystem
         public ushort Size;
     }
     
+    internal sealed class SequenceComparer : IComparer<ushort>
+    {
+        public int Compare(ushort x, ushort y)
+        {
+            return Utils.SequenceDiff(x, y);
+        }
+    }
+    
     public sealed class NetPlayer
     {
         public readonly byte Id;
@@ -221,6 +229,7 @@ namespace LiteEntitySystem
 
         public void RemoveAIController<T>(T controller) where T : AiControllerLogic
         {
+            controller.StopControl();
             RemoveEntity(controller);
         }
 
@@ -413,14 +422,15 @@ namespace LiteEntitySystem
                                 _entityIdQueue.Enqueue(eId);
                             if (writePosition > mtu)
                             {
-                                _packetBuffer[1] = PacketDiffSync;
-                                peer.Send(_packetBuffer, 0, mtu, DeliveryMethod.Unreliable);
-                                    
                                 if (*partCount == MaxParts-1)
                                 {
+                                    Logger.Log($"P:{pidx} Request baseline {Tick}");
                                     netPlayer.RequestBaselineSync();
                                     break;
                                 }
+                                _packetBuffer[1] = PacketDiffSync;
+                                Logger.LogWarning($"P:{pidx} Sending diff part {*partCount}: {Tick}");
+                                peer.Send(_packetBuffer, 0, mtu, DeliveryMethod.Unreliable);
                                 (*partCount)++;
 
                                 //repeat in next packet
@@ -430,12 +440,12 @@ namespace LiteEntitySystem
                         }
                         else if (diffResult == DiffResult.RequestBaselineSync)
                         {
+                            Logger.LogWarning($"P:{pidx} Request baseline {Tick}");
                             netPlayer.RequestBaselineSync();
                             break;
                         }
                         //else skip
                     }
-                    
                     //Debug.Log($"PARTS: {partCount} {_netDataWriter.Data[4]}");
                     packetBuffer[1] = PacketDiffSyncLast; //lastPart flag
                     peer.Send(_packetBuffer, 0, writePosition, DeliveryMethod.Unreliable);
@@ -488,23 +498,29 @@ namespace LiteEntitySystem
         {
             return _netPlayersDict[ownerId];
         }
-        
+
         protected override void OnLogicTick()
         {
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
             {
                 var player = _netPlayersArray[pidx];
-                if (!player.IsFirstStateReceived || player.AvailableInput.Count == 0) 
+                if (!player.IsFirstStateReceived) 
                     continue;
+                if (player.AvailableInput.Count == 0)
+                {
+                    Logger.LogWarning($"Inputs of player {pidx} is zero");
+                    continue;
+                }
                 
                 var inputFrame = player.AvailableInput.Minimal();
+                player.AvailableInput.Remove(inputFrame.Tick);
                 ref var inputData = ref inputFrame.Input;
                         
                 player.LastProcessedTick = inputFrame.Tick;
                 player.StateATick = inputData.StateA;
                 player.StateBTick = inputData.StateB;
-                player.LerpTime = inputData.LerpMsec / 65535f;
-                player.SimulatedServerTick = inputData.SimulatedServerTick;
+                player.LerpTime = inputData.LerpMsec;
+                player.SimulatedServerTick = (ushort)(inputData.StateA + Math.Round(Utils.SequenceDiff(inputData.StateB,  inputData.StateA) * inputData.LerpMsec));
                         
                 _inputReader.SetSource(inputFrame.Data, 0, inputFrame.Size);
                 
@@ -517,7 +533,6 @@ namespace LiteEntitySystem
                     }
                 }
                 
-                player.AvailableInput.Remove(inputFrame.Tick);
                 _inputPool.Enqueue(inputFrame.Data);
             }
             
@@ -661,6 +676,7 @@ namespace LiteEntitySystem
                 {
                     if (player.AvailableInput.Count >= MaxSavedStateDiff)
                     {
+                        Logger.LogWarning($"[SEM] Too much input's received: {MaxSavedStateDiff} from player: {player.Id}");
                         var minimal = player.AvailableInput.Minimal();
                         if (Utils.SequenceDiff(inputBuffer.Tick, minimal.Tick) > 0)
                         {
