@@ -48,7 +48,7 @@ namespace LiteEntitySystem
     public abstract class EntityLogic : InternalEntity
     {
         [SyncVar(nameof(OnParentChange))] 
-        private ushort _parentId = EntityManager.InvalidEntityId;
+        private EntitySharedReference _parentId;
         
         [SyncVar(nameof(OnDestroyChange))] 
         private bool _isDestroyed;
@@ -147,19 +147,18 @@ namespace LiteEntitySystem
             if (EntityManager.IsClient)
                 return;
             
-            ushort id = parentEntity?.Id ?? EntityManager.InvalidEntityId;
+            var id = new EntitySharedReference(parentEntity);
             if (id == _parentId)
                 return;
             
-            ushort oldId = _parentId;
+            EntitySharedReference oldId = _parentId;
             _parentId = id;
             OnParentChange(oldId);
             
-            var newParent = EntityManager.GetEntityById<EntityLogic>(_parentId);
-            InternalOwnerId = newParent?.InternalOwnerId ?? 0;
-            if (InternalOwnerId != oldId)
+            var newParent = EntityManager.GetEntityById<EntityLogic>(_parentId)?.InternalOwnerId ?? ServerEntityManager.ServerPlayerId;
+            if (InternalOwnerId != newParent)
             {
-                SetOwner(this, InternalOwnerId);
+                SetOwner(this, newParent);
             }
         }
         
@@ -170,7 +169,7 @@ namespace LiteEntitySystem
         /// <returns>parent entity</returns>
         public T GetParent<T>() where T : EntityLogic
         {
-            return EntityManager.GetEntityByIdSafe<T>(_parentId);
+            return EntityManager.GetEntityById<T>(_parentId);
         }
         
         /// <summary>
@@ -210,7 +209,7 @@ namespace LiteEntitySystem
                 ServerManager.DestroySavedData(this);
             }
 
-            var parent = EntityManager.GetEntityByIdSafe<EntityLogic>(_parentId);
+            var parent = EntityManager.GetEntityById<EntityLogic>(_parentId);
             if (parent != null && !parent._isDestroyed)
             {
                 parent.Childs.Remove(this);
@@ -231,17 +230,17 @@ namespace LiteEntitySystem
                 DestroyInternal();
         }
 
-        private void OnParentChange(ushort oldId)
+        private void OnParentChange(EntitySharedReference oldId)
         {
-            EntityManager.GetEntityByIdSafe<EntityLogic>(oldId)?.Childs.Remove(this);
-            EntityManager.GetEntityByIdSafe<EntityLogic>(_parentId)?.Childs.Add(this);
+            EntityManager.GetEntityById<EntityLogic>(oldId)?.Childs.Remove(this);
+            EntityManager.GetEntityById<EntityLogic>(_parentId)?.Childs.Add(this);
         }
 
         internal static void SetOwner(EntityLogic entity, byte ownerId)
         {
+            entity.InternalOwnerId = ownerId;
             foreach (var child in entity.Childs)
             {
-                child.InternalOwnerId = ownerId;
                 SetOwner(child, ownerId);
             }
         }
@@ -274,27 +273,26 @@ namespace LiteEntitySystem
     public abstract class PawnLogic : EntityLogic
     {
         [SyncVar] 
-        private ControllerLogic _controller;
+        private EntitySharedReference _controller;
 
         public ControllerLogic Controller
         {
-            get => _controller;
+            get => EntityManager.GetEntityById<ControllerLogic>(_controller);
             internal set
             {
-                InternalOwnerId = value?.InternalOwnerId ?? (GetParent<EntityLogic>()?.InternalOwnerId ?? ServerEntityManager.ServerPlayerId);
-                SetOwner(this, InternalOwnerId);
+                SetOwner(this, value?.InternalOwnerId ?? (GetParent<EntityLogic>()?.InternalOwnerId ?? ServerEntityManager.ServerPlayerId));
                 _controller = value;
             }
         }
 
         public override void Update()
         {
-            _controller?.BeforeControlledUpdate();
+            Controller?.BeforeControlledUpdate();
         }
 
         protected override void OnDestroy()
         {
-            _controller?.OnControlledDestroy();
+            Controller?.OnControlledDestroy();
         }
 
         protected PawnLogic(EntityParams entityParams) : base(entityParams) { }
@@ -309,10 +307,10 @@ namespace LiteEntitySystem
         internal byte InternalOwnerId;
         
         [SyncVar] 
-        private PawnLogic _controlledEntity;
+        private EntitySharedReference _controlledEntity;
 
         public byte OwnerId => InternalOwnerId;
-        public PawnLogic ControlledEntity => _controlledEntity;
+        public PawnLogic ControlledEntity => EntityManager.GetEntityById<PawnLogic>(_controlledEntity);
 
         internal override bool IsControlledBy(byte playerId)
         {
@@ -324,11 +322,11 @@ namespace LiteEntitySystem
             
         }
 
-        public void StartControl<T>(T target) where T : PawnLogic
+        public void StartControl(PawnLogic target)
         {
             StopControl();
             _controlledEntity = target;
-            _controlledEntity.Controller = this;
+            ControlledEntity.Controller = this;
         }
 
         internal void OnControlledDestroy()
@@ -338,9 +336,9 @@ namespace LiteEntitySystem
 
         public void StopControl()
         {
-            if (_controlledEntity == null)
+            if (ControlledEntity == null)
                 return;
-            _controlledEntity.Controller = null;
+            ControlledEntity.Controller = null;
             _controlledEntity = null;
         }
         

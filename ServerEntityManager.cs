@@ -78,8 +78,6 @@ namespace LiteEntitySystem
     public sealed class ServerEntityManager : EntityManager
     {
         public const byte ServerPlayerId = 0;
-        
-        private const int MaxPlayers = byte.MaxValue-1;
 
         private readonly Queue<ushort> _entityIdQueue = new Queue<ushort>(MaxSyncedEntityCount);
         private readonly Queue<byte> _playerIdQueue = new Queue<byte>(MaxPlayers);
@@ -89,7 +87,7 @@ namespace LiteEntitySystem
         private readonly NetPlayer[] _netPlayersArray = new NetPlayer[MaxPlayers];
         private readonly NetPlayer[] _netPlayersDict = new NetPlayer[MaxPlayers];
         private readonly NetDataReader _inputReader = new NetDataReader();
-        private readonly StateSerializer[] _savedEntityData = new StateSerializer[ushort.MaxValue];
+        private readonly StateSerializer[] _savedEntityData = new StateSerializer[MaxSyncedEntityCount];
 
         private byte[] _compressionBuffer;
         private int _netPlayersCount;
@@ -127,7 +125,7 @@ namespace LiteEntitySystem
             InternalPlayerId = ServerPlayerId;
             for (int i = 1; i <= byte.MaxValue; i++)
                 _playerIdQueue.Enqueue((byte)i);
-            for (ushort i = 0; i < MaxSyncedEntityCount; i++)
+            for (ushort i = FirstEntityId; i < MaxSyncedEntityCount; i++)
                 _entityIdQueue.Enqueue(i);
 
             _packetBuffer[0] = packetHeader;
@@ -173,7 +171,7 @@ namespace LiteEntitySystem
             if (player == null || _netPlayersDict[player.Id] == null)
                 return false;
             
-            for(int i = 0; i < MaxEntityId; i++)
+            for(int i = FirstEntityId; i < MaxSyncedEntityId; i++)
             {
                 var e = EntitiesDict[i];
                 if (e.IsControlledBy(player.Id))
@@ -360,7 +358,7 @@ namespace LiteEntitySystem
                     //send all data
                     if (netPlayer.IsNew)
                     {
-                        for (int i = 0; i <= MaxEntityId; i++)
+                        for (int i = FirstEntityId; i <= MaxSyncedEntityId; i++)
                         {
                             _savedEntityData[i].MakeBaseline(netPlayer.Id, Tick, packetBuffer, ref writePosition);
                         }
@@ -407,7 +405,7 @@ namespace LiteEntitySystem
                     Unsafe.Write(packetBuffer + 7, netPlayer.LastReceivedTick);
                     writePosition = 9;
 
-                    for (ushort eId = 0; eId <= MaxEntityId; eId++)
+                    for (ushort eId = FirstEntityId; eId <= MaxSyncedEntityId; eId++)
                     {
                         var diffResult = _savedEntityData[eId].MakeDiff(
                             netPlayer.Id,
@@ -541,7 +539,8 @@ namespace LiteEntitySystem
             
             //write history
             foreach (var aliveEntity in AliveEntities)
-                _savedEntityData[aliveEntity.Id].WriteHistory(Tick);
+                if(!aliveEntity.IsLocal)
+                    _savedEntityData[aliveEntity.Id].WriteHistory(Tick);
         }
         
         internal void DestroySavedData(InternalEntity entityLogic)
@@ -623,7 +622,8 @@ namespace LiteEntitySystem
             //Logger.Log($"compensated: {player.ServerInterpolatedTick} =====");
             foreach (var entity in AliveEntities)
             {
-                _savedEntityData[entity.Id].EnableLagCompensation(player, _tick);
+                if(!entity.IsLocal)
+                    _savedEntityData[entity.Id].EnableLagCompensation(player, _tick);
                 //entity.DebugPrint();
             }
             OnLagCompensation?.Invoke(true);
@@ -637,7 +637,8 @@ namespace LiteEntitySystem
             //Logger.Log($"restored: {Tick} =====");
             foreach (var entity in AliveEntities)
             {
-                _savedEntityData[entity.Id].DisableLagCompensation(_tick);
+                if(!entity.IsLocal)
+                    _savedEntityData[entity.Id].DisableLagCompensation(_tick);
                 //entity.DebugPrint();
             }
             OnLagCompensation?.Invoke(false);

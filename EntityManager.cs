@@ -68,11 +68,13 @@ namespace LiteEntitySystem
         /// Maximum synchronized (without LocalOnly) entities
         /// </summary>
         public const int MaxSyncedEntityCount = 8192;
+
+        public const int MaxEntityCount = MaxSyncedEntityCount * 2;
         
         /// <summary>
         /// Invalid entity id
         /// </summary>
-        public const ushort InvalidEntityId = ushort.MaxValue;
+        public const ushort InvalidEntityId = 0;
         
         /// <summary>
         /// Total entities count (including local)
@@ -141,8 +143,10 @@ namespace LiteEntitySystem
         private const int MaxTicksPerUpdate = 5;
 
         public double VisualDeltaTime { get; private set; }
-        
-        protected int MaxEntityId = -1; //current maximum id
+        public const int MaxPlayers = byte.MaxValue-1;
+
+        protected int MaxSyncedEntityId = -1; //current maximum id
+        protected int MaxLocalEntityId = -1;
         protected ushort _tick;
         
         protected readonly EntityFilter<InternalEntity> AliveEntities = new EntityFilter<InternalEntity>();
@@ -153,13 +157,14 @@ namespace LiteEntitySystem
         private readonly SingletonEntityLogic[] _singletonEntities;
         private readonly EntityFilter[] _entityFilters;
         private readonly Dictionary<Type, ushort> _registeredTypeIds = new Dictionary<Type, ushort>();
-        internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxSyncedEntityCount];
+        internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount+1];
         internal readonly EntityClassData[] ClassDataDict;
 
         private readonly long _deltaTimeTicks;
         private long _accumulator;
         private long _lastTime;
         private ushort _localIdCounter = MaxSyncedEntityCount;
+        protected const ushort FirstEntityId = 1;
 
         internal byte InternalPlayerId;
 
@@ -233,7 +238,7 @@ namespace LiteEntitySystem
 
             for (int i = 0; i < _singletonEntities.Length; i++)
                 _singletonEntities[i] = null;
-            for (int i = 0; i <= MaxEntityId; i++)
+            for (int i = FirstEntityId; i < EntitiesDict.Length; i++)
                 EntitiesDict[i] = null;
             for (int i = 0; i < _entityFilters.Length; i++)
                 _entityFilters[i] = null;
@@ -245,9 +250,12 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="id">Id of entity</param>
         /// <returns>Entity if it exists, null if id == InvalidEntityId</returns>
-        public T GetEntityById<T>(ushort id) where T : InternalEntity
+        public T GetEntityById<T>(EntitySharedReference id) where T : InternalEntity
         {
-            return id == InvalidEntityId ? null : (T)EntitiesDict[id];
+            if (id.Id == InvalidEntityId)
+                return null;
+            var entity = (T)EntitiesDict[id.Id];
+            return entity.Version == id.Version ? entity : null;
         }
         
         /// <summary>
@@ -255,9 +263,11 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="id">Id of entity</param>
         /// <returns>Entity if it exists, null otherwise</returns>
-        public T GetEntityByIdSafe<T>(ushort id) where T : InternalEntity
+        public T GetEntityByIdSafe<T>(EntitySharedReference id) where T : InternalEntity
         {
-            return id == InvalidEntityId ? null : EntitiesDict[id] as T;
+            return id.Id != InvalidEntityId && EntitiesDict[id.Id] is T entity && entity.Version == id.Version 
+                ? entity
+                : null;
         }
 
         /// <summary>
@@ -277,7 +287,12 @@ namespace LiteEntitySystem
             //initialize new
             var typedFilter = new EntityFilter<T>();
             entityFilter = typedFilter;
-            for (int i = 0; i <= MaxEntityId; i++)
+            for (int i = FirstEntityId; i <= MaxSyncedEntityId; i++)
+            {
+                if(EntitiesDict[i] is T castedEnt && !castedEnt.IsDestroyed)
+                    typedFilter.Add(castedEnt);
+            }
+            for (int i = MaxSyncedEntityCount; i <= MaxLocalEntityId; i++)
             {
                 if(EntitiesDict[i] is T castedEnt && !castedEnt.IsDestroyed)
                     typedFilter.Add(castedEnt);
@@ -302,7 +317,12 @@ namespace LiteEntitySystem
             
             var typedFilter = new EntityFilter<T>();
             entityFilter = typedFilter;
-            for (int i = 0; i <= MaxEntityId; i++)
+            for (int i = FirstEntityId; i <= MaxSyncedEntityId; i++)
+            {
+                if(EntitiesDict[i] is T castedEnt)
+                    typedFilter.Add(castedEnt);
+            }
+            for (int i = MaxSyncedEntityCount; i <= MaxLocalEntityId; i++)
             {
                 if(EntitiesDict[i] is T castedEnt)
                     typedFilter.Add(castedEnt);
@@ -371,16 +391,18 @@ namespace LiteEntitySystem
                 Logger.LogError("Max local entities count reached");
                 return null;
             }
-
-            var classId = EntityClassInfo<T>.ClassId;
-            var entityParams = new EntityParams(classId, _localIdQueue.Count > 0 ? _localIdQueue.Dequeue() : _localIdCounter++, 0, this);
-            var entity = (T)ClassDataDict[classId].EntityConstructor(entityParams);
-            EntitiesCount++;
-
+            
+            var entityParams = new EntityParams(
+                EntityClassInfo<T>.ClassId,
+                _localIdQueue.Count > 0 ? _localIdQueue.Dequeue() : _localIdCounter++, 
+                0,
+                this);
+            var entity = (T)AddEntity(entityParams);
             if (IsClient && entity is EntityLogic logic)
             {
                 logic.InternalOwnerId = InternalPlayerId;
             }
+
             initMethod?.Invoke(entity);
             ConstructEntity(entity);
             return entity;
@@ -388,7 +410,7 @@ namespace LiteEntitySystem
 
         protected InternalEntity AddEntity(EntityParams entityParams)
         {
-            if (entityParams.Id >= InvalidEntityId)
+            if (entityParams.Id == InvalidEntityId || entityParams.Id >= EntitiesDict.Length)
             {
                 throw new ArgumentException($"Invalid entity id: {entityParams.Id}");
             }
@@ -404,7 +426,12 @@ namespace LiteEntitySystem
                 throw new Exception($"Unregistered entity class: {entityParams.ClassId}");
             }
             var entity = classData.EntityConstructor(entityParams);
-            MaxEntityId = MaxEntityId < entityParams.Id ? entityParams.Id : MaxEntityId;
+            
+            if(entityParams.Id < MaxSyncedEntityCount)
+                MaxSyncedEntityId = MaxSyncedEntityId < entityParams.Id ? entityParams.Id : MaxSyncedEntityId;
+            else
+                MaxLocalEntityId = MaxLocalEntityId < entityParams.Id ? entityParams.Id : MaxLocalEntityId;
+            
             EntitiesDict[entity.Id] = entity;
             EntitiesCount++;
             return entity;

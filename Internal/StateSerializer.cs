@@ -136,32 +136,25 @@ namespace LiteEntitySystem.Internal
                     byte* latestDataPtr = latestEntityData + HeaderSize + field.FixedOffset;
 
                     //update only changed fields
-                    if(field.FieldType == FieldType.Entity)
-                    {
-                        ushort entityId = Unsafe.AsRef<InternalEntity>(fieldPtr)?.Id ?? EntityManager.InvalidEntityId;
-                        
-                        //local
-                        if (entityId >= EntityManager.MaxSyncedEntityCount)
-                            entityId = EntityManager.InvalidEntityId;
-
-                        ushort *ushortPtr = (ushort*)latestDataPtr;
-                        if (*ushortPtr != entityId)
-                        {
-                            *ushortPtr = entityId;
-                            _fieldChangeTicks[i] = serverTick;
-                        }
-                    }
-                    else if (field.FieldType == FieldType.SyncableSyncVar)
+                    if (field.FieldType == FieldType.SyncableSyncVar)
                     {
                         ref var syncable = ref Unsafe.AsRef<SyncableField>(fieldPtr);
-                        byte* syncVarPtr = Utils.GetPtr(ref syncable) + field.SyncableSyncVarOffset;
-                        if (Utils.memcmp(latestDataPtr, syncVarPtr, field.PtrSize) != 0)
+                        fieldPtr = Utils.GetPtr(ref syncable) + field.SyncableSyncVarOffset;
+                    }
+                    if (field.FieldType == FieldType.Entity)
+                    {
+                        //skip local ids
+                        var sharedRef = Unsafe.AsRef<EntitySharedReference>(fieldPtr);
+                        if (sharedRef.IsLocal)
+                            sharedRef = null;
+                        if (Unsafe.Read<EntitySharedReference>(latestDataPtr) != sharedRef)
                         {
-                            Unsafe.CopyBlock(latestDataPtr, syncVarPtr, field.Size);
+                            Unsafe.Write(latestDataPtr, sharedRef);
                             _fieldChangeTicks[i] = serverTick;
                         }
+                        continue;
                     }
-                    else if (Utils.memcmp(latestDataPtr, fieldPtr, field.PtrSize) != 0)
+                    if (Utils.memcmp(latestDataPtr, fieldPtr, field.PtrSize) != 0)
                     {
                         Unsafe.CopyBlock(latestDataPtr, fieldPtr, field.Size);
                         _fieldChangeTicks[i] = serverTick;
@@ -219,14 +212,19 @@ namespace LiteEntitySystem.Internal
             //make diff
             int startPos = position;
 
+            int versionChangedDifference = Utils.SequenceDiff(_versionChangedTick, playerTick);
+            //this will eliminate resends of full data after tick overflow
+            if (Utils.SequenceDiff(minimalTick, _versionChangedTick) > 0)
+                _versionChangedTick = minimalTick;
+
             fixed (byte* lastEntityData = _latestEntityData)
             {
                 //at 0 ushort
                 ushort* fieldFlagAndSize = (ushort*) (resultData + startPos);
                 position += 2;
-                
+
                 //initial state with compression
-                if (Utils.SequenceDiff(_versionChangedTick, playerTick) > 0)
+                if (versionChangedDifference > 0)
                 {
                     //write full header here (totalSize + eid)
                     //also all fields
@@ -247,24 +245,25 @@ namespace LiteEntitySystem.Internal
                     
                     for (int i = 0; i < _classData.FieldsCount; i++)
                     {
-                        ref var fieldInfo = ref _classData.Fields[i];
+                        ref var field = ref _classData.Fields[i];
                         if (i % 8 == 0)
                         {
                             fields++;
                             *fields = 0;
                         }
-                        
-                        if((fieldInfo.Flags.HasFlagFast(SyncFlags.OnlyForLocal) && !localControlled) ||
-                           (fieldInfo.Flags.HasFlagFast(SyncFlags.OnlyForRemote) && localControlled))
-                            continue;
-                        
-                        if (Utils.SequenceDiff(_fieldChangeTicks[i], playerTick) > 0)
+
+                        if ((!field.Flags.HasFlagFast(SyncFlags.OnlyForLocal) || localControlled) &&
+                            (!field.Flags.HasFlagFast(SyncFlags.OnlyForRemote) || !localControlled) &&
+                            Utils.SequenceDiff(_fieldChangeTicks[i], playerTick) > 0)
                         {
                             hasChanges = true;
-                            *fields |= (byte)(1 << i%8);
-                            Unsafe.CopyBlock(resultData + position, entityDataAfterHeader + fieldInfo.FixedOffset, fieldInfo.Size);
-                            position += fieldInfo.IntSize;
+                            *fields |= (byte)(1 << i % 8);
+                            Unsafe.CopyBlock(resultData + position, entityDataAfterHeader + field.FixedOffset, field.Size);
+                            position += field.IntSize;
                         }
+                        
+                        if (Utils.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
+                            _fieldChangeTicks[i] = minimalTick;
                     }
 
                     var rpcNode = _rpcHead;
@@ -317,6 +316,7 @@ namespace LiteEntitySystem.Internal
                 
                 *fieldFlagAndSize |= (ushort)(resultSize << 1);
             }
+
             return canReuse ? DiffResult.DoneAndDestroy : DiffResult.Done;
         }
 

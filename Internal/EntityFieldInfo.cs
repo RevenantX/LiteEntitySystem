@@ -31,39 +31,21 @@ namespace LiteEntitySystem.Internal
             InterpolatorDelegate interpolator,
             int offset,
             int size,
-            SyncFlags flags)
+            SyncFlags flags,
+            bool isEntityReference)
         {
             SyncableSyncVarOffset = -1;
             Offset = offset;
             Size = (uint)size;
             IntSize = size;
             PtrSize = (UIntPtr)Size;
-            FieldType = FieldType.Value;
+            FieldType = isEntityReference ? FieldType.Entity : FieldType.Value;
             OnSync = onSync;
             Interpolator = interpolator;
             FixedOffset = 0;
             Flags = flags;
         }
-        
-        //For entity
-        public EntityFieldInfo(
-            MethodCallDelegate onSync,
-            int offset,
-            int size,
-            SyncFlags flags)
-        {
-            SyncableSyncVarOffset = -1;
-            Offset = offset;
-            Size = (uint)size;
-            IntSize = size;
-            PtrSize = (UIntPtr)Size;
-            FieldType = FieldType.Entity;
-            OnSync = onSync;
-            Interpolator = null;
-            FixedOffset = 0;
-            Flags = flags;
-        }
-        
+
         //For syncable
         public EntityFieldInfo(
             int offset,

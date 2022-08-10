@@ -57,7 +57,6 @@ namespace LiteEntitySystem.Internal
 
         private static readonly int NativeFieldOffset;
         private static readonly Type InternalEntityType = typeof(InternalEntity);
-        private static readonly Type EntityLogicType = typeof(EntityLogic);
         private static readonly Type SingletonEntityType = typeof(SingletonEntityLogic);
         private static readonly Type SyncableType = typeof(SyncableField);
 
@@ -242,7 +241,7 @@ namespace LiteEntitySystem.Internal
                         }
 
                         MethodCallDelegate onSyncMethod = GetOnSyncDelegate(baseType, ft, syncVarAttribute.MethodName);
-                        var fieldInfo = new EntityFieldInfo(onSyncMethod, interpolator, offset, fieldSize, syncVarAttribute.Flags);
+                        var fieldInfo = new EntityFieldInfo(onSyncMethod, interpolator, offset, fieldSize, syncVarAttribute.Flags, ft == typeof(EntitySharedReference));
                         if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.LagCompensated))
                         {
                             lagCompensatedFields.Add(fieldInfo);
@@ -250,12 +249,6 @@ namespace LiteEntitySystem.Internal
                         }
                         fields.Add(fieldInfo);
                         FixedFieldsSize += fieldSize;
-                    }
-                    else if (ft == EntityLogicType || ft.IsSubclassOf(InternalEntityType))
-                    {
-                        MethodCallDelegate onSyncMethod = GetOnSyncDelegate(baseType, ft, syncVarAttribute.MethodName);
-                        fields.Add(new EntityFieldInfo(onSyncMethod, offset, sizeof(ushort), syncVarAttribute.Flags));
-                        FixedFieldsSize += sizeof(ushort);
                     }
                     else if (ft.IsSubclassOf(SyncableType))
                     {

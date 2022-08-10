@@ -75,8 +75,7 @@ namespace LiteEntitySystem.Internal
         private int _totalPartsCount;
         private int _receivedPartsCount;
         private int _maxReceivedPart;
-
-        public int RemoteCallsProcessed;
+        
         public int RemoteCallsCount;
         public RemoteCallsCache[] RemoteCallsCaches = new RemoteCallsCache[32];
 
@@ -97,7 +96,6 @@ namespace LiteEntitySystem.Internal
             _receivedPartsCount = 0;
             _totalPartsCount = 0;
             RemoteCallsCount = 0;
-            RemoteCallsProcessed = 0;
             Size = 0;
             Offset = 0;
         }
