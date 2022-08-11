@@ -68,7 +68,7 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         public void Destroy()
         {
-            if (EntityManager.IsClient || _isDestroyed)
+            if ((EntityManager.IsClient && !IsLocal) || _isDestroyed)
                 return;
             DestroyInternal();
         }
