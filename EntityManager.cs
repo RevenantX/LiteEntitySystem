@@ -237,11 +237,21 @@ namespace LiteEntitySystem
             AliveEntities.Clear();
 
             for (int i = 0; i < _singletonEntities.Length; i++)
+            {
+                _singletonEntities[i]?.DestroyInternal();
                 _singletonEntities[i] = null;
+            }
+
             for (int i = FirstEntityId; i < EntitiesDict.Length; i++)
+            {
+                EntitiesDict[i]?.DestroyInternal();
                 EntitiesDict[i] = null;
+            }
+
             for (int i = 0; i < _entityFilters.Length; i++)
+            {
                 _entityFilters[i] = null;
+            }
         }
 
         /// <summary>
@@ -453,17 +463,33 @@ namespace LiteEntitySystem
                 foreach (int baseId in classData.BaseIds)
                     _entityFilters[baseId]?.Add(e);
             }
-            if (classData.IsUpdateable && (IsServer || e.IsLocal || (IsClient && classData.UpdateOnClient)))
+            if (IsEntityAlive(classData, e))
                 AliveEntities.Add(e);
+        }
+
+        private bool IsEntityAlive(EntityClassData classData, InternalEntity entity)
+        {
+            return classData.IsUpdateable && (IsServer || entity.IsLocal || (IsClient && classData.UpdateOnClient));
         }
 
         internal void RemoveEntity(InternalEntity e)
         {
             ref var classData = ref ClassDataDict[e.ClassId];
-            _entityFilters[classData.FilterId]?.Remove(e);
-            foreach (int baseId in classData.BaseIds)
-                _entityFilters[baseId]?.Remove(e);
-            if (classData.IsUpdateable && (IsServer || e.IsLocal || (IsClient && classData.UpdateOnClient)))
+            
+            if (classData.IsSingleton)
+            {
+                _singletonEntities[classData.FilterId] = null;
+                foreach (int baseId in classData.BaseIds) 
+                    _singletonEntities[baseId] = null;
+            }
+            else
+            {
+                _entityFilters[classData.FilterId]?.Remove(e);
+                foreach (int baseId in classData.BaseIds) 
+                    _entityFilters[baseId]?.Remove(e);
+            }
+            
+            if (IsEntityAlive(classData, e))
                 AliveEntities.Remove(e);
             if (classData.IsLocalOnly)
                 _localIdQueue.Enqueue(e.Id);

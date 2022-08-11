@@ -104,7 +104,7 @@ namespace LiteEntitySystem
             _localPeer = localPeer;
             _sendBuffer[0] = headerByte;
             _sendBuffer[1] = PacketClientSync;
-            AliveEntities.OnAdded += InitInterpolation;
+            AliveEntities.OnConstructed += InitInterpolation;
         }
 
         /// <summary>
@@ -128,11 +128,14 @@ namespace LiteEntitySystem
         /// Read incoming data omitting header byte
         /// </summary>
         /// <param name="reader"></param>
-        public void Deserialize(NetPacketReader reader)
+        public unsafe void Deserialize(NetPacketReader reader)
         {
             byte packetType = reader.GetByte();
             if(packetType == PacketBaselineSync)
             {
+                _lerpBuffer.Clear();
+                _receivedStates.Clear();
+                _stateB = null;
                 _stateA = new ServerStateData
                 {
                     IsBaseline = true,
@@ -156,7 +159,21 @@ namespace LiteEntitySystem
                 }
                 _stateA.Tick = BitConverter.ToUInt16(_stateA.Data, 0);
                 _stateA.Offset = 2;
-                ReadEntityStates();
+                fixed (byte* readerData = _stateA.Data)
+                {
+                    _inputCommands.Clear();
+                    int bytesRead = _stateA.Offset;
+                    while (bytesRead < _stateA.Size)
+                    {
+                        ushort entityId = BitConverter.ToUInt16(_stateA.Data, bytesRead);
+                        bytesRead += 2;
+                        ReadEntityState(readerData, ref bytesRead, entityId, true);
+                        if (bytesRead == -1)
+                            return;
+                    }
+                    _remoteCallsTick = _stateA.Tick;
+                }
+                ConstructAndSync();
                 _isSyncReceived = true;
                 _jitterTimer.Restart();
             }
@@ -297,7 +314,19 @@ namespace LiteEntitySystem
             _stateA = _stateB;
             _stateB = null;
 
-            ReadEntityStates();
+            fixed (byte* readerData = _stateA.Data)
+            {
+                for (int i = 0; i < _stateA.PreloadDataCount; i++)
+                {
+                    ref var preloadData = ref _stateA.PreloadDataArray[i];
+                    int offset = preloadData.DataOffset;
+                    ReadEntityState(readerData, ref offset, preloadData.EntityId,
+                        preloadData.EntityFieldsOffset == -1);
+                    if (offset == -1)
+                        return;
+                }
+            }
+            ConstructAndSync();
             
             _timer -= _lerpTime;
             
@@ -693,39 +722,15 @@ namespace LiteEntitySystem
             }
         }
 
-        private unsafe void ReadEntityStates()
+        private unsafe void ConstructAndSync()
         {
-            fixed (byte* readerData = _stateA.Data)
+            //Call construct methods
+            for (int i = 0; i < _entitiesToConstructCount; i++)
             {
-                if (_stateA.IsBaseline)
-                {
-                    _inputCommands.Clear();
-                    int bytesRead = _stateA.Offset;
-                    while (bytesRead < _stateA.Size)
-                    {
-                        ushort entityId = BitConverter.ToUInt16(_stateA.Data, bytesRead);
-                        bytesRead += 2;
-                        ReadEntityState(readerData, ref bytesRead, entityId, true);
-                        if (bytesRead == -1)
-                            return;
-                    }
-                    _remoteCallsTick = _stateA.Tick;
-                }
-                else
-                {
-
-                    for (int i = 0; i < _stateA.PreloadDataCount; i++)
-                    {
-                        ref var preloadData = ref _stateA.PreloadDataArray[i];
-                        int offset = preloadData.DataOffset;
-                        ReadEntityState(readerData, ref offset, preloadData.EntityId,
-                            preloadData.EntityFieldsOffset == -1);
-                        if (offset == -1)
-                            return;
-                    }
-                }
+                ConstructEntity(_entitiesToConstruct[i]);
             }
-
+            _entitiesToConstructCount = 0;
+            
             //Make OnSyncCalls
             for (int i = 0; i < _syncCallsCount; i++)
             {
@@ -736,13 +741,6 @@ namespace LiteEntitySystem
                 }
             }
             _syncCallsCount = 0;
-            
-            //Call construct methods
-            for (int i = 0; i < _entitiesToConstructCount; i++)
-            {
-                ConstructEntity(_entitiesToConstruct[i]);
-            }
-            _entitiesToConstructCount = 0;
         }
 
         private unsafe void ReadEntityState(byte* rawData, ref int readerPosition, ushort entityInstanceId, bool fullSync)

@@ -49,17 +49,9 @@ namespace LiteEntitySystem
     {
         [SyncVar(nameof(OnParentChange))] 
         private EntitySharedReference _parentId;
-        
-        [SyncVar(nameof(OnDestroyChange))] 
-        private bool _isDestroyed;
-        
+
         [SyncVar(nameof(OnOwnerChange))]
         internal byte InternalOwnerId;
-        
-        /// <summary>
-        /// Is entity is destroyed
-        /// </summary>
-        public bool IsDestroyed => _isDestroyed;
 
         /// <summary>
         /// Child entities (can be used for transforms or as components)
@@ -70,17 +62,7 @@ namespace LiteEntitySystem
         /// Owner player id
         /// </summary>
         public byte OwnerId => InternalOwnerId;
-        
-        /// <summary>
-        /// Destroy entity
-        /// </summary>
-        public void Destroy()
-        {
-            if (EntityManager.IsClient || _isDestroyed)
-                return;
-            DestroyInternal();
-        }
-        
+
         /// <summary>
         /// Enable lag compensation for player that owns this entity
         /// </summary>
@@ -193,24 +175,17 @@ namespace LiteEntitySystem
             return playerId == InternalOwnerId;
         }
 
-        internal void DestroyInternal()
+        internal override void DestroyInternal()
         {
-            _isDestroyed = true;
-            OnDestroy();
-            EntityManager.RemoveEntity(this);
+            if (IsDestroyed)
+                return;
+            base.DestroyInternal();
             if (EntityManager.IsClient && IsLocalControlled && !IsLocal)
             {
                 ClientManager.RemoveOwned(this);
             }
-            else if (EntityManager.IsServer)
-            {
-                foreach (var e in Childs)
-                    e.DestroyInternal();
-                ServerManager.DestroySavedData(this);
-            }
-
             var parent = EntityManager.GetEntityById<EntityLogic>(_parentId);
-            if (parent != null && !parent._isDestroyed)
+            if (parent != null && !parent.IsDestroyed)
             {
                 parent.Childs.Remove(this);
             }
@@ -222,12 +197,6 @@ namespace LiteEntitySystem
                 ClientManager.AddOwned(this);
             else if(prevOwner == EntityManager.InternalPlayerId && !IsLocal)
                 ClientManager.RemoveOwned(this);
-        }
-
-        private void OnDestroyChange(bool prevValue)
-        {
-            if (_isDestroyed)
-                DestroyInternal();
         }
 
         private void OnParentChange(EntitySharedReference oldId)
@@ -243,11 +212,6 @@ namespace LiteEntitySystem
             {
                 SetOwner(child, ownerId);
             }
-        }
-
-        protected virtual void OnDestroy()
-        {
-
         }
 
         protected EntityLogic(EntityParams entityParams) : base(entityParams) { }
@@ -371,9 +335,6 @@ namespace LiteEntitySystem
     [UpdateableEntity(true)]
     public abstract class HumanControllerLogic : ControllerLogic
     {
-        [SyncVar(nameof(OnDestroyChange))] 
-        private bool _isDestroyed;
-        
         /// <summary>
         /// Called on client and server to read generated from <see cref="GenerateInput"/> input
         /// </summary>
@@ -385,24 +346,6 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="writer"></param>
         public abstract void GenerateInput(NetDataWriter writer);
-
-        internal void DestroyInternal()
-        {
-            _isDestroyed = true;
-            EntityManager.RemoveEntity(this);
-            ServerManager.DestroySavedData(this);
-        }
-        
-        private void OnDestroyChange(bool prevValue)
-        {
-            if(_isDestroyed)
-                OnDestroy();
-        }
-
-        protected virtual void OnDestroy()
-        {
-            
-        }
 
         protected HumanControllerLogic(EntityParams entityParams) : base(entityParams) { }
     }

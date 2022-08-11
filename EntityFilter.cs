@@ -50,12 +50,12 @@ namespace LiteEntitySystem
         /// <summary>
         /// Called when entity created and synced
         /// </summary>
-        public event Action<T> OnAdded;
+        public event Action<T> OnConstructed;
         
         /// <summary>
         /// Called when entity is removed/destroyed
         /// </summary>
-        public event Action<T> OnRemoved;
+        public event Action<T> OnDestroyed;
 
         /// <summary>
         /// Entities count of type <typeparamref name="T"/>
@@ -74,8 +74,8 @@ namespace LiteEntitySystem
             {
                 _array[i] = null;
             }
-            OnAdded = null;
-            OnRemoved = null;
+            OnConstructed = null;
+            OnDestroyed = null;
             _count = 0;
         }
 
@@ -99,7 +99,7 @@ namespace LiteEntitySystem
             _dict[entity.Id] = _count;
             _count++;
             
-            OnAdded?.Invoke((T)entity);
+            OnConstructed?.Invoke((T)entity);
         }
 
         internal override void Remove(InternalEntity entity)
@@ -117,7 +117,7 @@ namespace LiteEntitySystem
                 _dict[_array[idx].Id] = idx;
             }
             _array[_count] = null;
-            OnRemoved?.Invoke((T)entity);
+            OnDestroyed?.Invoke((T)entity);
         }
 
         public EntityFilterEnumerator GetEnumerator()

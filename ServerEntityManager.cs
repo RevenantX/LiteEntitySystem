@@ -225,12 +225,6 @@ namespace LiteEntitySystem
             return Add(initMethod);
         }
 
-        public void RemoveAIController<T>(T controller) where T : AiControllerLogic
-        {
-            controller.StopControl();
-            RemoveEntity(controller);
-        }
-
         /// <summary>
         /// Add new entity
         /// </summary>

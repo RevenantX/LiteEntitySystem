@@ -21,6 +21,14 @@ namespace LiteEntitySystem.Internal
         public readonly EntityManager EntityManager;
         
         internal readonly byte Version;
+        
+        [SyncVar(nameof(OnDestroyChange))] 
+        private bool _isDestroyed;
+        
+        /// <summary>
+        /// Is entity is destroyed
+        /// </summary>
+        public bool IsDestroyed => _isDestroyed;
 
         /// <summary>
         /// Is entity is local controlled
@@ -56,11 +64,40 @@ namespace LiteEntitySystem.Internal
         public bool IsLocal => Id >= EntityManager.MaxSyncedEntityCount;
 
         /// <summary>
-        /// Called when entity manager is reset
+        /// Destroy entity
         /// </summary>
-        public virtual void Free()
+        public void Destroy()
         {
-            
+            if (EntityManager.IsClient || _isDestroyed)
+                return;
+            DestroyInternal();
+        }
+        
+        private void OnDestroyChange(bool prevValue)
+        {
+            if (_isDestroyed)
+                DestroyInternal();
+        }
+        
+        /// <summary>
+        /// Event called on entity destroy
+        /// </summary>
+        protected virtual void OnDestroy()
+        {
+
+        }
+        
+        internal virtual void DestroyInternal()
+        {
+            if (_isDestroyed)
+                return;
+            _isDestroyed = true;
+            OnDestroy();
+            EntityManager.RemoveEntity(this);
+            if (EntityManager.IsServer)
+            {
+                ServerManager.DestroySavedData(this);
+            }
         }
 
         /// <summary>
