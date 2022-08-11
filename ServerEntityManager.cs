@@ -482,11 +482,8 @@ namespace LiteEntitySystem
                     classData.ClassId, 
                     entityId,
                     stateSerializer.IncrementVersion(Tick),
-                    this));
+                    this), initMethod);
                 stateSerializer.Init(ref classData, entity);
-                
-                initMethod?.Invoke(entity);
-                ConstructEntity(entity);
             }
             //Debug.Log($"[SEM] Entity create. clsId: {classData.ClassId}, id: {entityId}, v: {version}");
             return entity;

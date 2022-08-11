@@ -80,8 +80,6 @@ namespace LiteEntitySystem
         private SyncCallInfo[] _syncCalls;
         private int _syncCallsCount;
         
-        private InternalEntity[] _entitiesToConstruct = new InternalEntity[64];
-        private int _entitiesToConstructCount;
         private ushort _remoteCallsTick;
         private ushort _lastReceivedInputTick;
         private float _logicLerpMsec;
@@ -128,11 +126,12 @@ namespace LiteEntitySystem
         /// Read incoming data omitting header byte
         /// </summary>
         /// <param name="reader"></param>
-        public void Deserialize(NetPacketReader reader)
+        public unsafe void Deserialize(NetPacketReader reader)
         {
             byte packetType = reader.GetByte();
             if(packetType == PacketBaselineSync)
             {
+                _stateB = null;
                 _stateA = new ServerStateData
                 {
                     IsBaseline = true,
@@ -156,7 +155,20 @@ namespace LiteEntitySystem
                 }
                 _stateA.Tick = BitConverter.ToUInt16(_stateA.Data, 0);
                 _stateA.Offset = 2;
-                ReadEntityStates();
+                _inputCommands.Clear();
+                int bytesRead = _stateA.Offset;
+                fixed (byte* readerData = _stateA.Data)
+                {
+                    while (bytesRead < _stateA.Size)
+                    {
+                        ushort entityId = BitConverter.ToUInt16(_stateA.Data, bytesRead);
+                        bytesRead += 2;
+                        ReadEntityState(readerData, ref bytesRead, entityId, true);
+                        if (bytesRead == -1)
+                            return;
+                    }
+                }
+                _remoteCallsTick = _stateA.Tick;
                 _isSyncReceived = true;
                 _jitterTimer.Restart();
             }
@@ -296,9 +308,30 @@ namespace LiteEntitySystem
             _statesPool.Enqueue(_stateA);
             _stateA = _stateB;
             _stateB = null;
-
-            ReadEntityStates();
             
+            fixed (byte* readerData = _stateA.Data)
+            {
+                for (int i = 0; i < _stateA.PreloadDataCount; i++)
+                {
+                    ref var preloadData = ref _stateA.PreloadDataArray[i];
+                    int offset = preloadData.DataOffset;
+                    ReadEntityState(readerData, ref offset, preloadData.EntityId, preloadData.EntityFieldsOffset == -1);
+                    if (offset == -1)
+                        break;
+                }
+            }
+
+            //Make OnSyncCalls
+            for (int i = 0; i < _syncCallsCount; i++)
+            {
+                ref var syncCall = ref _syncCalls[i];
+                fixed (byte* readerData = _stateA.Data)
+                {
+                    syncCall.OnSync(syncCall.Entity, readerData + syncCall.PrevDataPos, 1); //TODO: count!!!
+                }
+            }
+            _syncCallsCount = 0;
+
             _timer -= _lerpTime;
             
             //reset owned entities
@@ -693,58 +726,6 @@ namespace LiteEntitySystem
             }
         }
 
-        private unsafe void ReadEntityStates()
-        {
-            fixed (byte* readerData = _stateA.Data)
-            {
-                if (_stateA.IsBaseline)
-                {
-                    _inputCommands.Clear();
-                    int bytesRead = _stateA.Offset;
-                    while (bytesRead < _stateA.Size)
-                    {
-                        ushort entityId = BitConverter.ToUInt16(_stateA.Data, bytesRead);
-                        bytesRead += 2;
-                        ReadEntityState(readerData, ref bytesRead, entityId, true);
-                        if (bytesRead == -1)
-                            return;
-                    }
-                    _remoteCallsTick = _stateA.Tick;
-                }
-                else
-                {
-
-                    for (int i = 0; i < _stateA.PreloadDataCount; i++)
-                    {
-                        ref var preloadData = ref _stateA.PreloadDataArray[i];
-                        int offset = preloadData.DataOffset;
-                        ReadEntityState(readerData, ref offset, preloadData.EntityId,
-                            preloadData.EntityFieldsOffset == -1);
-                        if (offset == -1)
-                            return;
-                    }
-                }
-            }
-
-            //Make OnSyncCalls
-            for (int i = 0; i < _syncCallsCount; i++)
-            {
-                ref var syncCall = ref _syncCalls[i];
-                fixed (byte* readerData = _stateA.Data)
-                {
-                    syncCall.OnSync(syncCall.Entity, readerData + syncCall.PrevDataPos, 1); //TODO: count!!!
-                }
-            }
-            _syncCallsCount = 0;
-            
-            //Call construct methods
-            for (int i = 0; i < _entitiesToConstructCount; i++)
-            {
-                ConstructEntity(_entitiesToConstruct[i]);
-            }
-            _entitiesToConstructCount = 0;
-        }
-
         private unsafe void ReadEntityState(byte* rawData, ref int readerPosition, ushort entityInstanceId, bool fullSync)
         {
             if (entityInstanceId == InvalidEntityId || entityInstanceId >= MaxSyncedEntityCount)
@@ -772,13 +753,17 @@ namespace LiteEntitySystem
                         entityLogic.DestroyInternal();
                     entity = null;
                 }
+                
+                //create new
                 if(entity == null)
                 {
-                    //create new
-                    entity = AddEntity(new EntityParams(classId, entityInstanceId, version, this));
-                    Utils.ResizeIfFull(ref _entitiesToConstruct, _entitiesToConstructCount);
-                    _entitiesToConstruct[_entitiesToConstructCount++] = entity;
+                    int localReaderPosition = readerPosition;
+                    AddEntity<InternalEntity>(
+                        new EntityParams(classId, entityInstanceId, version, this),
+                        internalEntity => ReadEntityData(internalEntity, rawData, ref localReaderPosition, true));
+                    readerPosition = localReaderPosition;
                     //Logger.Log($"[CEM] Add entity: {entity.GetType()}");
+                    return;
                 }
             }
             else if (entity == null)
@@ -787,7 +772,12 @@ namespace LiteEntitySystem
                 readerPosition = -1;
                 return;
             }
-            
+
+            ReadEntityData(entity, rawData, ref readerPosition, fullSync);
+        }
+
+        private unsafe void ReadEntityData(InternalEntity entity, byte* rawData, ref int readerPosition, bool fullSync)
+        {
             ref var classData = ref ClassDataDict[entity.ClassId];
 
             //create interpolation buffers
@@ -855,12 +845,8 @@ namespace LiteEntitySystem
                     readerPosition += field.IntSize;
                 }
                 if (fullSync)
-                {
                     for (int i = 0; i < classData.SyncableFields.Length; i++)
-                    {
                         Unsafe.AsRef<SyncableField>(entityPtr + classData.SyncableFields[i].Offset).FullSyncRead(rawData, ref readerPosition);
-                    }
-                }
                 entity.OnSyncEnd();
             }
         }
