@@ -397,18 +397,18 @@ namespace LiteEntitySystem
                 _localIdQueue.Count > 0 ? _localIdQueue.Dequeue() : _localIdCounter++, 
                 0,
                 this);
-            var entity = AddEntity<T>(entityParams, resultingEntity =>
+            var entity = (T)AddEntity(entityParams);
+            if (IsClient && entity is EntityLogic logic)
             {
-                if (IsClient && resultingEntity is EntityLogic logic)
-                {
-                    logic.InternalOwnerId = InternalPlayerId;
-                }
-                initMethod?.Invoke(resultingEntity);
-            });
+                logic.InternalOwnerId = InternalPlayerId;
+            }
+
+            initMethod?.Invoke(entity);
+            ConstructEntity(entity);
             return entity;
         }
 
-        protected T AddEntity<T>(EntityParams entityParams, Action<T> initMethod = null) where T : InternalEntity
+        protected InternalEntity AddEntity(EntityParams entityParams)
         {
             if (entityParams.Id == InvalidEntityId || entityParams.Id >= EntitiesDict.Length)
             {
@@ -434,23 +434,27 @@ namespace LiteEntitySystem
             
             EntitiesDict[entity.Id] = entity;
             EntitiesCount++;
-            initMethod?.Invoke((T)entity);
-            entity.OnConstructed();
+            return entity;
+        }
+
+        protected void ConstructEntity(InternalEntity e)
+        {
+            e.OnConstructed();
+            ref var classData = ref ClassDataDict[e.ClassId];
             if (classData.IsSingleton)
             {
-                _singletonEntities[classData.FilterId] = (SingletonEntityLogic)entity;
+                _singletonEntities[classData.FilterId] = (SingletonEntityLogic)e;
                 foreach (int baseId in classData.BaseIds)
-                    _singletonEntities[baseId] = (SingletonEntityLogic)entity;
+                    _singletonEntities[baseId] = (SingletonEntityLogic)e;
             }
             else
             {
-                _entityFilters[classData.FilterId]?.Add(entity);
+                _entityFilters[classData.FilterId]?.Add(e);
                 foreach (int baseId in classData.BaseIds)
-                    _entityFilters[baseId]?.Add(entity);
+                    _entityFilters[baseId]?.Add(e);
             }
-            if (classData.IsUpdateable && (IsServer || entity.IsLocal || (IsClient && classData.UpdateOnClient)))
-                AliveEntities.Add(entity);
-            return (T)entity;
+            if (classData.IsUpdateable && (IsServer || e.IsLocal || (IsClient && classData.UpdateOnClient)))
+                AliveEntities.Add(e);
         }
 
         internal void RemoveEntity(InternalEntity e)

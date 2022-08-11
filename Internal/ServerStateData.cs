@@ -117,7 +117,8 @@ namespace LiteEntitySystem.Internal
                 preloadData.EntityId = BitConverter.ToUInt16(Data, bytesRead + 2);
                 preloadData.InterpolatedCachesCount = 0;
                 bytesRead += preloadData.TotalSize;
-                if (preloadData.EntityId == EntityManager.InvalidEntityId || preloadData.EntityId >= EntityManager.MaxSyncedEntityCount)
+                
+                if (preloadData.EntityId > EntityManager.MaxSyncedEntityCount)
                 {
                     //Should remove at all
                     Logger.LogError($"[CEM] Invalid entity id: {preloadData.EntityId}");
