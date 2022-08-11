@@ -163,7 +163,7 @@ namespace LiteEntitySystem
                     {
                         ushort entityId = BitConverter.ToUInt16(_stateA.Data, bytesRead);
                         bytesRead += 2;
-                        ReadEntityState(readerData, ref bytesRead, entityId, true);
+                        ReadEntityStateFullSync(readerData, ref bytesRead, entityId);
                         if (bytesRead == -1)
                             return;
                     }
@@ -315,7 +315,10 @@ namespace LiteEntitySystem
                 {
                     ref var preloadData = ref _stateA.PreloadDataArray[i];
                     int offset = preloadData.DataOffset;
-                    ReadEntityState(readerData, ref offset, preloadData.EntityId, preloadData.EntityFieldsOffset == -1);
+                    if (preloadData.EntityFieldsOffset == -1)
+                        ReadEntityStateFullSync(readerData, ref offset, preloadData.EntityId);
+                    else
+                        ReadEntityData(EntitiesDict[preloadData.EntityId], readerData, ref offset, false);
                     if (offset == -1)
                         break;
                 }
@@ -725,8 +728,8 @@ namespace LiteEntitySystem
                 }
             }
         }
-
-        private unsafe void ReadEntityState(byte* rawData, ref int readerPosition, ushort entityInstanceId, bool fullSync)
+        
+        private unsafe void ReadEntityStateFullSync(byte* rawData, ref int readerPosition, ushort entityInstanceId)
         {
             if (entityInstanceId == InvalidEntityId || entityInstanceId >= MaxSyncedEntityCount)
             {
@@ -735,45 +738,35 @@ namespace LiteEntitySystem
                 return;
             }
             var entity = EntitiesDict[entityInstanceId];
+            byte version = rawData[readerPosition];
+            ushort classId = Unsafe.Read<ushort>(rawData + readerPosition + 1);
+            readerPosition += 3;
 
-            //full sync
-            if (fullSync)
+            //remove old entity
+            if (entity != null && entity.Version != version)
             {
-                byte version = rawData[readerPosition];
-                ushort classId = Unsafe.Read<ushort>(rawData + readerPosition + 1);
-                readerPosition += 3;
-
-                //remove old entity
-                if (entity != null && entity.Version != version)
-                {
-                    //this can be only on logics (not on singletons)
-                    Logger.Log($"[CEM] Replace entity by new: {version}");
-                    var entityLogic = (EntityLogic) entity;
-                    if(!entityLogic.IsDestroyed)
-                        entityLogic.DestroyInternal();
-                    entity = null;
-                }
-                
-                //create new
-                if(entity == null)
-                {
-                    int localReaderPosition = readerPosition;
-                    AddEntity<InternalEntity>(
-                        new EntityParams(classId, entityInstanceId, version, this),
-                        internalEntity => ReadEntityData(internalEntity, rawData, ref localReaderPosition, true));
-                    readerPosition = localReaderPosition;
-                    //Logger.Log($"[CEM] Add entity: {entity.GetType()}");
-                    return;
-                }
+                //this can be only on logics (not on singletons)
+                Logger.Log($"[CEM] Replace entity by new: {version}");
+                var entityLogic = (EntityLogic) entity;
+                if(!entityLogic.IsDestroyed)
+                    entityLogic.DestroyInternal();
+                entity = null;
             }
-            else if (entity == null)
+            
+            //create new
+            if(entity == null)
             {
-                Logger.LogError($"EntityNull? : {entityInstanceId}");
-                readerPosition = -1;
-                return;
+                int localReaderPosition = readerPosition;
+                AddEntity<InternalEntity>(
+                    new EntityParams(classId, entityInstanceId, version, this),
+                    internalEntity => ReadEntityData(internalEntity, rawData, ref localReaderPosition, true));
+                readerPosition = localReaderPosition;
+                //Logger.Log($"[CEM] Add entity: {entity.GetType()}");
             }
-
-            ReadEntityData(entity, rawData, ref readerPosition, fullSync);
+            else
+            {
+                ReadEntityData(entity, rawData, ref readerPosition, true);
+            }
         }
 
         private unsafe void ReadEntityData(InternalEntity entity, byte* rawData, ref int readerPosition, bool fullSync)
@@ -789,9 +782,9 @@ namespace LiteEntitySystem
             int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
             bool writeInterpolationData = entity.IsServerControlled || fullSync;
             
+            entity.OnSyncStart();
             fixed (byte* interpDataPtr = interpolatedInitialData, tempData = _tempData, latestEntityData = _predictedEntities[entity.Id])
             {
-                entity.OnSyncStart();
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
                     if (!fullSync && !Utils.IsBitSet(rawData + fieldsFlagsOffset, i))
@@ -844,11 +837,13 @@ namespace LiteEntitySystem
                     }
                     readerPosition += field.IntSize;
                 }
-                if (fullSync)
-                    for (int i = 0; i < classData.SyncableFields.Length; i++)
-                        Unsafe.AsRef<SyncableField>(entityPtr + classData.SyncableFields[i].Offset).FullSyncRead(rawData, ref readerPosition);
-                entity.OnSyncEnd();
             }
+            
+            if (fullSync)
+                for (int i = 0; i < classData.SyncableFields.Length; i++)
+                    Unsafe.AsRef<SyncableField>(entityPtr + classData.SyncableFields[i].Offset).FullSyncRead(rawData, ref readerPosition);
+            
+            entity.OnSyncEnd();
         }
     }
 }
