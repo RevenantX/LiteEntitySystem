@@ -167,6 +167,13 @@ namespace LiteEntitySystem
                         if (bytesRead == -1)
                             return;
                     }
+                    //Make OnSyncCalls
+                    for (int i = 0; i < _syncCallsCount; i++)
+                    {
+                        ref var syncCall = ref _syncCalls[i];
+                        syncCall.OnSync(syncCall.Entity, readerData + syncCall.PrevDataPos, 1); //TODO: count!!!
+                    }
+                    _syncCallsCount = 0;
                 }
                 _remoteCallsTick = _stateA.Tick;
                 _isSyncReceived = true;
@@ -322,18 +329,14 @@ namespace LiteEntitySystem
                     if (offset == -1)
                         break;
                 }
-            }
-
-            //Make OnSyncCalls
-            for (int i = 0; i < _syncCallsCount; i++)
-            {
-                ref var syncCall = ref _syncCalls[i];
-                fixed (byte* readerData = _stateA.Data)
+                //Make OnSyncCalls
+                for (int i = 0; i < _syncCallsCount; i++)
                 {
+                    ref var syncCall = ref _syncCalls[i];
                     syncCall.OnSync(syncCall.Entity, readerData + syncCall.PrevDataPos, 1); //TODO: count!!!
                 }
+                _syncCallsCount = 0;
             }
-            _syncCallsCount = 0;
 
             _timer -= _lerpTime;
             
