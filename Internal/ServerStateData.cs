@@ -65,7 +65,6 @@ namespace LiteEntitySystem.Internal
         public ushort Tick;
         public ushort ProcessedTick;
         public ushort LastReceivedTick;
-        public bool IsBaseline;
         public StatePreloadData[] PreloadDataArray = new StatePreloadData[32];
         public int PreloadDataCount;
         public int[] InterpolatedFields = new int[8];
@@ -87,8 +86,7 @@ namespace LiteEntitySystem.Internal
                 statePart?.Recycle();
                 statePart = null;
             }
-
-            IsBaseline = false;
+            
             Tick = tick;
             InterpolatedCount = 0;
             PreloadDataCount = 0;

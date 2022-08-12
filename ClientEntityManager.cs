@@ -138,7 +138,6 @@ namespace LiteEntitySystem
                 _stateB = null;
                 _stateA = new ServerStateData
                 {
-                    IsBaseline = true,
                     Size = reader.GetInt()
                 };
                 InternalPlayerId = reader.GetByte();
