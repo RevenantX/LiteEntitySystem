@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using K4os.Compression.LZ4;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem

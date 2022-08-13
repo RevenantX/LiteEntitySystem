@@ -292,7 +292,7 @@ namespace LiteEntitySystem
             //remove processed inputs
             while (_inputCommands.Count > 0)
             {
-                if (Utils.SequenceDiff(_stateB.ProcessedTick, (ushort)(Tick - _inputCommands.Count + 1)) >= 0)
+                if (Utils.SequenceDiff(_stateB.ProcessedTick, (ushort)(_tick - _inputCommands.Count + 1)) >= 0)
                 {
                     var inputWriter = _inputCommands.Dequeue();
                     inputWriter.Reset();
@@ -423,7 +423,7 @@ namespace LiteEntitySystem
                 return;
             
             //logic update
-            ushort prevTick = Tick;
+            ushort prevTick = _tick;
             base.Update();
             
             if (_stateB != null || PreloadNextState())
@@ -487,13 +487,13 @@ namespace LiteEntitySystem
             }
 
             //send buffered input
-            if (Tick != prevTick)
+            if (_tick != prevTick)
             {
                 //pack tick first
                 int offset = 4;
                 fixed (byte* sendBuffer = _sendBuffer)
                 {
-                    ushort currentTick = (ushort)(Tick - _inputCommands.Count + 1);
+                    ushort currentTick = (ushort)(_tick - _inputCommands.Count + 1);
                     ushort tickIndex = 0;
                     
                     foreach (var inputCommand in _inputCommands)
@@ -611,7 +611,7 @@ namespace LiteEntitySystem
 
         internal void AddPredictedInfo(EntityLogic e)
         {
-            _spawnPredictedEntities.Enqueue((Tick, e));
+            _spawnPredictedEntities.Enqueue((_tick, e));
         }
 
         protected override unsafe void OnLogicTick()

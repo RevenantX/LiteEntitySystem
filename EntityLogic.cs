@@ -286,6 +286,13 @@ namespace LiteEntitySystem
             
         }
 
+        public void DestroyWithControlledEntity()
+        {
+            ControlledEntity?.Destroy();
+            _controlledEntity = null;
+            Destroy();
+        }
+
         public void StartControl(PawnLogic target)
         {
             StopControl();

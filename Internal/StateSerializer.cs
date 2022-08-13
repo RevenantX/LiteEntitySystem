@@ -115,7 +115,7 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        private unsafe void Write(ushort serverTick)
+        private unsafe void Write(ushort serverTick, ushort minimalTick)
         {
             //write if there new tick
             if (serverTick == _lastWriteTick || _state != SerializerState.Active) 
@@ -124,6 +124,9 @@ namespace LiteEntitySystem.Internal
             _controllerOwner = _entity is ControllerLogic controller
                 ? controller.InternalOwnerId
                 : ServerEntityManager.ServerPlayerId;
+            
+            if (Utils.SequenceDiff(minimalTick, _versionChangedTick) > 0)
+                _versionChangedTick = minimalTick;
 
             _lastWriteTick = serverTick;
             byte* entityPointer = Utils.GetPtr(ref _entity);
@@ -152,6 +155,10 @@ namespace LiteEntitySystem.Internal
                             Unsafe.Write(latestDataPtr, sharedRef);
                             _fieldChangeTicks[i] = serverTick;
                         }
+                        else if (Utils.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
+                        {
+                            _fieldChangeTicks[i] = minimalTick;
+                        }
                         continue;
                     }
                     if (Utils.memcmp(latestDataPtr, fieldPtr, field.PtrSize) != 0)
@@ -159,45 +166,43 @@ namespace LiteEntitySystem.Internal
                         Unsafe.CopyBlock(latestDataPtr, fieldPtr, field.Size);
                         _fieldChangeTicks[i] = serverTick;
                     }
+                    else if (Utils.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
+                    {
+                        _fieldChangeTicks[i] = minimalTick;
+                    }
                 }
             }
         }
 
-        public void Destroy(ushort serverTick)
+        public void Destroy(ushort serverTick, ushort minimalTick)
         {
-            Write((ushort)(serverTick+1));
+            Write((ushort)(serverTick+1), minimalTick);
             _state = SerializerState.Destroyed;
             _ticksOnDestroy = serverTick;
         }
 
-        private unsafe void WriteFull(byte* resultData, byte *lastEntityData, ref int position)
+        public unsafe void MakeBaseline(byte playerId, ushort serverTick, ushort minimalTick, byte* resultData, ref int position)
         {
-            Unsafe.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
-            position += (int)_fullDataSize;
-            for (int i = 0; i < _classData.SyncableFields.Length; i++)
-            {
-                Unsafe.AsRef<SyncableField>(Utils.GetPtr(ref _entity) + _classData.SyncableFields[i].Offset).FullSyncWrite(resultData, ref position);
-            }
-        }
-
-        public unsafe void MakeBaseline(byte playerId, ushort serverTick, byte* resultData, ref int position)
-        {
-            if (_state != SerializerState.Active)
+            if (_state != SerializerState.Active ||
+                (_controllerOwner != ServerEntityManager.ServerPlayerId && playerId != _controllerOwner))
                 return;
-            Write(serverTick);
-            if (_controllerOwner != ServerEntityManager.ServerPlayerId && playerId != _controllerOwner)
-                return;
+            Write(serverTick, minimalTick);
             
             //make diff
             fixed (byte* lastEntityData = _latestEntityData)
             {
                 //initial state with compression
                 //don't write total size in full sync and fields
-                WriteFull(resultData, lastEntityData, ref position);
+                Unsafe.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
+                position += (int)_fullDataSize;
+                for (int i = 0; i < _classData.SyncableFields.Length; i++)
+                {
+                    Unsafe.AsRef<SyncableField>(Utils.GetPtr(ref _entity) + _classData.SyncableFields[i].Offset).FullSyncWrite(resultData, ref position);
+                }
             }
         }
 
-        public unsafe DiffResult MakeDiff(byte playerId, ushort minimalTick, ushort serverTick, ushort playerTick, byte* resultData, ref int position)
+        public unsafe DiffResult MakeDiff(byte playerId, ushort serverTick, ushort minimalTick, ushort playerTick, byte* resultData, ref int position)
         {
             bool canReuse = false;
             if (_state == SerializerState.Destroyed && Utils.SequenceDiff(serverTick, _ticksOnDestroy) >= TicksToDestroy)
@@ -205,17 +210,12 @@ namespace LiteEntitySystem.Internal
                 _state = SerializerState.Freed;
                 canReuse = true;
             }
-            Write(serverTick);
             if(_controllerOwner != ServerEntityManager.ServerPlayerId && playerId != _controllerOwner)
                 return DiffResult.Skip;
+            Write(serverTick, minimalTick);
 
             //make diff
             int startPos = position;
-
-            int versionChangedDifference = Utils.SequenceDiff(_versionChangedTick, playerTick);
-            //this will eliminate resends of full data after tick overflow
-            if (Utils.SequenceDiff(minimalTick, _versionChangedTick) > 0)
-                _versionChangedTick = minimalTick;
 
             fixed (byte* lastEntityData = _latestEntityData)
             {
@@ -224,12 +224,17 @@ namespace LiteEntitySystem.Internal
                 position += 2;
 
                 //initial state with compression
-                if (versionChangedDifference > 0)
+                if (Utils.SequenceDiff(_versionChangedTick, playerTick) > 0)
                 {
                     //write full header here (totalSize + eid)
                     //also all fields
                     *fieldFlagAndSize = 1;
-                    WriteFull(resultData, lastEntityData, ref position);
+                    Unsafe.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
+                    position += (int)_fullDataSize;
+                    for (int i = 0; i < _classData.SyncableFields.Length; i++)
+                    {
+                        Unsafe.AsRef<SyncableField>(Utils.GetPtr(ref _entity) + _classData.SyncableFields[i].Offset).FullSyncWrite(resultData, ref position);
+                    }
                 }
                 else //make diff
                 {
@@ -261,9 +266,6 @@ namespace LiteEntitySystem.Internal
                             Unsafe.CopyBlock(resultData + position, entityDataAfterHeader + field.FixedOffset, field.Size);
                             position += field.IntSize;
                         }
-                        
-                        if (Utils.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
-                            _fieldChangeTicks[i] = minimalTick;
                     }
 
                     var rpcNode = _rpcHead;
