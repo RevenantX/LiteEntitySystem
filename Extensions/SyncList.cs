@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace LiteEntitySystem
+namespace LiteEntitySystem.Extensions
 {
     public class SyncList<T> : SyncableField, IList<T> where T : struct
     {

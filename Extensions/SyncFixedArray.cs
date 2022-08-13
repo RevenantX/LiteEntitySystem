@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace LiteEntitySystem
+namespace LiteEntitySystem.Extensions
 {
     public class SyncFixedArray<T> : SyncableField where T : struct
     {

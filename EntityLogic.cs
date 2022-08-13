@@ -274,7 +274,11 @@ namespace LiteEntitySystem
         private EntitySharedReference _controlledEntity;
 
         public byte OwnerId => InternalOwnerId;
-        public PawnLogic ControlledEntity => EntityManager.GetEntityById<PawnLogic>(_controlledEntity);
+
+        public T GetControlledEntity<T>() where T : PawnLogic
+        {
+            return EntityManager.GetEntityById<T>(_controlledEntity);
+        }
 
         internal override bool IsControlledBy(byte playerId)
         {
@@ -288,7 +292,7 @@ namespace LiteEntitySystem
 
         public void DestroyWithControlledEntity()
         {
-            ControlledEntity?.Destroy();
+            GetControlledEntity<PawnLogic>()?.Destroy();
             _controlledEntity = null;
             Destroy();
         }
@@ -297,7 +301,7 @@ namespace LiteEntitySystem
         {
             StopControl();
             _controlledEntity = target;
-            ControlledEntity.Controller = this;
+            GetControlledEntity<PawnLogic>().Controller = this;
         }
 
         internal void OnControlledDestroy()
@@ -307,9 +311,10 @@ namespace LiteEntitySystem
 
         public void StopControl()
         {
-            if (ControlledEntity == null)
+            var controlledLogic = GetControlledEntity<PawnLogic>();
+            if (controlledLogic == null)
                 return;
-            ControlledEntity.Controller = null;
+            controlledLogic.Controller = null;
             _controlledEntity = null;
         }
         
@@ -331,7 +336,7 @@ namespace LiteEntitySystem
     [LocalOnly, UpdateableEntity]
     public abstract class AiControllerLogic<T> : AiControllerLogic where T : PawnLogic
     {
-        public new T ControlledEntity => base.ControlledEntity as T;
+        public T ControlledEntity => GetControlledEntity<T>();
         
         protected AiControllerLogic(EntityParams entityParams) : base(entityParams) { }
     }
@@ -362,7 +367,7 @@ namespace LiteEntitySystem
     /// </summary>
     public abstract class HumanControllerLogic<T> : HumanControllerLogic where T : PawnLogic
     {
-        public new T ControlledEntity => base.ControlledEntity as T;
+        public T ControlledEntity => GetControlledEntity<T>();
         
         protected HumanControllerLogic(EntityParams entityParams) : base(entityParams) { }
     }

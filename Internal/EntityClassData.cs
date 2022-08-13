@@ -268,7 +268,7 @@ namespace LiteEntitySystem.Internal
                                 if (syncableFieldType.IsValueType)
                                 {
                                     if (syncableFieldType.IsEnum)
-                                        syncableFieldType = ft.GetEnumUnderlyingType();
+                                        syncableFieldType = syncableFieldType.GetEnumUnderlyingType();
                                     int syncvarOffset = Marshal.ReadInt32(syncableField.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
                                     int size = GetTypeSize(syncableFieldType);
                                     fields.Add(new EntityFieldInfo(offset, syncvarOffset, size, syncVarAttribute.Flags));

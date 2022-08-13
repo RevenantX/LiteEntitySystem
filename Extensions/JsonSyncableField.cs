@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
 
-namespace LiteEntitySystem
+namespace LiteEntitySystem.Extensions
 {
     public class JsonSyncableField<T> : SyncableField where T : ScriptableObject
     {

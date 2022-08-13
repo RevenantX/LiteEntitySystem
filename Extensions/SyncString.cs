@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using LiteEntitySystem.Internal;
 
-namespace LiteEntitySystem
+namespace LiteEntitySystem.Extensions
 {
     public class SyncString : SyncableField
     {

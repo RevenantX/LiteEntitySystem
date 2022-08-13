@@ -255,28 +255,29 @@ namespace LiteEntitySystem
 
         /// <summary>
         /// Get entity by id
-        /// throws exception if entity is null or invalid type
         /// </summary>
         /// <param name="id">Id of entity</param>
-        /// <returns>Entity if it exists, null if id == InvalidEntityId</returns>
+        /// <returns>Entity if it exists, null if id == InvalidEntityId or entity is another type or version</returns>
         public T GetEntityById<T>(EntitySharedReference id) where T : InternalEntity
         {
-            if (id.Id == InvalidEntityId)
-                return null;
-            var entity = (T)EntitiesDict[id.Id];
-            return entity.Version == id.Version ? entity : null;
+            return id.Id != InvalidEntityId
+                ? EntitiesDict[id.Id] is T entity && entity.Version == id.Version ? entity : null
+                : null;
         }
         
         /// <summary>
-        /// Get entity by id
+        /// Try get entity by id
+        /// throws exception if entity is null or invalid type
         /// </summary>
         /// <param name="id">Id of entity</param>
-        /// <returns>Entity if it exists, null otherwise</returns>
-        public T GetEntityByIdSafe<T>(EntitySharedReference id) where T : InternalEntity
+        /// <param name="entity">out entity if exists otherwise null</param>
+        /// <returns>true if it exists, false if id == InvalidEntityId or entity is another type or version</returns>
+        public bool TryGetEntityById<T>(EntitySharedReference id, out T entity) where T : InternalEntity
         {
-            return id.Id != InvalidEntityId && EntitiesDict[id.Id] is T entity && entity.Version == id.Version 
-                ? entity
+            entity = id.Id != InvalidEntityId
+                ? EntitiesDict[id.Id] is T castedEnt && castedEnt.Version == id.Version ? castedEnt : null
                 : null;
+            return entity != null;
         }
 
         /// <summary>
