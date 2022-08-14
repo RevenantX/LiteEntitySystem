@@ -1,6 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
-using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
@@ -26,9 +24,16 @@ namespace LiteEntitySystem
 
         protected bool IsClient => EntityManager == null;
         protected bool IsServer => EntityManager != null;
-        
-        public abstract unsafe void FullSyncWrite(byte* data, ref int position);
-        public abstract unsafe void FullSyncRead(byte* data, ref int position);
+
+        public virtual void FullSyncWrite(Span<byte> dataSpan, ref int position)
+        {
+            
+        }
+
+        public virtual void FullSyncRead(Span<byte> dataSpan, ref int position)
+        {
+            
+        }
 
         public virtual void OnServerInitialized()
         {

@@ -88,7 +88,7 @@ namespace LiteEntitySystem
         private readonly Queue<byte> _playerIdQueue = new Queue<byte>(MaxPlayers);
         private readonly Queue<RemoteCallPacket> _rpcPool = new Queue<RemoteCallPacket>();
         private readonly Queue<byte[]> _inputPool = new Queue<byte[]>();
-        private readonly byte[] _packetBuffer = new byte[NetConstants.MaxPacketSize*(MaxParts+1)];
+        private readonly byte[] _packetBuffer = new byte[200 * 1024 * 1024];
         private readonly NetPlayer[] _netPlayersArray = new NetPlayer[MaxPlayers];
         private readonly NetPlayer[] _netPlayersDict = new NetPlayer[MaxPlayers];
         private readonly NetDataReader _inputReader = new NetDataReader();
@@ -368,9 +368,7 @@ namespace LiteEntitySystem
                     if (netPlayer.State == NetPlayerState.New)
                     {
                         for (int i = FirstEntityId; i <= MaxSyncedEntityId; i++)
-                        {
                             _savedEntityData[i].MakeBaseline(netPlayer.Id, _tick, _minimalTick, packetBuffer, ref writePosition);
-                        }
 
                         Utils.ResizeOrCreate(ref _compressionBuffer, writePosition);
 
@@ -385,13 +383,12 @@ namespace LiteEntitySystem
                                 writePosition - 2,
                                 compressionBuffer,
                                 _compressionBuffer.Length,
-                                LZ4Level.L10_OPT);
+                                LZ4Level.L00_FAST);
                             Unsafe.Write(packetBuffer + 2, originalLength);
                             packetBuffer[6] = netPlayer.Id;
                             Unsafe.CopyBlock(packetBuffer + 7, compressionBuffer, (uint)encodedLength);
                         }
-                        Logger.Log(
-                            $"[SEM] SendWorld to player {netPlayer.Id}. orig: {originalLength} bytes, compressed: {encodedLength}");
+                        Logger.Log($"[SEM] SendWorld to player {netPlayer.Id}. orig: {originalLength} bytes, compressed: {encodedLength}");
 
                         packetBuffer[1] = PacketBaselineSync;
                         peer.Send(_packetBuffer, 0, encodedLength + 7, DeliveryMethod.ReliableOrdered);
@@ -516,7 +513,7 @@ namespace LiteEntitySystem
                     continue;
                 if (player.AvailableInput.Count == 0)
                 {
-                    Logger.LogWarning($"Inputs of player {pidx} is zero");
+                    //Logger.LogWarning($"Inputs of player {pidx} is zero");
                     continue;
                 }
                 

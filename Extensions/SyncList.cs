@@ -130,33 +130,39 @@ namespace LiteEntitySystem.Extensions
 
         public ref T this[int index] => ref _data[index];
         
-        public override unsafe void FullSyncWrite(byte* data, ref int position)
+        public override unsafe void FullSyncWrite(Span<byte> dataSpan, ref int position)
         {
-            Unsafe.Write(data + position, (ushort)_count);
+            fixed (byte* data = dataSpan)
+            {
+                Unsafe.Write(data + position, (ushort)_count);
             
-            byte[] byteData = Unsafe.As<byte[]>(_data);
-            int bytesCount = Unsafe.SizeOf<T>() * _count;
+                byte[] byteData = Unsafe.As<byte[]>(_data);
+                int bytesCount = Unsafe.SizeOf<T>() * _count;
             
-            fixed(void* rawData = byteData)
-                Unsafe.CopyBlock(data + position + sizeof(ushort), rawData, (uint)bytesCount);
-            
-            position += sizeof(ushort) + bytesCount;
+                fixed(void* rawData = byteData)
+                    Unsafe.CopyBlock(data + position + sizeof(ushort), rawData, (uint)bytesCount); 
+                
+                position += sizeof(ushort) + bytesCount;
+            }
         }
 
-        public override unsafe void FullSyncRead(byte* data, ref int position)
+        public override unsafe void FullSyncRead(Span<byte> dataSpan, ref int position)
         {
-            _count = Unsafe.Read<ushort>(data + position);
-            
-            if (_data.Length < _count)
-                Array.Resize(ref _data, Math.Max(_data.Length * 2, _count));
-            
-            byte[] byteData = Unsafe.As<byte[]>(_data);
-            int bytesCount = Unsafe.SizeOf<T>() * _count;
-            
-            fixed(void* rawData = byteData)
-                Unsafe.CopyBlock(rawData, data + position + sizeof(ushort), (uint)bytesCount);
-            
-            position += sizeof(ushort) + bytesCount;
+            fixed (byte* data = dataSpan)
+            {
+                _count = Unsafe.Read<ushort>(data + position);
+
+                if (_data.Length < _count)
+                    Array.Resize(ref _data, Math.Max(_data.Length * 2, _count));
+
+                byte[] byteData = Unsafe.As<byte[]>(_data);
+                int bytesCount = Unsafe.SizeOf<T>() * _count;
+
+                fixed (void* rawData = byteData)
+                    Unsafe.CopyBlock(rawData, data + position + sizeof(ushort), (uint)bytesCount);
+                
+                position += sizeof(ushort) + bytesCount;
+            }
         }
 
         public IEnumerator<T> GetEnumerator()

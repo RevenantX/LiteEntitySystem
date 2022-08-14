@@ -11,7 +11,7 @@ namespace LiteEntitySystem.Extensions
             public ushort Index;
         }
         
-        private readonly T[] _data;
+        public readonly T[] Data;
         private Action<SetCallData> _setRpcAction;
 
         public readonly int Length;
@@ -19,7 +19,7 @@ namespace LiteEntitySystem.Extensions
         public SyncFixedArray(int size)
         {
             Length = size;
-            _data = new T[size];
+            Data = new T[size];
         }
 
         public override void OnServerInitialized()
@@ -30,33 +30,33 @@ namespace LiteEntitySystem.Extensions
         [SyncableRemoteCall]
         private void SetValueRPC(SetCallData setCallData)
         {
-            _data[setCallData.Index] = setCallData.Value;
+            Data[setCallData.Index] = setCallData.Value;
         }
         
         public T this[int index]
         {
-            get => _data[index];
+            get => Data[index];
             set
             {
-                _data[index] = value;
+                Data[index] = value;
                 _setRpcAction?.Invoke(new SetCallData { Value = value, Index = (ushort)index });
             }
         }
 
-        public override unsafe void FullSyncWrite(byte* data, ref int position)
+        public override unsafe void FullSyncWrite(Span<byte> dataSpan, ref int position)
         {
-            byte[] byteData = Unsafe.As<byte[]>(_data);
-            int bytesCount = Unsafe.SizeOf<T>() * _data.Length;
-            fixed(void* rawData = byteData)
+            byte[] byteData = Unsafe.As<byte[]>(Data);
+            int bytesCount = Unsafe.SizeOf<T>() * Length;
+            fixed(byte* rawData = byteData, data = dataSpan)
                 Unsafe.CopyBlock(data + position, rawData, (uint)bytesCount);
             position += bytesCount;
         }
 
-        public override unsafe void FullSyncRead(byte* data, ref int position)
+        public override unsafe void FullSyncRead(Span<byte> dataSpan, ref int position)
         {
-            byte[] byteData = Unsafe.As<byte[]>(_data);
-            int bytesCount = Unsafe.SizeOf<T>() * _data.Length;
-            fixed(void* rawData = byteData)
+            byte[] byteData = Unsafe.As<byte[]>(Data);
+            int bytesCount = Unsafe.SizeOf<T>() * Length;
+            fixed(byte* rawData = byteData, data = dataSpan)
                 Unsafe.CopyBlock(rawData, data + position, (uint)bytesCount);
             position += bytesCount;
         }

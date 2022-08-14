@@ -319,8 +319,7 @@ namespace LiteEntitySystem
                 {
                     ref var preloadData = ref _stateA.PreloadDataArray[i];
                     int offset = preloadData.DataOffset;
-                    ReadEntityState(readerData, ref offset, preloadData.EntityId,
-                        preloadData.EntityFieldsOffset == -1);
+                    ReadEntityState(readerData, ref offset, preloadData.EntityId, preloadData.EntityFieldsOffset == -1);
                     if (offset == -1)
                         return;
                 }
@@ -854,9 +853,7 @@ namespace LiteEntitySystem
                 if (fullSync)
                 {
                     for (int i = 0; i < classData.SyncableFields.Length; i++)
-                    {
-                        Unsafe.AsRef<SyncableField>(entityPtr + classData.SyncableFields[i].Offset).FullSyncRead(rawData, ref readerPosition);
-                    }
+                        Unsafe.AsRef<SyncableField>(entityPtr + classData.SyncableFields[i].Offset).FullSyncRead(new Span<byte>(rawData, _stateA.Size), ref readerPosition);
                 }
                 entity.OnSyncEnd();
             }

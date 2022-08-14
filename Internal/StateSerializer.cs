@@ -197,7 +197,7 @@ namespace LiteEntitySystem.Internal
                 position += (int)_fullDataSize;
                 for (int i = 0; i < _classData.SyncableFields.Length; i++)
                 {
-                    Unsafe.AsRef<SyncableField>(Utils.GetPtr(ref _entity) + _classData.SyncableFields[i].Offset).FullSyncWrite(resultData, ref position);
+                    Unsafe.AsRef<SyncableField>(Utils.GetPtr(ref _entity) + _classData.SyncableFields[i].Offset).FullSyncWrite(new Span<byte>(resultData, (int)_fullDataSize), ref position);
                 }
             }
         }
@@ -233,7 +233,7 @@ namespace LiteEntitySystem.Internal
                     position += (int)_fullDataSize;
                     for (int i = 0; i < _classData.SyncableFields.Length; i++)
                     {
-                        Unsafe.AsRef<SyncableField>(Utils.GetPtr(ref _entity) + _classData.SyncableFields[i].Offset).FullSyncWrite(resultData, ref position);
+                        Unsafe.AsRef<SyncableField>(Utils.GetPtr(ref _entity) + _classData.SyncableFields[i].Offset).FullSyncWrite(new Span<byte>(resultData, (int)_fullDataSize), ref position);
                     }
                 }
                 else //make diff

@@ -97,16 +97,6 @@ namespace LiteEntitySystem.Extensions
             }
             return false;
         }
-        
-        public override unsafe void FullSyncWrite(byte* data, ref int position)
-        {
-
-        }
-
-        public override unsafe void FullSyncRead(byte* data, ref int position)
-        {
-
-        }
 
         public override void OnServerInitialized()
         {

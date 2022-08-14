@@ -49,19 +49,22 @@ namespace LiteEntitySystem.Extensions
             _string = Encoding.GetString(data, 0, count);
         }
 
-        public override unsafe void FullSyncRead(byte* data, ref int position)
+        public override unsafe void FullSyncRead(Span<byte> dataSpan, ref int position)
         {
-            int length = Unsafe.Read<ushort>(data + position);
-            Utils.ResizeOrCreate(ref _stringData, length);
-            _string = Encoding.GetString(data + position + sizeof(ushort), length);
-            position += sizeof(ushort) + length;
+            fixed (byte* data = dataSpan)
+            {
+                int length = Unsafe.Read<ushort>(data + position);
+                Utils.ResizeOrCreate(ref _stringData, length);
+                _string = Encoding.GetString(data + position + sizeof(ushort), length);
+                position += sizeof(ushort) + length;
+            }
         }
 
-        public override unsafe void FullSyncWrite(byte* data, ref int position)
+        public override unsafe void FullSyncWrite(Span<byte> dataSpan, ref int position)
         {
-            Unsafe.Write(data + position, (ushort)_size);
-            fixed (byte* stringData = _stringData)
+            fixed (byte* data = dataSpan, stringData = _stringData)
             {
+                Unsafe.Write(data + position, (ushort)_size);
                 Unsafe.CopyBlock(data + position + sizeof(ushort), stringData, (uint)_size);
             }
             position += sizeof(ushort) + _size;
