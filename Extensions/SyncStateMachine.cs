@@ -30,27 +30,22 @@ namespace LiteEntitySystem.Extensions
             return this;
         }
 
-        private ref StateCalls GetCurrentState()
-        {
-            return ref _data[_state.GetEnumValue()];
-        }
-
         public void SetInitialState(T state)
         {
             _state = state;
-            GetCurrentState().OnEnter?.Invoke();
+            _data[_state.GetEnumValue()].OnEnter?.Invoke();
         }
 
         public void ChangeState(T state)
         {
-            GetCurrentState().OnExit?.Invoke();
+            _data[_state.GetEnumValue()].OnExit?.Invoke();
             _state = state;
-            GetCurrentState().OnEnter?.Invoke();
+            _data[_state.GetEnumValue()].OnEnter?.Invoke();
         }
 
         public void Update(float dt)
         {
-            GetCurrentState().OnUpdate?.Invoke(dt);
+            _data[_state.GetEnumValue()].OnUpdate?.Invoke(dt);
         }
 
         public override unsafe void FullSyncWrite(byte* data, ref int position)
