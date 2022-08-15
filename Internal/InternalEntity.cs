@@ -75,8 +75,11 @@ namespace LiteEntitySystem.Internal
         
         private void OnDestroyChange(bool prevValue)
         {
-            if (_isDestroyed)
+            if (!prevValue && _isDestroyed)
+            {
+                _isDestroyed = false;
                 DestroyInternal();
+            }
         }
         
         /// <summary>
