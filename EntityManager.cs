@@ -176,6 +176,10 @@ namespace LiteEntitySystem
         private readonly SingletonEntityLogic[] _singletonEntities;
         private readonly EntityFilter[] _entityFilters;
         private readonly Dictionary<Type, ushort> _registeredTypeIds = new();
+        private InternalEntity[] _aliveEntitiesToAdd = new InternalEntity[8];
+        private InternalEntity[] _aliveEntitiesToDestroy = new InternalEntity[8];
+        private int _aliveEntitiesToAddCount;
+        private int _aliveEntitiesToRemoveCount;
         
         internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount+1];
         internal readonly EntityClassData[] ClassDataDict;
@@ -514,20 +518,37 @@ namespace LiteEntitySystem
         
         protected AliveEntityEnumerable<InternalEntity> GetAliveEntities()
         {
+            bool recreateEnumerator = false;
+            if (_aliveEntitiesToRemoveCount > 0)
+            {
+                for(int i = 0; i < _aliveEntitiesToRemoveCount; i++)
+                    _aliveEntities.Remove(_aliveEntitiesToDestroy[i]);
+                _aliveEntitiesToRemoveCount = 0;
+                recreateEnumerator = true;
+            }
+            if (_aliveEntitiesToAddCount > 0)
+            {
+                for(int i = 0; i < _aliveEntitiesToAddCount; i++)
+                    _aliveEntities.Add(_aliveEntitiesToAdd[i]);
+                _aliveEntitiesToAddCount = 0;
+                recreateEnumerator = true;
+            }
+            if(recreateEnumerator)
+                _aliveEntitiesEnumerator = _aliveEntities.GetEnumerator();
             return new AliveEntityEnumerable<InternalEntity>(ref _aliveEntitiesEnumerator);
         }
 
         protected void AddAliveEntity(InternalEntity e)
         {
-            _aliveEntities.Add(e);
-            _aliveEntitiesEnumerator = _aliveEntities.GetEnumerator();
+            Utils.ResizeIfFull(ref _aliveEntitiesToAdd, _aliveEntitiesToAddCount);
+            _aliveEntitiesToAdd[_aliveEntitiesToAddCount++] = e;
             OnAliveConstructed(e);
         }
 
         protected void RemoveAliveEntity(InternalEntity e)
         {
-            _aliveEntities.Remove(e);
-            _aliveEntitiesEnumerator = _aliveEntities.GetEnumerator();
+            Utils.ResizeIfFull(ref _aliveEntitiesToDestroy, _aliveEntitiesToRemoveCount);
+            _aliveEntitiesToDestroy[_aliveEntitiesToRemoveCount++] = e;
             OnAliveDestroyed(e);
         }
 
