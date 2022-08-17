@@ -27,7 +27,6 @@ namespace LiteEntitySystem.Internal
         private byte _version;
         private EntityClassData _classData;
         private InternalEntity _entity;
-        private byte[][] _history;
         private byte[] _latestEntityData;
         private ushort[] _fieldChangeTicks;
         private ushort _versionChangedTick;
@@ -38,10 +37,8 @@ namespace LiteEntitySystem.Internal
         private RemoteCallPacket _rpcHead;
         private RemoteCallPacket _rpcTail;
         private ushort _ticksOnDestroy;
-        private int _filledHistory;
         private bool _lagCompensationEnabled;
         private byte _controllerOwner;
-        private byte _maxHistory; //should be power of two
         private uint _fullDataSize;
         
         public void AddRpcPacket(RemoteCallPacket rpc)
@@ -65,8 +62,6 @@ namespace LiteEntitySystem.Internal
             _classData = classData;
             _entity = e;
             _state = SerializerState.Active;
-            _filledHistory = 0;
-            _maxHistory = (byte)e.ServerManager.MaxHistorySize;
 
             _fullDataSize = (uint)(HeaderSize + _classData.FixedFieldsSize);
             Utils.ResizeOrCreate(ref _latestEntityData, (int)_fullDataSize);
@@ -87,31 +82,6 @@ namespace LiteEntitySystem.Internal
                 Unsafe.Write(data, e.Id);
                 data[2] = e.Version;
                 Unsafe.Write(data + 3, e.ClassId);
-            }
-
-            _history ??= new byte[_maxHistory][];
-            if(classData.LagCompensatedSize > 0)
-            {
-                for (int i = 0; i < _maxHistory; i++)
-                    Utils.ResizeOrCreate(ref _history[i], classData.LagCompensatedSize);
-            } 
-        }
-
-        public unsafe void WriteHistory(ushort tick)
-        {
-            if (_classData.LagCompensatedSize == 0)
-                return;
-            _filledHistory = Math.Min(_filledHistory + 1, _maxHistory);
-            byte* entityPointer = Utils.GetPtr(ref _entity);
-            int historyOffset = 0;
-            fixed (byte* history = _history[tick % _maxHistory])
-            {
-                for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
-                {
-                    ref var field = ref _classData.LagCompensatedFields[i];
-                    Unsafe.CopyBlock(history + historyOffset, entityPointer + field.Offset, field.Size);
-                    historyOffset += field.IntSize;
-                }
             }
         }
 
@@ -183,10 +153,11 @@ namespace LiteEntitySystem.Internal
 
         public unsafe void MakeBaseline(byte playerId, ushort serverTick, ushort minimalTick, byte* resultData, ref int position)
         {
-            if (_state != SerializerState.Active ||
-                (_controllerOwner != ServerEntityManager.ServerPlayerId && playerId != _controllerOwner))
+            if (_state != SerializerState.Active)
                 return;
             Write(serverTick, minimalTick);
+            if (_controllerOwner != ServerEntityManager.ServerPlayerId && playerId != _controllerOwner)
+                return;
             
             //make diff
             fixed (byte* lastEntityData = _latestEntityData)
@@ -210,9 +181,9 @@ namespace LiteEntitySystem.Internal
                 _state = SerializerState.Freed;
                 canReuse = true;
             }
+            Write(serverTick, minimalTick);
             if(_controllerOwner != ServerEntityManager.ServerPlayerId && playerId != _controllerOwner)
                 return DiffResult.Skip;
-            Write(serverTick, minimalTick);
 
             //make diff
             int startPos = position;
@@ -320,68 +291,6 @@ namespace LiteEntitySystem.Internal
             }
 
             return canReuse ? DiffResult.DoneAndDestroy : DiffResult.Done;
-        }
-
-        public unsafe void EnableLagCompensation(NetPlayer player, ushort tick)
-        {
-            if (_entity == null || _state != SerializerState.Active || _entity.IsControlledBy(player.Id))
-                return;
-            var entityLogic = _entity as EntityLogic;
-            if (entityLogic == null)
-                return;
-
-            int diff = Utils.SequenceDiff(tick, player.StateATick);
-            if (diff <= 0 || diff >= _filledHistory)
-                return;
-            byte* entityPtr = Utils.GetPtr(ref _entity);
-            fixed (byte* 
-                   historyA = _history[player.StateATick % _maxHistory], 
-                   historyB = _history[player.StateBTick % _maxHistory],
-                   current = _history[tick % _maxHistory])
-            {
-                int historyOffset = 0;
-                for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
-                {
-                    var field = _classData.LagCompensatedFields[i];
-                    Unsafe.CopyBlock(current + historyOffset, entityPtr + field.Offset, field.Size);
-                    if (field.Interpolator != null)
-                    {
-                        field.Interpolator(
-                            historyA + historyOffset,
-                            historyB + historyOffset,
-                            entityPtr + field.Offset,
-                            player.LerpTime);
-                    }
-                    else
-                    {
-                        Unsafe.CopyBlock(entityPtr + field.Offset, historyA + historyOffset, field.Size);
-                    }
-                    historyOffset += field.IntSize;
-                }
-            }
-
-            entityLogic.OnLagCompensationStart();
-            _lagCompensationEnabled = true;
-        }
-
-        public unsafe void DisableLagCompensation(ushort tick)
-        {
-            if (!_lagCompensationEnabled)
-                return;
-            _lagCompensationEnabled = false;
-            
-            byte* entityPtr = Utils.GetPtr(ref _entity);
-            fixed (byte* history = _history[tick % _maxHistory])
-            {
-                int historyOffset = 0;
-                for (int i = 0; i < _classData.LagCompensatedFields.Length; i++)
-                {
-                    var field = _classData.LagCompensatedFields[i];
-                    Unsafe.CopyBlock(entityPtr + field.Offset, history + historyOffset, field.Size);
-                    historyOffset += field.IntSize;
-                }
-            }
-            ((EntityLogic)_entity).OnLagCompensationEnd();
         }
     }
 }

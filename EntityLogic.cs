@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using LiteEntitySystem.Internal;
-using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
 {
@@ -63,29 +63,120 @@ namespace LiteEntitySystem
         /// </summary>
         public byte OwnerId => InternalOwnerId;
 
+        private readonly byte[] _tempHistory;
+        private readonly byte[] _history;
+        private readonly EntityFieldInfo[] _lagCompensatedFields;
+        private readonly int _lagCompensatedSize;
+        private int _filledHistory;
+        private bool _lagCompensationEnabled;
+
+        public bool HasLagCompensation => _lagCompensatedSize > 0;
+
+        internal unsafe void WriteHistory(ushort tick)
+        {
+            byte maxHistory = (byte)EntityManager.MaxHistorySize;
+            _filledHistory = Math.Min(_filledHistory + 1, maxHistory);
+            var localEntity = this;
+            byte* entityPointer = Utils.GetPtr(ref localEntity);
+            int historyOffset = (tick % maxHistory)*_lagCompensatedSize;
+            fixed (byte* history = _history)
+            {
+                for (int i = 0; i < _lagCompensatedFields.Length; i++)
+                {
+                    ref var field = ref _lagCompensatedFields[i];
+                    Unsafe.CopyBlock(history + historyOffset, entityPointer + field.Offset, field.Size);
+                    historyOffset += field.IntSize;
+                }
+            }
+        }
+        
+        //on client it works only in rollback
+        internal unsafe void EnableLagCompensation(NetPlayer player)
+        {
+            if (IsControlledBy(player.Id))
+                return;
+            ushort tick = EntityManager.IsClient ? ClientManager.ServerTick : EntityManager.Tick;
+            byte maxHistory = (byte)EntityManager.MaxHistorySize;
+            if (Utils.SequenceDiff(player.StateATick, tick) >= 0 || Utils.SequenceDiff(player.StateBTick, tick) > 0)
+            {
+                Logger.Log($"LagCompensationMiss. Tick: {tick}, StateA: {player.StateATick}, StateB: {player.StateBTick}");
+                return;
+            }
+            var localEntity = this;
+            byte* entityPtr = Utils.GetPtr(ref localEntity);
+            int historyAOffset = (player.StateATick % maxHistory)*_lagCompensatedSize;
+            int historyBOffset = (player.StateBTick % maxHistory)*_lagCompensatedSize;
+            int historyCurrent = 0;
+
+            fixed (byte* history = _history, tempHistory = _tempHistory)
+            {
+                for (int i = 0; i < _lagCompensatedFields.Length; i++)
+                {
+                    ref var field = ref _lagCompensatedFields[i];
+                    Unsafe.CopyBlock(tempHistory + historyCurrent, entityPtr + field.Offset, field.Size);
+                    if (field.Interpolator != null)
+                    {
+                        field.Interpolator(
+                            history + historyAOffset,
+                            history + historyBOffset,
+                            entityPtr + field.Offset,
+                            player.LerpTime);
+                    }
+                    else
+                    {
+                        Unsafe.CopyBlock(entityPtr + field.Offset, history + historyAOffset, field.Size);
+                    }
+                    historyAOffset += field.IntSize;
+                    historyBOffset += field.IntSize;
+                    historyCurrent += field.IntSize;
+                }
+            }
+
+            OnLagCompensationStart();
+            _lagCompensationEnabled = true;
+        }
+
+        internal unsafe void DisableLagCompensation()
+        {
+            if (!_lagCompensationEnabled)
+                return;
+            _lagCompensationEnabled = false;
+            var localEntity = this;
+            byte* entityPtr = Utils.GetPtr(ref localEntity);
+            int historyOffset = 0;
+            fixed (byte* tempHistory = _tempHistory)
+            {
+                for (int i = 0; i < _lagCompensatedFields.Length; i++)
+                {
+                    ref var field = ref _lagCompensatedFields[i];
+                    Unsafe.CopyBlock(entityPtr + field.Offset, tempHistory + historyOffset, field.Size);
+                    historyOffset += field.IntSize;
+                }
+            }
+            OnLagCompensationEnd();
+        }
+
         /// <summary>
         /// Enable lag compensation for player that owns this entity
         /// </summary>
-        public void EnableLagCompensation()
+        public void EnableLagCompensationForOwner()
         {
-            if (EntityManager.IsServer)
-                ServerManager.EnableLagCompensation(InternalOwnerId);
+            EntityManager.EnableLagCompensation(InternalOwnerId);
         }
 
         /// <summary>
         /// Disable lag compensation for player that owns this entity
         /// </summary>
-        public void DisableLagCompensation()
+        public void DisableLagCompensationForOwner()
         {
-            if (EntityManager.IsServer)
-                ServerManager.DisableLagCompensation();
+            EntityManager.DisableLagCompensation();
         }
         
         public int GetFrameSeed()
         {
-            return EntityManager.IsClient || InternalOwnerId == ServerEntityManager.ServerPlayerId 
-                ? EntityManager.Tick 
-                : ServerManager.GetPlayer(InternalOwnerId).LastProcessedTick;
+            return EntityManager.IsClient
+                ? (EntityManager.InRollBackState ? ClientManager.RollBackTick : EntityManager.Tick) 
+                : (InternalOwnerId == ServerEntityManager.ServerPlayerId ? EntityManager.Tick : ServerManager.GetPlayer(InternalOwnerId).LastProcessedTick);
         }
         
         /// <summary>
@@ -214,161 +305,16 @@ namespace LiteEntitySystem
             }
         }
 
-        protected EntityLogic(EntityParams entityParams) : base(entityParams) { }
-    }
-
-    /// <summary>
-    /// Base class for singletons entity that can exists in only one instance
-    /// </summary>
-    public abstract class SingletonEntityLogic : InternalEntity
-    {
-        internal override bool IsControlledBy(byte playerId)
+        protected EntityLogic(EntityParams entityParams) : base(entityParams)
         {
-            return false;
-        }
-
-        protected SingletonEntityLogic(EntityParams entityParams) : base(entityParams) { }
-    }
-
-    /// <summary>
-    /// Base class for entites that can be controlled by Controller
-    /// </summary>
-    [UpdateableEntity]
-    public abstract class PawnLogic : EntityLogic
-    {
-        [SyncVar] 
-        private EntitySharedReference _controller;
-
-        public ControllerLogic Controller
-        {
-            get => EntityManager.GetEntityById<ControllerLogic>(_controller);
-            internal set
+            ref var classData = ref GetClassData();
+            _lagCompensatedSize = classData.LagCompensatedSize;
+            if (_lagCompensatedSize > 0)
             {
-                SetOwner(this, value?.InternalOwnerId ?? (GetParent<EntityLogic>()?.InternalOwnerId ?? ServerEntityManager.ServerPlayerId));
-                _controller = value;
+                _history = new byte[(byte)EntityManager.MaxHistorySize * _lagCompensatedSize];
+                _lagCompensatedFields = classData.LagCompensatedFields;
+                _tempHistory = new byte[_lagCompensatedSize];
             }
         }
-
-        public override void Update()
-        {
-            Controller?.BeforeControlledUpdate();
-        }
-
-        protected override void OnDestroy()
-        {
-            Controller?.OnControlledDestroy();
-        }
-
-        protected PawnLogic(EntityParams entityParams) : base(entityParams) { }
-    }
-    
-    /// <summary>
-    /// Base class for Controller entities
-    /// </summary>
-    public abstract class ControllerLogic : InternalEntity
-    {
-        [SyncVar] 
-        internal byte InternalOwnerId;
-        
-        [SyncVar] 
-        private EntitySharedReference _controlledEntity;
-
-        public byte OwnerId => InternalOwnerId;
-
-        public T GetControlledEntity<T>() where T : PawnLogic
-        {
-            return EntityManager.GetEntityById<T>(_controlledEntity);
-        }
-
-        internal override bool IsControlledBy(byte playerId)
-        {
-            return InternalOwnerId == playerId;
-        }
-        
-        public virtual void BeforeControlledUpdate()
-        {
-            
-        }
-
-        public void DestroyWithControlledEntity()
-        {
-            GetControlledEntity<PawnLogic>()?.Destroy();
-            _controlledEntity = null;
-            Destroy();
-        }
-
-        public void StartControl(PawnLogic target)
-        {
-            StopControl();
-            _controlledEntity = target;
-            GetControlledEntity<PawnLogic>().Controller = this;
-        }
-
-        internal void OnControlledDestroy()
-        {
-            StopControl();
-        }
-
-        public void StopControl()
-        {
-            var controlledLogic = GetControlledEntity<PawnLogic>();
-            if (controlledLogic == null)
-                return;
-            controlledLogic.Controller = null;
-            _controlledEntity = null;
-        }
-        
-        protected ControllerLogic(EntityParams entityParams) : base(entityParams) { }
-    }
-
-    /// <summary>
-    /// Base class for AI Controller entities
-    /// </summary>
-    [LocalOnly, UpdateableEntity]
-    public abstract class AiControllerLogic : ControllerLogic
-    {
-        protected AiControllerLogic(EntityParams entityParams) : base(entityParams) { }
-    }
-
-    /// <summary>
-    /// Base class for AI Controller entities with typed ControlledEntity field
-    /// </summary>
-    [LocalOnly, UpdateableEntity]
-    public abstract class AiControllerLogic<T> : AiControllerLogic where T : PawnLogic
-    {
-        public T ControlledEntity => GetControlledEntity<T>();
-        
-        protected AiControllerLogic(EntityParams entityParams) : base(entityParams) { }
-    }
-
-    /// <summary>
-    /// Base class for human Controller entities
-    /// </summary>
-    [UpdateableEntity(true)]
-    public abstract class HumanControllerLogic : ControllerLogic
-    {
-        /// <summary>
-        /// Called on client and server to read generated from <see cref="GenerateInput"/> input
-        /// </summary>
-        /// <param name="reader"></param>
-        public abstract void ReadInput(NetDataReader reader);
-        
-        /// <summary>
-        /// Called on client to generate input
-        /// </summary>
-        /// <param name="writer"></param>
-        public abstract void GenerateInput(NetDataWriter writer);
-
-        protected HumanControllerLogic(EntityParams entityParams) : base(entityParams) { }
-    }
-
-    /// <summary>
-    /// Base class for human Controller entities with typed ControlledEntity field
-    /// </summary>
-    public abstract class HumanControllerLogic<T> : HumanControllerLogic where T : PawnLogic
-    {
-        public T ControlledEntity => GetControlledEntity<T>();
-        
-        protected HumanControllerLogic(EntityParams entityParams) : base(entityParams) { }
     }
 }

@@ -23,7 +23,10 @@ namespace LiteEntitySystem.Internal
         public readonly InterpolatorDelegate Interpolator;
         public readonly SyncFlags Flags;
 
+        public bool IsPredicted => Flags.HasFlagFast(SyncFlags.RemotePredicted) || !Flags.HasFlagFast(SyncFlags.OnlyForRemote);
+
         public int FixedOffset;
+        public int PredictedOffset;
 
         //for value type
         public EntityFieldInfo(
@@ -43,6 +46,7 @@ namespace LiteEntitySystem.Internal
             OnSync = onSync;
             Interpolator = interpolator;
             FixedOffset = 0;
+            PredictedOffset = 0;
             Flags = flags;
         }
 
@@ -59,6 +63,7 @@ namespace LiteEntitySystem.Internal
             FieldType = FieldType.Syncable;
             Interpolator = null;
             FixedOffset = 0;
+            PredictedOffset = 0;
             Flags = flags;
             OnSync = null;
         }
@@ -79,6 +84,7 @@ namespace LiteEntitySystem.Internal
             OnSync = null;
             Interpolator = null;
             FixedOffset = 0;
+            PredictedOffset = 0;
             Flags = flags;
         }
         

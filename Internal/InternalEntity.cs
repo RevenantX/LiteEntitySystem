@@ -232,7 +232,14 @@ namespace LiteEntitySystem.Internal
 
         int IComparable<InternalEntity>.CompareTo(InternalEntity other)
         {
-            return Id - other.Id;
+            //local first because mostly this is unity physics or something similar
+            return (Id >= EntityManager.MaxSyncedEntityCount ? Id - ushort.MaxValue : Id) -
+                   (other.Id >= EntityManager.MaxSyncedEntityCount ? other.Id - ushort.MaxValue : other.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id + Version * ushort.MaxValue;
         }
     }
 }

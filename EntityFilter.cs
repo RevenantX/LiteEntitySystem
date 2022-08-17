@@ -98,7 +98,6 @@ namespace LiteEntitySystem
             _array[_count] = (T)entity;
             _dict[entity.Id] = _count;
             _count++;
-            
             OnConstructed?.Invoke((T)entity);
         }
 

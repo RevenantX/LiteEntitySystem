@@ -38,6 +38,8 @@ namespace LiteEntitySystem.Internal
         public readonly int FieldsCount;
         public readonly int FieldsFlagsSize;
         public readonly int FixedFieldsSize;
+        public readonly int PredictedSize;
+        public readonly bool HasRemotePredictedFields;
         public readonly EntityFieldInfo[] Fields;
         public readonly EntityFieldInfo[] SyncableFields;
         public readonly int InterpolatedFieldsSize;
@@ -141,6 +143,8 @@ namespace LiteEntitySystem.Internal
 
         public EntityClassData(ushort filterId, Type entType, ushort classId, EntityConstructor<InternalEntity> constructor)
         {
+            HasRemotePredictedFields = false;
+            PredictedSize = 0;
             FixedFieldsSize = 0;
             LagCompensatedSize = 0;
             InterpolatedCount = 0;
@@ -247,6 +251,17 @@ namespace LiteEntitySystem.Internal
                             lagCompensatedFields.Add(fieldInfo);
                             LagCompensatedSize += fieldSize;
                         }
+                        
+                        if (fieldInfo.IsPredicted)
+                        {
+                            PredictedSize += fieldSize;
+                        }
+
+                        if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.RemotePredicted))
+                        {
+                            HasRemotePredictedFields = true;
+                        }
+
                         fields.Add(fieldInfo);
                         FixedFieldsSize += fieldSize;
                     }
@@ -271,8 +286,14 @@ namespace LiteEntitySystem.Internal
                                         syncableFieldType = syncableFieldType.GetEnumUnderlyingType();
                                     int syncvarOffset = Marshal.ReadInt32(syncableField.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
                                     int size = GetTypeSize(syncableFieldType);
-                                    fields.Add(new EntityFieldInfo(offset, syncvarOffset, size, syncVarAttribute.Flags));
+                                    var fieldInfo = new EntityFieldInfo(offset, syncvarOffset, size,
+                                        syncVarAttribute.Flags);
+                                    fields.Add(fieldInfo);
                                     FixedFieldsSize += size;
+                                    if (fieldInfo.IsPredicted)
+                                    {
+                                        PredictedSize += size;
+                                    }
                                 }
                                 else
                                 {
@@ -326,10 +347,21 @@ namespace LiteEntitySystem.Internal
             LagCompensatedFields = lagCompensatedFields.ToArray();
             
             int fixedOffset = 0;
+            int predictedOffset = 0;
             for (int i = 0; i < Fields.Length; i++)
             {
-                Fields[i].FixedOffset = fixedOffset;
-                fixedOffset += Fields[i].IntSize;
+                ref var field = ref Fields[i];
+                field.FixedOffset = fixedOffset;
+                fixedOffset += field.IntSize;
+                if (field.IsPredicted)
+                {
+                    field.PredictedOffset = predictedOffset;
+                    predictedOffset += field.IntSize;
+                }
+                else
+                {
+                    field.PredictedOffset = -1;
+                }
             }
 
             IsCreated = true;

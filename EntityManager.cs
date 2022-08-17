@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using LiteEntitySystem.Internal;
@@ -28,6 +29,14 @@ namespace LiteEntitySystem
     {
         Normal,
         PredictionRollback
+    }
+    
+    public enum MaxHistorySize : byte
+    {
+        Size16 = 16,
+        Size32 = 32,
+        Size64 = 64,
+        Size128 = 128
     }
 
     public abstract class EntityTypesMap
@@ -69,6 +78,8 @@ namespace LiteEntitySystem
         public const int MaxSyncedEntityCount = 8192;
 
         public const int MaxEntityCount = MaxSyncedEntityCount * 2;
+        
+        public const byte ServerPlayerId = 0;
         
         /// <summary>
         /// Invalid entity id
@@ -124,6 +135,11 @@ namespace LiteEntitySystem
         /// Fixed delta time (float for less precision)
         /// </summary>
         public readonly float DeltaTimeF;
+        
+        /// <summary>
+        /// Size of history (in ticks) for lag compensation. Tune for your game fps 
+        /// </summary>
+        public MaxHistorySize MaxHistorySize = MaxHistorySize.Size32;
 
         /// <summary>
         /// Local player id (0 on server)
@@ -131,6 +147,7 @@ namespace LiteEntitySystem
         public byte PlayerId => InternalPlayerId;
         
         public bool InRollBackState => UpdateMode == UpdateMode.PredictionRollback;
+        public bool InNormalState => UpdateMode == UpdateMode.Normal;
 
         protected const byte PacketDiffSync = 1;
         protected const byte PacketClientSync = 2;
@@ -138,6 +155,7 @@ namespace LiteEntitySystem
         protected const byte PacketDiffSyncLast = 4;
         protected const int MaxFieldSize = 1024;
         protected const int MaxSavedStateDiff = 30;
+        protected const ushort FirstEntityId = 1;
         internal const int MaxParts = 256;
         private const int MaxTicksPerUpdate = 5;
 
@@ -148,14 +166,17 @@ namespace LiteEntitySystem
         protected int MaxLocalEntityId = -1;
         protected ushort _tick;
         
-        protected readonly EntityFilter<InternalEntity> AliveEntities = new EntityFilter<InternalEntity>();
+        private readonly SortedSet<InternalEntity> _aliveEntities = new();
+        private SortedSet<InternalEntity>.Enumerator _aliveEntitiesEnumerator;
+        protected readonly EntityFilter<EntityLogic> LagCompensatedEntities = new();
 
         private readonly double _stopwatchFrequency;
-        private readonly Stopwatch _stopwatch = new Stopwatch();
-        private readonly Queue<ushort> _localIdQueue = new Queue<ushort>();
+        private readonly Stopwatch _stopwatch = new();
+        private readonly Queue<ushort> _localIdQueue = new();
         private readonly SingletonEntityLogic[] _singletonEntities;
         private readonly EntityFilter[] _entityFilters;
-        private readonly Dictionary<Type, ushort> _registeredTypeIds = new Dictionary<Type, ushort>();
+        private readonly Dictionary<Type, ushort> _registeredTypeIds = new();
+        
         internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount+1];
         internal readonly EntityClassData[] ClassDataDict;
 
@@ -163,7 +184,7 @@ namespace LiteEntitySystem
         private long _accumulator;
         private long _lastTime;
         private ushort _localIdCounter = MaxSyncedEntityCount;
-        protected const ushort FirstEntityId = 1;
+        private bool _lagCompensationEnabled;
 
         internal byte InternalPlayerId;
 
@@ -215,6 +236,7 @@ namespace LiteEntitySystem
             DeltaTimeF = (float) DeltaTime;
             _stopwatchFrequency = 1.0 / Stopwatch.Frequency;
             _deltaTimeTicks = (long)(DeltaTime * Stopwatch.Frequency);
+            _aliveEntitiesEnumerator = _aliveEntities.GetEnumerator();
         }
 
         /// <summary>
@@ -233,7 +255,8 @@ namespace LiteEntitySystem
             _localIdQueue.Clear();
             _stopwatch.Restart();
 
-            AliveEntities.Clear();
+            _aliveEntities.Clear();
+            //_aliveEntitiesEnumerator = _aliveEntities.GetEnumerator();
 
             for (int i = 0; i < _singletonEntities.Length; i++)
             {
@@ -358,7 +381,7 @@ namespace LiteEntitySystem
         /// <returns>Singleton entity or null if it didn't exists</returns>
         public T GetSingletonSafe<T>() where T : SingletonEntityLogic
         {
-            return _singletonEntities[_registeredTypeIds[typeof(T)]] as T;
+            return _registeredTypeIds.TryGetValue(typeof(T), out ushort registeredId) ? _singletonEntities[registeredId] as T : null;
         }
 
         /// <summary>
@@ -447,10 +470,73 @@ namespace LiteEntitySystem
             return entity;
         }
 
+        protected virtual void OnAliveConstructed(InternalEntity e)
+        {
+
+        }
+
+        protected virtual void OnAliveDestroyed(InternalEntity e)
+        {
+
+        }
+
+        protected readonly struct AliveEntityEnumerable<T> : IEnumerable<T>
+        {
+            private readonly SortedSet<T>.Enumerator _enumerator;
+
+            public AliveEntityEnumerable(ref SortedSet<T>.Enumerator enumerator)
+            {
+                _enumerator = enumerator;
+                ResetEnumerator(ref _enumerator);
+            }
+
+            private static void ResetEnumerator<TEnumerator>(ref TEnumerator enumerator)
+                where TEnumerator : struct, IEnumerator<T>
+            {
+                enumerator.Reset();
+            }
+
+            public SortedSet<T>.Enumerator GetEnumerator()
+            {
+                return _enumerator;
+            }
+            
+            IEnumerator<T> IEnumerable<T>.GetEnumerator()
+            {
+                return _enumerator;
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return _enumerator;
+            }
+        }
+        
+        protected AliveEntityEnumerable<InternalEntity> GetAliveEntities()
+        {
+            return new AliveEntityEnumerable<InternalEntity>(ref _aliveEntitiesEnumerator);
+        }
+
+        protected void AddAliveEntity(InternalEntity e)
+        {
+            _aliveEntities.Add(e);
+            _aliveEntitiesEnumerator = _aliveEntities.GetEnumerator();
+            OnAliveConstructed(e);
+        }
+
+        protected void RemoveAliveEntity(InternalEntity e)
+        {
+            _aliveEntities.Remove(e);
+            _aliveEntitiesEnumerator = _aliveEntities.GetEnumerator();
+            OnAliveDestroyed(e);
+        }
+
         protected void ConstructEntity(InternalEntity e)
         {
-            e.OnConstructed();
             ref var classData = ref ClassDataDict[e.ClassId];
+  
+            e.OnConstructed();
+
             if (classData.IsSingleton)
             {
                 _singletonEntities[classData.FilterId] = (SingletonEntityLogic)e;
@@ -463,8 +549,13 @@ namespace LiteEntitySystem
                 foreach (int baseId in classData.BaseIds)
                     _entityFilters[baseId]?.Add(e);
             }
+            
             if (IsEntityAlive(classData, e))
-                AliveEntities.Add(e);
+            {
+                AddAliveEntity(e);
+                if(!e.IsLocal && e is EntityLogic entityLogic && entityLogic.HasLagCompensation)
+                    LagCompensatedEntities.Add(entityLogic);
+            }
         }
 
         private bool IsEntityAlive(EntityClassData classData, InternalEntity entity)
@@ -488,13 +579,50 @@ namespace LiteEntitySystem
                 foreach (int baseId in classData.BaseIds) 
                     _entityFilters[baseId]?.Remove(e);
             }
-            
+
             if (IsEntityAlive(classData, e))
-                AliveEntities.Remove(e);
+            {
+                RemoveAliveEntity(e);
+                if(!e.IsLocal && e is EntityLogic entityLogic && entityLogic.HasLagCompensation)
+                    LagCompensatedEntities.Remove(entityLogic);
+            }
             if (classData.IsLocalOnly)
                 _localIdQueue.Enqueue(e.Id);
             EntitiesCount--;
             //Logger.Log($"{Mode} - RemoveEntity: {e.Id}");
+        }
+
+        internal abstract NetPlayer GetPlayer(byte playerId);
+
+        public void EnableLagCompensation(byte playerId)
+        {
+            if (_lagCompensationEnabled || playerId == ServerPlayerId)
+                return;
+
+            var player = GetPlayer(playerId);
+            if (player == null)
+                return;
+
+            _lagCompensationEnabled = true;
+            //Logger.Log($"C: {IsClient} compensated: {player.SimulatedServerTick} =====");
+            foreach (var entity in LagCompensatedEntities)
+            {
+                entity.EnableLagCompensation(player);
+                //entity.DebugPrint();
+            }
+        }
+
+        public void DisableLagCompensation()
+        {
+            if(!_lagCompensationEnabled)
+                return;
+            _lagCompensationEnabled = false;
+            //Logger.Log($"restored: {Tick} =====");
+            foreach (var entity in LagCompensatedEntities)
+            {
+                entity.DisableLagCompensation();
+                //entity.DebugPrint();
+            }
         }
 
         protected abstract void OnLogicTick();
@@ -524,6 +652,7 @@ namespace LiteEntitySystem
                 }
                 _tick++;
                 OnLogicTick();
+
                 _accumulator -= _deltaTimeTicks;
                 updates++;
             }
