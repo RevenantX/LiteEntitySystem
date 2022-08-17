@@ -30,8 +30,6 @@ namespace LiteEntitySystem
 
         public ushort RawServerTick => _stateA != null ? _stateA.Tick : (ushort)0;
 
-        public ushort RawTargetServerTick => _stateB != null ? _stateB.Tick : RawServerTick;
-        
         /// <summary>
         /// Stored input commands count for prediction correction
         /// </summary>
