@@ -97,10 +97,8 @@ namespace LiteEntitySystem.Internal
             _isDestroyed = true;
             OnDestroy();
             EntityManager.RemoveEntity(this);
-            if (EntityManager.IsServer)
-            {
+            if (EntityManager.IsServer && !IsLocal)
                 ServerManager.DestroySavedData(this);
-            }
         }
 
         /// <summary>
