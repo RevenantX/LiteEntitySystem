@@ -474,7 +474,7 @@ namespace LiteEntitySystem
             if (_stateB != null)
             {
                 _logicLerpMsec = (float)(_timer / _lerpTime);
-                ServerTick = (ushort)(_stateA.Tick + Math.Round(Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * _logicLerpMsec));
+                ServerTick = Utils.LerpSequence(_stateA.Tick, _stateB.Tick, _logicLerpMsec);
                 fixed (byte* rawData = _stateB.Data)
                 {
                     int maxTick = -1;
@@ -685,7 +685,7 @@ namespace LiteEntitySystem
                         }
 
                         tickIndex++;
-                        if (tickIndex == MaxSavedStateDiff)
+                        if (tickIndex == ServerEntityManager.MaxStoredInputs)
                         {
                             break;
                         }
@@ -785,7 +785,7 @@ namespace LiteEntitySystem
 
                     Utils.ResizeIfFull(ref _entitiesToConstruct, _entitiesToConstructCount);
                     _entitiesToConstruct[_entitiesToConstructCount++] = entity;
-                    //Logger.Log($"[CEM] Add entity: {entity.GetType()}");
+                    Logger.Log($"[CEM] Add entity: {entity.GetType()}");
                 }
             }
             else if (entity == null)

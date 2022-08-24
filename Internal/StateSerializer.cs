@@ -146,6 +146,8 @@ namespace LiteEntitySystem.Internal
 
         public void Destroy(ushort serverTick, ushort minimalTick)
         {
+            if (_state != SerializerState.Active)
+                return;
             Write((ushort)(serverTick+1), minimalTick);
             _state = SerializerState.Destroyed;
             _ticksOnDestroy = serverTick;
@@ -175,15 +177,19 @@ namespace LiteEntitySystem.Internal
 
         public unsafe DiffResult MakeDiff(byte playerId, ushort serverTick, ushort minimalTick, ushort playerTick, byte* resultData, ref int position)
         {
-            bool canReuse = false;
+            if (_state == SerializerState.Freed)
+                return DiffResult.Skip;
+            
             if (_state == SerializerState.Destroyed && Utils.SequenceDiff(serverTick, _ticksOnDestroy) >= TicksToDestroy)
             {
                 _state = SerializerState.Freed;
-                canReuse = true;
+                return DiffResult.DoneAndDestroy;
             }
             Write(serverTick, minimalTick);
-            if(_controllerOwner != ServerEntityManager.ServerPlayerId && playerId != _controllerOwner)
+            if (_controllerOwner != ServerEntityManager.ServerPlayerId && playerId != _controllerOwner)
+            {
                 return DiffResult.Skip;
+            }
 
             //make diff
             int startPos = position;
@@ -290,7 +296,7 @@ namespace LiteEntitySystem.Internal
                 *fieldFlagAndSize |= (ushort)(resultSize << 1);
             }
 
-            return canReuse ? DiffResult.DoneAndDestroy : DiffResult.Done;
+            return DiffResult.Done;
         }
     }
 }

@@ -48,6 +48,12 @@ namespace LiteEntitySystem.Internal
             return a + (b - a) * t;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ushort LerpSequence(ushort seq1, ushort seq2, float t)
+        {
+            return (ushort)((seq1 + Math.Round(SequenceDiff(seq2, seq1) * t)) % MaxSequence);
+        }
+
         private const int MaxSequence = 65536;
         private const int MaxSeq2 = MaxSequence / 2;
         private const int MaxSeq15 = MaxSequence + MaxSeq2;

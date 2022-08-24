@@ -47,8 +47,9 @@ namespace LiteEntitySystem
         internal float LerpTime;
         internal NetPlayerState State;
         internal int ArrayIndex;
-        
-        internal readonly SortedList<ushort, InputBuffer> AvailableInput = new SortedList<ushort, InputBuffer>(new SequenceComparer());
+
+        internal ushort AvailableInputCount;
+        internal readonly InputBuffer[] AvailableInput = new InputBuffer[ServerEntityManager.MaxStoredInputs];
 
         internal void RequestBaselineSync()
         {
@@ -83,6 +84,7 @@ namespace LiteEntitySystem
         private readonly NetPlayer[] _netPlayersDict = new NetPlayer[MaxPlayers];
         private readonly NetDataReader _inputReader = new();
         private readonly StateSerializer[] _stateSerializers = new StateSerializer[MaxSyncedEntityCount];
+        public const int MaxStoredInputs = 30;
 
         private byte[] _compressionBuffer;
         private int _netPlayersCount;
@@ -401,10 +403,12 @@ namespace LiteEntitySystem
                             netPlayer.CurrentServerTick,
                             packetBuffer,
                             ref writePosition);
-                        if (diffResult == DiffResult.Done || diffResult == DiffResult.DoneAndDestroy)
+                        if (diffResult == DiffResult.DoneAndDestroy)
                         {
-                            if (diffResult == DiffResult.DoneAndDestroy)
-                                _entityIdQueue.Enqueue(eId);
+                            _entityIdQueue.Enqueue(eId);
+                        }
+                        if (diffResult == DiffResult.Done)
+                        {
                             if (writePosition > mtu)
                             {
                                 if (*partCount == MaxParts-1)
@@ -491,22 +495,34 @@ namespace LiteEntitySystem
                 var player = _netPlayersArray[pidx];
                 if (player.State == NetPlayerState.New) 
                     continue;
-                if (player.AvailableInput.Count == 0)
+                if (player.AvailableInputCount == 0)
                 {
                     //Logger.LogWarning($"Inputs of player {pidx} is zero");
                     continue;
                 }
-                
-                var inputFrame = player.AvailableInput.Minimal();
-                player.AvailableInput.Remove(inputFrame.Tick);
+
+                var emptyInputBuffer = new InputBuffer();
+                ref var inputFrame = ref emptyInputBuffer;
+                int nextInputTick = player.LastProcessedTick;
+                while (inputFrame.Data == null)
+                {
+                    nextInputTick = (nextInputTick+1) % MaxStoredInputs;
+                    inputFrame = ref player.AvailableInput[nextInputTick];
+                    if (player.LastProcessedTick == nextInputTick)
+                    {
+                        Logger.LogError("This shouldn't be happen");
+                        break;
+                    }
+                }
+
+                player.AvailableInputCount--;
                 ref var inputData = ref inputFrame.Input;
-                        
                 player.LastProcessedTick = inputFrame.Tick;
                 player.StateATick = inputData.StateA;
                 player.StateBTick = inputData.StateB;
                 player.LerpTime = inputData.LerpMsec;
                 //Logger.Log($"[SEM] CT: {player.LastProcessedTick}, stateA: {player.StateATick}, stateB: {player.StateBTick}");
-                player.SimulatedServerTick = (ushort)(inputData.StateA + Math.Round(Utils.SequenceDiff(inputData.StateB,  inputData.StateA) * inputData.LerpMsec));
+                player.SimulatedServerTick = Utils.LerpSequence(inputData.StateA, inputData.StateB, inputData.LerpMsec);
                 if (player.State == NetPlayerState.WaitingForFirstInputProcess)
                     player.State = NetPlayerState.Active;
                         
@@ -522,6 +538,7 @@ namespace LiteEntitySystem
                 }
                 
                 _inputPool.Enqueue(inputFrame.Data);
+                inputFrame.Data = null;
             }
 
             foreach (var aliveEntity in GetAliveEntities())
@@ -626,29 +643,14 @@ namespace LiteEntitySystem
                     player.CurrentServerTick = input.StateB;
                     
                 //read input
-                if (!player.AvailableInput.ContainsKey(inputBuffer.Tick) && Utils.SequenceDiff(inputBuffer.Tick, player.LastProcessedTick) > 0)
+                if (player.AvailableInput[inputBuffer.Tick % MaxStoredInputs].Data == null && Utils.SequenceDiff(inputBuffer.Tick, player.LastProcessedTick) > 0)
                 {
-                    if (player.AvailableInput.Count >= MaxSavedStateDiff)
-                    {
-                        Logger.LogWarning($"[SEM] Too much input's received: {MaxSavedStateDiff} from player: {player.Id}");
-                        var minimal = player.AvailableInput.Minimal();
-                        if (Utils.SequenceDiff(inputBuffer.Tick, minimal.Tick) > 0)
-                        {
-                            _inputPool.Enqueue(minimal.Data);
-                            player.AvailableInput.Remove(minimal.Tick);
-                        }
-                        else
-                        {
-                            reader.SkipBytes(inputBuffer.Size);
-                            continue;
-                        }
-                    }
-
                     _inputPool.TryDequeue(out inputBuffer.Data);
                     Utils.ResizeOrCreate(ref inputBuffer.Data, inputBuffer.Size);
                     fixed(byte* inputData = inputBuffer.Data, readerData = reader.RawData)
                         Unsafe.CopyBlock(inputData, readerData + reader.Position, inputBuffer.Size);
-                    player.AvailableInput.Add(inputBuffer.Tick, inputBuffer);
+                    player.AvailableInput[inputBuffer.Tick % MaxStoredInputs] = inputBuffer;
+                    player.AvailableInputCount++;
 
                     //to reduce data
                     if (Utils.SequenceDiff(inputBuffer.Tick, player.LastReceivedTick) > 0)

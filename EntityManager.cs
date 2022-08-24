@@ -609,6 +609,7 @@ namespace LiteEntitySystem
             }
             if (classData.IsLocalOnly)
                 _localIdQueue.Enqueue(e.Id);
+            EntitiesDict[e.Id] = null;
             EntitiesCount--;
             //Logger.Log($"{Mode} - RemoveEntity: {e.Id}");
         }

@@ -122,97 +122,86 @@ namespace LiteEntitySystem.Internal
                     Logger.LogError($"[CEM] Invalid entity id: {preloadData.EntityId}");
                     return;
                 }
-
-                InternalEntity entity = entityDict[preloadData.EntityId];
+                
                 if (fullSync)
                 {
                     preloadData.EntityFieldsOffset = -1;
                     preloadData.DataOffset = initialReaderPosition + 4;
+                    continue;
                 }
-                else
+      
+                //it should be here at preload
+                InternalEntity entity = entityDict[preloadData.EntityId];
+                if (entity == null)
                 {
-                    //it should be here at preload
-                    entity = entityDict[preloadData.EntityId];
-                    if (entity == null)
-                    {
-                        Logger.LogError($"Preload entity: {preloadData.EntityId} == null");
-                        return;
-                    }
-                    
-                    preloadData.EntityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
-                    preloadData.DataOffset =
-                        initialReaderPosition +
-                        StateSerializer.DiffHeaderSize +
-                        entity.GetClassData().FieldsFlagsSize;
+                    //Removed entity
+                    //Logger.LogError($"Preload entity: {preloadData.EntityId} == null");
+                    PreloadDataCount--;
+                    continue;
                 }
 
-                if (entity != null)
-                {
-                    ref var classData = ref entity.GetClassData();
-                    var fields = classData.Fields;
-                    
-                    int stateReaderOffset = preloadData.DataOffset;
-                    if (fullSync)
-                        //version(byte) + classId(ushort)
-                        stateReaderOffset += 3;
-                    
-                    //preload interpolation info
-                    if (entity.IsServerControlled && classData.InterpolatedCount > 0)
-                    {
-                        Utils.ResizeIfFull(ref InterpolatedFields, InterpolatedCount);
-                        Utils.ResizeOrCreate(ref preloadData.InterpolatedCaches, classData.InterpolatedCount);
-                        InterpolatedFields[InterpolatedCount++] = PreloadDataCount - 1;
-                    }
-                    for (int i = 0; i < classData.FieldsCount; i++)
-                    {
-                        if (!fullSync && !Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, i))
-                            continue;
-                        var field = fields[i];
-                        if (entity.IsServerControlled && field.Interpolator != null)
-                        {
-                            preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
-                            (
-                                i, stateReaderOffset
-                            );
-                        }
-                        stateReaderOffset += field.IntSize;
-                    }
+                preloadData.EntityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
+                preloadData.DataOffset =
+                    initialReaderPosition +
+                    StateSerializer.DiffHeaderSize +
+                    entity.GetClassData().FieldsFlagsSize;
+                
+                ref var classData = ref entity.GetClassData();
+                var fields = classData.Fields;
+                int stateReaderOffset = preloadData.DataOffset;
 
-                    //in full sync there is no rpcs, only full data
-                    if (fullSync)
+                //preload interpolation info
+                if (entity.IsServerControlled && classData.InterpolatedCount > 0)
+                {
+                    Utils.ResizeIfFull(ref InterpolatedFields, InterpolatedCount);
+                    Utils.ResizeOrCreate(ref preloadData.InterpolatedCaches, classData.InterpolatedCount);
+                    InterpolatedFields[InterpolatedCount++] = PreloadDataCount - 1;
+                }
+                for (int i = 0; i < classData.FieldsCount; i++)
+                {
+                    if (!Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, i))
                         continue;
-
-                    //preload rpcs
-                    while(stateReaderOffset < initialReaderPosition + preloadData.TotalSize)
+                    var field = fields[i];
+                    if (entity.IsServerControlled && field.Interpolator != null)
                     {
-                        byte rpcId = Data[stateReaderOffset];
-                        byte fieldId = Data[stateReaderOffset + 1];
-                        ushort size = BitConverter.ToUInt16(Data, stateReaderOffset + 4);
-                        
-                        var rpcCache = new RemoteCallsCache(
-                            preloadData.EntityId,
-                            fieldId,
-                            fieldId == byte.MaxValue
-                                ? classData.RemoteCallsClient[rpcId]
-                                : classData.SyncableRemoteCallsClient[rpcId],
-                            BitConverter.ToUInt16(Data, stateReaderOffset + 2),
-                            stateReaderOffset + 6,
-                            1 //TODO: count!!!
-                            );
-                        if (rpcCache.Delegate == null)
-                        {
-                            Logger.LogError($"ZeroRPC: {rpcId}, FieldId: {fieldId}");
-                        }
-                        
-                        Utils.ResizeOrCreate(ref RemoteCallsCaches, RemoteCallsCount);
-                        RemoteCallsCaches[RemoteCallsCount++] = rpcCache;
-                        stateReaderOffset += 6 + size;
+                        preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
+                        (
+                            i, stateReaderOffset
+                        );
                     }
+                    stateReaderOffset += field.IntSize;
+                }
 
-                    if (stateReaderOffset != initialReaderPosition + preloadData.TotalSize)
+                //preload rpcs
+                while(stateReaderOffset < initialReaderPosition + preloadData.TotalSize)
+                {
+                    byte rpcId = Data[stateReaderOffset];
+                    byte fieldId = Data[stateReaderOffset + 1];
+                    ushort size = BitConverter.ToUInt16(Data, stateReaderOffset + 4);
+                    
+                    var rpcCache = new RemoteCallsCache(
+                        preloadData.EntityId,
+                        fieldId,
+                        fieldId == byte.MaxValue
+                            ? classData.RemoteCallsClient[rpcId]
+                            : classData.SyncableRemoteCallsClient[rpcId],
+                        BitConverter.ToUInt16(Data, stateReaderOffset + 2),
+                        stateReaderOffset + 6,
+                        1 //TODO: count!!!
+                        );
+                    if (rpcCache.Delegate == null)
                     {
-                        Logger.LogError($"Missread! {stateReaderOffset} > {initialReaderPosition + preloadData.TotalSize}");
+                        Logger.LogError($"ZeroRPC: {rpcId}, FieldId: {fieldId}");
                     }
+                    
+                    Utils.ResizeOrCreate(ref RemoteCallsCaches, RemoteCallsCount);
+                    RemoteCallsCaches[RemoteCallsCount++] = rpcCache;
+                    stateReaderOffset += 6 + size;
+                }
+
+                if (stateReaderOffset != initialReaderPosition + preloadData.TotalSize)
+                {
+                    Logger.LogError($"Missread! {stateReaderOffset} > {initialReaderPosition + preloadData.TotalSize}");
                 }
             }
         }
