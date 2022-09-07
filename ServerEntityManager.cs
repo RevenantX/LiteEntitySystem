@@ -81,7 +81,7 @@ namespace LiteEntitySystem
         private readonly Queue<byte[]> _inputPool = new();
         private readonly byte[] _packetBuffer = new byte[200 * 1024 * 1024];
         private readonly NetPlayer[] _netPlayersArray = new NetPlayer[MaxPlayers];
-        private readonly NetPlayer[] _netPlayersDict = new NetPlayer[MaxPlayers];
+        private readonly NetPlayer[] _netPlayersDict = new NetPlayer[MaxPlayers+1];
         private readonly NetDataReader _inputReader = new();
         private readonly StateSerializer[] _stateSerializers = new StateSerializer[MaxSyncedEntityCount];
         public const int MaxStoredInputs = 30;
@@ -162,7 +162,7 @@ namespace LiteEntitySystem
             for(int i = FirstEntityId; i < MaxSyncedEntityId; i++)
             {
                 var e = EntitiesDict[i];
-                if (e.IsControlledBy(player.Id))
+                if (e != null && e.IsControlledBy(player.Id))
                 {
                     if (e is HumanControllerLogic controllerLogic)
                         controllerLogic.DestroyInternal();
@@ -178,9 +178,9 @@ namespace LiteEntitySystem
             if (player.ArrayIndex != _netPlayersCount)
             {
                 _netPlayersArray[player.ArrayIndex] = _netPlayersArray[_netPlayersCount];
-                _netPlayersArray[player.ArrayIndex].ArrayIndex = _netPlayersCount;
-                _netPlayersArray[_netPlayersCount] = null;
+                _netPlayersArray[player.ArrayIndex].ArrayIndex = player.ArrayIndex;
             }
+            _netPlayersArray[_netPlayersCount] = null;
 
             return true;
         }
@@ -541,7 +541,7 @@ namespace LiteEntitySystem
                 inputFrame.Data = null;
             }
 
-            foreach (var aliveEntity in GetAliveEntities())
+            foreach (var aliveEntity in AliveEntities)
                 aliveEntity.Update();
 
             foreach (var lagCompensatedEntity in LagCompensatedEntities)

@@ -116,10 +116,15 @@ namespace LiteEntitySystem.Internal
             
         }
 
+        internal void CallConstruct()
+        {
+            OnConstructed();
+        }
+
         /// <summary>
         /// Called when entity constructed
         /// </summary>
-        public virtual void OnConstructed()
+        protected virtual void OnConstructed()
         {
         }
 
@@ -238,6 +243,11 @@ namespace LiteEntitySystem.Internal
         public override int GetHashCode()
         {
             return Id + Version * ushort.MaxValue;
+        }
+
+        public override string ToString()
+        {
+            return $"Entity. Id: {Id}, ClassId: {ClassId}, Version: {Version}";
         }
     }
 }

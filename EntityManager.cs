@@ -166,8 +166,7 @@ namespace LiteEntitySystem
         protected int MaxLocalEntityId = -1;
         protected ushort _tick;
         
-        private readonly SortedSet<InternalEntity> _aliveEntities = new();
-        private SortedSet<InternalEntity>.Enumerator _aliveEntitiesEnumerator;
+        protected readonly EntityFilter<InternalEntity> AliveEntities = new();
         protected readonly EntityFilter<EntityLogic> LagCompensatedEntities = new();
 
         private readonly double _stopwatchFrequency;
@@ -176,11 +175,7 @@ namespace LiteEntitySystem
         private readonly SingletonEntityLogic[] _singletonEntities;
         private readonly EntityFilter[] _entityFilters;
         private readonly Dictionary<Type, ushort> _registeredTypeIds = new();
-        private InternalEntity[] _aliveEntitiesToAdd = new InternalEntity[8];
-        private InternalEntity[] _aliveEntitiesToDestroy = new InternalEntity[8];
-        private int _aliveEntitiesToAddCount;
-        private int _aliveEntitiesToRemoveCount;
-        
+
         internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount+1];
         internal readonly EntityClassData[] ClassDataDict;
 
@@ -240,7 +235,6 @@ namespace LiteEntitySystem
             DeltaTimeF = (float) DeltaTime;
             _stopwatchFrequency = 1.0 / Stopwatch.Frequency;
             _deltaTimeTicks = (long)(DeltaTime * Stopwatch.Frequency);
-            _aliveEntitiesEnumerator = _aliveEntities.GetEnumerator();
         }
 
         /// <summary>
@@ -259,7 +253,7 @@ namespace LiteEntitySystem
             _localIdQueue.Clear();
             _stopwatch.Restart();
 
-            _aliveEntities.Clear();
+            AliveEntities.Clear();
             //_aliveEntitiesEnumerator = _aliveEntities.GetEnumerator();
 
             for (int i = 0; i < _singletonEntities.Length; i++)
@@ -306,6 +300,36 @@ namespace LiteEntitySystem
                 : null;
             return entity != null;
         }
+        
+        private EntityFilter<T> GetEntitiesInternal<T>() where T : InternalEntity
+        {
+            if (!_registeredTypeIds.TryGetValue(typeof(T), out ushort typeId))
+                throw new Exception($"Unregistered type: {typeof(T)}");
+            
+            ref var entityFilter = ref _entityFilters[typeId];
+            EntityFilter<T> typedFilter;
+            if (entityFilter != null)
+            {
+                typedFilter = (EntityFilter<T>)entityFilter;
+                typedFilter.Refresh();
+                return typedFilter;
+            }
+            
+            typedFilter = new EntityFilter<T>();
+            entityFilter = typedFilter;
+            for (int i = FirstEntityId; i <= MaxSyncedEntityId; i++)
+            {
+                if(EntitiesDict[i] is T castedEnt)
+                    typedFilter.Add(castedEnt);
+            }
+            for (int i = MaxSyncedEntityCount; i <= MaxLocalEntityId; i++)
+            {
+                if(EntitiesDict[i] is T castedEnt)
+                    typedFilter.Add(castedEnt);
+            }
+            typedFilter.Refresh();
+            return typedFilter;
+        }
 
         /// <summary>
         /// Get all entities with type
@@ -314,28 +338,7 @@ namespace LiteEntitySystem
         /// <returns>Entity filter that can be used in foreach</returns>
         public EntityFilter<T> GetEntities<T>() where T : EntityLogic
         {
-            if (!_registeredTypeIds.TryGetValue(typeof(T), out ushort typeId))
-                throw new Exception($"Unregistered type: {typeof(T)}");
-
-            ref var entityFilter = ref _entityFilters[typeId];
-            if (entityFilter != null)
-                return (EntityFilter<T>)entityFilter;
-
-            //initialize new
-            var typedFilter = new EntityFilter<T>();
-            entityFilter = typedFilter;
-            for (int i = FirstEntityId; i <= MaxSyncedEntityId; i++)
-            {
-                if(EntitiesDict[i] is T castedEnt && !castedEnt.IsDestroyed)
-                    typedFilter.Add(castedEnt);
-            }
-            for (int i = MaxSyncedEntityCount; i <= MaxLocalEntityId; i++)
-            {
-                if(EntitiesDict[i] is T castedEnt && !castedEnt.IsDestroyed)
-                    typedFilter.Add(castedEnt);
-            }
-
-            return typedFilter;
+            return GetEntitiesInternal<T>();
         }
         
         /// <summary>
@@ -345,27 +348,7 @@ namespace LiteEntitySystem
         /// <returns>Entity filter that can be used in foreach</returns>
         public EntityFilter<T> GetControllers<T>() where T : ControllerLogic
         {
-            if (!_registeredTypeIds.TryGetValue(typeof(T), out ushort typeId))
-                throw new Exception($"Unregistered type: {typeof(T)}");
-            
-            ref var entityFilter = ref _entityFilters[typeId];
-            if (entityFilter != null)
-                return (EntityFilter<T>)entityFilter;
-            
-            var typedFilter = new EntityFilter<T>();
-            entityFilter = typedFilter;
-            for (int i = FirstEntityId; i <= MaxSyncedEntityId; i++)
-            {
-                if(EntitiesDict[i] is T castedEnt)
-                    typedFilter.Add(castedEnt);
-            }
-            for (int i = MaxSyncedEntityCount; i <= MaxLocalEntityId; i++)
-            {
-                if(EntitiesDict[i] is T castedEnt)
-                    typedFilter.Add(castedEnt);
-            }
-
-            return typedFilter;
+            return GetEntitiesInternal<T>();
         }
 
         /// <summary>
@@ -376,6 +359,16 @@ namespace LiteEntitySystem
         public T GetSingleton<T>() where T : SingletonEntityLogic
         {
             return (T)_singletonEntities[_registeredTypeIds[typeof(T)]];
+        }
+        
+        /// <summary>
+        /// Get existing singleton entity
+        /// </summary>
+        /// <typeparam name="T">Singleton entity type</typeparam>
+        /// <param name="singleton">Singleton entity, can throw exceptions on invalid type</param>
+        public void GetSingleton<T>(out T singleton) where T : SingletonEntityLogic
+        {
+            singleton = (T)_singletonEntities[_registeredTypeIds[typeof(T)]];
         }
 
         /// <summary>
@@ -474,89 +467,11 @@ namespace LiteEntitySystem
             return entity;
         }
 
-        protected virtual void OnAliveConstructed(InternalEntity e)
-        {
-
-        }
-
-        protected virtual void OnAliveDestroyed(InternalEntity e)
-        {
-
-        }
-
-        protected readonly struct AliveEntityEnumerable<T> : IEnumerable<T>
-        {
-            private readonly SortedSet<T>.Enumerator _enumerator;
-
-            public AliveEntityEnumerable(ref SortedSet<T>.Enumerator enumerator)
-            {
-                _enumerator = enumerator;
-                ResetEnumerator(ref _enumerator);
-            }
-
-            private static void ResetEnumerator<TEnumerator>(ref TEnumerator enumerator)
-                where TEnumerator : struct, IEnumerator<T>
-            {
-                enumerator.Reset();
-            }
-
-            public SortedSet<T>.Enumerator GetEnumerator()
-            {
-                return _enumerator;
-            }
-            
-            IEnumerator<T> IEnumerable<T>.GetEnumerator()
-            {
-                return _enumerator;
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return _enumerator;
-            }
-        }
-        
-        protected AliveEntityEnumerable<InternalEntity> GetAliveEntities()
-        {
-            bool recreateEnumerator = false;
-            if (_aliveEntitiesToRemoveCount > 0)
-            {
-                for(int i = 0; i < _aliveEntitiesToRemoveCount; i++)
-                    _aliveEntities.Remove(_aliveEntitiesToDestroy[i]);
-                _aliveEntitiesToRemoveCount = 0;
-                recreateEnumerator = true;
-            }
-            if (_aliveEntitiesToAddCount > 0)
-            {
-                for(int i = 0; i < _aliveEntitiesToAddCount; i++)
-                    _aliveEntities.Add(_aliveEntitiesToAdd[i]);
-                _aliveEntitiesToAddCount = 0;
-                recreateEnumerator = true;
-            }
-            if(recreateEnumerator)
-                _aliveEntitiesEnumerator = _aliveEntities.GetEnumerator();
-            return new AliveEntityEnumerable<InternalEntity>(ref _aliveEntitiesEnumerator);
-        }
-
-        protected void AddAliveEntity(InternalEntity e)
-        {
-            Utils.ResizeIfFull(ref _aliveEntitiesToAdd, _aliveEntitiesToAddCount);
-            _aliveEntitiesToAdd[_aliveEntitiesToAddCount++] = e;
-            OnAliveConstructed(e);
-        }
-
-        protected void RemoveAliveEntity(InternalEntity e)
-        {
-            Utils.ResizeIfFull(ref _aliveEntitiesToDestroy, _aliveEntitiesToRemoveCount);
-            _aliveEntitiesToDestroy[_aliveEntitiesToRemoveCount++] = e;
-            OnAliveDestroyed(e);
-        }
-
         protected void ConstructEntity(InternalEntity e)
         {
             ref var classData = ref ClassDataDict[e.ClassId];
   
-            e.OnConstructed();
+            e.CallConstruct();
 
             if (classData.IsSingleton)
             {
@@ -573,7 +488,7 @@ namespace LiteEntitySystem
             
             if (IsEntityAlive(classData, e))
             {
-                AddAliveEntity(e);
+                AliveEntities.Add(e);
                 if(!e.IsLocal && e is EntityLogic entityLogic && entityLogic.HasLagCompensation)
                     LagCompensatedEntities.Add(entityLogic);
             }
@@ -603,7 +518,7 @@ namespace LiteEntitySystem
 
             if (IsEntityAlive(classData, e))
             {
-                RemoveAliveEntity(e);
+                AliveEntities.Remove(e);
                 if(!e.IsLocal && e is EntityLogic entityLogic && entityLogic.HasLagCompensation)
                     LagCompensatedEntities.Remove(entityLogic);
             }
@@ -656,7 +571,7 @@ namespace LiteEntitySystem
         {
             if(!_stopwatch.IsRunning)
                 _stopwatch.Start();
-            
+
             long elapsedTicks = _stopwatch.ElapsedTicks;
             long ticksDelta = elapsedTicks - _lastTime;
             VisualDeltaTime = ticksDelta * _stopwatchFrequency;

@@ -30,6 +30,8 @@ namespace LiteEntitySystem
 
         public ushort RawServerTick => _stateA != null ? _stateA.Tick : (ushort)0;
 
+        public ushort RawTargetServerTick => _stateB != null ? _stateB.Tick : RawServerTick;
+        
         /// <summary>
         /// Stored input commands count for prediction correction
         /// </summary>
@@ -102,14 +104,16 @@ namespace LiteEntitySystem
         /// <param name="localPeer">Local NetPeer</param>
         /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
         /// <param name="framesPerSecond">Fixed framerate of game logic</param>
-        public unsafe ClientEntityManager(EntityTypesMap typesMap, NetPeer localPeer, byte headerByte, byte framesPerSecond) : base(typesMap, NetworkMode.Client, framesPerSecond)
+        public ClientEntityManager(EntityTypesMap typesMap, NetPeer localPeer, byte headerByte, byte framesPerSecond) : base(typesMap, NetworkMode.Client, framesPerSecond)
         {
             _localPeer = localPeer;
             _sendBuffer[0] = headerByte;
             _sendBuffer[1] = PacketClientSync;
+            AliveEntities.SubscribeToConstructed(OnAliveConstructed, false);
+            AliveEntities.OnDestroyed += OnAliveDestroyed;
         }
 
-        protected override unsafe void OnAliveConstructed(InternalEntity entity)
+        private unsafe void OnAliveConstructed(InternalEntity entity)
         {
             ref var classData = ref ClassDataDict[entity.ClassId];
             byte* entityPtr = Utils.GetPtr(ref entity);
@@ -130,7 +134,7 @@ namespace LiteEntitySystem
             }
         }
 
-        protected override void OnAliveDestroyed(InternalEntity e)
+        private void OnAliveDestroyed(InternalEntity e)
         {
             _predictedEntities[e.Id] = null;
         }
@@ -368,7 +372,7 @@ namespace LiteEntitySystem
             _timer -= _lerpTime;
 
             //reset owned entities
-            foreach (var entity in GetAliveEntities())
+            foreach (var entity in AliveEntities)
             {
                 if(entity.IsLocal)
                     continue;
@@ -420,7 +424,7 @@ namespace LiteEntitySystem
                 {
                     controller.ReadInput(_inputReader);
                 }
-                foreach (var entity in GetAliveEntities())
+                foreach (var entity in AliveEntities)
                 {
                     if(entity.IsLocal || !entity.IsLocalControlled)
                         continue;
@@ -431,7 +435,7 @@ namespace LiteEntitySystem
             UpdateMode = UpdateMode.Normal;
             
             //update local interpolated position
-            foreach (var entity in GetAliveEntities())
+            foreach (var entity in AliveEntities)
             {
                 if(entity.IsLocal || !entity.IsLocalControlled)
                     continue;
@@ -539,7 +543,7 @@ namespace LiteEntitySystem
             _inputCommands.Enqueue(inputWriter);
 
             //local only and UpdateOnClient
-            foreach (var entity in GetAliveEntities())
+            foreach (var entity in AliveEntities)
             {
                 if (entity.IsLocal || entity.IsLocalControlled)
                 {
@@ -622,7 +626,7 @@ namespace LiteEntitySystem
 
             //local interpolation
             float localLerpT = LerpFactor;
-            foreach (var entity in GetAliveEntities())
+            foreach (var entity in AliveEntities)
             {
                 if (!entity.IsLocalControlled && !entity.IsLocal)
                     continue;
@@ -697,7 +701,7 @@ namespace LiteEntitySystem
             }
             
             //local only and UpdateOnClient
-            foreach (var entity in GetAliveEntities())
+            foreach (var entity in AliveEntities)
             {
                 entity.VisualUpdate();
             }
@@ -706,13 +710,13 @@ namespace LiteEntitySystem
         internal void AddOwned(EntityLogic entity)
         {
             if (entity.GetClassData().IsUpdateable && !entity.GetClassData().UpdateOnClient)
-                AddAliveEntity(entity);
+                AliveEntities.Add(entity);
         }
         
         internal void RemoveOwned(EntityLogic entity)
         {
             if (entity.GetClassData().IsUpdateable && !entity.GetClassData().UpdateOnClient)
-                RemoveAliveEntity(entity);
+                AliveEntities.Remove(entity);
         }
 
         internal void AddPredictedInfo(EntityLogic e)

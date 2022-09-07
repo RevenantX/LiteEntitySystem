@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
@@ -12,45 +13,17 @@ namespace LiteEntitySystem
         internal abstract void Clear();
     }
 
-    //For usability
-    public sealed class EntityFilter<T> : EntityFilter, IEnumerable<T> where T : InternalEntity
+    public class EntityFilter<T> : EntityFilter, IEnumerable<T> where T : InternalEntity
     {
-        public struct EntityFilterEnumerator : IEnumerator<T>
+        private readonly SortedSet<T> _entities = new();
+        private SortedSet<T>.Enumerator _enumerator;
+
+        public EntityFilter()
         {
-            private int _idx;
-            private readonly EntityFilter<T> _filter;
-
-            public EntityFilterEnumerator(EntityFilter<T> filter)
-            {
-                _filter = filter;
-                _idx = -1;
-            }
-
-            public bool MoveNext()
-            {
-                _idx++;
-                return _idx < _filter._count;
-            }
-
-            public void Reset()
-            {
-                _idx = -1;
-            }
-
-            public T Current => _filter._array[_idx];
-
-            object IEnumerator.Current => _filter._array[_idx];
-
-            public void Dispose()
-            {
-                
-            }
+            _enumerator = _entities.GetEnumerator();
         }
-
-        /// <summary>
-        /// Called when entity created and synced
-        /// </summary>
-        public event Action<T> OnConstructed;
+        
+        private event Action<T> OnConstructed;
         
         /// <summary>
         /// Called when entity is removed/destroyed
@@ -58,80 +31,134 @@ namespace LiteEntitySystem
         public event Action<T> OnDestroyed;
 
         /// <summary>
+        /// Called when entity created and synced
+        /// <param name="onConstructed">callback</param>
+        /// <param name="callOnExisting">call that callback on existing entities in this fitler/list</param>
+        /// </summary>
+        public void SubscribeToConstructed(Action<T> onConstructed, bool callOnExisting)
+        {
+            if (callOnExisting)
+            {
+                foreach (T entity in this)
+                {
+                    onConstructed(entity);
+                }
+            }
+            OnConstructed += onConstructed;
+        }
+        
+        /// <summary>
         /// Entities count of type <typeparamref name="T"/>
         /// </summary>
-        public int Count => _count;
+        public int Count => _entities.Count;
 
-        public T this[int i] => _array[i];
-
-        private ushort[] _dict;
-        private T[] _array = new T[8];
-        private ushort _count;
-
-        internal override void Clear()
-        {
-            for (int i = 0; i < _count; i++)
-            {
-                _array[i] = null;
-            }
-            OnConstructed = null;
-            OnDestroyed = null;
-            _count = 0;
-        }
+        private T[] _entitiesToAdd;
+        private T[] _entitiesToRemove;
+        private int _entitiesToAddCount;
+        private int _entitiesToRemoveCount;
 
         internal override void Add(InternalEntity entity)
         {
-            if (_dict == null)
-            {
-                _dict = new ushort[Math.Max(entity.Id * 2, 8)];
-            }
-            else if (entity.Id >= _dict.Length)
-            {
-                Array.Resize(ref _dict, Math.Min(entity.Id * 2, ushort.MaxValue));
-            }
-
-            if (_count == _array.Length)
-            {
-                Array.Resize(ref _array, Math.Min(_count * 2, ushort.MaxValue));
-            }
-
-            _array[_count] = (T)entity;
-            _dict[entity.Id] = _count;
-            _count++;
+            Utils.ResizeOrCreate(ref _entitiesToAdd, _entitiesToAddCount+1);
+            _entitiesToAdd[_entitiesToAddCount++] = (T)entity;
             OnConstructed?.Invoke((T)entity);
         }
 
         internal override void Remove(InternalEntity entity)
         {
-            if (_count == 0)
-            {
-                Logger.LogError("Remove when count is 0");
-                return;
-            }
-            ushort idx = _dict[entity.Id];
-            _count--;
-            if(idx != _count)
-            {
-                _array[idx] = _array[_count];
-                _dict[_array[idx].Id] = idx;
-            }
-            _array[_count] = null;
+            Utils.ResizeOrCreate(ref _entitiesToRemove, _entitiesToRemoveCount + 1);
+            _entitiesToRemove[_entitiesToRemoveCount++] = (T)entity;
             OnDestroyed?.Invoke((T)entity);
         }
-
-        public EntityFilterEnumerator GetEnumerator()
+        
+        public T[] ToArray()
         {
-            return new EntityFilterEnumerator(this);
+            var resultArr = new T[_entities.Count + _entitiesToAddCount - _entitiesToRemoveCount];
+            int idx = 0;
+            foreach (var entity in this)
+            {
+                resultArr[idx++] = entity;
+            }
+            return resultArr;
+        }
+
+        public bool Contains(T entity)
+        {
+            return _entities.Contains(entity);
+        }
+
+        internal override void Clear()
+        {
+            _entitiesToAddCount = 0;
+            _entitiesToRemoveCount = 0;
+            _entities.Clear();
+            _enumerator = _entities.GetEnumerator();
+        }
+
+        internal void Refresh()
+        {
+            if (_entitiesToAddCount > 0 || _entitiesToRemoveCount > 0)
+            {
+                for (int i = 0; i < _entitiesToAddCount; i++)
+                {
+                    _entities.Add(_entitiesToAdd[i]);
+                }
+                for (int i = 0; i < _entitiesToRemoveCount; i++)
+                {
+                    _entities.Remove(_entitiesToRemove[i]);
+                }
+                _entitiesToAddCount = 0;
+                _entitiesToRemoveCount = 0;
+                _enumerator = _entities.GetEnumerator();
+            }
+        }
+        
+        private static void ResetEnumerator<TEnumerator>(ref TEnumerator enumerator) where TEnumerator : struct, IEnumerator<T>
+        {
+            enumerator.Reset();
+        }
+
+        public SortedSet<T>.Enumerator GetEnumerator()
+        {
+            if (_entitiesToAddCount > 0 || _entitiesToRemoveCount > 0)
+            {
+                Refresh();
+            }
+            else
+            {
+                ResetEnumerator(ref _enumerator);
+            }
+            return _enumerator;
         }
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            return new EntityFilterEnumerator(this);
+            return GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return new EntityFilterEnumerator(this);
+            return GetEnumerator();
+        }
+    }
+
+    public class EntityList<T> : EntityFilter<T> where T : InternalEntity
+    {
+        public new void Add(InternalEntity entity)
+        {
+            base.Add(entity);
+            Refresh();
+        }
+        
+        public new void Remove(InternalEntity entity)
+        {
+            base.Remove(entity);
+            Refresh();
+        }
+
+        public new void Clear()
+        {
+            base.Clear();
         }
     }
 }

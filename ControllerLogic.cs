@@ -1,4 +1,5 @@
-﻿using LiteNetLib.Utils;
+﻿using System.Runtime.CompilerServices;
+using LiteNetLib.Utils;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
@@ -15,6 +16,11 @@ namespace LiteEntitySystem
         private EntitySharedReference _controlledEntity;
 
         public byte OwnerId => InternalOwnerId;
+        
+        /// <summary>
+        /// Is controller - AI controller
+        /// </summary>
+        public abstract bool IsBot { get; }
 
         public T GetControlledEntity<T>() where T : PawnLogic
         {
@@ -68,6 +74,8 @@ namespace LiteEntitySystem
     [LocalOnly, UpdateableEntity]
     public abstract class AiControllerLogic : ControllerLogic
     {
+        public override bool IsBot => true;
+        
         protected AiControllerLogic(EntityParams entityParams) : base(entityParams) { }
     }
 
@@ -100,6 +108,8 @@ namespace LiteEntitySystem
         /// <param name="writer"></param>
         public abstract void GenerateInput(NetDataWriter writer);
 
+        public override bool IsBot => false;
+        
         protected HumanControllerLogic(EntityParams entityParams) : base(entityParams) { }
     }
 
@@ -109,7 +119,7 @@ namespace LiteEntitySystem
     public abstract class HumanControllerLogic<T> : HumanControllerLogic where T : PawnLogic
     {
         public T ControlledEntity => GetControlledEntity<T>();
-        
+
         protected HumanControllerLogic(EntityParams entityParams) : base(entityParams) { }
     }
 }
