@@ -25,9 +25,13 @@
             Controller?.BeforeControlledUpdate();
         }
 
-        protected override void OnDestroy()
+        internal override void DestroyInternal()
         {
-            Controller?.OnControlledDestroy();
+            if (EntityManager.IsServer)
+            {
+                Controller?.OnControlledDestroy();
+            }
+            base.DestroyInternal();
         }
 
         protected PawnLogic(EntityParams entityParams) : base(entityParams) { }

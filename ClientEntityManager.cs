@@ -121,22 +121,25 @@ namespace LiteEntitySystem
             if (classData.InterpolatedFieldsSize > 0)
             {
                 Utils.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
+                
+                //for local interpolated
+                Utils.ResizeOrCreate(ref _interpolatedInitialData[entity.Id], classData.InterpolatedFieldsSize);
             }
 
             fixed (byte* interpDataPtr = _interpolatedInitialData[entity.Id])
             {
-                for (int i = 0; i < classData.FieldsCount; i++)
+                for (int i = 0; i < classData.InterpolatedCount; i++)
                 {
                     var field = classData.Fields[i];
-                    if (field.Interpolator != null)
-                        Unsafe.CopyBlock(interpDataPtr + field.FixedOffset, entityPtr + field.Offset, field.Size);
+                    Unsafe.CopyBlock(interpDataPtr + field.FixedOffset, entityPtr + field.Offset, field.Size);
                 }
             }
         }
 
         private void OnAliveDestroyed(InternalEntity e)
         {
-            _predictedEntities[e.Id] = null;
+            if(e.Id < MaxSyncedEntityCount)
+                _predictedEntities[e.Id] = null;
         }
 
         /// <summary>
