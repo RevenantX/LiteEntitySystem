@@ -51,13 +51,25 @@ namespace LiteEntitySystem.Internal
                 type = type.GetElementType();
             if (type.IsGenericType)
             {
-                fullName = fullName
-                    .Substring(0, fullName.IndexOf("[", StringComparison.InvariantCulture))
-                    .Replace("`1", $"<{GetTypeName(type.GetGenericArguments()[0])}>");
+                fullName = fullName.Substring(0, fullName.IndexOf("[", StringComparison.InvariantCulture));
+                var genericArgs = type.GetGenericArguments();
+                for (int i = 0; i < genericArgs.Length; i++)
+                {
+                    fullName = fullName.Replace($"`{i + 1}", $"<{GetTypeName(genericArgs[i])}>");
+                }
             }
             return KeywordTypeMap.TryGetValue(type, out var name) 
                 ? name + (isArray ? "[]" : string.Empty)
                 : fullName!.Replace('+', '.');
+        }
+
+        private static void AddSizeOf(Type valueType)
+        {
+            if (valueType != null && valueType.IsValueType && AddedSizeofs.Add(valueType))
+            {
+                GenCode.Append(' ', 12);
+                GenCode.AppendLine($"Unsafe.SizeOf<{GetTypeName(valueType)}>();");
+            }
         }
 
         private static void AppendGenerator(Type classType, Type valueType)
@@ -77,11 +89,7 @@ namespace LiteEntitySystem.Internal
                 GenCode.AppendLine($"G.GenerateArray<{classTypeName},{valueTypeName}>(null);");
             else
                 GenCode.AppendLine($"G.Generate<{classTypeName},{valueTypeName}>(null);");
-            if (valueType != null && valueType.IsValueType && AddedSizeofs.Add(valueType))
-            {
-                GenCode.Append(' ', 12);
-                GenCode.AppendLine($"Unsafe.SizeOf<{valueTypeName}>();");
-            }
+            AddSizeOf(valueType);
         }
         
         [MenuItem("LiteEntitySystem/GenerateAOTCode")]
@@ -107,7 +115,8 @@ namespace LiteEntitySystem.Internal
                 {
                     foreach (var fieldInfo in entity.GetFields(BindFlags))
                     {
-                        if (fieldInfo.GetCustomAttribute<SyncVar>() == null) 
+                        var syncvarAttrib = fieldInfo.GetCustomAttribute<SyncVar>();
+                        if (syncvarAttrib == null) 
                             continue;
                         
                         if (fieldInfo.FieldType.IsSubclassOf(typeof(SyncableField)))
@@ -121,9 +130,13 @@ namespace LiteEntitySystem.Internal
                                 }
                             }
                         }
-                        else
+                        else if(!string.IsNullOrEmpty(syncvarAttrib.MethodName))
                         {
                             AppendGenerator(entity, fieldInfo.FieldType);
+                        }
+                        else
+                        {
+                            AddSizeOf(fieldInfo.FieldType);
                         }
                     }
                     foreach (var methodInfo in entity.GetMethods(BindFlags))
