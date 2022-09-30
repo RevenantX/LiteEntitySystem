@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncList<T> : SyncableField, IList<T> where T : struct
+    public class SyncList<T> : SyncableField, IList<T>, IReadOnlyList<T> where T : struct
     {
         public int Count => _count;
         public bool IsReadOnly => false;
@@ -129,6 +129,7 @@ namespace LiteEntitySystem.Extensions
         }
 
         public ref T this[int index] => ref _data[index];
+        T IReadOnlyList<T>.this[int index] => _data[index];
         
         public override unsafe void FullSyncWrite(Span<byte> dataSpan, ref int position)
         {
