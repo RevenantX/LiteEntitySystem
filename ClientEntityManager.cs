@@ -42,21 +42,20 @@ namespace LiteEntitySystem
         public ushort LastProcessedTick => _stateA?.ProcessedTick ?? 0;
 
         public ushort LastReceivedTick => _stateA?.LastReceivedTick ?? 0;
+
+        public ServerSendRate ServerSendRate => _serverSendRate;
         
         /// <summary>
         /// States count in interpolation buffer
         /// </summary>
-        public int LerpBufferCount => _lerpBuffer.Count;
-
-        private const int InterpolateBufferSize = 10;
+        public int LerpBufferCount => _readyStates;
+        
         private const int InputBufferSize = 128;
 
         private readonly NetPeer _localPeer;
-        private readonly SortedList<ushort, ServerStateData> _receivedStates = new (new SequenceComparer());
-        private readonly Queue<ServerStateData> _statesPool = new (MaxSavedStateDiff);
+        private readonly ServerStateData[] _receivedStates = new ServerStateData[MaxSavedStateDiff];
         private readonly Queue<byte[]> _inputCommands = new (InputBufferSize);
         private readonly Queue<byte[]> _inputPool = new (InputBufferSize);
-        private readonly SortedSet<ServerStateData> _lerpBuffer = new (new ServerStateComparer());
         private readonly Queue<(ushort, EntityLogic)> _spawnPredictedEntities = new ();
         private readonly byte[][] _interpolatedInitialData = new byte[MaxEntityCount][];
         private readonly byte[][] _interpolatePrevData = new byte[MaxEntityCount][];
@@ -64,10 +63,13 @@ namespace LiteEntitySystem
         private readonly byte[] _tempData = new byte[MaxFieldSize];
         private readonly byte[] _sendBuffer = new byte[NetConstants.MaxPacketSize];
 
+        private ServerSendRate _serverSendRate;
         private ServerStateData _stateA;
         private ServerStateData _stateB;
         private float _lerpTime;
         private double _timer;
+        private ushort _readyStates;
+        private ushort _simulatePosition;
         private bool _isSyncReceived;
 
         private struct SyncCallInfo
@@ -101,13 +103,22 @@ namespace LiteEntitySystem
         /// <param name="localPeer">Local NetPeer</param>
         /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
         /// <param name="framesPerSecond">Fixed framerate of game logic</param>
-        public ClientEntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetPeer localPeer, byte headerByte, byte framesPerSecond) : base(typesMap, inputProcessor, NetworkMode.Client, framesPerSecond)
+        public ClientEntityManager(
+            EntityTypesMap typesMap, 
+            InputProcessor inputProcessor, 
+            NetPeer localPeer, 
+            byte headerByte, 
+            byte framesPerSecond) : base(typesMap, inputProcessor, NetworkMode.Client, framesPerSecond)
         {
             _localPeer = localPeer;
             _sendBuffer[0] = headerByte;
             _sendBuffer[1] = PacketClientSync;
             AliveEntities.SubscribeToConstructed(OnAliveConstructed, false);
             AliveEntities.OnDestroyed += OnAliveDestroyed;
+            for (int i = 0; i < MaxSavedStateDiff; i++)
+            {
+                _receivedStates[i] = new ServerStateData();
+            }
         }
 
         private unsafe void OnAliveConstructed(InternalEntity entity)
@@ -165,14 +176,13 @@ namespace LiteEntitySystem
             byte packetType = reader.GetByte();
             if(packetType == PacketBaselineSync)
             {
-                _lerpBuffer.Clear();
-                _receivedStates.Clear();
                 _stateB = null;
                 _stateA = new ServerStateData
                 {
                     Size = reader.GetInt()
                 };
                 InternalPlayerId = reader.GetByte();
+                _serverSendRate = (ServerSendRate)reader.GetByte();
                 _localPlayer = new NetPlayer(_localPeer, InternalPlayerId)
                 {
                     State = NetPlayerState.Active
@@ -194,6 +204,7 @@ namespace LiteEntitySystem
                     return;
                 }
                 _stateA.Tick = BitConverter.ToUInt16(_stateA.Data, 0);
+                _simulatePosition = _stateA.Tick;
                 _stateA.Offset = 2;
                 fixed (byte* readerData = _stateA.Data)
                 {
@@ -217,10 +228,27 @@ namespace LiteEntitySystem
             {
                 bool isLastPart = packetType == PacketDiffSyncLast;
                 ushort newServerTick = reader.GetUShort();
-                if (Utils.SequenceDiff(newServerTick, _stateA.Tick) <= 0)
+                int tickDifference = Utils.SequenceDiff(newServerTick, _simulatePosition) / (byte)ServerSendRate;
+                if (tickDifference <= 0)
                 {
                     reader.Recycle();
                     return;
+                }
+
+                while (tickDifference > MaxSavedStateDiff)
+                {
+                    //fast-forward
+                    _timer = _lerpTime;
+                    if (_stateB != null || PreloadNextState())
+                    {
+                        GoToNextState();
+                        tickDifference = Utils.SequenceDiff(newServerTick, _simulatePosition) / (byte)ServerSendRate;
+                    }
+                    else
+                    {
+                        _simulatePosition = (ushort)(newServerTick - MaxSavedStateDiff);
+                        break;
+                    }
                 }
                 
                 //sample jitter
@@ -228,65 +256,26 @@ namespace LiteEntitySystem
                 _jitterSampleIdx = (_jitterSampleIdx + 1) % _jitterSamples.Length;
                 //reset timer
                 _jitterTimer.Reset();
-                
-                if(!_receivedStates.TryGetValue(newServerTick, out var serverState))
+
+                var serverState = _receivedStates[(newServerTick / (byte)_serverSendRate) % MaxSavedStateDiff];
+                switch (serverState.Status)
                 {
-                    if (_receivedStates.Count > MaxSavedStateDiff)
-                    {
-                        Logger.LogWarning("[CEM] Too much states received: this should be rare thing");
-                        var minimal = _receivedStates.Keys[0];
-                        if (Utils.SequenceDiff(newServerTick, minimal) > 0)
-                        {
-                            serverState = _receivedStates[minimal];
-                            _receivedStates.Remove(minimal);
+                    case ServerDataStatus.Executed:
+                    case ServerDataStatus.Empty: 
+                    case ServerDataStatus.Partial:
+                        if (serverState.Tick != newServerTick)
                             serverState.Reset(newServerTick);
-                        }
-                        else
+                        serverState.ReadPart(isLastPart, reader);
+                        if(serverState.Status == ServerDataStatus.Ready)
                         {
-                            reader.Recycle();
-                            return;
+                            if (Utils.SequenceDiff(serverState.LastReceivedTick, _lastReceivedInputTick) > 0)
+                                _lastReceivedInputTick = serverState.LastReceivedTick;
+                            _readyStates++;
                         }
-                    }
-                    else if (_statesPool.Count > 0)
-                    {
-                        serverState = _statesPool.Dequeue();
-                        serverState.Reset(newServerTick);
-                    }
-                    else
-                    {
-                        serverState = new ServerStateData { Tick = newServerTick };
-                    }
-                    _receivedStates.Add(newServerTick, serverState);
-                }
-                
-                //if got full state - add to lerp buffer
-                if(serverState.ReadPart(isLastPart, reader))
-                {
-                    if (Utils.SequenceDiff(serverState.LastReceivedTick, _lastReceivedInputTick) > 0)
-                        _lastReceivedInputTick = serverState.LastReceivedTick;
-                    
-                    _receivedStates.Remove(serverState.Tick);
-                    
-                    if (_lerpBuffer.Count >= InterpolateBufferSize)
-                    {
-                        if (Utils.SequenceDiff(serverState.Tick, _lerpBuffer.Min.Tick) > 0)
-                        {
-                            _timer = _lerpTime;
-                            if (_stateB != null || PreloadNextState())
-                            {
-                                GoToNextState();
-                            }
-                            _lerpBuffer.Add(serverState);
-                        }
-                        else
-                        {
-                            _statesPool.Enqueue(serverState);
-                        }
-                    }
-                    else
-                    {
-                        _lerpBuffer.Add(serverState);
-                    }
+                        break;
+                    default:
+                        Logger.LogError($"Invalid status in read mode: {serverState.Status}");
+                        return;
                 }
             }
         }
@@ -298,7 +287,7 @@ namespace LiteEntitySystem
 
         private bool PreloadNextState()
         {
-            if (_lerpBuffer.Count == 0)
+            if (_readyStates == 0)
             {
                 if (_adaptiveMiddlePoint < 3f)
                     _adaptiveMiddlePoint = 3f;
@@ -324,25 +313,25 @@ namespace LiteEntitySystem
                 _adaptiveMiddlePoint = Utils.Lerp(_adaptiveMiddlePoint, Math.Max(1f, jitterSum), 0.05f);
             }
 
-            _stateB = _lerpBuffer.Min;
-            _lerpBuffer.Remove(_stateB);
+            ushort simPos = (ushort)(_simulatePosition+1);
+            while (_receivedStates[(simPos/(byte)ServerSendRate) % MaxSavedStateDiff].Status != ServerDataStatus.Ready)
+            {
+                simPos = (ushort)(simPos+(byte)ServerSendRate);
+            }
+            _stateB = _receivedStates[(simPos / (byte)ServerSendRate) % MaxSavedStateDiff];
             _lerpTime = 
                 Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTimeF *
-                (1f - (_lerpBuffer.Count - _adaptiveMiddlePoint) * 0.02f);
+                (1f - (_readyStates - _adaptiveMiddlePoint) * 0.02f);
             _stateB.Preload(EntitiesDict);
+            _readyStates--;
 
             //remove processed inputs
             while (_inputCommands.Count > 0)
             {
                 if (Utils.SequenceDiff(_stateB.ProcessedTick, (ushort)(_tick - _inputCommands.Count + 1)) >= 0)
-                {
-                    var inputWriter = _inputCommands.Dequeue();
-                    _inputPool.Enqueue(inputWriter);
-                }
+                    _inputPool.Enqueue(_inputCommands.Dequeue());
                 else
-                {
                     break;
-                }
             }
 
             return true;
@@ -350,9 +339,9 @@ namespace LiteEntitySystem
 
         private unsafe void GoToNextState()
         {
-            _statesPool.Enqueue(_stateA);
-
+            _stateA.Status = ServerDataStatus.Executed;
             _stateA = _stateB;
+            _simulatePosition = _stateA.Tick;
             _stateB = null;
 
             fixed (byte* readerData = _stateA.Data)

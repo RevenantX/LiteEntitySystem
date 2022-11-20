@@ -55,6 +55,15 @@ namespace LiteEntitySystem.Internal
             return Utils.SequenceDiff(x!.Tick, y!.Tick);
         }
     }
+
+    internal enum ServerDataStatus
+    {
+        Empty,
+        Partial,
+        Ready,
+        Preloaded,
+        Executed
+    }
     
     internal sealed class ServerStateData
     {
@@ -77,6 +86,7 @@ namespace LiteEntitySystem.Internal
         
         public int RemoteCallsCount;
         public RemoteCallsCache[] RemoteCallsCaches = new RemoteCallsCache[32];
+        public ServerDataStatus Status;
 
         public void Reset(ushort tick)
         {
@@ -86,7 +96,8 @@ namespace LiteEntitySystem.Internal
                 statePart?.Recycle();
                 statePart = null;
             }
-            
+
+            Status = ServerDataStatus.Empty;
             Tick = tick;
             InterpolatedCount = 0;
             PreloadDataCount = 0;
@@ -100,6 +111,13 @@ namespace LiteEntitySystem.Internal
 
         public void Preload(InternalEntity[] entityDict)
         {
+            if (Status != ServerDataStatus.Ready)
+            {
+                Logger.LogError($"Invalid status on preload: {Status}");
+                return;
+            }
+            Status = ServerDataStatus.Preloaded;
+            
             int bytesRead = 0;
             //preload some data
             while (bytesRead < Size)
@@ -206,8 +224,9 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        public unsafe bool ReadPart(bool isLastPart, NetPacketReader reader)
+        public unsafe void ReadPart(bool isLastPart, NetPacketReader reader)
         {
+            Status = ServerDataStatus.Partial;
             //check processed tick
             byte partNumber = reader.GetByte();
             if (partNumber == 0)
@@ -226,7 +245,6 @@ namespace LiteEntitySystem.Internal
             if (_packetReaders[partNumber] != null)
             {
                 reader.Recycle();
-                return false;
             }
 
             Size += reader.AvailableBytes;
@@ -249,9 +267,8 @@ namespace LiteEntitySystem.Internal
                     statePart.Recycle();
                     statePart = null;
                 }
-                return true;
+                Status = ServerDataStatus.Ready;
             }
-            return false;
         }
     }
 }

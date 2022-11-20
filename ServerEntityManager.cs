@@ -63,7 +63,7 @@ namespace LiteEntitySystem
         }
     }
 
-    public enum ServerSendRate
+    public enum ServerSendRate : byte
     {
         EqualToFPS = 1,
         HalfOfFPS = 2,
@@ -96,7 +96,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Rate at which server will make and send packets
         /// </summary>
-        public ServerSendRate SendRate = ServerSendRate.ThirdOfFPS;
+        public readonly ServerSendRate SendRate;
 
         private ushort _minimalTick;
 
@@ -106,7 +106,12 @@ namespace LiteEntitySystem
         /// <param name="typesMap">EntityTypesMap with registered entity types</param>
         /// <param name="packetHeader">Header byte that will be used for packets (to distinguish entity system packets)</param>
         /// <param name="framesPerSecond">Fixed framerate of game logic</param>
-        public ServerEntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, byte packetHeader, byte framesPerSecond) 
+        public ServerEntityManager(
+            EntityTypesMap typesMap, 
+            InputProcessor inputProcessor,
+            byte packetHeader, 
+            byte framesPerSecond,
+            ServerSendRate sendRate) 
             : base(typesMap, inputProcessor, NetworkMode.Server, framesPerSecond)
         {
             InternalPlayerId = ServerPlayerId;
@@ -116,6 +121,7 @@ namespace LiteEntitySystem
                 _entityIdQueue.Enqueue(i);
 
             _packetBuffer[0] = packetHeader;
+            SendRate = sendRate;
         }
         
         /// <summary>
@@ -360,12 +366,13 @@ namespace LiteEntitySystem
                                 LZ4Level.L00_FAST);
                             *(int*)(packetBuffer + 2) = originalLength;
                             packetBuffer[6] = netPlayer.Id;
-                            Unsafe.CopyBlock(packetBuffer + 7, compressionBuffer, (uint)encodedLength);
+                            packetBuffer[7] = (byte)SendRate;
+                            Unsafe.CopyBlock(packetBuffer + 8, compressionBuffer, (uint)encodedLength);
                         }
                         Logger.Log($"[SEM] SendWorld to player {netPlayer.Id}. orig: {originalLength} bytes, compressed: {encodedLength}");
 
                         packetBuffer[1] = PacketBaselineSync;
-                        peer.Send(_packetBuffer, 0, encodedLength + 7, DeliveryMethod.ReliableOrdered);
+                        peer.Send(_packetBuffer, 0, encodedLength + 8, DeliveryMethod.ReliableOrdered);
 
                         netPlayer.StateATick = _tick;
                         netPlayer.CurrentServerTick = _tick;
