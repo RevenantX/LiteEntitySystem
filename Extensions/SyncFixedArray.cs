@@ -52,7 +52,7 @@ namespace LiteEntitySystem.Extensions
             position += bytesCount;
         }
 
-        public override unsafe void FullSyncRead(Span<byte> dataSpan, ref int position)
+        public override unsafe void FullSyncRead(ReadOnlySpan<byte> dataSpan, ref int position)
         {
             byte[] byteData = Unsafe.As<byte[]>(Data);
             int bytesCount = sizeof(T) * Length;

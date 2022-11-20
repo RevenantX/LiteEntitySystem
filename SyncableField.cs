@@ -31,7 +31,7 @@ namespace LiteEntitySystem
             
         }
 
-        public virtual void FullSyncRead(Span<byte> dataSpan, ref int position)
+        public virtual void FullSyncRead(ReadOnlySpan<byte> dataSpan, ref int position)
         {
             
         }

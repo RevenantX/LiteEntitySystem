@@ -65,6 +65,8 @@ namespace LiteEntitySystem.Internal
 
         private static void AddSizeOf(Type valueType)
         {
+            if (valueType.IsReadonlySpan())
+                valueType = valueType.GenericTypeArguments[0];
             if (valueType != null && valueType.IsValueType && AddedSizeofs.Add(valueType))
             {
                 GenCode.Append(' ', 12);
@@ -85,10 +87,10 @@ namespace LiteEntitySystem.Internal
             GenCode.Append(' ', 12);
             if(valueType == null)
                 GenCode.AppendLine($"G.GenerateNoParams<{classTypeName}>(null);");
-            else if(valueType.IsArray)
-                GenCode.AppendLine($"G.GenerateArray<{classTypeName},{valueTypeName}>(null);");
+            else if(valueType.IsReadonlySpan())
+                GenCode.AppendLine($"G.Generate<{classTypeName},{GetTypeName(valueType.GenericTypeArguments[0])}>(null,true);");
             else
-                GenCode.AppendLine($"G.Generate<{classTypeName},{valueTypeName}>(null);");
+                GenCode.AppendLine($"G.Generate<{classTypeName},{valueTypeName}>(null,false);");
             AddSizeOf(valueType);
         }
         

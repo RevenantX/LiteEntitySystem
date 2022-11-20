@@ -38,7 +38,7 @@ namespace LiteEntitySystem.Extensions
             position += sizeof(ushort) + size;
         }
 
-        public override unsafe void FullSyncRead(Span<byte> dataSpan, ref int position)
+        public override unsafe void FullSyncRead(ReadOnlySpan<byte> dataSpan, ref int position)
         {
             fixed (byte* data = dataSpan)
             {

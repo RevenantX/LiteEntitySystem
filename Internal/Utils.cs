@@ -70,5 +70,15 @@ namespace LiteEntitySystem.Internal
         {
             return (byte*)Unsafe.As<T, IntPtr>(ref value);
         }
+
+        internal static bool IsSpan(this Type type)
+        {
+            return type.IsGenericType && typeof(Span<>) == type.GetGenericTypeDefinition();
+        }
+        
+        internal static bool IsReadonlySpan(this Type type)
+        {
+            return type.IsGenericType && typeof(ReadOnlySpan<>) == type.GetGenericTypeDefinition();
+        }
     }
 }

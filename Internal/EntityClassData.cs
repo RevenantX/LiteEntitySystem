@@ -113,16 +113,23 @@ namespace LiteEntitySystem.Internal
         {
             try
             {
-                var genericMethod = valueType == null 
-                    ? MethodCallGenerator.GenerateNoParamsMethod.MakeGenericMethod(classType) 
-                    : valueType.IsArray 
-                        ? MethodCallGenerator.GenerateArrayMethod.MakeGenericMethod(classType, valueType)
-                        : MethodCallGenerator.GenerateMethod.MakeGenericMethod(classType, valueType);
-                return (MethodCallDelegate)genericMethod.Invoke(null, new object[] { method });
+                if (valueType == null)
+                {
+                    return (MethodCallDelegate)MethodCallGenerator.GenerateNoParamsMethod.MakeGenericMethod(classType)
+                        .Invoke(null, new object[] { method });
+                }
+                else
+                {
+                    var genericMethod = MethodCallGenerator.GenerateMethod.MakeGenericMethod(
+                        classType, 
+                        valueType.IsReadonlySpan() ? valueType.GenericTypeArguments[0] : valueType);
+                    
+                    return (MethodCallDelegate)genericMethod.Invoke(null, new object[] { method, valueType.IsReadonlySpan() });
+                }
             }
-            catch(Exception)
+            catch(Exception e)
             {
-                throw new Exception($"{classType.Name}.{method.Name} has invalid argument type {method.GetParameters()[0]?.ParameterType.Name} instead of {valueType.Name}");
+                throw new Exception($"{classType.Name}.{method.Name} has something wrong with types: {e}");
             }
         }
 
