@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncFixedArray<T> : SyncableField where T : struct
+    public class SyncFixedArray<T> : SyncableField where T : unmanaged
     {
         public struct SetCallData
         {
@@ -46,7 +46,7 @@ namespace LiteEntitySystem.Extensions
         public override unsafe void FullSyncWrite(Span<byte> dataSpan, ref int position)
         {
             byte[] byteData = Unsafe.As<byte[]>(Data);
-            int bytesCount = Unsafe.SizeOf<T>() * Length;
+            int bytesCount = sizeof(T) * Length;
             fixed(byte* rawData = byteData, data = dataSpan)
                 Unsafe.CopyBlock(data + position, rawData, (uint)bytesCount);
             position += bytesCount;
@@ -55,7 +55,7 @@ namespace LiteEntitySystem.Extensions
         public override unsafe void FullSyncRead(Span<byte> dataSpan, ref int position)
         {
             byte[] byteData = Unsafe.As<byte[]>(Data);
-            int bytesCount = Unsafe.SizeOf<T>() * Length;
+            int bytesCount = sizeof(T) * Length;
             fixed(byte* rawData = byteData, data = dataSpan)
                 Unsafe.CopyBlock(rawData, data + position, (uint)bytesCount);
             position += bytesCount;

@@ -81,9 +81,9 @@ namespace LiteEntitySystem.Internal
 
             TestOffset to = new TestOffset();
             byte* rawData = (byte*)Unsafe.As<TestOffset, IntPtr>(ref to);
-            if (Unsafe.Read<uint>(rawData + monoFieldOffset) == 0xDEADBEEF)
+            if (*(uint*)(rawData + monoFieldOffset) == 0xDEADBEEF)
                 NativeFieldOffset = monoOffset;
-            else if (Unsafe.Read<uint>(rawData + dotnetFieldOffset) == 0xDEADBEEF)
+            else if (*(uint*)(rawData + dotnetFieldOffset) == 0xDEADBEEF)
                 NativeFieldOffset = dotnetOffset;
             else
                 Logger.Log("Unknown native field offset");
@@ -113,8 +113,12 @@ namespace LiteEntitySystem.Internal
         {
             try
             {
-                var d = MethodCallGenerator.GetGenericMethod(classType, valueType).Invoke(null, new object[] { method });
-                return (MethodCallDelegate)d;
+                var genericMethod = valueType == null 
+                    ? MethodCallGenerator.GenerateNoParamsMethod.MakeGenericMethod(classType) 
+                    : valueType.IsArray 
+                        ? MethodCallGenerator.GenerateArrayMethod.MakeGenericMethod(classType, valueType)
+                        : MethodCallGenerator.GenerateMethod.MakeGenericMethod(classType, valueType);
+                return (MethodCallDelegate)genericMethod.Invoke(null, new object[] { method });
             }
             catch(Exception)
             {
@@ -226,6 +230,11 @@ namespace LiteEntitySystem.Internal
                         continue;
                     
                     var ft = field.FieldType;
+                    if (ft.IsArray)
+                    {
+                        Logger.LogError($"SyncVar cannot be array! {field.Name} - {ft}");
+                        continue;
+                    }
                     int offset = Marshal.ReadInt32(field.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
 
                     if (ft.IsValueType)
@@ -239,7 +248,7 @@ namespace LiteEntitySystem.Internal
                         if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.Interpolated) && !ft.IsArray && !ft.IsEnum)
                         {
                             if (!Interpolation.Methods.TryGetValue(ft, out interpolator))
-                                throw new Exception($"No info how to interpolate: {ft}");
+                                throw new ArgumentException($"No info how to interpolate: {ft}");
                             InterpolatedFieldsSize += fieldSize;
                             InterpolatedCount++;
                         }

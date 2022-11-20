@@ -180,7 +180,7 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         /// <param name="methodToCall">RPC method to call (must have <see cref="RemoteCall"/> attribute)</param>
         /// <param name="cachedAction">output action that should be used to call rpc</param>
-        protected void CreateRPCAction<T>(Action<T> methodToCall, out Action<T> cachedAction) where T : struct
+        protected void CreateRPCAction<T>(Action<T> methodToCall, out Action<T> cachedAction) where T : unmanaged
         {
             if (methodToCall.Target != this)
                 throw new Exception("You can call this only on this class methods");
@@ -209,7 +209,7 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         /// <param name="methodToCall">RPC method to call (must have <see cref="RemoteCall"/> attribute)</param>
         /// <param name="cachedAction">output action that should be used to call rpc</param>
-        protected void CreateRPCAction<T>(Action<T[], ushort> methodToCall, out Action<T[], ushort> cachedAction) where T : struct
+        protected void CreateRPCAction<T>(RemoteCallSpan<T> methodToCall, out RemoteCallSpan<T> cachedAction) where T : unmanaged
         {
             if (methodToCall.Target != this)
                 throw new Exception("You can call this only on this class methods");
@@ -219,16 +219,16 @@ namespace LiteEntitySystem.Internal
             if (EntityManager.IsServer)
             {
                 if ((rpcInfo.Flags & ExecuteFlags.ExecuteOnServer) != 0)
-                    cachedAction = (value, count) => { methodToCall(value, count); ServerManager.AddRemoteCall(Id, value, count, rpcInfo); };
+                    cachedAction = value => { methodToCall(value); ServerManager.AddRemoteCall(Id, value, rpcInfo); };
                 else
-                    cachedAction = (value, count) => ServerManager.AddRemoteCall(Id, value, count, rpcInfo);
+                    cachedAction = value => ServerManager.AddRemoteCall(Id, value, rpcInfo);
             }
             else
             {
-                cachedAction = (value, count) =>
+                cachedAction = value =>
                 {
                     if (IsLocalControlled && (rpcInfo.Flags & ExecuteFlags.ExecuteOnPrediction) != 0)
-                        methodToCall(value, count);
+                        methodToCall(value);
                 };
             }
         }

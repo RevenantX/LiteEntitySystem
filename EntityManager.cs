@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using LiteEntitySystem.Internal;
@@ -186,8 +185,9 @@ namespace LiteEntitySystem
         private bool _lagCompensationEnabled;
 
         internal byte InternalPlayerId;
+        protected readonly InputProcessor InputProcessor;
 
-        protected EntityManager(EntityTypesMap typesMap, NetworkMode mode, byte framesPerSecond)
+        protected EntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetworkMode mode, byte framesPerSecond)
         {
 #if UNITY_ANDROID
             if (IntPtr.Size == 4)
@@ -202,7 +202,7 @@ namespace LiteEntitySystem
             ushort singletonCount = 0;
             
             //preregister some types
-            _registeredTypeIds.Add(typeof(HumanControllerLogic), filterCount++);
+            _registeredTypeIds.Add(typeof(ControllerLogic), filterCount++);
             
             foreach (var kv in typesMap.RegisteredTypes)
             {
@@ -226,6 +226,8 @@ namespace LiteEntitySystem
 
             _entityFilters = new EntityFilter[filterCount];
             _singletonEntities = new SingletonEntityLogic[singletonCount];
+
+            InputProcessor = inputProcessor;
             
             Mode = mode;
             IsServer = Mode == NetworkMode.Server;

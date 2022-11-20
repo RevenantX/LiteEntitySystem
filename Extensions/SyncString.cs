@@ -12,7 +12,7 @@ namespace LiteEntitySystem.Extensions
         private string _string;
         private int _size;
 
-        private Action<byte[], ushort> _setStringClientCall;
+        private RemoteCallSpan<byte> _setStringClientCall;
 
         public string Value
         {
@@ -24,7 +24,7 @@ namespace LiteEntitySystem.Extensions
                 _string = value;
                 Utils.ResizeOrCreate(ref _stringData, Encoding.GetMaxByteCount(_string.Length));
                 _size = Encoding.GetBytes(_string, 0, _string.Length, _stringData, 0);
-                _setStringClientCall?.Invoke(_stringData, (ushort)_size);
+                _setStringClientCall?.Invoke(_stringData);
             }
         }
 
@@ -44,16 +44,16 @@ namespace LiteEntitySystem.Extensions
         }
 
         [SyncableRemoteCall]
-        private void SetNewString(byte[] data, ushort count)
+        private void SetNewString(ReadOnlySpan<byte> data)
         {
-            _string = Encoding.GetString(data, 0, count);
+            _string = Encoding.GetString(data);
         }
 
         public override unsafe void FullSyncRead(Span<byte> dataSpan, ref int position)
         {
             fixed (byte* data = dataSpan)
             {
-                int length = Unsafe.Read<ushort>(data + position);
+                int length = *(ushort*)(data + position);
                 Utils.ResizeOrCreate(ref _stringData, length);
                 _string = Encoding.GetString(data + position + sizeof(ushort), length);
                 position += sizeof(ushort) + length;
@@ -64,7 +64,7 @@ namespace LiteEntitySystem.Extensions
         {
             fixed (byte* data = dataSpan, stringData = _stringData)
             {
-                Unsafe.Write(data + position, (ushort)_size);
+                *(ushort*)(data + position) = (ushort)_size;
                 Unsafe.CopyBlock(data + position + sizeof(ushort), stringData, (uint)_size);
             }
             position += sizeof(ushort) + _size;

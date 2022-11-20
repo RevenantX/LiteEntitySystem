@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using K4os.Compression.LZ4;
 using LiteNetLib;
-using LiteNetLib.Utils;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
@@ -82,7 +82,6 @@ namespace LiteEntitySystem
         private readonly byte[] _packetBuffer = new byte[200 * 1024 * 1024];
         private readonly NetPlayer[] _netPlayersArray = new NetPlayer[MaxPlayers];
         private readonly NetPlayer[] _netPlayersDict = new NetPlayer[MaxPlayers+1];
-        private readonly NetDataReader _inputReader = new();
         private readonly StateSerializer[] _stateSerializers = new StateSerializer[MaxSyncedEntityCount];
         public const int MaxStoredInputs = 30;
 
@@ -107,8 +106,8 @@ namespace LiteEntitySystem
         /// <param name="typesMap">EntityTypesMap with registered entity types</param>
         /// <param name="packetHeader">Header byte that will be used for packets (to distinguish entity system packets)</param>
         /// <param name="framesPerSecond">Fixed framerate of game logic</param>
-        public ServerEntityManager(EntityTypesMap typesMap, byte packetHeader, byte framesPerSecond) 
-            : base(typesMap, NetworkMode.Server, framesPerSecond)
+        public ServerEntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, byte packetHeader, byte framesPerSecond) 
+            : base(typesMap, inputProcessor, NetworkMode.Server, framesPerSecond)
         {
             InternalPlayerId = ServerPlayerId;
             for (int i = 1; i <= byte.MaxValue; i++)
@@ -161,14 +160,8 @@ namespace LiteEntitySystem
             
             for(int i = FirstEntityId; i < MaxSyncedEntityId; i++)
             {
-                var e = EntitiesDict[i];
-                if (e != null && e.IsControlledBy(player.Id))
-                {
-                    if (e is HumanControllerLogic controllerLogic)
-                        controllerLogic.DestroyInternal();
-                    else if (e is EntityLogic entityLogic) 
-                        entityLogic.Destroy();
-                }
+                if (EntitiesDict[i] is ControllerLogic controllerLogic && controllerLogic.OwnerId == player.Id)
+                    controllerLogic.DestroyWithControlledEntity();
             }
             
             _netPlayersDict[player.Id] = null;
@@ -192,7 +185,7 @@ namespace LiteEntitySystem
         /// <param name="initMethod">Method that will be called after entity construction</param>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Created entity or null in case of limit</returns>
-        public T AddController<T>(NetPlayer owner, Action<T> initMethod = null) where T : HumanControllerLogic
+        public T AddController<T>(NetPlayer owner, Action<T> initMethod = null) where T : ControllerLogic
         {
             var result = Add<T>(ent =>
             {
@@ -337,7 +330,7 @@ namespace LiteEntitySystem
             fixed (byte* packetBuffer = _packetBuffer)
             {
                 //header byte, packet type (2 bytes)
-                Unsafe.Write(packetBuffer + 2, _tick);
+                *(ushort*)(packetBuffer + 2) = _tick;
                 
                 for (int pidx = 0; pidx < _netPlayersCount; pidx++)
                 {
@@ -365,7 +358,7 @@ namespace LiteEntitySystem
                                 compressionBuffer,
                                 _compressionBuffer.Length,
                                 LZ4Level.L00_FAST);
-                            Unsafe.Write(packetBuffer + 2, originalLength);
+                            *(int*)(packetBuffer + 2) = originalLength;
                             packetBuffer[6] = netPlayer.Id;
                             Unsafe.CopyBlock(packetBuffer + 7, compressionBuffer, (uint)encodedLength);
                         }
@@ -390,8 +383,8 @@ namespace LiteEntitySystem
                     int mtu = peer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable);
 
                     //first part full of data
-                    Unsafe.Write(packetBuffer + 5, netPlayer.LastProcessedTick);
-                    Unsafe.Write(packetBuffer + 7, netPlayer.LastReceivedTick);
+                    *(ushort*)(packetBuffer + 5) = netPlayer.LastProcessedTick;
+                    *(ushort*)(packetBuffer + 7) = netPlayer.LastReceivedTick;
                     writePosition = 9;
 
                     for (ushort eId = FirstEntityId; eId <= MaxSyncedEntityId; eId++)
@@ -525,18 +518,10 @@ namespace LiteEntitySystem
                 player.SimulatedServerTick = Utils.LerpSequence(inputData.StateA, inputData.StateB, inputData.LerpMsec);
                 if (player.State == NetPlayerState.WaitingForFirstInputProcess)
                     player.State = NetPlayerState.Active;
-                        
-                _inputReader.SetSource(inputFrame.Data, 0, inputFrame.Size);
-                
+
                 //process input
-                foreach (var controller in GetControllers<HumanControllerLogic>())
-                {
-                    if (player.Id == controller.OwnerId)
-                    {
-                        controller.ReadInput(_inputReader);
-                    }
-                }
-                
+                InputProcessor.ReadInputs(this, player.Id, inputFrame.Data, 0, inputFrame.Size);
+
                 _inputPool.Enqueue(inputFrame.Data);
                 inputFrame.Data = null;
             }
@@ -565,21 +550,20 @@ namespace LiteEntitySystem
             _stateSerializers[entityId].AddRpcPacket(rpc);
         }
         
-        internal unsafe void AddRemoteCall<T>(ushort entityId, T value, RemoteCall remoteCallInfo) where T : struct
+        internal unsafe void AddRemoteCall<T>(ushort entityId, T value, RemoteCall remoteCallInfo) where T : unmanaged
         {
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             rpc.Init(_tick, remoteCallInfo);
             fixed (byte* rawData = rpc.Data)
-                Unsafe.Copy(rawData, ref value);
+                *(T*)rawData = value;
             _stateSerializers[entityId].AddRpcPacket(rpc);
         }
         
-        internal unsafe void AddRemoteCall<T>(ushort entityId, T[] value, int count, RemoteCall remoteCallInfo) where T : struct
+        internal void AddRemoteCall<T>(ushort entityId, ReadOnlySpan<T> value, RemoteCall remoteCallInfo) where T : unmanaged
         {
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Init(_tick, remoteCallInfo, count);
-            fixed (byte* rawData = rpc.Data, rawValue = Unsafe.As<byte[]>(value))
-                Unsafe.CopyBlock(rawData, rawValue, rpc.Size);
+            rpc.Init(_tick, remoteCallInfo, value.Length);
+            MemoryMarshal.AsBytes(value).CopyTo(rpc.Data);
             _stateSerializers[entityId].AddRpcPacket(rpc);
         }
         
@@ -592,25 +576,24 @@ namespace LiteEntitySystem
             _stateSerializers[field.EntityId].AddRpcPacket(rpc);
         }
         
-        internal unsafe void AddSyncableCall<T>(SyncableField field, T value, MethodInfo method) where T : struct
+        internal unsafe void AddSyncableCall<T>(SyncableField field, T value, MethodInfo method) where T : unmanaged
         {
             var entity = EntitiesDict[field.EntityId];
             var remoteCallInfo = ClassDataDict[entity.ClassId].SyncableRemoteCalls[method];
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             rpc.Init(_tick, remoteCallInfo, field.FieldId);
             fixed (byte* rawData = rpc.Data)
-                Unsafe.Copy(rawData, ref value);
+                *(T*)rawData = value;
             _stateSerializers[field.EntityId].AddRpcPacket(rpc);
         }
         
-        internal unsafe void AddSyncableCall<T>(SyncableField field, T[] value, int count, MethodInfo method) where T : struct
+        internal void AddSyncableCall<T>(SyncableField field, ReadOnlySpan<T> value, MethodInfo method) where T : unmanaged
         {
             var entity = EntitiesDict[field.EntityId];
             var remoteCallInfo = ClassDataDict[entity.ClassId].SyncableRemoteCalls[method];
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Init(_tick, remoteCallInfo, field.FieldId, count);
-            fixed (byte* rawData = rpc.Data, rawValue = Unsafe.As<byte[]>(value))
-                Unsafe.CopyBlock(rawData, rawValue, rpc.Size);
+            rpc.Init(_tick, remoteCallInfo, field.FieldId, value.Length);
+            MemoryMarshal.AsBytes(value).CopyTo(rpc.Data);
             _stateSerializers[field.EntityId].AddRpcPacket(rpc);
         }
 
@@ -618,7 +601,7 @@ namespace LiteEntitySystem
         {
             ushort clientTick = reader.GetUShort();
 
-            while (reader.AvailableBytes >= sizeof(ushort) + Unsafe.SizeOf<InputPacketHeader>())
+            while (reader.AvailableBytes >= sizeof(ushort) + sizeof(InputPacketHeader))
             {
                 var inputBuffer = new InputBuffer
                 {
@@ -637,7 +620,7 @@ namespace LiteEntitySystem
                 {
                     Unsafe.Copy(ref input, rawData + reader.Position);
                 }
-                reader.SkipBytes(Unsafe.SizeOf<InputPacketHeader>());
+                reader.SkipBytes(sizeof(InputPacketHeader));
 
                 if (Utils.SequenceDiff(input.StateB, player.CurrentServerTick) > 0)
                     player.CurrentServerTick = input.StateB;

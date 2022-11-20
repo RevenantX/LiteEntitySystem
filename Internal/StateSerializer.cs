@@ -79,9 +79,9 @@ namespace LiteEntitySystem.Internal
             
             fixed (byte* data = _latestEntityData)
             {
-                Unsafe.Write(data, e.Id);
+                *(ushort*)data = e.Id;
                 data[2] = e.Version;
-                Unsafe.Write(data + 3, e.ClassId);
+                *(ushort*)(data + 3) = e.ClassId;
             }
         }
 
@@ -106,8 +106,7 @@ namespace LiteEntitySystem.Internal
                 {
                     ref var field = ref _classData.Fields[i];
                     byte* fieldPtr = entityPointer + field.Offset;
-                    byte* latestDataPtr = latestEntityData + HeaderSize + field.FixedOffset;
-
+                    
                     //update only changed fields
                     if (field.FieldType == FieldType.SyncableSyncVar)
                     {
@@ -120,9 +119,10 @@ namespace LiteEntitySystem.Internal
                         var sharedRef = Unsafe.AsRef<EntitySharedReference>(fieldPtr);
                         if (sharedRef.IsLocal)
                             sharedRef = null;
-                        if (Unsafe.Read<EntitySharedReference>(latestDataPtr) != sharedRef)
+                        var latestRefPtr = (EntitySharedReference*)(latestEntityData + HeaderSize + field.FixedOffset);
+                        if (*latestRefPtr != sharedRef)
                         {
-                            Unsafe.Write(latestDataPtr, sharedRef);
+                            *latestRefPtr = sharedRef;
                             _fieldChangeTicks[i] = serverTick;
                         }
                         else if (Utils.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
@@ -131,6 +131,7 @@ namespace LiteEntitySystem.Internal
                         }
                         continue;
                     }
+                    byte* latestDataPtr = latestEntityData + HeaderSize + field.FixedOffset;
                     if (Utils.memcmp(latestDataPtr, fieldPtr, field.PtrSize) != 0)
                     {
                         Unsafe.CopyBlock(latestDataPtr, fieldPtr, field.Size);
@@ -257,8 +258,8 @@ namespace LiteEntitySystem.Internal
                             //put new
                             resultData[position] = rpcNode.Id;
                             resultData[position + 1] = rpcNode.FieldId;
-                            Unsafe.Write(resultData + position + 2, rpcNode.Tick);
-                            Unsafe.Write(resultData + position + 4, rpcNode.Size);
+                            *(ushort*)(resultData + position + 2) = rpcNode.Tick;
+                            *(ushort*)(resultData + position + 4) = rpcNode.Size;
                             fixed (byte* rpcData = rpcNode.Data)
                                 Unsafe.CopyBlock(resultData + position + 6, rpcData, rpcNode.Size);
                             position += 6 + rpcNode.Size;

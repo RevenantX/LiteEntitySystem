@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncList<T> : SyncableField, IList<T>, IReadOnlyList<T> where T : struct
+    public class SyncList<T> : SyncableField, IList<T>, IReadOnlyList<T> where T : unmanaged
     {
         public int Count => _count;
         public bool IsReadOnly => false;
@@ -135,10 +135,10 @@ namespace LiteEntitySystem.Extensions
         {
             fixed (byte* data = dataSpan)
             {
-                Unsafe.Write(data + position, (ushort)_count);
+                *(ushort*)(data + position) = (ushort)_count;
             
                 byte[] byteData = Unsafe.As<byte[]>(_data);
-                int bytesCount = Unsafe.SizeOf<T>() * _count;
+                int bytesCount = sizeof(T) * _count;
             
                 fixed(void* rawData = byteData)
                     Unsafe.CopyBlock(data + position + sizeof(ushort), rawData, (uint)bytesCount); 
@@ -151,13 +151,13 @@ namespace LiteEntitySystem.Extensions
         {
             fixed (byte* data = dataSpan)
             {
-                _count = Unsafe.Read<ushort>(data + position);
+                _count = *(ushort*)(data + position);
 
                 if (_data.Length < _count)
                     Array.Resize(ref _data, Math.Max(_data.Length * 2, _count));
 
                 byte[] byteData = Unsafe.As<byte[]>(_data);
-                int bytesCount = Unsafe.SizeOf<T>() * _count;
+                int bytesCount = sizeof(T) * _count;
 
                 fixed (void* rawData = byteData)
                     Unsafe.CopyBlock(rawData, data + position + sizeof(ushort), (uint)bytesCount);

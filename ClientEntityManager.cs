@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 using K4os.Compression.LZ4;
 using LiteEntitySystem.Internal;
 using LiteNetLib;
-using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
 {
@@ -51,14 +50,12 @@ namespace LiteEntitySystem
 
         private const int InterpolateBufferSize = 10;
         private const int InputBufferSize = 128;
-        private static readonly int InputHeaderSize = Unsafe.SizeOf<InputPacketHeader>();
-        
+
         private readonly NetPeer _localPeer;
         private readonly SortedList<ushort, ServerStateData> _receivedStates = new (new SequenceComparer());
         private readonly Queue<ServerStateData> _statesPool = new (MaxSavedStateDiff);
-        private readonly NetDataReader _inputReader = new ();
-        private readonly Queue<NetDataWriter> _inputCommands = new (InputBufferSize);
-        private readonly Queue<NetDataWriter> _inputPool = new (InputBufferSize);
+        private readonly Queue<byte[]> _inputCommands = new (InputBufferSize);
+        private readonly Queue<byte[]> _inputPool = new (InputBufferSize);
         private readonly SortedSet<ServerStateData> _lerpBuffer = new (new ServerStateComparer());
         private readonly Queue<(ushort, EntityLogic)> _spawnPredictedEntities = new ();
         private readonly byte[][] _interpolatedInitialData = new byte[MaxEntityCount][];
@@ -104,7 +101,7 @@ namespace LiteEntitySystem
         /// <param name="localPeer">Local NetPeer</param>
         /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
         /// <param name="framesPerSecond">Fixed framerate of game logic</param>
-        public ClientEntityManager(EntityTypesMap typesMap, NetPeer localPeer, byte headerByte, byte framesPerSecond) : base(typesMap, NetworkMode.Client, framesPerSecond)
+        public ClientEntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetPeer localPeer, byte headerByte, byte framesPerSecond) : base(typesMap, inputProcessor, NetworkMode.Client, framesPerSecond)
         {
             _localPeer = localPeer;
             _sendBuffer[0] = headerByte;
@@ -340,7 +337,6 @@ namespace LiteEntitySystem
                 if (Utils.SequenceDiff(_stateB.ProcessedTick, (ushort)(_tick - _inputCommands.Count + 1)) >= 0)
                 {
                     var inputWriter = _inputCommands.Dequeue();
-                    inputWriter.Reset();
                     _inputPool.Enqueue(inputWriter);
                 }
                 else
@@ -415,18 +411,14 @@ namespace LiteEntitySystem
             foreach (var inputCommand in _inputCommands)
             {
                 //reapply input data
-                _inputReader.SetSource(inputCommand.Data, InputHeaderSize, inputCommand.Length);
-                fixed (byte* rawInputData = inputCommand.Data)
+                fixed (byte* rawInputData = inputCommand)
                 {
-                    var header = Unsafe.Read<InputPacketHeader>(rawInputData);
+                    var header = *(InputPacketHeader*)rawInputData;
                     _localPlayer.StateATick = header.StateA;
                     _localPlayer.StateBTick = header.StateB;
                     _localPlayer.LerpTime = header.LerpMsec;
                 }
-                foreach(var controller in GetControllers<HumanControllerLogic>())
-                {
-                    controller.ReadInput(_inputReader);
-                }
+                InputProcessor.ReadInputs(this, _localPlayer.Id, inputCommand, sizeof(InputPacketHeader), inputCommand.Length);
                 foreach (var entity in AliveEntities)
                 {
                     if(entity.IsLocal || !entity.IsLocalControlled)
@@ -482,67 +474,57 @@ namespace LiteEntitySystem
             {
                 _logicLerpMsec = (float)(_timer / _lerpTime);
                 ServerTick = Utils.LerpSequence(_stateA.Tick, _stateB.Tick, _logicLerpMsec);
-                fixed (byte* rawData = _stateB.Data)
+                int maxTick = -1;
+                for (int i = 0; i < _stateB.RemoteCallsCount; i++)
                 {
-                    int maxTick = -1;
-                    for (int i = 0; i < _stateB.RemoteCallsCount; i++)
+                    ref var rpcCache = ref _stateB.RemoteCallsCaches[i];
+                    if (Utils.SequenceDiff(rpcCache.Tick, _remoteCallsTick) > 0 && Utils.SequenceDiff(rpcCache.Tick, ServerTick) <= 0)
                     {
-                        ref var rpcCache = ref _stateB.RemoteCallsCaches[i];
-                        if (Utils.SequenceDiff(rpcCache.Tick, _remoteCallsTick) > 0 && Utils.SequenceDiff(rpcCache.Tick, ServerTick) <= 0)
+                        if (maxTick == -1 || Utils.SequenceDiff(rpcCache.Tick, (ushort)maxTick) > 0)
                         {
-                            if (maxTick == -1 || Utils.SequenceDiff(rpcCache.Tick, (ushort)maxTick) > 0)
-                            {
-                                maxTick = rpcCache.Tick;
-                            }
-                            var entity = EntitiesDict[rpcCache.EntityId];
-                            if (rpcCache.FieldId == byte.MaxValue)
-                            {
-                                rpcCache.Delegate(entity, rawData + rpcCache.Offset, rpcCache.Count);
-                            }
-                            else
-                            {
-                                var fieldPtr = Utils.GetPtr(ref entity) + ClassDataDict[entity.ClassId].SyncableFields[rpcCache.FieldId].Offset;
-                                rpcCache.Delegate(Unsafe.AsRef<SyncVar>(fieldPtr), rawData + rpcCache.Offset, rpcCache.Count);
-                            }
+                            maxTick = rpcCache.Tick;
+                        }
+                        var entity = EntitiesDict[rpcCache.EntityId];
+                        if (rpcCache.FieldId == byte.MaxValue)
+                        {
+                            rpcCache.Delegate(entity, _stateB.Data, rpcCache.Offset, rpcCache.Count);
+                        }
+                        else
+                        {
+                            var fieldPtr = Utils.GetPtr(ref entity) + ClassDataDict[entity.ClassId].SyncableFields[rpcCache.FieldId].Offset;
+                            rpcCache.Delegate(Unsafe.AsRef<SyncVar>(fieldPtr), _stateB.Data, rpcCache.Offset, rpcCache.Count);
                         }
                     }
-                    if(maxTick != -1)
-                        _remoteCallsTick = (ushort)maxTick;
-                }        
+                }
+                if(maxTick != -1)
+                    _remoteCallsTick = (ushort)maxTick;
             }
 
             if (_inputCommands.Count > InputBufferSize)
             {
                 _inputCommands.Clear();
             }
-            var inputWriter = _inputPool.Count > 0 ? _inputPool.Dequeue() : new NetDataWriter(true, InputHeaderSize);
-            var inputPacketHeader = new InputPacketHeader
-            {
-                StateA   = _stateA.Tick,
-                StateB   = _stateB?.Tick ?? _stateA.Tick,
-                LerpMsec = _logicLerpMsec
-            };
-            fixed(void* writerData = inputWriter.Data)
-                Unsafe.Write(writerData, inputPacketHeader);
-            inputWriter.SetPosition(InputHeaderSize);
             
-            //generate inputs
-            foreach(var controller in GetControllers<HumanControllerLogic>())
-            {
-                controller.GenerateInput(inputWriter);
-                if (inputWriter.Length > NetConstants.MaxUnreliableDataSize - 2)
+            int maxResultSize = sizeof(InputPacketHeader) + InputProcessor.GetInputsSize(this);
+            if (_inputPool.TryDequeue(out byte[] inputWriter))
+                Utils.ResizeIfFull(ref inputWriter, maxResultSize);
+            else
+                inputWriter = new byte[maxResultSize];
+            
+            fixed(void* writerData = inputWriter)
+                *(InputPacketHeader*)writerData = new InputPacketHeader
                 {
-                    Logger.LogError($"Input too large: {inputWriter.Length-InputHeaderSize} bytes");
-                    break;
-                }
-            }
-            
+                    StateA   = _stateA.Tick,
+                    StateB   = _stateB?.Tick ?? _stateA.Tick,
+                    LerpMsec = _logicLerpMsec
+                };
+
+            //generate inputs
+            int offset = sizeof(InputPacketHeader);
+            InputProcessor.GenerateAndWriteInputs(this, inputWriter, ref offset);
+
             //read
-            _inputReader.SetSource(inputWriter.Data, InputHeaderSize, inputWriter.Length);
-            foreach (var controller in GetControllers<HumanControllerLogic>())
-            {
-                controller.ReadInput(_inputReader);
-            }
+            InputProcessor.ReadInputs(this, _localPlayer.Id, inputWriter, sizeof(InputPacketHeader), offset);
             _inputCommands.Enqueue(inputWriter);
 
             //local only and UpdateOnClient
@@ -670,11 +652,11 @@ namespace LiteEntitySystem
                             currentTick++;
                             continue;
                         }
-                        fixed (byte* inputData = inputCommand.Data)
+                        fixed (byte* inputData = inputCommand)
                         {
                             if (offset + inputCommand.Length + sizeof(ushort) > _localPeer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable))
                             {
-                                Unsafe.Write(sendBuffer + 2, currentTick);
+                                *(ushort*)(sendBuffer + 2) = currentTick;
                                 _localPeer.Send(_sendBuffer, 0, offset, DeliveryMethod.Unreliable);
                                 offset = 4;
                                 
@@ -683,7 +665,7 @@ namespace LiteEntitySystem
                             }
                             
                             //put size
-                            Unsafe.Write(sendBuffer + offset, (ushort)(inputCommand.Length - InputHeaderSize));
+                            *(ushort*)(sendBuffer + offset) = (ushort)(inputCommand.Length - sizeof(InputPacketHeader));
                             offset += sizeof(ushort);
                             
                             //put data
@@ -697,7 +679,7 @@ namespace LiteEntitySystem
                             break;
                         }
                     }
-                    Unsafe.Write(sendBuffer + 2, currentTick);
+                    *(ushort*)(sendBuffer + 2) = currentTick;
                     _localPeer.Send(_sendBuffer, 0, offset, DeliveryMethod.Unreliable);
                     _localPeer.NetManager.TriggerUpdate();
                 }
@@ -742,10 +724,7 @@ namespace LiteEntitySystem
             for (int i = 0; i < _syncCallsCount; i++)
             {
                 ref var syncCall = ref _syncCalls[i];
-                fixed (byte* readerData = _stateA.Data)
-                {
-                    syncCall.OnSync(syncCall.Entity, readerData + syncCall.PrevDataPos, 1); //TODO: count!!!
-                }
+                syncCall.OnSync(syncCall.Entity, _stateA.Data, syncCall.PrevDataPos, 1);
             }
             _syncCallsCount = 0;
             
@@ -767,7 +746,7 @@ namespace LiteEntitySystem
             if (fullSync)
             {
                 byte version = rawData[readerPosition];
-                ushort classId = Unsafe.Read<ushort>(rawData + readerPosition + 1);
+                ushort classId = *(ushort*)(rawData + readerPosition + 1);
                 readerPosition += 3;
 
                 //remove old entity

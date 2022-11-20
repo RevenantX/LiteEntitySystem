@@ -1,4 +1,5 @@
 using System;
+using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
@@ -47,18 +48,18 @@ namespace LiteEntitySystem
             cachedAction = () => EntityManager?.AddSyncableCall(this, methodToCall.Method);
         }
 
-        protected void CreateClientAction<T>(Action<T> methodToCall, out Action<T> cachedAction) where T : struct
+        protected void CreateClientAction<T>(Action<T> methodToCall, out Action<T> cachedAction) where T : unmanaged
         {
             if (methodToCall.Target != this)
                 throw new Exception("You can call this only on this class methods");
             cachedAction = value => EntityManager?.AddSyncableCall(this, value, methodToCall.Method);
         }
         
-        protected void CreateClientAction<T>(Action<T[], ushort> methodToCall, out Action<T[], ushort> cachedAction) where T : struct
+        protected void CreateClientAction<T>(RemoteCallSpan<T> methodToCall, out RemoteCallSpan<T> cachedAction) where T : unmanaged
         {
             if (methodToCall.Target != this)
                 throw new Exception("You can call this only on this class methods");
-            cachedAction = (value, count) => EntityManager?.AddSyncableCall(this, value, count, methodToCall.Method);
+            cachedAction = value => EntityManager?.AddSyncableCall(this, value, methodToCall.Method);
         }
     }
 }

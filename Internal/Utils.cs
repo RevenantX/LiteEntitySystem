@@ -1,10 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
 {
+    public delegate void RemoteCallSpan<T>(ReadOnlySpan<T> data) where T : unmanaged;
+
     public static class Utils
     {
 #if UNITY_STANDALONE_WIN || _WINDOWS || UNITY_EDITOR_WIN
@@ -64,12 +65,6 @@ namespace LiteEntitySystem.Internal
             return (newer - older + MaxSeq15) % MaxSequence - MaxSeq2;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Minimal<TIndex, T>(this SortedList<TIndex, T> sortedList)
-        {
-            return sortedList[sortedList.Keys[0]];
-        }
-        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static unsafe byte* GetPtr<T>(ref T value) where T : class
         {

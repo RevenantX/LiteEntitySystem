@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
