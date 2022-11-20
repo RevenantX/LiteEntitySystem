@@ -176,7 +176,7 @@ namespace LiteEntitySystem
         {
             return EntityManager.IsClient
                 ? (EntityManager.InRollBackState ? ClientManager.RollBackTick : EntityManager.Tick) 
-                : (InternalOwnerId == ServerEntityManager.ServerPlayerId ? EntityManager.Tick : ServerManager.GetPlayer(InternalOwnerId).LastProcessedTick);
+                : (InternalOwnerId == EntityManager.ServerPlayerId ? EntityManager.Tick : ServerManager.GetPlayer(InternalOwnerId).LastProcessedTick);
         }
         
         /// <summary>
@@ -189,7 +189,7 @@ namespace LiteEntitySystem
         {
             if (EntityManager.IsServer)
             {
-                if (InternalOwnerId == ServerEntityManager.ServerPlayerId)
+                if (InternalOwnerId == EntityManager.ServerPlayerId)
                 {
                     return ServerManager.AddEntity(initMethod);
                 }
@@ -228,7 +228,7 @@ namespace LiteEntitySystem
             _parentId = id;
             OnParentChange(oldId);
             
-            var newParent = EntityManager.GetEntityById<EntityLogic>(_parentId)?.InternalOwnerId ?? ServerEntityManager.ServerPlayerId;
+            var newParent = EntityManager.GetEntityById<EntityLogic>(_parentId)?.InternalOwnerId ?? EntityManager.ServerPlayerId;
             if (InternalOwnerId != newParent)
             {
                 SetOwner(this, newParent);

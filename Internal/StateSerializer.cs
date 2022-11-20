@@ -93,7 +93,7 @@ namespace LiteEntitySystem.Internal
 
             _controllerOwner = _entity is ControllerLogic controller
                 ? controller.InternalOwnerId
-                : ServerEntityManager.ServerPlayerId;
+                : EntityManager.ServerPlayerId;
             
             if (Utils.SequenceDiff(minimalTick, _versionChangedTick) > 0)
                 _versionChangedTick = minimalTick;
@@ -158,7 +158,7 @@ namespace LiteEntitySystem.Internal
             if (_state != SerializerState.Active)
                 return;
             Write(serverTick, minimalTick);
-            if (_controllerOwner != ServerEntityManager.ServerPlayerId && playerId != _controllerOwner)
+            if (_controllerOwner != EntityManager.ServerPlayerId && playerId != _controllerOwner)
                 return;
             
             //make diff
@@ -186,7 +186,7 @@ namespace LiteEntitySystem.Internal
                 return DiffResult.DoneAndDestroy;
             }
             Write(serverTick, minimalTick);
-            if (_controllerOwner != ServerEntityManager.ServerPlayerId && playerId != _controllerOwner)
+            if (_controllerOwner != EntityManager.ServerPlayerId && playerId != _controllerOwner)
             {
                 return DiffResult.Skip;
             }

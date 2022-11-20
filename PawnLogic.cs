@@ -14,7 +14,7 @@
             get => EntityManager.GetEntityById<ControllerLogic>(_controller);
             internal set
             {
-                SetOwner(this, value?.InternalOwnerId ?? (GetParent<EntityLogic>()?.InternalOwnerId ?? ServerEntityManager.ServerPlayerId));
+                SetOwner(this, value?.InternalOwnerId ?? (GetParent<EntityLogic>()?.InternalOwnerId ?? EntityManager.ServerPlayerId));
                 _controller = value;
             }
         }
