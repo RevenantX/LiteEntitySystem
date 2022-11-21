@@ -78,7 +78,7 @@ namespace LiteEntitySystem.Internal
         
         internal static bool IsReadonlySpan(this Type type)
         {
-            return type.IsGenericType && typeof(ReadOnlySpan<>) == type.GetGenericTypeDefinition();
+            return type != null && type.IsGenericType && typeof(ReadOnlySpan<>) == type.GetGenericTypeDefinition();
         }
     }
 }

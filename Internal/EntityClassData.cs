@@ -248,7 +248,7 @@ namespace LiteEntitySystem.Internal
                     {
                         if (ft.IsEnum)
                             ft = ft.GetEnumUnderlyingType();
-                        
+
                         int fieldSize = GetTypeSize(ft);
                         InterpolatorDelegate interpolator = null;
                         
@@ -334,7 +334,7 @@ namespace LiteEntitySystem.Internal
                                     
                                     rcAttribute.DataSize = parameterType == null 
                                         ? 0 
-                                        : GetTypeSize(parameterType.HasElementType ? parameterType.GetElementType() : parameterType);
+                                        : GetTypeSize(parameterType.IsReadonlySpan() ? parameterType.GenericTypeArguments[0] : parameterType);
                                 }
                                 
                                 SyncableRemoteCalls[method] = rcAttribute;
