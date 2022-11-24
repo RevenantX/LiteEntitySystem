@@ -67,10 +67,9 @@ namespace LiteEntitySystem.Internal
             Utils.ResizeOrCreate(ref _latestEntityData, (int)_fullDataSize);
             Utils.ResizeOrCreate(ref _fieldChangeTicks, classData.FieldsCount);
             
-            byte* entityPointer = Utils.GetPtr(ref _entity);
             for (int i = 0; i < _classData.SyncableFields.Length; i++)
             {
-                ref var syncable = ref Unsafe.AsRef<SyncableField>(entityPointer + _classData.SyncableFields[i].Offset);
+                var syncable = Utils.RefFieldValue<SyncableField, InternalEntity>(_entity, _classData.SyncableFields[i].Offset);
                 syncable.EntityManager = e.ServerManager;
                 syncable.FieldId = (byte)i;
                 syncable.EntityId = e.Id;
@@ -99,27 +98,29 @@ namespace LiteEntitySystem.Internal
                 _versionChangedTick = minimalTick;
 
             _lastWriteTick = serverTick;
-            byte* entityPointer = Utils.GetPtr(ref _entity);
             fixed (byte* latestEntityData = _latestEntityData)
             {
                 for (int i = 0; i < _classData.FieldsCount; i++)
                 {
                     ref var field = ref _classData.Fields[i];
-                    byte* fieldPtr = entityPointer + field.Offset;
+                    byte* latestDataPtr = latestEntityData + HeaderSize + field.FixedOffset;
                     
                     //update only changed fields
                     if (field.FieldType == FieldType.SyncableSyncVar)
                     {
-                        ref var syncable = ref Unsafe.AsRef<SyncableField>(fieldPtr);
-                        fieldPtr = Utils.GetPtr(ref syncable) + field.SyncableSyncVarOffset;
+                        var syncable = Utils.RefFieldValue<SyncableField, InternalEntity>(_entity, field.Offset);
+                        if (field.TypeProcessor.CompareAndWrite(syncable, field.SyncableSyncVarOffset, latestDataPtr))
+                            _fieldChangeTicks[i] = serverTick;
+                        else if (Utils.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
+                            _fieldChangeTicks[i] = minimalTick;
                     }
                     if (field.FieldType == FieldType.Entity)
                     {
                         //skip local ids
-                        var sharedRef = Unsafe.AsRef<EntitySharedReference>(fieldPtr);
+                        var sharedRef = Utils.RefFieldValue<EntitySharedReference, InternalEntity>(_entity, field.Offset);
                         if (sharedRef.IsLocal)
                             sharedRef = null;
-                        var latestRefPtr = (EntitySharedReference*)(latestEntityData + HeaderSize + field.FixedOffset);
+                        var latestRefPtr = (EntitySharedReference*)latestDataPtr;
                         if (*latestRefPtr != sharedRef)
                         {
                             *latestRefPtr = sharedRef;
@@ -131,16 +132,11 @@ namespace LiteEntitySystem.Internal
                         }
                         continue;
                     }
-                    byte* latestDataPtr = latestEntityData + HeaderSize + field.FixedOffset;
-                    if (Utils.memcmp(latestDataPtr, fieldPtr, field.PtrSize) != 0)
-                    {
-                        Unsafe.CopyBlock(latestDataPtr, fieldPtr, field.Size);
+                    
+                    if (field.TypeProcessor.CompareAndWrite(_entity, field.Offset, latestDataPtr))
                         _fieldChangeTicks[i] = serverTick;
-                    }
                     else if (Utils.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
-                    {
                         _fieldChangeTicks[i] = minimalTick;
-                    }
                 }
             }
         }
@@ -171,7 +167,7 @@ namespace LiteEntitySystem.Internal
                 position += (int)_fullDataSize;
                 for (int i = 0; i < _classData.SyncableFields.Length; i++)
                 {
-                    Unsafe.AsRef<SyncableField>(Utils.GetPtr(ref _entity) + _classData.SyncableFields[i].Offset).FullSyncWrite(new Span<byte>(resultData, (int)_fullDataSize), ref position);
+                    Utils.RefFieldValue<SyncableField, InternalEntity>(_entity, _classData.SyncableFields[i].Offset).FullSyncWrite(new Span<byte>(resultData, (int)_fullDataSize), ref position);
                 }
             }
         }
@@ -211,7 +207,7 @@ namespace LiteEntitySystem.Internal
                     position += (int)_fullDataSize;
                     for (int i = 0; i < _classData.SyncableFields.Length; i++)
                     {
-                        Unsafe.AsRef<SyncableField>(Utils.GetPtr(ref _entity) + _classData.SyncableFields[i].Offset).FullSyncWrite(new Span<byte>(resultData, (int)_fullDataSize), ref position);
+                        Utils.RefFieldValue<SyncableField, InternalEntity>(_entity, _classData.SyncableFields[i].Offset).FullSyncWrite(new Span<byte>(resultData, (int)_fullDataSize), ref position);
                     }
                 }
                 else //make diff

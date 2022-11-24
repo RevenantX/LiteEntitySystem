@@ -63,17 +63,6 @@ namespace LiteEntitySystem.Internal
                 : fullName!.Replace('+', '.');
         }
 
-        private static void AddSizeOf(Type valueType)
-        {
-            if (valueType.IsReadonlySpan())
-                valueType = valueType.GenericTypeArguments[0];
-            if (valueType != null && valueType.IsValueType && AddedSizeofs.Add(valueType))
-            {
-                GenCode.Append(' ', 12);
-                GenCode.AppendLine($"Unsafe.SizeOf<{GetTypeName(valueType)}>();");
-            }
-        }
-
         private static void AppendGenerator(Type classType, Type valueType)
         {
             if (!AddedTypes.Add((classType, valueType)))
@@ -91,7 +80,6 @@ namespace LiteEntitySystem.Internal
                 GenCode.AppendLine($"G.Generate<{classTypeName},{GetTypeName(valueType.GenericTypeArguments[0])}>(null,true);");
             else
                 GenCode.AppendLine($"G.Generate<{classTypeName},{valueTypeName}>(null,false);");
-            AddSizeOf(valueType);
         }
         
         [MenuItem("LiteEntitySystem/GenerateAOTCode")]
@@ -135,10 +123,6 @@ namespace LiteEntitySystem.Internal
                         else if(!string.IsNullOrEmpty(syncvarAttrib.MethodName))
                         {
                             AppendGenerator(entity, fieldInfo.FieldType);
-                        }
-                        else
-                        {
-                            AddSizeOf(fieldInfo.FieldType);
                         }
                     }
                     foreach (var methodInfo in entity.GetMethods(BindFlags))

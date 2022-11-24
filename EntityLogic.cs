@@ -76,15 +76,13 @@ namespace LiteEntitySystem
         {
             byte maxHistory = (byte)EntityManager.MaxHistorySize;
             _filledHistory = Math.Min(_filledHistory + 1, maxHistory);
-            var localEntity = this;
-            byte* entityPointer = Utils.GetPtr(ref localEntity);
             int historyOffset = (tick % maxHistory)*_lagCompensatedSize;
             fixed (byte* history = _history)
             {
                 for (int i = 0; i < _lagCompensatedFields.Length; i++)
                 {
                     ref var field = ref _lagCompensatedFields[i];
-                    Unsafe.CopyBlock(history + historyOffset, entityPointer + field.Offset, field.Size);
+                    field.TypeProcessor.WriteTo(this, field.Offset, history + historyOffset);
                     historyOffset += field.IntSize;
                 }
             }
@@ -102,8 +100,6 @@ namespace LiteEntitySystem
                 Logger.Log($"LagCompensationMiss. Tick: {tick}, StateA: {player.StateATick}, StateB: {player.StateBTick}");
                 return;
             }
-            var localEntity = this;
-            byte* entityPtr = Utils.GetPtr(ref localEntity);
             int historyAOffset = (player.StateATick % maxHistory)*_lagCompensatedSize;
             int historyBOffset = (player.StateBTick % maxHistory)*_lagCompensatedSize;
             int historyCurrent = 0;
@@ -113,19 +109,13 @@ namespace LiteEntitySystem
                 for (int i = 0; i < _lagCompensatedFields.Length; i++)
                 {
                     ref var field = ref _lagCompensatedFields[i];
-                    Unsafe.CopyBlock(tempHistory + historyCurrent, entityPtr + field.Offset, field.Size);
-                    if (field.Interpolator != null)
-                    {
-                        field.Interpolator(
-                            history + historyAOffset,
-                            history + historyBOffset,
-                            entityPtr + field.Offset,
-                            player.LerpTime);
-                    }
-                    else
-                    {
-                        Unsafe.CopyBlock(entityPtr + field.Offset, history + historyAOffset, field.Size);
-                    }
+                    field.TypeProcessor.LoadHistory(
+                        this, 
+                        field.Offset,
+                        tempHistory + historyCurrent,
+                        history + historyAOffset,
+                        history + historyBOffset,
+                        player.LerpTime);
                     historyAOffset += field.IntSize;
                     historyBOffset += field.IntSize;
                     historyCurrent += field.IntSize;
@@ -141,15 +131,13 @@ namespace LiteEntitySystem
             if (!_lagCompensationEnabled)
                 return;
             _lagCompensationEnabled = false;
-            var localEntity = this;
-            byte* entityPtr = Utils.GetPtr(ref localEntity);
             int historyOffset = 0;
             fixed (byte* tempHistory = _tempHistory)
             {
                 for (int i = 0; i < _lagCompensatedFields.Length; i++)
                 {
                     ref var field = ref _lagCompensatedFields[i];
-                    Unsafe.CopyBlock(entityPtr + field.Offset, tempHistory + historyOffset, field.Size);
+                    field.TypeProcessor.SetFrom(this, field.Offset, tempHistory + historyOffset);
                     historyOffset += field.IntSize;
                 }
             }

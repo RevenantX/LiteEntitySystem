@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
@@ -13,6 +12,7 @@ namespace LiteEntitySystem.Internal
     
     internal struct EntityFieldInfo
     {
+        public readonly ValueTypeProcessor TypeProcessor;
         public readonly int Offset;
         public readonly int SyncableSyncVarOffset;
         public readonly uint Size;
@@ -20,7 +20,6 @@ namespace LiteEntitySystem.Internal
         public readonly UIntPtr PtrSize;
         public readonly FieldType FieldType;
         public readonly MethodCallDelegate OnSync;
-        public readonly InterpolatorDelegate Interpolator;
         public readonly SyncFlags Flags;
 
         public bool IsPredicted => Flags.HasFlagFast(SyncFlags.RemotePredicted) || !Flags.HasFlagFast(SyncFlags.OnlyForRemote);
@@ -30,13 +29,14 @@ namespace LiteEntitySystem.Internal
 
         //for value type
         public EntityFieldInfo(
-            MethodCallDelegate onSync, 
-            InterpolatorDelegate interpolator,
+            ValueTypeProcessor valueTypeProcessor,
+            MethodCallDelegate onSync,
             int offset,
             int size,
             SyncFlags flags,
             bool isEntityReference)
         {
+            TypeProcessor = valueTypeProcessor;
             SyncableSyncVarOffset = -1;
             Offset = offset;
             Size = (uint)size;
@@ -44,7 +44,6 @@ namespace LiteEntitySystem.Internal
             PtrSize = (UIntPtr)Size;
             FieldType = isEntityReference ? FieldType.Entity : FieldType.Value;
             OnSync = onSync;
-            Interpolator = interpolator;
             FixedOffset = 0;
             PredictedOffset = 0;
             Flags = flags;
@@ -55,13 +54,13 @@ namespace LiteEntitySystem.Internal
             int offset,
             SyncFlags flags)
         {
+            TypeProcessor = null;
             SyncableSyncVarOffset = -1;
             Offset = offset;
             Size = 0;
             IntSize = 0;
             PtrSize = (UIntPtr)Size;
             FieldType = FieldType.Syncable;
-            Interpolator = null;
             FixedOffset = 0;
             PredictedOffset = 0;
             Flags = flags;
@@ -70,11 +69,13 @@ namespace LiteEntitySystem.Internal
         
         //For syncable syncvar
         public EntityFieldInfo(
+            ValueTypeProcessor valueTypeProcessor,
             int offset,
             int syncableSyncVarOffset,
             int size,
             SyncFlags flags)
         {
+            TypeProcessor = valueTypeProcessor;
             SyncableSyncVarOffset = syncableSyncVarOffset;
             Offset = offset;
             Size = (uint)size;
@@ -82,22 +83,9 @@ namespace LiteEntitySystem.Internal
             PtrSize = (UIntPtr)Size;
             FieldType = FieldType.SyncableSyncVar;
             OnSync = null;
-            Interpolator = null;
             FixedOffset = 0;
             PredictedOffset = 0;
             Flags = flags;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe void GetToFixedOffset(byte* entityPointer, byte* outData)
-        {
-            Unsafe.CopyBlock(outData + FixedOffset, entityPointer + Offset, Size);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe void SetFromFixedOffset(byte* entityPointer, byte* data)
-        {
-            Unsafe.CopyBlock(entityPointer + Offset, data + FixedOffset, Size);
         }
     }
 }

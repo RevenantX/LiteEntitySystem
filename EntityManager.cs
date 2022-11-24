@@ -186,16 +186,45 @@ namespace LiteEntitySystem
 
         internal byte InternalPlayerId;
         protected readonly InputProcessor InputProcessor;
+        
+        public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged
+        {
+            ValueProcessors.RegisteredProcessors[typeof(T)] = new UserTypeProcessor<T>(interpolationDelegate);
+        }
+        
+        public static void RegisterFieldType<T>() where T : unmanaged
+        {
+            ValueProcessors.RegisteredProcessors[typeof(T)] = new UserTypeProcessor<T>(null);
+        }
 
-        protected EntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetworkMode mode, byte framesPerSecond)
+        private static void RegisterBasicFieldType<T>(ValueTypeProcessor<T> proc) where T : unmanaged
+        {
+            ValueProcessors.RegisteredProcessors.Add(typeof(T), proc);
+        }
+
+        static EntityManager()
         {
 #if UNITY_ANDROID
             if (IntPtr.Size == 4)
                 LZ4Codec.Enforce32 = true;
 #endif
+            RegisterBasicFieldType(new ValueTypeProcessorByte());
+            RegisterBasicFieldType(new ValueTypeProcessorSByte());
+            RegisterBasicFieldType(new ValueTypeProcessorShort());
+            RegisterBasicFieldType(new ValueTypeProcessorUShort());
+            RegisterBasicFieldType(new ValueTypeProcessorInt());
+            RegisterBasicFieldType(new ValueTypeProcessorUInt());
+            RegisterBasicFieldType(new ValueTypeProcessorLong());
+            RegisterBasicFieldType(new ValueTypeProcessorULong());
+            RegisterBasicFieldType(new ValueTypeProcessorFloat());
+            RegisterBasicFieldType(new ValueTypeProcessorDouble());
+            RegisterBasicFieldType(new ValueTypeProcessorBool());
+            RegisterBasicFieldType(new ValueTypeProcessorESR());
+            RegisterFieldType<FloatAngle>(FloatAngle.Lerp);
+        }
 
-            Interpolation.Register<float>(Utils.Lerp);
-            Interpolation.Register<FloatAngle>(FloatAngle.Lerp);
+        protected EntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetworkMode mode, byte framesPerSecond)
+        {
             ClassDataDict = new EntityClassData[typesMap.MaxId+1];
 
             ushort filterCount = 0;

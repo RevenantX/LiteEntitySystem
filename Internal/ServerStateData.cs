@@ -180,7 +180,7 @@ namespace LiteEntitySystem.Internal
                     if (!Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, i))
                         continue;
                     var field = fields[i];
-                    if (entity.IsServerControlled && field.Interpolator != null)
+                    if (entity.IsServerControlled && field.Flags.HasFlagFast(SyncFlags.Interpolated))
                     {
                         preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
                         (

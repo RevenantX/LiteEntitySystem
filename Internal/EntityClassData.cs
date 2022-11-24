@@ -64,26 +64,23 @@ namespace LiteEntitySystem.Internal
 
         private class TestOffset
         {
-#pragma warning disable CS0414
             public readonly uint TestValue = 0xDEADBEEF;
-#pragma warning restore CS0414
         }
         
-        static unsafe EntityClassData()
+        static EntityClassData()
         {
             //check field offset
-            int monoOffset = 3 * IntPtr.Size;
-            int dotnetOffset = 4 + IntPtr.Size;
-
             var field = typeof(TestOffset).GetField("TestValue");
+            int monoOffset = 3 * IntPtr.Size;
+            int dotnetOffset = IntPtr.Size + 4;
             int monoFieldOffset = Marshal.ReadInt32(field.FieldHandle.Value + monoOffset) & 0xFFFFFF;
             int dotnetFieldOffset = Marshal.ReadInt32(field.FieldHandle.Value + dotnetOffset) & 0xFFFFFF;
 
             TestOffset to = new TestOffset();
-            byte* rawData = (byte*)Unsafe.As<TestOffset, IntPtr>(ref to);
-            if (*(uint*)(rawData + monoFieldOffset) == 0xDEADBEEF)
+
+            if (Utils.RefFieldValue<uint, TestOffset>(to, monoFieldOffset) == to.TestValue)
                 NativeFieldOffset = monoOffset;
-            else if (*(uint*)(rawData + dotnetFieldOffset) == 0xDEADBEEF)
+            else if (Utils.RefFieldValue<uint, TestOffset>(to, dotnetFieldOffset) == to.TestValue)
                 NativeFieldOffset = dotnetOffset;
             else
                 Logger.Log("Unknown native field offset");
@@ -250,18 +247,20 @@ namespace LiteEntitySystem.Internal
                             ft = ft.GetEnumUnderlyingType();
 
                         int fieldSize = GetTypeSize(ft);
-                        InterpolatorDelegate interpolator = null;
+                        if (!ValueProcessors.RegisteredProcessors.TryGetValue(ft, out var valueTypeProcessor))
+                        {
+                            Logger.LogError($"Unregistered field type: {ft}");
+                            continue;
+                        }
                         
                         if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.Interpolated) && !ft.IsArray && !ft.IsEnum)
                         {
-                            if (!Interpolation.Methods.TryGetValue(ft, out interpolator))
-                                throw new ArgumentException($"No info how to interpolate: {ft}");
                             InterpolatedFieldsSize += fieldSize;
                             InterpolatedCount++;
                         }
 
                         MethodCallDelegate onSyncMethod = GetOnSyncDelegate(baseType, ft, syncVarAttribute.MethodName);
-                        var fieldInfo = new EntityFieldInfo(onSyncMethod, interpolator, offset, fieldSize, syncVarAttribute.Flags, ft == typeof(EntitySharedReference));
+                        var fieldInfo = new EntityFieldInfo(valueTypeProcessor, onSyncMethod, offset, fieldSize, syncVarAttribute.Flags, ft == typeof(EntitySharedReference));
                         if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.LagCompensated))
                         {
                             lagCompensatedFields.Add(fieldInfo);
@@ -300,9 +299,14 @@ namespace LiteEntitySystem.Internal
                                 {
                                     if (syncableFieldType.IsEnum)
                                         syncableFieldType = syncableFieldType.GetEnumUnderlyingType();
+                                    if (!ValueProcessors.RegisteredProcessors.TryGetValue(syncableFieldType, out var valueTypeProcessor))
+                                    {
+                                        Logger.LogError($"Unregistered field type: {syncableFieldType}");
+                                        continue;
+                                    }
                                     int syncvarOffset = Marshal.ReadInt32(syncableField.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
                                     int size = GetTypeSize(syncableFieldType);
-                                    var fieldInfo = new EntityFieldInfo(offset, syncvarOffset, size,
+                                    var fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, syncvarOffset, size,
                                         syncVarAttribute.Flags);
                                     fields.Add(fieldInfo);
                                     FixedFieldsSize += size;
@@ -352,8 +356,8 @@ namespace LiteEntitySystem.Internal
             //sort by placing interpolated first
             fields.Sort((a, b) =>
             {
-                int wa = a.Interpolator != null ? 1 : 0;
-                int wb = b.Interpolator != null ? 1 : 0;
+                int wa = a.Flags.HasFlagFast(SyncFlags.Interpolated) ? 1 : 0;
+                int wb = b.Flags.HasFlagFast(SyncFlags.Interpolated) ? 1 : 0;
                 return wb - wa;
             });
             Fields = fields.ToArray();
