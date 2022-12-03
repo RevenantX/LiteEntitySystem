@@ -173,6 +173,21 @@ namespace LiteEntitySystem.Internal
     internal class ValueTypeProcessorESR : ValueTypeProcessor<EntitySharedReference>
     {
         protected override bool Compare(ref EntitySharedReference a, ref EntitySharedReference b) => a == b;
+        
+        internal override unsafe bool CompareAndWrite(object obj, int offset, byte* data)
+        {
+            //skip local ids
+            var sharedRef = Utils.RefFieldValue<EntitySharedReference>(obj, offset);
+            if (sharedRef.IsLocal)
+                sharedRef = null;
+            var latestRefPtr = (EntitySharedReference*)data;
+            if (*latestRefPtr != sharedRef)
+            {
+                *latestRefPtr = sharedRef;
+                return true;
+            }
+            return false;
+        }
     }
 
     public delegate T InterpolatorDelegateWithReturn<T>(T prev, T current, float t) where T : unmanaged;
@@ -191,7 +206,7 @@ namespace LiteEntitySystem.Internal
         internal override void SetInterpolation(object obj, int offset, byte* prev, byte* current,
             float fTimer)
         {
-            ref var a = ref Utils.RefFieldValue<T, object>(obj, offset);
+            ref var a = ref Utils.RefFieldValue<T>(obj, offset);
             a = InterpDelegate(*(T*)prev, *(T*)current, fTimer);
         }
 

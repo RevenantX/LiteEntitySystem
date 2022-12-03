@@ -87,19 +87,9 @@ namespace LiteEntitySystem.Internal
         public static ref U RefFieldValue<U>(object obj, int offset)
         {
 #if UNITY_5_3_OR_NEWER
-            return ref RefMagic.RefFieldValueMono<U, object>(obj, offset);
+            return ref RefMagic.RefFieldValueMono<U>(obj, offset);
 #else
-            return ref RefMagic.RefFieldValueDotNet<U, object>(obj, offset + IntPtr.Size);
-#endif
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ref U RefFieldValue<U, T>(T obj, int offset)
-        {
-#if UNITY_5_3_OR_NEWER
-            return ref RefMagic.RefFieldValueMono<U, T>(obj, offset);
-#else
-            return ref RefMagic.RefFieldValueDotNet<U, T>(obj, offset + IntPtr.Size);
+            return ref RefMagic.RefFieldValueDotNet<U>(obj, offset + IntPtr.Size);
 #endif
         }
 

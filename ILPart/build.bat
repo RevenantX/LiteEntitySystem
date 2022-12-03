@@ -1,3 +1,3 @@
 @echo off
-ilasm.exe /dll /x64 RefMagic.il
+ilasm.exe /dll RefMagic.il
 pause

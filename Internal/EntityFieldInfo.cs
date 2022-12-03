@@ -5,7 +5,6 @@ namespace LiteEntitySystem.Internal
     internal enum FieldType
     {
         Value,
-        Entity,
         Syncable,
         SyncableSyncVar
     }
@@ -17,7 +16,6 @@ namespace LiteEntitySystem.Internal
         public readonly int SyncableSyncVarOffset;
         public readonly uint Size;
         public readonly int IntSize;
-        public readonly UIntPtr PtrSize;
         public readonly FieldType FieldType;
         public readonly MethodCallDelegate OnSync;
         public readonly SyncFlags Flags;
@@ -33,16 +31,14 @@ namespace LiteEntitySystem.Internal
             MethodCallDelegate onSync,
             int offset,
             int size,
-            SyncFlags flags,
-            bool isEntityReference)
+            SyncFlags flags)
         {
             TypeProcessor = valueTypeProcessor;
             SyncableSyncVarOffset = -1;
             Offset = offset;
             Size = (uint)size;
             IntSize = size;
-            PtrSize = (UIntPtr)Size;
-            FieldType = isEntityReference ? FieldType.Entity : FieldType.Value;
+            FieldType = FieldType.Value;
             OnSync = onSync;
             FixedOffset = 0;
             PredictedOffset = 0;
@@ -59,7 +55,6 @@ namespace LiteEntitySystem.Internal
             Offset = offset;
             Size = 0;
             IntSize = 0;
-            PtrSize = (UIntPtr)Size;
             FieldType = FieldType.Syncable;
             FixedOffset = 0;
             PredictedOffset = 0;
@@ -80,7 +75,6 @@ namespace LiteEntitySystem.Internal
             Offset = offset;
             Size = (uint)size;
             IntSize = size;
-            PtrSize = (UIntPtr)Size;
             FieldType = FieldType.SyncableSyncVar;
             OnSync = null;
             FixedOffset = 0;

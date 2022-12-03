@@ -78,9 +78,9 @@ namespace LiteEntitySystem.Internal
 
             TestOffset to = new TestOffset();
 
-            if (Utils.RefFieldValue<uint, TestOffset>(to, monoFieldOffset) == to.TestValue)
+            if (Utils.RefFieldValue<uint>(to, monoFieldOffset) == to.TestValue)
                 NativeFieldOffset = monoOffset;
-            else if (Utils.RefFieldValue<uint, TestOffset>(to, dotnetFieldOffset) == to.TestValue)
+            else if (Utils.RefFieldValue<uint>(to, dotnetFieldOffset) == to.TestValue)
                 NativeFieldOffset = dotnetOffset;
             else
                 Logger.Log("Unknown native field offset");
@@ -260,7 +260,7 @@ namespace LiteEntitySystem.Internal
                         }
 
                         MethodCallDelegate onSyncMethod = GetOnSyncDelegate(baseType, ft, syncVarAttribute.MethodName);
-                        var fieldInfo = new EntityFieldInfo(valueTypeProcessor, onSyncMethod, offset, fieldSize, syncVarAttribute.Flags, ft == typeof(EntitySharedReference));
+                        var fieldInfo = new EntityFieldInfo(valueTypeProcessor, onSyncMethod, offset, fieldSize, syncVarAttribute.Flags);
                         if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.LagCompensated))
                         {
                             lagCompensatedFields.Add(fieldInfo);

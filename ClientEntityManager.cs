@@ -476,7 +476,7 @@ namespace LiteEntitySystem
                         }
                         else
                         {
-                            rpcCache.Delegate(Utils.RefFieldValue<SyncVar, InternalEntity>(entity, ClassDataDict[entity.ClassId].SyncableFields[rpcCache.FieldId].Offset), _stateB.Data, rpcCache.Offset, rpcCache.Count);
+                            rpcCache.Delegate(Utils.RefFieldValue<SyncVar>(entity, ClassDataDict[entity.ClassId].SyncableFields[rpcCache.FieldId].Offset), _stateB.Data, rpcCache.Offset, rpcCache.Count);
                         }
                     }
                 }
@@ -787,7 +787,7 @@ namespace LiteEntitySystem
                     
                     if (field.FieldType == FieldType.SyncableSyncVar)
                     {
-                        var syncableField = Utils.RefFieldValue<SyncableField, InternalEntity>(entity, field.Offset);
+                        var syncableField = Utils.RefFieldValue<SyncableField>(entity, field.Offset);
                         field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, readDataPtr);
                     }
                     else
@@ -820,7 +820,7 @@ namespace LiteEntitySystem
                 if (fullSync)
                 {
                     for (int i = 0; i < classData.SyncableFields.Length; i++)
-                        Utils.RefFieldValue<SyncableField, InternalEntity>(entity, classData.SyncableFields[i].Offset).FullSyncRead(new Span<byte>(rawData, _stateA.Size), ref readerPosition);
+                        Utils.RefFieldValue<SyncableField>(entity, classData.SyncableFields[i].Offset).FullSyncRead(new Span<byte>(rawData, _stateA.Size), ref readerPosition);
                 }
                 entity.OnSyncEnd();
             }
