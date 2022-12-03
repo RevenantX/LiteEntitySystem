@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LiteEntitySystem.Internal
+﻿namespace LiteEntitySystem.Internal
 {
     internal enum FieldType
     {

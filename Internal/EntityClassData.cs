@@ -6,27 +6,6 @@ using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
 {
-    internal struct SyncableFieldInfo
-    {
-        public readonly int Offset;
-        public readonly int ParentOffset;
-        public readonly uint Size;
-        public readonly int IntSize;
-        public readonly UIntPtr PtrSize;
-
-        public int FixedOffset;
-
-        public SyncableFieldInfo(int parentOffset, int offset, int size)
-        {
-            ParentOffset = parentOffset;
-            Offset = offset;
-            Size = (uint)size;
-            IntSize = size;
-            PtrSize = (UIntPtr)Size;
-            FixedOffset = 0;
-        }
-    }
-    
     internal readonly struct EntityClassData
     {
         public readonly bool IsCreated;
