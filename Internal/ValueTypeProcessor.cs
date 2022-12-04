@@ -10,21 +10,24 @@ namespace LiteEntitySystem.Internal
     
     internal abstract unsafe class ValueTypeProcessor
     {
+        internal abstract Type ValueType { get; }
+        internal abstract int Size { get; }
         internal abstract bool CompareAndWrite(object obj, int offset, byte* data);
         internal abstract void SetFrom(object obj, int offset, byte* data);
         internal abstract bool SetFromAndSync(object obj, int offset, byte* data, byte* tempData);
         internal abstract void WriteTo(object obj, int offset, byte* data);
         internal abstract void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer);
-        internal abstract void LoadHistory(object obj, int offset, byte* tempHistory,
-            byte* historyA, byte* historyB, float lerpTime);
+        internal abstract void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime);
     }
 
     internal abstract unsafe class ValueTypeProcessor<T> : ValueTypeProcessor where T : unmanaged
     {
-        internal override void SetInterpolation(object obj, int offset, byte* prev, byte* current,
-            float fTimer)
+        internal override Type ValueType => typeof(T);
+        internal override int Size => sizeof(T);
+
+        internal override void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
-            throw new Exception("This type: {typeof(T)} can't be interpolated");
+            throw new Exception($"This type: {typeof(T)} can't be interpolated");
         }
         
         internal override void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
@@ -170,7 +173,7 @@ namespace LiteEntitySystem.Internal
         protected override bool Compare(ref bool a, ref bool b) => a == b;
     }
     
-    internal class ValueTypeProcessorESR : ValueTypeProcessor<EntitySharedReference>
+    internal class ValueTypeProcessorEntitySharedReference : ValueTypeProcessor<EntitySharedReference>
     {
         protected override bool Compare(ref EntitySharedReference a, ref EntitySharedReference b) => a == b;
         
@@ -195,7 +198,7 @@ namespace LiteEntitySystem.Internal
     internal unsafe class UserTypeProcessor<T> : ValueTypeProcessor<T> where T : unmanaged
     {
         private static readonly UIntPtr SizeU = new ((uint)sizeof(T));
-        private static InterpolatorDelegateWithReturn<T> InterpDelegate;
+        private readonly InterpolatorDelegateWithReturn<T> _interpDelegate;
 
         protected override bool Compare(ref T a, ref T b)
         {
@@ -207,12 +210,12 @@ namespace LiteEntitySystem.Internal
             float fTimer)
         {
             ref var a = ref Utils.RefFieldValue<T>(obj, offset);
-            a = InterpDelegate(*(T*)prev, *(T*)current, fTimer);
+            a = _interpDelegate(*(T*)prev, *(T*)current, fTimer);
         }
 
         public UserTypeProcessor(InterpolatorDelegateWithReturn<T> interpolationDelegate)
         {
-            InterpDelegate = interpolationDelegate;
+            _interpDelegate = interpolationDelegate;
         }
     }
 }

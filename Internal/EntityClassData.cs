@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
 {
-    internal readonly struct EntityClassData
+    internal struct EntityClassData
     {
         public readonly bool IsCreated;
         
@@ -31,7 +30,6 @@ namespace LiteEntitySystem.Internal
         public readonly bool IsLocalOnly;
         public readonly Type[] BaseTypes;
         public readonly EntityConstructor<InternalEntity> EntityConstructor;
-        public readonly Dictionary<MethodInfo, RemoteCall> RemoteCalls;
         public readonly MethodCallDelegate[] RemoteCallsClient;
         public readonly MethodCallDelegate[] SyncableRemoteCallsClient;
         public readonly Dictionary<MethodInfo, SyncableRemoteCall> SyncableRemoteCalls;
@@ -45,6 +43,8 @@ namespace LiteEntitySystem.Internal
         {
             public readonly uint TestValue = 0xDEADBEEF;
         }
+
+        public byte RpcIdCounter;
         
         static EntityClassData()
         {
@@ -64,50 +64,6 @@ namespace LiteEntitySystem.Internal
             else
                 Logger.Log("Unknown native field offset");
         }
-        
-        private static MethodCallDelegate GetOnSyncDelegate(Type classType, Type valueType, string methodName)
-        {
-            if (string.IsNullOrEmpty(methodName))
-                return null;
-            
-            var method = classType.GetMethod(
-                methodName,
-                BindingFlags.Instance |
-                BindingFlags.Public |
-                BindingFlags.DeclaredOnly |
-                BindingFlags.NonPublic);
-            if (method == null)
-            {
-                Logger.LogError($"Method: {methodName} not found in {classType}");
-                return null;
-            }
-
-            return GetOnSyncDelegate(classType, valueType, method);
-        }
-
-        private static MethodCallDelegate GetOnSyncDelegate(Type classType, Type valueType, MethodInfo method)
-        {
-            try
-            {
-                if (valueType == null)
-                {
-                    return (MethodCallDelegate)MethodCallGenerator.GenerateNoParamsMethod.MakeGenericMethod(classType)
-                        .Invoke(null, new object[] { method });
-                }
-                else
-                {
-                    var genericMethod = MethodCallGenerator.GenerateMethod.MakeGenericMethod(
-                        classType, 
-                        valueType.IsReadonlySpan() ? valueType.GenericTypeArguments[0] : valueType);
-                    
-                    return (MethodCallDelegate)genericMethod.Invoke(null, new object[] { method, valueType.IsReadonlySpan() });
-                }
-            }
-            catch(Exception e)
-            {
-                throw new Exception($"{classType.Name}.{method.Name} has something wrong with types: {e}");
-            }
-        }
 
         private static List<Type> GetBaseTypes(Type ofType, Type until, bool includeSelf)
         {
@@ -123,25 +79,20 @@ namespace LiteEntitySystem.Internal
             return baseTypes;
         }
 
-        private static int GetTypeSize(Type type)
+        public EntityClassData(ushort filterId, Type entType, RegisteredTypeInfo typeInfo)
         {
-            return (int)typeof(Unsafe).GetMethod("SizeOf").MakeGenericMethod(type).Invoke(null, null);
-        }
-
-        public EntityClassData(ushort filterId, Type entType, ushort classId, EntityConstructor<InternalEntity> constructor)
-        {
+            RpcIdCounter = 0;
             HasRemotePredictedFields = false;
             PredictedSize = 0;
             FixedFieldsSize = 0;
             LagCompensatedSize = 0;
             InterpolatedCount = 0;
             InterpolatedFieldsSize = 0;
-            RemoteCalls = new Dictionary<MethodInfo, RemoteCall>();
             RemoteCallsClient = new MethodCallDelegate[255];
             SyncableRemoteCallsClient = new MethodCallDelegate[255];
             SyncableRemoteCalls = new Dictionary<MethodInfo, SyncableRemoteCall>();
             
-            ClassId = classId;
+            ClassId = typeInfo.ClassId;
 
             var updateAttribute = entType.GetCustomAttribute<UpdateableEntity>();
             if (updateAttribute != null)
@@ -156,7 +107,7 @@ namespace LiteEntitySystem.Internal
             }
 
             IsLocalOnly = entType.GetCustomAttribute<LocalOnly>() != null;
-            EntityConstructor = constructor;
+            EntityConstructor = typeInfo.Constructor;
             IsSingleton = entType.IsSubclassOf(SingletonEntityType);
             FilterId = filterId;
 
@@ -176,35 +127,10 @@ namespace LiteEntitySystem.Internal
                                               BindingFlags.Public |
                                               BindingFlags.NonPublic |
                                               BindingFlags.DeclaredOnly;
-
-            byte rpcIndex = 0;
+            
             byte syncableRpcIndex = 0;
             foreach (var baseType in baseTypes)
             {
-                //cache rpcs
-                foreach (var method in baseType.GetMethods(bindingFlags))
-                {
-                    var remoteCallAttribute = method.GetCustomAttribute<RemoteCall>();
-                    if(remoteCallAttribute == null)
-                        continue;
-
-                    var methodParams = method.GetParameters();
-                    var parameterType = methodParams.Length > 0 ? methodParams[0].ParameterType : null;
-                    if (remoteCallAttribute.Id == byte.MaxValue)
-                    {
-                        remoteCallAttribute.Id = rpcIndex++;
-                        if (parameterType != null)
-                        {
-                            remoteCallAttribute.IsArray = parameterType.IsArray;
-                            remoteCallAttribute.DataSize = GetTypeSize(parameterType.HasElementType ? parameterType.GetElementType() : parameterType);
-                        }
-                        if (rpcIndex == byte.MaxValue)
-                            throw new Exception("254 is max RemoteCall methods");
-                    }
-                    RemoteCalls.Add(method, remoteCallAttribute);
-                    RemoteCallsClient[remoteCallAttribute.Id] = GetOnSyncDelegate(baseType, parameterType, method);
-                }
-                
                 //cache fields
                 foreach (var field in baseType.GetFields(bindingFlags))
                 {
@@ -225,21 +151,27 @@ namespace LiteEntitySystem.Internal
                         if (ft.IsEnum)
                             ft = ft.GetEnumUnderlyingType();
 
-                        int fieldSize = GetTypeSize(ft);
+                        bool hasChangeNotification = false;
+                        if (ft.GetGenericTypeDefinition() == typeof(SyncVarWithNotify<>))
+                        {
+                            ft = ft.GetGenericArguments()[0];
+                            hasChangeNotification = true;
+                        }
+                        
                         if (!ValueProcessors.RegisteredProcessors.TryGetValue(ft, out var valueTypeProcessor))
                         {
                             Logger.LogError($"Unregistered field type: {ft}");
                             continue;
                         }
+                        int fieldSize = valueTypeProcessor.Size;
                         
                         if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.Interpolated) && !ft.IsArray && !ft.IsEnum)
                         {
                             InterpolatedFieldsSize += fieldSize;
                             InterpolatedCount++;
                         }
-
-                        MethodCallDelegate onSyncMethod = GetOnSyncDelegate(baseType, ft, syncVarAttribute.MethodName);
-                        var fieldInfo = new EntityFieldInfo(valueTypeProcessor, onSyncMethod, offset, fieldSize, syncVarAttribute.Flags);
+                        
+                        var fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, hasChangeNotification, syncVarAttribute.Flags);
                         if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.LagCompensated))
                         {
                             lagCompensatedFields.Add(fieldInfo);
@@ -251,7 +183,7 @@ namespace LiteEntitySystem.Internal
                             PredictedSize += fieldSize;
                         }
 
-                        if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.RemotePredicted))
+                        if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.AlwaysPredict))
                         {
                             HasRemotePredictedFields = true;
                         }
@@ -278,20 +210,25 @@ namespace LiteEntitySystem.Internal
                                 {
                                     if (syncableFieldType.IsEnum)
                                         syncableFieldType = syncableFieldType.GetEnumUnderlyingType();
+                                    bool hasChangeNotification = false;
+                                    if (ft.GetGenericTypeDefinition() == typeof(SyncVarWithNotify<>))
+                                    {
+                                        ft = ft.GetGenericArguments()[0];
+                                        hasChangeNotification = true;
+                                    }
+                                    
                                     if (!ValueProcessors.RegisteredProcessors.TryGetValue(syncableFieldType, out var valueTypeProcessor))
                                     {
                                         Logger.LogError($"Unregistered field type: {syncableFieldType}");
                                         continue;
                                     }
                                     int syncvarOffset = Marshal.ReadInt32(syncableField.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
-                                    int size = GetTypeSize(syncableFieldType);
-                                    var fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, syncvarOffset, size,
-                                        syncVarAttribute.Flags);
+                                    var fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, syncvarOffset, hasChangeNotification, syncVarAttribute.Flags);
                                     fields.Add(fieldInfo);
-                                    FixedFieldsSize += size;
+                                    FixedFieldsSize += fieldInfo.IntSize;
                                     if (fieldInfo.IsPredicted)
                                     {
-                                        PredictedSize += size;
+                                        PredictedSize += fieldInfo.IntSize;
                                     }
                                 }
                                 else
@@ -314,14 +251,10 @@ namespace LiteEntitySystem.Internal
                                     rcAttribute.Id = syncableRpcIndex++;
                                     if (syncableRpcIndex == byte.MaxValue)
                                         throw new Exception("254 is max RemoteCall methods");
-                                    
-                                    rcAttribute.DataSize = parameterType == null 
-                                        ? 0 
-                                        : GetTypeSize(parameterType.IsReadonlySpan() ? parameterType.GenericTypeArguments[0] : parameterType);
                                 }
                                 
                                 SyncableRemoteCalls[method] = rcAttribute;
-                                SyncableRemoteCallsClient[rcAttribute.Id] = GetOnSyncDelegate(syncableType, parameterType, method);
+                                //TODO://SyncableRemoteCallsClient[rcAttribute.Id] = parameterType == null ? typeInfo.NoParamsRpc(method) : GetOnSyncDelegate(syncableType, parameterType, method);
                             }
                         }
                     }

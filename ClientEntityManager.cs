@@ -86,6 +86,8 @@ namespace LiteEntitySystem
         private ushort _remoteCallsTick;
         private ushort _lastReceivedInputTick;
         private float _logicLerpMsec;
+        
+        private byte[] _compressionBuffer;
 
         //adaptive lerp vars
         private float _adaptiveMiddlePoint = 3f;
@@ -373,10 +375,10 @@ namespace LiteEntitySystem
                     for (int i = 0; i < classData.FieldsCount; i++)
                     {
                         ref var field = ref classData.Fields[i];
-                        if ((entity.IsServerControlled && !field.Flags.HasFlagFast(SyncFlags.RemotePredicted)) ||
-                            (entity.IsLocalControlled && field.Flags.HasFlagFast(SyncFlags.OnlyForRemote)))
+                        if ((entity.IsServerControlled && !field.Flags.HasFlagFast(SyncFlags.AlwaysPredict)) ||
+                            (entity.IsLocalControlled && field.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers)))
                             continue;
-                        if (field.FieldType == FieldType.SyncableSyncVar)
+                        if (field.FieldType == FieldType.SyncableField)
                         {
                             var syncableField = Utils.RefFieldValue<SyncableField>(entity, field.Offset);
                             field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, predictedData + field.PredictedOffset);
@@ -472,11 +474,13 @@ namespace LiteEntitySystem
                         var entity = EntitiesDict[rpcCache.EntityId];
                         if (rpcCache.FieldId == byte.MaxValue)
                         {
-                            rpcCache.Delegate(entity, _stateB.Data, rpcCache.Offset, rpcCache.Count);
+                            rpcCache.Delegate(entity, new ReadOnlySpan<byte>(_stateB.Data, rpcCache.Offset, rpcCache.Count));
                         }
                         else
                         {
-                            rpcCache.Delegate(Utils.RefFieldValue<SyncVar>(entity, ClassDataDict[entity.ClassId].SyncableFields[rpcCache.FieldId].Offset), _stateB.Data, rpcCache.Offset, rpcCache.Count);
+                            rpcCache.Delegate(
+                                Utils.RefFieldValue<SyncVar>(entity, ClassDataDict[entity.ClassId].SyncableFields[rpcCache.FieldId].Offset), 
+                                new ReadOnlySpan<byte>(_stateB.Data, rpcCache.Offset, rpcCache.Count));
                         }
                     }
                 }
@@ -691,7 +695,7 @@ namespace LiteEntitySystem
             _spawnPredictedEntities.Enqueue((_tick, e));
         }
 
-        private unsafe void ConstructAndSync()
+        private void ConstructAndSync()
         {
             ServerTick = _stateA.Tick;
             
@@ -706,7 +710,7 @@ namespace LiteEntitySystem
             for (int i = 0; i < _syncCallsCount; i++)
             {
                 ref var syncCall = ref _syncCalls[i];
-                syncCall.OnSync(syncCall.Entity, _stateA.Data, syncCall.PrevDataPos, 1);
+                syncCall.OnSync(syncCall.Entity, new ReadOnlySpan<byte>(_stateA.Data, syncCall.PrevDataPos, 1));
             }
             _syncCallsCount = 0;
             
@@ -781,11 +785,11 @@ namespace LiteEntitySystem
                     byte* readDataPtr = rawData + readerPosition;
                     
                     if( fullSync || 
-                        (entity.IsServerControlled && field.Flags.HasFlagFast(SyncFlags.RemotePredicted)) || 
-                        (entity.IsLocalControlled && !field.Flags.HasFlagFast(SyncFlags.OnlyForRemote)) )
+                        (entity.IsServerControlled && field.Flags.HasFlagFast(SyncFlags.AlwaysPredict)) || 
+                        (entity.IsLocalControlled && !field.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers)) )
                         Unsafe.CopyBlock(predictedData + field.PredictedOffset, readDataPtr, field.Size);
                     
-                    if (field.FieldType == FieldType.SyncableSyncVar)
+                    if (field.FieldType == FieldType.SyncableField)
                     {
                         var syncableField = Utils.RefFieldValue<SyncableField>(entity, field.Offset);
                         field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, readDataPtr);

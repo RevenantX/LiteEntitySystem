@@ -7,7 +7,6 @@ namespace LiteEntitySystem
     public class SyncableRemoteCall : Attribute
     {
         internal byte Id = byte.MaxValue;
-        internal int DataSize;
     }
 
     [AttributeUsage(AttributeTargets.Field)]

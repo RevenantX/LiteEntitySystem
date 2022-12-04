@@ -108,7 +108,7 @@ namespace LiteEntitySystem.Internal
                     int offset;
                     
                     //update only changed fields
-                    if (field.FieldType == FieldType.SyncableSyncVar)
+                    if (field.FieldType == FieldType.SyncableField)
                     {
                         obj = Utils.RefFieldValue<SyncableField>(_entity, field.Offset);
                         offset = field.SyncableSyncVarOffset;
@@ -217,8 +217,8 @@ namespace LiteEntitySystem.Internal
                             *fields = 0;
                         }
 
-                        if ((!field.Flags.HasFlagFast(SyncFlags.OnlyForLocal) || localControlled) &&
-                            (!field.Flags.HasFlagFast(SyncFlags.OnlyForRemote) || !localControlled) &&
+                        if ((!field.Flags.HasFlagFast(SyncFlags.OnlyForOwner) || localControlled) &&
+                            (!field.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) || !localControlled) &&
                             Utils.SequenceDiff(_fieldChangeTicks[i], playerTick) > 0)
                         {
                             hasChanges = true;

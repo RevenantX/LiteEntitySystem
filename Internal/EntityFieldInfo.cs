@@ -4,7 +4,7 @@
     {
         Value,
         Syncable,
-        SyncableSyncVar
+        SyncableField
     }
     
     internal struct EntityFieldInfo
@@ -15,32 +15,32 @@
         public readonly uint Size;
         public readonly int IntSize;
         public readonly FieldType FieldType;
-        public readonly MethodCallDelegate OnSync;
         public readonly SyncFlags Flags;
-
-        public bool IsPredicted => Flags.HasFlagFast(SyncFlags.RemotePredicted) || !Flags.HasFlagFast(SyncFlags.OnlyForRemote);
-
+        public readonly bool ChangeNotification;
+        
+        public MethodCallDelegate OnSync;
+        public bool IsPredicted => Flags.HasFlagFast(SyncFlags.AlwaysPredict) || !Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers);
         public int FixedOffset;
         public int PredictedOffset;
 
         //for value type
         public EntityFieldInfo(
             ValueTypeProcessor valueTypeProcessor,
-            MethodCallDelegate onSync,
             int offset,
-            int size,
+            bool changeNotification,
             SyncFlags flags)
         {
             TypeProcessor = valueTypeProcessor;
             SyncableSyncVarOffset = -1;
             Offset = offset;
-            Size = (uint)size;
-            IntSize = size;
+            Size = (uint)TypeProcessor.Size;
+            IntSize = TypeProcessor.Size;
             FieldType = FieldType.Value;
-            OnSync = onSync;
             FixedOffset = 0;
             PredictedOffset = 0;
             Flags = flags;
+            OnSync = null;
+            ChangeNotification = changeNotification;
         }
 
         //For syncable
@@ -58,6 +58,7 @@
             PredictedOffset = 0;
             Flags = flags;
             OnSync = null;
+            ChangeNotification = false;
         }
         
         //For syncable syncvar
@@ -65,19 +66,20 @@
             ValueTypeProcessor valueTypeProcessor,
             int offset,
             int syncableSyncVarOffset,
-            int size,
+            bool changeNotification,
             SyncFlags flags)
         {
             TypeProcessor = valueTypeProcessor;
             SyncableSyncVarOffset = syncableSyncVarOffset;
             Offset = offset;
-            Size = (uint)size;
-            IntSize = size;
-            FieldType = FieldType.SyncableSyncVar;
-            OnSync = null;
+            Size = (uint)TypeProcessor.Size;
+            IntSize = TypeProcessor.Size;
+            FieldType = FieldType.SyncableField;
             FixedOffset = 0;
             PredictedOffset = 0;
             Flags = flags;
+            OnSync = null;
+            ChangeNotification = changeNotification;
         }
     }
 }

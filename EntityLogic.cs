@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
@@ -26,32 +25,17 @@ namespace LiteEntitySystem
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class LocalOnly : Attribute { }
-    
-    [AttributeUsage(AttributeTargets.Method)]
-    public class RemoteCall : Attribute
-    {
-        public readonly ExecuteFlags Flags;
-        
-        internal byte Id = byte.MaxValue;
-        internal int DataSize;
-        internal bool IsArray;
-
-        public RemoteCall(ExecuteFlags flags)
-        {
-            Flags = flags;
-        }
-    }
 
     /// <summary>
     /// Base class for simple (not controlled by controller) entity
     /// </summary>
     public abstract class EntityLogic : InternalEntity
     {
-        [SyncVar(nameof(OnParentChange))] 
-        private EntitySharedReference _parentId;
+        [SyncVar] 
+        private SyncVarWithNotify<EntitySharedReference> _parentId;
 
-        [SyncVar(nameof(OnOwnerChange))]
-        internal byte InternalOwnerId;
+        [SyncVar]
+        internal SyncVarWithNotify<byte> InternalOwnerId;
 
         /// <summary>
         /// Child entities (can be used for transforms or as components)

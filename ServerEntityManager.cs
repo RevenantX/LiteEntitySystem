@@ -550,26 +550,26 @@ namespace LiteEntitySystem
             _rpcPool.Enqueue(rpcNode);
         }
         
-        internal void AddRemoteCall(ushort entityId, RemoteCall remoteCallInfo) 
+        internal void AddRemoteCall(ushort entityId, byte rpcId, ExecuteFlags flags) 
         {
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Init(_tick, remoteCallInfo);
+            rpc.Init(_tick, 0, rpcId, flags);
             _stateSerializers[entityId].AddRpcPacket(rpc);
         }
         
-        internal unsafe void AddRemoteCall<T>(ushort entityId, T value, RemoteCall remoteCallInfo) where T : unmanaged
+        internal unsafe void AddRemoteCall<T>(ushort entityId, T value, byte rpcId, ExecuteFlags flags) where T : unmanaged
         {
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Init(_tick, remoteCallInfo);
+            rpc.Init(_tick, (ushort)sizeof(T), rpcId, flags);
             fixed (byte* rawData = rpc.Data)
                 *(T*)rawData = value;
             _stateSerializers[entityId].AddRpcPacket(rpc);
         }
         
-        internal void AddRemoteCall<T>(ushort entityId, ReadOnlySpan<T> value, RemoteCall remoteCallInfo) where T : unmanaged
+        internal unsafe void AddRemoteCall<T>(ushort entityId, ReadOnlySpan<T> value, byte rpcId, ExecuteFlags flags) where T : unmanaged
         {
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Init(_tick, remoteCallInfo, value.Length);
+            rpc.Init(_tick, (ushort)sizeof(T), rpcId, flags, value.Length);
             MemoryMarshal.AsBytes(value).CopyTo(rpc.Data);
             _stateSerializers[entityId].AddRpcPacket(rpc);
         }
@@ -579,7 +579,7 @@ namespace LiteEntitySystem
             var entity = EntitiesDict[field.EntityId];
             var remoteCallInfo = ClassDataDict[entity.ClassId].SyncableRemoteCalls[method];
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Init(_tick, remoteCallInfo, field.FieldId);
+            rpc.Init(_tick, 0, remoteCallInfo, field.FieldId);
             _stateSerializers[field.EntityId].AddRpcPacket(rpc);
         }
         
@@ -588,18 +588,18 @@ namespace LiteEntitySystem
             var entity = EntitiesDict[field.EntityId];
             var remoteCallInfo = ClassDataDict[entity.ClassId].SyncableRemoteCalls[method];
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Init(_tick, remoteCallInfo, field.FieldId);
+            rpc.Init(_tick, (ushort)sizeof(T), remoteCallInfo, field.FieldId);
             fixed (byte* rawData = rpc.Data)
                 *(T*)rawData = value;
             _stateSerializers[field.EntityId].AddRpcPacket(rpc);
         }
         
-        internal void AddSyncableCall<T>(SyncableField field, ReadOnlySpan<T> value, MethodInfo method) where T : unmanaged
+        internal unsafe void AddSyncableCall<T>(SyncableField field, ReadOnlySpan<T> value, MethodInfo method) where T : unmanaged
         {
             var entity = EntitiesDict[field.EntityId];
             var remoteCallInfo = ClassDataDict[entity.ClassId].SyncableRemoteCalls[method];
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Init(_tick, remoteCallInfo, field.FieldId, value.Length);
+            rpc.Init(_tick, (ushort)sizeof(T), remoteCallInfo, field.FieldId, value.Length);
             MemoryMarshal.AsBytes(value).CopyTo(rpc.Data);
             _stateSerializers[field.EntityId].AddRpcPacket(rpc);
         }

@@ -10,42 +10,42 @@ namespace LiteEntitySystem.Internal
         public ExecuteFlags Flags;
         public RemoteCallPacket Next;
 
-        public void Init(ushort tick, RemoteCall rc)
+        public void Init(ushort tick, ushort dataSize, byte rpcId, ExecuteFlags flags)
         {
             Tick = tick;
-            Id = rc.Id;
+            Id = rpcId;
             FieldId = byte.MaxValue;
-            Flags = rc.Flags;
-            Size = (ushort)rc.DataSize;
+            Flags = flags;
+            Size = dataSize;
             Utils.ResizeOrCreate(ref Data, Size);
         }
         
-        public void Init(ushort tick, RemoteCall rc, int count)
+        public void Init(ushort tick, ushort dataSize, byte rpcId, ExecuteFlags flags, int count)
         {
             Tick = tick;
-            Id = rc.Id;
+            Id = rpcId;
             FieldId = byte.MaxValue;
-            Flags = rc.Flags;
-            Size = (ushort)(rc.DataSize*count);
+            Flags = flags;
+            Size = (ushort)(dataSize*count);
             Utils.ResizeOrCreate(ref Data, Size);
         }
         
-        public void Init(ushort tick, SyncableRemoteCall rc, byte fieldId)
+        public void Init(ushort tick, ushort dataSize, SyncableRemoteCall rc, byte fieldId)
         {
             Tick = tick;
             Id = rc.Id;
             FieldId = fieldId;
-            Size = (ushort)rc.DataSize;
+            Size = dataSize;
             Utils.ResizeOrCreate(ref Data, Size);
             Flags = ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner;
         }
         
-        public void Init(ushort tick, SyncableRemoteCall rc, byte fieldId, int count)
+        public void Init(ushort tick, ushort dataSize, SyncableRemoteCall rc, byte fieldId, int count)
         {
             Tick = tick;
             Id = rc.Id;
             FieldId = fieldId;
-            Size = (ushort)(rc.DataSize * count);
+            Size = (ushort)(dataSize * count);
             Utils.ResizeOrCreate(ref Data, Size);
             Flags = ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner;
         }

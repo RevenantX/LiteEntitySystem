@@ -10,6 +10,7 @@ namespace LiteEntitySystem
     [Flags]
     public enum ExecuteFlags : byte
     {
+        None = 0,
         SendToOwner = 1,
         SendToOther = 1 << 1,
         ExecuteOnPrediction = 1 << 2,
@@ -38,34 +39,6 @@ namespace LiteEntitySystem
         Size128 = 128
     }
 
-    public abstract class EntityTypesMap
-    {
-        internal ushort MaxId;
-        internal readonly Dictionary<Type, (ushort, EntityConstructor<InternalEntity>)> RegisteredTypes = new Dictionary<Type, (ushort, EntityConstructor<InternalEntity>)>();
-    }
-
-    /// <summary>
-    /// Entity types map that will be used for EntityManager
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public sealed class EntityTypesMap<T> : EntityTypesMap where T : Enum
-    {
-        /// <summary>
-        /// Register new entity type that will be used in game
-        /// </summary>
-        /// <param name="id">Enum value that will describe entity class id</param>
-        /// <param name="constructor">Constructor of entity</param>
-        /// <typeparam name="TEntity">Type of entity</typeparam>
-        public EntityTypesMap<T> Register<TEntity>(T id, EntityConstructor<TEntity> constructor) where TEntity : InternalEntity 
-        {
-            ushort classId = (ushort)((ushort)(object)id + 1);
-            EntityClassInfo<TEntity>.ClassId = classId;
-            RegisteredTypes.Add(typeof(TEntity), (classId, constructor));
-            MaxId = Math.Max(MaxId, classId);
-            return this;
-        }
-    }
-    
     /// <summary>
     /// Base class for client and server manager
     /// </summary>
@@ -219,7 +192,7 @@ namespace LiteEntitySystem
             RegisterBasicFieldType(new ValueTypeProcessorFloat());
             RegisterBasicFieldType(new ValueTypeProcessorDouble());
             RegisterBasicFieldType(new ValueTypeProcessorBool());
-            RegisterBasicFieldType(new ValueTypeProcessorESR());
+            RegisterBasicFieldType(new ValueTypeProcessorEntitySharedReference());
             RegisterFieldType<FloatAngle>(FloatAngle.Lerp);
         }
 
@@ -236,21 +209,19 @@ namespace LiteEntitySystem
             foreach (var kv in typesMap.RegisteredTypes)
             {
                 var entType = kv.Key;
-                (ushort classId, var entityConstructor) = kv.Value;
 
-                ClassDataDict[classId] = new EntityClassData(
+                ClassDataDict[kv.Value.ClassId] = new EntityClassData(
                     entType.IsSubclassOf(typeof(SingletonEntityLogic)) ? singletonCount++ : filterCount++, 
                     entType, 
-                    classId, 
-                    entityConstructor);
-                _registeredTypeIds.Add(entType, ClassDataDict[classId].FilterId);
+                    kv.Value);
+                _registeredTypeIds.Add(entType, ClassDataDict[kv.Value.ClassId].FilterId);
                 //Logger.Log($"Register: {entType.Name} ClassId: {classId}");
             }
 
             foreach (var registeredType in typesMap.RegisteredTypes.Values)
             {
                 //map base ids
-                ClassDataDict[registeredType.Item1].PrepareBaseTypes(_registeredTypeIds, ref singletonCount, ref filterCount);
+                ClassDataDict[registeredType.ClassId].PrepareBaseTypes(_registeredTypeIds, ref singletonCount, ref filterCount);
             }
 
             _entityFilters = new EntityFilter[filterCount];
