@@ -30,7 +30,7 @@ namespace LiteEntitySystem.Extensions
 
         public override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
-            r.CreateClientAction(this, SetNewString, out _setStringClientCall);
+            r.CreateClientAction(this, SetNewString, ref _setStringClientCall);
         }
 
         public override string ToString()

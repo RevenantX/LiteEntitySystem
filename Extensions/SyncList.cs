@@ -20,10 +20,10 @@ namespace LiteEntitySystem.Extensions
 
         public override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
-            r.CreateClientAction(this, Add, out _addAction);
-            r.CreateClientAction(this, Clear, out _clearAction);
-            r.CreateClientAction(this, FullClear, out _fullClearAction);
-            r.CreateClientAction(this, RemoveAt, out _removeAtAction);
+            r.CreateClientAction(this, Add, ref _addAction);
+            r.CreateClientAction(this, Clear, ref _clearAction);
+            r.CreateClientAction(this, FullClear, ref _fullClearAction);
+            r.CreateClientAction(this, RemoveAt, ref _removeAtAction);
         }
 
         public SyncList()

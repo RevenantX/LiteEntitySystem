@@ -141,10 +141,17 @@ namespace LiteEntitySystem.Internal
         {
             ref var classData = ref GetClassData();
             //load cache and/or init RpcIds
-            for (int i = 0; i < classData.RemoteCallOffsets.Length; i++)
+            for (int i = 0; i < classData.RpcOffsets.Length; i++)
             {
-                ref var remoteCall = ref Utils.RefFieldValue<RemoteCall>(this, classData.RemoteCallOffsets[i]);
+                ref var remoteCall = ref Utils.RefFieldValue<RemoteCall>(this, classData.RpcOffsets[i]);
                 remoteCall = new RemoteCall((byte)i, classData.RPCCache[i]);
+            }
+            for (int i = 0; i < classData.SyncableRpcOffsets.Length; i++)
+            {
+                var syncable = Utils.RefFieldValue<SyncableField>(this, classData.SyncableRpcOffsets[i].SyncableOffset);
+                ref var remoteCall = ref Utils.RefFieldValue<RemoteCall>(syncable, classData.SyncableRpcOffsets[i].RpcOffset);
+                remoteCall = new RemoteCall((byte)i, classData.SyncableRPCCache[i]);
+                syncable.ParentEntityId = Id;
             }
             if(!classData.IsRpcBound)
             {
@@ -159,16 +166,15 @@ namespace LiteEntitySystem.Internal
                 }
                 var r = new RPCRegistrator();
                 RegisterRPC(ref r);
+                for (int i = 0; i < classData.SyncableFieldOffsets.Length; i++)
+                {
+                    var syncable = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFieldOffsets[i]);
+                    syncable.FieldId = (byte)i;
+                    var syncableRegistrator = new SyncableRPCRegistrator(this);
+                    syncable.RegisterRPC(ref syncableRegistrator);
+                }
+                classData.IsRpcBound = true;
             }
-            
-            for (int i = 0; i < classData.SyncableFieldOffsets.Length; i++)
-            {
-                var syncable = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFieldOffsets[i]);
-                syncable.FieldId = (byte)i;
-                var syncableRegistrator = new SyncableRPCRegistrator(this);
-                syncable.RegisterRPC(ref syncableRegistrator);
-            }
-            classData.IsRpcBound = true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

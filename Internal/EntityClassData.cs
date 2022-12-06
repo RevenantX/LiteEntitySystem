@@ -5,6 +5,18 @@ using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
 {
+    internal struct SyncableRpcOffset
+    {
+        public readonly int SyncableOffset;
+        public readonly int RpcOffset;
+
+        public SyncableRpcOffset(int syncableOffset, int rpcOffset)
+        {
+            SyncableOffset = syncableOffset;
+            RpcOffset = rpcOffset;
+        }
+    }
+    
     internal struct EntityClassData
     {
         public readonly bool IsCreated;
@@ -20,7 +32,8 @@ namespace LiteEntitySystem.Internal
         public readonly bool HasRemotePredictedFields;
         public readonly EntityFieldInfo[] Fields;
         public readonly int[] SyncableFieldOffsets;
-        public readonly int[] RemoteCallOffsets;
+        public readonly int[] RpcOffsets;
+        public readonly SyncableRpcOffset[] SyncableRpcOffsets;
         public readonly int InterpolatedFieldsSize;
         public readonly int InterpolatedCount;
         public readonly EntityFieldInfo[] LagCompensatedFields;
@@ -47,7 +60,7 @@ namespace LiteEntitySystem.Internal
         public readonly MethodCallDelegate[] SyncableRemoteCallsClient;
         
         public object[] RPCCache;
-        //public object[] SyncableRPCCache;
+        public object[] SyncableRPCCache;
 
         static EntityClassData()
         {
@@ -84,8 +97,6 @@ namespace LiteEntitySystem.Internal
 
         public EntityClassData(ushort filterId, Type entType, RegisteredTypeInfo typeInfo)
         {
-            SyncableRemoteCallsClient = new MethodCallDelegate[8];
-            //SyncableRPCCache = new object[8];
             IsRpcBound = false;
             HasRemotePredictedFields = false;
             PredictedSize = 0;
@@ -121,6 +132,7 @@ namespace LiteEntitySystem.Internal
             var syncableFields = new List<int>();
             var lagCompensatedFields = new List<EntityFieldInfo>();
             var remoteCallOffsets = new List<int>();
+            var syncableRpcOffsets = new List<SyncableRpcOffset>();
 
             //add here to baseTypes to add fields
             baseTypes.Insert(0, typeof(InternalEntity));
@@ -139,12 +151,12 @@ namespace LiteEntitySystem.Internal
                     var ft = field.FieldType;
                     
                     var syncVarAttribute = field.GetCustomAttribute<SyncVarFlags>();
-
+                    int offset = Marshal.ReadInt32(field.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
+                    
                     //remotecalls
                     if(ft == typeof(RemoteCall) ||
                        (ft.IsGenericType && (ft.GetGenericTypeDefinition() == typeof(RemoteCall<>) || ft.GetGenericTypeDefinition() == typeof(RemoteCallSpan<>)) ))
                     {
-                        int offset = Marshal.ReadInt32(field.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
                         remoteCallOffsets.Add(offset);
                     }
                     //syncvars
@@ -161,8 +173,7 @@ namespace LiteEntitySystem.Internal
                             continue;
                         
                         ft = ft.GetGenericArguments()[0];
-
-                        int offset = Marshal.ReadInt32(field.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
+                        
                         if (ft.IsEnum)
                             ft = ft.GetEnumUnderlyingType();
 
@@ -205,8 +216,7 @@ namespace LiteEntitySystem.Internal
                     {
                         if (!field.IsInitOnly)
                             throw new Exception("Syncable fields should be readonly!");
-
-                        int offset = Marshal.ReadInt32(field.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
+                        
                         syncableFields.Add(offset);
                         foreach (var syncableType in GetBaseTypes(ft, typeof(SyncableField), true))
                         {
@@ -214,6 +224,14 @@ namespace LiteEntitySystem.Internal
                             foreach (var syncableField in syncableType.GetFields(bindingFlags))
                             {
                                 var syncableFieldType = syncableField.FieldType;
+                                //remotecalls
+                                if(syncableFieldType == typeof(RemoteCall) ||
+                                   (syncableFieldType.IsGenericType && (syncableFieldType.GetGenericTypeDefinition() == typeof(RemoteCall<>) || syncableFieldType.GetGenericTypeDefinition() == typeof(RemoteCallSpan<>)) ))
+                                {
+                                    int rpcOffset = Marshal.ReadInt32(syncableField.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
+                                    syncableRpcOffsets.Add(new SyncableRpcOffset(offset, rpcOffset));
+                                    continue;
+                                }
                                 if (!syncableFieldType.IsValueType || !syncableFieldType.IsGenericType || syncableFieldType.GetGenericTypeDefinition() != typeof(SyncVar<>)) 
                                     continue;
 
@@ -248,13 +266,16 @@ namespace LiteEntitySystem.Internal
                 return wb - wa;
             });
             Fields = fields.ToArray();
-            RemoteCallOffsets = remoteCallOffsets.ToArray();
+            RpcOffsets = remoteCallOffsets.ToArray();
             SyncableFieldOffsets = syncableFields.ToArray();
             FieldsCount = Fields.Length;
             FieldsFlagsSize = (FieldsCount-1) / 8 + 1;
             LagCompensatedFields = lagCompensatedFields.ToArray();
-            RemoteCallsClient = new MethodCallDelegate[RemoteCallOffsets.Length];
-            RPCCache = new object[RemoteCallOffsets.Length];
+            RemoteCallsClient = new MethodCallDelegate[RpcOffsets.Length];
+            RPCCache = new object[RpcOffsets.Length];
+            SyncableRpcOffsets = syncableRpcOffsets.ToArray();
+            SyncableRPCCache = new object[SyncableRpcOffsets.Length];
+            SyncableRemoteCallsClient = new MethodCallDelegate[SyncableRpcOffsets.Length];
             
             int fixedOffset = 0;
             int predictedOffset = 0;
