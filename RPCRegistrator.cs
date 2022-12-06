@@ -21,19 +21,12 @@ namespace LiteEntitySystem
             _isRpcBound = isRpcBound;
             _rpcId = 0;
         }
-        
-        public unsafe void BindOnChange<T, TEntity>(TEntity entity, ref SyncVarWithNotify<T> syncVar, Action<TEntity, T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
+
+        public void BindOnChange<T, TEntity>(TEntity self, ref SyncVarWithNotify<T> syncVar, Action<T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
         {
-            entity.GetClassData().Fields[syncVar.FieldId].OnSync = (ptr, buffer) =>
-            {
-                fixed(byte* data = buffer)
-                    onChangedAction((TEntity)ptr, *(T*)data);
-            };
-        }
-        
-        public void BindOnChange<T, TEntity>(TEntity entity, ref SyncVarWithNotify<T> syncVar, Action<T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
-        {
-            entity.GetClassData().Fields[syncVar.FieldId].OnSync = MethodCallGenerator.Generate<TEntity, T>(onChangedAction.Method);
+            if (onChangedAction.Target != self)
+                throw new Exception("You can call this only on this class methods");
+            self.GetClassData().Fields[syncVar.FieldId].OnSync = MethodCallGenerator.Generate<TEntity, T>(onChangedAction.Method);
         }
         
         /// <summary>

@@ -8,7 +8,7 @@ namespace LiteEntitySystem
     public abstract class ControllerLogic : InternalEntity
     {
         internal SyncVar<byte> InternalOwnerId;
-        private SyncEntityReference _controlledEntity;
+        private SyncVar<EntitySharedReference> _controlledEntity;
 
         public byte OwnerId => InternalOwnerId;
         
@@ -35,14 +35,14 @@ namespace LiteEntitySystem
         public void DestroyWithControlledEntity()
         {
             GetControlledEntity<PawnLogic>()?.Destroy();
-            _controlledEntity = null;
+            _controlledEntity.Value = null;
             Destroy();
         }
 
         public void StartControl(PawnLogic target)
         {
             StopControl();
-            _controlledEntity = target;
+            _controlledEntity.Value = target;
             GetControlledEntity<PawnLogic>().Controller = this;
         }
 
@@ -57,7 +57,7 @@ namespace LiteEntitySystem
             if (controlledLogic == null)
                 return;
             controlledLogic.Controller = null;
-            _controlledEntity = null;
+            _controlledEntity.Value = null;
         }
         
         protected ControllerLogic(EntityParams entityParams) : base(entityParams) { }

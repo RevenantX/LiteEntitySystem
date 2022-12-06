@@ -60,7 +60,6 @@ namespace LiteEntitySystem
         private readonly byte[][] _interpolatedInitialData = new byte[MaxEntityCount][];
         private readonly byte[][] _interpolatePrevData = new byte[MaxEntityCount][];
         private readonly byte[][] _predictedEntities = new byte[MaxSyncedEntityCount][];
-        private readonly byte[] _tempData = new byte[MaxFieldSize];
         private readonly byte[] _sendBuffer = new byte[NetConstants.MaxPacketSize];
 
         private ServerSendRate _serverSendRate;
@@ -378,7 +377,7 @@ namespace LiteEntitySystem
                         if ((entity.IsServerControlled && !field.Flags.HasFlagFast(SyncFlags.AlwaysPredict)) ||
                             (entity.IsLocalControlled && field.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers)))
                             continue;
-                        if (field.FieldType == FieldType.SyncableField)
+                        if (field.FieldType == FieldType.SyncableSyncVar)
                         {
                             var syncableField = Utils.RefFieldValue<SyncableField>(entity, field.Offset);
                             field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, predictedData + field.PredictedOffset);
@@ -767,13 +766,13 @@ namespace LiteEntitySystem
                 return;
             }
             
-            ref var classData = ref ClassDataDict[entity.ClassId];
+            ref var classData = ref entity.GetClassData();
             ref byte[] interpolatedInitialData = ref _interpolatedInitialData[entity.Id];
             int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
             bool writeInterpolationData = entity.IsServerControlled || fullSync;
             Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
 
-            fixed (byte* interpDataPtr = interpolatedInitialData, tempData = _tempData, predictedData = _predictedEntities[entity.Id])
+            fixed (byte* interpDataPtr = interpolatedInitialData, predictedData = _predictedEntities[entity.Id])
             {
                 entity.OnSyncStart();
                 for (int i = 0; i < classData.FieldsCount; i++)
@@ -789,7 +788,7 @@ namespace LiteEntitySystem
                         (entity.IsLocalControlled && !field.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers)) )
                         Unsafe.CopyBlock(predictedData + field.PredictedOffset, readDataPtr, field.Size);
                     
-                    if (field.FieldType == FieldType.SyncableField)
+                    if (field.FieldType == FieldType.SyncableSyncVar)
                     {
                         var syncableField = Utils.RefFieldValue<SyncableField>(entity, field.Offset);
                         field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, readDataPtr);
@@ -804,8 +803,9 @@ namespace LiteEntitySystem
 
                         if (field.OnSync != null)
                         {
-                            if (field.TypeProcessor.SetFromAndSync(entity, field.Offset, readDataPtr, tempData))
+                            if (field.TypeProcessor.SetFromAndSync(entity, field.Offset, readDataPtr))
                             {
+                                Logger.Log($"Sync: {entity.Id}, {i}");
                                 _syncCalls[_syncCallsCount++] = new SyncCallInfo
                                 {
                                     OnSync = field.OnSync,
@@ -824,7 +824,7 @@ namespace LiteEntitySystem
                 if (fullSync)
                 {
                     for (int i = 0; i < classData.SyncableFields.Length; i++)
-                        Utils.RefFieldValue<SyncableField>(entity, classData.SyncableFields[i].Offset).FullSyncRead(new Span<byte>(rawData, _stateA.Size), ref readerPosition);
+                        Utils.RefFieldValue<SyncableField>(entity, classData.SyncableFields[i].Offset).FullSyncRead(new ReadOnlySpan<byte>(rawData, _stateA.Size), ref readerPosition);
                 }
                 entity.OnSyncEnd();
             }

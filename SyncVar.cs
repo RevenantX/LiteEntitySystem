@@ -39,6 +39,11 @@ namespace LiteEntitySystem
         {
             return new SyncVar<T> { Value = v };
         }
+
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -55,6 +60,11 @@ namespace LiteEntitySystem
         public static implicit operator SyncVarWithNotify<T>(T v)
         {
             return new SyncVarWithNotify<T> { Value = v };
+        }
+        
+        public override string ToString()
+        {
+            return Value.ToString();
         }
     }
 }

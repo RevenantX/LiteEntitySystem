@@ -4,19 +4,10 @@
     {
         SyncVar,
         SyncVarWithNotification,
-        SyncEntityReference,
         Syncable,
-        SyncableField
+        SyncableSyncVar
     }
 
-    internal static class FieldTypeExt
-    {
-        public static bool HasNotification(this FieldType ft)
-        {
-            return ft == FieldType.SyncEntityReference || ft == FieldType.SyncVarWithNotification;
-        }
-    }
-    
     internal struct EntityFieldInfo
     {
         public readonly ValueTypeProcessor TypeProcessor;
@@ -80,7 +71,7 @@
             Offset = offset;
             Size = (uint)TypeProcessor.Size;
             IntSize = TypeProcessor.Size;
-            FieldType = FieldType.SyncableField;
+            FieldType = FieldType.SyncableSyncVar;
             FixedOffset = 0;
             PredictedOffset = 0;
             Flags = flags;

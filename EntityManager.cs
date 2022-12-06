@@ -281,7 +281,7 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="id">Id of entity</param>
         /// <returns>Entity if it exists, null if id == InvalidEntityId or entity is another type or version</returns>
-        public T GetEntityById<T>(SyncEntityReference id) where T : InternalEntity
+        public T GetEntityById<T>(EntitySharedReference id) where T : InternalEntity
         {
             return id.Id != InvalidEntityId
                 ? EntitiesDict[id.Id] is T entity && entity.Version == id.Version ? entity : null
@@ -295,7 +295,7 @@ namespace LiteEntitySystem
         /// <param name="id">Id of entity</param>
         /// <param name="entity">out entity if exists otherwise null</param>
         /// <returns>true if it exists, false if id == InvalidEntityId or entity is another type or version</returns>
-        public bool TryGetEntityById<T>(SyncEntityReference id, out T entity) where T : InternalEntity
+        public bool TryGetEntityById<T>(EntitySharedReference id, out T entity) where T : InternalEntity
         {
             entity = id.Id != InvalidEntityId
                 ? EntitiesDict[id.Id] is T castedEnt && castedEnt.Version == id.Version ? castedEnt : null
@@ -458,6 +458,7 @@ namespace LiteEntitySystem
                 throw new Exception($"Unregistered entity class: {entityParams.ClassId}");
             }
             var entity = classData.EntityConstructor(entityParams);
+            entity.RegisterRpcInternal();
 
             if(entityParams.Id < MaxSyncedEntityCount)
                 MaxSyncedEntityId = MaxSyncedEntityId < entityParams.Id ? entityParams.Id : MaxSyncedEntityId;

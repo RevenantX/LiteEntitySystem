@@ -99,7 +99,7 @@ namespace LiteEntitySystem.Internal
                     int offset;
                     
                     //update only changed fields
-                    if (field.FieldType == FieldType.SyncableField)
+                    if (field.FieldType == FieldType.SyncableSyncVar)
                     {
                         obj = Utils.RefFieldValue<SyncableField>(_entity, field.Offset);
                         offset = field.SyncableSyncVarOffset;

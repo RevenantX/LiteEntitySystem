@@ -6,7 +6,7 @@
     [UpdateableEntity]
     public abstract class PawnLogic : EntityLogic
     {
-        private SyncEntityReference _controller;
+        private SyncVar<EntitySharedReference> _controller;
 
         public ControllerLogic Controller
         {
@@ -17,13 +17,10 @@
                 if (value != null)
                 {
                     var parent = GetParent<EntityLogic>();
-                    if (parent != null)
-                    {
-                        ownerId = parent.OwnerId;
-                    }
+                    ownerId = parent != null ? parent.OwnerId : value.OwnerId;
                 }
                 SetOwner(this, ownerId);
-                _controller = value;
+                _controller.Value = value;
             }
         }
 

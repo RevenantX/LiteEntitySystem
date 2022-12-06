@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
@@ -137,26 +136,20 @@ namespace LiteEntitySystem.Internal
                     var syncVarAttribute = field.GetCustomAttribute<SyncVarFlags>();
 
                     //syncvars
-                    if (ft.IsValueType)
+                    if (ft.IsValueType && ft.IsGenericType)
                     {
-                        FieldType internalFieldType = FieldType.SyncVar;
-                        if (ft.IsGenericType)
-                        {
-                            var genericType = ft.GetGenericTypeDefinition();
-                            
-                            if (genericType == typeof(SyncVar<>))
-                                internalFieldType = FieldType.SyncVar;
-                            else if (genericType == typeof(SyncVarWithNotify<>))
-                                internalFieldType = FieldType.SyncVarWithNotification;
-                            else
-                                continue;
-                            
-                            ft = ft.GetGenericArguments()[0];
-                        }
-                        else if (ft != typeof(SyncEntityReference))
-                        {
+                        FieldType internalFieldType;
+                        var genericType = ft.GetGenericTypeDefinition();
+                        
+                        if (genericType == typeof(SyncVar<>))
+                            internalFieldType = FieldType.SyncVar;
+                        else if (genericType == typeof(SyncVarWithNotify<>))
+                            internalFieldType = FieldType.SyncVarWithNotification;
+                        else
                             continue;
-                        }
+                        
+                        ft = ft.GetGenericArguments()[0];
+
 
                         int offset = Marshal.ReadInt32(field.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
                         if (ft.IsEnum)
@@ -185,8 +178,7 @@ namespace LiteEntitySystem.Internal
                         }
                         else
                         {
-                            fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, internalFieldType,
-                                SyncFlags.None);
+                            fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, internalFieldType, SyncFlags.None);
                         }
                         
                         if (fieldInfo.IsPredicted)
@@ -211,30 +203,25 @@ namespace LiteEntitySystem.Internal
                             foreach (var syncableField in syncableType.GetFields(bindingFlags))
                             {
                                 var syncableFieldType = syncableField.FieldType;
-                                if (syncableFieldType.IsValueType && syncableFieldType.IsGenericType)
-                                {
-                                    if (syncableFieldType.GetGenericTypeDefinition() != typeof(SyncVar<>))
-                                    {
-                                        continue;
-                                    }
-                                    syncableFieldType = syncableFieldType.GetGenericArguments()[0];
-                                    
-                                    if (syncableFieldType.IsEnum)
-                                        syncableFieldType = syncableFieldType.GetEnumUnderlyingType();
+                                if (!syncableFieldType.IsValueType || !syncableFieldType.IsGenericType || syncableFieldType.GetGenericTypeDefinition() != typeof(SyncVar<>)) 
+                                    continue;
 
-                                    if (!ValueProcessors.RegisteredProcessors.TryGetValue(syncableFieldType, out var valueTypeProcessor))
-                                    {
-                                        Logger.LogError($"Unregistered field type: {syncableFieldType}");
-                                        continue;
-                                    }
-                                    int syncvarOffset = Marshal.ReadInt32(syncableField.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
-                                    var fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, syncvarOffset, syncVarAttribute?.Flags ?? SyncFlags.None);
-                                    fields.Add(fieldInfo);
-                                    FixedFieldsSize += fieldInfo.IntSize;
-                                    if (fieldInfo.IsPredicted)
-                                    {
-                                        PredictedSize += fieldInfo.IntSize;
-                                    }
+                                syncableFieldType = syncableFieldType.GetGenericArguments()[0];
+                                if (syncableFieldType.IsEnum)
+                                    syncableFieldType = syncableFieldType.GetEnumUnderlyingType();
+
+                                if (!ValueProcessors.RegisteredProcessors.TryGetValue(syncableFieldType, out var valueTypeProcessor))
+                                {
+                                    Logger.LogError($"Unregistered field type: {syncableFieldType}");
+                                    continue;
+                                }
+                                int syncvarOffset = Marshal.ReadInt32(syncableField.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
+                                var fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, syncvarOffset, syncVarAttribute?.Flags ?? SyncFlags.None);
+                                fields.Add(fieldInfo);
+                                FixedFieldsSize += fieldInfo.IntSize;
+                                if (fieldInfo.IsPredicted)
+                                {
+                                    PredictedSize += fieldInfo.IntSize;
                                 }
                             }
                         }

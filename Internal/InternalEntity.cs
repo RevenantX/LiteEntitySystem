@@ -117,13 +117,35 @@ namespace LiteEntitySystem.Internal
 
         internal void CallConstruct()
         {
-            ref var classData = ref GetClassData();
+            OnConstructed();
+        }
+
+        /// <summary>
+        /// Called when entity constructed
+        /// </summary>
+        protected virtual void OnConstructed()
+        {
+        }
+
+        public virtual void OnSyncStart()
+        {
             
+        }
+
+        public virtual void OnSyncEnd()
+        {
+            
+        }
+
+        internal void RegisterRpcInternal()
+        {
+            ref var classData = ref GetClassData();
             for (int i = 0; i < classData.FieldsCount; i++)
             {
-                if (classData.Fields[i].FieldType.HasNotification())
+                ref var field = ref classData.Fields[i];
+                if (field.FieldType == FieldType.SyncVarWithNotification)
                 {
-                    ref var a = ref Utils.RefFieldValue<byte>(this, classData.Fields[i].Offset+classData.Fields[i].IntSize);
+                    ref var a = ref Utils.RefFieldValue<byte>(this, field.Offset + field.IntSize);
                     a = (byte)i;
                 }
             }
@@ -143,25 +165,6 @@ namespace LiteEntitySystem.Internal
                 }
             }
             classData.IsRpcBound = true;
-            
-            OnConstructed();
-        }
-
-        /// <summary>
-        /// Called when entity constructed
-        /// </summary>
-        protected virtual void OnConstructed()
-        {
-        }
-
-        public virtual void OnSyncStart()
-        {
-            
-        }
-
-        public virtual void OnSyncEnd()
-        {
-            
         }
 
         protected virtual void RegisterRPC(ref RPCRegistrator r)

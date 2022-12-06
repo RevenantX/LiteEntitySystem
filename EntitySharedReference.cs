@@ -4,20 +4,16 @@ using LiteEntitySystem.Internal;
 namespace LiteEntitySystem
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct SyncEntityReference
+    public readonly struct EntitySharedReference
     {
-        public const int DataSize = 3; //Id 2, Version 1
-        
-        public ushort Id;
-        public byte Version;
-        internal byte FieldId;
-        
+        public readonly ushort Id;
+        public readonly byte Version;
+
         public bool IsInvalid => Id == EntityManager.InvalidEntityId;
         public bool IsLocal => Id >= EntityManager.MaxSyncedEntityCount;
 
-        public SyncEntityReference(InternalEntity entity)
+        public EntitySharedReference(InternalEntity entity)
         {
-            FieldId = 0;
             if (entity == null)
             {
                 Id = EntityManager.InvalidEntityId;
@@ -30,19 +26,19 @@ namespace LiteEntitySystem
             }
         }
 
-        public static bool operator ==(SyncEntityReference obj1, SyncEntityReference obj2)
+        public static bool operator ==(EntitySharedReference obj1, EntitySharedReference obj2)
         {
             return obj1.Id == obj2.Id && obj1.Version == obj2.Version;
         }
         
-        public static bool operator !=(SyncEntityReference obj1, SyncEntityReference obj2)
+        public static bool operator !=(EntitySharedReference obj1, EntitySharedReference obj2)
         {
             return obj1.Id != obj2.Id || obj1.Version != obj2.Version;
         }
 
         public override bool Equals(object obj)
         {
-            if (obj is SyncEntityReference esr)
+            if (obj is EntitySharedReference esr)
                 return esr.Id == Id && esr.Version == Version;
             return false;
         }
@@ -52,25 +48,9 @@ namespace LiteEntitySystem
             return Id + Version * ushort.MaxValue;
         }
 
-        public static implicit operator SyncEntityReference(InternalEntity entity)
+        public static implicit operator EntitySharedReference(InternalEntity entity)
         {
-            return new SyncEntityReference(entity);
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct InternalEntityReference
-    {
-        public ushort Id;
-        public byte Version;
-        
-        public static implicit operator SyncEntityReference(InternalEntityReference i)
-        {
-            return new SyncEntityReference
-            {
-                Id = i.Id,
-                Version = i.Version
-            };
+            return new EntitySharedReference(entity);
         }
     }
 }

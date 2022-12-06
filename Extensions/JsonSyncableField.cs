@@ -49,11 +49,6 @@ namespace LiteEntitySystem.Extensions
             }
         }
 
-        public override void RegisterRPC(ref SyncableRPCRegistrator r)
-        {
-            
-        }
-
         public static implicit operator T(JsonSyncableField<T> field)
         {
             return field.Value;

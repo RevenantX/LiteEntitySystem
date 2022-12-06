@@ -14,7 +14,7 @@ namespace LiteEntitySystem.Internal
         internal abstract int Size { get; }
         internal abstract bool CompareAndWrite(object obj, int offset, byte* data);
         internal abstract void SetFrom(object obj, int offset, byte* data);
-        internal abstract bool SetFromAndSync(object obj, int offset, byte* data, byte* tempData);
+        internal abstract bool SetFromAndSync(object obj, int offset, byte* data);
         internal abstract void WriteTo(object obj, int offset, byte* data);
         internal abstract void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer);
         internal abstract void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime);
@@ -27,7 +27,7 @@ namespace LiteEntitySystem.Internal
 
         internal override void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
-            throw new Exception($"This type: {typeof(T)} can't be interpolated");
+            throw new Exception($"This type: {ValueType} can't be interpolated");
         }
         
         internal override void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
@@ -43,14 +43,14 @@ namespace LiteEntitySystem.Internal
             a = *(T*)data;
         }
 
-        internal override bool SetFromAndSync(object obj, int offset, byte* data, byte* tempData)
+        internal override bool SetFromAndSync(object obj, int offset, byte* data)
         {
             ref var a = ref Utils.RefFieldValue<T>(obj, offset);
             if (!Compare(ref a, ref *(T*)data))
             {
-                *(T*)tempData = a;
+                T temp = a;
                 a = *(T*)data;
-                *(T*)data = *(T*)tempData;
+                *(T*)data = temp;
                 return true;
             }
             return false;
@@ -173,22 +173,20 @@ namespace LiteEntitySystem.Internal
         protected override bool Compare(ref bool a, ref bool b) => a == b;
     }
     
-    internal class ValueTypeProcessorEntitySharedReference : ValueTypeProcessor<SyncEntityReference>
+    internal class ValueTypeProcessorEntitySharedReference : ValueTypeProcessor<EntitySharedReference>
     {
-        internal override int Size => SyncEntityReference.DataSize;
-        protected override bool Compare(ref SyncEntityReference a, ref SyncEntityReference b) => a == b;
+        protected override bool Compare(ref EntitySharedReference a, ref EntitySharedReference b) => a == b;
         
         internal override unsafe bool CompareAndWrite(object obj, int offset, byte* data)
         {
             //skip local ids
-            var sharedRef = (SyncEntityReference)Utils.RefFieldValue<InternalEntityReference>(obj, offset);
+            var sharedRef = Utils.RefFieldValue<EntitySharedReference>(obj, offset);
             if (sharedRef.IsLocal)
                 sharedRef = null;
-            var latestRefPtr = (InternalEntityReference*)data;
+            var latestRefPtr = (EntitySharedReference*)data;
             if (*latestRefPtr != sharedRef)
             {
-                latestRefPtr->Id = sharedRef.Id;
-                latestRefPtr->Version = sharedRef.Version;
+                *latestRefPtr = sharedRef;
                 return true;
             }
             return false;
