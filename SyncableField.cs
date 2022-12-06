@@ -24,7 +24,7 @@ namespace LiteEntitySystem
 
         public virtual void RegisterRPC(ref SyncableRPCRegistrator r)
         {
-            r.CreateClientAction(this, null, out var a);
+
         }
     }
 }

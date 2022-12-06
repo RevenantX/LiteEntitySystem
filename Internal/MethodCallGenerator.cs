@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
 {
+    internal delegate void MethodCallDelegate(object classPtr, ReadOnlySpan<byte> buffer);
+    
     internal static class MethodCallGenerator
     {
         public static unsafe MethodCallDelegate Generate<TClass, TValue>(MethodInfo method, bool isSpan) where TValue : unmanaged

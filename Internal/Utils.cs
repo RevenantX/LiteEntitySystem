@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
 {
-    public delegate void RemoteCallSpan<T>(ReadOnlySpan<T> data) where T : unmanaged;
     internal delegate void ArrayBinding<TClass, TValue>(TClass obj, ReadOnlySpan<TValue> arr);
 
     public static class Utils

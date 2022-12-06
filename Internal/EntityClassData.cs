@@ -83,8 +83,6 @@ namespace LiteEntitySystem.Internal
             RemoteCallsClient = new MethodCallDelegate[8];
             SyncableRemoteCallsClient = new MethodCallDelegate[8];
             IsRpcBound = false;
-            RpcIdCounter = 0;
-            SyncableRpcIdCounter = 0;
             HasRemotePredictedFields = false;
             PredictedSize = 0;
             FixedFieldsSize = 0;
@@ -151,7 +149,7 @@ namespace LiteEntitySystem.Internal
                             ft = ft.GetEnumUnderlyingType();
 
                         bool hasChangeNotification = false;
-                        if (ft.GetGenericTypeDefinition() == typeof(SyncVarWithNotify<>))
+                        if (ft.IsGenericType && ft.GetGenericTypeDefinition() == typeof(SyncVarWithNotify<>))
                         {
                             ft = ft.GetGenericArguments()[0];
                             hasChangeNotification = true;
@@ -210,7 +208,7 @@ namespace LiteEntitySystem.Internal
                                     if (syncableFieldType.IsEnum)
                                         syncableFieldType = syncableFieldType.GetEnumUnderlyingType();
                                     bool hasChangeNotification = false;
-                                    if (ft.GetGenericTypeDefinition() == typeof(SyncVarWithNotify<>))
+                                    if (ft.IsGenericType && ft.GetGenericTypeDefinition() == typeof(SyncVarWithNotify<>))
                                     {
                                         ft = ft.GetGenericArguments()[0];
                                         hasChangeNotification = true;

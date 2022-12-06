@@ -12,7 +12,7 @@ namespace LiteEntitySystem.Extensions
         }
         
         public readonly T[] Data;
-        private Action<SetCallData> _setRpcAction;
+        private RemoteCall<SetCallData> _setRpcAction;
 
         public readonly int Length;
 

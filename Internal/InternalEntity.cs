@@ -1,11 +1,8 @@
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
 {
-    public delegate void MethodCallDelegate(object classPtr, ReadOnlySpan<byte> buffer);
-
     public abstract class InternalEntity : IComparable<InternalEntity>
     {
         /// <summary>
@@ -144,24 +141,25 @@ namespace LiteEntitySystem.Internal
                     a = (byte)i;
                 }
             }
-            if (!classData.IsRpcBound)
+            if (!classData.IsRpcBound || EntityManager.IsServer)
             {
-                RegisterRPC(new RPCRegistrator());
+                var r = new RPCRegistrator(classData.IsRpcBound);
+                RegisterRPC(ref r);
             }
             for (int i = 0; i < classData.SyncableFields.Length; i++)
             {
                 var syncable = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
                 syncable.FieldId = (byte)i;
-                if ((EntityManager.IsClient && !classData.IsRpcBound) || EntityManager.IsServer)
+                if (!classData.IsRpcBound || EntityManager.IsServer)
                 {
-                    var syncableRegistrator = new SyncableRPCRegistrator(EntityManager, this, classData.IsRpcBound);
+                    var syncableRegistrator = new SyncableRPCRegistrator(this, classData.IsRpcBound);
                     syncable.RegisterRPC(ref syncableRegistrator);
                 }
             }
             classData.IsRpcBound = true;
         }
         
-        protected virtual void RegisterRPC(in RPCRegistrator r)
+        protected virtual void RegisterRPC(ref RPCRegistrator r)
         {
             r.BindOnChange(this, ref _isDestroyed, (entity, prevValue) =>
             {
