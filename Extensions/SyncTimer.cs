@@ -8,8 +8,8 @@ namespace LiteEntitySystem.Extensions
         public float ElapsedTime => _time;
         public bool IsTimeElapsed => _time >= _maxTime;
         
-        [SyncableSyncVar] private float _time;
-        [SyncableSyncVar] private float _maxTime;
+        private SyncVar<float> _time;
+        private SyncVar<float> _maxTime;
 
         public SyncTimer(float maxTime) 
         {

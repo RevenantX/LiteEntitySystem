@@ -15,27 +15,38 @@ namespace LiteEntitySystem
     }
     
     [AttributeUsage(AttributeTargets.Field)]
-    public class SyncVar : Attribute
+    public class SyncVarFlags : Attribute
     {
         internal readonly SyncFlags Flags;
 
-        public SyncVar()
-        {
-        }
-
-        public SyncVar(SyncFlags flags)
+        public SyncVarFlags(SyncFlags flags)
         {
             Flags = flags;
         }
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct SyncVarWithNotify<T> where T : unmanaged
+    public struct SyncVar<T> where T : unmanaged
     {
-        internal byte FieldId;
-        
         public T Value;
 
+        public static implicit operator T(SyncVar<T> sv)
+        {
+            return sv.Value;
+        }
+        
+        public static implicit operator SyncVar<T>(T v)
+        {
+            return new SyncVar<T> { Value = v };
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct SyncVarWithNotify<T> where T : unmanaged
+    {
+        public T Value;
+        internal byte FieldId;
+        
         public static implicit operator T(SyncVarWithNotify<T> sv)
         {
             return sv.Value;

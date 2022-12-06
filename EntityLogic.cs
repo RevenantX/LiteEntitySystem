@@ -31,10 +31,7 @@ namespace LiteEntitySystem
     /// </summary>
     public abstract class EntityLogic : InternalEntity
     {
-        [SyncVar] 
-        private SyncVarWithNotify<EntitySharedReference> _parentId;
-
-        [SyncVar]
+        private SyncVarWithNotify<SyncEntityReference> _parentId;
         internal SyncVarWithNotify<byte> InternalOwnerId;
 
         /// <summary>
@@ -192,11 +189,11 @@ namespace LiteEntitySystem
             if (EntityManager.IsClient)
                 return;
             
-            var id = new EntitySharedReference(parentEntity);
+            var id = new SyncEntityReference(parentEntity);
             if (id == _parentId)
                 return;
             
-            EntitySharedReference oldId = _parentId;
+            SyncEntityReference oldId = _parentId;
             _parentId = id;
             OnParentChange(oldId);
             
@@ -262,7 +259,7 @@ namespace LiteEntitySystem
                 ClientManager.RemoveOwned(this);
         }
 
-        private void OnParentChange(EntitySharedReference oldId)
+        private void OnParentChange(SyncEntityReference oldId)
         {
             EntityManager.GetEntityById<EntityLogic>(oldId)?.Childs.Remove(this);
             EntityManager.GetEntityById<EntityLogic>(_parentId)?.Childs.Add(this);

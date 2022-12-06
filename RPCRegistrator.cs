@@ -1,4 +1,6 @@
 using System;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
@@ -6,6 +8,8 @@ namespace LiteEntitySystem
     public delegate void RemoteCall();
     public delegate void RemoteCall<T>(T data) where T : unmanaged;
     public delegate void RemoteCallSpan<T>(ReadOnlySpan<T> data) where T : unmanaged;
+    
+    internal delegate void MethodCallDelegate(object classPtr, ReadOnlySpan<byte> buffer);
     
     public ref struct RPCRegistrator
     {
@@ -29,7 +33,7 @@ namespace LiteEntitySystem
         
         public void BindOnChange<T, TEntity>(TEntity entity, ref SyncVarWithNotify<T> syncVar, Action<T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
         {
-            entity.GetClassData().Fields[syncVar.FieldId].OnSync = MethodCallGenerator.Generate<TEntity, T>(onChangedAction.Method, false);
+            entity.GetClassData().Fields[syncVar.FieldId].OnSync = MethodCallGenerator.Generate<TEntity, T>(onChangedAction.Method);
         }
         
         /// <summary>
@@ -85,7 +89,7 @@ namespace LiteEntitySystem
             {
                 ref var classData = ref self.GetClassData();
                 Utils.ResizeIfFull(ref classData.RemoteCallsClient, rpcId);
-                classData.RemoteCallsClient[rpcId] ??= MethodCallGenerator.Generate<TEntity, T>(methodToCall.Method, false);
+                classData.RemoteCallsClient[rpcId] ??= MethodCallGenerator.Generate<TEntity, T>(methodToCall.Method);
             }
 
             if (self.EntityManager.IsServer)
@@ -121,7 +125,7 @@ namespace LiteEntitySystem
             {
                 ref var classData = ref self.GetClassData();
                 Utils.ResizeIfFull(ref classData.RemoteCallsClient, rpcId);
-                classData.RemoteCallsClient[rpcId] ??= MethodCallGenerator.Generate<TEntity, T>(methodToCall.Method, true);
+                classData.RemoteCallsClient[rpcId] ??= MethodCallGenerator.GenerateSpan<TEntity, T>(methodToCall.Method);
             }
 
             if (self.EntityManager.IsServer)
@@ -189,7 +193,7 @@ namespace LiteEntitySystem
             byte rpcId = _rpcId;
             _rpcId++;
             if (!_isRpcBound)
-                GetSyncableRemoteCall(rpcId) = MethodCallGenerator.Generate<TSyncField, T>(methodToCall.Method, false);
+                GetSyncableRemoteCall(rpcId) = MethodCallGenerator.Generate<TSyncField, T>(methodToCall.Method);
             if (_entity.EntityManager.IsServer)
             {
                 var serverManager = _entity.ServerManager;
@@ -209,7 +213,7 @@ namespace LiteEntitySystem
             byte rpcId = _rpcId;
             _rpcId++;
             if (!_isRpcBound)
-                GetSyncableRemoteCall(rpcId) = MethodCallGenerator.Generate<TSyncField, T>(methodToCall.Method, true);
+                GetSyncableRemoteCall(rpcId) = MethodCallGenerator.GenerateSpan<TSyncField, T>(methodToCall.Method);
             if(_entity.EntityManager.IsServer)
             {
                 var serverManager = _entity.ServerManager;
@@ -220,6 +224,31 @@ namespace LiteEntitySystem
             {
                 cachedAction = null;
             }
+        }
+    }
+
+    internal static class MethodCallGenerator
+    {
+        public static unsafe MethodCallDelegate Generate<TClass, TValue>(MethodInfo method) where TValue : unmanaged
+        {
+            var d = (Action<TClass, TValue>)method.CreateDelegate(typeof(Action<TClass, TValue>));
+            return (classPtr, buffer) =>
+            {
+                fixed(byte* data = buffer)
+                    d((TClass)classPtr, *(TValue*)data);
+            };
+        }
+        
+        public static MethodCallDelegate GenerateSpan<TClass, TValue>(MethodInfo method) where TValue : unmanaged
+        {
+            var d = (ArrayBinding<TClass, TValue>)method.CreateDelegate(typeof(ArrayBinding<TClass, TValue>));
+            return (classPtr, buffer) => d((TClass)classPtr, MemoryMarshal.Cast<byte, TValue>(buffer));
+        }
+
+        public static MethodCallDelegate GenerateNoParams<TClass>(MethodInfo method) 
+        {
+            var d = (Action<TClass>)method.CreateDelegate(typeof(Action<TClass>));
+            return (classPtr, _) => d((TClass)classPtr);
         }
     }
 }

@@ -6,15 +6,23 @@
     [UpdateableEntity]
     public abstract class PawnLogic : EntityLogic
     {
-        [SyncVar] 
-        private EntitySharedReference _controller;
+        private SyncEntityReference _controller;
 
         public ControllerLogic Controller
         {
             get => EntityManager.GetEntityById<ControllerLogic>(_controller);
             internal set
             {
-                SetOwner(this, value?.InternalOwnerId ?? (GetParent<EntityLogic>()?.InternalOwnerId ?? EntityManager.ServerPlayerId));
+                byte ownerId = EntityManager.ServerPlayerId;
+                if (value != null)
+                {
+                    var parent = GetParent<EntityLogic>();
+                    if (parent != null)
+                    {
+                        ownerId = parent.OwnerId;
+                    }
+                }
+                SetOwner(this, ownerId);
                 _controller = value;
             }
         }

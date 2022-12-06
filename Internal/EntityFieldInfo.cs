@@ -2,9 +2,19 @@
 {
     internal enum FieldType
     {
-        Value,
+        SyncVar,
+        SyncVarWithNotification,
+        SyncEntityReference,
         Syncable,
         SyncableField
+    }
+
+    internal static class FieldTypeExt
+    {
+        public static bool HasNotification(this FieldType ft)
+        {
+            return ft == FieldType.SyncEntityReference || ft == FieldType.SyncVarWithNotification;
+        }
     }
     
     internal struct EntityFieldInfo
@@ -16,8 +26,7 @@
         public readonly int IntSize;
         public readonly FieldType FieldType;
         public readonly SyncFlags Flags;
-        public readonly bool ChangeNotification;
-        
+
         public MethodCallDelegate OnSync;
         public bool IsPredicted => Flags.HasFlagFast(SyncFlags.AlwaysPredict) || !Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers);
         public int FixedOffset;
@@ -27,7 +36,7 @@
         public EntityFieldInfo(
             ValueTypeProcessor valueTypeProcessor,
             int offset,
-            bool changeNotification,
+            FieldType fieldType,
             SyncFlags flags)
         {
             TypeProcessor = valueTypeProcessor;
@@ -35,12 +44,11 @@
             Offset = offset;
             Size = (uint)TypeProcessor.Size;
             IntSize = TypeProcessor.Size;
-            FieldType = FieldType.Value;
+            FieldType = fieldType;
             FixedOffset = 0;
             PredictedOffset = 0;
             Flags = flags;
             OnSync = null;
-            ChangeNotification = changeNotification;
         }
 
         //For syncable
@@ -58,7 +66,6 @@
             PredictedOffset = 0;
             Flags = flags;
             OnSync = null;
-            ChangeNotification = false;
         }
         
         //For syncable syncvar
@@ -66,7 +73,6 @@
             ValueTypeProcessor valueTypeProcessor,
             int offset,
             int syncableSyncVarOffset,
-            bool changeNotification,
             SyncFlags flags)
         {
             TypeProcessor = valueTypeProcessor;
@@ -79,7 +85,6 @@
             PredictedOffset = 0;
             Flags = flags;
             OnSync = null;
-            ChangeNotification = changeNotification;
         }
     }
 }

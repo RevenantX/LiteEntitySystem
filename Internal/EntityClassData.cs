@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
@@ -34,7 +35,7 @@ namespace LiteEntitySystem.Internal
         private static readonly int NativeFieldOffset;
         private static readonly Type InternalEntityType = typeof(InternalEntity);
         private static readonly Type SingletonEntityType = typeof(SingletonEntityLogic);
-        private static readonly Type SyncableType = typeof(SyncableField);
+        private static readonly Type SyncableFieldType = typeof(SyncableField);
 
         private class TestOffset
         {
@@ -131,96 +132,103 @@ namespace LiteEntitySystem.Internal
                 //cache fields
                 foreach (var field in baseType.GetFields(bindingFlags))
                 {
-                    var syncVarAttribute = field.GetCustomAttribute<SyncVar>();
-                    if(syncVarAttribute == null)
-                        continue;
-                    
                     var ft = field.FieldType;
-                    if (ft.IsArray)
-                    {
-                        Logger.LogError($"SyncVar cannot be array! {field.Name} - {ft}");
-                        continue;
-                    }
-                    int offset = Marshal.ReadInt32(field.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
+                    
+                    var syncVarAttribute = field.GetCustomAttribute<SyncVarFlags>();
 
+                    //syncvars
                     if (ft.IsValueType)
                     {
+                        FieldType internalFieldType = FieldType.SyncVar;
+                        if (ft.IsGenericType)
+                        {
+                            var genericType = ft.GetGenericTypeDefinition();
+                            
+                            if (genericType == typeof(SyncVar<>))
+                                internalFieldType = FieldType.SyncVar;
+                            else if (genericType == typeof(SyncVarWithNotify<>))
+                                internalFieldType = FieldType.SyncVarWithNotification;
+                            else
+                                continue;
+                            
+                            ft = ft.GetGenericArguments()[0];
+                        }
+                        else if (ft != typeof(SyncEntityReference))
+                        {
+                            continue;
+                        }
+
+                        int offset = Marshal.ReadInt32(field.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
                         if (ft.IsEnum)
                             ft = ft.GetEnumUnderlyingType();
 
-                        bool hasChangeNotification = false;
-                        if (ft.IsGenericType && ft.GetGenericTypeDefinition() == typeof(SyncVarWithNotify<>))
-                        {
-                            ft = ft.GetGenericArguments()[0];
-                            hasChangeNotification = true;
-                        }
-                        
                         if (!ValueProcessors.RegisteredProcessors.TryGetValue(ft, out var valueTypeProcessor))
                         {
                             Logger.LogError($"Unregistered field type: {ft}");
                             continue;
                         }
                         int fieldSize = valueTypeProcessor.Size;
-                        
-                        if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.Interpolated) && !ft.IsArray && !ft.IsEnum)
+                        EntityFieldInfo fieldInfo;
+                        if (syncVarAttribute != null)
                         {
-                            InterpolatedFieldsSize += fieldSize;
-                            InterpolatedCount++;
+                            if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.Interpolated) && !ft.IsArray && !ft.IsEnum)
+                            {
+                                InterpolatedFieldsSize += fieldSize;
+                                InterpolatedCount++;
+                            }
+                            fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, internalFieldType, syncVarAttribute.Flags);
+                            if (syncVarAttribute != null && syncVarAttribute.Flags.HasFlagFast(SyncFlags.LagCompensated))
+                            {
+                                lagCompensatedFields.Add(fieldInfo);
+                                LagCompensatedSize += fieldSize;
+                            }
                         }
-                        
-                        var fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, hasChangeNotification, syncVarAttribute.Flags);
-                        if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.LagCompensated))
+                        else
                         {
-                            lagCompensatedFields.Add(fieldInfo);
-                            LagCompensatedSize += fieldSize;
+                            fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, internalFieldType,
+                                SyncFlags.None);
                         }
                         
                         if (fieldInfo.IsPredicted)
-                        {
                             PredictedSize += fieldSize;
-                        }
 
-                        if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.AlwaysPredict))
-                        {
+                        if (syncVarAttribute != null && syncVarAttribute.Flags.HasFlagFast(SyncFlags.AlwaysPredict))
                             HasRemotePredictedFields = true;
-                        }
 
                         fields.Add(fieldInfo);
                         FixedFieldsSize += fieldSize;
                     }
-                    else if (ft.IsSubclassOf(SyncableType))
+                    else if (ft.IsSubclassOf(SyncableFieldType))
                     {
                         if (!field.IsInitOnly)
                             throw new Exception("Syncable fields should be readonly!");
 
-                        syncableFields.Add(new EntityFieldInfo(offset, syncVarAttribute.Flags));
+                        int offset = Marshal.ReadInt32(field.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
+                        syncableFields.Add(new EntityFieldInfo(offset, syncVarAttribute?.Flags ?? SyncFlags.None));
                         foreach (var syncableType in GetBaseTypes(ft, typeof(SyncableField), true))
                         {
                             //syncable fields
                             foreach (var syncableField in syncableType.GetFields(bindingFlags))
                             {
-                                var syncableFieldAttribute = syncableField.GetCustomAttribute<SyncableSyncVar>();
-                                if (syncableFieldAttribute == null)
-                                    continue;
                                 var syncableFieldType = syncableField.FieldType;
-                                if (syncableFieldType.IsValueType)
+                                if (syncableFieldType.IsValueType && syncableFieldType.IsGenericType)
                                 {
+                                    if (syncableFieldType.GetGenericTypeDefinition() != typeof(SyncVar<>))
+                                    {
+                                        continue;
+                                    }
+                                    syncableFieldType = syncableFieldType.GetGenericArguments()[0];
+                                    
                                     if (syncableFieldType.IsEnum)
                                         syncableFieldType = syncableFieldType.GetEnumUnderlyingType();
-                                    bool hasChangeNotification = false;
-                                    if (ft.IsGenericType && ft.GetGenericTypeDefinition() == typeof(SyncVarWithNotify<>))
-                                    {
-                                        ft = ft.GetGenericArguments()[0];
-                                        hasChangeNotification = true;
-                                    }
-                                    
+
                                     if (!ValueProcessors.RegisteredProcessors.TryGetValue(syncableFieldType, out var valueTypeProcessor))
                                     {
                                         Logger.LogError($"Unregistered field type: {syncableFieldType}");
                                         continue;
                                     }
                                     int syncvarOffset = Marshal.ReadInt32(syncableField.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
-                                    var fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, syncvarOffset, hasChangeNotification, syncVarAttribute.Flags);
+                                    var fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, syncvarOffset, syncVarAttribute?.Flags ?? SyncFlags.None);
                                     fields.Add(fieldInfo);
                                     FixedFieldsSize += fieldInfo.IntSize;
                                     if (fieldInfo.IsPredicted)
@@ -228,16 +236,8 @@ namespace LiteEntitySystem.Internal
                                         PredictedSize += fieldInfo.IntSize;
                                     }
                                 }
-                                else
-                                {
-                                    throw new Exception("Syncronized fields in SyncableField should be ValueType only!");
-                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        Logger.LogError($"Unsupported SyncVar: {field.Name} - {ft}");
                     }
                 }
             }

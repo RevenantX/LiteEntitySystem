@@ -173,20 +173,22 @@ namespace LiteEntitySystem.Internal
         protected override bool Compare(ref bool a, ref bool b) => a == b;
     }
     
-    internal class ValueTypeProcessorEntitySharedReference : ValueTypeProcessor<EntitySharedReference>
+    internal class ValueTypeProcessorEntitySharedReference : ValueTypeProcessor<SyncEntityReference>
     {
-        protected override bool Compare(ref EntitySharedReference a, ref EntitySharedReference b) => a == b;
+        internal override int Size => SyncEntityReference.DataSize;
+        protected override bool Compare(ref SyncEntityReference a, ref SyncEntityReference b) => a == b;
         
         internal override unsafe bool CompareAndWrite(object obj, int offset, byte* data)
         {
             //skip local ids
-            var sharedRef = Utils.RefFieldValue<EntitySharedReference>(obj, offset);
+            var sharedRef = (SyncEntityReference)Utils.RefFieldValue<InternalEntityReference>(obj, offset);
             if (sharedRef.IsLocal)
                 sharedRef = null;
-            var latestRefPtr = (EntitySharedReference*)data;
+            var latestRefPtr = (InternalEntityReference*)data;
             if (*latestRefPtr != sharedRef)
             {
-                *latestRefPtr = sharedRef;
+                latestRefPtr->Id = sharedRef.Id;
+                latestRefPtr->Version = sharedRef.Version;
                 return true;
             }
             return false;

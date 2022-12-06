@@ -22,7 +22,6 @@ namespace LiteEntitySystem.Internal
         
         internal readonly byte Version;
         
-        [SyncVar] 
         private SyncVarWithNotify<bool> _isDestroyed;
         
         /// <summary>
@@ -72,6 +71,15 @@ namespace LiteEntitySystem.Internal
                 return;
             DestroyInternal();
         }
+        
+        private void OnDestroyChange(bool prevValue)
+        {
+            if (!prevValue && _isDestroyed)
+            {
+                _isDestroyed = false;
+                DestroyInternal();
+            }
+        }
 
         /// <summary>
         /// Event called on entity destroy
@@ -80,7 +88,7 @@ namespace LiteEntitySystem.Internal
         {
 
         }
-        
+
         internal virtual void DestroyInternal()
         {
             if (_isDestroyed)
@@ -109,6 +117,33 @@ namespace LiteEntitySystem.Internal
 
         internal void CallConstruct()
         {
+            ref var classData = ref GetClassData();
+            
+            for (int i = 0; i < classData.FieldsCount; i++)
+            {
+                if (classData.Fields[i].FieldType.HasNotification())
+                {
+                    ref var a = ref Utils.RefFieldValue<byte>(this, classData.Fields[i].Offset+classData.Fields[i].IntSize);
+                    a = (byte)i;
+                }
+            }
+            if (!classData.IsRpcBound || EntityManager.IsServer)
+            {
+                var r = new RPCRegistrator(classData.IsRpcBound);
+                RegisterRPC(ref r);
+            }
+            for (int i = 0; i < classData.SyncableFields.Length; i++)
+            {
+                var syncable = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
+                syncable.FieldId = (byte)i;
+                if (!classData.IsRpcBound || EntityManager.IsServer)
+                {
+                    var syncableRegistrator = new SyncableRPCRegistrator(this, classData.IsRpcBound);
+                    syncable.RegisterRPC(ref syncableRegistrator);
+                }
+            }
+            classData.IsRpcBound = true;
+            
             OnConstructed();
         }
 
@@ -129,46 +164,9 @@ namespace LiteEntitySystem.Internal
             
         }
 
-        internal void Initialize_Internal()
-        {
-            ref var classData = ref EntityManager.ClassDataDict[ClassId];
-            
-            for (int i = 0; i < classData.FieldsCount; i++)
-            {
-                if (classData.Fields[i].ChangeNotification)
-                {
-                    ref var a = ref Utils.RefFieldValue<byte>(this, classData.Fields[i].Offset);
-                    a = (byte)i;
-                }
-            }
-            if (!classData.IsRpcBound || EntityManager.IsServer)
-            {
-                var r = new RPCRegistrator(classData.IsRpcBound);
-                RegisterRPC(ref r);
-            }
-            for (int i = 0; i < classData.SyncableFields.Length; i++)
-            {
-                var syncable = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
-                syncable.FieldId = (byte)i;
-                if (!classData.IsRpcBound || EntityManager.IsServer)
-                {
-                    var syncableRegistrator = new SyncableRPCRegistrator(this, classData.IsRpcBound);
-                    syncable.RegisterRPC(ref syncableRegistrator);
-                }
-            }
-            classData.IsRpcBound = true;
-        }
-        
         protected virtual void RegisterRPC(ref RPCRegistrator r)
         {
-            r.BindOnChange(this, ref _isDestroyed, (entity, prevValue) =>
-            {
-                if (!prevValue && entity._isDestroyed)
-                {
-                    entity._isDestroyed = false;
-                    entity.DestroyInternal();
-                }
-            });
+            r.BindOnChange(this, ref _isDestroyed, OnDestroyChange);
         }
 
         protected InternalEntity(EntityParams entityParams)

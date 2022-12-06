@@ -11,10 +11,9 @@ namespace LiteEntitySystem.Extensions
     
     public class SyncStateMachine<T> : SyncableField where T : unmanaged, Enum
     {
-        [SyncableSyncVar]
-        private T _state;
+        private SyncVar<T> _state;
 
-        public T CurrentState => _state;
+        public SyncVar<T> CurrentState => _state;
 
         private readonly StateCalls[] _data;
 

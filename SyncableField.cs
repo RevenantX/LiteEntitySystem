@@ -2,12 +2,6 @@ using System;
 
 namespace LiteEntitySystem
 {
-    [AttributeUsage(AttributeTargets.Field)]
-    public class SyncableSyncVar : Attribute
-    {
-        
-    }
-
     public abstract class SyncableField
     {
         internal byte FieldId;
