@@ -31,22 +31,19 @@ namespace LiteEntitySystem
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void ExecuteRPC(in RemoteCall rpc)
         {
-            if (ParentEntityId != EntityManager.InvalidEntityId)
-                ((Action<SyncableField>)rpc.CachedAction)(this);
+            ((Action<SyncableField>)rpc.CachedAction)?.Invoke(this);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void ExecuteRPC<T>(in RemoteCall<T> rpc, T value) where T : unmanaged
         {
-            if (ParentEntityId != EntityManager.InvalidEntityId)
-                ((Action<SyncableField, T>)rpc.CachedAction)(this, value);
+            ((Action<SyncableField, T>)rpc.CachedAction)?.Invoke(this, value);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void ExecuteRPC<T>(in RemoteCallSpan<T> rpc, ReadOnlySpan<T> value) where T : unmanaged
         {
-            if (ParentEntityId != EntityManager.InvalidEntityId)
-                ((SpanAction<SyncableField, T>)rpc.CachedAction)(this, value);
+            ((SpanAction<SyncableField, T>)rpc.CachedAction)?.Invoke(this, value);
         }
     }
 }
