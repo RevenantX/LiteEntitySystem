@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
@@ -26,9 +27,14 @@ namespace LiteEntitySystem
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct SyncVar<T> where T : unmanaged
+    public unsafe struct SyncVar<T> where T : unmanaged
     {
         public T Value;
+
+        public SyncVar(T value)
+        {
+            Value = value;
+        }
 
         public static implicit operator T(SyncVar<T> sv)
         {
@@ -44,13 +50,51 @@ namespace LiteEntitySystem
         {
             return Value.ToString();
         }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+        
+        public override bool Equals(object o)
+        {
+            return this == (SyncVar<T>)o;
+        }
+
+        private static readonly UIntPtr SizeU = new ((uint)sizeof(T));
+
+        public static bool operator==(SyncVar<T> a, SyncVar<T> b)
+        {
+            return Utils.memcmp(&a, &b, SizeU) == 0;
+        }
+        
+        public static bool operator!=(SyncVar<T> a, SyncVar<T> b)
+        {
+            return Utils.memcmp(&a, &b, SizeU) != 0;
+        }
+        
+        public static bool operator==(T a, SyncVar<T> b)
+        {
+            return Utils.memcmp(&a, &b.Value, SizeU) == 0;
+        }
+        
+        public static bool operator!=(T a, SyncVar<T> b)
+        {
+            return Utils.memcmp(&a, &b.Value, SizeU) != 0;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct SyncVarWithNotify<T> where T : unmanaged
+    public unsafe struct SyncVarWithNotify<T> where T : unmanaged
     {
         public T Value;
         internal byte FieldId;
+        
+        public SyncVarWithNotify(T value)
+        {
+            Value = value;
+            FieldId = 0;
+        }
         
         public static implicit operator T(SyncVarWithNotify<T> sv)
         {
@@ -62,9 +106,61 @@ namespace LiteEntitySystem
             return new SyncVarWithNotify<T> { Value = v };
         }
         
+        public static implicit operator SyncVar<T>(SyncVarWithNotify<T> sv)
+        {
+            return new SyncVar<T>(sv.Value);
+        }
+        
+        public static implicit operator SyncVarWithNotify<T>(SyncVar<T> v)
+        {
+            return new SyncVarWithNotify<T> { Value = v.Value };
+        }
+        
         public override string ToString()
         {
             return Value.ToString();
+        }
+        
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+        
+        public override bool Equals(object o)
+        {
+            return this == (SyncVarWithNotify<T>)o;
+        }
+
+        private static readonly UIntPtr SizeU = new ((uint)sizeof(T));
+        
+        public static bool operator==(SyncVarWithNotify<T> a, SyncVarWithNotify<T> b)
+        {
+            return Utils.memcmp(&a.Value, &b.Value, SizeU) == 0;
+        }
+        
+        public static bool operator!=(SyncVarWithNotify<T> a, SyncVarWithNotify<T> b)
+        {
+            return Utils.memcmp(&a.Value, &b.Value, SizeU) != 0;
+        }
+        
+        public static bool operator==(SyncVar<T> a, SyncVarWithNotify<T> b)
+        {
+            return Utils.memcmp(&a.Value, &b.Value, SizeU) == 0;
+        }
+        
+        public static bool operator!=(SyncVar<T> a, SyncVarWithNotify<T> b)
+        {
+            return Utils.memcmp(&a.Value, &b.Value, SizeU) != 0;
+        }
+        
+        public static bool operator==(T a, SyncVarWithNotify<T> b)
+        {
+            return Utils.memcmp(&a, &b.Value, SizeU) == 0;
+        }
+        
+        public static bool operator!=(T a, SyncVarWithNotify<T> b)
+        {
+            return Utils.memcmp(&a, &b.Value, SizeU) != 0;
         }
     }
 }

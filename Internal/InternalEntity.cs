@@ -149,11 +149,8 @@ namespace LiteEntitySystem.Internal
                     a = (byte)i;
                 }
             }
-            if (!classData.IsRpcBound || EntityManager.IsServer)
-            {
-                var r = new RPCRegistrator(classData.IsRpcBound);
-                RegisterRPC(ref r);
-            }
+            var r = new RPCRegistrator(classData.IsRpcBound);
+            RegisterRPC(ref r);
             for (int i = 0; i < classData.SyncableFields.Length; i++)
             {
                 var syncable = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);

@@ -51,7 +51,7 @@ namespace LiteEntitySystem
 
             if (self.EntityManager.IsServer)
             {
-                if ((flags & ExecuteFlags.ExecuteOnServer) != 0)
+                if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
                     cachedAction = () => { methodToCall(); self.ServerManager.AddRemoteCall(self.Id, rpcId, flags); };
                 else
                     cachedAction = () => self.ServerManager.AddRemoteCall(self.Id, rpcId, flags);
@@ -60,7 +60,7 @@ namespace LiteEntitySystem
             {
                 cachedAction = () =>
                 {
-                    if (self.IsLocalControlled && (flags & ExecuteFlags.ExecuteOnPrediction) != 0)
+                    if (self.IsLocalControlled && flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction))
                         methodToCall();
                 };
             }
@@ -87,7 +87,7 @@ namespace LiteEntitySystem
 
             if (self.EntityManager.IsServer)
             {
-                if ((flags & ExecuteFlags.ExecuteOnServer) != 0)
+                if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
                     cachedAction = value => { methodToCall(value); self.ServerManager.AddRemoteCall(self.Id, value, rpcId, flags); };
                 else
                     cachedAction = value => self.ServerManager.AddRemoteCall(self.Id, value, rpcId, flags);
@@ -96,7 +96,7 @@ namespace LiteEntitySystem
             {
                 cachedAction = value =>
                 {
-                    if (self.IsLocalControlled && (flags & ExecuteFlags.ExecuteOnPrediction) != 0)
+                    if (self.IsLocalControlled && flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction))
                         methodToCall(value);
                 };
             }
@@ -123,7 +123,7 @@ namespace LiteEntitySystem
 
             if (self.EntityManager.IsServer)
             {
-                if ((flags & ExecuteFlags.ExecuteOnServer) != 0)
+                if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
                     cachedAction = value => { methodToCall(value); self.ServerManager.AddRemoteCall(self.Id, value, rpcId, flags); };
                 else
                     cachedAction = value => self.ServerManager.AddRemoteCall(self.Id, value, rpcId, flags);
@@ -132,7 +132,7 @@ namespace LiteEntitySystem
             {
                 cachedAction = value =>
                 {
-                    if (self.IsLocalControlled && (flags & ExecuteFlags.ExecuteOnPrediction) != 0)
+                    if (self.IsLocalControlled && flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction))
                         methodToCall(value);
                 };
             }

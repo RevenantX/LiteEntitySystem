@@ -803,7 +803,6 @@ namespace LiteEntitySystem
                         {
                             if (field.TypeProcessor.SetFromAndSync(entity, field.Offset, readDataPtr))
                             {
-                                Logger.Log($"Sync: {entity.Id}, {i}");
                                 _syncCalls[_syncCallsCount++] = new SyncCallInfo
                                 {
                                     OnSync = field.OnSync,
