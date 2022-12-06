@@ -38,7 +38,7 @@ namespace LiteEntitySystem.Extensions
             set
             {
                 Data[index] = value;
-                _setRpcAction?.Invoke(new SetCallData { Value = value, Index = (ushort)index });
+                ExecuteRPC(_setRpcAction, new SetCallData { Value = value, Index = (ushort)index });
             }
         }
 

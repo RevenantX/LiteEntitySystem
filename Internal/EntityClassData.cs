@@ -45,6 +45,9 @@ namespace LiteEntitySystem.Internal
         public MethodCallDelegate[] RemoteCallsClient;
         public MethodCallDelegate[] SyncableRemoteCallsClient;
         
+        public object[] RPCCache;
+        public object[] SyncableRPCCache;
+        
         static EntityClassData()
         {
             //check field offset
@@ -82,6 +85,8 @@ namespace LiteEntitySystem.Internal
         {
             RemoteCallsClient = new MethodCallDelegate[8];
             SyncableRemoteCallsClient = new MethodCallDelegate[8];
+            RPCCache = new object[8];
+            SyncableRPCCache = new object[8];
             IsRpcBound = false;
             HasRemotePredictedFields = false;
             PredictedSize = 0;

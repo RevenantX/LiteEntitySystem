@@ -140,6 +140,8 @@ namespace LiteEntitySystem.Internal
         internal void RegisterRpcInternal()
         {
             ref var classData = ref GetClassData();
+            if (classData.IsRpcBound)
+                return;
             for (int i = 0; i < classData.FieldsCount; i++)
             {
                 ref var field = ref classData.Fields[i];
@@ -149,19 +151,34 @@ namespace LiteEntitySystem.Internal
                     a = (byte)i;
                 }
             }
-            var r = new RPCRegistrator(classData.IsRpcBound);
+            var r = new RPCRegistrator();
             RegisterRPC(ref r);
             for (int i = 0; i < classData.SyncableFields.Length; i++)
             {
                 var syncable = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
                 syncable.FieldId = (byte)i;
-                if (!classData.IsRpcBound || EntityManager.IsServer)
-                {
-                    var syncableRegistrator = new SyncableRPCRegistrator(this, classData.IsRpcBound);
-                    syncable.RegisterRPC(ref syncableRegistrator);
-                }
+                var syncableRegistrator = new SyncableRPCRegistrator(this);
+                syncable.RegisterRPC(ref syncableRegistrator);
             }
             classData.IsRpcBound = true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void ExecuteRPC(in RemoteCall rpc)
+        {
+            ((Action<InternalEntity>)rpc.CachedAction)(this);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void ExecuteRPC<T>(in RemoteCall<T> rpc, T value) where T : unmanaged
+        {
+            ((Action<InternalEntity, T>)rpc.CachedAction)(this, value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void ExecuteRPC<T>(in RemoteCallSpan<T> rpc, ReadOnlySpan<T> value) where T : unmanaged
+        {
+            ((SpanAction<InternalEntity, T>)rpc.CachedAction)(this, value);
         }
 
         protected virtual void RegisterRPC(ref RPCRegistrator r)

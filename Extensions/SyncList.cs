@@ -16,14 +16,14 @@ namespace LiteEntitySystem.Extensions
         private RemoteCall<T> _addAction;
         private RemoteCall _clearAction;
         private RemoteCall _fullClearAction;
-        private RemoteCall<int> _remoteAtAction;
+        private RemoteCall<int> _removeAtAction;
 
         public override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, Add, out _addAction);
             r.CreateClientAction(this, Clear, out _clearAction);
             r.CreateClientAction(this, FullClear, out _fullClearAction);
-            r.CreateClientAction(this, RemoveAt, out _remoteAtAction);
+            r.CreateClientAction(this, RemoveAt, out _removeAtAction);
         }
 
         public SyncList()
@@ -49,13 +49,13 @@ namespace LiteEntitySystem.Extensions
                 Array.Resize(ref _data, Math.Min(_data.Length * 2, ushort.MaxValue));
             _data[_count] = item;
             _count++;
-            _addAction?.Invoke(item);
+            ExecuteRPC(_addAction, item);
         }
         
         public void Clear()
         {
             _count = 0;
-            _clearAction?.Invoke();
+            ExecuteRPC(_clearAction);
         }
         
         public void FullClear()
@@ -64,7 +64,7 @@ namespace LiteEntitySystem.Extensions
                 return;
             Array.Clear(_data, 0, _count);
             _count = 0;
-            _fullClearAction?.Invoke();
+            ExecuteRPC(_fullClearAction);
         }
 
         public bool Contains(T item)
@@ -115,7 +115,7 @@ namespace LiteEntitySystem.Extensions
             _data[index] = _data[_count - 1];
             _data[_count - 1] = default;
             _count--;
-            _remoteAtAction?.Invoke(index);
+            ExecuteRPC(_removeAtAction, index);
         }
 
         T IList<T>.this[int index]

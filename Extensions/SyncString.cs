@@ -24,7 +24,7 @@ namespace LiteEntitySystem.Extensions
                 _string = value;
                 Utils.ResizeOrCreate(ref _stringData, Encoding.GetMaxByteCount(_string.Length));
                 _size = Encoding.GetBytes(_string, 0, _string.Length, _stringData, 0);
-                _setStringClientCall?.Invoke(_stringData);
+                ExecuteRPC(_setStringClientCall, _stringData);
             }
         }
 
