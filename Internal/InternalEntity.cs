@@ -140,22 +140,30 @@ namespace LiteEntitySystem.Internal
         internal void RegisterRpcInternal()
         {
             ref var classData = ref GetClassData();
-            if (classData.IsRpcBound)
-                return;
-            for (int i = 0; i < classData.FieldsCount; i++)
+            //load cache and/or init RpcIds
+            for (int i = 0; i < classData.RemoteCallOffsets.Length; i++)
             {
-                ref var field = ref classData.Fields[i];
-                if (field.FieldType == FieldType.SyncVarWithNotification)
-                {
-                    ref var a = ref Utils.RefFieldValue<byte>(this, field.Offset + field.IntSize);
-                    a = (byte)i;
-                }
+                ref var remoteCall = ref Utils.RefFieldValue<RemoteCall>(this, classData.RemoteCallOffsets[i]);
+                remoteCall = new RemoteCall((byte)i, classData.RPCCache[i]);
             }
-            var r = new RPCRegistrator();
-            RegisterRPC(ref r);
-            for (int i = 0; i < classData.SyncableFields.Length; i++)
+            if(!classData.IsRpcBound)
             {
-                var syncable = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
+                for (int i = 0; i < classData.FieldsCount; i++)
+                {
+                    ref var field = ref classData.Fields[i];
+                    if (field.FieldType == FieldType.SyncVarWithNotification)
+                    {
+                        ref var a = ref Utils.RefFieldValue<byte>(this, field.Offset + field.IntSize);
+                        a = (byte)i;
+                    }
+                }
+                var r = new RPCRegistrator();
+                RegisterRPC(ref r);
+            }
+            
+            for (int i = 0; i < classData.SyncableFieldOffsets.Length; i++)
+            {
+                var syncable = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFieldOffsets[i]);
                 syncable.FieldId = (byte)i;
                 var syncableRegistrator = new SyncableRPCRegistrator(this);
                 syncable.RegisterRPC(ref syncableRegistrator);

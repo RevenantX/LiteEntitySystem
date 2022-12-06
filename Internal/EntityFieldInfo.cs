@@ -4,7 +4,6 @@
     {
         SyncVar,
         SyncVarWithNotification,
-        Syncable,
         SyncableSyncVar
     }
 
@@ -42,23 +41,6 @@
             OnSync = null;
         }
 
-        //For syncable
-        public EntityFieldInfo(
-            int offset,
-            SyncFlags flags)
-        {
-            TypeProcessor = null;
-            SyncableSyncVarOffset = -1;
-            Offset = offset;
-            Size = 0;
-            IntSize = 0;
-            FieldType = FieldType.Syncable;
-            FixedOffset = 0;
-            PredictedOffset = 0;
-            Flags = flags;
-            OnSync = null;
-        }
-        
         //For syncable syncvar
         public EntityFieldInfo(
             ValueTypeProcessor valueTypeProcessor,

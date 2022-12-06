@@ -142,9 +142,9 @@ namespace LiteEntitySystem.Internal
                 //don't write total size in full sync and fields
                 Unsafe.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
                 position += (int)_fullDataSize;
-                for (int i = 0; i < _classData.SyncableFields.Length; i++)
+                for (int i = 0; i < _classData.SyncableFieldOffsets.Length; i++)
                 {
-                    Utils.RefFieldValue<SyncableField>(_entity, _classData.SyncableFields[i].Offset).FullSyncWrite(new Span<byte>(resultData, (int)_fullDataSize), ref position);
+                    Utils.RefFieldValue<SyncableField>(_entity, _classData.SyncableFieldOffsets[i]).FullSyncWrite(new Span<byte>(resultData, (int)_fullDataSize), ref position);
                 }
             }
         }
@@ -182,9 +182,9 @@ namespace LiteEntitySystem.Internal
                     *fieldFlagAndSize = 1;
                     Unsafe.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
                     position += (int)_fullDataSize;
-                    for (int i = 0; i < _classData.SyncableFields.Length; i++)
+                    for (int i = 0; i < _classData.SyncableFieldOffsets.Length; i++)
                     {
-                        Utils.RefFieldValue<SyncableField>(_entity, _classData.SyncableFields[i].Offset).FullSyncWrite(new Span<byte>(resultData, (int)_fullDataSize), ref position);
+                        Utils.RefFieldValue<SyncableField>(_entity, _classData.SyncableFieldOffsets[i]).FullSyncWrite(new Span<byte>(resultData, (int)_fullDataSize), ref position);
                     }
                 }
                 else //make diff
