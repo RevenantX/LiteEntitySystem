@@ -85,8 +85,6 @@ namespace LiteEntitySystem
         private ushort _remoteCallsTick;
         private ushort _lastReceivedInputTick;
         private float _logicLerpMsec;
-        
-        private byte[] _compressionBuffer;
 
         //adaptive lerp vars
         private float _adaptiveMiddlePoint = 3f;

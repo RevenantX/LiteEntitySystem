@@ -19,4 +19,10 @@
       <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="RefMagic">
+        <HintPath>ILPart\RefMagic.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
