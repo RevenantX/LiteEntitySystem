@@ -18,12 +18,12 @@ namespace LiteEntitySystem.Extensions
         private Action _fullClearAction;
         private Action<int> _remoteAtAction;
 
-        public override void OnServerInitialized()
+        public override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
-            CreateClientAction(Add, out _addAction);
-            CreateClientAction(Clear, out _clearAction);
-            CreateClientAction(FullClear, out _fullClearAction);
-            CreateClientAction(RemoveAt, out _remoteAtAction);
+            r.CreateClientAction(this, Add, out _addAction);
+            r.CreateClientAction(this, Clear, out _clearAction);
+            r.CreateClientAction(this, FullClear, out _fullClearAction);
+            r.CreateClientAction(this, RemoveAt, out _remoteAtAction);
         }
 
         public SyncList()
@@ -42,8 +42,7 @@ namespace LiteEntitySystem.Extensions
             Buffer.BlockCopy(_data, 0, arr, 0, _count);
             return arr;
         }
-
-        [SyncableRemoteCall]
+        
         public void Add(T item)
         {
             if (_data.Length == _count)
@@ -52,15 +51,13 @@ namespace LiteEntitySystem.Extensions
             _count++;
             _addAction?.Invoke(item);
         }
-
-        [SyncableRemoteCall]
+        
         public void Clear()
         {
             _count = 0;
             _clearAction?.Invoke();
         }
-
-        [SyncableRemoteCall]
+        
         public void FullClear()
         {
             if (_count == 0)
@@ -112,8 +109,7 @@ namespace LiteEntitySystem.Extensions
         {
             throw new NotImplementedException();
         }
-
-        [SyncableRemoteCall]
+        
         public void RemoveAt(int index)
         {
             _data[index] = _data[_count - 1];

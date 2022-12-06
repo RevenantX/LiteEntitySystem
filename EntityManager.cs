@@ -458,6 +458,7 @@ namespace LiteEntitySystem
                 throw new Exception($"Unregistered entity class: {entityParams.ClassId}");
             }
             var entity = classData.EntityConstructor(entityParams);
+            entity.Initialize_Internal();
             
             if(entityParams.Id < MaxSyncedEntityCount)
                 MaxSyncedEntityId = MaxSyncedEntityId < entityParams.Id ? entityParams.Id : MaxSyncedEntityId;

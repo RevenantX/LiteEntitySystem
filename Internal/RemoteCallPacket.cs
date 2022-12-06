@@ -30,20 +30,20 @@ namespace LiteEntitySystem.Internal
             Utils.ResizeOrCreate(ref Data, Size);
         }
         
-        public void Init(ushort tick, ushort dataSize, SyncableRemoteCall rc, byte fieldId)
+        public void Init(ushort tick, ushort dataSize, byte rpcId, byte fieldId)
         {
             Tick = tick;
-            Id = rc.Id;
+            Id = rpcId;
             FieldId = fieldId;
             Size = dataSize;
             Utils.ResizeOrCreate(ref Data, Size);
             Flags = ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner;
         }
         
-        public void Init(ushort tick, ushort dataSize, SyncableRemoteCall rc, byte fieldId, int count)
+        public void Init(ushort tick, ushort dataSize, byte rpcId, byte fieldId, int count)
         {
             Tick = tick;
-            Id = rc.Id;
+            Id = rpcId;
             FieldId = fieldId;
             Size = (ushort)(dataSize * count);
             Utils.ResizeOrCreate(ref Data, Size);

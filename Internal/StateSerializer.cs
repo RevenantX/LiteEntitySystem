@@ -66,16 +66,7 @@ namespace LiteEntitySystem.Internal
             _fullDataSize = (uint)(HeaderSize + _classData.FixedFieldsSize);
             Utils.ResizeOrCreate(ref _latestEntityData, (int)_fullDataSize);
             Utils.ResizeOrCreate(ref _fieldChangeTicks, classData.FieldsCount);
-            
-            for (int i = 0; i < _classData.SyncableFields.Length; i++)
-            {
-                var syncable = Utils.RefFieldValue<SyncableField>(_entity, _classData.SyncableFields[i].Offset);
-                syncable.EntityManager = e.ServerManager;
-                syncable.FieldId = (byte)i;
-                syncable.EntityId = e.Id;
-                syncable.OnServerInitialized();
-            }
-            
+
             fixed (byte* data = _latestEntityData)
             {
                 *(ushort*)data = e.Id;

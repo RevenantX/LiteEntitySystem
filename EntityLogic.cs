@@ -277,6 +277,13 @@ namespace LiteEntitySystem
             }
         }
 
+        protected override void RegisterRPC(in RPCRegistrator registrator)
+        {
+            base.RegisterRPC(in registrator);
+            registrator.BindOnChange(this, ref _parentId, OnParentChange);
+            registrator.BindOnChange(this, ref InternalOwnerId, OnOwnerChange);
+        }
+
         protected EntityLogic(EntityParams entityParams) : base(entityParams)
         {
             ref var classData = ref GetClassData();

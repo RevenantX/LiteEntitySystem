@@ -28,9 +28,9 @@ namespace LiteEntitySystem.Extensions
             }
         }
 
-        public override void OnServerInitialized()
+        public override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
-            CreateClientAction(SetNewString, out _setStringClientCall);
+            r.CreateClientAction(this, SetNewString, out _setStringClientCall);
         }
 
         public override string ToString()
@@ -42,8 +42,7 @@ namespace LiteEntitySystem.Extensions
         {
             return s.Value;
         }
-
-        [SyncableRemoteCall]
+        
         private void SetNewString(ReadOnlySpan<byte> data)
         {
             _string = Encoding.GetString(data);

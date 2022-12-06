@@ -1,35 +1,11 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
 {
     public delegate void MethodCallDelegate(object classPtr, ReadOnlySpan<byte> buffer);
-    public delegate void ArrayBinding<TClass, TValue>(TClass obj, ReadOnlySpan<TValue> arr) where TValue : unmanaged;
 
-    public readonly ref struct NotificationBinder
-    {
-        public unsafe void Bind<T, TEntity>(TEntity entity, ref SyncVarWithNotify<T> syncVar, Action<TEntity, T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
-        {
-            var classData = entity.EntityManager.ClassDataDict[entity.ClassId];
-            if (syncVar.FieldId == 0)
-            {
-                for (int i = 0; i < classData.FieldsCount; i++)
-                {
-                    if (classData.Fields[i].ChangeNotification)
-                    {
-                        ref var a = ref Utils.RefFieldValue<byte>(entity, classData.Fields[i].Offset);
-                        a = (byte)(i+1);
-                    }
-                }
-            }
-            classData.Fields[syncVar.FieldId-1].OnSync = (ptr, buffer) =>
-            {
-                fixed(byte* data = buffer)
-                    onChangedAction((TEntity)ptr, *(T*)data);
-            };
-        }
-    }
-    
     public abstract class InternalEntity : IComparable<InternalEntity>
     {
         /// <summary>
@@ -155,10 +131,39 @@ namespace LiteEntitySystem.Internal
         {
             
         }
-        
-        public virtual void BindChangeNotifications(in NotificationBinder binder)
+
+        internal void Initialize_Internal()
         {
-            binder.Bind(this, ref _isDestroyed, (entity, prevValue) =>
+            ref var classData = ref EntityManager.ClassDataDict[ClassId];
+            
+            for (int i = 0; i < classData.FieldsCount; i++)
+            {
+                if (classData.Fields[i].ChangeNotification)
+                {
+                    ref var a = ref Utils.RefFieldValue<byte>(this, classData.Fields[i].Offset);
+                    a = (byte)i;
+                }
+            }
+            if (!classData.IsRpcBound)
+            {
+                RegisterRPC(new RPCRegistrator());
+            }
+            for (int i = 0; i < classData.SyncableFields.Length; i++)
+            {
+                var syncable = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
+                syncable.FieldId = (byte)i;
+                if ((EntityManager.IsClient && !classData.IsRpcBound) || EntityManager.IsServer)
+                {
+                    var syncableRegistrator = new SyncableRPCRegistrator(EntityManager, this, classData.IsRpcBound);
+                    syncable.RegisterRPC(ref syncableRegistrator);
+                }
+            }
+            classData.IsRpcBound = true;
+        }
+        
+        protected virtual void RegisterRPC(in RPCRegistrator r)
+        {
+            r.BindOnChange(this, ref _isDestroyed, (entity, prevValue) =>
             {
                 if (!prevValue && entity._isDestroyed)
                 {
@@ -174,99 +179,6 @@ namespace LiteEntitySystem.Internal
             Id = entityParams.Id;
             ClassId = entityParams.ClassId;
             Version = entityParams.Version;
-        }
-
-        /// <summary>
-        /// Creates cached rpc action
-        /// </summary>
-        /// <param name="methodToCall">RPC method to call (must have <see cref="RemoteCall"/> attribute)</param>
-        /// <param name="cachedAction">output action that should be used to call rpc</param>
-        protected void CreateRPCAction(Action methodToCall, out Action cachedAction, ExecuteFlags flags = ExecuteFlags.None)
-        {
-            if (methodToCall.Target != this)
-                throw new Exception("You can call this only on this class methods");
-
-            ref var classData = ref EntityManager.ClassDataDict[ClassId];
-            byte rpcId = classData.RpcIdCounter;
-            classData.RpcIdCounter++;
-            
-            if (EntityManager.IsServer)
-            {
-                if ((flags & ExecuteFlags.ExecuteOnServer) != 0)
-                    cachedAction = () => { methodToCall(); ServerManager.AddRemoteCall(Id, rpcId, flags); };
-                else
-                    cachedAction = () => ServerManager.AddRemoteCall(Id, rpcId, flags);
-            }
-            else
-            {
-                cachedAction = () =>
-                {
-                    if (IsLocalControlled && (flags & ExecuteFlags.ExecuteOnPrediction) != 0)
-                        methodToCall();
-                };
-            }
-        }
-
-        /// <summary>
-        /// Creates cached rpc action
-        /// </summary>
-        /// <param name="methodToCall">RPC method to call (must have <see cref="RemoteCall"/> attribute)</param>
-        /// <param name="cachedAction">output action that should be used to call rpc</param>
-        protected void CreateRPCAction<T>(Action<T> methodToCall, out Action<T> cachedAction, ExecuteFlags flags = ExecuteFlags.None) where T : unmanaged
-        {
-            if (methodToCall.Target != this)
-                throw new Exception("You can call this only on this class methods");
-            
-            ref var classData = ref EntityManager.ClassDataDict[ClassId];
-            byte rpcId = classData.RpcIdCounter;
-            classData.RpcIdCounter++;
-
-            if (EntityManager.IsServer)
-            {
-                if ((flags & ExecuteFlags.ExecuteOnServer) != 0)
-                    cachedAction = value => { methodToCall(value); ServerManager.AddRemoteCall(Id, value, rpcId, flags); };
-                else
-                    cachedAction = value => ServerManager.AddRemoteCall(Id, value, rpcId, flags);
-            }
-            else
-            {
-                cachedAction = value =>
-                {
-                    if (IsLocalControlled && (flags & ExecuteFlags.ExecuteOnPrediction) != 0)
-                        methodToCall(value);
-                };
-            }
-        }
-        
-        /// <summary>
-        /// Creates cached rpc action
-        /// </summary>
-        /// <param name="methodToCall">RPC method to call (must have <see cref="RemoteCall"/> attribute)</param>
-        /// <param name="cachedAction">output action that should be used to call rpc</param>
-        protected void CreateRPCAction<T>(RemoteCallSpan<T> methodToCall, out RemoteCallSpan<T> cachedAction, ExecuteFlags flags = ExecuteFlags.None) where T : unmanaged
-        {
-            if (methodToCall.Target != this)
-                throw new Exception("You can call this only on this class methods");
-            
-            ref var classData = ref EntityManager.ClassDataDict[ClassId];
-            byte rpcId = classData.RpcIdCounter;
-            classData.RpcIdCounter++;
-
-            if (EntityManager.IsServer)
-            {
-                if ((flags & ExecuteFlags.ExecuteOnServer) != 0)
-                    cachedAction = value => { methodToCall(value); ServerManager.AddRemoteCall(Id, value, rpcId, flags); };
-                else
-                    cachedAction = value => ServerManager.AddRemoteCall(Id, value, rpcId, flags);
-            }
-            else
-            {
-                cachedAction = value =>
-                {
-                    if (IsLocalControlled && (flags & ExecuteFlags.ExecuteOnPrediction) != 0)
-                        methodToCall(value);
-                };
-            }
         }
 
         int IComparable<InternalEntity>.CompareTo(InternalEntity other)

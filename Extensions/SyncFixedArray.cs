@@ -22,12 +22,11 @@ namespace LiteEntitySystem.Extensions
             Data = new T[size];
         }
 
-        public override void OnServerInitialized()
+        public override void RegisterRPC(ref SyncableRPCRegistrator registrator)
         {
-            CreateClientAction(SetValueRPC, out _setRpcAction);
+            registrator.CreateClientAction(this, SetValueRPC, out _setRpcAction);
         }
-
-        [SyncableRemoteCall]
+        
         private void SetValueRPC(SetCallData setCallData)
         {
             Data[setCallData.Index] = setCallData.Value;

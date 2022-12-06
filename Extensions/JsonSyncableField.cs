@@ -49,7 +49,7 @@ namespace LiteEntitySystem.Extensions
             }
         }
 
-        public override void OnServerInitialized()
+        public override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
             
         }

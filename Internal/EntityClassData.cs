@@ -30,9 +30,6 @@ namespace LiteEntitySystem.Internal
         public readonly bool IsLocalOnly;
         public readonly Type[] BaseTypes;
         public readonly EntityConstructor<InternalEntity> EntityConstructor;
-        public readonly MethodCallDelegate[] RemoteCallsClient;
-        public readonly MethodCallDelegate[] SyncableRemoteCallsClient;
-        public readonly Dictionary<MethodInfo, SyncableRemoteCall> SyncableRemoteCalls;
 
         private static readonly int NativeFieldOffset;
         private static readonly Type InternalEntityType = typeof(InternalEntity);
@@ -43,8 +40,10 @@ namespace LiteEntitySystem.Internal
         {
             public readonly uint TestValue = 0xDEADBEEF;
         }
-
-        public byte RpcIdCounter;
+        
+        public bool IsRpcBound;
+        public MethodCallDelegate[] RemoteCallsClient;
+        public MethodCallDelegate[] SyncableRemoteCallsClient;
         
         static EntityClassData()
         {
@@ -81,17 +80,18 @@ namespace LiteEntitySystem.Internal
 
         public EntityClassData(ushort filterId, Type entType, RegisteredTypeInfo typeInfo)
         {
+            RemoteCallsClient = new MethodCallDelegate[8];
+            SyncableRemoteCallsClient = new MethodCallDelegate[8];
+            IsRpcBound = false;
             RpcIdCounter = 0;
+            SyncableRpcIdCounter = 0;
             HasRemotePredictedFields = false;
             PredictedSize = 0;
             FixedFieldsSize = 0;
             LagCompensatedSize = 0;
             InterpolatedCount = 0;
             InterpolatedFieldsSize = 0;
-            RemoteCallsClient = new MethodCallDelegate[255];
-            SyncableRemoteCallsClient = new MethodCallDelegate[255];
-            SyncableRemoteCalls = new Dictionary<MethodInfo, SyncableRemoteCall>();
-            
+
             ClassId = typeInfo.ClassId;
 
             var updateAttribute = entType.GetCustomAttribute<UpdateableEntity>();
@@ -128,7 +128,6 @@ namespace LiteEntitySystem.Internal
                                               BindingFlags.NonPublic |
                                               BindingFlags.DeclaredOnly;
             
-            byte syncableRpcIndex = 0;
             foreach (var baseType in baseTypes)
             {
                 //cache fields
@@ -235,26 +234,6 @@ namespace LiteEntitySystem.Internal
                                 {
                                     throw new Exception("Syncronized fields in SyncableField should be ValueType only!");
                                 }
-                            }
-
-                            //syncable rpcs
-                            foreach (var method in syncableType.GetMethods(bindingFlags))
-                            {
-                                var rcAttribute = method.GetCustomAttribute<SyncableRemoteCall>();
-                                if(rcAttribute == null)
-                                    continue;
-
-                                var parameters = method.GetParameters();
-                                var parameterType = parameters.Length == 0 ? null : parameters[0].ParameterType;
-                                if (rcAttribute.Id == byte.MaxValue)
-                                {
-                                    rcAttribute.Id = syncableRpcIndex++;
-                                    if (syncableRpcIndex == byte.MaxValue)
-                                        throw new Exception("254 is max RemoteCall methods");
-                                }
-                                
-                                SyncableRemoteCalls[method] = rcAttribute;
-                                //TODO://SyncableRemoteCallsClient[rcAttribute.Id] = parameterType == null ? typeInfo.NoParamsRpc(method) : GetOnSyncDelegate(syncableType, parameterType, method);
                             }
                         }
                     }

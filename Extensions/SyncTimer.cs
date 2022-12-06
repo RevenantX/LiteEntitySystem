@@ -92,10 +92,5 @@ namespace LiteEntitySystem.Extensions
             }
             return false;
         }
-
-        public override void OnServerInitialized()
-        {
-            
-        }
     }
 }
