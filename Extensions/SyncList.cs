@@ -18,7 +18,7 @@ namespace LiteEntitySystem.Extensions
         private RemoteCall _fullClearAction;
         private RemoteCall<int> _removeAtAction;
 
-        public override void RegisterRPC(ref SyncableRPCRegistrator r)
+        public override void RegisterRPC(in SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, Add, ref _addAction);
             r.CreateClientAction(this, Clear, ref _clearAction);

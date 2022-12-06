@@ -49,7 +49,7 @@ namespace LiteEntitySystem
     
     internal delegate void MethodCallDelegate(object classPtr, ReadOnlySpan<byte> buffer);
 
-    public ref struct RPCRegistrator
+    public readonly ref struct RPCRegistrator
     {
         public void BindOnChange<T, TEntity>(TEntity self, ref SyncVarWithNotify<T> syncVar, Action<T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
         {
@@ -157,7 +157,7 @@ namespace LiteEntitySystem
         }
     }
 
-    public ref struct SyncableRPCRegistrator
+    public readonly ref struct SyncableRPCRegistrator
     {
         private readonly InternalEntity _entity;
 

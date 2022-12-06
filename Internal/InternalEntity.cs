@@ -164,14 +164,12 @@ namespace LiteEntitySystem.Internal
                         a = (byte)i;
                     }
                 }
-                var r = new RPCRegistrator();
-                RegisterRPC(ref r);
+                RegisterRPC(new RPCRegistrator());
                 for (int i = 0; i < classData.SyncableFieldOffsets.Length; i++)
                 {
                     var syncable = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFieldOffsets[i]);
                     syncable.FieldId = (byte)i;
-                    var syncableRegistrator = new SyncableRPCRegistrator(this);
-                    syncable.RegisterRPC(ref syncableRegistrator);
+                    syncable.RegisterRPC(new SyncableRPCRegistrator(this));
                 }
                 classData.IsRpcBound = true;
             }
@@ -195,7 +193,7 @@ namespace LiteEntitySystem.Internal
             ((SpanAction<InternalEntity, T>)rpc.CachedAction)(this, value);
         }
 
-        protected virtual void RegisterRPC(ref RPCRegistrator r)
+        protected virtual void RegisterRPC(in RPCRegistrator r)
         {
             r.BindOnChange(this, ref _isDestroyed, OnDestroyChange);
         }

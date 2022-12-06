@@ -22,7 +22,7 @@ namespace LiteEntitySystem.Extensions
             Data = new T[size];
         }
 
-        public override void RegisterRPC(ref SyncableRPCRegistrator registrator)
+        public override void RegisterRPC(in SyncableRPCRegistrator registrator)
         {
             registrator.CreateClientAction(this, SetValueRPC, ref _setRpcAction);
         }

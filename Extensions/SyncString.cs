@@ -28,7 +28,7 @@ namespace LiteEntitySystem.Extensions
             }
         }
 
-        public override void RegisterRPC(ref SyncableRPCRegistrator r)
+        public override void RegisterRPC(in SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, SetNewString, ref _setStringClientCall);
         }

@@ -23,7 +23,7 @@ namespace LiteEntitySystem
             
         }
 
-        public virtual void RegisterRPC(ref SyncableRPCRegistrator r)
+        public virtual void RegisterRPC(in SyncableRPCRegistrator r)
         {
 
         }
