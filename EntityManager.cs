@@ -179,7 +179,7 @@ namespace LiteEntitySystem
         {
 #if UNITY_ANDROID
             if (IntPtr.Size == 4)
-                LZ4Codec.Enforce32 = true;
+                K4os.Compression.LZ4.LZ4Codec.Enforce32 = true;
 #endif
             RegisterBasicFieldType(new ValueTypeProcessorByte());
             RegisterBasicFieldType(new ValueTypeProcessorSByte());
