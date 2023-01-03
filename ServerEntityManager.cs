@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using K4os.Compression.LZ4;
@@ -104,8 +103,10 @@ namespace LiteEntitySystem
         /// Constructor
         /// </summary>
         /// <param name="typesMap">EntityTypesMap with registered entity types</param>
+        /// <param name="inputProcessor">Input processor (you can use default InputProcessor/<T/> or derive from abstract one to make your own input serialization</param>
         /// <param name="packetHeader">Header byte that will be used for packets (to distinguish entity system packets)</param>
         /// <param name="framesPerSecond">Fixed framerate of game logic</param>
+        /// <param name="sendRate">Send rate of server (depends on fps)</param>
         public ServerEntityManager(
             EntityTypesMap typesMap, 
             InputProcessor inputProcessor,
@@ -619,7 +620,7 @@ namespace LiteEntitySystem
                 ref var input = ref inputBuffer.Input;
                 fixed (byte* rawData = reader.RawData)
                 {
-                    Unsafe.Copy(ref input, rawData + reader.Position);
+                    input = *(InputPacketHeader*)(rawData + reader.Position);
                 }
                 reader.SkipBytes(sizeof(InputPacketHeader));
 

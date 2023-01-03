@@ -43,6 +43,9 @@ namespace LiteEntitySystem
 
         public ushort LastReceivedTick => _stateA?.LastReceivedTick ?? 0;
 
+        /// <summary>
+        /// Send rate of server
+        /// </summary>
         public ServerSendRate ServerSendRate => _serverSendRate;
         
         /// <summary>
@@ -99,6 +102,7 @@ namespace LiteEntitySystem
         /// Constructor
         /// </summary>
         /// <param name="typesMap">EntityTypesMap with registered entity types</param>
+        /// <param name="inputProcessor">Input processor (you can use default InputProcessor/<T/> or derive from abstract one to make your own input serialization</param>
         /// <param name="localPeer">Local NetPeer</param>
         /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
         /// <param name="framesPerSecond">Fixed framerate of game logic</param>
