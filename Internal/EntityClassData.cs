@@ -192,11 +192,13 @@ namespace LiteEntitySystem.Internal
                                 InterpolatedCount++;
                             }
                             fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, internalFieldType, syncVarAttribute.Flags);
-                            if (syncVarAttribute != null && syncVarAttribute.Flags.HasFlagFast(SyncFlags.LagCompensated))
+                            if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.LagCompensated))
                             {
                                 lagCompensatedFields.Add(fieldInfo);
                                 LagCompensatedSize += fieldSize;
                             }
+                            if (syncVarAttribute.Flags.HasFlagFast(SyncFlags.AlwaysPredict))
+                                HasRemotePredictedFields = true;
                         }
                         else
                         {
@@ -205,9 +207,6 @@ namespace LiteEntitySystem.Internal
                         
                         if (fieldInfo.IsPredicted)
                             PredictedSize += fieldSize;
-
-                        if (syncVarAttribute != null && syncVarAttribute.Flags.HasFlagFast(SyncFlags.AlwaysPredict))
-                            HasRemotePredictedFields = true;
 
                         fields.Add(fieldInfo);
                         FixedFieldsSize += fieldSize;

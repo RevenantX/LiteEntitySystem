@@ -380,7 +380,7 @@ namespace LiteEntitySystem
                             var syncableField = Utils.RefFieldValue<SyncableField>(entity, field.Offset);
                             field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, predictedData + field.PredictedOffset);
                         }
-                        else //value or entity
+                        else
                         {
                             field.TypeProcessor.SetFrom(entity, field.Offset, predictedData + field.PredictedOffset);
                         }
@@ -515,10 +515,10 @@ namespace LiteEntitySystem
             //local only and UpdateOnClient
             foreach (var entity in AliveEntities)
             {
+                ref var classData = ref ClassDataDict[entity.ClassId];
                 if (entity.IsLocal || entity.IsLocalControlled)
                 {
                     //save data for interpolation before update
-                    ref var classData = ref ClassDataDict[entity.ClassId];
                     fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
                            prevDataPtr = _interpolatePrevData[entity.Id])
                     {
@@ -541,7 +541,7 @@ namespace LiteEntitySystem
                         }
                     }
                 }
-                else
+                else if(classData.UpdateOnClient)
                 {
                     entity.Update();
                 }
@@ -599,10 +599,8 @@ namespace LiteEntitySystem
                 if (!entity.IsLocalControlled && !entity.IsLocal)
                     continue;
                 
-                var entityLocal = entity;
                 ref var classData = ref entity.GetClassData();
-                fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id],
-                       prevDataPtr = _interpolatePrevData[entity.Id])
+                fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id], prevDataPtr = _interpolatePrevData[entity.Id])
                 {
                     for(int i = 0; i < classData.InterpolatedCount; i++)
                     {
