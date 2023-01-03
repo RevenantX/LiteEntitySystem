@@ -4,3 +4,4 @@ bin
 *.meta
 .vs
 .DS_Store
+*.user

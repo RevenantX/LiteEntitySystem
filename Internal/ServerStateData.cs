@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using LiteNetLib;
 
@@ -45,14 +44,6 @@ namespace LiteEntitySystem.Internal
         {
             Field = fieldId;
             StateReaderOffset = offset;
-        }
-    }
-    
-    internal sealed class ServerStateComparer : IComparer<ServerStateData>
-    {
-        public int Compare(ServerStateData x, ServerStateData y)
-        {
-            return Utils.SequenceDiff(x!.Tick, y!.Tick);
         }
     }
 
