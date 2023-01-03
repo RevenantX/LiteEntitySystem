@@ -10,8 +10,15 @@ namespace LiteEntitySystem.Internal
     
     internal abstract unsafe class ValueTypeProcessor
     {
-        internal abstract Type ValueType { get; }
-        internal abstract int Size { get; }
+        internal readonly Type ValueType;
+        internal readonly int Size;
+
+        protected ValueTypeProcessor(Type valueType, int size)
+        {
+            ValueType = valueType;
+            Size = size;
+        }
+        
         internal abstract bool CompareAndWrite(object obj, int offset, byte* data);
         internal abstract void SetFrom(object obj, int offset, byte* data);
         internal abstract bool SetFromAndSync(object obj, int offset, byte* data);
@@ -22,8 +29,9 @@ namespace LiteEntitySystem.Internal
 
     internal abstract unsafe class ValueTypeProcessor<T> : ValueTypeProcessor where T : unmanaged
     {
-        internal override Type ValueType => typeof(T);
-        internal override int Size => sizeof(T);
+        protected ValueTypeProcessor() : base(typeof(T), sizeof(T))
+        {
+        }
 
         internal override void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
@@ -197,17 +205,15 @@ namespace LiteEntitySystem.Internal
 
     internal unsafe class UserTypeProcessor<T> : ValueTypeProcessor<T> where T : unmanaged
     {
-        private static readonly UIntPtr SizeU = new ((uint)sizeof(T));
         private readonly InterpolatorDelegateWithReturn<T> _interpDelegate;
 
         protected override bool Compare(ref T a, ref T b)
         {
             fixed (void* ptrA = &a, ptrB = &b)
-                return Utils.memcmp(ptrA, ptrB, SizeU) == 0;
+                return new ReadOnlySpan<byte>(ptrA, Size).SequenceEqual(new ReadOnlySpan<byte>(ptrB, Size));
         }
 
-        internal override void SetInterpolation(object obj, int offset, byte* prev, byte* current,
-            float fTimer)
+        internal override void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
             ref var a = ref Utils.RefFieldValue<T>(obj, offset);
             a = _interpDelegate(*(T*)prev, *(T*)current, fTimer);

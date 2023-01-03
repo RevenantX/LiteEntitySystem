@@ -61,26 +61,26 @@ namespace LiteEntitySystem
             return this == (SyncVar<T>)o;
         }
 
-        private static readonly UIntPtr SizeU = new ((uint)sizeof(T));
+        private static readonly int Size = sizeof(T);
 
         public static bool operator==(SyncVar<T> a, SyncVar<T> b)
         {
-            return Utils.memcmp(&a, &b, SizeU) == 0;
+            return new ReadOnlySpan<byte>(&a.Value, Size).SequenceEqual(new ReadOnlySpan<byte>(&b.Value, Size));
         }
         
         public static bool operator!=(SyncVar<T> a, SyncVar<T> b)
         {
-            return Utils.memcmp(&a, &b, SizeU) != 0;
+            return new ReadOnlySpan<byte>(&a.Value, Size).SequenceEqual(new ReadOnlySpan<byte>(&b.Value, Size)) == false;
         }
         
         public static bool operator==(T a, SyncVar<T> b)
         {
-            return Utils.memcmp(&a, &b.Value, SizeU) == 0;
+            return new ReadOnlySpan<byte>(&a, Size).SequenceEqual(new ReadOnlySpan<byte>(&b.Value, Size));
         }
         
         public static bool operator!=(T a, SyncVar<T> b)
         {
-            return Utils.memcmp(&a, &b.Value, SizeU) != 0;
+            return new ReadOnlySpan<byte>(&a, Size).SequenceEqual(new ReadOnlySpan<byte>(&b.Value, Size)) == false;
         }
     }
 
@@ -131,36 +131,36 @@ namespace LiteEntitySystem
             return this == (SyncVarWithNotify<T>)o;
         }
 
-        private static readonly UIntPtr SizeU = new ((uint)sizeof(T));
+        private static readonly int Size = sizeof(T);
         
         public static bool operator==(SyncVarWithNotify<T> a, SyncVarWithNotify<T> b)
         {
-            return Utils.memcmp(&a.Value, &b.Value, SizeU) == 0;
+            return new ReadOnlySpan<byte>(&a.Value, Size).SequenceEqual(new ReadOnlySpan<byte>(&b.Value, Size));
         }
         
         public static bool operator!=(SyncVarWithNotify<T> a, SyncVarWithNotify<T> b)
         {
-            return Utils.memcmp(&a.Value, &b.Value, SizeU) != 0;
+            return new ReadOnlySpan<byte>(&a.Value, Size).SequenceEqual(new ReadOnlySpan<byte>(&b.Value, Size)) == false;
         }
         
         public static bool operator==(SyncVar<T> a, SyncVarWithNotify<T> b)
         {
-            return Utils.memcmp(&a.Value, &b.Value, SizeU) == 0;
+            return new ReadOnlySpan<byte>(&a.Value, Size).SequenceEqual(new ReadOnlySpan<byte>(&b.Value, Size));
         }
         
         public static bool operator!=(SyncVar<T> a, SyncVarWithNotify<T> b)
         {
-            return Utils.memcmp(&a.Value, &b.Value, SizeU) != 0;
+            return new ReadOnlySpan<byte>(&a.Value, Size).SequenceEqual(new ReadOnlySpan<byte>(&b.Value, Size)) == false;
         }
         
         public static bool operator==(T a, SyncVarWithNotify<T> b)
         {
-            return Utils.memcmp(&a, &b.Value, SizeU) == 0;
+            return new ReadOnlySpan<byte>(&a, Size).SequenceEqual(new ReadOnlySpan<byte>(&b.Value, Size));
         }
         
         public static bool operator!=(T a, SyncVarWithNotify<T> b)
         {
-            return Utils.memcmp(&a, &b.Value, SizeU) != 0;
+            return new ReadOnlySpan<byte>(&a, Size).SequenceEqual(new ReadOnlySpan<byte>(&b.Value, Size)) == false;
         }
     }
 }

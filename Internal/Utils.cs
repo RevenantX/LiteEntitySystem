@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
 {
@@ -8,13 +7,6 @@ namespace LiteEntitySystem.Internal
 
     public static class Utils
     {
-#if UNITY_STANDALONE_WIN || _WINDOWS || UNITY_EDITOR_WIN
-        [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
-#else
-        [DllImport("libc", CallingConvention = CallingConvention.Cdecl)]                
-#endif
-        public static extern unsafe int memcmp([In] void* b1, [In] void* b2, [In] UIntPtr count);
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ResizeIfFull<T>(ref T[] arr, int count)
         {
@@ -86,7 +78,7 @@ namespace LiteEntitySystem.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref U RefFieldValue<U>(object obj, int offset)
         {
-#if UNITY_5_3_OR_NEWER
+#if UNITY_2021_2_OR_NEWER
             return ref RefMagic.RefFieldValueMono<U>(obj, offset);
 #else
             return ref RefMagic.RefFieldValueDotNet<U>(obj, offset + IntPtr.Size);
