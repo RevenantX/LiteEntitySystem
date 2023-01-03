@@ -754,7 +754,7 @@ namespace LiteEntitySystem
 
                     Utils.ResizeIfFull(ref _entitiesToConstruct, _entitiesToConstructCount);
                     _entitiesToConstruct[_entitiesToConstructCount++] = entity;
-                    Logger.Log($"[CEM] Add entity: {entity.GetType()}");
+                    //Logger.Log($"[CEM] Add entity: {entity.GetType()}");
                 }
             }
             else if (entity == null)

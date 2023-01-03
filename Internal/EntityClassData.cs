@@ -215,7 +215,7 @@ namespace LiteEntitySystem.Internal
                     else if (ft.IsSubclassOf(SyncableFieldType))
                     {
                         if (!field.IsInitOnly)
-                            throw new Exception("Syncable fields should be readonly!");
+                            throw new Exception($"Syncable fields should be readonly! (Class: {entType} Field: {field.Name})");
                         
                         syncableFields.Add(offset);
                         foreach (var syncableType in GetBaseTypes(ft, typeof(SyncableField), true))
