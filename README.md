@@ -34,5 +34,10 @@ Pure C# HighLevel API for multiplayer games using .NET Standard 2.1
 * Also works as game logic engine
 * LiteNetLib as core transport with tight integration and without abstractions for maximum speed
 
+## Dependencies
+
+* LZ4: https://github.com/MiloszKrajewski/K4os.Compression.LZ4
+* System.Runtime.CompilerServices.Unsafe: https://www.nuget.org/packages/System.Runtime.CompilerServices.Unsafe/
+
 ## Unity notes!!!
 * Always use library sources instead of precompiled DLL files ( because there are platform specific #ifdefs and workarounds for unity bugs )
