@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class UpdateableEntity
+    <title>Class SyncVarFlags
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class UpdateableEntity
+    <meta name="title" content="Class SyncVarFlags
    ">
     <meta name="generator" content="docfx 2.59.4.0">
     
@@ -68,19 +68,18 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.UpdateableEntity">
+            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.SyncVarFlags">
   
   
-  <h1 id="LiteEntitySystem_UpdateableEntity" data-uid="LiteEntitySystem.UpdateableEntity" class="text-break">Class UpdateableEntity
+  <h1 id="LiteEntitySystem_SyncVarFlags" data-uid="LiteEntitySystem.SyncVarFlags" class="text-break">Class SyncVarFlags
   </h1>
-  <div class="markdown level0 summary"><p>Entity has update method</p>
-</div>
+  <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">System.Attribute</span></div>
-    <div class="level2"><span class="xref">UpdateableEntity</span></div>
+    <div class="level2"><span class="xref">SyncVarFlags</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -198,32 +197,22 @@
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
-  <h5 id="LiteEntitySystem_UpdateableEntity_syntax">Syntax</h5>
+  <h5 id="LiteEntitySystem_SyncVarFlags_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[AttributeUsage(AttributeTargets.Class)]
-public class UpdateableEntity : Attribute</code></pre>
+    <pre><code class="lang-csharp hljs">[AttributeUsage(AttributeTargets.Field)]
+public class SyncVarFlags : Attribute</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   
   
-  <a id="LiteEntitySystem_UpdateableEntity__ctor_" data-uid="LiteEntitySystem.UpdateableEntity.#ctor*"></a>
-  <h4 id="LiteEntitySystem_UpdateableEntity__ctor" data-uid="LiteEntitySystem.UpdateableEntity.#ctor">UpdateableEntity()</h4>
+  <a id="LiteEntitySystem_SyncVarFlags__ctor_" data-uid="LiteEntitySystem.SyncVarFlags.#ctor*"></a>
+  <h4 id="LiteEntitySystem_SyncVarFlags__ctor_LiteEntitySystem_SyncFlags_" data-uid="LiteEntitySystem.SyncVarFlags.#ctor(LiteEntitySystem.SyncFlags)">SyncVarFlags(SyncFlags)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public UpdateableEntity()</code></pre>
-  </div>
-  
-  
-  <a id="LiteEntitySystem_UpdateableEntity__ctor_" data-uid="LiteEntitySystem.UpdateableEntity.#ctor*"></a>
-  <h4 id="LiteEntitySystem_UpdateableEntity__ctor_System_Boolean_" data-uid="LiteEntitySystem.UpdateableEntity.#ctor(System.Boolean)">UpdateableEntity(Boolean)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public UpdateableEntity(bool updateOnClient)</code></pre>
+    <pre><code class="lang-csharp hljs">public SyncVarFlags(SyncFlags flags)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -236,34 +225,8 @@ public class UpdateableEntity : Attribute</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">updateOnClient</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="fields">Fields
-  </h3>
-  
-  
-  <h4 id="LiteEntitySystem_UpdateableEntity_UpdateOnClient" data-uid="LiteEntitySystem.UpdateableEntity.UpdateOnClient">UpdateOnClient</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly bool UpdateOnClient</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="LiteEntitySystem.SyncFlags.html">SyncFlags</a></td>
+        <td><span class="parametername">flags</span></td>
         <td></td>
       </tr>
     </tbody>

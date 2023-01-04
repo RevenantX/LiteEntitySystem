@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class EntityManager
    ">
-    <meta name="generator" content="docfx 2.59.2.0">
+    <meta name="generator" content="docfx 2.59.4.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -73,7 +73,8 @@
   
   <h1 id="LiteEntitySystem_EntityManager" data-uid="LiteEntitySystem.EntityManager" class="text-break">Class EntityManager
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Base class for client and server manager</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -86,19 +87,19 @@
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_EntityManager_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class EntityManager : object</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class EntityManager</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   
   
   <a id="LiteEntitySystem_EntityManager__ctor_" data-uid="LiteEntitySystem.EntityManager.#ctor*"></a>
-  <h4 id="LiteEntitySystem_EntityManager__ctor_LiteEntitySystem_NetworkMode_System_Byte_" data-uid="LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.NetworkMode,System.Byte)">EntityManager(NetworkMode, Byte)</h4>
+  <h4 id="LiteEntitySystem_EntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteEntitySystem_NetworkMode_System_Byte_" data-uid="LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteEntitySystem.NetworkMode,System.Byte)">EntityManager(EntityTypesMap, InputProcessor, NetworkMode, Byte)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected EntityManager(NetworkMode mode, byte framesPerSecond)</code></pre>
+    <pre><code class="lang-csharp hljs">protected EntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetworkMode mode, byte framesPerSecond)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -110,6 +111,16 @@
       </tr>
     </thead>
     <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.EntityTypesMap.html">EntityTypesMap</a></td>
+        <td><span class="parametername">typesMap</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.InputProcessor.html">InputProcessor</a></td>
+        <td><span class="parametername">inputProcessor</span></td>
+        <td></td>
+      </tr>
       <tr>
         <td><a class="xref" href="LiteEntitySystem.NetworkMode.html">NetworkMode</a></td>
         <td><span class="parametername">mode</span></td>
@@ -124,6 +135,30 @@
   </table>
   <h3 id="fields">Fields
   </h3>
+  
+  
+  <h4 id="LiteEntitySystem_EntityManager__tick" data-uid="LiteEntitySystem.EntityManager._tick">_tick</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected ushort _tick</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   
   
   <h4 id="LiteEntitySystem_EntityManager_AliveEntities" data-uid="LiteEntitySystem.EntityManager.AliveEntities">AliveEntities</h4>
@@ -156,7 +191,32 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly float DeltaTime</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly double DeltaTime</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="LiteEntitySystem_EntityManager_DeltaTimeF" data-uid="LiteEntitySystem.EntityManager.DeltaTimeF">DeltaTimeF</h4>
+  <div class="markdown level1 summary"><p>Fixed delta time (float for less precision)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly float DeltaTimeF</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -175,12 +235,12 @@
   </table>
   
   
-  <h4 id="LiteEntitySystem_EntityManager_EntitiesDict" data-uid="LiteEntitySystem.EntityManager.EntitiesDict">EntitiesDict</h4>
+  <h4 id="LiteEntitySystem_EntityManager_FirstEntityId" data-uid="LiteEntitySystem.EntityManager.FirstEntityId">FirstEntityId</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected readonly InternalEntity[] EntitiesDict</code></pre>
+    <pre><code class="lang-csharp hljs">protected const ushort FirstEntityId = 1</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -192,7 +252,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>[]</td>
+        <td><span class="xref">System.UInt16</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -224,13 +284,37 @@
   </table>
   
   
+  <h4 id="LiteEntitySystem_EntityManager_InputProcessor" data-uid="LiteEntitySystem.EntityManager.InputProcessor">InputProcessor</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected readonly InputProcessor InputProcessor</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.InputProcessor.html">InputProcessor</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <h4 id="LiteEntitySystem_EntityManager_InvalidEntityId" data-uid="LiteEntitySystem.EntityManager.InvalidEntityId">InvalidEntityId</h4>
   <div class="markdown level1 summary"><p>Invalid entity id</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const ushort InvalidEntityId = null</code></pre>
+    <pre><code class="lang-csharp hljs">public const ushort InvalidEntityId = 0</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -299,13 +383,12 @@
   </table>
   
   
-  <h4 id="LiteEntitySystem_EntityManager_MaxEntityCount" data-uid="LiteEntitySystem.EntityManager.MaxEntityCount">MaxEntityCount</h4>
-  <div class="markdown level1 summary"><p>Maximum synchronized (without LocalOnly) entites</p>
-</div>
+  <h4 id="LiteEntitySystem_EntityManager_LagCompensatedEntities" data-uid="LiteEntitySystem.EntityManager.LagCompensatedEntities">LagCompensatedEntities</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const int MaxEntityCount = null</code></pre>
+    <pre><code class="lang-csharp hljs">protected readonly EntityFilter&lt;EntityLogic&gt; LagCompensatedEntities</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -317,19 +400,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><a class="xref" href="LiteEntitySystem.EntityFilter-1.html">EntityFilter</a>&lt;<a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <h4 id="LiteEntitySystem_EntityManager_MaxEntityId" data-uid="LiteEntitySystem.EntityManager.MaxEntityId">MaxEntityId</h4>
+  <h4 id="LiteEntitySystem_EntityManager_MaxEntityCount" data-uid="LiteEntitySystem.EntityManager.MaxEntityCount">MaxEntityCount</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected int MaxEntityId</code></pre>
+    <pre><code class="lang-csharp hljs">public const int MaxEntityCount = 16384</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -353,7 +436,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected const int MaxFieldSize = null</code></pre>
+    <pre><code class="lang-csharp hljs">protected const int MaxFieldSize = 1024</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -372,12 +455,61 @@
   </table>
   
   
-  <h4 id="LiteEntitySystem_EntityManager_MaxParts" data-uid="LiteEntitySystem.EntityManager.MaxParts">MaxParts</h4>
+  <h4 id="LiteEntitySystem_EntityManager_MaxHistorySize" data-uid="LiteEntitySystem.EntityManager.MaxHistorySize">MaxHistorySize</h4>
+  <div class="markdown level1 summary"><p>Size of history (in ticks) for lag compensation. Tune for your game fps </p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public MaxHistorySize MaxHistorySize</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.MaxHistorySize.html">MaxHistorySize</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="LiteEntitySystem_EntityManager_MaxLocalEntityId" data-uid="LiteEntitySystem.EntityManager.MaxLocalEntityId">MaxLocalEntityId</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected const int MaxParts = null</code></pre>
+    <pre><code class="lang-csharp hljs">protected int MaxLocalEntityId</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="LiteEntitySystem_EntityManager_MaxPlayers" data-uid="LiteEntitySystem.EntityManager.MaxPlayers">MaxPlayers</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int MaxPlayers = 254</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -401,7 +533,56 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected const int MaxSavedStateDiff = null</code></pre>
+    <pre><code class="lang-csharp hljs">protected const int MaxSavedStateDiff = 30</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="LiteEntitySystem_EntityManager_MaxSyncedEntityCount" data-uid="LiteEntitySystem.EntityManager.MaxSyncedEntityCount">MaxSyncedEntityCount</h4>
+  <div class="markdown level1 summary"><p>Maximum synchronized (without LocalOnly) entities</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int MaxSyncedEntityCount = 8192</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="LiteEntitySystem_EntityManager_MaxSyncedEntityId" data-uid="LiteEntitySystem.EntityManager.MaxSyncedEntityId">MaxSyncedEntityId</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected int MaxSyncedEntityId</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -450,7 +631,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected const byte PacketBaselineSync = null</code></pre>
+    <pre><code class="lang-csharp hljs">protected const byte PacketBaselineSync = 3</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -474,7 +655,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected const byte PacketClientSync = null</code></pre>
+    <pre><code class="lang-csharp hljs">protected const byte PacketClientSync = 2</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -498,7 +679,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected const byte PacketDiffSync = null</code></pre>
+    <pre><code class="lang-csharp hljs">protected const byte PacketDiffSync = 1</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -522,7 +703,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected const byte PacketDiffSyncLast = null</code></pre>
+    <pre><code class="lang-csharp hljs">protected const byte PacketDiffSyncLast = 4</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -541,12 +722,12 @@
   </table>
   
   
-  <h4 id="LiteEntitySystem_EntityManager_PacketEntityCall" data-uid="LiteEntitySystem.EntityManager.PacketEntityCall">PacketEntityCall</h4>
+  <h4 id="LiteEntitySystem_EntityManager_ServerPlayerId" data-uid="LiteEntitySystem.EntityManager.ServerPlayerId">ServerPlayerId</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected const byte PacketEntityCall = null</code></pre>
+    <pre><code class="lang-csharp hljs">public const byte ServerPlayerId = 0</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -567,31 +748,6 @@
   </h3>
   
   
-  <a id="LiteEntitySystem_EntityManager_CurrentDelta_" data-uid="LiteEntitySystem.EntityManager.CurrentDelta*"></a>
-  <h4 id="LiteEntitySystem_EntityManager_CurrentDelta" data-uid="LiteEntitySystem.EntityManager.CurrentDelta">CurrentDelta</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected double CurrentDelta { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
   <a id="LiteEntitySystem_EntityManager_EntitiesCount_" data-uid="LiteEntitySystem.EntityManager.EntitiesCount*"></a>
   <h4 id="LiteEntitySystem_EntityManager_EntitiesCount" data-uid="LiteEntitySystem.EntityManager.EntitiesCount">EntitiesCount</h4>
   <div class="markdown level1 summary"><p>Total entities count (including local)</p>
@@ -599,7 +755,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int EntitiesCount { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public ushort EntitiesCount { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -611,7 +767,57 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="LiteEntitySystem_EntityManager_InNormalState_" data-uid="LiteEntitySystem.EntityManager.InNormalState*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_InNormalState" data-uid="LiteEntitySystem.EntityManager.InNormalState">InNormalState</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool InNormalState { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="LiteEntitySystem_EntityManager_InRollBackState_" data-uid="LiteEntitySystem.EntityManager.InRollBackState*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_InRollBackState" data-uid="LiteEntitySystem.EntityManager.InRollBackState">InRollBackState</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool InRollBackState { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -698,7 +904,7 @@
   
   <a id="LiteEntitySystem_EntityManager_UpdateMode_" data-uid="LiteEntitySystem.EntityManager.UpdateMode*"></a>
   <h4 id="LiteEntitySystem_EntityManager_UpdateMode" data-uid="LiteEntitySystem.EntityManager.UpdateMode">UpdateMode</h4>
-  <div class="markdown level1 summary"><p>Current update mode (can be used inside entites to separate logic for rollbacks)</p>
+  <div class="markdown level1 summary"><p>Current update mode (can be used inside entities to separate logic for rollbacks)</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -716,6 +922,31 @@
     <tbody>
       <tr>
         <td><a class="xref" href="LiteEntitySystem.UpdateMode.html">UpdateMode</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="LiteEntitySystem_EntityManager_VisualDeltaTime_" data-uid="LiteEntitySystem.EntityManager.VisualDeltaTime*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_VisualDeltaTime" data-uid="LiteEntitySystem.EntityManager.VisualDeltaTime">VisualDeltaTime</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double VisualDeltaTime { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -767,12 +998,14 @@
   
   
   <a id="LiteEntitySystem_EntityManager_AddLocalEntity_" data-uid="LiteEntitySystem.EntityManager.AddLocalEntity*"></a>
-  <h4 id="LiteEntitySystem_EntityManager_AddLocalEntity_System_UInt16_" data-uid="LiteEntitySystem.EntityManager.AddLocalEntity(System.UInt16)">AddLocalEntity(UInt16)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="LiteEntitySystem_EntityManager_AddLocalEntity__1_System_Action___0__" data-uid="LiteEntitySystem.EntityManager.AddLocalEntity``1(System.Action{``0})">AddLocalEntity&lt;T&gt;(Action&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"><p>Add local entity that will be not synchronized</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected InternalEntity AddLocalEntity(ushort classId)</code></pre>
+    <pre><code class="lang-csharp hljs">public T AddLocalEntity&lt;T&gt;(Action&lt;T&gt; initMethod = null)
+    where T : InternalEntity</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -785,8 +1018,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
-        <td><span class="parametername">classId</span></td>
+        <td><span class="xref">System.Action</span>&lt;T&gt;</td>
+        <td><span class="parametername">initMethod</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -801,21 +1034,28 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></td>
-        <td></td>
+        <td><span class="xref">T</span></td>
+        <td><p>Created entity or null if entities limit is reached (65535 - <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxSyncedEntityCount">MaxSyncedEntityCount</a>)</p>
+</td>
       </tr>
     </tbody>
   </table>
-  
-  
-  <a id="LiteEntitySystem_EntityManager_CheckStart_" data-uid="LiteEntitySystem.EntityManager.CheckStart*"></a>
-  <h4 id="LiteEntitySystem_EntityManager_CheckStart" data-uid="LiteEntitySystem.EntityManager.CheckStart">CheckStart()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void CheckStart()</code></pre>
-  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Entity type</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   
   
   <a id="LiteEntitySystem_EntityManager_ConstructEntity_" data-uid="LiteEntitySystem.EntityManager.ConstructEntity*"></a>
@@ -824,7 +1064,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void ConstructEntity(InternalEntity entity)</code></pre>
+    <pre><code class="lang-csharp hljs">protected void ConstructEntity(InternalEntity e)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -838,7 +1078,44 @@
     <tbody>
       <tr>
         <td><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></td>
-        <td><span class="parametername">entity</span></td>
+        <td><span class="parametername">e</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="LiteEntitySystem_EntityManager_DisableLagCompensation_" data-uid="LiteEntitySystem.EntityManager.DisableLagCompensation*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_DisableLagCompensation" data-uid="LiteEntitySystem.EntityManager.DisableLagCompensation">DisableLagCompensation()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void DisableLagCompensation()</code></pre>
+  </div>
+  
+  
+  <a id="LiteEntitySystem_EntityManager_EnableLagCompensation_" data-uid="LiteEntitySystem.EntityManager.EnableLagCompensation*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_EnableLagCompensation_System_Byte_" data-uid="LiteEntitySystem.EntityManager.EnableLagCompensation(System.Byte)">EnableLagCompensation(Byte)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void EnableLagCompensation(byte playerId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">playerId</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -934,75 +1211,13 @@
   
   
   <a id="LiteEntitySystem_EntityManager_GetEntityById_" data-uid="LiteEntitySystem.EntityManager.GetEntityById*"></a>
-  <h4 id="LiteEntitySystem_EntityManager_GetEntityById__1_System_UInt16_" data-uid="LiteEntitySystem.EntityManager.GetEntityById``1(System.UInt16)">GetEntityById&lt;T&gt;(UInt16)</h4>
-  <div class="markdown level1 summary"><p>Get entity by id
-throws exception if entity is null or invalid type</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T GetEntityById&lt;T&gt;(ushort id)
-    where T : InternalEntity</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.UInt16</span></td>
-        <td><span class="parametername">id</span></td>
-        <td><p>Id of entity</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><p>Entity if it exists, null if id == InvalidEntityId</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="LiteEntitySystem_EntityManager_GetEntityByIdSafe_" data-uid="LiteEntitySystem.EntityManager.GetEntityByIdSafe*"></a>
-  <h4 id="LiteEntitySystem_EntityManager_GetEntityByIdSafe__1_System_UInt16_" data-uid="LiteEntitySystem.EntityManager.GetEntityByIdSafe``1(System.UInt16)">GetEntityByIdSafe&lt;T&gt;(UInt16)</h4>
+  <h4 id="LiteEntitySystem_EntityManager_GetEntityById__1_LiteEntitySystem_EntitySharedReference_" data-uid="LiteEntitySystem.EntityManager.GetEntityById``1(LiteEntitySystem.EntitySharedReference)">GetEntityById&lt;T&gt;(EntitySharedReference)</h4>
   <div class="markdown level1 summary"><p>Get entity by id</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T GetEntityByIdSafe&lt;T&gt;(ushort id)
+    <pre><code class="lang-csharp hljs">public T GetEntityById&lt;T&gt;(EntitySharedReference id)
     where T : InternalEntity</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -1016,7 +1231,7 @@ throws exception if entity is null or invalid type</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a></td>
         <td><span class="parametername">id</span></td>
         <td><p>Id of entity</p>
 </td>
@@ -1034,7 +1249,7 @@ throws exception if entity is null or invalid type</p>
     <tbody>
       <tr>
         <td><span class="xref">T</span></td>
-        <td><p>Entity if it exists, null otherwise</p>
+        <td><p>Entity if it exists, null if id == InvalidEntityId or entity is another type or version</p>
 </td>
       </tr>
     </tbody>
@@ -1077,6 +1292,52 @@ throws exception if entity is null or invalid type</p>
     <tbody>
       <tr>
         <td><span class="xref">T</span></td>
+        <td><p>Singleton entity, can throw exceptions on invalid type</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Singleton entity type</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="LiteEntitySystem_EntityManager_GetSingleton_" data-uid="LiteEntitySystem.EntityManager.GetSingleton*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_GetSingleton__1___0__" data-uid="LiteEntitySystem.EntityManager.GetSingleton``1(``0@)">GetSingleton&lt;T&gt;(out T)</h4>
+  <div class="markdown level1 summary"><p>Get existing singleton entity</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void GetSingleton&lt;T&gt;(out T singleton)
+    where T : SingletonEntityLogic</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">singleton</span></td>
         <td><p>Singleton entity, can throw exceptions on invalid type</p>
 </td>
       </tr>
@@ -1196,15 +1457,40 @@ throws exception if entity is null or invalid type</p>
   </div>
   
   
-  <a id="LiteEntitySystem_EntityManager_RegisterEntityType_" data-uid="LiteEntitySystem.EntityManager.RegisterEntityType*"></a>
-  <h4 id="LiteEntitySystem_EntityManager_RegisterEntityType__2___1_LiteEntitySystem_Internal_EntityConstructor___0__" data-uid="LiteEntitySystem.EntityManager.RegisterEntityType``2(``1,LiteEntitySystem.Internal.EntityConstructor{``0})">RegisterEntityType&lt;TEntity, TEnum&gt;(TEnum, EntityConstructor&lt;TEntity&gt;)</h4>
-  <div class="markdown level1 summary"><p>Register new entity type that will be used in game</p>
-</div>
+  <a id="LiteEntitySystem_EntityManager_RegisterFieldType_" data-uid="LiteEntitySystem.EntityManager.RegisterFieldType*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_RegisterFieldType__1" data-uid="LiteEntitySystem.EntityManager.RegisterFieldType``1">RegisterFieldType&lt;T&gt;()</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void RegisterEntityType&lt;TEntity, TEnum&gt;(TEnum id, EntityConstructor&lt;TEntity&gt; constructor)
-    where TEntity : InternalEntity where TEnum : Enum</code></pre>
+    <pre><code class="lang-csharp hljs">public static void RegisterFieldType&lt;T&gt;()
+    where T : struct</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="LiteEntitySystem_EntityManager_RegisterFieldType_" data-uid="LiteEntitySystem.EntityManager.RegisterFieldType*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_RegisterFieldType__1_LiteEntitySystem_Internal_InterpolatorDelegateWithReturn___0__" data-uid="LiteEntitySystem.EntityManager.RegisterFieldType``1(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{``0})">RegisterFieldType&lt;T&gt;(InterpolatorDelegateWithReturn&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void RegisterFieldType&lt;T&gt;(InterpolatorDelegateWithReturn&lt;T&gt; interpolationDelegate)
+    where T : struct</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1217,16 +1503,9 @@ throws exception if entity is null or invalid type</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">TEnum</span></td>
-        <td><span class="parametername">id</span></td>
-        <td><p>Enum value that will describe entity class id</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">LiteEntitySystem.Internal.EntityConstructor</span>&lt;TEntity&gt;</td>
-        <td><span class="parametername">constructor</span></td>
-        <td><p>Constructor of entity</p>
-</td>
+        <td><span class="xref">LiteEntitySystem.Internal.InterpolatorDelegateWithReturn</span>&lt;T&gt;</td>
+        <td><span class="parametername">interpolationDelegate</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -1240,14 +1519,8 @@ throws exception if entity is null or invalid type</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">TEntity</span></td>
-        <td><p>Type of entity</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="parametername">TEnum</span></td>
-        <td><p>Enum used as classId</p>
-</td>
+        <td><span class="parametername">T</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -1262,6 +1535,74 @@ throws exception if entity is null or invalid type</p>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void Reset()</code></pre>
   </div>
+  
+  
+  <a id="LiteEntitySystem_EntityManager_TryGetEntityById_" data-uid="LiteEntitySystem.EntityManager.TryGetEntityById*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_TryGetEntityById__1_LiteEntitySystem_EntitySharedReference___0__" data-uid="LiteEntitySystem.EntityManager.TryGetEntityById``1(LiteEntitySystem.EntitySharedReference,``0@)">TryGetEntityById&lt;T&gt;(EntitySharedReference, out T)</h4>
+  <div class="markdown level1 summary"><p>Try get entity by id
+throws exception if entity is null or invalid type</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool TryGetEntityById&lt;T&gt;(EntitySharedReference id, out T entity)
+    where T : InternalEntity</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>Id of entity</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">entity</span></td>
+        <td><p>out entity if exists otherwise null</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>true if it exists, false if id == InvalidEntityId or entity is another type or version</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   
   
   <a id="LiteEntitySystem_EntityManager_TryGetSingleton_" data-uid="LiteEntitySystem.EntityManager.TryGetSingleton*"></a>

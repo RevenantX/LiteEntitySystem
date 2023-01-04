@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Struct FloatAngle
+    <title>Struct EntitySharedReference
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Struct FloatAngle
+    <meta name="title" content="Struct EntitySharedReference
    ">
     <meta name="generator" content="docfx 2.59.4.0">
     
@@ -68,30 +68,30 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.FloatAngle">
+            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.EntitySharedReference">
   
   
-  <h1 id="LiteEntitySystem_FloatAngle" data-uid="LiteEntitySystem.FloatAngle" class="text-break">Struct FloatAngle
+  <h1 id="LiteEntitySystem_EntitySharedReference" data-uid="LiteEntitySystem.EntitySharedReference" class="text-break">Struct EntitySharedReference
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
-  <h5 id="LiteEntitySystem_FloatAngle_syntax">Syntax</h5>
+  <h5 id="LiteEntitySystem_EntitySharedReference_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct FloatAngle</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly struct EntitySharedReference</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   
   
-  <a id="LiteEntitySystem_FloatAngle__ctor_" data-uid="LiteEntitySystem.FloatAngle.#ctor*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle__ctor_System_Single_" data-uid="LiteEntitySystem.FloatAngle.#ctor(System.Single)">FloatAngle(Single)</h4>
+  <a id="LiteEntitySystem_EntitySharedReference__ctor_" data-uid="LiteEntitySystem.EntitySharedReference.#ctor*"></a>
+  <h4 id="LiteEntitySystem_EntitySharedReference__ctor_LiteEntitySystem_Internal_InternalEntity_" data-uid="LiteEntitySystem.EntitySharedReference.#ctor(LiteEntitySystem.Internal.InternalEntity)">EntitySharedReference(InternalEntity)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FloatAngle(float value)</code></pre>
+    <pre><code class="lang-csharp hljs">public EntitySharedReference(InternalEntity entity)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -104,8 +104,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td><span class="parametername">value</span></td>
+        <td><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></td>
+        <td><span class="parametername">entity</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -114,12 +114,12 @@
   </h3>
   
   
-  <h4 id="LiteEntitySystem_FloatAngle_Deg2Rad" data-uid="LiteEntitySystem.FloatAngle.Deg2Rad">Deg2Rad</h4>
+  <h4 id="LiteEntitySystem_EntitySharedReference_Id" data-uid="LiteEntitySystem.EntitySharedReference.Id">Id</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const float Deg2Rad = 0.0174532924F</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly ushort Id</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -131,19 +131,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.UInt16</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <h4 id="LiteEntitySystem_FloatAngle_Degrees" data-uid="LiteEntitySystem.FloatAngle.Degrees">Degrees</h4>
+  <h4 id="LiteEntitySystem_EntitySharedReference_Version" data-uid="LiteEntitySystem.EntitySharedReference.Version">Version</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float Degrees</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly byte Version</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -155,55 +155,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="LiteEntitySystem_FloatAngle_PI" data-uid="LiteEntitySystem.FloatAngle.PI">PI</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const float PI = 3.14159274F</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="LiteEntitySystem_FloatAngle_Rad2Deg" data-uid="LiteEntitySystem.FloatAngle.Rad2Deg">Rad2Deg</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const float Rad2Deg = 57.29578F</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Byte</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -212,13 +164,13 @@
   </h3>
   
   
-  <a id="LiteEntitySystem_FloatAngle_Normalized_" data-uid="LiteEntitySystem.FloatAngle.Normalized*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_Normalized" data-uid="LiteEntitySystem.FloatAngle.Normalized">Normalized</h4>
+  <a id="LiteEntitySystem_EntitySharedReference_IsInvalid_" data-uid="LiteEntitySystem.EntitySharedReference.IsInvalid*"></a>
+  <h4 id="LiteEntitySystem_EntitySharedReference_IsInvalid" data-uid="LiteEntitySystem.EntitySharedReference.IsInvalid">IsInvalid</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly FloatAngle Normalized { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly bool IsInvalid { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -230,20 +182,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.FloatAngle.html">FloatAngle</a></td>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="LiteEntitySystem_FloatAngle_Radians_" data-uid="LiteEntitySystem.FloatAngle.Radians*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_Radians" data-uid="LiteEntitySystem.FloatAngle.Radians">Radians</h4>
+  <a id="LiteEntitySystem_EntitySharedReference_IsLocal_" data-uid="LiteEntitySystem.EntitySharedReference.IsLocal*"></a>
+  <h4 id="LiteEntitySystem_EntitySharedReference_IsLocal" data-uid="LiteEntitySystem.EntitySharedReference.IsLocal">IsLocal</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly float Radians { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly bool IsLocal { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -255,7 +207,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -264,38 +216,13 @@
   </h3>
   
   
-  <a id="LiteEntitySystem_FloatAngle_Cos_" data-uid="LiteEntitySystem.FloatAngle.Cos*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_Cos" data-uid="LiteEntitySystem.FloatAngle.Cos">Cos()</h4>
+  <a id="LiteEntitySystem_EntitySharedReference_Equals_" data-uid="LiteEntitySystem.EntitySharedReference.Equals*"></a>
+  <h4 id="LiteEntitySystem_EntitySharedReference_Equals_System_Object_" data-uid="LiteEntitySystem.EntitySharedReference.Equals(System.Object)">Equals(Object)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float Cos()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="LiteEntitySystem_FloatAngle_Lerp_" data-uid="LiteEntitySystem.FloatAngle.Lerp*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_Lerp_LiteEntitySystem_FloatAngle_LiteEntitySystem_FloatAngle_System_Single_" data-uid="LiteEntitySystem.FloatAngle.Lerp(LiteEntitySystem.FloatAngle,LiteEntitySystem.FloatAngle,System.Single)">Lerp(FloatAngle, FloatAngle, Single)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static FloatAngle Lerp(FloatAngle a, FloatAngle b, float t)</code></pre>
+    <pre><code class="lang-csharp hljs">public override readonly bool Equals(object obj)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -308,18 +235,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.FloatAngle.html">FloatAngle</a></td>
-        <td><span class="parametername">a</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.FloatAngle.html">FloatAngle</a></td>
-        <td><span class="parametername">b</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td><span class="parametername">t</span></td>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">obj</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -334,84 +251,51 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.FloatAngle.html">FloatAngle</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="LiteEntitySystem_FloatAngle_Normalize_" data-uid="LiteEntitySystem.FloatAngle.Normalize*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_Normalize" data-uid="LiteEntitySystem.FloatAngle.Normalize">Normalize()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Normalize()</code></pre>
-  </div>
-  
-  
-  <a id="LiteEntitySystem_FloatAngle_Sin_" data-uid="LiteEntitySystem.FloatAngle.Sin*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_Sin" data-uid="LiteEntitySystem.FloatAngle.Sin">Sin()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float Sin()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="LiteEntitySystem_FloatAngle_ToString_" data-uid="LiteEntitySystem.FloatAngle.ToString*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_ToString" data-uid="LiteEntitySystem.FloatAngle.ToString">ToString()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.ValueType.ToString()</span></div>
+  <div><span class="xref">System.ValueType.Equals(System.Object)</span></div>
+  
+  
+  <a id="LiteEntitySystem_EntitySharedReference_GetHashCode_" data-uid="LiteEntitySystem.EntitySharedReference.GetHashCode*"></a>
+  <h4 id="LiteEntitySystem_EntitySharedReference_GetHashCode" data-uid="LiteEntitySystem.EntitySharedReference.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override readonly int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.GetHashCode()</span></div>
   <h3 id="operators">Operators
   </h3>
   
   
-  <a id="LiteEntitySystem_FloatAngle_op_Implicit_" data-uid="LiteEntitySystem.FloatAngle.op_Implicit*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_op_Implicit_LiteEntitySystem_FloatAngle__System_Single" data-uid="LiteEntitySystem.FloatAngle.op_Implicit(LiteEntitySystem.FloatAngle)~System.Single">Implicit(FloatAngle to Single)</h4>
+  <a id="LiteEntitySystem_EntitySharedReference_op_Equality_" data-uid="LiteEntitySystem.EntitySharedReference.op_Equality*"></a>
+  <h4 id="LiteEntitySystem_EntitySharedReference_op_Equality_LiteEntitySystem_EntitySharedReference_LiteEntitySystem_EntitySharedReference_" data-uid="LiteEntitySystem.EntitySharedReference.op_Equality(LiteEntitySystem.EntitySharedReference,LiteEntitySystem.EntitySharedReference)">Equality(EntitySharedReference, EntitySharedReference)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static implicit operator float (FloatAngle value)</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool operator ==(EntitySharedReference obj1, EntitySharedReference obj2)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -424,8 +308,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.FloatAngle.html">FloatAngle</a></td>
-        <td><span class="parametername">value</span></td>
+        <td><a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a></td>
+        <td><span class="parametername">obj1</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a></td>
+        <td><span class="parametername">obj2</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -440,20 +329,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="LiteEntitySystem_FloatAngle_op_Implicit_" data-uid="LiteEntitySystem.FloatAngle.op_Implicit*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_op_Implicit_System_Single__LiteEntitySystem_FloatAngle" data-uid="LiteEntitySystem.FloatAngle.op_Implicit(System.Single)~LiteEntitySystem.FloatAngle">Implicit(Single to FloatAngle)</h4>
+  <a id="LiteEntitySystem_EntitySharedReference_op_Implicit_" data-uid="LiteEntitySystem.EntitySharedReference.op_Implicit*"></a>
+  <h4 id="LiteEntitySystem_EntitySharedReference_op_Implicit_LiteEntitySystem_Internal_InternalEntity__LiteEntitySystem_EntitySharedReference" data-uid="LiteEntitySystem.EntitySharedReference.op_Implicit(LiteEntitySystem.Internal.InternalEntity)~LiteEntitySystem.EntitySharedReference">Implicit(InternalEntity to EntitySharedReference)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static implicit operator FloatAngle(float degrees)</code></pre>
+    <pre><code class="lang-csharp hljs">public static implicit operator EntitySharedReference(InternalEntity entity)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -466,8 +355,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td><span class="parametername">degrees</span></td>
+        <td><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></td>
+        <td><span class="parametername">entity</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -482,7 +371,54 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.FloatAngle.html">FloatAngle</a></td>
+        <td><a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="LiteEntitySystem_EntitySharedReference_op_Inequality_" data-uid="LiteEntitySystem.EntitySharedReference.op_Inequality*"></a>
+  <h4 id="LiteEntitySystem_EntitySharedReference_op_Inequality_LiteEntitySystem_EntitySharedReference_LiteEntitySystem_EntitySharedReference_" data-uid="LiteEntitySystem.EntitySharedReference.op_Inequality(LiteEntitySystem.EntitySharedReference,LiteEntitySystem.EntitySharedReference)">Inequality(EntitySharedReference, EntitySharedReference)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(EntitySharedReference obj1, EntitySharedReference obj2)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a></td>
+        <td><span class="parametername">obj1</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a></td>
+        <td><span class="parametername">obj2</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>

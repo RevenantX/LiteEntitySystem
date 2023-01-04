@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Enum ExecuteFlags
    ">
-    <meta name="generator" content="docfx 2.59.2.0">
+    <meta name="generator" content="docfx 2.59.4.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -79,7 +79,8 @@
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_ExecuteFlags_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum ExecuteFlags : byte</code></pre>
+    <pre><code class="lang-csharp hljs">[Flags]
+public enum ExecuteFlags : byte</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -96,11 +97,19 @@
         <td></td>
       </tr>
       <tr>
+        <td id="LiteEntitySystem_ExecuteFlags_ExecuteOnClinet">ExecuteOnClinet</td>
+        <td></td>
+      </tr>
+      <tr>
         <td id="LiteEntitySystem_ExecuteFlags_ExecuteOnPrediction">ExecuteOnPrediction</td>
         <td></td>
       </tr>
       <tr>
         <td id="LiteEntitySystem_ExecuteFlags_ExecuteOnServer">ExecuteOnServer</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td id="LiteEntitySystem_ExecuteFlags_None">None</td>
         <td></td>
       </tr>
       <tr>
@@ -113,6 +122,13 @@
       </tr>
     </tbody>
   </thead></thead></table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_HasFlagFast__1___0___0_">Helpers.HasFlagFast&lt;ExecuteFlags&gt;(ExecuteFlags)</a>
+  </div>
+  <div>
+      <a class="xref" href="LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_GetEnumValue__1___0_">Helpers.GetEnumValue&lt;ExecuteFlags&gt;()</a>
+  </div>
 </article>
           </div>
           

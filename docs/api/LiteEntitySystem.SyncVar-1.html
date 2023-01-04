@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Struct FloatAngle
+    <title>Struct SyncVar&lt;T&gt;
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Struct FloatAngle
+    <meta name="title" content="Struct SyncVar&lt;T&gt;
    ">
     <meta name="generator" content="docfx 2.59.4.0">
     
@@ -68,30 +68,46 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.FloatAngle">
+            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.SyncVar`1">
   
   
-  <h1 id="LiteEntitySystem_FloatAngle" data-uid="LiteEntitySystem.FloatAngle" class="text-break">Struct FloatAngle
+  <h1 id="LiteEntitySystem_SyncVar_1" data-uid="LiteEntitySystem.SyncVar`1" class="text-break">Struct SyncVar&lt;T&gt;
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
-  <h5 id="LiteEntitySystem_FloatAngle_syntax">Syntax</h5>
+  <h5 id="LiteEntitySystem_SyncVar_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct FloatAngle</code></pre>
+    <pre><code class="lang-csharp hljs">public struct SyncVar&lt;T&gt;
+    where T : struct</code></pre>
   </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="constructors">Constructors
   </h3>
   
   
-  <a id="LiteEntitySystem_FloatAngle__ctor_" data-uid="LiteEntitySystem.FloatAngle.#ctor*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle__ctor_System_Single_" data-uid="LiteEntitySystem.FloatAngle.#ctor(System.Single)">FloatAngle(Single)</h4>
+  <a id="LiteEntitySystem_SyncVar_1__ctor_" data-uid="LiteEntitySystem.SyncVar`1.#ctor*"></a>
+  <h4 id="LiteEntitySystem_SyncVar_1__ctor__0_" data-uid="LiteEntitySystem.SyncVar`1.#ctor(`0)">SyncVar(T)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FloatAngle(float value)</code></pre>
+    <pre><code class="lang-csharp hljs">public SyncVar(T value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -104,7 +120,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">T</span></td>
         <td><span class="parametername">value</span></td>
         <td></td>
       </tr>
@@ -114,12 +130,12 @@
   </h3>
   
   
-  <h4 id="LiteEntitySystem_FloatAngle_Deg2Rad" data-uid="LiteEntitySystem.FloatAngle.Deg2Rad">Deg2Rad</h4>
+  <h4 id="LiteEntitySystem_SyncVar_1_Value" data-uid="LiteEntitySystem.SyncVar`1.Value">Value</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const float Deg2Rad = 0.0174532924F</code></pre>
+    <pre><code class="lang-csharp hljs">public T Value</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -131,131 +147,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="LiteEntitySystem_FloatAngle_Degrees" data-uid="LiteEntitySystem.FloatAngle.Degrees">Degrees</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float Degrees</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="LiteEntitySystem_FloatAngle_PI" data-uid="LiteEntitySystem.FloatAngle.PI">PI</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const float PI = 3.14159274F</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="LiteEntitySystem_FloatAngle_Rad2Deg" data-uid="LiteEntitySystem.FloatAngle.Rad2Deg">Rad2Deg</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const float Rad2Deg = 57.29578F</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="properties">Properties
-  </h3>
-  
-  
-  <a id="LiteEntitySystem_FloatAngle_Normalized_" data-uid="LiteEntitySystem.FloatAngle.Normalized*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_Normalized" data-uid="LiteEntitySystem.FloatAngle.Normalized">Normalized</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly FloatAngle Normalized { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.FloatAngle.html">FloatAngle</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="LiteEntitySystem_FloatAngle_Radians_" data-uid="LiteEntitySystem.FloatAngle.Radians*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_Radians" data-uid="LiteEntitySystem.FloatAngle.Radians">Radians</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly float Radians { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">T</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -264,38 +156,13 @@
   </h3>
   
   
-  <a id="LiteEntitySystem_FloatAngle_Cos_" data-uid="LiteEntitySystem.FloatAngle.Cos*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_Cos" data-uid="LiteEntitySystem.FloatAngle.Cos">Cos()</h4>
+  <a id="LiteEntitySystem_SyncVar_1_Equals_" data-uid="LiteEntitySystem.SyncVar`1.Equals*"></a>
+  <h4 id="LiteEntitySystem_SyncVar_1_Equals_System_Object_" data-uid="LiteEntitySystem.SyncVar`1.Equals(System.Object)">Equals(Object)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float Cos()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="LiteEntitySystem_FloatAngle_Lerp_" data-uid="LiteEntitySystem.FloatAngle.Lerp*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_Lerp_LiteEntitySystem_FloatAngle_LiteEntitySystem_FloatAngle_System_Single_" data-uid="LiteEntitySystem.FloatAngle.Lerp(LiteEntitySystem.FloatAngle,LiteEntitySystem.FloatAngle,System.Single)">Lerp(FloatAngle, FloatAngle, Single)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static FloatAngle Lerp(FloatAngle a, FloatAngle b, float t)</code></pre>
+    <pre><code class="lang-csharp hljs">public override bool Equals(object o)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -308,18 +175,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.FloatAngle.html">FloatAngle</a></td>
-        <td><span class="parametername">a</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.FloatAngle.html">FloatAngle</a></td>
-        <td><span class="parametername">b</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td><span class="parametername">t</span></td>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">o</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -334,30 +191,22 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.FloatAngle.html">FloatAngle</a></td>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.Equals(System.Object)</span></div>
   
   
-  <a id="LiteEntitySystem_FloatAngle_Normalize_" data-uid="LiteEntitySystem.FloatAngle.Normalize*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_Normalize" data-uid="LiteEntitySystem.FloatAngle.Normalize">Normalize()</h4>
+  <a id="LiteEntitySystem_SyncVar_1_GetHashCode_" data-uid="LiteEntitySystem.SyncVar`1.GetHashCode*"></a>
+  <h4 id="LiteEntitySystem_SyncVar_1_GetHashCode" data-uid="LiteEntitySystem.SyncVar`1.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Normalize()</code></pre>
-  </div>
-  
-  
-  <a id="LiteEntitySystem_FloatAngle_Sin_" data-uid="LiteEntitySystem.FloatAngle.Sin*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_Sin" data-uid="LiteEntitySystem.FloatAngle.Sin">Sin()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float Sin()</code></pre>
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -369,15 +218,17 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Int32</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.GetHashCode()</span></div>
   
   
-  <a id="LiteEntitySystem_FloatAngle_ToString_" data-uid="LiteEntitySystem.FloatAngle.ToString*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_ToString" data-uid="LiteEntitySystem.FloatAngle.ToString">ToString()</h4>
+  <a id="LiteEntitySystem_SyncVar_1_ToString_" data-uid="LiteEntitySystem.SyncVar`1.ToString*"></a>
+  <h4 id="LiteEntitySystem_SyncVar_1_ToString" data-uid="LiteEntitySystem.SyncVar`1.ToString">ToString()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -405,13 +256,13 @@
   </h3>
   
   
-  <a id="LiteEntitySystem_FloatAngle_op_Implicit_" data-uid="LiteEntitySystem.FloatAngle.op_Implicit*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_op_Implicit_LiteEntitySystem_FloatAngle__System_Single" data-uid="LiteEntitySystem.FloatAngle.op_Implicit(LiteEntitySystem.FloatAngle)~System.Single">Implicit(FloatAngle to Single)</h4>
+  <a id="LiteEntitySystem_SyncVar_1_op_Equality_" data-uid="LiteEntitySystem.SyncVar`1.op_Equality*"></a>
+  <h4 id="LiteEntitySystem_SyncVar_1_op_Equality__0_LiteEntitySystem_SyncVar__0__" data-uid="LiteEntitySystem.SyncVar`1.op_Equality(`0,LiteEntitySystem.SyncVar{`0})">Equality(T, SyncVar&lt;T&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static implicit operator float (FloatAngle value)</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool operator ==(T a, SyncVar&lt;T&gt; b)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -424,8 +275,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.FloatAngle.html">FloatAngle</a></td>
-        <td><span class="parametername">value</span></td>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">a</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.SyncVar-1.html">SyncVar</a>&lt;T&gt;</td>
+        <td><span class="parametername">b</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -440,20 +296,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="LiteEntitySystem_FloatAngle_op_Implicit_" data-uid="LiteEntitySystem.FloatAngle.op_Implicit*"></a>
-  <h4 id="LiteEntitySystem_FloatAngle_op_Implicit_System_Single__LiteEntitySystem_FloatAngle" data-uid="LiteEntitySystem.FloatAngle.op_Implicit(System.Single)~LiteEntitySystem.FloatAngle">Implicit(Single to FloatAngle)</h4>
+  <a id="LiteEntitySystem_SyncVar_1_op_Equality_" data-uid="LiteEntitySystem.SyncVar`1.op_Equality*"></a>
+  <h4 id="LiteEntitySystem_SyncVar_1_op_Equality_LiteEntitySystem_SyncVar__0__LiteEntitySystem_SyncVar__0__" data-uid="LiteEntitySystem.SyncVar`1.op_Equality(LiteEntitySystem.SyncVar{`0},LiteEntitySystem.SyncVar{`0})">Equality(SyncVar&lt;T&gt;, SyncVar&lt;T&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static implicit operator FloatAngle(float degrees)</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool operator ==(SyncVar&lt;T&gt; a, SyncVar&lt;T&gt; b)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -466,8 +322,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td><span class="parametername">degrees</span></td>
+        <td><a class="xref" href="LiteEntitySystem.SyncVar-1.html">SyncVar</a>&lt;T&gt;</td>
+        <td><span class="parametername">a</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.SyncVar-1.html">SyncVar</a>&lt;T&gt;</td>
+        <td><span class="parametername">b</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -482,7 +343,185 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.FloatAngle.html">FloatAngle</a></td>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="LiteEntitySystem_SyncVar_1_op_Implicit_" data-uid="LiteEntitySystem.SyncVar`1.op_Implicit*"></a>
+  <h4 id="LiteEntitySystem_SyncVar_1_op_Implicit__0__LiteEntitySystem_SyncVar__0_" data-uid="LiteEntitySystem.SyncVar`1.op_Implicit(`0)~LiteEntitySystem.SyncVar{`0}">Implicit(T to SyncVar&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator SyncVar&lt;T&gt;(T v)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">v</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.SyncVar-1.html">SyncVar</a>&lt;T&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="LiteEntitySystem_SyncVar_1_op_Implicit_" data-uid="LiteEntitySystem.SyncVar`1.op_Implicit*"></a>
+  <h4 id="LiteEntitySystem_SyncVar_1_op_Implicit_LiteEntitySystem_SyncVar__0____0" data-uid="LiteEntitySystem.SyncVar`1.op_Implicit(LiteEntitySystem.SyncVar{`0})~`0">Implicit(SyncVar&lt;T&gt; to T)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator T(SyncVar&lt;T&gt; sv)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.SyncVar-1.html">SyncVar</a>&lt;T&gt;</td>
+        <td><span class="parametername">sv</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="LiteEntitySystem_SyncVar_1_op_Inequality_" data-uid="LiteEntitySystem.SyncVar`1.op_Inequality*"></a>
+  <h4 id="LiteEntitySystem_SyncVar_1_op_Inequality__0_LiteEntitySystem_SyncVar__0__" data-uid="LiteEntitySystem.SyncVar`1.op_Inequality(`0,LiteEntitySystem.SyncVar{`0})">Inequality(T, SyncVar&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(T a, SyncVar&lt;T&gt; b)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">a</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.SyncVar-1.html">SyncVar</a>&lt;T&gt;</td>
+        <td><span class="parametername">b</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="LiteEntitySystem_SyncVar_1_op_Inequality_" data-uid="LiteEntitySystem.SyncVar`1.op_Inequality*"></a>
+  <h4 id="LiteEntitySystem_SyncVar_1_op_Inequality_LiteEntitySystem_SyncVar__0__LiteEntitySystem_SyncVar__0__" data-uid="LiteEntitySystem.SyncVar`1.op_Inequality(LiteEntitySystem.SyncVar{`0},LiteEntitySystem.SyncVar{`0})">Inequality(SyncVar&lt;T&gt;, SyncVar&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(SyncVar&lt;T&gt; a, SyncVar&lt;T&gt; b)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.SyncVar-1.html">SyncVar</a>&lt;T&gt;</td>
+        <td><span class="parametername">a</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.SyncVar-1.html">SyncVar</a>&lt;T&gt;</td>
+        <td><span class="parametername">b</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>

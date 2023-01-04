@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class EntityLogic
    ">
-    <meta name="generator" content="docfx 2.59.2.0">
+    <meta name="generator" content="docfx 2.59.4.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -83,6 +83,10 @@
     <div class="level2"><span class="xref">EntityLogic</span></div>
       <div class="level3"><a class="xref" href="LiteEntitySystem.PawnLogic.html">PawnLogic</a></div>
   </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.IComparable</span>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -95,7 +99,10 @@
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_EntityManager">InternalEntity.EntityManager</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Version">InternalEntity.Version</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsDestroyed">InternalEntity.IsDestroyed</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsLocalControlled">InternalEntity.IsLocalControlled</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsServerControlled">InternalEntity.IsServerControlled</a>
@@ -107,29 +114,53 @@
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ServerManager">InternalEntity.ServerManager</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_DebugPrint">InternalEntity.DebugPrint()</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsLocal">InternalEntity.IsLocal</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Destroy">InternalEntity.Destroy()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnDestroy">InternalEntity.OnDestroy()</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Update">InternalEntity.Update()</a>
     </div>
     <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_VisualUpdate">InternalEntity.VisualUpdate()</a>
+    </div>
+    <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnConstructed">InternalEntity.OnConstructed()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRemoteCall__1_Action___0____0_">InternalEntity.ExecuteRemoteCall&lt;T&gt;(Action&lt;T&gt;, T)</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnSyncStart">InternalEntity.OnSyncStart()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRemoteCall__1_Action___0______0___System_Int32_">InternalEntity.ExecuteRemoteCall&lt;T&gt;(Action&lt;T[]&gt;, T[], Int32)</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnSyncEnd">InternalEntity.OnSyncEnd()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_CompareTo_LiteEntitySystem_Internal_InternalEntity_">InternalEntity.CompareTo(InternalEntity)</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_LiteEntitySystem_RemoteCall__">InternalEntity.ExecuteRPC(RemoteCall)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">InternalEntity.ExecuteRPC&lt;T&gt;(RemoteCall&lt;T&gt;, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">InternalEntity.ExecuteRPC&lt;T&gt;(RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_System_IComparable_LiteEntitySystem_Internal_InternalEntity__CompareTo_LiteEntitySystem_Internal_InternalEntity_">InternalEntity.IComparable&lt;InternalEntity&gt;.CompareTo(InternalEntity)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_GetHashCode">InternalEntity.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ToString">InternalEntity.ToString()</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_EntityLogic_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class EntityLogic : InternalEntity</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class EntityLogic : InternalEntity, IComparable&lt;InternalEntity&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -182,7 +213,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">HashSet</span>&lt;<a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;<a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -191,14 +222,13 @@
   </h3>
   
   
-  <a id="LiteEntitySystem_EntityLogic_IsDestroyed_" data-uid="LiteEntitySystem.EntityLogic.IsDestroyed*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_IsDestroyed" data-uid="LiteEntitySystem.EntityLogic.IsDestroyed">IsDestroyed</h4>
-  <div class="markdown level1 summary"><p>Is entity is destroyed</p>
-</div>
+  <a id="LiteEntitySystem_EntityLogic_HasLagCompensation_" data-uid="LiteEntitySystem.EntityLogic.HasLagCompensation*"></a>
+  <h4 id="LiteEntitySystem_EntityLogic_HasLagCompensation" data-uid="LiteEntitySystem.EntityLogic.HasLagCompensation">HasLagCompensation</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsDestroyed { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool HasLagCompensation { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -215,34 +245,6 @@
       </tr>
     </tbody>
   </table>
-  
-  
-  <a id="LiteEntitySystem_EntityLogic_IsLocalControlled_" data-uid="LiteEntitySystem.EntityLogic.IsLocalControlled*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_IsLocalControlled" data-uid="LiteEntitySystem.EntityLogic.IsLocalControlled">IsLocalControlled</h4>
-  <div class="markdown level1 summary"><p>Is entity is local controlled</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override bool IsLocalControlled { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsLocalControlled">InternalEntity.IsLocalControlled</a></div>
   
   
   <a id="LiteEntitySystem_EntityLogic_OwnerId_" data-uid="LiteEntitySystem.EntityLogic.OwnerId*"></a>
@@ -273,15 +275,113 @@
   </h3>
   
   
-  <a id="LiteEntitySystem_EntityLogic_Destroy_" data-uid="LiteEntitySystem.EntityLogic.Destroy*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_Destroy" data-uid="LiteEntitySystem.EntityLogic.Destroy">Destroy()</h4>
-  <div class="markdown level1 summary"><p>Destroy entity</p>
+  <a id="LiteEntitySystem_EntityLogic_AddPredictedEntity_" data-uid="LiteEntitySystem.EntityLogic.AddPredictedEntity*"></a>
+  <h4 id="LiteEntitySystem_EntityLogic_AddPredictedEntity__1_System_Action___0__" data-uid="LiteEntitySystem.EntityLogic.AddPredictedEntity``1(System.Action{``0})">AddPredictedEntity&lt;T&gt;(Action&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"><p>Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Destroy()</code></pre>
+    <pre><code class="lang-csharp hljs">public T AddPredictedEntity&lt;T&gt;(Action&lt;T&gt; initMethod = null)
+    where T : EntityLogic</code></pre>
   </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;T&gt;</td>
+        <td><span class="parametername">initMethod</span></td>
+        <td><p>Method that will be called after entity constructed</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><p>Created predicted local entity</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Entity type</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="LiteEntitySystem_EntityLogic_DisableLagCompensationForOwner_" data-uid="LiteEntitySystem.EntityLogic.DisableLagCompensationForOwner*"></a>
+  <h4 id="LiteEntitySystem_EntityLogic_DisableLagCompensationForOwner" data-uid="LiteEntitySystem.EntityLogic.DisableLagCompensationForOwner">DisableLagCompensationForOwner()</h4>
+  <div class="markdown level1 summary"><p>Disable lag compensation for player that owns this entity</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void DisableLagCompensationForOwner()</code></pre>
+  </div>
+  
+  
+  <a id="LiteEntitySystem_EntityLogic_EnableLagCompensationForOwner_" data-uid="LiteEntitySystem.EntityLogic.EnableLagCompensationForOwner*"></a>
+  <h4 id="LiteEntitySystem_EntityLogic_EnableLagCompensationForOwner" data-uid="LiteEntitySystem.EntityLogic.EnableLagCompensationForOwner">EnableLagCompensationForOwner()</h4>
+  <div class="markdown level1 summary"><p>Enable lag compensation for player that owns this entity</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void EnableLagCompensationForOwner()</code></pre>
+  </div>
+  
+  
+  <a id="LiteEntitySystem_EntityLogic_GetFrameSeed_" data-uid="LiteEntitySystem.EntityLogic.GetFrameSeed*"></a>
+  <h4 id="LiteEntitySystem_EntityLogic_GetFrameSeed" data-uid="LiteEntitySystem.EntityLogic.GetFrameSeed">GetFrameSeed()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int GetFrameSeed()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   
   
   <a id="LiteEntitySystem_EntityLogic_GetParent_" data-uid="LiteEntitySystem.EntityLogic.GetParent*"></a>
@@ -328,24 +428,35 @@
   </table>
   
   
-  <a id="LiteEntitySystem_EntityLogic_OnDestroy_" data-uid="LiteEntitySystem.EntityLogic.OnDestroy*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_OnDestroy" data-uid="LiteEntitySystem.EntityLogic.OnDestroy">OnDestroy()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected virtual void OnDestroy()</code></pre>
-  </div>
-  
-  
-  <a id="LiteEntitySystem_EntityLogic_OnLagCompensation_" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensation*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_OnLagCompensation_System_Boolean_" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensation(System.Boolean)">OnLagCompensation(Boolean)</h4>
-  <div class="markdown level1 summary"><p>Called when lag compensation was enabled for this entity</p>
+  <a id="LiteEntitySystem_EntityLogic_OnLagCompensationEnd_" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensationEnd*"></a>
+  <h4 id="LiteEntitySystem_EntityLogic_OnLagCompensationEnd" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensationEnd">OnLagCompensationEnd()</h4>
+  <div class="markdown level1 summary"><p>Called when lag compensation ended for this entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual void OnLagCompensation(bool enabled)</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual void OnLagCompensationEnd()</code></pre>
+  </div>
+  
+  
+  <a id="LiteEntitySystem_EntityLogic_OnLagCompensationStart_" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensationStart*"></a>
+  <h4 id="LiteEntitySystem_EntityLogic_OnLagCompensationStart" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensationStart">OnLagCompensationStart()</h4>
+  <div class="markdown level1 summary"><p>Called when lag compensation was started for this entity</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void OnLagCompensationStart()</code></pre>
+  </div>
+  
+  
+  <a id="LiteEntitySystem_EntityLogic_RegisterRPC_" data-uid="LiteEntitySystem.EntityLogic.RegisterRPC*"></a>
+  <h4 id="LiteEntitySystem_EntityLogic_RegisterRPC_LiteEntitySystem_RPCRegistrator__" data-uid="LiteEntitySystem.EntityLogic.RegisterRPC(LiteEntitySystem.RPCRegistrator@)">RegisterRPC(in RPCRegistrator)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void RegisterRPC(in RPCRegistrator r)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -358,13 +469,14 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">enabled</span></td>
-        <td><p>is enabled</p>
-</td>
+        <td><a class="xref" href="LiteEntitySystem.RPCRegistrator.html">RPCRegistrator</a></td>
+        <td><span class="parametername">r</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_RegisterRPC_LiteEntitySystem_RPCRegistrator__">InternalEntity.RegisterRPC(in RPCRegistrator)</a></div>
   
   
   <a id="LiteEntitySystem_EntityLogic_SetParent_" data-uid="LiteEntitySystem.EntityLogic.SetParent*"></a>
@@ -394,6 +506,10 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.IComparable&lt;T&gt;</span>
+  </div>
 </article>
           </div>
           

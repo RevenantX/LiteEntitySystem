@@ -1,6 +1,6 @@
 {
   "homepages": [],
-  "source_base_path": "D:/Projects/netgameexample_test/Assets/Plugins/LiteEntitySystem/docfx_project",
+  "source_base_path": "d:/Projects/LiteEntitySystem/docfx_project",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -9,7 +9,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.AiControllerLogic-1.html",
-          "hash": "Bjv5pn5svQmHkBvdIKZa+e2iN54xmZ0iExfCBUKI9ao="
+          "hash": "pFC5aive4vEXclVCuRHs2B9l8ubElvLjMXYct90/7Yg="
         }
       },
       "is_incremental": false,
@@ -21,7 +21,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.AiControllerLogic.html",
-          "hash": "YKUOeDauoQWyT/Nq2wwEHVzIlpmRS2DIIqvvTyL7pxQ="
+          "hash": "2VUEjEImQTtJZiiMHcEg78pA9aDqtUaAFyObnDNo7CE="
         }
       },
       "is_incremental": false,
@@ -33,7 +33,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.ClientEntityManager.html",
-          "hash": "fdAbaX/KTTH1lzaJnek46jm3W9+5+sG7tSkFB4BFd04="
+          "hash": "fGU7NZseOZqb5pRMRq/uxb3X01zaASwAy/wxWUPkczQ="
         }
       },
       "is_incremental": false,
@@ -45,19 +45,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.ControllerLogic.html",
-          "hash": "qd3aRHOcCgkJpQsfPgJYlb8vDZ2WdvusQYLGsIQcegc="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.EntityFilter-1.EntityFilterEnumerator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.EntityFilter-1.EntityFilterEnumerator.html",
-          "hash": "6raO6zMlGAk+rXNWZW9sp/YbrDTnU5yhmsIyMSKQXyM="
+          "hash": "myypuMBWqxLtTW9jbjZBLs7R9i4g4tdsbpDE8HFZAO4="
         }
       },
       "is_incremental": false,
@@ -69,7 +57,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.EntityFilter-1.html",
-          "hash": "1twoodGZCHwt7qP/fGI/PumSc8S9m4ZGXP3wXqXk7gU="
+          "hash": "bciOU6EIXyPb6yY2XkFtaD1ZY+ranEesvbu9TsqchsE="
         }
       },
       "is_incremental": false,
@@ -81,7 +69,19 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.EntityFilter.html",
-          "hash": "6ceJKI49CpQVkiUEsGaOZ3M4Y9rKE3grWwtQaubBVMM="
+          "hash": "gqof5LX/GItCEm+7nVgYxE3tzV1IyDUytNcyN53nObA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.EntityList-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.EntityList-1.html",
+          "hash": "bSNVAxZdEKEAPNp28AX1STaMOgqsdPUCS92sbhWZcGc="
         }
       },
       "is_incremental": false,
@@ -93,7 +93,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.EntityLogic.html",
-          "hash": "fhPflWJcVvzGx0QEVHHaBRt1o5QcPph8sCZOlnhEJHI="
+          "hash": "k7uNNX7KguYOwQCxUaunQUrRTP6/VZSibf8CoMvtqvM="
         }
       },
       "is_incremental": false,
@@ -105,7 +105,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.EntityManager.html",
-          "hash": "xMqG+zm8ELfafn2NbZgGDE5sKXeDVxSzjd974SEKyZ0="
+          "hash": "7SXggwaejEpCCn/mphGBI+6XbtbSCE6yRB2B+0yZ3ak="
         }
       },
       "is_incremental": false,
@@ -117,7 +117,43 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.EntityParams.html",
-          "hash": "0y6MoJpEu+RcH7kfiiNYhZ8GQsHorH4X8PRGYL1KTUM="
+          "hash": "GODYSwRlkQQZomDx9pVIztOBxOt2zU0fEP99aTsFha8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.EntitySharedReference.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.EntitySharedReference.html",
+          "hash": "bNQ1WLnvE3JBRUKPtSeG0rc7+AA5ZRl8d7XzY95aEPk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.EntityTypesMap-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.EntityTypesMap-1.html",
+          "hash": "bd8iQsapU5CIpVhcV5vUGu/ZOJOpZuQNeFGYwDZmmqQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.EntityTypesMap.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.EntityTypesMap.html",
+          "hash": "J6xm4dXYSHAyRvjfSuGXLARQcO6Fo+3HHoiXo0BCQmI="
         }
       },
       "is_incremental": false,
@@ -129,7 +165,103 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.ExecuteFlags.html",
-          "hash": "NQm2m2+nRSKJtJwC/ZmgF8SrJq+P9BfbCsByBu6MZe0="
+          "hash": "qyDofzwEVPBmP5NQ1TJFPzOobSm0k9zJddILFtVrIHQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Extensions.StateCalls.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Extensions.StateCalls.html",
+          "hash": "s7hww2/GiveuPSr816OmTzREVBv4KIj9+mbzMtYQNcI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.SetCallData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.SetCallData.html",
+          "hash": "kwUKx1bWU+qOHDOGah6zTBiyq6DFpO5vMrsIdAUt2Sk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.html",
+          "hash": "pMdUleuuvkGLfVJZHwulkSf9bbKjp/C44eMxfWHMRxE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncList-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncList-1.html",
+          "hash": "yjqeAZv+nRDIO7VfIHuK3CBeIrdBvEhv4RpAs5BXgDg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncStateMachine-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncStateMachine-1.html",
+          "hash": "LhGHaIX5f6CtPOQlOdzKZoikqhaMDKhWDMxO8oME0Q8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncString.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncString.html",
+          "hash": "zKaRxvCtC8f9lxHLWmcT2gYlVvXZzimADUYaHC0wWbY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncTimer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncTimer.html",
+          "hash": "LAiT2A4sqW3vFTGTA5zCaFFOwfoYy9wCqAqbo6IJIwI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Extensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Extensions.html",
+          "hash": "N7WOMXA2aTyTcNAYW5QVFohqODrhz0RWaEeAcHguBuI="
         }
       },
       "is_incremental": false,
@@ -141,7 +273,19 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.FloatAngle.html",
-          "hash": "y7l89G2AiU16BFnaKEL3fOWFGa+HFKtxKXFh65ZzShw="
+          "hash": "60mHc+nYhBSbFoNX98LGpgpNpEQ9iLQ2pSwy4eHTIiA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Helpers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Helpers.html",
+          "hash": "50VV1e0zZwWMOdXZwEwytNGNxQsdQTZHI1fDvEK9kiU="
         }
       },
       "is_incremental": false,
@@ -153,7 +297,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.HumanControllerLogic-1.html",
-          "hash": "UsYUL857oIE7TY10t7+37Atgym+qxKwES5+QlYMe7w8="
+          "hash": "ca5dDiWCRRR8rqS3zIiKgRswzS2ezkO48OthupTJVfg="
         }
       },
       "is_incremental": false,
@@ -161,23 +305,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.HumanControllerLogic.yml",
+      "source_relative_path": "api/LiteEntitySystem.HumanControllerLogic-2.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.HumanControllerLogic.html",
-          "hash": "cRCI7gnfaoGXNahCAKS4QhtDx10J7gr8S8p5r8nP/FU="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.IInputGenerator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.IInputGenerator.html",
-          "hash": "bdwXu9U1ql1WLJ3wojxfX41yAiZBh/53p0lmvr3bO7w="
+          "relative_path": "api/LiteEntitySystem.HumanControllerLogic-2.html",
+          "hash": "CqxO1PrDhb961y5ImVCJgdL1uRspdDdWMEGuRV3yUIw="
         }
       },
       "is_incremental": false,
@@ -189,7 +321,31 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.ILogger.html",
-          "hash": "wEKF8NAfi+nBfCE6iAf5ZiQWNY7pZdcN9eBdUZQ1dGE="
+          "hash": "sdS7O9V28moHQcRzaZ1bwVSkp0NTJMVcULzJuAlX6RM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.InputProcessor-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.InputProcessor-1.html",
+          "hash": "w8Czw6sYaJtzXM5ViONQC8VivqOG8WEaLu1c5xC6HUE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.InputProcessor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.InputProcessor.html",
+          "hash": "GShpSiYBZ8FAuj3gTiPnuf7H8tOU+Ya4/b4Oy5wpOVw="
         }
       },
       "is_incremental": false,
@@ -201,7 +357,19 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.Internal.InternalEntity.html",
-          "hash": "nQgD2UUbSIE/lndjdY67F58n4UQ41A43BqDzWZVeO8s="
+          "hash": "z/DMqTN0ap36mJ2ZnVb35BABgJy0XUL5gLmxPWmfmJM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Internal.Utils.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Internal.Utils.html",
+          "hash": "EgphdTMUocAB9YSn2hbdym80PPnVcSR2vvJ++S3tPdA="
         }
       },
       "is_incremental": false,
@@ -213,19 +381,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.Internal.html",
-          "hash": "tZO0Sz8w0P+2j6bUe+DLU364ij11x5f8Cv5fYm5JKP4="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Interpolation.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Interpolation.html",
-          "hash": "o8ImMyOmU6JbLC5a+cRE9SAjUYq6RTp9a4HfEMXkud8="
+          "hash": "eABcqk8NbjKFCMhWdiwI9bxO04ORYQS+JasNllM+2Xs="
         }
       },
       "is_incremental": false,
@@ -237,7 +393,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.LocalOnly.html",
-          "hash": "XkBZhsfjKnl38qzt05A8dB6TdpQFE6iRmaryUdB7bbU="
+          "hash": "xYU8UP3fN8H/6MYZnsU57YnY1E3fMGvZ13fnVGc1P3U="
         }
       },
       "is_incremental": false,
@@ -249,7 +405,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.Logger.html",
-          "hash": "8ZR2xR1WkrLdjxvUzislMcoMV2Fm8OJtu3um2qCKDc4="
+          "hash": "0qCrhnFWR2KwragXUJqjEb0+54TH7jl/u+L/z257xwo="
         }
       },
       "is_incremental": false,
@@ -257,11 +413,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.MethodCallGenerator.yml",
+      "source_relative_path": "api/LiteEntitySystem.MaxHistorySize.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.MethodCallGenerator.html",
-          "hash": "c1hzQs0nXOOBoguOI0YnQf/EPjUVKj3p9EpYYWls3QY="
+          "relative_path": "api/LiteEntitySystem.MaxHistorySize.html",
+          "hash": "OcUKnWugsitgPJ+UJAPvtCRG3Kp2/89qXz4px5wg/TQ="
         }
       },
       "is_incremental": false,
@@ -273,7 +429,19 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.NetPlayer.html",
-          "hash": "B4cExGQJLoqRMkzag7tt66G/o7lnIuXXNJSwFG1FeSk="
+          "hash": "OzeZGXe93VRrnDTVqi8/2zQ3ceGoEIBmkvhWZQsibqo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.NetPlayerState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.NetPlayerState.html",
+          "hash": "Zvp0u3MkV+OTire9JfMwNooxhfVdz/nO2A9bTOVe+To="
         }
       },
       "is_incremental": false,
@@ -285,7 +453,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.NetworkMode.html",
-          "hash": "8QiBSDsuGTBvs83DeANj4fjJ12dgMdB9asu3UKLpghY="
+          "hash": "gZBNLYtJtWJO/wbKr5k+FI+jfx4MmtRfbzVp12H2tzo="
         }
       },
       "is_incremental": false,
@@ -297,7 +465,31 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.PawnLogic.html",
-          "hash": "/PSO/RtCXv7lClZcwPXv1NSVFo1JaGXlyZr3vPvQtB8="
+          "hash": "t7wkaO4JHkjrA9/sr+7j24T8IbjFshKo9kh0paio7eE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.RPCRegistrator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.RPCRegistrator.html",
+          "hash": "r+kpNH0MUzNxejU4inNx3C3Ry6IxK0yMooLzullcoS8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.RemoteCall-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.RemoteCall-1.html",
+          "hash": "6Pzutpk50TpysEzGtGAbtn0GwYUBvYD2Mzd4MOVgDCI="
         }
       },
       "is_incremental": false,
@@ -309,7 +501,19 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.RemoteCall.html",
-          "hash": "9j6Vb7XY6tJJu5pCuF/wK/To4GA5J7P51cdWpx7/Y0U="
+          "hash": "bf3xNMX2p+iZUozCqSozTJ+/Sw8geTOdZsJAUX4ItZ8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.RemoteCallSpan-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.RemoteCallSpan-1.html",
+          "hash": "klQNArO904G/8YpUWr7avhKglrGC1sIwW5HUzAb0+Rg="
         }
       },
       "is_incremental": false,
@@ -321,7 +525,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.ServerEntityManager.html",
-          "hash": "Q0OkoTVduU7C+ozfzCPNapvvIrbkcBBEmGyv3maW6iM="
+          "hash": "YoMA1pQQs5Z5flxeNBDP1bIOIWBm7GYZ3aAtMU4Whcw="
         }
       },
       "is_incremental": false,
@@ -333,7 +537,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.ServerSendRate.html",
-          "hash": "ukvMj7WgCqHhf/6luR8kl0Bv/Ji6Ztf0OXFt+tgo9sk="
+          "hash": "rB0T+1dKIiK9+Wgr3jYXAH0LNInRYxDXHrgebMDW/bA="
         }
       },
       "is_incremental": false,
@@ -345,7 +549,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.SingletonEntityLogic.html",
-          "hash": "XeqrMOoOWtI7Yv5JmG9RYxS09474F6Pb29bJ6doiuIQ="
+          "hash": "tZ7NQkkMW3F343xO9+kAZXCK2/v/w1nTi6qFX64h3cQ="
         }
       },
       "is_incremental": false,
@@ -357,7 +561,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.SyncFlags.html",
-          "hash": "XobAK4mOCd8lXmwQZ70wZ9ekk4mnySo6JRkAWffAJuY="
+          "hash": "Eus6o8LEp5gCQcyvv3vj0K1et2kpcxg63HpNFhlTaGw="
         }
       },
       "is_incremental": false,
@@ -365,11 +569,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.SyncList-1.yml",
+      "source_relative_path": "api/LiteEntitySystem.SyncVar-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.SyncList-1.html",
-          "hash": "hRv804E/rk/kNwkkur0c9f4rzPEm9qePmLuxjZQVGjo="
+          "relative_path": "api/LiteEntitySystem.SyncVar-1.html",
+          "hash": "jd9rpvFKbHD6hfRXEi2wGQd+Lf65vS9GEBP7A+oIGM4="
         }
       },
       "is_incremental": false,
@@ -377,11 +581,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.SyncString.yml",
+      "source_relative_path": "api/LiteEntitySystem.SyncVarFlags.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.SyncString.html",
-          "hash": "y0Of9VuxMzcVovnOVxQRjcor/RjT+w4Bnyq2N2PETMA="
+          "relative_path": "api/LiteEntitySystem.SyncVarFlags.html",
+          "hash": "buho3m70Fgo1llgGGmRLv9ZuBfX4Mqu65W6En65lSwE="
         }
       },
       "is_incremental": false,
@@ -389,11 +593,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.SyncVar.yml",
+      "source_relative_path": "api/LiteEntitySystem.SyncVarWithNotify-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.SyncVar.html",
-          "hash": "aMlCaZS5weYn0MAVkhfVNfKwmiGGq8DoiZ/NNovEYEk="
+          "relative_path": "api/LiteEntitySystem.SyncVarWithNotify-1.html",
+          "hash": "htShSzvGyuR62GSIgvtxU29Xg7GXLW7KohSNVYNIPBw="
         }
       },
       "is_incremental": false,
@@ -405,7 +609,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.SyncableField.html",
-          "hash": "0xLvxhosYOwPLEc2rrbVobAz21QhHbvkADBtEhNHM1c="
+          "hash": "dsoBwtplQY+4cZTnzerFKWkDGnRzecJystA8ZDToqbM="
         }
       },
       "is_incremental": false,
@@ -413,11 +617,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.SyncableRemoteCall.yml",
+      "source_relative_path": "api/LiteEntitySystem.SyncableRPCRegistrator.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.SyncableRemoteCall.html",
-          "hash": "2QXzS4rMuny5R5woQqyGNiXgO6jzywMymzm08Iwvduk="
+          "relative_path": "api/LiteEntitySystem.SyncableRPCRegistrator.html",
+          "hash": "GwMtN3EJnTtWtmVantPPTXvqHV7+wQMwU6YaGEi52dw="
         }
       },
       "is_incremental": false,
@@ -429,7 +633,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.UpdateMode.html",
-          "hash": "HK3ikH8nW7uQ1sDx1QoLvAjEfCy/z7kQ64AdE0VNZT8="
+          "hash": "A1Xer7Nnn44NovSAx8as3J31NbuzZPc1gJqh0uHGwvc="
         }
       },
       "is_incremental": false,
@@ -441,7 +645,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.UpdateableEntity.html",
-          "hash": "VhSCPy+MCs1PR/DykiKuhFdsvU5KvDiKNBL9nDNDnpE="
+          "hash": "G17gNQSbaE24cMKPdTS3E0spRp2ifLL7DpYNhhvNvlw="
         }
       },
       "is_incremental": false,
@@ -453,7 +657,7 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.html",
-          "hash": "Ns7/P14DSmT3rhzC3ATLmWhQIR3tSUIYyVxPItHbeSA="
+          "hash": "0m3d0LeX/Lck1ng65PqgpDRWftBG2ELtiVlu7Q8DRsc="
         }
       },
       "is_incremental": false,
@@ -465,7 +669,7 @@
       "output": {
         ".html": {
           "relative_path": "api/index.html",
-          "hash": "kEaWbuo/mJZH7fg3By+wcXJilBMSD+0Pz7E085+nLy8="
+          "hash": "QqE69LUlvep8MmLyzjGR3Y+tsUT5sp7IWkGdfyoUmG0="
         }
       },
       "is_incremental": false,
@@ -477,7 +681,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "BfgsXlLu2OXBdSuQq89/2/BkSa87SXbRpM6zzGHICVQ="
+          "hash": "6K1moHNEUixgFF6iJV9s8iESWuoVUIDuBmKTcp6jwwg="
         }
       },
       "is_incremental": false,
@@ -489,7 +693,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "F4fTl4O6UgQxsbu2tmTYoTZYfyoQ+4DlQGwAjmIZsEc="
+          "hash": "4FhZT3UubxshcVu9JwedfXkP4VDhJvHXAsCk9N3bTzQ="
         }
       },
       "is_incremental": false,
@@ -528,7 +732,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 38,
+          "total_file_count": 55,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

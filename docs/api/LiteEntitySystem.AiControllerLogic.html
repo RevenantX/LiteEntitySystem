@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class AiControllerLogic
    ">
-    <meta name="generator" content="docfx 2.59.2.0">
+    <meta name="generator" content="docfx 2.59.4.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -84,22 +84,26 @@
     <div class="level3"><span class="xref">AiControllerLogic</span></div>
       <div class="level4"><a class="xref" href="LiteEntitySystem.AiControllerLogic-1.html">AiControllerLogic&lt;T&gt;</a></div>
   </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.IComparable</span>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
       <a class="xref" href="LiteEntitySystem.ControllerLogic.html#LiteEntitySystem_ControllerLogic_OwnerId">ControllerLogic.OwnerId</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.ControllerLogic.html#LiteEntitySystem_ControllerLogic_ControlledEntity">ControllerLogic.ControlledEntity</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.ControllerLogic.html#LiteEntitySystem_ControllerLogic_IsLocalControlled">ControllerLogic.IsLocalControlled</a>
+      <a class="xref" href="LiteEntitySystem.ControllerLogic.html#LiteEntitySystem_ControllerLogic_GetControlledEntity__1">ControllerLogic.GetControlledEntity&lt;T&gt;()</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.ControllerLogic.html#LiteEntitySystem_ControllerLogic_BeforeControlledUpdate">ControllerLogic.BeforeControlledUpdate()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.ControllerLogic.html#LiteEntitySystem_ControllerLogic_StartControl__1___0_">ControllerLogic.StartControl&lt;T&gt;(T)</a>
+      <a class="xref" href="LiteEntitySystem.ControllerLogic.html#LiteEntitySystem_ControllerLogic_DestroyWithControlledEntity">ControllerLogic.DestroyWithControlledEntity()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.ControllerLogic.html#LiteEntitySystem_ControllerLogic_StartControl_LiteEntitySystem_PawnLogic_">ControllerLogic.StartControl(PawnLogic)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.ControllerLogic.html#LiteEntitySystem_ControllerLogic_StopControl">ControllerLogic.StopControl()</a>
@@ -114,7 +118,10 @@
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_EntityManager">InternalEntity.EntityManager</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Version">InternalEntity.Version</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsDestroyed">InternalEntity.IsDestroyed</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsLocalControlled">InternalEntity.IsLocalControlled</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsServerControlled">InternalEntity.IsServerControlled</a>
@@ -126,29 +133,57 @@
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ServerManager">InternalEntity.ServerManager</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_DebugPrint">InternalEntity.DebugPrint()</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsLocal">InternalEntity.IsLocal</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Destroy">InternalEntity.Destroy()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnDestroy">InternalEntity.OnDestroy()</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Update">InternalEntity.Update()</a>
     </div>
     <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_VisualUpdate">InternalEntity.VisualUpdate()</a>
+    </div>
+    <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnConstructed">InternalEntity.OnConstructed()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRemoteCall__1_Action___0____0_">InternalEntity.ExecuteRemoteCall&lt;T&gt;(Action&lt;T&gt;, T)</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnSyncStart">InternalEntity.OnSyncStart()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRemoteCall__1_Action___0______0___System_Int32_">InternalEntity.ExecuteRemoteCall&lt;T&gt;(Action&lt;T[]&gt;, T[], Int32)</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnSyncEnd">InternalEntity.OnSyncEnd()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_CompareTo_LiteEntitySystem_Internal_InternalEntity_">InternalEntity.CompareTo(InternalEntity)</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_LiteEntitySystem_RemoteCall__">InternalEntity.ExecuteRPC(RemoteCall)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">InternalEntity.ExecuteRPC&lt;T&gt;(RemoteCall&lt;T&gt;, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">InternalEntity.ExecuteRPC&lt;T&gt;(RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_RegisterRPC_LiteEntitySystem_RPCRegistrator__">InternalEntity.RegisterRPC(RPCRegistrator)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_System_IComparable_LiteEntitySystem_Internal_InternalEntity__CompareTo_LiteEntitySystem_Internal_InternalEntity_">InternalEntity.IComparable&lt;InternalEntity&gt;.CompareTo(InternalEntity)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_GetHashCode">InternalEntity.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ToString">InternalEntity.ToString()</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_AiControllerLogic_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class AiControllerLogic : ControllerLogic</code></pre>
+    <pre><code class="lang-csharp hljs">[UpdateableEntity]
+public abstract class AiControllerLogic : ControllerLogic, IComparable&lt;InternalEntity&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -179,6 +214,39 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="LiteEntitySystem_AiControllerLogic_IsBot_" data-uid="LiteEntitySystem.AiControllerLogic.IsBot*"></a>
+  <h4 id="LiteEntitySystem_AiControllerLogic_IsBot" data-uid="LiteEntitySystem.AiControllerLogic.IsBot">IsBot</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool IsBot { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.ControllerLogic.html#LiteEntitySystem_ControllerLogic_IsBot">ControllerLogic.IsBot</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.IComparable&lt;T&gt;</span>
+  </div>
 </article>
           </div>
           
