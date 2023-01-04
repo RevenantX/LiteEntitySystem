@@ -23,6 +23,7 @@ Pure C# HighLevel API for multiplayer games using .NET Standard 2.1
 * Serialization of custom types (like strings,lists,arrays,jsons,etc)
 * Synchronized variables (with optional notifications on change)
 * Client-side prediction
+* Client-side spawn prediction (for projectiles)
 * Remote procedure calls (RPC) with compile-time checks
 * Client input system
 * Basic hierarchy system (childs, parent)
