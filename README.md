@@ -9,7 +9,7 @@ Pure C# HighLevel API for multiplayer games using .NET Standard 2.1
 
 [Little Game Example on Unity](https://github.com/RevenantX/LiteEntitySystemUnityExample)
 
-[Documentation](https://revenantx.github.io/LiteEntitySystem/index.html)
+[Documentation](https://revenantx.github.io/LiteEntitySystem/api/LiteEntitySystem.html)
 
 ## Features
 
