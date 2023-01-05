@@ -1,5 +1,5 @@
 {
-    "name": "EntitySystem",
+    "name": "LiteEntitySystem",
     "rootNamespace": "",
     "references": [
         "LiteNetLib"
