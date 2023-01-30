@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
@@ -93,6 +94,30 @@ namespace LiteEntitySystem.Internal
         internal static bool IsReadonlySpan(this Type type)
         {
             return type != null && type.IsGenericType && typeof(ReadOnlySpan<>) == type.GetGenericTypeDefinition();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static T CreateDelegate<T>(this MethodInfo mi) where T : Delegate
+        {
+            return (T)mi.CreateDelegate(typeof(T));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Action<T> CreateSelfDelegate<T>(this MethodInfo mi)
+        {
+            return (Action<T>)mi.CreateDelegate(typeof(Action<T>));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Action<T, TArgument> CreateSelfDelegate<T, TArgument>(this MethodInfo mi)
+        {
+            return (Action<T, TArgument>)mi.CreateDelegate(typeof(Action<T, TArgument>));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static SpanAction<T, TArgument> CreateSelfDelegateSpan<T, TArgument>(this MethodInfo mi) where TArgument : unmanaged
+        {
+            return (SpanAction<T, TArgument>)mi.CreateDelegate(typeof(SpanAction<T, TArgument>));
         }
     }
 }

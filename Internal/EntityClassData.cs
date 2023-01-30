@@ -59,8 +59,8 @@ namespace LiteEntitySystem.Internal
         public readonly MethodCallDelegate[] RemoteCallsClient;
         public readonly MethodCallDelegate[] SyncableRemoteCallsClient;
         
-        public object[] RPCCache;
-        public object[] SyncableRPCCache;
+        public Delegate[] RPCCache;
+        public Delegate[] SyncableRPCCache;
 
         static EntityClassData()
         {
@@ -271,9 +271,9 @@ namespace LiteEntitySystem.Internal
             FieldsFlagsSize = (FieldsCount-1) / 8 + 1;
             LagCompensatedFields = lagCompensatedFields.ToArray();
             RemoteCallsClient = new MethodCallDelegate[RpcOffsets.Length];
-            RPCCache = new object[RpcOffsets.Length];
+            RPCCache = new Delegate[RpcOffsets.Length];
             SyncableRpcOffsets = syncableRpcOffsets.ToArray();
-            SyncableRPCCache = new object[SyncableRpcOffsets.Length];
+            SyncableRPCCache = new Delegate[SyncableRpcOffsets.Length];
             SyncableRemoteCallsClient = new MethodCallDelegate[SyncableRpcOffsets.Length];
             
             int fixedOffset = 0;

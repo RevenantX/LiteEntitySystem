@@ -19,9 +19,9 @@ namespace LiteEntitySystem
     public struct RemoteCall
     {
         internal readonly byte RpcId;
-        internal object CachedAction;
+        internal Delegate CachedAction;
 
-        internal RemoteCall(byte rpcId, object cachedAction)
+        internal RemoteCall(byte rpcId, Delegate cachedAction)
         {
             RpcId = rpcId;
             CachedAction = cachedAction;
@@ -32,26 +32,14 @@ namespace LiteEntitySystem
     public struct RemoteCall<T> where T : unmanaged
     {
         internal readonly byte RpcId;
-        internal object CachedAction;
-
-        internal RemoteCall(byte rpcId, object cachedAction)
-        {
-            RpcId = rpcId;
-            CachedAction = cachedAction;
-        }
+        internal Delegate CachedAction;
     }
     
     [StructLayout(LayoutKind.Sequential)]
     public struct RemoteCallSpan<T> where T : unmanaged
     {
         internal readonly byte RpcId;
-        internal object CachedAction;
-
-        internal RemoteCallSpan(byte rpcId, object cachedAction)
-        {
-            RpcId = rpcId;
-            CachedAction = cachedAction;
-        }
+        internal Delegate CachedAction;
     }
     
     internal delegate void MethodCallDelegate(object classPtr, ReadOnlySpan<byte> buffer);
@@ -64,13 +52,83 @@ namespace LiteEntitySystem
                 throw new Exception("You can call this only on this class methods");
             self.GetClassData().Fields[syncVar.FieldId].OnSync = MethodCallGenerator.Generate<TEntity, T>(onChangedAction.Method);
         }
-        
-        private void CreateRpcDelegate(InternalEntity entity, object methodTarget, MethodCallDelegate d, byte rpcId)
+
+        private static Delegate Create<TEntity, T>(
+            TEntity self,
+            byte rpcId,
+            Delegate methodToCall,
+            ExecuteFlags flags,
+            RPCType type) where TEntity : InternalEntity where T : unmanaged
         {
-            if (methodTarget != entity)
+            if (methodToCall.Target != self)
                 throw new Exception("You can call this only on this class methods");
-            ref var classData = ref entity.GetClassData();
-            classData.RemoteCallsClient[rpcId] = d;
+            ref var classData = ref self.GetClassData();
+            Delegate cachedAction;
+            if (type == RPCType.NoParams)
+            {
+                var d = methodToCall.Method.CreateSelfDelegate<TEntity>();
+                Action<InternalEntity> t;
+                if (self.EntityManager.IsServer)
+                {
+                    if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
+                        t = e => { d((TEntity)e); e.ServerManager.AddRemoteCall(e.Id, rpcId, flags); };
+                    else
+                        t = e => e.ServerManager.AddRemoteCall(e.Id, rpcId, flags);
+                }
+                else
+                {
+                    classData.RemoteCallsClient[rpcId] = MethodCallGenerator.GenerateNoParams<TEntity>(methodToCall.Method);
+                    if(flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction))
+                        t = e => { if (e.IsLocalControlled) d((TEntity)e); };
+                    else
+                        t = _ => { };
+                }
+                cachedAction = t;
+            }
+            else if(type == RPCType.OneValue)
+            {
+                var d = methodToCall.Method.CreateSelfDelegate<TEntity, T>();
+                Action<InternalEntity, T> t;
+                if (self.EntityManager.IsServer)
+                {
+                    if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
+                        t = (e, value) => { d((TEntity)e, value); e.ServerManager.AddRemoteCall(e.Id, value, rpcId, flags); };
+                    else
+                        t = (e, value) => e.ServerManager.AddRemoteCall(e.Id, value, rpcId, flags);
+                }
+                else
+                {
+                    classData.RemoteCallsClient[rpcId] = MethodCallGenerator.Generate<TEntity, T>(methodToCall.Method);
+                    if (flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction))
+                        t = (e, value) => { if (e.IsLocalControlled) d((TEntity)e, value); };
+                    else
+                        t = (_, _) => { };
+                }
+                cachedAction = t;
+            }
+            else //Array
+            {
+                var d = methodToCall.Method.CreateSelfDelegateSpan<TEntity, T>();
+                SpanAction<InternalEntity, T> t;
+                if (self.EntityManager.IsServer)
+                {
+                    if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
+                        t = (e, value) => { d((TEntity)e, value); e.ServerManager.AddRemoteCall(e.Id, value, rpcId, flags); };
+                    else
+                        t = (e, value) => e.ServerManager.AddRemoteCall(e.Id, value, rpcId, flags);
+                }
+                else
+                {
+                    classData.RemoteCallsClient[rpcId] = MethodCallGenerator.GenerateSpan<TEntity, T>(methodToCall.Method);
+                    if (flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction))
+                        t = (e, value) => { if (e.IsLocalControlled) d((TEntity)e, value); };
+                    else
+                        t = (_, _) => { };
+                }
+                cachedAction = t;
+            }
+            classData.RPCCache[rpcId] = cachedAction;
+            return cachedAction;
         }
         
         /// <summary>
@@ -80,27 +138,7 @@ namespace LiteEntitySystem
         /// <param name="cachedAction">output action that should be used to call rpc</param>
         public void CreateRPCAction<TEntity>(TEntity self, Action methodToCall, ref RemoteCall remoteCallHandle, ExecuteFlags flags = ExecuteFlags.None) where TEntity : InternalEntity
         {
-            byte rpcId = remoteCallHandle.RpcId;
-            CreateRpcDelegate(self, methodToCall.Target, MethodCallGenerator.GenerateNoParams<TEntity>(methodToCall.Method), rpcId);
-            var d = (Action<TEntity>)methodToCall.Method.CreateDelegate(typeof(Action<TEntity>));
-            Action<InternalEntity> cachedAction;
-            if (self.EntityManager.IsServer)
-            {
-                if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
-                    cachedAction = e => { d((TEntity)e); e.ServerManager.AddRemoteCall(e.Id, rpcId, flags); };
-                else
-                    cachedAction = e => e.ServerManager.AddRemoteCall(e.Id, rpcId, flags);
-            }
-            else if(flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction))
-            {
-                cachedAction = e => { if (e.IsLocalControlled) d((TEntity)e); };
-            }
-            else
-            {
-                cachedAction = _ => { };
-            }
-            self.GetClassData().RPCCache[rpcId] = cachedAction;
-            remoteCallHandle = new RemoteCall(rpcId, cachedAction);
+            remoteCallHandle.CachedAction = Create<TEntity, int>(self, remoteCallHandle.RpcId, methodToCall, flags, RPCType.NoParams);
         }
 
         /// <summary>
@@ -110,27 +148,7 @@ namespace LiteEntitySystem
         /// <param name="cachedAction">output action that should be used to call rpc</param>
         public void CreateRPCAction<TEntity, T>(TEntity self, Action<T> methodToCall, ref RemoteCall<T> remoteCallHandle, ExecuteFlags flags = ExecuteFlags.None) where T : unmanaged where TEntity : InternalEntity
         {
-            byte rpcId = remoteCallHandle.RpcId;
-            CreateRpcDelegate(self, methodToCall.Target, MethodCallGenerator.Generate<TEntity, T>(methodToCall.Method), rpcId);
-            var d = (Action<TEntity, T>)methodToCall.Method.CreateDelegate(typeof(Action<TEntity, T>));
-            Action<InternalEntity, T> cachedAction;
-            if (self.EntityManager.IsServer)
-            {
-                if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
-                    cachedAction = (e, value) => { d((TEntity)e, value); e.ServerManager.AddRemoteCall(e.Id, value, rpcId, flags); };
-                else
-                    cachedAction = (e, value) => e.ServerManager.AddRemoteCall(e.Id, value, rpcId, flags);
-            }
-            else if(flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction))
-            {
-                cachedAction = (e, value) => { if (e.IsLocalControlled) d((TEntity)e, value); };
-            }
-            else
-            {
-                cachedAction = (_, _) => { };
-            }
-            self.GetClassData().RPCCache[rpcId] = cachedAction;
-            remoteCallHandle = new RemoteCall<T>(rpcId, cachedAction);
+            remoteCallHandle.CachedAction = Create<TEntity, T>(self, remoteCallHandle.RpcId, methodToCall, flags, RPCType.OneValue);
         }
 
         /// <summary>
@@ -140,27 +158,7 @@ namespace LiteEntitySystem
         /// <param name="cachedAction">output action that should be used to call rpc</param>
         public void CreateRPCAction<TEntity, T>(TEntity self, SpanAction<T> methodToCall, ref RemoteCallSpan<T> remoteCallHandle, ExecuteFlags flags = ExecuteFlags.None) where T : unmanaged where TEntity : InternalEntity
         {
-            byte rpcId = remoteCallHandle.RpcId;
-            CreateRpcDelegate(self, methodToCall.Target, MethodCallGenerator.GenerateSpan<TEntity, T>(methodToCall.Method), rpcId);
-            var d = (SpanAction<TEntity, T>)methodToCall.Method.CreateDelegate(typeof(SpanAction<TEntity, T>));
-            SpanAction<InternalEntity, T> cachedAction;
-            if (self.EntityManager.IsServer)
-            {
-                if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
-                    cachedAction = (e, value) => { d((TEntity)e, value); e.ServerManager.AddRemoteCall(e.Id, value, rpcId, flags); };
-                else
-                    cachedAction = (e, value) => e.ServerManager.AddRemoteCall(e.Id, value, rpcId, flags);
-            }
-            else if(flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction))
-            {
-                cachedAction = (e, value) => { if (e.IsLocalControlled) d((TEntity)e, value); };
-            }
-            else
-            {
-                cachedAction = (_, _) => { };
-            }
-            self.GetClassData().RPCCache[rpcId] = cachedAction;
-            remoteCallHandle = new RemoteCallSpan<T>(rpcId, cachedAction);
+            remoteCallHandle.CachedAction = Create<TEntity, T>(self, remoteCallHandle.RpcId, methodToCall, flags, RPCType.Array);
         }
     }
 
@@ -173,69 +171,51 @@ namespace LiteEntitySystem
             _entity = entity;
         }
 
-        private object CreateAction<T, TSyncField>(
-            TSyncField self,
-            object callTarget, 
-            byte rpcId,
-            MethodCallDelegate d,
-            RPCType type) where T : unmanaged where TSyncField : SyncableField
+        private Delegate CreateAction<T, TSyncField>(TSyncField self, Delegate methodToCall, byte rpcId, RPCType type)
+            where T : unmanaged where TSyncField : SyncableField
         {
-            if (callTarget != self)
+            if (methodToCall.Target != self)
                 throw new Exception("You can call this only on this class methods");
             ref var classData = ref _entity.GetClassData();
-            classData.SyncableRemoteCallsClient[rpcId] = d;
-            object cachedAction = null;
+            Delegate cachedAction = null;
             if (_entity.EntityManager.IsServer)
             {
                 var serverManager = _entity.ServerManager;
-                switch (type)
+                cachedAction = type switch
                 {
-                    case RPCType.NoParams:
-                        cachedAction = (Action<SyncableField>)(s => serverManager.AddSyncableCall(s.ParentEntityId, s.FieldId, rpcId));
-                        break;
-                    case RPCType.OneValue:
-                        cachedAction = (Action<SyncableField, T>) ((s, value) =>
-                            serverManager.AddSyncableCall(s.ParentEntityId, rpcId, s.FieldId, value));
-                        break;
-                    case RPCType.Array:
-                        cachedAction = (SpanAction<SyncableField, T>)((s, value) =>
-                            serverManager.AddSyncableCall(s.ParentEntityId, rpcId, s.FieldId, value));
-                        break;
-                }
+                    RPCType.NoParams => (Action<SyncableField>) (s => serverManager.AddSyncableCall(s.ParentEntityId, rpcId, s.FieldId)),
+                    RPCType.OneValue => (Action<SyncableField, T>) ((s, value) => serverManager.AddSyncableCall(s.ParentEntityId, rpcId, s.FieldId, value)),
+                    RPCType.Array => (SpanAction<SyncableField, T>) ((s, value) => serverManager.AddSyncableCall(s.ParentEntityId, rpcId, s.FieldId, value)),
+                    _ => null
+                };
                 classData.SyncableRPCCache[rpcId] = cachedAction;
             }
-
+            else
+            {
+                classData.SyncableRemoteCallsClient[rpcId] = type switch
+                {
+                    RPCType.NoParams => MethodCallGenerator.GenerateNoParams<TSyncField>(methodToCall.Method),
+                    RPCType.OneValue => MethodCallGenerator.Generate<TSyncField, T>(methodToCall.Method),
+                    RPCType.Array => MethodCallGenerator.GenerateSpan<TSyncField, T>(methodToCall.Method),
+                    _ => null
+                };
+            }
             return cachedAction;
         }
 
         public void CreateClientAction<TSyncField>(TSyncField self, Action methodToCall, ref RemoteCall remoteCallHandle) where TSyncField : SyncableField
         {
-            remoteCallHandle.CachedAction = CreateAction<int, TSyncField>(
-                self,
-                methodToCall.Target,
-                remoteCallHandle.RpcId,
-                MethodCallGenerator.GenerateNoParams<TSyncField>(methodToCall.Method),
-                RPCType.NoParams);
+            remoteCallHandle.CachedAction = CreateAction<int, TSyncField>(self, methodToCall, remoteCallHandle.RpcId, RPCType.NoParams);
         }
 
         public void CreateClientAction<T, TSyncField>(TSyncField self, Action<T> methodToCall, ref RemoteCall<T> remoteCallHandle) where T : unmanaged where TSyncField : SyncableField
         {
-            remoteCallHandle.CachedAction = CreateAction<T, TSyncField>(
-                self,
-                methodToCall.Target,
-                remoteCallHandle.RpcId,
-                MethodCallGenerator.Generate<TSyncField, T>(methodToCall.Method),
-                RPCType.OneValue);
+            remoteCallHandle.CachedAction = CreateAction<T, TSyncField>(self, methodToCall, remoteCallHandle.RpcId, RPCType.OneValue);
         }
         
         public void CreateClientAction<T, TSyncField>(TSyncField self, SpanAction<T> methodToCall, ref RemoteCallSpan<T> remoteCallHandle) where T : unmanaged where TSyncField : SyncableField
         {
-            remoteCallHandle.CachedAction = CreateAction<T, TSyncField>(
-                self,
-                methodToCall.Target,
-                remoteCallHandle.RpcId,
-                MethodCallGenerator.GenerateSpan<TSyncField, T>(methodToCall.Method),
-                RPCType.Array);
+            remoteCallHandle.CachedAction = CreateAction<T, TSyncField>(self, methodToCall, remoteCallHandle.RpcId, RPCType.Array);
         }
     }
 
