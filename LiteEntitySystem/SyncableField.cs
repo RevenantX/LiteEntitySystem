@@ -13,12 +13,17 @@ namespace LiteEntitySystem
             ParentEntityId = EntityManager.InvalidEntityId;
         }
 
-        public virtual void FullSyncWrite(Span<byte> dataSpan, ref int position)
+        public virtual int GetFullSyncSize()
+        {
+            return 0;
+        }
+
+        public virtual void FullSyncWrite(ServerEntityManager server, Span<byte> dataSpan)
         {
             
         }
 
-        public virtual void FullSyncRead(ReadOnlySpan<byte> dataSpan, ref int position)
+        public virtual void FullSyncRead(ClientEntityManager client, ReadOnlySpan<byte> dataSpan)
         {
             
         }

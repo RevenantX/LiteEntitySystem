@@ -823,7 +823,13 @@ namespace LiteEntitySystem
                 if (fullSync)
                 {
                     for (int i = 0; i < classData.SyncableFieldOffsets.Length; i++)
-                        Utils.RefFieldValue<SyncableField>(entity, classData.SyncableFieldOffsets[i]).FullSyncRead(new ReadOnlySpan<byte>(rawData, _stateA.Size), ref readerPosition);
+                    {
+                        int fullSyncSize = *(int*)(rawData+readerPosition);
+                        readerPosition += sizeof(int);
+                        Utils.RefFieldValue<SyncableField>(entity, classData.SyncableFieldOffsets[i]).FullSyncRead(
+                            this, new ReadOnlySpan<byte>(rawData + readerPosition, fullSyncSize));
+                        readerPosition += fullSyncSize;
+                    }
                 }
                 entity.OnSyncEnd();
             }

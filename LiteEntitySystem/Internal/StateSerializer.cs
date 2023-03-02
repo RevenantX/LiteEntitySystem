@@ -127,6 +127,14 @@ namespace LiteEntitySystem.Internal
             _ticksOnDestroy = serverTick;
         }
 
+        public int GetMaximumSize()
+        {
+            int totalSize = (int)_fullDataSize;
+            for (int i = 0; i < _classData.SyncableFieldOffsets.Length; i++)
+                totalSize += sizeof(int) + Utils.RefFieldValue<SyncableField>(_entity, _classData.SyncableFieldOffsets[i]).GetFullSyncSize();
+            return totalSize;
+        }
+
         public unsafe void MakeBaseline(byte playerId, ushort serverTick, ushort minimalTick, byte* resultData, ref int position)
         {
             if (_state != SerializerState.Active)
@@ -144,7 +152,12 @@ namespace LiteEntitySystem.Internal
                 position += (int)_fullDataSize;
                 for (int i = 0; i < _classData.SyncableFieldOffsets.Length; i++)
                 {
-                    Utils.RefFieldValue<SyncableField>(_entity, _classData.SyncableFieldOffsets[i]).FullSyncWrite(new Span<byte>(resultData, (int)_fullDataSize), ref position);
+                    var syncableField = Utils.RefFieldValue<SyncableField>(_entity, _classData.SyncableFieldOffsets[i]);
+                    int writeSize = syncableField.GetFullSyncSize();
+                    *(int*)(resultData + position) = writeSize;
+                    position += sizeof(int);
+                    syncableField.FullSyncWrite(_entity.ServerManager, new Span<byte>(resultData + position, writeSize));
+                    position += writeSize;
                 }
             }
         }
@@ -184,7 +197,12 @@ namespace LiteEntitySystem.Internal
                     position += (int)_fullDataSize;
                     for (int i = 0; i < _classData.SyncableFieldOffsets.Length; i++)
                     {
-                        Utils.RefFieldValue<SyncableField>(_entity, _classData.SyncableFieldOffsets[i]).FullSyncWrite(new Span<byte>(resultData, (int)_fullDataSize), ref position);
+                        var syncableField = Utils.RefFieldValue<SyncableField>(_entity, _classData.SyncableFieldOffsets[i]);
+                        int writeSize = syncableField.GetFullSyncSize();
+                        *(int*)(resultData + position) = writeSize;
+                        position += sizeof(int);
+                        syncableField.FullSyncWrite(_entity.ServerManager, new Span<byte>(resultData + position, writeSize));
+                        position += writeSize;
                     }
                 }
                 else //make diff

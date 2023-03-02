@@ -46,18 +46,21 @@ namespace LiteEntitySystem.Extensions
             _data[_state.GetEnumValue()].OnUpdate?.Invoke(dt);
         }
 
-        public override unsafe void FullSyncWrite(Span<byte> dataSpan, ref int position)
+        public override unsafe int GetFullSyncSize()
         {
-            fixed(byte *data = dataSpan)
-                *(T*)(data + position) = _state;
-            position += sizeof(T);
+            return sizeof(T);
         }
 
-        public override unsafe void FullSyncRead(ReadOnlySpan<byte> dataSpan, ref int position)
+        public override unsafe void FullSyncWrite(ServerEntityManager server, Span<byte> dataSpan)
         {
             fixed(byte *data = dataSpan)
-                _state = *(T*)(data + position);
-            position += sizeof(T);
+                *(T*)data = _state;
+        }
+
+        public override unsafe void FullSyncRead(ClientEntityManager client, ReadOnlySpan<byte> dataSpan)
+        {
+            fixed(byte *data = dataSpan)
+                _state = *(T*)data;
         }
     }
 }

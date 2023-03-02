@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using LiteEntitySystem.Internal;
+using LiteNetLib;
 
 namespace LiteEntitySystem
 {
@@ -121,10 +123,12 @@ namespace LiteEntitySystem
         public bool InRollBackState => UpdateMode == UpdateMode.PredictionRollback;
         public bool InNormalState => UpdateMode == UpdateMode.Normal;
 
+        protected const byte PacketHeaderSize = 2;
         protected const byte PacketDiffSync = 1;
         protected const byte PacketClientSync = 2;
         protected const byte PacketBaselineSync = 3;
         protected const byte PacketDiffSyncLast = 4;
+
         protected const int MaxFieldSize = 1024;
         protected const int MaxSavedStateDiff = 30;
         protected const ushort FirstEntityId = 1;
@@ -159,7 +163,7 @@ namespace LiteEntitySystem
 
         internal byte InternalPlayerId;
         protected readonly InputProcessor InputProcessor;
-        
+
         public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged
         {
             ValueProcessors.RegisteredProcessors[typeof(T)] = new UserTypeProcessor<T>(interpolationDelegate);
@@ -254,9 +258,7 @@ namespace LiteEntitySystem
             _localIdCounter = MaxSyncedEntityCount;
             _localIdQueue.Clear();
             _stopwatch.Restart();
-
             AliveEntities.Clear();
-            //_aliveEntitiesEnumerator = _aliveEntities.GetEnumerator();
 
             for (int i = 0; i < _singletonEntities.Length; i++)
             {

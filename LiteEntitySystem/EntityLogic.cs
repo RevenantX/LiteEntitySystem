@@ -53,6 +53,8 @@ namespace LiteEntitySystem
 
         public bool HasLagCompensation => _lagCompensatedSize > 0;
 
+        public EntitySharedReference SharedReference => new EntitySharedReference(this);
+
         internal unsafe void WriteHistory(ushort tick)
         {
             byte maxHistory = (byte)EntityManager.MaxHistorySize;

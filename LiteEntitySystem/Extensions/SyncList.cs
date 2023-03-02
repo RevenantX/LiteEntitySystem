@@ -126,39 +126,32 @@ namespace LiteEntitySystem.Extensions
 
         public ref T this[int index] => ref _data[index];
         T IReadOnlyList<T>.this[int index] => _data[index];
-        
-        public override unsafe void FullSyncWrite(Span<byte> dataSpan, ref int position)
+
+        public override unsafe int GetFullSyncSize()
         {
+            return sizeof(T) * _count;
+        }
+
+        public override unsafe void FullSyncWrite(ServerEntityManager server, Span<byte> dataSpan)
+        {
+            byte[] byteData = Unsafe.As<byte[]>(_data);
             fixed (byte* data = dataSpan)
             {
-                *(ushort*)(data + position) = (ushort)_count;
-            
-                byte[] byteData = Unsafe.As<byte[]>(_data);
-                int bytesCount = sizeof(T) * _count;
-            
                 fixed(void* rawData = byteData)
-                    Unsafe.CopyBlock(data + position + sizeof(ushort), rawData, (uint)bytesCount); 
-                
-                position += sizeof(ushort) + bytesCount;
+                    Unsafe.CopyBlock(data, rawData, (uint)dataSpan.Length);
             }
         }
 
-        public override unsafe void FullSyncRead(ReadOnlySpan<byte> dataSpan, ref int position)
+        public override unsafe void FullSyncRead(ClientEntityManager client, ReadOnlySpan<byte> dataSpan)
         {
+            _count = dataSpan.Length / sizeof(T);
+            if (_data.Length < _count)
+                Array.Resize(ref _data, Math.Max(_data.Length * 2, _count));
+            byte[] byteData = Unsafe.As<byte[]>(_data);
             fixed (byte* data = dataSpan)
             {
-                _count = *(ushort*)(data + position);
-
-                if (_data.Length < _count)
-                    Array.Resize(ref _data, Math.Max(_data.Length * 2, _count));
-
-                byte[] byteData = Unsafe.As<byte[]>(_data);
-                int bytesCount = sizeof(T) * _count;
-
                 fixed (void* rawData = byteData)
-                    Unsafe.CopyBlock(rawData, data + position + sizeof(ushort), (uint)bytesCount);
-                
-                position += sizeof(ushort) + bytesCount;
+                    Unsafe.CopyBlock(rawData, data, (uint)dataSpan.Length);
             }
         }
 

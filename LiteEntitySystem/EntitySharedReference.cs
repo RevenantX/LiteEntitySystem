@@ -1,5 +1,5 @@
-﻿using System.Runtime.InteropServices;
-using LiteEntitySystem.Internal;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem
 {
@@ -12,7 +12,21 @@ namespace LiteEntitySystem
         public bool IsInvalid => Id == EntityManager.InvalidEntityId;
         public bool IsLocal => Id >= EntityManager.MaxSyncedEntityCount;
 
-        public EntitySharedReference(InternalEntity entity)
+        internal EntitySharedReference(ControllerLogic controllerLogic)
+        {
+            if (controllerLogic == null)
+            {
+                Id = EntityManager.InvalidEntityId;
+                Version = 0;
+            }
+            else
+            {
+                Id = controllerLogic.Id;
+                Version = controllerLogic.Version;
+            }
+        }
+
+        public EntitySharedReference(EntityLogic entity)
         {
             if (entity == null)
             {
@@ -24,6 +38,23 @@ namespace LiteEntitySystem
                 Id = entity.Id;
                 Version = entity.Version;
             }
+        }
+
+        /// <summary>
+        /// Create entity reference from byte data (3 bytes)
+        /// </summary>
+        /// <param name="data"></param>
+        public EntitySharedReference(ReadOnlySpan<byte> data)
+        {
+            Id = (ushort)(data[0] << 8 | data[1]);
+            Version = data[2];
+        }
+
+        public void WriteAsBytes(Span<byte> data)
+        {
+            data[0] = (byte)(Id >> 8);
+            data[1] = (byte)Id;
+            data[3] = Version;
         }
 
         public static bool operator ==(EntitySharedReference obj1, EntitySharedReference obj2)
@@ -48,7 +79,7 @@ namespace LiteEntitySystem
             return Id + Version * ushort.MaxValue;
         }
 
-        public static implicit operator EntitySharedReference(InternalEntity entity)
+        public static implicit operator EntitySharedReference(EntityLogic entity)
         {
             return new EntitySharedReference(entity);
         }

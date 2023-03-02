@@ -42,22 +42,23 @@ namespace LiteEntitySystem.Extensions
             }
         }
 
-        public override unsafe void FullSyncWrite(Span<byte> dataSpan, ref int position)
+        public override unsafe int GetFullSyncSize()
         {
-            byte[] byteData = Unsafe.As<byte[]>(Data);
-            int bytesCount = sizeof(T) * Length;
-            fixed(byte* rawData = byteData, data = dataSpan)
-                Unsafe.CopyBlock(data + position, rawData, (uint)bytesCount);
-            position += bytesCount;
+            return sizeof(T) * Length;
         }
 
-        public override unsafe void FullSyncRead(ReadOnlySpan<byte> dataSpan, ref int position)
+        public override unsafe void FullSyncWrite(ServerEntityManager server, Span<byte> dataSpan)
         {
             byte[] byteData = Unsafe.As<byte[]>(Data);
-            int bytesCount = sizeof(T) * Length;
             fixed(byte* rawData = byteData, data = dataSpan)
-                Unsafe.CopyBlock(rawData, data + position, (uint)bytesCount);
-            position += bytesCount;
+                Unsafe.CopyBlock(data, rawData, (uint)dataSpan.Length);
+        }
+
+        public override unsafe void FullSyncRead(ClientEntityManager client, ReadOnlySpan<byte> dataSpan)
+        {
+            byte[] byteData = Unsafe.As<byte[]>(Data);
+            fixed(byte* rawData = byteData, data = dataSpan)
+                Unsafe.CopyBlock(rawData, data, (uint)dataSpan.Length);
         }
     }
 }

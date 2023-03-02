@@ -48,25 +48,24 @@ namespace LiteEntitySystem.Extensions
             _string = Encoding.GetString(data);
         }
 
-        public override unsafe void FullSyncRead(ReadOnlySpan<byte> dataSpan, ref int position)
+        public override int GetFullSyncSize()
+        {
+            return _size;
+        }
+
+        public override unsafe void FullSyncRead(ClientEntityManager client, ReadOnlySpan<byte> dataSpan)
         {
             fixed (byte* data = dataSpan)
             {
-                int length = *(ushort*)(data + position);
-                Utils.ResizeOrCreate(ref _stringData, length);
-                _string = Encoding.GetString(data + position + sizeof(ushort), length);
-                position += sizeof(ushort) + length;
+                Utils.ResizeOrCreate(ref _stringData, dataSpan.Length);
+                _string = Encoding.GetString(data, dataSpan.Length);
             }
         }
 
-        public override unsafe void FullSyncWrite(Span<byte> dataSpan, ref int position)
+        public override unsafe void FullSyncWrite(ServerEntityManager server, Span<byte> dataSpan)
         {
             fixed (byte* data = dataSpan, stringData = _stringData)
-            {
-                *(ushort*)(data + position) = (ushort)_size;
-                Unsafe.CopyBlock(data + position + sizeof(ushort), stringData, (uint)_size);
-            }
-            position += sizeof(ushort) + _size;
+                Unsafe.CopyBlock(data, stringData, (uint)_size);
         }
     }
 }

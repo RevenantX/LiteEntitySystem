@@ -6,6 +6,7 @@
     [UpdateableEntity]
     public abstract class PawnLogic : EntityLogic
     {
+        [SyncVarFlags(SyncFlags.OnlyForOwner)]
         private SyncVar<EntitySharedReference> _controller;
 
         public ControllerLogic Controller
@@ -20,7 +21,7 @@
                     ownerId = parent != null ? parent.OwnerId : value.OwnerId;
                 }
                 SetOwner(this, ownerId);
-                _controller.Value = value;
+                _controller.Value = new EntitySharedReference(value);
             }
         }
 
