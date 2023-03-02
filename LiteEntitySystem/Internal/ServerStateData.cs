@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using LiteNetLib;
 
 namespace LiteEntitySystem.Internal
 {
@@ -58,10 +57,8 @@ namespace LiteEntitySystem.Internal
     
     internal sealed class ServerStateData
     {
-        public byte[] Data;
+        public byte[] Data = new byte[1500];
         public int Size;
-        public int Offset;
-        
         public ushort Tick;
         public ushort ProcessedTick;
         public ushort LastReceivedTick;
@@ -69,36 +66,15 @@ namespace LiteEntitySystem.Internal
         public int PreloadDataCount;
         public int[] InterpolatedFields = new int[8];
         public int InterpolatedCount;
-
-        private readonly NetPacketReader[] _packetReaders = new NetPacketReader[EntityManager.MaxParts];
-        private int _totalPartsCount;
-        private int _receivedPartsCount;
-        private int _maxReceivedPart;
-        
         public int RemoteCallsCount;
         public RemoteCallsCache[] RemoteCallsCaches = new RemoteCallsCache[32];
         public ServerDataStatus Status;
 
-        public void Reset(ushort tick)
-        {
-            for (int i = 0; i <= _maxReceivedPart; i++)
-            {
-                ref var statePart = ref _packetReaders[i];
-                statePart?.Recycle();
-                statePart = null;
-            }
-
-            Status = ServerDataStatus.Empty;
-            Tick = tick;
-            InterpolatedCount = 0;
-            PreloadDataCount = 0;
-            _maxReceivedPart = 0;
-            _receivedPartsCount = 0;
-            _totalPartsCount = 0;
-            RemoteCallsCount = 0;
-            Size = 0;
-            Offset = 0;
-        }
+        private readonly bool[] _receivedParts = new bool[EntityManager.MaxParts];
+        private int _totalPartsCount;
+        private int _receivedPartsCount;
+        private byte _maxReceivedPart;
+        private ushort _partMtu;
 
         public void Preload(InternalEntity[] entityDict)
         {
@@ -215,51 +191,81 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        public unsafe void ReadPart(bool isLastPart, NetPacketReader reader)
+        public unsafe void ReadPart(DiffPartHeader partHeader, byte* rawData, int partSize)
         {
+            //reset if not same
+            if (Tick != partHeader.Tick)
+            {
+                Tick = partHeader.Tick;
+                Array.Clear(_receivedParts, 0, _maxReceivedPart+1);
+                InterpolatedCount = 0;
+                PreloadDataCount = 0;
+                _maxReceivedPart = 0;
+                _receivedPartsCount = 0;
+                _totalPartsCount = 0;
+                RemoteCallsCount = 0;
+                Size = 0;
+                _partMtu = 0;
+            }
+            else if (_receivedParts[partHeader.Part])
+            {
+                //duplicate ?
+                return;
+            }
             Status = ServerDataStatus.Partial;
-            //check processed tick
-            byte partNumber = reader.GetByte();
-            if (partNumber == 0)
+            int partDataSize;
+            
+            if (partHeader.Part == 0)
             {
-                ProcessedTick = reader.GetUShort();
-                LastReceivedTick = reader.GetUShort();
-            }
-
-            if (isLastPart)
-            {
-                _totalPartsCount = partNumber + 1;
-                //Debug.Log($"TPC: {partNumber} {serverState.TotalPartsCount}");
-            }
-                    
-            //duplicate ?
-            if (_packetReaders[partNumber] != null)
-            {
-                reader.Recycle();
-            }
-
-            Size += reader.AvailableBytes;
-            _packetReaders[partNumber] = reader;
-            _receivedPartsCount++;
-            _maxReceivedPart = Math.Max(_maxReceivedPart, partNumber);
-
-            if (_receivedPartsCount == _totalPartsCount)
-            {
-                int writePosition = 0;
-                for (int i = 0; i < _totalPartsCount; i++)
+                //First packet processing
+                var firstPartHeader = (FirstPartHeader*)rawData;
+                ProcessedTick = firstPartHeader->LastProcessedTick;
+                LastReceivedTick = firstPartHeader->LastReceivedTick;
+                partDataSize = partSize - sizeof(FirstPartHeader);
+                rawData += sizeof(FirstPartHeader);
+                
+                //for one part packets
+                if (partHeader.PacketType == EntityManager.PacketDiffSyncLast)
                 {
-                    ref var statePart = ref _packetReaders[i];
-                    Utils.ResizeOrCreate(ref Data, Size);
-                    fixed (byte* data = Data, stateData = statePart.RawData)
-                    {
-                        Unsafe.CopyBlock(data + writePosition, stateData + statePart.Position, (uint)statePart.AvailableBytes);
-                    }
-                    writePosition += statePart.AvailableBytes;
-                    statePart.Recycle();
-                    statePart = null;
+                    Size = partDataSize;
+                    Utils.ResizeIfFull(ref Data, partDataSize);
+                    fixed(byte* stateData = Data)
+                        Unsafe.CopyBlock(stateData, rawData, (uint)partDataSize);
+                    Status = ServerDataStatus.Ready;
+                    return;
                 }
-                Status = ServerDataStatus.Ready;
+                if(_partMtu == 0)
+                    _partMtu = (ushort)partDataSize;
             }
+            else
+            {
+                partDataSize = partSize - sizeof(DiffPartHeader);
+                if (partHeader.PacketType == EntityManager.PacketDiffSyncLast)
+                {
+                    partDataSize -= sizeof(ushort);
+                    _totalPartsCount = partHeader.Part + 1;
+                    if (_partMtu == 0)  //read MTU at last packet from end
+                    {
+                        _partMtu = *(ushort*)(rawData + partSize - sizeof(ushort));
+                        Utils.ResizeIfFull(ref Data, _partMtu * _totalPartsCount);
+                    }
+                    //Debug.Log($"TPC: {partNumber} {serverState.TotalPartsCount}");
+                }
+                else if (_partMtu == 0)
+                {
+                    _partMtu = (ushort)partDataSize;
+                    Utils.ResizeIfFull(ref Data, _partMtu * (partHeader.Part + 1));
+                }
+                rawData += sizeof(DiffPartHeader);
+            }
+            fixed(byte* stateData = Data)
+                Unsafe.CopyBlock(stateData + _partMtu * partHeader.Part, rawData, (uint)partDataSize);
+            _receivedParts[partHeader.Part] = true;
+            Size += partDataSize;
+            _receivedPartsCount++;
+            _maxReceivedPart = Math.Max(_maxReceivedPart, partHeader.Part);
+            if (_receivedPartsCount == _totalPartsCount)
+                Status = ServerDataStatus.Ready;
         }
     }
 }

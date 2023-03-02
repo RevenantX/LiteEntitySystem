@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using K4os.Compression.LZ4;
 using LiteEntitySystem.Internal;
 using LiteNetLib;
+using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
 {
@@ -157,7 +158,7 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="reader">Reader with data (will be recycled inside, also works with autorecycle)</param>
         /// <returns>true if first byte is == headerByte</returns>
-        public bool DeserializeWithHeaderCheck(NetPacketReader reader)
+        public bool DeserializeWithHeaderCheck(NetDataReader reader)
         {
             if (reader.PeekByte() == _sendBuffer[0])
             {
@@ -169,71 +170,81 @@ namespace LiteEntitySystem
             return false;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private ref ServerStateData GetStateFromTick(ushort tick)
+        {
+            return ref _receivedStates[(tick / (byte)_serverSendRate) % MaxSavedStateDiff];
+        }
+
         /// <summary>
         /// Read incoming data omitting header byte
         /// </summary>
         /// <param name="reader"></param>
-        public unsafe void Deserialize(NetPacketReader reader)
+        public unsafe void Deserialize(NetDataReader reader)
         {
-            byte packetType = reader.GetByte();
+            fixed (byte* rawData = reader.RawData)
+                Deserialize(rawData + reader.UserDataOffset, reader.UserDataSize);
+        }
+        
+        private unsafe void Deserialize(byte* rawData, int size)
+        {
+            byte packetType = rawData[1];
             if(packetType == PacketBaselineSync)
             {
-                _stateB = null;
+                //read header and decode
+                int decodedBytes;
+                var header = *(BaselineDataHeader*)rawData;
                 _stateA = new ServerStateData
                 {
-                    Size = reader.GetInt()
+                    Size = header.OriginalLength,
+                    Tick = header.Tick,
+                    Data = new byte[header.OriginalLength]
                 };
-                InternalPlayerId = reader.GetByte();
-                _serverSendRate = (ServerSendRate)reader.GetByte();
-                _localPlayer = new NetPlayer(_localPeer, InternalPlayerId)
-                {
-                    State = NetPlayerState.Active
-                };
-
-                Logger.Log($"[CEM] Got baseline sync. Assigned player id: {InternalPlayerId}");
-                Utils.ResizeOrCreate(ref _stateA.Data, _stateA.Size);
+                InternalPlayerId = header.PlayerId;
+                _serverSendRate = (ServerSendRate)header.SendRate;
                 
-                int decodedBytes = LZ4Codec.Decode(
-                    reader.RawData,
-                    reader.Position,
-                    reader.AvailableBytes,
-                    _stateA.Data,
-                    0,
-                    _stateA.Size);
-                if (decodedBytes != _stateA.Size)
+                fixed (byte* stateData = _stateA.Data)
                 {
-                    Logger.LogError("Error on decompress");
-                    return;
-                }
-                _stateA.Tick = BitConverter.ToUInt16(_stateA.Data, 0);
-                _simulatePosition = _stateA.Tick;
-                _stateA.Offset = 2;
-                fixed (byte* readerData = _stateA.Data)
-                {
-                    _inputCommands.Clear();
-                    int bytesRead = _stateA.Offset;
+                    //TODO: not available bytes!!!
+                    decodedBytes = LZ4Codec.Decode(
+                        rawData + sizeof(BaselineDataHeader),
+                        size - sizeof(BaselineDataHeader),
+                        stateData,
+                        _stateA.Size);
+                    if (decodedBytes != header.OriginalLength)
+                    {
+                        Logger.LogError("Error on decompress");
+                        return;
+                    }
+                    int bytesRead = 0;
                     while (bytesRead < _stateA.Size)
                     {
-                        ushort entityId = BitConverter.ToUInt16(_stateA.Data, bytesRead);
-                        bytesRead += 2;
-                        ReadEntityState(readerData, ref bytesRead, entityId, true);
+                        ushort entityId = *(ushort*)(stateData + bytesRead);
+                        bytesRead += sizeof(ushort);
+                        ReadEntityState(stateData, ref bytesRead, entityId, true);
                         if (bytesRead == -1)
                             return;
                     }
-                    _remoteCallsTick = _stateA.Tick;
                 }
-                ConstructAndSync();
+                
+                _localPlayer = new NetPlayer(_localPeer, InternalPlayerId);
+                _stateB = null;   
+                _simulatePosition = _stateA.Tick;
+                _remoteCallsTick = _stateA.Tick;
+                _inputCommands.Clear();
                 _isSyncReceived = true;
                 _jitterTimer.Restart();
+                ConstructAndSync();
+                Logger.Log($"[CEM] Got baseline sync. Assigned player id: {header.PlayerId}, Original: {decodedBytes}, Compressed: {size}, Tick: {header.Tick}, SendRate: {_serverSendRate}");
             }
             else
             {
-                bool isLastPart = packetType == PacketDiffSyncLast;
-                ushort newServerTick = reader.GetUShort();
-                int tickDifference = Utils.SequenceDiff(newServerTick, _simulatePosition) / (byte)ServerSendRate;
+                var diffHeader = *(DiffPartHeader*)rawData;
+
+                int tickDifference = Utils.SequenceDiff(diffHeader.Tick, _simulatePosition) / (byte)ServerSendRate;
                 if (tickDifference <= 0)
                 {
-                    reader.Recycle();
+                    //old state
                     return;
                 }
 
@@ -243,12 +254,15 @@ namespace LiteEntitySystem
                     _timer = _lerpTime;
                     if (_stateB != null || PreloadNextState())
                     {
+                        Logger.Log("TickOverflow, GoToNext");
                         GoToNextState();
-                        tickDifference = Utils.SequenceDiff(newServerTick, _simulatePosition) / (byte)ServerSendRate;
+                        tickDifference = Utils.SequenceDiff(diffHeader.Tick, _simulatePosition) / (byte)ServerSendRate;
                     }
                     else
                     {
-                        _simulatePosition = (ushort)(newServerTick - MaxSavedStateDiff);
+                        _readyStates = 0;
+                        Logger.Log("TickOverflow, _simulatePosition"); //TODO fix
+                        _simulatePosition = (ushort)(diffHeader.Tick - MaxSavedStateDiff);
                         break;
                     }
                 }
@@ -259,15 +273,13 @@ namespace LiteEntitySystem
                 //reset timer
                 _jitterTimer.Reset();
 
-                var serverState = _receivedStates[(newServerTick / (byte)_serverSendRate) % MaxSavedStateDiff];
+                var serverState = GetStateFromTick(diffHeader.Tick);
                 switch (serverState.Status)
                 {
                     case ServerDataStatus.Executed:
                     case ServerDataStatus.Empty: 
                     case ServerDataStatus.Partial:
-                        if (serverState.Tick != newServerTick)
-                            serverState.Reset(newServerTick);
-                        serverState.ReadPart(isLastPart, reader);
+                        serverState.ReadPart(diffHeader, rawData, size);
                         if(serverState.Status == ServerDataStatus.Ready)
                         {
                             if (Utils.SequenceDiff(serverState.LastReceivedTick, _lastReceivedInputTick) > 0)
@@ -316,11 +328,11 @@ namespace LiteEntitySystem
             }
 
             ushort simPos = (ushort)(_simulatePosition+1);
-            while (_receivedStates[(simPos/(byte)ServerSendRate) % MaxSavedStateDiff].Status != ServerDataStatus.Ready)
+            while (GetStateFromTick(simPos).Status != ServerDataStatus.Ready)
             {
                 simPos = (ushort)(simPos+(byte)ServerSendRate);
             }
-            _stateB = _receivedStates[(simPos / (byte)ServerSendRate) % MaxSavedStateDiff];
+            _stateB = GetStateFromTick(simPos);
             _lerpTime = 
                 Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTimeF *
                 (1f - (_readyStates - _adaptiveMiddlePoint) * 0.02f);
@@ -351,9 +363,8 @@ namespace LiteEntitySystem
                 for (int i = 0; i < _stateA.PreloadDataCount; i++)
                 {
                     ref var preloadData = ref _stateA.PreloadDataArray[i];
-                    int offset = preloadData.DataOffset;
-                    ReadEntityState(readerData, ref offset, preloadData.EntityId, preloadData.EntityFieldsOffset == -1);
-                    if (offset == -1)
+                    ReadEntityState(readerData, ref preloadData.DataOffset, preloadData.EntityId, preloadData.EntityFieldsOffset == -1);
+                    if (preloadData.DataOffset == -1)
                         return;
                 }
             }
@@ -700,9 +711,8 @@ namespace LiteEntitySystem
             
             //Call construct methods
             for (int i = 0; i < _entitiesToConstructCount; i++)
-            {
                 ConstructEntity(_entitiesToConstruct[i]);
-            }
+            
             _entitiesToConstructCount = 0;
             
             //Make OnSyncCalls

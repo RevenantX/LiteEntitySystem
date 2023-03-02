@@ -122,12 +122,11 @@ namespace LiteEntitySystem
         
         public bool InRollBackState => UpdateMode == UpdateMode.PredictionRollback;
         public bool InNormalState => UpdateMode == UpdateMode.Normal;
-
-        protected const byte PacketHeaderSize = 2;
-        protected const byte PacketDiffSync = 1;
-        protected const byte PacketClientSync = 2;
-        protected const byte PacketBaselineSync = 3;
-        protected const byte PacketDiffSyncLast = 4;
+        
+        internal const byte PacketDiffSync = 1;
+        internal const byte PacketClientSync = 2;
+        internal const byte PacketBaselineSync = 3;
+        internal const byte PacketDiffSyncLast = 4;
 
         protected const int MaxFieldSize = 1024;
         protected const int MaxSavedStateDiff = 30;
