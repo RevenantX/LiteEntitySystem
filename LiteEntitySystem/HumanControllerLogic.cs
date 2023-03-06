@@ -53,7 +53,7 @@ namespace LiteEntitySystem
                 int diff = Utils.SequenceDiff(response.RequestId, awaitingRequest.Item1);
                 if (diff == 0)
                 {
-                    awaitingRequest.Item2(true);
+                    awaitingRequest.Item2(response.Success);
                 }
                 else if (diff < 0)
                 {
