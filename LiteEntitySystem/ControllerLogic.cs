@@ -84,36 +84,4 @@ namespace LiteEntitySystem
         
         protected AiControllerLogic(EntityParams entityParams) : base(entityParams) { }
     }
-
-    /// <summary>
-    /// Base class for human Controller entities
-    /// </summary>
-    [UpdateableEntity(true)]
-    public abstract class HumanControllerLogic<TInput> : ControllerLogic where TInput : unmanaged
-    {
-        /// <summary>
-        /// Called on client and server to read generated from <see cref="GenerateInput"/> input
-        /// </summary>
-        /// <param name="input"></param>
-        public abstract void ReadInput(in TInput input);
-        
-        /// <summary>
-        /// Called on client to generate input
-        /// </summary>
-        public abstract void GenerateInput(out TInput input);
-
-        public override bool IsBot => false;
-        
-        protected HumanControllerLogic(EntityParams entityParams) : base(entityParams) { }
-    }
-
-    /// <summary>
-    /// Base class for human Controller entities with typed ControlledEntity field
-    /// </summary>
-    public abstract class HumanControllerLogic<TInput, T> : HumanControllerLogic<TInput> where T : PawnLogic where TInput : unmanaged
-    {
-        public T ControlledEntity => GetControlledEntity<T>();
-
-        protected HumanControllerLogic(EntityParams entityParams) : base(entityParams) { }
-    }
 }

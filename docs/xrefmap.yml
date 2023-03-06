@@ -790,6 +790,12 @@ references:
   commentId: T:LiteEntitySystem.EntityManager
   fullName: LiteEntitySystem.EntityManager
   nameWithType: EntityManager
+- uid: LiteEntitySystem.EntityManager._tick
+  name: _tick
+  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager__tick
+  commentId: F:LiteEntitySystem.EntityManager._tick
+  fullName: LiteEntitySystem.EntityManager._tick
+  nameWithType: EntityManager._tick
 - uid: LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteEntitySystem.NetworkMode,System.Byte)
   name: EntityManager(EntityTypesMap, InputProcessor, NetworkMode, Byte)
   href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteEntitySystem_NetworkMode_System_Byte_
@@ -803,12 +809,6 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.EntityManager.EntityManager
   nameWithType: EntityManager.EntityManager
-- uid: LiteEntitySystem.EntityManager._tick
-  name: _tick
-  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager__tick
-  commentId: F:LiteEntitySystem.EntityManager._tick
-  fullName: LiteEntitySystem.EntityManager._tick
-  nameWithType: EntityManager._tick
 - uid: LiteEntitySystem.EntityManager.AddEntity(LiteEntitySystem.EntityParams)
   name: AddEntity(EntityParams)
   href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_AddEntity_LiteEntitySystem_EntityParams_
@@ -2442,18 +2442,18 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.Extensions.SyncTimer.IsTimeElapsed
   nameWithType: SyncTimer.IsTimeElapsed
-- uid: LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single,System.Single)
-  name: LerpByProgress(Single, Single)
-  href: api/LiteEntitySystem.Extensions.SyncTimer.html#LiteEntitySystem_Extensions_SyncTimer_LerpByProgress_System_Single_System_Single_
-  commentId: M:LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single,System.Single)
-  fullName: LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single, System.Single)
-  nameWithType: SyncTimer.LerpByProgress(Single, Single)
 - uid: LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single,System.Single,System.Boolean)
   name: LerpByProgress(Single, Single, Boolean)
   href: api/LiteEntitySystem.Extensions.SyncTimer.html#LiteEntitySystem_Extensions_SyncTimer_LerpByProgress_System_Single_System_Single_System_Boolean_
   commentId: M:LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single,System.Single,System.Boolean)
   fullName: LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single, System.Single, System.Boolean)
   nameWithType: SyncTimer.LerpByProgress(Single, Single, Boolean)
+- uid: LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single,System.Single)
+  name: LerpByProgress(Single, Single)
+  href: api/LiteEntitySystem.Extensions.SyncTimer.html#LiteEntitySystem_Extensions_SyncTimer_LerpByProgress_System_Single_System_Single_
+  commentId: M:LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single,System.Single)
+  fullName: LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single, System.Single)
+  nameWithType: SyncTimer.LerpByProgress(Single, Single)
 - uid: LiteEntitySystem.Extensions.SyncTimer.LerpByProgress*
   name: LerpByProgress
   href: api/LiteEntitySystem.Extensions.SyncTimer.html#LiteEntitySystem_Extensions_SyncTimer_LerpByProgress_
@@ -3354,12 +3354,6 @@ references:
   commentId: T:LiteEntitySystem.Internal.Utils
   fullName: LiteEntitySystem.Internal.Utils
   nameWithType: Utils
-- uid: LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte*,System.Int32)
-  name: IsBitSet(Byte*, Int32)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_IsBitSet_System_Byte__System_Int32_
-  commentId: M:LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte*,System.Int32)
-  fullName: LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte*, System.Int32)
-  nameWithType: Utils.IsBitSet(Byte*, Int32)
 - uid: LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte[],System.Int32,System.Int32)
   name: IsBitSet(Byte[], Int32, Int32)
   href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_IsBitSet_System_Byte___System_Int32_System_Int32_
@@ -3369,6 +3363,12 @@ references:
   fullName.vb: LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte(), System.Int32, System.Int32)
   nameWithType: Utils.IsBitSet(Byte[], Int32, Int32)
   nameWithType.vb: Utils.IsBitSet(Byte(), Int32, Int32)
+- uid: LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte*,System.Int32)
+  name: IsBitSet(Byte*, Int32)
+  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_IsBitSet_System_Byte__System_Int32_
+  commentId: M:LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte*,System.Int32)
+  fullName: LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte*, System.Int32)
+  nameWithType: Utils.IsBitSet(Byte*, Int32)
 - uid: LiteEntitySystem.Internal.Utils.IsBitSet*
   name: IsBitSet
   href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_IsBitSet_

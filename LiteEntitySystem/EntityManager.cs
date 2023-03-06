@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using LiteEntitySystem.Internal;
-using LiteNetLib;
 
 namespace LiteEntitySystem
 {
@@ -12,16 +10,26 @@ namespace LiteEntitySystem
     [Flags]
     public enum ExecuteFlags : byte
     {
-        None = 0,
-        SendToOwner = 1,
+        ///<summary>Execute RPC for owner of entity</summary>
+        SendToOwner = 0,
+        
+        ///<summary>Execute RPC for non owners</summary>
         SendToOther = 1 << 1,
+        
+        ///<summary>Execute RPC for all players</summary>
+        SendToAll = SendToOwner | SendToOther,
+        
+        ///<summary>Execute RPC on client for owner of entity on prediction</summary>
         ExecuteOnPrediction = 1 << 2,
+        
+        ///<summary>Execute RPC directly on server</summary>
         ExecuteOnServer = 1 << 3,
-        ExecuteOnClinet = 1 << 4,
+        
+        ///<summary>All flags, send to owner, to others, execute on prediction and on server</summary>
         All = SendToOther | SendToOwner | ExecuteOnPrediction | ExecuteOnServer
     }
 
-    public enum NetworkMode : byte
+    public enum NetworkMode
     {
         Client,
         Server
@@ -54,7 +62,7 @@ namespace LiteEntitySystem
         public const int MaxEntityCount = MaxSyncedEntityCount * 2;
         
         public const byte ServerPlayerId = 0;
-        
+
         /// <summary>
         /// Invalid entity id
         /// </summary>
@@ -119,16 +127,12 @@ namespace LiteEntitySystem
         /// Local player id (0 on server)
         /// </summary>
         public byte PlayerId => InternalPlayerId;
+
+        public readonly byte HeaderByte;
         
         public bool InRollBackState => UpdateMode == UpdateMode.PredictionRollback;
         public bool InNormalState => UpdateMode == UpdateMode.Normal;
         
-        internal const byte PacketDiffSync = 1;
-        internal const byte PacketClientSync = 2;
-        internal const byte PacketBaselineSync = 3;
-        internal const byte PacketDiffSyncLast = 4;
-
-        protected const int MaxFieldSize = 1024;
         protected const int MaxSavedStateDiff = 30;
         protected const ushort FirstEntityId = 1;
         internal const int MaxParts = 256;
@@ -162,7 +166,7 @@ namespace LiteEntitySystem
 
         internal byte InternalPlayerId;
         protected readonly InputProcessor InputProcessor;
-
+        
         public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged
         {
             ValueProcessors.RegisteredProcessors[typeof(T)] = new UserTypeProcessor<T>(interpolationDelegate);
@@ -199,8 +203,9 @@ namespace LiteEntitySystem
             RegisterFieldType<FloatAngle>(FloatAngle.Lerp);
         }
 
-        protected EntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetworkMode mode, byte framesPerSecond)
+        protected EntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetworkMode mode, byte framesPerSecond, byte headerByte)
         {
+            HeaderByte = headerByte;
             ClassDataDict = new EntityClassData[typesMap.MaxId+1];
 
             ushort filterCount = 0;
@@ -532,16 +537,10 @@ namespace LiteEntitySystem
             EntitiesCount--;
             //Logger.Log($"{Mode} - RemoveEntity: {e.Id}");
         }
-
-        internal abstract NetPlayer GetPlayer(byte playerId);
-
-        public void EnableLagCompensation(byte playerId)
+        
+        public void EnableLagCompensation(NetPlayer player)
         {
-            if (_lagCompensationEnabled || playerId == ServerPlayerId)
-                return;
-
-            var player = GetPlayer(playerId);
-            if (player == null)
+            if (_lagCompensationEnabled)
                 return;
 
             _lagCompensationEnabled = true;

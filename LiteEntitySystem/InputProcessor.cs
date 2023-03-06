@@ -1,3 +1,5 @@
+using LiteNetLib.Utils;
+
 namespace LiteEntitySystem
 {
     public abstract class InputProcessor
@@ -5,6 +7,7 @@ namespace LiteEntitySystem
         public abstract int ReadInputs(EntityManager manager, byte ownerId, byte[] data, int offset, int size);
         public abstract void GenerateAndWriteInputs(EntityManager manager, byte[] data, ref int offset);
         public abstract int GetInputsSize(EntityManager manager);
+        public abstract void ReadClientRequest(EntityManager manager, NetDataReader reader);
     }
 
     public class InputProcessor<TInput> : InputProcessor where TInput : unmanaged
@@ -40,6 +43,16 @@ namespace LiteEntitySystem
                     *(TInput*)(rawData + offset) = input;
                     offset += sizeof(TInput);
                 }
+            }
+        }
+
+        public override void ReadClientRequest(EntityManager manager, NetDataReader reader)
+        {
+            ushort controllerId = reader.GetUShort();
+            byte controllerVersion = reader.GetByte();
+            if (manager.TryGetEntityById<HumanControllerLogic<TInput>>(new EntitySharedReference(controllerId, controllerVersion), out var controller))
+            {
+                controller.ReadClientRequest(reader);
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using LiteNetLib;
 
 namespace LiteEntitySystem.Internal
 {
@@ -32,5 +31,21 @@ namespace LiteEntitySystem.Internal
         public byte PacketType;
         public byte Part;
         public ushort Tick;
+    }
+    
+    internal struct InputPacketHeader
+    {
+        public ushort StateA;
+        public ushort StateB;
+        public float LerpMsec;
+    }
+
+    internal static class InternalPackets
+    {
+        public const byte DiffSync = 1;
+        public const byte ClientSync = 2;
+        public const byte BaselineSync = 3;
+        public const byte DiffSyncLast = 4;
+        public const byte ClientRequest = 5;
     }
 }

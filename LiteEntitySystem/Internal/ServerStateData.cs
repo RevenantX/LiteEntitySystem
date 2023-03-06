@@ -225,7 +225,7 @@ namespace LiteEntitySystem.Internal
                 rawData += sizeof(FirstPartHeader);
                 
                 //for one part packets
-                if (partHeader.PacketType == EntityManager.PacketDiffSyncLast)
+                if (partHeader.PacketType == InternalPackets.DiffSyncLast)
                 {
                     Size = partDataSize;
                     Utils.ResizeIfFull(ref Data, partDataSize);
@@ -240,7 +240,7 @@ namespace LiteEntitySystem.Internal
             else
             {
                 partDataSize = partSize - sizeof(DiffPartHeader);
-                if (partHeader.PacketType == EntityManager.PacketDiffSyncLast)
+                if (partHeader.PacketType == InternalPackets.DiffSyncLast)
                 {
                     partDataSize -= sizeof(ushort);
                     _totalPartsCount = partHeader.Part + 1;

@@ -1,23 +1,22 @@
 ﻿<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
-  
+
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class EntityLogic
-   </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class EntityLogic
-   ">
-    <meta name="generator" content="docfx 2.59.4.0">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class EntityLogic
+ </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class EntityLogic
+ ">
     
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
     
     
     
@@ -25,7 +24,7 @@
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
       <header>
-        
+
         <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
           <div class="container">
             <div class="navbar-header">
@@ -35,7 +34,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              
+
               <a class="navbar-brand" href="../index.html">
                 <img id="logo" class="svg" src="../logo.svg" alt="">
               </a>
@@ -49,7 +48,7 @@
             </div>
           </div>
         </nav>
-        
+
         <div class="subnav navbar navbar-default">
           <div class="container hide-when-search" id="breadcrumb">
             <ul class="breadcrumb">
@@ -59,7 +58,7 @@
         </div>
       </header>
       <div role="main" class="container body-content hide-when-search">
-        
+
         <div class="sidenav hide-when-search">
           <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
           <div class="sidetoggle collapse" id="sidetoggle">
@@ -69,10 +68,10 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.EntityLogic">
-  
-  
+
+
   <h1 id="LiteEntitySystem_EntityLogic" data-uid="LiteEntitySystem.EntityLogic" class="text-break">Class EntityLogic
-  </h1>
+</h1>
   <div class="markdown level0 summary"><p>Base class for simple (not controlled by controller) entity</p>
 </div>
   <div class="markdown level0 conceptual"></div>
@@ -85,7 +84,7 @@
   </div>
   <div class="implements">
     <h5>Implements</h5>
-    <div><span class="xref">System.IComparable</span>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</div>
+    <div><span class="xref">System.IComparable&lt;T&gt;</span>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -163,14 +162,14 @@
     <pre><code class="lang-csharp hljs">public abstract class EntityLogic : InternalEntity, IComparable&lt;InternalEntity&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
-  </h3>
-  
-  
+</h3>
+
+
   <a id="LiteEntitySystem_EntityLogic__ctor_" data-uid="LiteEntitySystem.EntityLogic.#ctor*"></a>
   <h4 id="LiteEntitySystem_EntityLogic__ctor_LiteEntitySystem_EntityParams_" data-uid="LiteEntitySystem.EntityLogic.#ctor(LiteEntitySystem.EntityParams)">EntityLogic(EntityParams)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
+  <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected EntityLogic(EntityParams entityParams)</code></pre>
   </div>
@@ -192,14 +191,14 @@
     </tbody>
   </table>
   <h3 id="fields">Fields
-  </h3>
-  
-  
+</h3>
+
+
   <h4 id="LiteEntitySystem_EntityLogic_Childs" data-uid="LiteEntitySystem.EntityLogic.Childs">Childs</h4>
   <div class="markdown level1 summary"><p>Child entities (can be used for transforms or as components)</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
+  <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public readonly HashSet&lt;EntityLogic&gt; Childs</code></pre>
   </div>
@@ -213,20 +212,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;<a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.HashSet&lt;T&gt;</span>&lt;<a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h3 id="properties">Properties
-  </h3>
-  
-  
+</h3>
+
+
   <a id="LiteEntitySystem_EntityLogic_HasLagCompensation_" data-uid="LiteEntitySystem.EntityLogic.HasLagCompensation*"></a>
   <h4 id="LiteEntitySystem_EntityLogic_HasLagCompensation" data-uid="LiteEntitySystem.EntityLogic.HasLagCompensation">HasLagCompensation</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
+  <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool HasLagCompensation { get; }</code></pre>
   </div>
@@ -245,14 +244,14 @@
       </tr>
     </tbody>
   </table>
-  
-  
+
+
   <a id="LiteEntitySystem_EntityLogic_OwnerId_" data-uid="LiteEntitySystem.EntityLogic.OwnerId*"></a>
   <h4 id="LiteEntitySystem_EntityLogic_OwnerId" data-uid="LiteEntitySystem.EntityLogic.OwnerId">OwnerId</h4>
   <div class="markdown level1 summary"><p>Owner player id</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
+  <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public byte OwnerId { get; }</code></pre>
   </div>
@@ -272,15 +271,15 @@
     </tbody>
   </table>
   <h3 id="methods">Methods
-  </h3>
-  
-  
+</h3>
+
+
   <a id="LiteEntitySystem_EntityLogic_AddPredictedEntity_" data-uid="LiteEntitySystem.EntityLogic.AddPredictedEntity*"></a>
   <h4 id="LiteEntitySystem_EntityLogic_AddPredictedEntity__1_System_Action___0__" data-uid="LiteEntitySystem.EntityLogic.AddPredictedEntity``1(System.Action{``0})">AddPredictedEntity&lt;T&gt;(Action&lt;T&gt;)</h4>
   <div class="markdown level1 summary"><p>Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
+  <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public T AddPredictedEntity&lt;T&gt;(Action&lt;T&gt; initMethod = null)
     where T : EntityLogic</code></pre>
@@ -296,7 +295,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Action</span>&lt;T&gt;</td>
+        <td><span class="xref">System.Action&lt;T&gt;</span>&lt;T&gt;</td>
         <td><span class="parametername">initMethod</span></td>
         <td><p>Method that will be called after entity constructed</p>
 </td>
@@ -335,35 +334,35 @@
       </tr>
     </tbody>
   </table>
-  
-  
+
+
   <a id="LiteEntitySystem_EntityLogic_DisableLagCompensationForOwner_" data-uid="LiteEntitySystem.EntityLogic.DisableLagCompensationForOwner*"></a>
   <h4 id="LiteEntitySystem_EntityLogic_DisableLagCompensationForOwner" data-uid="LiteEntitySystem.EntityLogic.DisableLagCompensationForOwner">DisableLagCompensationForOwner()</h4>
   <div class="markdown level1 summary"><p>Disable lag compensation for player that owns this entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
+  <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void DisableLagCompensationForOwner()</code></pre>
   </div>
-  
-  
+
+
   <a id="LiteEntitySystem_EntityLogic_EnableLagCompensationForOwner_" data-uid="LiteEntitySystem.EntityLogic.EnableLagCompensationForOwner*"></a>
   <h4 id="LiteEntitySystem_EntityLogic_EnableLagCompensationForOwner" data-uid="LiteEntitySystem.EntityLogic.EnableLagCompensationForOwner">EnableLagCompensationForOwner()</h4>
   <div class="markdown level1 summary"><p>Enable lag compensation for player that owns this entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
+  <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void EnableLagCompensationForOwner()</code></pre>
   </div>
-  
-  
+
+
   <a id="LiteEntitySystem_EntityLogic_GetFrameSeed_" data-uid="LiteEntitySystem.EntityLogic.GetFrameSeed*"></a>
   <h4 id="LiteEntitySystem_EntityLogic_GetFrameSeed" data-uid="LiteEntitySystem.EntityLogic.GetFrameSeed">GetFrameSeed()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
+  <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public int GetFrameSeed()</code></pre>
   </div>
@@ -382,14 +381,14 @@
       </tr>
     </tbody>
   </table>
-  
-  
+
+
   <a id="LiteEntitySystem_EntityLogic_GetParent_" data-uid="LiteEntitySystem.EntityLogic.GetParent*"></a>
   <h4 id="LiteEntitySystem_EntityLogic_GetParent__1" data-uid="LiteEntitySystem.EntityLogic.GetParent``1">GetParent&lt;T&gt;()</h4>
   <div class="markdown level1 summary"><p>Get parent entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
+  <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public T GetParent&lt;T&gt;()
     where T : EntityLogic</code></pre>
@@ -426,35 +425,35 @@
       </tr>
     </tbody>
   </table>
-  
-  
+
+
   <a id="LiteEntitySystem_EntityLogic_OnLagCompensationEnd_" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensationEnd*"></a>
   <h4 id="LiteEntitySystem_EntityLogic_OnLagCompensationEnd" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensationEnd">OnLagCompensationEnd()</h4>
   <div class="markdown level1 summary"><p>Called when lag compensation ended for this entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
+  <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public virtual void OnLagCompensationEnd()</code></pre>
   </div>
-  
-  
+
+
   <a id="LiteEntitySystem_EntityLogic_OnLagCompensationStart_" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensationStart*"></a>
   <h4 id="LiteEntitySystem_EntityLogic_OnLagCompensationStart" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensationStart">OnLagCompensationStart()</h4>
   <div class="markdown level1 summary"><p>Called when lag compensation was started for this entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
+  <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public virtual void OnLagCompensationStart()</code></pre>
   </div>
-  
-  
+
+
   <a id="LiteEntitySystem_EntityLogic_RegisterRPC_" data-uid="LiteEntitySystem.EntityLogic.RegisterRPC*"></a>
   <h4 id="LiteEntitySystem_EntityLogic_RegisterRPC_LiteEntitySystem_RPCRegistrator__" data-uid="LiteEntitySystem.EntityLogic.RegisterRPC(LiteEntitySystem.RPCRegistrator@)">RegisterRPC(in RPCRegistrator)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
+  <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected override void RegisterRPC(in RPCRegistrator r)</code></pre>
   </div>
@@ -477,14 +476,14 @@
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_RegisterRPC_LiteEntitySystem_RPCRegistrator__">InternalEntity.RegisterRPC(in RPCRegistrator)</a></div>
-  
-  
+
+
   <a id="LiteEntitySystem_EntityLogic_SetParent_" data-uid="LiteEntitySystem.EntityLogic.SetParent*"></a>
   <h4 id="LiteEntitySystem_EntityLogic_SetParent_LiteEntitySystem_EntityLogic_" data-uid="LiteEntitySystem.EntityLogic.SetParent(LiteEntitySystem.EntityLogic)">SetParent(EntityLogic)</h4>
   <div class="markdown level1 summary"><p>Set parent entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
+  <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void SetParent(EntityLogic parentEntity)</code></pre>
   </div>
@@ -512,7 +511,7 @@
   </div>
 </article>
           </div>
-          
+
           <div class="hidden-sm col-md-2" role="complementary">
             <div class="sideaffix">
               <div class="contribution">
@@ -527,7 +526,7 @@
           </div>
         </div>
       </div>
-      
+
       <footer>
         <div class="grad-bottom"></div>
         <div class="footer">
@@ -535,13 +534,13 @@
             <span class="pull-right">
               <a href="#top">Back to top</a>
             </span>
-            
-            <span>Generated by <strong>DocFX</strong></span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
           </div>
         </div>
       </footer>
     </div>
-    
+
     <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>

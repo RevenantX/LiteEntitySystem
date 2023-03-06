@@ -12,6 +12,12 @@ namespace LiteEntitySystem
         public bool IsInvalid => Id == EntityManager.InvalidEntityId;
         public bool IsLocal => Id >= EntityManager.MaxSyncedEntityCount;
 
+        internal EntitySharedReference(ushort id, byte version)
+        {
+            Id = id;
+            Version = version;
+        }
+
         internal EntitySharedReference(ControllerLogic controllerLogic)
         {
             if (controllerLogic == null)
@@ -54,7 +60,7 @@ namespace LiteEntitySystem
         {
             data[0] = (byte)(Id >> 8);
             data[1] = (byte)Id;
-            data[3] = Version;
+            data[2] = Version;
         }
 
         public static bool operator ==(EntitySharedReference obj1, EntitySharedReference obj2)

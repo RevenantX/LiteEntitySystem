@@ -4,7 +4,7 @@
       "src": [
         {
           "files": [ "**/*.csproj" ],
-          "src": "../"
+          "src": "../LiteEntitySystem"
         }
       ],
       "dest": "api",

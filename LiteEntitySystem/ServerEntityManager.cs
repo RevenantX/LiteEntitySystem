@@ -33,31 +33,6 @@ namespace LiteEntitySystem
         WaitingForFirstInputProcess,
         RequestBaseline
     }
-    
-    public sealed class NetPlayer
-    {
-        public readonly byte Id;
-        public readonly NetPeer Peer;
-        
-        internal ushort LastProcessedTick;
-        internal ushort LastReceivedTick;
-        internal ushort CurrentServerTick;
-        internal ushort StateATick;
-        internal ushort StateBTick;
-        internal ushort SimulatedServerTick;
-        internal float LerpTime;
-        internal NetPlayerState State;
-        internal int ArrayIndex;
-
-        internal ushort AvailableInputCount;
-        internal readonly InputBuffer[] AvailableInput = new InputBuffer[ServerEntityManager.MaxStoredInputs];
-
-        internal NetPlayer(NetPeer peer, byte id)
-        {
-            Peer = peer;
-            Id = id;
-        }
-    }
 
     public enum ServerSendRate : byte
     {
@@ -110,7 +85,7 @@ namespace LiteEntitySystem
             byte packetHeader, 
             byte framesPerSecond,
             ServerSendRate sendRate) 
-            : base(typesMap, inputProcessor, NetworkMode.Server, framesPerSecond)
+            : base(typesMap, inputProcessor, NetworkMode.Server, framesPerSecond, packetHeader)
         {
             InternalPlayerId = ServerPlayerId;
             for (int i = 1; i <= byte.MaxValue; i++)
@@ -121,7 +96,7 @@ namespace LiteEntitySystem
             _packetBuffer[0] = packetHeader;
             SendRate = sendRate;
         }
-        
+
         /// <summary>
         /// Create and add new player
         /// </summary>
@@ -238,6 +213,20 @@ namespace LiteEntitySystem
         }
         
         /// <summary>
+        /// Add new entity and set parent entity
+        /// </summary>
+        /// <param name="parent">Parent entity</param>
+        /// <param name="initMethod">Method that will be called after entity construction</param>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <returns>Created entity or null in case of limit</returns>
+        public T AddEntity<T>(EntityLogic parent, Action<T> initMethod = null) where T : EntityLogic
+        {
+            var entity = Add(initMethod);
+            entity.SetParent(parent);
+            return entity;
+        }
+        
+        /// <summary>
         /// Read data from NetPeer with assigned NetPlayer to NetPeer.Tag
         /// </summary>
         /// <param name="peer">Player that sent input</param>
@@ -296,7 +285,12 @@ namespace LiteEntitySystem
                 return;
             }
             byte packetType = reader.GetByte();
-            if (packetType != PacketClientSync)
+            if (packetType == InternalPackets.ClientRequest)
+            {
+                InputProcessor.ReadClientRequest(this, reader);
+                return;
+            }
+            if (packetType != InternalPackets.ClientSync)
             {
                 Logger.LogWarning($"[SEM] Unknown packet type: {packetType}");
                 return;
@@ -318,9 +312,8 @@ namespace LiteEntitySystem
                 
                 ref var input = ref inputBuffer.Input;
                 fixed (byte* rawData = reader.RawData)
-                {
                     input = *(InputPacketHeader*)(rawData + reader.Position);
-                }
+                
                 reader.SkipBytes(sizeof(InputPacketHeader));
 
                 if (Utils.SequenceDiff(input.StateB, player.CurrentServerTick) > 0)
@@ -403,7 +396,7 @@ namespace LiteEntitySystem
                     *(BaselineDataHeader*)packetBuffer = new BaselineDataHeader
                     {
                         UserHeader = headerByte,
-                        PacketType = PacketBaselineSync,
+                        PacketType = InternalPackets.BaselineSync,
                         OriginalLength = originalLength,
                         Tick = _tick,
                         PlayerId = player.Id,
@@ -457,7 +450,7 @@ namespace LiteEntitySystem
                                 player.State = NetPlayerState.RequestBaseline;
                                 break;
                             }
-                            header->PacketType = PacketDiffSync;
+                            header->PacketType = InternalPackets.DiffSync;
                             //Logger.LogWarning($"P:{pidx} Sending diff part {*partCount}: {_tick}");
                             player.Peer.Send(_packetBuffer, 0, mtu, DeliveryMethod.Unreliable);
                             header->Part++;
@@ -477,7 +470,7 @@ namespace LiteEntitySystem
                     //else skip
                 }
                 //Debug.Log($"PARTS: {partCount} {_netDataWriter.Data[4]}");
-                header->PacketType = PacketDiffSyncLast; //lastPart flag
+                header->PacketType = InternalPackets.DiffSyncLast; //lastPart flag
                 if (header->Part > 0)
                 {
                     //put mtu at last packet
@@ -529,7 +522,7 @@ namespace LiteEntitySystem
             return entity;
         }
         
-        internal override NetPlayer GetPlayer(byte ownerId)
+        public NetPlayer GetPlayer(byte ownerId)
         {
             return _netPlayersDict[ownerId];
         }

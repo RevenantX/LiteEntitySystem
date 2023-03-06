@@ -132,7 +132,11 @@ namespace LiteEntitySystem
         /// </summary>
         public void EnableLagCompensationForOwner()
         {
-            EntityManager.EnableLagCompensation(InternalOwnerId);
+            if (InternalOwnerId == EntityManager.ServerPlayerId)
+                return;
+            EntityManager.EnableLagCompensation(EntityManager.IsClient
+                ? ClientManager.LocalPlayer
+                : ServerManager.GetPlayer(InternalOwnerId));
         }
 
         /// <summary>

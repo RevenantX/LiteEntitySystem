@@ -46,6 +46,12 @@ namespace LiteEntitySystem
 
     public readonly ref struct RPCRegistrator
     {
+        /// <summary>
+        /// Bind notification of SyncVarWithNotify to action
+        /// </summary>
+        /// <param name="self">Target entity for binding</param>
+        /// <param name="syncVar">Variable to bind</param>
+        /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
         public void BindOnChange<T, TEntity>(TEntity self, ref SyncVarWithNotify<T> syncVar, Action<T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
         {
             if (onChangedAction.Target != self)
@@ -134,29 +140,35 @@ namespace LiteEntitySystem
         /// <summary>
         /// Creates cached rpc action
         /// </summary>
+        /// <param name="self">Target entity with RPC</param>
         /// <param name="methodToCall">RPC method to call</param>
-        /// <param name="cachedAction">output action that should be used to call rpc</param>
-        public void CreateRPCAction<TEntity>(TEntity self, Action methodToCall, ref RemoteCall remoteCallHandle, ExecuteFlags flags = ExecuteFlags.None) where TEntity : InternalEntity
+        /// <param name="remoteCallHandle">output handle that should be used to call rpc</param>
+        /// <param name="flags">RPC execution flags</param>
+        public void CreateRPCAction<TEntity>(TEntity self, Action methodToCall, ref RemoteCall remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity
         {
             remoteCallHandle.CachedAction = Create<TEntity, int>(self, remoteCallHandle.RpcId, methodToCall, flags, RPCType.NoParams);
         }
 
         /// <summary>
-        /// Creates cached rpc action
+        /// Creates cached rpc action with valueType argument
         /// </summary>
+        /// <param name="self">Target entity with RPC</param>
         /// <param name="methodToCall">RPC method to call</param>
-        /// <param name="cachedAction">output action that should be used to call rpc</param>
-        public void CreateRPCAction<TEntity, T>(TEntity self, Action<T> methodToCall, ref RemoteCall<T> remoteCallHandle, ExecuteFlags flags = ExecuteFlags.None) where T : unmanaged where TEntity : InternalEntity
+        /// <param name="remoteCallHandle">output handle that should be used to call rpc</param>
+        /// <param name="flags">RPC execution flags</param>
+        public void CreateRPCAction<TEntity, T>(TEntity self, Action<T> methodToCall, ref RemoteCall<T> remoteCallHandle, ExecuteFlags flags) where T : unmanaged where TEntity : InternalEntity
         {
             remoteCallHandle.CachedAction = Create<TEntity, T>(self, remoteCallHandle.RpcId, methodToCall, flags, RPCType.OneValue);
         }
 
         /// <summary>
-        /// Creates cached rpc action
+        /// Creates cached rpc action with Span argument
         /// </summary>
+        /// <param name="self">Target entity with RPC</param>
         /// <param name="methodToCall">RPC method to call</param>
-        /// <param name="cachedAction">output action that should be used to call rpc</param>
-        public void CreateRPCAction<TEntity, T>(TEntity self, SpanAction<T> methodToCall, ref RemoteCallSpan<T> remoteCallHandle, ExecuteFlags flags = ExecuteFlags.None) where T : unmanaged where TEntity : InternalEntity
+        /// <param name="remoteCallHandle">output handle that should be used to call rpc</param>
+        /// <param name="flags">RPC execution flags</param>
+        public void CreateRPCAction<TEntity, T>(TEntity self, SpanAction<T> methodToCall, ref RemoteCallSpan<T> remoteCallHandle, ExecuteFlags flags) where T : unmanaged where TEntity : InternalEntity
         {
             remoteCallHandle.CachedAction = Create<TEntity, T>(self, remoteCallHandle.RpcId, methodToCall, flags, RPCType.Array);
         }

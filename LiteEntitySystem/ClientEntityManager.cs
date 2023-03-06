@@ -9,13 +9,6 @@ using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
 {
-    internal struct InputPacketHeader
-    {
-        public ushort StateA;
-        public ushort StateB;
-        public float LerpMsec;
-    }
-
     /// <summary>
     /// Client entity manager
     /// </summary>
@@ -31,6 +24,8 @@ namespace LiteEntitySystem
         public ushort RawServerTick => _stateA != null ? _stateA.Tick : (ushort)0;
 
         public ushort RawTargetServerTick => _stateB != null ? _stateB.Tick : RawServerTick;
+
+        public NetPlayer LocalPlayer => _localPlayer;
         
         /// <summary>
         /// Stored input commands count for prediction correction
@@ -112,17 +107,16 @@ namespace LiteEntitySystem
             InputProcessor inputProcessor, 
             NetPeer localPeer, 
             byte headerByte, 
-            byte framesPerSecond) : base(typesMap, inputProcessor, NetworkMode.Client, framesPerSecond)
+            byte framesPerSecond) : base(typesMap, inputProcessor, NetworkMode.Client, framesPerSecond, headerByte)
         {
             _localPeer = localPeer;
             _sendBuffer[0] = headerByte;
-            _sendBuffer[1] = PacketClientSync;
+            _sendBuffer[1] = InternalPackets.ClientSync;
+
             AliveEntities.SubscribeToConstructed(OnAliveConstructed, false);
             AliveEntities.OnDestroyed += OnAliveDestroyed;
             for (int i = 0; i < MaxSavedStateDiff; i++)
-            {
                 _receivedStates[i] = new ServerStateData();
-            }
         }
 
         private unsafe void OnAliveConstructed(InternalEntity entity)
@@ -179,7 +173,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Read incoming data omitting header byte
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader">NetDataReader with data</param>
         public unsafe void Deserialize(NetDataReader reader)
         {
             fixed (byte* rawData = reader.RawData)
@@ -189,7 +183,7 @@ namespace LiteEntitySystem
         private unsafe void Deserialize(byte* rawData, int size)
         {
             byte packetType = rawData[1];
-            if(packetType == PacketBaselineSync)
+            if(packetType == InternalPackets.BaselineSync)
             {
                 //read header and decode
                 int decodedBytes;
@@ -201,6 +195,7 @@ namespace LiteEntitySystem
                     Data = new byte[header.OriginalLength]
                 };
                 InternalPlayerId = header.PlayerId;
+                _localPlayer = new NetPlayer(_localPeer, InternalPlayerId);
                 _serverSendRate = (ServerSendRate)header.SendRate;
                 
                 fixed (byte* stateData = _stateA.Data)
@@ -227,7 +222,6 @@ namespace LiteEntitySystem
                     }
                 }
                 
-                _localPlayer = new NetPlayer(_localPeer, InternalPlayerId);
                 _stateB = null;   
                 _simulatePosition = _stateA.Tick;
                 _remoteCallsTick = _stateA.Tick;
@@ -235,7 +229,7 @@ namespace LiteEntitySystem
                 _isSyncReceived = true;
                 _jitterTimer.Restart();
                 ConstructAndSync();
-                Logger.Log($"[CEM] Got baseline sync. Assigned player id: {header.PlayerId}, Original: {decodedBytes}, Compressed: {size}, Tick: {header.Tick}, SendRate: {_serverSendRate}");
+                Logger.Log($"[CEM] Got baseline sync. Assigned player id: {header.PlayerId}, Original: {decodedBytes}, Tick: {header.Tick}, SendRate: {_serverSendRate}");
             }
             else
             {
@@ -292,11 +286,6 @@ namespace LiteEntitySystem
                         return;
                 }
             }
-        }
-
-        internal override NetPlayer GetPlayer(byte playerId)
-        {
-            return UpdateMode == UpdateMode.Normal || playerId != InternalPlayerId ? null : _localPlayer;
         }
 
         private bool PreloadNextState()
