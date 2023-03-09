@@ -81,7 +81,6 @@ namespace LiteEntitySystem
         
         private InternalEntity[] _entitiesToConstruct = new InternalEntity[64];
         private int _entitiesToConstructCount;
-        private ushort _remoteCallsTick;
         private ushort _lastReceivedInputTick;
         private float _logicLerpMsec;
 
@@ -224,7 +223,6 @@ namespace LiteEntitySystem
                 
                 _stateB = null;   
                 _simulatePosition = _stateA.Tick;
-                _remoteCallsTick = _stateA.Tick;
                 _inputCommands.Clear();
                 _isSyncReceived = true;
                 _jitterTimer.Restart();
@@ -342,6 +340,8 @@ namespace LiteEntitySystem
 
         private unsafe void GoToNextState()
         {
+            for (int i = 0; i < _stateB.RemoteCallsCount; i++)
+                ExecuteRpcFromCache(ref _stateB.RemoteCallsCaches[i], false);
             _stateA.Status = ServerDataStatus.Executed;
             _stateA = _stateB;
             _simulatePosition = _stateA.Tick;
@@ -455,6 +455,27 @@ namespace LiteEntitySystem
                 _timer *= (prevLerpTime / _lerpTime);
             }
         }
+
+        private void ExecuteRpcFromCache(ref RemoteCallsCache rpcCache, bool checkTick)
+        {
+            if (Utils.SequenceDiff(rpcCache.Tick, _stateA.Tick) <= 0 || rpcCache.Executed)
+                return;
+            if (checkTick && Utils.SequenceDiff(rpcCache.Tick, ServerTick) > 0)
+                return;
+            rpcCache.Executed = true;
+            var entity = EntitiesDict[rpcCache.EntityId];
+            //Logger.Log($"Executing rpc. Entity: {rpcCache.EntityId}. Tick {rpcCache.Tick}. FieldId: {rpcCache.FieldId}");
+            if (rpcCache.FieldId == byte.MaxValue)
+            {
+                rpcCache.Delegate(entity, new ReadOnlySpan<byte>(_stateB.Data, rpcCache.Offset, rpcCache.Count));
+            }
+            else
+            {
+                rpcCache.Delegate(
+                    Utils.RefFieldValue<SyncableField>(entity, ClassDataDict[entity.ClassId].SyncableFieldOffsets[rpcCache.FieldId]), 
+                    new ReadOnlySpan<byte>(_stateB.Data, rpcCache.Offset, rpcCache.Count));
+            }
+        }
         
         protected override unsafe void OnLogicTick()
         {
@@ -462,31 +483,8 @@ namespace LiteEntitySystem
             {
                 _logicLerpMsec = (float)(_timer / _lerpTime);
                 ServerTick = Utils.LerpSequence(_stateA.Tick, _stateB.Tick, _logicLerpMsec);
-                int maxTick = -1;
                 for (int i = 0; i < _stateB.RemoteCallsCount; i++)
-                {
-                    ref var rpcCache = ref _stateB.RemoteCallsCaches[i];
-                    if (Utils.SequenceDiff(rpcCache.Tick, _remoteCallsTick) > 0 && Utils.SequenceDiff(rpcCache.Tick, ServerTick) <= 0)
-                    {
-                        if (maxTick == -1 || Utils.SequenceDiff(rpcCache.Tick, (ushort)maxTick) > 0)
-                        {
-                            maxTick = rpcCache.Tick;
-                        }
-                        var entity = EntitiesDict[rpcCache.EntityId];
-                        if (rpcCache.FieldId == byte.MaxValue)
-                        {
-                            rpcCache.Delegate(entity, new ReadOnlySpan<byte>(_stateB.Data, rpcCache.Offset, rpcCache.Count));
-                        }
-                        else
-                        {
-                            rpcCache.Delegate(
-                                Utils.RefFieldValue<SyncableField>(entity, ClassDataDict[entity.ClassId].SyncableFieldOffsets[rpcCache.FieldId]), 
-                                new ReadOnlySpan<byte>(_stateB.Data, rpcCache.Offset, rpcCache.Count));
-                        }
-                    }
-                }
-                if(maxTick != -1)
-                    _remoteCallsTick = (ushort)maxTick;
+                    ExecuteRpcFromCache(ref _stateB.RemoteCallsCaches[i], true);
             }
 
             if (_inputCommands.Count > InputBufferSize)
@@ -701,7 +699,6 @@ namespace LiteEntitySystem
             //Call construct methods
             for (int i = 0; i < _entitiesToConstructCount; i++)
                 ConstructEntity(_entitiesToConstruct[i]);
-            
             _entitiesToConstructCount = 0;
             
             //Make OnSyncCalls
@@ -826,7 +823,7 @@ namespace LiteEntitySystem
                         int fullSyncSize = *(int*)(rawData+readerPosition);
                         readerPosition += sizeof(int);
                         Utils.RefFieldValue<SyncableField>(entity, classData.SyncableFieldOffsets[i]).FullSyncRead(
-                            this, new ReadOnlySpan<byte>(rawData + readerPosition, fullSyncSize));
+                            new ReadOnlySpan<byte>(rawData + readerPosition, fullSyncSize));
                         readerPosition += fullSyncSize;
                     }
                 }

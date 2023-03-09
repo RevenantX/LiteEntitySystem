@@ -46,23 +46,6 @@ namespace LiteEntitySystem
             }
         }
 
-        /// <summary>
-        /// Create entity reference from byte data (3 bytes)
-        /// </summary>
-        /// <param name="data"></param>
-        public EntitySharedReference(ReadOnlySpan<byte> data)
-        {
-            Id = (ushort)(data[0] << 8 | data[1]);
-            Version = data[2];
-        }
-
-        public void WriteAsBytes(Span<byte> data)
-        {
-            data[0] = (byte)(Id >> 8);
-            data[1] = (byte)Id;
-            data[2] = Version;
-        }
-
         public static bool operator ==(EntitySharedReference obj1, EntitySharedReference obj2)
         {
             return obj1.Id == obj2.Id && obj1.Version == obj2.Version;

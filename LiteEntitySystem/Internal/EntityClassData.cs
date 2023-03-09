@@ -225,7 +225,8 @@ namespace LiteEntitySystem.Internal
                                 var syncableFieldType = syncableField.FieldType;
                                 //remotecalls
                                 if(syncableFieldType == typeof(RemoteCall) ||
-                                   (syncableFieldType.IsGenericType && (syncableFieldType.GetGenericTypeDefinition() == typeof(RemoteCall<>) || syncableFieldType.GetGenericTypeDefinition() == typeof(RemoteCallSpan<>)) ))
+                                   (syncableFieldType.IsGenericType && (syncableFieldType.GetGenericTypeDefinition() == typeof(RemoteCall<>) ||
+                                                                        syncableFieldType.GetGenericTypeDefinition() == typeof(RemoteCallSpan<>)) ))
                                 {
                                     int rpcOffset = Marshal.ReadInt32(syncableField.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
                                     syncableRpcOffsets.Add(new SyncableRpcOffset(offset, rpcOffset));

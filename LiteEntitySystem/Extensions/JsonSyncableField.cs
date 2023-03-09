@@ -26,7 +26,7 @@ namespace LiteEntitySystem.Extensions
             return Encoding.GetByteCount(JsonUtility.ToJson(Value, false));
         }
 
-        public override unsafe void FullSyncWrite(ServerEntityManager server, Span<byte> dataSpan)
+        public override unsafe void FullSyncWrite(Span<byte> dataSpan)
         {
             if (Value == null)
                 Value = ScriptableObject.CreateInstance<T>();
@@ -39,7 +39,7 @@ namespace LiteEntitySystem.Extensions
                 Unsafe.CopyBlock(data, rawData, (uint)size);
         }
 
-        public override unsafe void FullSyncRead(ClientEntityManager client, ReadOnlySpan<byte> dataSpan)
+        public override unsafe void FullSyncRead(ReadOnlySpan<byte> dataSpan)
         {
             fixed (byte* data = dataSpan)
                 LoadFromJson(Encoding.GetString(data, dataSpan.Length));

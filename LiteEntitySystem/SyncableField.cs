@@ -18,12 +18,12 @@ namespace LiteEntitySystem
             return 0;
         }
 
-        public virtual void FullSyncWrite(ServerEntityManager server, Span<byte> dataSpan)
+        public virtual void FullSyncWrite(Span<byte> dataSpan)
         {
             
         }
 
-        public virtual void FullSyncRead(ClientEntityManager client, ReadOnlySpan<byte> dataSpan)
+        public virtual void FullSyncRead(ReadOnlySpan<byte> dataSpan)
         {
             
         }

@@ -132,7 +132,7 @@ namespace LiteEntitySystem.Extensions
             return sizeof(T) * _count;
         }
 
-        public override unsafe void FullSyncWrite(ServerEntityManager server, Span<byte> dataSpan)
+        public override unsafe void FullSyncWrite(Span<byte> dataSpan)
         {
             byte[] byteData = Unsafe.As<byte[]>(_data);
             fixed (byte* data = dataSpan)
@@ -142,7 +142,7 @@ namespace LiteEntitySystem.Extensions
             }
         }
 
-        public override unsafe void FullSyncRead(ClientEntityManager client, ReadOnlySpan<byte> dataSpan)
+        public override unsafe void FullSyncRead(ReadOnlySpan<byte> dataSpan)
         {
             _count = dataSpan.Length / sizeof(T);
             if (_data.Length < _count)

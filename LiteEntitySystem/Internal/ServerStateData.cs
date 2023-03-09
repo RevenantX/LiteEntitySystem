@@ -13,7 +13,7 @@ namespace LiteEntitySystem.Internal
         public InterpolatedCache[] InterpolatedCaches;
     }
 
-    internal readonly struct RemoteCallsCache
+    internal struct RemoteCallsCache
     {
         public readonly ushort EntityId;
         public readonly byte FieldId;
@@ -21,6 +21,7 @@ namespace LiteEntitySystem.Internal
         public readonly ushort Tick;
         public readonly int Offset;
         public readonly ushort Count;
+        public bool Executed;
 
         public RemoteCallsCache(ushort entityId, byte fieldId, MethodCallDelegate callDelegate, ushort tick, int offset,
             ushort count)
@@ -31,6 +32,7 @@ namespace LiteEntitySystem.Internal
             Tick = tick;
             Offset = offset;
             Count = count;
+            Executed = false;
         }
     }
 
@@ -76,7 +78,7 @@ namespace LiteEntitySystem.Internal
         private byte _maxReceivedPart;
         private ushort _partMtu;
 
-        public void Preload(InternalEntity[] entityDict)
+        public unsafe void Preload(InternalEntity[] entityDict)
         {
             if (Status != ServerDataStatus.Ready)
             {
@@ -160,28 +162,27 @@ namespace LiteEntitySystem.Internal
                 //preload rpcs
                 while(stateReaderOffset < initialReaderPosition + preloadData.TotalSize)
                 {
-                    byte rpcId = Data[stateReaderOffset];
-                    byte fieldId = Data[stateReaderOffset + 1];
-                    ushort size = BitConverter.ToUInt16(Data, stateReaderOffset + 4);
-                    
+                    RPCHeader header;
+                    fixed (byte* rawData = Data)
+                        header = *(RPCHeader*)(rawData + stateReaderOffset);
                     var rpcCache = new RemoteCallsCache(
                         preloadData.EntityId,
-                        fieldId,
-                        fieldId == byte.MaxValue
-                            ? classData.RemoteCallsClient[rpcId]
-                            : classData.SyncableRemoteCallsClient[rpcId],
-                        BitConverter.ToUInt16(Data, stateReaderOffset + 2),
-                        stateReaderOffset + 6,
+                        header.FieldId,
+                        header.FieldId == byte.MaxValue
+                            ? classData.RemoteCallsClient[header.Id]
+                            : classData.SyncableRemoteCallsClient[header.Id],
+                        header.Tick,
+                        stateReaderOffset + sizeof(RPCHeader),
                         1 //TODO: count!!!
                         );
                     if (rpcCache.Delegate == null)
                     {
-                        Logger.LogError($"ZeroRPC: {rpcId}, FieldId: {fieldId}");
+                        Logger.LogError($"ZeroRPC: {header.Id}, FieldId: {header.FieldId}");
                     }
                     
                     Utils.ResizeOrCreate(ref RemoteCallsCaches, RemoteCallsCount);
                     RemoteCallsCaches[RemoteCallsCount++] = rpcCache;
-                    stateReaderOffset += 6 + size;
+                    stateReaderOffset += sizeof(RPCHeader) + header.Size;
                 }
 
                 if (stateReaderOffset != initialReaderPosition + preloadData.TotalSize)

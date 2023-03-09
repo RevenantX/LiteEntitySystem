@@ -86,22 +86,6 @@ namespace LiteEntitySystem.Internal
 #endif
         }
 
-        internal static bool IsSpan(this Type type)
-        {
-            return type.IsGenericType && typeof(Span<>) == type.GetGenericTypeDefinition();
-        }
-        
-        internal static bool IsReadonlySpan(this Type type)
-        {
-            return type != null && type.IsGenericType && typeof(ReadOnlySpan<>) == type.GetGenericTypeDefinition();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static T CreateDelegate<T>(this MethodInfo mi) where T : Delegate
-        {
-            return (T)mi.CreateDelegate(typeof(T));
-        }
-        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static Action<T> CreateSelfDelegate<T>(this MethodInfo mi)
         {

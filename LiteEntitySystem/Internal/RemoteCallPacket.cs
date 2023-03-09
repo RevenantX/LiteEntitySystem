@@ -1,52 +1,57 @@
 namespace LiteEntitySystem.Internal
 {
+    internal struct RPCHeader
+    {
+        public byte Id;
+        public byte FieldId;
+        public ushort Tick;
+        public ushort Size;
+    }
+    
     internal sealed class RemoteCallPacket
     {
-        public byte Id = byte.MaxValue;
-        public byte FieldId = byte.MaxValue;
-        public ushort Tick;
+        public RPCHeader Header;
         public byte[] Data;
-        public ushort Size;
         public ExecuteFlags Flags;
         public RemoteCallPacket Next;
 
         public void Init(ushort tick, ushort dataSize, byte rpcId, ExecuteFlags flags)
         {
-            Tick = tick;
-            Id = rpcId;
-            FieldId = byte.MaxValue;
+            Header.Tick = tick;
+            Header.Id = rpcId;
+            Header.FieldId = byte.MaxValue;
             Flags = flags;
-            Size = dataSize;
-            Utils.ResizeOrCreate(ref Data, Size);
+            Header.Size = dataSize;
+            Utils.ResizeOrCreate(ref Data, Header.Size);
         }
         
         public void Init(ushort tick, ushort dataSize, byte rpcId, ExecuteFlags flags, int count)
         {
-            Tick = tick;
-            Id = rpcId;
-            FieldId = byte.MaxValue;
+            Header.Tick = tick;
+            Header.Id = rpcId;
+            Header.FieldId = byte.MaxValue;
             Flags = flags;
-            Size = (ushort)(dataSize*count);
-            Utils.ResizeOrCreate(ref Data, Size);
+            Header.Size = (ushort)(dataSize*count);
+            Utils.ResizeOrCreate(ref Data, Header.Size);
         }
         
         public void Init(ushort tick, ushort dataSize, byte rpcId, byte fieldId)
         {
-            Tick = tick;
-            Id = rpcId;
-            FieldId = fieldId;
-            Size = dataSize;
-            Utils.ResizeOrCreate(ref Data, Size);
+            Header.Tick = tick;
+            Header.Id = rpcId;
+            Header.FieldId = fieldId;
+            Header.Size = dataSize;
+            Utils.ResizeOrCreate(ref Data, Header.Size);
             Flags = ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner;
         }
         
         public void Init(ushort tick, ushort dataSize, byte rpcId, byte fieldId, int count)
         {
-            Tick = tick;
-            Id = rpcId;
-            FieldId = fieldId;
-            Size = (ushort)(dataSize * count);
-            Utils.ResizeOrCreate(ref Data, Size);
+            Header.Tick = tick;
+            Header.Id = rpcId;
+            Header.FieldId = fieldId;
+            Header.Size = (ushort)(dataSize * count);
+            Utils.ResizeOrCreate(ref Data, Header.Size);
             Flags = ExecuteFlags.SendToOther | ExecuteFlags.SendToOwner;
         }
     }

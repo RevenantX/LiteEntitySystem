@@ -6,6 +6,28 @@ namespace LiteEntitySystem
     public static class Helpers
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe int WriteStruct<T>(this Span<byte> data, T value) where T : unmanaged
+        {
+            fixed (byte* rawData = data)
+                *(T*) rawData = value;
+            return sizeof(T);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe int ReadStruct<T>(this ReadOnlySpan<byte> data, out T value) where T : unmanaged
+        {
+            fixed (byte* rawData = data)
+                value = *(T*)rawData;
+            return sizeof(T);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe int SizeOfStruct<T>() where T : unmanaged
+        {
+            return sizeof(T);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool HasFlagFast<T>(this T e, T flag) where T : unmanaged, Enum
         {
             switch (sizeof(T))

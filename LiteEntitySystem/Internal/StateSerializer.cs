@@ -156,7 +156,7 @@ namespace LiteEntitySystem.Internal
                     int writeSize = syncableField.GetFullSyncSize();
                     *(int*)(resultData + position) = writeSize;
                     position += sizeof(int);
-                    syncableField.FullSyncWrite(_entity.ServerManager, new Span<byte>(resultData + position, writeSize));
+                    syncableField.FullSyncWrite(new Span<byte>(resultData + position, writeSize));
                     position += writeSize;
                 }
             }
@@ -201,7 +201,7 @@ namespace LiteEntitySystem.Internal
                         int writeSize = syncableField.GetFullSyncSize();
                         *(int*)(resultData + position) = writeSize;
                         position += sizeof(int);
-                        syncableField.FullSyncWrite(_entity.ServerManager, new Span<byte>(resultData + position, writeSize));
+                        syncableField.FullSyncWrite(new Span<byte>(resultData + position, writeSize));
                         position += writeSize;
                     }
                 }
@@ -243,21 +243,19 @@ namespace LiteEntitySystem.Internal
                         bool send = (rpcNode.Flags.HasFlagFast(ExecuteFlags.SendToOwner) && localControlled) ||
                                      (rpcNode.Flags.HasFlagFast(ExecuteFlags.SendToOther) && !localControlled);
 
-                        if (send && Utils.SequenceDiff(playerTick, rpcNode.Tick) < 0)
+                        if (send && Utils.SequenceDiff(playerTick, rpcNode.Header.Tick) < 0)
                         {
                             hasChanges = true;
                             //put new
-                            resultData[position] = rpcNode.Id;
-                            resultData[position + 1] = rpcNode.FieldId;
-                            *(ushort*)(resultData + position + 2) = rpcNode.Tick;
-                            *(ushort*)(resultData + position + 4) = rpcNode.Size;
+                            *(RPCHeader*)(resultData + position) = rpcNode.Header;
+                            position += sizeof(RPCHeader);
                             fixed (byte* rpcData = rpcNode.Data)
-                                Unsafe.CopyBlock(resultData + position + 6, rpcData, rpcNode.Size);
-                            position += 6 + rpcNode.Size;
+                                Unsafe.CopyBlock(resultData + position, rpcData, rpcNode.Header.Size);
+                            position += rpcNode.Header.Size;
                         }
-                        else if (Utils.SequenceDiff(rpcNode.Tick, minimalTick) < 0)
+                        else if (Utils.SequenceDiff(rpcNode.Header.Tick, minimalTick) < 0)
                         {
-                            //remove old RPCs
+                            //remove old RPCs (they should be at first place)
                             _entity.ServerManager.PoolRpc(rpcNode);
                             if (_rpcTail == _rpcHead)
                                 _rpcTail = null;

@@ -7,7 +7,7 @@ namespace LiteEntitySystem.Extensions
 {
     public class SyncString : SyncableField
     {
-        private static readonly UTF8Encoding Encoding = new UTF8Encoding(false, true);
+        private static readonly UTF8Encoding Encoding = new(false, true);
         private byte[] _stringData;
         private string _string;
         private int _size;
@@ -53,7 +53,7 @@ namespace LiteEntitySystem.Extensions
             return _size;
         }
 
-        public override unsafe void FullSyncRead(ClientEntityManager client, ReadOnlySpan<byte> dataSpan)
+        public override unsafe void FullSyncRead(ReadOnlySpan<byte> dataSpan)
         {
             fixed (byte* data = dataSpan)
             {
@@ -62,7 +62,7 @@ namespace LiteEntitySystem.Extensions
             }
         }
 
-        public override unsafe void FullSyncWrite(ServerEntityManager server, Span<byte> dataSpan)
+        public override unsafe void FullSyncWrite(Span<byte> dataSpan)
         {
             fixed (byte* data = dataSpan, stringData = _stringData)
                 Unsafe.CopyBlock(data, stringData, (uint)_size);
