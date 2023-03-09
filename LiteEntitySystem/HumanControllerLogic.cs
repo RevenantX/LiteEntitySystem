@@ -16,6 +16,12 @@ namespace LiteEntitySystem
         {
             public ushort RequestId;
             public bool Success;
+
+            public ServerResponse(ushort requestId, bool success)
+            {
+                RequestId = requestId;
+                Success = success;
+            }
         }
         
         /// <summary>
@@ -47,6 +53,7 @@ namespace LiteEntitySystem
 
         private void OnServerResponse(ServerResponse response)
         {
+            Logger.Log($"OnServerResponse Id: {response.RequestId} - {response.Success}");
             while (_awaitingRequests.Count > 0)
             {
                 var awaitingRequest = _awaitingRequests.Dequeue();
@@ -132,7 +139,7 @@ namespace LiteEntitySystem
             _packetProcessor.SubscribeNetSerializable<T, ushort>((data, requestId) =>
             {
                 onRequestReceived(data);
-                ExecuteRPC(_serverResponseRpc, new ServerResponse { RequestId = requestId, Success = true });
+                ExecuteRPC(_serverResponseRpc, new ServerResponse(requestId, true));
             });
         }
         
@@ -141,7 +148,7 @@ namespace LiteEntitySystem
             _packetProcessor.SubscribeNetSerializable<T, ushort>((data, requestId) =>
             {
                 bool success = onRequestReceived(data);
-                ExecuteRPC(_serverResponseRpc, new ServerResponse { RequestId = requestId, Success = success });
+                ExecuteRPC(_serverResponseRpc, new ServerResponse(requestId, success));
             });
         }
         
@@ -150,7 +157,7 @@ namespace LiteEntitySystem
             _packetProcessor.SubscribeReusable<T, ushort>((data, requestId) =>
             {
                 onRequestReceived(data);
-                ExecuteRPC(_serverResponseRpc, new ServerResponse { RequestId = requestId, Success = true });
+                ExecuteRPC(_serverResponseRpc, new ServerResponse(requestId, true));
             });
         }
         
@@ -159,7 +166,7 @@ namespace LiteEntitySystem
             _packetProcessor.SubscribeReusable<T, ushort>((data, requestId) =>
             {
                 bool success = onRequestReceived(data);
-                ExecuteRPC(_serverResponseRpc, new ServerResponse { RequestId = requestId, Success = success });
+                ExecuteRPC(_serverResponseRpc, new ServerResponse(requestId, success));
             });
         }
 

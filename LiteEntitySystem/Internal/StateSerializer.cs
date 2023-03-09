@@ -243,6 +243,7 @@ namespace LiteEntitySystem.Internal
                         bool send = (rpcNode.Flags.HasFlagFast(ExecuteFlags.SendToOwner) && localControlled) ||
                                      (rpcNode.Flags.HasFlagFast(ExecuteFlags.SendToOther) && !localControlled);
 
+                        //Logger.Log($"[Sever] SendRPC Tick: {rpcNode.Header.Tick}, Id: {rpcNode.Header.Id}, Player: {playerId}, EntityId: {_entity.Id}, Send: {send}");
                         if (send && Utils.SequenceDiff(playerTick, rpcNode.Header.Tick) < 0)
                         {
                             hasChanges = true;

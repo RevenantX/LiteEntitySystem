@@ -11,7 +11,7 @@ namespace LiteEntitySystem
     public enum ExecuteFlags : byte
     {
         ///<summary>Execute RPC for owner of entity</summary>
-        SendToOwner = 0,
+        SendToOwner = 1,
         
         ///<summary>Execute RPC for non owners</summary>
         SendToOther = 1 << 1,

@@ -458,7 +458,7 @@ namespace LiteEntitySystem
 
         private void ExecuteRpcFromCache(ref RemoteCallsCache rpcCache, bool checkTick)
         {
-            if (Utils.SequenceDiff(rpcCache.Tick, _stateA.Tick) <= 0 || rpcCache.Executed)
+            if (Utils.SequenceDiff(rpcCache.Tick, _stateA.Tick) < 0 || rpcCache.Executed)
                 return;
             if (checkTick && Utils.SequenceDiff(rpcCache.Tick, ServerTick) > 0)
                 return;
