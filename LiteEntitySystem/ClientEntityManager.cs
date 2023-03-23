@@ -199,7 +199,6 @@ namespace LiteEntitySystem
                 
                 fixed (byte* stateData = _stateA.Data)
                 {
-                    //TODO: not available bytes!!!
                     decodedBytes = LZ4Codec.Decode(
                         rawData + sizeof(BaselineDataHeader),
                         size - sizeof(BaselineDataHeader),
@@ -214,7 +213,15 @@ namespace LiteEntitySystem
                     while (bytesRead < _stateA.Size)
                     {
                         ushort entityId = *(ushort*)(stateData + bytesRead);
+                        //Logger.Log($"[CEM] ReadBaseline Entity: {entityId} pos: {bytesRead}");
                         bytesRead += sizeof(ushort);
+                        
+                        if (entityId == InvalidEntityId || entityId >= MaxSyncedEntityCount)
+                        {
+                            Logger.LogError($"Bad data (id > {MaxSyncedEntityCount} or Id == 0) Id: {entityId}");
+                            return;
+                        }
+
                         ReadEntityState(stateData, ref bytesRead, entityId, true);
                         if (bytesRead == -1)
                             return;
@@ -226,7 +233,7 @@ namespace LiteEntitySystem
                 _inputCommands.Clear();
                 _isSyncReceived = true;
                 _jitterTimer.Restart();
-                ConstructAndSync();
+                ConstructAndSync(true);
                 Logger.Log($"[CEM] Got baseline sync. Assigned player id: {header.PlayerId}, Original: {decodedBytes}, Tick: {header.Tick}, SendRate: {_serverSendRate}");
             }
             else
@@ -340,8 +347,6 @@ namespace LiteEntitySystem
 
         private unsafe void GoToNextState()
         {
-            for (int i = 0; i < _stateB.RemoteCallsCount; i++)
-                ExecuteRpcFromCache(ref _stateB.RemoteCallsCaches[i], false);
             _stateA.Status = ServerDataStatus.Executed;
             _stateA = _stateB;
             _simulatePosition = _stateA.Tick;
@@ -357,7 +362,7 @@ namespace LiteEntitySystem
                         return;
                 }
             }
-            ConstructAndSync();
+            ConstructAndSync(false);
             
             _timer -= _lerpTime;
 
@@ -456,35 +461,13 @@ namespace LiteEntitySystem
             }
         }
 
-        private void ExecuteRpcFromCache(ref RemoteCallsCache rpcCache, bool checkTick)
-        {
-            if (Utils.SequenceDiff(rpcCache.Tick, _stateA.Tick) < 0 || rpcCache.Executed)
-                return;
-            if (checkTick && Utils.SequenceDiff(rpcCache.Tick, ServerTick) > 0)
-                return;
-            rpcCache.Executed = true;
-            var entity = EntitiesDict[rpcCache.EntityId];
-            //Logger.Log($"Executing rpc. Entity: {rpcCache.EntityId}. Tick {rpcCache.Tick}. FieldId: {rpcCache.FieldId}");
-            if (rpcCache.FieldId == byte.MaxValue)
-            {
-                rpcCache.Delegate(entity, new ReadOnlySpan<byte>(_stateB.Data, rpcCache.Offset, rpcCache.Count));
-            }
-            else
-            {
-                rpcCache.Delegate(
-                    Utils.RefFieldValue<SyncableField>(entity, ClassDataDict[entity.ClassId].SyncableFieldOffsets[rpcCache.FieldId]), 
-                    new ReadOnlySpan<byte>(_stateB.Data, rpcCache.Offset, rpcCache.Count));
-            }
-        }
-        
         protected override unsafe void OnLogicTick()
         {
             if (_stateB != null)
             {
                 _logicLerpMsec = (float)(_timer / _lerpTime);
                 ServerTick = Utils.LerpSequence(_stateA.Tick, _stateB.Tick, _logicLerpMsec);
-                for (int i = 0; i < _stateB.RemoteCallsCount; i++)
-                    ExecuteRpcFromCache(ref _stateB.RemoteCallsCaches[i], true);
+                _stateB.ExecuteRpcs(this, ServerTick, RpcExecutionMode.Interpolated);
             }
 
             if (_inputCommands.Count > InputBufferSize)
@@ -535,7 +518,7 @@ namespace LiteEntitySystem
                         entity.Update();
                 
                         //save current
-                        Unsafe.CopyBlock(prevDataPtr, currentDataPtr, (uint)classData.InterpolatedFieldsSize);
+                        RefMagic.CopyBlock(prevDataPtr, currentDataPtr, (uint)classData.InterpolatedFieldsSize);
                         for(int i = 0; i < classData.InterpolatedCount; i++)
                         {
                             var field = classData.Fields[i];
@@ -652,7 +635,7 @@ namespace LiteEntitySystem
                             offset += sizeof(ushort);
                             
                             //put data
-                            Unsafe.CopyBlock(sendBuffer + offset, inputData, (uint)inputCommand.Length);
+                            RefMagic.CopyBlock(sendBuffer + offset, inputData, (uint)inputCommand.Length);
                             offset += inputCommand.Length;
                         }
 
@@ -692,10 +675,13 @@ namespace LiteEntitySystem
             _spawnPredictedEntities.Enqueue((_tick, e));
         }
 
-        private void ConstructAndSync()
+        private void ConstructAndSync(bool firstSync)
         {
             ServerTick = _stateA.Tick;
             
+            //execute all previous rpcs
+            _stateA.ExecuteRpcs(this, ServerTick, firstSync ? RpcExecutionMode.FirstSync : RpcExecutionMode.FastForward);
+
             //Call construct methods
             for (int i = 0; i < _entitiesToConstructCount; i++)
                 ConstructEntity(_entitiesToConstruct[i]);
@@ -715,14 +701,8 @@ namespace LiteEntitySystem
 
         private unsafe void ReadEntityState(byte* rawData, ref int readerPosition, ushort entityInstanceId, bool fullSync)
         {
-            if (entityInstanceId == InvalidEntityId || entityInstanceId >= MaxSyncedEntityCount)
-            {
-                Logger.LogError($"Bad data (id > MaxEntityCount) {entityInstanceId} >= {MaxSyncedEntityCount}");
-                readerPosition = -1;
-                return;
-            }
             var entity = EntitiesDict[entityInstanceId];
-
+            
             //full sync
             if (fullSync)
             {
@@ -768,9 +748,9 @@ namespace LiteEntitySystem
             bool writeInterpolationData = entity.IsServerControlled || fullSync;
             Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
 
+            entity.OnSyncStart();
             fixed (byte* interpDataPtr = interpolatedInitialData, predictedData = _predictedEntities[entity.Id])
             {
-                entity.OnSyncStart();
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
                     if (!fullSync && !Utils.IsBitSet(rawData + fieldsFlagsOffset, i))
@@ -779,10 +759,10 @@ namespace LiteEntitySystem
                     ref var field = ref classData.Fields[i];
                     byte* readDataPtr = rawData + readerPosition;
                     
-                    if( fullSync || 
-                        (entity.IsServerControlled && field.Flags.HasFlagFast(SyncFlags.AlwaysPredict)) || 
-                        (entity.IsLocalControlled && !field.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers)) )
-                        Unsafe.CopyBlock(predictedData + field.PredictedOffset, readDataPtr, field.Size);
+                    if(fullSync || 
+                       (entity.IsServerControlled && field.Flags.HasFlagFast(SyncFlags.AlwaysPredict)) || 
+                       (entity.IsLocalControlled && !field.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers)))
+                        RefMagic.CopyBlock(predictedData + field.PredictedOffset, readDataPtr, field.Size);
                     
                     if (field.FieldType == FieldType.SyncableSyncVar)
                     {
@@ -794,20 +774,18 @@ namespace LiteEntitySystem
                         if (field.Flags.HasFlagFast(SyncFlags.Interpolated) && writeInterpolationData)
                         {
                             //this is interpolated save for future
-                            Unsafe.CopyBlock(interpDataPtr + field.FixedOffset, readDataPtr, field.Size);
+                            RefMagic.CopyBlock(interpDataPtr + field.FixedOffset, readDataPtr, field.Size);
                         }
 
                         if (field.OnSync != null)
                         {
                             if (field.TypeProcessor.SetFromAndSync(entity, field.Offset, readDataPtr))
-                            {
                                 _syncCalls[_syncCallsCount++] = new SyncCallInfo
                                 {
                                     OnSync = field.OnSync,
                                     Entity = entity,
                                     PrevDataPos = readerPosition
                                 };
-                            }
                         }
                         else
                         {
@@ -816,19 +794,11 @@ namespace LiteEntitySystem
                     }
                     readerPosition += field.IntSize;
                 }
-                if (fullSync)
-                {
-                    for (int i = 0; i < classData.SyncableFieldOffsets.Length; i++)
-                    {
-                        int fullSyncSize = *(int*)(rawData+readerPosition);
-                        readerPosition += sizeof(int);
-                        Utils.RefFieldValue<SyncableField>(entity, classData.SyncableFieldOffsets[i]).FullSyncRead(
-                            new ReadOnlySpan<byte>(rawData + readerPosition, fullSyncSize));
-                        readerPosition += fullSyncSize;
-                    }
-                }
-                entity.OnSyncEnd();
             }
+
+            if (fullSync)
+                _stateA.ReadRPCs(rawData, ref readerPosition, new EntitySharedReference(entity.Id, entity.Version), classData);
+            entity.OnSyncEnd();
         }
     }
 }

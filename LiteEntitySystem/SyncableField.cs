@@ -6,29 +6,29 @@ namespace LiteEntitySystem
     public abstract class SyncableField
     {
         internal ushort ParentEntityId;
-        internal byte FieldId;
+        internal ExecuteFlags Flags;
 
         protected SyncableField()
         {
             ParentEntityId = EntityManager.InvalidEntityId;
         }
 
-        public virtual int GetFullSyncSize()
+        internal void InternalInit(in SyncableRPCRegistrator r)
         {
-            return 0;
+            RegisterRPC(in r);
         }
 
-        public virtual void FullSyncWrite(Span<byte> dataSpan)
+        internal void InternalOnSyncRequested()
+        {
+            OnSyncRequested();
+        }
+
+        protected virtual void OnSyncRequested()
         {
             
         }
 
-        public virtual void FullSyncRead(ReadOnlySpan<byte> dataSpan)
-        {
-            
-        }
-
-        public virtual void RegisterRPC(in SyncableRPCRegistrator r)
+        protected virtual void RegisterRPC(in SyncableRPCRegistrator r)
         {
 
         }

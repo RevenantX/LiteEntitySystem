@@ -43,4 +43,14 @@
         add
         ret
     }
+
+    .method public hidebysig static void CopyBlock(void* destination, void* source, unsigned int32 byteCount) cil managed
+    {
+        .maxstack 3
+        ldarg.0
+        ldarg.1 
+        ldarg.2
+        cpblk
+        ret
+    }
 }

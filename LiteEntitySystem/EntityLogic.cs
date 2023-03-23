@@ -273,6 +273,10 @@ namespace LiteEntitySystem
 
         internal static void SetOwner(EntityLogic entity, byte ownerId)
         {
+            if (entity.EntityManager.IsServer)
+            {
+                entity.ServerManager.OnOwnerChanged(entity);
+            }
             entity.InternalOwnerId = ownerId;
             foreach (var child in entity.Childs)
             {

@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using System.Text;
 using LiteEntitySystem.Internal;
 
@@ -28,7 +27,7 @@ namespace LiteEntitySystem.Extensions
             }
         }
 
-        public override void RegisterRPC(in SyncableRPCRegistrator r)
+        protected override void RegisterRPC(in SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, SetNewString, ref _setStringClientCall);
         }
@@ -48,24 +47,9 @@ namespace LiteEntitySystem.Extensions
             _string = Encoding.GetString(data);
         }
 
-        public override int GetFullSyncSize()
+        protected override void OnSyncRequested()
         {
-            return _size;
-        }
-
-        public override unsafe void FullSyncRead(ReadOnlySpan<byte> dataSpan)
-        {
-            fixed (byte* data = dataSpan)
-            {
-                Utils.ResizeOrCreate(ref _stringData, dataSpan.Length);
-                _string = Encoding.GetString(data, dataSpan.Length);
-            }
-        }
-
-        public override unsafe void FullSyncWrite(Span<byte> dataSpan)
-        {
-            fixed (byte* data = dataSpan, stringData = _stringData)
-                Unsafe.CopyBlock(data, stringData, (uint)_size);
+            ExecuteRPC(_setStringClientCall, new ReadOnlySpan<byte>(_stringData, 0, _size));
         }
     }
 }

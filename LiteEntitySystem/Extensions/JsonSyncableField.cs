@@ -1,6 +1,5 @@
 ﻿#if UNITY_2021_2_OR_NEWER
 using System;
-using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
 
@@ -8,25 +7,18 @@ namespace LiteEntitySystem.Extensions
 {
     public class JsonSyncableField<T> : SyncableField where T : ScriptableObject
     {
-        private static readonly UTF8Encoding Encoding = new UTF8Encoding(false, true);
+        private static readonly UTF8Encoding Encoding = new(false, true);
         
         public T Value;
 
-        public void LoadFromJson(string jsonString)
+        private RemoteCallSpan<byte> _initAction;
+
+        protected override void RegisterRPC(in SyncableRPCRegistrator r)
         {
-            if (Value == null)
-                Value = ScriptableObject.CreateInstance<T>();
-            JsonUtility.FromJsonOverwrite(jsonString, Value);
+            r.CreateClientAction(this, Init, ref _initAction);
         }
 
-        public override int GetFullSyncSize()
-        {
-            if (Value == null)
-                Value = ScriptableObject.CreateInstance<T>();
-            return Encoding.GetByteCount(JsonUtility.ToJson(Value, false));
-        }
-
-        public override unsafe void FullSyncWrite(Span<byte> dataSpan)
+        protected override void OnSyncRequested()
         {
             if (Value == null)
                 Value = ScriptableObject.CreateInstance<T>();
@@ -34,15 +26,19 @@ namespace LiteEntitySystem.Extensions
             string str = JsonUtility.ToJson(Value, false);
             byte[] stringData = new byte[Encoding.GetMaxByteCount(str.Length)];
             int size = Encoding.GetBytes(str, 0, str.Length, stringData, 0);
-
-            fixed (byte* data = dataSpan, rawData = stringData)
-                Unsafe.CopyBlock(data, rawData, (uint)size);
+            ExecuteRPC(_initAction, new ReadOnlySpan<byte>(stringData, 0, size));
         }
 
-        public override unsafe void FullSyncRead(ReadOnlySpan<byte> dataSpan)
+        private void Init(ReadOnlySpan<byte> data)
         {
-            fixed (byte* data = dataSpan)
-                LoadFromJson(Encoding.GetString(data, dataSpan.Length));
+            LoadFromJson(Encoding.GetString(data));
+        }
+
+        private void LoadFromJson(string jsonString)
+        {
+            if (Value == null)
+                Value = ScriptableObject.CreateInstance<T>();
+            JsonUtility.FromJsonOverwrite(jsonString, Value);
         }
 
         public static implicit operator T(JsonSyncableField<T> field)

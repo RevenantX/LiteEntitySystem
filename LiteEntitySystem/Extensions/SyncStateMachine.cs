@@ -13,7 +13,7 @@ namespace LiteEntitySystem.Extensions
     {
         private SyncVar<T> _state;
 
-        public SyncVar<T> CurrentState => _state;
+        public T CurrentState => _state;
 
         private readonly StateCalls[] _data;
 
@@ -44,23 +44,6 @@ namespace LiteEntitySystem.Extensions
         public void Update(float dt)
         {
             _data[_state.GetEnumValue()].OnUpdate?.Invoke(dt);
-        }
-
-        public override unsafe int GetFullSyncSize()
-        {
-            return sizeof(T);
-        }
-
-        public override unsafe void FullSyncWrite(Span<byte> dataSpan)
-        {
-            fixed(byte *data = dataSpan)
-                *(T*)data = _state;
-        }
-
-        public override unsafe void FullSyncRead(ReadOnlySpan<byte> dataSpan)
-        {
-            fixed(byte *data = dataSpan)
-                _state = *(T*)data;
         }
     }
 }

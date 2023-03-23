@@ -4,14 +4,12 @@ using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
-    internal delegate void ArrayBinding<TClass, TValue>(TClass obj, ReadOnlySpan<TValue> arr);
-
     public static class Utils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ResizeIfFull<T>(ref T[] arr, int count)
         {
-            if (count == arr.Length)
+            if (count >= arr.Length)
                 Array.Resize(ref arr, count*2);
         }
         
@@ -85,23 +83,36 @@ namespace LiteEntitySystem.Internal
             return ref RefMagic.RefFieldValueDotNet<U>(obj, offset + IntPtr.Size);
 #endif
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static T CreateDelegateHelper<T>(this MethodInfo method) where T : Delegate
+        {
+            return (T)method.CreateDelegate(typeof(T));
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static Action<T> CreateSelfDelegate<T>(this MethodInfo mi)
         {
-            return (Action<T>)mi.CreateDelegate(typeof(Action<T>));
+            return mi.CreateDelegateHelper<Action<T>>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static Action<T, TArgument> CreateSelfDelegate<T, TArgument>(this MethodInfo mi)
+        internal static Action<T, TArgument> CreateSelfDelegate<T, TArgument>(this MethodInfo mi) where TArgument : unmanaged
         {
-            return (Action<T, TArgument>)mi.CreateDelegate(typeof(Action<T, TArgument>));
+            return mi.CreateDelegateHelper<Action<T, TArgument>>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static SpanAction<T, TArgument> CreateSelfDelegateSpan<T, TArgument>(this MethodInfo mi) where TArgument : unmanaged
         {
-            return (SpanAction<T, TArgument>)mi.CreateDelegate(typeof(SpanAction<T, TArgument>));
+            return mi.CreateDelegateHelper<SpanAction<T, TArgument>>();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool SkipSync(SyncFlags flags, bool isOwned)
+        {
+            return ((flags & SyncFlags.OnlyForOwner) != 0 && !isOwned) || 
+                   ((flags & SyncFlags.OnlyForOtherPlayers) != 0 && isOwned);
         }
     }
 }

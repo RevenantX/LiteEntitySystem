@@ -141,17 +141,27 @@ namespace LiteEntitySystem.Internal
         {
             ref var classData = ref GetClassData();
             //load cache and/or init RpcIds
-            for (int i = 0; i < classData.RpcOffsets.Length; i++)
+            for (ushort i = 0; i < classData.RpcOffsets.Length; i++)
             {
-                ref var remoteCall = ref Utils.RefFieldValue<RemoteCall>(this, classData.RpcOffsets[i]);
-                remoteCall = new RemoteCall((byte)i, classData.RPCCache[i]);
-            }
-            for (int i = 0; i < classData.SyncableRpcOffsets.Length; i++)
-            {
-                var syncable = Utils.RefFieldValue<SyncableField>(this, classData.SyncableRpcOffsets[i].SyncableOffset);
-                ref var remoteCall = ref Utils.RefFieldValue<RemoteCall>(syncable, classData.SyncableRpcOffsets[i].RpcOffset);
-                remoteCall = new RemoteCall((byte)i, classData.SyncableRPCCache[i]);
-                syncable.ParentEntityId = Id;
+                var rpcOffset = classData.RpcOffsets[i];
+                if (rpcOffset.SyncableOffset == -1)
+                {
+                    ref RemoteCall remoteCall = ref Utils.RefFieldValue<RemoteCall>(this, rpcOffset.Offset);
+                    remoteCall = new RemoteCall(i, classData.RemoteCallsServer[i]);
+                }
+                else
+                {
+                    var syncable = Utils.RefFieldValue<SyncableField>(this, rpcOffset.SyncableOffset);
+                    ref var remoteCall = ref Utils.RefFieldValue<RemoteCall>(syncable, rpcOffset.Offset);
+                    remoteCall = new RemoteCall(i, classData.RemoteCallsServer[i]);
+                    syncable.ParentEntityId = Id;
+                    if (rpcOffset.Flags.HasFlagFast(SyncFlags.OnlyForOwner))
+                        syncable.Flags = ExecuteFlags.SendToOwner;
+                    else if (rpcOffset.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
+                        syncable.Flags = ExecuteFlags.SendToOther;
+                    else
+                        syncable.Flags = ExecuteFlags.SendToAll;
+                }
             }
             if(!classData.IsRpcBound)
             {
@@ -160,16 +170,15 @@ namespace LiteEntitySystem.Internal
                     ref var field = ref classData.Fields[i];
                     if (field.FieldType == FieldType.SyncVarWithNotification)
                     {
-                        ref var a = ref Utils.RefFieldValue<byte>(this, field.Offset + field.IntSize);
+                        ref byte a = ref Utils.RefFieldValue<byte>(this, field.Offset + field.IntSize);
                         a = (byte)i;
                     }
                 }
                 RegisterRPC(new RPCRegistrator());
-                for (int i = 0; i < classData.SyncableFieldOffsets.Length; i++)
+                //Logger.Log($"RegisterRPCs for class: {classData.ClassId}");
+                for (int i = 0; i < classData.SyncableFields.Length; i++)
                 {
-                    var syncable = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFieldOffsets[i]);
-                    syncable.FieldId = (byte)i;
-                    syncable.RegisterRPC(new SyncableRPCRegistrator(this));
+                    Utils.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset).InternalInit(new SyncableRPCRegistrator(this));
                 }
                 classData.IsRpcBound = true;
             }

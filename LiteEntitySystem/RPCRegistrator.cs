@@ -18,10 +18,10 @@ namespace LiteEntitySystem
     [StructLayout(LayoutKind.Sequential)]
     public struct RemoteCall
     {
-        internal readonly byte RpcId;
+        internal readonly ushort RpcId;
         internal Delegate CachedAction;
 
-        internal RemoteCall(byte rpcId, Delegate cachedAction)
+        internal RemoteCall(ushort rpcId, Delegate cachedAction)
         {
             RpcId = rpcId;
             CachedAction = cachedAction;
@@ -31,14 +31,14 @@ namespace LiteEntitySystem
     [StructLayout(LayoutKind.Sequential)]
     public struct RemoteCall<T> where T : unmanaged
     {
-        internal readonly byte RpcId;
+        internal readonly ushort RpcId;
         internal Delegate CachedAction;
     }
     
     [StructLayout(LayoutKind.Sequential)]
     public struct RemoteCallSpan<T> where T : unmanaged
     {
-        internal readonly byte RpcId;
+        internal readonly ushort RpcId;
         internal Delegate CachedAction;
     }
     
@@ -61,7 +61,7 @@ namespace LiteEntitySystem
 
         private static Delegate Create<TEntity, T>(
             TEntity self,
-            byte rpcId,
+            ushort rpcId,
             Delegate methodToCall,
             ExecuteFlags flags,
             RPCType type) where TEntity : InternalEntity where T : unmanaged
@@ -133,7 +133,7 @@ namespace LiteEntitySystem
                 }
                 cachedAction = t;
             }
-            classData.RPCCache[rpcId] = cachedAction;
+            classData.RemoteCallsServer[rpcId] = cachedAction;
             return cachedAction;
         }
         
@@ -183,7 +183,7 @@ namespace LiteEntitySystem
             _entity = entity;
         }
 
-        private Delegate CreateAction<T, TSyncField>(TSyncField self, Delegate methodToCall, byte rpcId, RPCType type)
+        private Delegate CreateAction<T, TSyncField>(TSyncField self, Delegate methodToCall, ushort rpcId, RPCType type)
             where T : unmanaged where TSyncField : SyncableField
         {
             if (methodToCall.Target != self)
@@ -195,16 +195,16 @@ namespace LiteEntitySystem
                 var serverManager = _entity.ServerManager;
                 cachedAction = type switch
                 {
-                    RPCType.NoParams => (Action<SyncableField>) (s => serverManager.AddSyncableCall(s.ParentEntityId, rpcId, s.FieldId)),
-                    RPCType.OneValue => (Action<SyncableField, T>) ((s, value) => serverManager.AddSyncableCall(s.ParentEntityId, rpcId, s.FieldId, value)),
-                    RPCType.Array => (SpanAction<SyncableField, T>) ((s, value) => serverManager.AddSyncableCall(s.ParentEntityId, rpcId, s.FieldId, value)),
+                    RPCType.NoParams => (Action<SyncableField>) (s => serverManager.AddRemoteCall(s.ParentEntityId, rpcId, s.Flags)),
+                    RPCType.OneValue => (Action<SyncableField, T>) ((s, value) => serverManager.AddRemoteCall(s.ParentEntityId, value, rpcId, s.Flags)),
+                    RPCType.Array => (SpanAction<SyncableField, T>) ((s, value) => serverManager.AddRemoteCall(s.ParentEntityId, value, rpcId, s.Flags)),
                     _ => null
                 };
-                classData.SyncableRPCCache[rpcId] = cachedAction;
+                classData.RemoteCallsServer[rpcId] = cachedAction;
             }
             else
             {
-                classData.SyncableRemoteCallsClient[rpcId] = type switch
+                classData.RemoteCallsClient[rpcId] = type switch
                 {
                     RPCType.NoParams => MethodCallGenerator.GenerateNoParams<TSyncField>(methodToCall.Method),
                     RPCType.OneValue => MethodCallGenerator.Generate<TSyncField, T>(methodToCall.Method),
@@ -235,7 +235,7 @@ namespace LiteEntitySystem
     {
         public static unsafe MethodCallDelegate Generate<TClass, TValue>(MethodInfo method) where TValue : unmanaged
         {
-            var d = (Action<TClass, TValue>)method.CreateDelegate(typeof(Action<TClass, TValue>));
+            var d = method.CreateDelegateHelper<Action<TClass,TValue>>();
             return (classPtr, buffer) =>
             {
                 fixed(byte* data = buffer)
@@ -245,13 +245,13 @@ namespace LiteEntitySystem
         
         public static MethodCallDelegate GenerateSpan<TClass, TValue>(MethodInfo method) where TValue : unmanaged
         {
-            var d = (ArrayBinding<TClass, TValue>)method.CreateDelegate(typeof(ArrayBinding<TClass, TValue>));
+            var d =  method.CreateDelegateHelper<SpanAction<TClass, TValue>>();
             return (classPtr, buffer) => d((TClass)classPtr, MemoryMarshal.Cast<byte, TValue>(buffer));
         }
 
         public static MethodCallDelegate GenerateNoParams<TClass>(MethodInfo method) 
         {
-            var d = (Action<TClass>)method.CreateDelegate(typeof(Action<TClass>));
+            var d =  method.CreateDelegateHelper<Action<TClass>>();
             return (classPtr, _) => d((TClass)classPtr);
         }
     }

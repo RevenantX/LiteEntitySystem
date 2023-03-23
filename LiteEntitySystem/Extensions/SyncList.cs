@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem.Extensions
 {
@@ -17,13 +17,26 @@ namespace LiteEntitySystem.Extensions
         private RemoteCall _clearAction;
         private RemoteCall _fullClearAction;
         private RemoteCall<int> _removeAtAction;
+        private RemoteCallSpan<T> _initAction;
 
-        public override void RegisterRPC(in SyncableRPCRegistrator r)
+        protected override void RegisterRPC(in SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, Add, ref _addAction);
             r.CreateClientAction(this, Clear, ref _clearAction);
             r.CreateClientAction(this, FullClear, ref _fullClearAction);
             r.CreateClientAction(this, RemoveAt, ref _removeAtAction);
+            r.CreateClientAction(this, Init, ref _initAction);
+        }
+
+        protected override void OnSyncRequested()
+        {
+            ExecuteRPC(_initAction, new ReadOnlySpan<T>(_data, 0, _count));
+        }
+
+        private void Init(ReadOnlySpan<T> data)
+        {
+            Utils.ResizeIfFull(ref _data, data.Length);
+            data.CopyTo(_data);
         }
 
         public SyncList()
@@ -126,34 +139,6 @@ namespace LiteEntitySystem.Extensions
 
         public ref T this[int index] => ref _data[index];
         T IReadOnlyList<T>.this[int index] => _data[index];
-
-        public override unsafe int GetFullSyncSize()
-        {
-            return sizeof(T) * _count;
-        }
-
-        public override unsafe void FullSyncWrite(Span<byte> dataSpan)
-        {
-            byte[] byteData = Unsafe.As<byte[]>(_data);
-            fixed (byte* data = dataSpan)
-            {
-                fixed(void* rawData = byteData)
-                    Unsafe.CopyBlock(data, rawData, (uint)dataSpan.Length);
-            }
-        }
-
-        public override unsafe void FullSyncRead(ReadOnlySpan<byte> dataSpan)
-        {
-            _count = dataSpan.Length / sizeof(T);
-            if (_data.Length < _count)
-                Array.Resize(ref _data, Math.Max(_data.Length * 2, _count));
-            byte[] byteData = Unsafe.As<byte[]>(_data);
-            fixed (byte* data = dataSpan)
-            {
-                fixed (void* rawData = byteData)
-                    Unsafe.CopyBlock(rawData, data, (uint)dataSpan.Length);
-            }
-        }
 
         public IEnumerator<T> GetEnumerator()
         {

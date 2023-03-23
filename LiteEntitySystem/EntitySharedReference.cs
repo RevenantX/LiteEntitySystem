@@ -72,5 +72,10 @@ namespace LiteEntitySystem
         {
             return new EntitySharedReference(entity);
         }
+
+        public override string ToString()
+        {
+            return $"Id: {Id}, Version: {Version}";
+        }
     }
 }

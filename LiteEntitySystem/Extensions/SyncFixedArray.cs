@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Extensions
 {
@@ -13,6 +12,7 @@ namespace LiteEntitySystem.Extensions
         
         public readonly T[] Data;
         private RemoteCall<SetCallData> _setRpcAction;
+        private RemoteCallSpan<T> _initArrayAction;
 
         public readonly int Length;
 
@@ -22,9 +22,20 @@ namespace LiteEntitySystem.Extensions
             Data = new T[size];
         }
 
-        public override void RegisterRPC(in SyncableRPCRegistrator registrator)
+        protected override void OnSyncRequested()
         {
-            registrator.CreateClientAction(this, SetValueRPC, ref _setRpcAction);
+            ExecuteRPC(_initArrayAction, Data);
+        }
+
+        protected override void RegisterRPC(in SyncableRPCRegistrator r)
+        {
+            r.CreateClientAction(this, SetValueRPC, ref _setRpcAction);
+            r.CreateClientAction(this, InitArrayRPC, ref _initArrayAction);
+        }
+
+        private void InitArrayRPC(ReadOnlySpan<T> data)
+        {
+            data.CopyTo(Data);
         }
         
         private void SetValueRPC(SetCallData setCallData)
@@ -40,25 +51,6 @@ namespace LiteEntitySystem.Extensions
                 Data[index] = value;
                 ExecuteRPC(_setRpcAction, new SetCallData { Value = value, Index = (ushort)index });
             }
-        }
-
-        public override unsafe int GetFullSyncSize()
-        {
-            return sizeof(T) * Length;
-        }
-
-        public override unsafe void FullSyncWrite(Span<byte> dataSpan)
-        {
-            byte[] byteData = Unsafe.As<byte[]>(Data);
-            fixed(byte* rawData = byteData, data = dataSpan)
-                Unsafe.CopyBlock(data, rawData, (uint)dataSpan.Length);
-        }
-
-        public override unsafe void FullSyncRead(ReadOnlySpan<byte> dataSpan)
-        {
-            byte[] byteData = Unsafe.As<byte[]>(Data);
-            fixed(byte* rawData = byteData, data = dataSpan)
-                Unsafe.CopyBlock(rawData, data, (uint)dataSpan.Length);
         }
     }
 }
