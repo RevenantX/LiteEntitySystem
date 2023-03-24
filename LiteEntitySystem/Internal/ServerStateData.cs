@@ -183,9 +183,12 @@ namespace LiteEntitySystem.Internal
                     return;
                 if (mode != RpcExecutionMode.FirstSync)
                 {
-                    if (Utils.SequenceDiff(rpcCache.Header.Tick, serverTick) < 0)
+                    int sequenceDifference = Utils.SequenceDiff(rpcCache.Header.Tick, serverTick);
+                    if (sequenceDifference < 0)
                         return;
-                    if (mode == RpcExecutionMode.Interpolated && Utils.SequenceDiff(rpcCache.Header.Tick, serverTick) > 0)
+                    if (mode == RpcExecutionMode.FastForward && sequenceDifference == 0)
+                        return;
+                    if (mode == RpcExecutionMode.Interpolated && sequenceDifference > 0)
                         return;
                 }
                 rpcCache.Executed = true;
