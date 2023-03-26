@@ -182,7 +182,7 @@ namespace LiteEntitySystem.Internal
                 {
                     if (Utils.SequenceDiff(rpc.Header.Tick, entityManager.ServerTick) > 0)
                         return;
-                    if (Utils.SequenceDiff(rpc.Header.Tick, minimalTick) < 0)
+                    if (Utils.SequenceDiff(rpc.Header.Tick, minimalTick) <= 0)
                         return;
                     //Logger.Log($"Executing rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}. Min: {minimalTick}, A->B: {entityManager.ServerTick}");
                 }

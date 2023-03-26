@@ -250,7 +250,7 @@ namespace LiteEntitySystem
                 _inputCommands.Clear();
                 _isSyncReceived = true;
                 _jitterTimer.Restart();
-                ConstructAndSync(true, firstState.Tick);
+                ConstructAndSync(true);
                 Logger.Log($"[CEM] Got baseline sync. Assigned player id: {header.PlayerId}, Original: {decodedBytes}, Tick: {header.Tick}, SendRate: {_serverSendRate}");
             }
             else
@@ -384,7 +384,7 @@ namespace LiteEntitySystem
                         return;
                 }
             }
-            ConstructAndSync(false, stateA.Tick);
+            ConstructAndSync(false);
             
             _timer -= _lerpTime;
 
@@ -704,11 +704,12 @@ namespace LiteEntitySystem
             _spawnPredictedEntities.Enqueue((_tick, e));
         }
 
-        private void ConstructAndSync(bool firstSync, ushort minimalTick)
+        private void ConstructAndSync(bool firstSync)
         {
             ref var stateA = ref _receivedStates[_stateAIndex];
 
             //execute all previous rpcs
+            ushort minimalTick = ServerTick;
             ServerTick = stateA.Tick;
             stateA.ExecuteRpcs(this, minimalTick, firstSync);
 
