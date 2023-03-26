@@ -40,7 +40,7 @@ namespace LiteEntitySystem.Internal
     internal static class InternalPackets
     {
         public const byte DiffSync = 1;
-        public const byte ClientSync = 2;
+        public const byte ClientInput = 2;
         public const byte BaselineSync = 3;
         public const byte DiffSyncLast = 4;
         public const byte ClientRequest = 5;

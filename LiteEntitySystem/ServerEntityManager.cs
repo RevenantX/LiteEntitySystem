@@ -279,7 +279,7 @@ namespace LiteEntitySystem
                 InputProcessor.ReadClientRequest(this, reader);
                 return;
             }
-            if (packetType != InternalPackets.ClientSync)
+            if (packetType != InternalPackets.ClientInput)
             {
                 Logger.LogWarning($"[SEM] Unknown packet type: {packetType}");
                 return;
@@ -349,11 +349,8 @@ namespace LiteEntitySystem
                     for (ushort i = FirstEntityId; i <= MaxSyncedEntityId; i++)
                         maxBaseline += _stateSerializers[i].GetMaximumSize();
                     if (_packetBuffer.Length < maxBaseline)
-                    {
                         _packetBuffer = new byte[maxBaseline + maxBaseline / 2];
-                        _packetBuffer[0] = HeaderByte;
-                    }
-                    int maxCompressedSize = LZ4Codec.MaximumOutputSize(_packetBuffer.Length);
+                    int maxCompressedSize = LZ4Codec.MaximumOutputSize(_packetBuffer.Length) + sizeof(BaselineDataHeader);
                     if (_compressionBuffer.Length < maxCompressedSize)
                         _compressionBuffer = new byte[maxCompressedSize];
                 }
@@ -377,11 +374,11 @@ namespace LiteEntitySystem
                     int encodedLength = LZ4Codec.Encode(
                         packetBuffer,
                         originalLength,
-                        compressionBuffer,
-                        _compressionBuffer.Length,
+                        compressionBuffer + sizeof(BaselineDataHeader),
+                        _compressionBuffer.Length - sizeof(BaselineDataHeader),
                         LZ4Level.L00_FAST);
                     
-                    *(BaselineDataHeader*)packetBuffer = new BaselineDataHeader
+                    *(BaselineDataHeader*)compressionBuffer = new BaselineDataHeader
                     {
                         UserHeader = HeaderByte,
                         PacketType = InternalPackets.BaselineSync,
@@ -390,8 +387,7 @@ namespace LiteEntitySystem
                         PlayerId = player.Id,
                         SendRate = (byte)SendRate
                     };
-                    RefMagic.CopyBlock(packetBuffer + sizeof(BaselineDataHeader), compressionBuffer, (uint)encodedLength);
-                    player.Peer.Send(_packetBuffer, 0, sizeof(BaselineDataHeader) + encodedLength, DeliveryMethod.ReliableOrdered);
+                    player.Peer.Send(_compressionBuffer, 0, sizeof(BaselineDataHeader) + encodedLength, DeliveryMethod.ReliableOrdered);
                     player.StateATick = _tick;
                     player.CurrentServerTick = _tick;
                     player.State = NetPlayerState.WaitingForFirstInput;
@@ -406,6 +402,7 @@ namespace LiteEntitySystem
                 
                 //Partial diff sync
                 var header = (DiffPartHeader*)packetBuffer;
+                header->UserHeader = HeaderByte;
                 header->Part = 0;
                 header->Tick = _tick;
                 int writePosition = sizeof(DiffPartHeader);

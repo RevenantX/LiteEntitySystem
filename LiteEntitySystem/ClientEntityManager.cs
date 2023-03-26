@@ -125,7 +125,7 @@ namespace LiteEntitySystem
         {
             _localPeer = localPeer;
             _sendBuffer[0] = headerByte;
-            _sendBuffer[1] = InternalPackets.ClientSync;
+            _sendBuffer[1] = InternalPackets.ClientInput;
 
             AliveEntities.SubscribeToConstructed(OnAliveConstructed, false);
             AliveEntities.OnDestroyed += OnAliveDestroyed;
