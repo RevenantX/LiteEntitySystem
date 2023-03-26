@@ -14,12 +14,9 @@ namespace LiteEntitySystem.Internal
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct FirstPartHeader
+    internal struct LastPartData
     {
-        public byte UserHeader;
-        public byte PacketType;
-        public byte Part;
-        public ushort Tick;
+        public ushort Mtu;
         public ushort LastProcessedTick;
         public ushort LastReceivedTick;
     }

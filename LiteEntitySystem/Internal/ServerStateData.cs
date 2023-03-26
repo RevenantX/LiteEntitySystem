@@ -154,12 +154,7 @@ namespace LiteEntitySystem.Internal
                         continue;
                     var field = fields[i];
                     if (entity.IsServerControlled && field.Flags.HasFlagFast(SyncFlags.Interpolated))
-                    {
-                        preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache
-                        (
-                            i, stateReaderOffset
-                        );
-                    }
+                        preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache(i, stateReaderOffset);
                     stateReaderOffset += field.IntSize;
                 }
 
@@ -251,55 +246,26 @@ namespace LiteEntitySystem.Internal
                 return;
             }
             Status = ServerDataStatus.Partial;
-            int partDataSize;
-            
-            if (partHeader.Part == 0)
+            if (partHeader.PacketType == InternalPackets.DiffSyncLast)
             {
-                //First packet processing
-                var firstPartHeader = (FirstPartHeader*)rawData;
-                ProcessedTick = firstPartHeader->LastProcessedTick;
-                LastReceivedTick = firstPartHeader->LastReceivedTick;
-                partDataSize = partSize - sizeof(FirstPartHeader);
-                rawData += sizeof(FirstPartHeader);
-                
-                //for one part packets
-                if (partHeader.PacketType == InternalPackets.DiffSyncLast)
-                {
-                    Size = partDataSize;
-                    Utils.ResizeIfFull(ref Data, partDataSize);
-                    fixed(byte* stateData = Data)
-                        RefMagic.CopyBlock(stateData, rawData, (uint)partDataSize);
-                    Status = ServerDataStatus.Ready;
-                    return;
-                }
-                if(_partMtu == 0)
-                    _partMtu = (ushort)partDataSize;
+                partSize -= sizeof(LastPartData);
+                var lastPartData = *(LastPartData*)(rawData + partSize);
+                _totalPartsCount = partHeader.Part + 1;
+                _partMtu = (ushort)(lastPartData.Mtu - sizeof(DiffPartHeader));
+                LastReceivedTick = lastPartData.LastReceivedTick;
+                ProcessedTick = lastPartData.LastProcessedTick;
+                //Logger.Log($"TPC: {partHeader.Part} {_partMtu}, LastReceivedTick: {LastReceivedTick}, LastProcessedTick: {ProcessedTick}");
             }
-            else
-            {
-                partDataSize = partSize - sizeof(DiffPartHeader);
-                if (partHeader.PacketType == InternalPackets.DiffSyncLast)
-                {
-                    partDataSize -= sizeof(ushort);
-                    _totalPartsCount = partHeader.Part + 1;
-                    if (_partMtu == 0)  //read MTU at last packet from end
-                    {
-                        _partMtu = *(ushort*)(rawData + partSize - sizeof(ushort));
-                        Utils.ResizeIfFull(ref Data, _partMtu * _totalPartsCount);
-                    }
-                    //Debug.Log($"TPC: {partNumber} {serverState.TotalPartsCount}");
-                }
-                else if (_partMtu == 0)
-                {
-                    _partMtu = (ushort)partDataSize;
-                    Utils.ResizeIfFull(ref Data, _partMtu * (partHeader.Part + 1));
-                }
-                rawData += sizeof(DiffPartHeader);
-            }
+            partSize -= sizeof(DiffPartHeader);
+            if(_partMtu == 0)
+                _partMtu = (ushort)partSize;
+            Utils.ResizeIfFull(ref Data, _totalPartsCount > 1 
+                ? _partMtu * _totalPartsCount 
+                : _partMtu * partHeader.Part + partSize);
             fixed(byte* stateData = Data)
-                RefMagic.CopyBlock(stateData + _partMtu * partHeader.Part, rawData, (uint)partDataSize);
+                RefMagic.CopyBlock(stateData + _partMtu * partHeader.Part, rawData + sizeof(DiffPartHeader), (uint)partSize);
             _receivedParts[partHeader.Part] = true;
-            Size += partDataSize;
+            Size += partSize;
             _receivedPartsCount++;
             _maxReceivedPart = Math.Max(_maxReceivedPart, partHeader.Part);
             if (_receivedPartsCount == _totalPartsCount)

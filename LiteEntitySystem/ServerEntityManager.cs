@@ -405,15 +405,12 @@ namespace LiteEntitySystem
                 }
                 
                 //Partial diff sync
-                var header = (FirstPartHeader*)packetBuffer;
+                var header = (DiffPartHeader*)packetBuffer;
                 header->Part = 0;
                 header->Tick = _tick;
-                header->LastProcessedTick = player.LastProcessedTick;
-                header->LastReceivedTick = player.LastReceivedTick;
-                int writePosition = sizeof(FirstPartHeader);
+                int writePosition = sizeof(DiffPartHeader);
                 
-                //minus ushort MTU value at end of last packet
-                int mtu = player.Peer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable) - sizeof(ushort);
+                ushort maxPartSize = (ushort)(player.Peer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable) - sizeof(LastPartData));
                 for (ushort eId = FirstEntityId; eId <= MaxSyncedEntityId; eId++)
                 {
                     var diffResult = _stateSerializers[eId].MakeDiff(
@@ -429,7 +426,7 @@ namespace LiteEntitySystem
                     }
                     else if (diffResult == DiffResult.Done)
                     {
-                        int overflow = writePosition - mtu;
+                        int overflow = writePosition - maxPartSize;
                         while (overflow > 0)
                         {
                             if (header->Part == MaxParts-1)
@@ -440,25 +437,27 @@ namespace LiteEntitySystem
                             }
                             header->PacketType = InternalPackets.DiffSync;
                             //Logger.LogWarning($"P:{pidx} Sending diff part {*partCount}: {_tick}");
-                            player.Peer.Send(_packetBuffer, 0, mtu, DeliveryMethod.Unreliable);
+                            player.Peer.Send(_packetBuffer, 0, maxPartSize, DeliveryMethod.Unreliable);
                             header->Part++;
 
                             //repeat in next packet
-                            RefMagic.CopyBlock(packetBuffer + sizeof(DiffPartHeader), packetBuffer + mtu, (uint)overflow);
+                            RefMagic.CopyBlock(packetBuffer + sizeof(DiffPartHeader), packetBuffer + maxPartSize, (uint)overflow);
                             writePosition = sizeof(DiffPartHeader) + overflow;
-                            overflow = writePosition - mtu;
+                            overflow = writePosition - maxPartSize;
                         }
                     }
                     //else skip
                 }
                 //Debug.Log($"PARTS: {partCount} {_netDataWriter.Data[4]}");
-                header->PacketType = InternalPackets.DiffSyncLast; //lastPart flag
-                if (header->Part > 0)
+                header->PacketType = InternalPackets.DiffSyncLast;
+                //put mtu at last packet
+                *(LastPartData*)(packetBuffer + writePosition) = new LastPartData
                 {
-                    //put mtu at last packet
-                    *(ushort*)(packetBuffer + writePosition) = (ushort)(mtu + sizeof(ushort));
-                    writePosition += sizeof(ushort);
-                }
+                    LastProcessedTick = player.LastProcessedTick,
+                    LastReceivedTick = player.LastReceivedTick,
+                    Mtu = maxPartSize
+                };
+                writePosition += sizeof(LastPartData);
                 player.Peer.Send(_packetBuffer, 0, writePosition, DeliveryMethod.Unreliable);
             }
 
