@@ -61,26 +61,35 @@ namespace LiteEntitySystem.Internal
         Interpolated
     }
     
-    internal sealed class ServerStateData
+    internal struct ServerStateData
     {
-        public byte[] Data = new byte[1500];
+        public byte[] Data;
         public int Size;
         public ushort Tick;
         public ushort ProcessedTick;
         public ushort LastReceivedTick;
-        public StatePreloadData[] PreloadDataArray = new StatePreloadData[32];
+        public StatePreloadData[] PreloadDataArray;
         public int PreloadDataCount;
-        public int[] InterpolatedFields = new int[8];
+        public int[] InterpolatedFields;
         public int InterpolatedCount;
-        public int RemoteCallsCount;
-        public RemoteCallsCache[] RemoteCallsCaches = new RemoteCallsCache[32];
         public ServerDataStatus Status;
 
-        private readonly bool[] _receivedParts = new bool[EntityManager.MaxParts];
+        private int _remoteCallsCount;
+        private RemoteCallsCache[] _remoteCallsCaches;
+        private bool[] _receivedParts;
         private int _totalPartsCount;
         private int _receivedPartsCount;
         private byte _maxReceivedPart;
         private ushort _partMtu;
+
+        public void Init()
+        {
+            Data = new byte[1500];
+            PreloadDataArray = new StatePreloadData[32];
+            InterpolatedFields = new int[8];
+            _remoteCallsCaches = new RemoteCallsCache[32];
+            _receivedParts = new bool[EntityManager.MaxParts];
+        }
 
         public unsafe void Preload(InternalEntity[] entityDict)
         {
@@ -171,9 +180,9 @@ namespace LiteEntitySystem.Internal
         
         public void ExecuteRpcs(EntityManager entityManager, ushort serverTick, RpcExecutionMode mode)
         {
-            for (int i = 0; i < RemoteCallsCount; i++)
+            for (int i = 0; i < _remoteCallsCount; i++)
             {
-                ref var rpcCache = ref RemoteCallsCaches[i];
+                ref var rpcCache = ref _remoteCallsCaches[i];
                 if (rpcCache.Executed)
                     return;
                 if (mode != RpcExecutionMode.FirstSync)
@@ -204,12 +213,12 @@ namespace LiteEntitySystem.Internal
 
         public unsafe void ReadRPCs(byte* rawData, ref int position, EntitySharedReference entityId, EntityClassData classData)
         {
-            int prevCount = RemoteCallsCount;
-            RemoteCallsCount += *(ushort*)(rawData + position);
-            Utils.ResizeOrCreate(ref RemoteCallsCaches, RemoteCallsCount);
+            int prevCount = _remoteCallsCount;
+            _remoteCallsCount += *(ushort*)(rawData + position);
+            Utils.ResizeOrCreate(ref _remoteCallsCaches, _remoteCallsCount);
             //Logger.Log($"[CEM] ReadRPC Entity: {entityId.Id} Count: {RemoteCallsCount} posAfterData: {position}");
             position += sizeof(ushort);
-            for (int i = prevCount; i < RemoteCallsCount; i++)
+            for (int i = prevCount; i < _remoteCallsCount; i++)
             {
                 var header = *(RPCHeader*)(rawData + position);
                 position += sizeof(RPCHeader);
@@ -219,7 +228,7 @@ namespace LiteEntitySystem.Internal
                 {
                     Logger.LogError($"ZeroRPC: {header.Id}");
                 }
-                RemoteCallsCaches[i] = rpcCache;
+                _remoteCallsCaches[i] = rpcCache;
                 position += header.TypeSize * header.Count;
             }
         }
@@ -236,7 +245,7 @@ namespace LiteEntitySystem.Internal
                 _maxReceivedPart = 0;
                 _receivedPartsCount = 0;
                 _totalPartsCount = 0;
-                RemoteCallsCount = 0;
+                _remoteCallsCount = 0;
                 Size = 0;
                 _partMtu = 0;
             }

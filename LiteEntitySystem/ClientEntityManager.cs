@@ -19,12 +19,24 @@ namespace LiteEntitySystem
         /// </summary>
         public ushort ServerTick { get; private set; }
         
+        /// <summary>
+        /// Current rollback tick (valid only in Rollback state)
+        /// </summary>
         public ushort RollBackTick { get; private set; }
 
-        public ushort RawServerTick => _stateA != null ? _stateA.Tick : (ushort)0;
+        /// <summary>
+        /// Current state server tick
+        /// </summary>
+        public ushort RawServerTick => _stateAIndex != -1 ? _receivedStates[_stateAIndex].Tick : (ushort)0;
 
-        public ushort RawTargetServerTick => _stateB != null ? _stateB.Tick : RawServerTick;
+        /// <summary>
+        /// Target state server tick
+        /// </summary>
+        public ushort RawTargetServerTick => _stateBIndex != -1 ? _receivedStates[_stateBIndex].Tick : RawServerTick;
 
+        /// <summary>
+        /// Our local player
+        /// </summary>
         public NetPlayer LocalPlayer => _localPlayer;
         
         /// <summary>
@@ -35,9 +47,12 @@ namespace LiteEntitySystem
         /// <summary>
         /// Player tick processed by server
         /// </summary>
-        public ushort LastProcessedTick => _stateA?.ProcessedTick ?? 0;
+        public ushort LastProcessedTick => _stateAIndex != -1 ? _receivedStates[_stateAIndex].ProcessedTick : (ushort)0;
 
-        public ushort LastReceivedTick => _stateA?.LastReceivedTick ?? 0;
+        /// <summary>
+        /// Last received player tick by server
+        /// </summary>
+        public ushort LastReceivedTick => _stateAIndex != -1 ? _receivedStates[_stateAIndex].LastReceivedTick : (ushort)0;
 
         /// <summary>
         /// Send rate of server
@@ -55,15 +70,15 @@ namespace LiteEntitySystem
         private readonly ServerStateData[] _receivedStates = new ServerStateData[MaxSavedStateDiff];
         private readonly Queue<byte[]> _inputCommands = new (InputBufferSize);
         private readonly Queue<byte[]> _inputPool = new (InputBufferSize);
-        private readonly Queue<(ushort, EntityLogic)> _spawnPredictedEntities = new ();
+        private readonly Queue<(ushort id, EntityLogic entity)> _spawnPredictedEntities = new ();
         private readonly byte[][] _interpolatedInitialData = new byte[MaxEntityCount][];
         private readonly byte[][] _interpolatePrevData = new byte[MaxEntityCount][];
         private readonly byte[][] _predictedEntities = new byte[MaxSyncedEntityCount][];
         private readonly byte[] _sendBuffer = new byte[NetConstants.MaxPacketSize];
 
         private ServerSendRate _serverSendRate;
-        private ServerStateData _stateA;
-        private ServerStateData _stateB;
+        private int _stateAIndex = -1;
+        private int _stateBIndex = -1;
         private float _lerpTime;
         private double _timer;
         private ushort _readyStates;
@@ -88,7 +103,7 @@ namespace LiteEntitySystem
         private float _adaptiveMiddlePoint = 3f;
         private readonly float[] _jitterSamples = new float[10];
         private int _jitterSampleIdx;
-        private readonly Stopwatch _jitterTimer = new ();
+        private readonly Stopwatch _jitterTimer = new();
         
         //local player
         private NetPlayer _localPlayer;
@@ -115,7 +130,10 @@ namespace LiteEntitySystem
             AliveEntities.SubscribeToConstructed(OnAliveConstructed, false);
             AliveEntities.OnDestroyed += OnAliveDestroyed;
             for (int i = 0; i < MaxSavedStateDiff; i++)
+            {
                 _receivedStates[i] = new ServerStateData();
+                _receivedStates[i].Init();
+            }
         }
 
         private unsafe void OnAliveConstructed(InternalEntity entity)
@@ -164,9 +182,9 @@ namespace LiteEntitySystem
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private ref ServerStateData GetStateFromTick(ushort tick)
+        private int GetStateIndex(ushort tick)
         {
-            return ref _receivedStates[(tick / (byte)_serverSendRate) % MaxSavedStateDiff];
+            return (tick / (byte)_serverSendRate) % MaxSavedStateDiff;
         }
 
         /// <summary>
@@ -187,30 +205,30 @@ namespace LiteEntitySystem
                 //read header and decode
                 int decodedBytes;
                 var header = *(BaselineDataHeader*)rawData;
-                _stateA = new ServerStateData
-                {
-                    Size = header.OriginalLength,
-                    Tick = header.Tick,
-                    Data = new byte[header.OriginalLength]
-                };
+                _serverSendRate = (ServerSendRate)header.SendRate;
+                _stateAIndex = GetStateIndex(header.Tick);
+                _stateBIndex = -1;
+                ref var firstState = ref _receivedStates[_stateAIndex];
+                firstState.Size = header.OriginalLength;
+                firstState.Tick = header.Tick;
+                firstState.Data = new byte[header.OriginalLength];
                 InternalPlayerId = header.PlayerId;
                 _localPlayer = new NetPlayer(_localPeer, InternalPlayerId);
-                _serverSendRate = (ServerSendRate)header.SendRate;
-                
-                fixed (byte* stateData = _stateA.Data)
+
+                fixed (byte* stateData = firstState.Data)
                 {
                     decodedBytes = LZ4Codec.Decode(
                         rawData + sizeof(BaselineDataHeader),
                         size - sizeof(BaselineDataHeader),
                         stateData,
-                        _stateA.Size);
+                        firstState.Size);
                     if (decodedBytes != header.OriginalLength)
                     {
                         Logger.LogError("Error on decompress");
                         return;
                     }
                     int bytesRead = 0;
-                    while (bytesRead < _stateA.Size)
+                    while (bytesRead < firstState.Size)
                     {
                         ushort entityId = *(ushort*)(stateData + bytesRead);
                         //Logger.Log($"[CEM] ReadBaseline Entity: {entityId} pos: {bytesRead}");
@@ -228,8 +246,7 @@ namespace LiteEntitySystem
                     }
                 }
                 
-                _stateB = null;   
-                _simulatePosition = _stateA.Tick;
+                _simulatePosition = firstState.Tick;
                 _inputCommands.Clear();
                 _isSyncReceived = true;
                 _jitterTimer.Restart();
@@ -251,7 +268,7 @@ namespace LiteEntitySystem
                 {
                     //fast-forward
                     _timer = _lerpTime;
-                    if (_stateB != null || PreloadNextState())
+                    if (_stateBIndex != -1 || PreloadNextState())
                     {
                         Logger.Log("TickOverflow, GoToNext");
                         GoToNextState();
@@ -272,7 +289,7 @@ namespace LiteEntitySystem
                 //reset timer
                 _jitterTimer.Reset();
 
-                var serverState = GetStateFromTick(diffHeader.Tick);
+                ref var serverState = ref _receivedStates[GetStateIndex(diffHeader.Tick)];
                 switch (serverState.Status)
                 {
                     case ServerDataStatus.Executed:
@@ -322,21 +339,23 @@ namespace LiteEntitySystem
             }
 
             ushort simPos = (ushort)(_simulatePosition+1);
-            while (GetStateFromTick(simPos).Status != ServerDataStatus.Ready)
+            while (_receivedStates[GetStateIndex(simPos)].Status != ServerDataStatus.Ready)
             {
                 simPos = (ushort)(simPos+(byte)ServerSendRate);
             }
-            _stateB = GetStateFromTick(simPos);
+
+            _stateBIndex = GetStateIndex(simPos);
+            ref var stateB = ref _receivedStates[_stateBIndex];
             _lerpTime = 
-                Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTimeF *
+                Utils.SequenceDiff(stateB.Tick, RawServerTick) * DeltaTimeF *
                 (1f - (_readyStates - _adaptiveMiddlePoint) * 0.02f);
-            _stateB.Preload(EntitiesDict);
+            stateB.Preload(EntitiesDict);
             _readyStates--;
 
             //remove processed inputs
             while (_inputCommands.Count > 0)
             {
-                if (Utils.SequenceDiff(_stateB.ProcessedTick, (ushort)(_tick - _inputCommands.Count + 1)) >= 0)
+                if (Utils.SequenceDiff(stateB.ProcessedTick, (ushort)(_tick - _inputCommands.Count + 1)) >= 0)
                     _inputPool.Enqueue(_inputCommands.Dequeue());
                 else
                     break;
@@ -347,16 +366,18 @@ namespace LiteEntitySystem
 
         private unsafe void GoToNextState()
         {
-            _stateA.Status = ServerDataStatus.Executed;
-            _stateA = _stateB;
-            _simulatePosition = _stateA.Tick;
-            _stateB = null;
+            _receivedStates[_stateAIndex].Status = ServerDataStatus.Executed;
+            _stateAIndex = _stateBIndex;
+            _stateBIndex = -1;
 
-            fixed (byte* readerData = _stateA.Data)
+            ref var newState = ref _receivedStates[_stateAIndex];
+            _simulatePosition = newState.Tick;
+
+            fixed (byte* readerData = newState.Data)
             {
-                for (int i = 0; i < _stateA.PreloadDataCount; i++)
+                for (int i = 0; i < newState.PreloadDataCount; i++)
                 {
-                    ref var preloadData = ref _stateA.PreloadDataArray[i];
+                    ref var preloadData = ref newState.PreloadDataArray[i];
                     ReadEntityState(readerData, ref preloadData.DataOffset, preloadData.EntityId, preloadData.EntityFieldsOffset == -1);
                     if (preloadData.DataOffset == -1)
                         return;
@@ -441,10 +462,10 @@ namespace LiteEntitySystem
             //delete predicted
             while (_spawnPredictedEntities.TryPeek(out var info))
             {
-                if (Utils.SequenceDiff(_stateA.ProcessedTick, info.Item1) >= 0)
+                if (Utils.SequenceDiff(newState.ProcessedTick, info.id) >= 0)
                 {
                     _spawnPredictedEntities.Dequeue();
-                    info.Item2.DestroyInternal();
+                    info.entity.DestroyInternal();
                 }
                 else
                 {
@@ -463,11 +484,14 @@ namespace LiteEntitySystem
 
         protected override unsafe void OnLogicTick()
         {
-            if (_stateB != null)
+            ref var stateA = ref _receivedStates[_stateAIndex]; 
+            
+            if (_stateBIndex != -1)
             {
+                ref var stateB = ref _receivedStates[_stateBIndex]; 
                 _logicLerpMsec = (float)(_timer / _lerpTime);
-                ServerTick = Utils.LerpSequence(_stateA.Tick, _stateB.Tick, _logicLerpMsec);
-                _stateB.ExecuteRpcs(this, ServerTick, RpcExecutionMode.Interpolated);
+                ServerTick = Utils.LerpSequence(stateA.Tick, stateB.Tick, _logicLerpMsec);
+                stateB.ExecuteRpcs(this, ServerTick, RpcExecutionMode.Interpolated);
             }
 
             if (_inputCommands.Count > InputBufferSize)
@@ -481,11 +505,11 @@ namespace LiteEntitySystem
             else
                 inputWriter = new byte[maxResultSize];
             
-            fixed(void* writerData = inputWriter)
+            fixed(byte* writerData = inputWriter)
                 *(InputPacketHeader*)writerData = new InputPacketHeader
                 {
-                    StateA   = _stateA.Tick,
-                    StateB   = _stateB?.Tick ?? _stateA.Tick,
+                    StateA   = stateA.Tick,
+                    StateB   = RawTargetServerTick,
                     LerpMsec = _logicLerpMsec
                 };
 
@@ -533,6 +557,9 @@ namespace LiteEntitySystem
             }
         }
 
+        /// <summary>
+        /// Update method, call this every frame
+        /// </summary>
         public override unsafe void Update()
         {
             if (!_isSyncReceived)
@@ -542,7 +569,7 @@ namespace LiteEntitySystem
             ushort prevTick = _tick;
             base.Update();
             
-            if (_stateB != null || PreloadNextState())
+            if (_stateBIndex != -1 || PreloadNextState())
             {
                 _timer += VisualDeltaTime;
                 if (_timer >= _lerpTime)
@@ -551,16 +578,17 @@ namespace LiteEntitySystem
                 }
             }
 
-            if (_stateB != null)
+            if (_stateBIndex != -1)
             {
                 //remote interpolation
                 float fTimer = (float)(_timer/_lerpTime);
-                for(int i = 0; i < _stateB.InterpolatedCount; i++)
+                ref var stateB = ref _receivedStates[_stateBIndex];
+                for(int i = 0; i < stateB.InterpolatedCount; i++)
                 {
-                    ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
+                    ref var preloadData = ref stateB.PreloadDataArray[stateB.InterpolatedFields[i]];
                     var entity = EntitiesDict[preloadData.EntityId];
                     var fields = entity.GetClassData().Fields;
-                    fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr = _stateB.Data)
+                    fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr = stateB.Data)
                     {
                         for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
                         {
@@ -677,10 +705,11 @@ namespace LiteEntitySystem
 
         private void ConstructAndSync(bool firstSync)
         {
-            ServerTick = _stateA.Tick;
+            ref var stateA = ref _receivedStates[_stateAIndex];
+            ServerTick = stateA.Tick;
             
             //execute all previous rpcs
-            _stateA.ExecuteRpcs(this, ServerTick, firstSync ? RpcExecutionMode.FirstSync : RpcExecutionMode.FastForward);
+            stateA.ExecuteRpcs(this, ServerTick, firstSync ? RpcExecutionMode.FirstSync : RpcExecutionMode.FastForward);
 
             //Call construct methods
             for (int i = 0; i < _entitiesToConstructCount; i++)
@@ -691,7 +720,7 @@ namespace LiteEntitySystem
             for (int i = 0; i < _syncCallsCount; i++)
             {
                 ref var syncCall = ref _syncCalls[i];
-                syncCall.OnSync(syncCall.Entity, new ReadOnlySpan<byte>(_stateA.Data, syncCall.PrevDataPos, _stateA.Size-syncCall.PrevDataPos));
+                syncCall.OnSync(syncCall.Entity, new ReadOnlySpan<byte>(stateA.Data, syncCall.PrevDataPos, stateA.Size-syncCall.PrevDataPos));
             }
             _syncCallsCount = 0;
             
@@ -797,7 +826,7 @@ namespace LiteEntitySystem
             }
 
             if (fullSync)
-                _stateA.ReadRPCs(rawData, ref readerPosition, new EntitySharedReference(entity.Id, entity.Version), classData);
+                _receivedStates[_stateAIndex].ReadRPCs(rawData, ref readerPosition, new EntitySharedReference(entity.Id, entity.Version), classData);
             entity.OnSyncEnd();
         }
     }
