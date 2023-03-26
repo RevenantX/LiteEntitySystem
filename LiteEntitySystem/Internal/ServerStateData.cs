@@ -54,13 +54,6 @@ namespace LiteEntitySystem.Internal
         Executed
     }
 
-    internal enum RpcExecutionMode
-    {
-        FirstSync,
-        FastForward,
-        Interpolated
-    }
-    
     internal struct ServerStateData
     {
         public byte[] Data;
@@ -178,35 +171,32 @@ namespace LiteEntitySystem.Internal
             }
         }
         
-        public void ExecuteRpcs(EntityManager entityManager, ushort serverTick, RpcExecutionMode mode)
+        public void ExecuteRpcs(ClientEntityManager entityManager, ushort minimalTick, bool firstSync)
         {
             for (int i = 0; i < _remoteCallsCount; i++)
             {
-                ref var rpcCache = ref _remoteCallsCaches[i];
-                if (rpcCache.Executed)
+                ref var rpc = ref _remoteCallsCaches[i];
+                if (rpc.Executed)
                     return;
-                if (mode != RpcExecutionMode.FirstSync)
+                if (!firstSync)
                 {
-                    int sequenceDifference = Utils.SequenceDiff(rpcCache.Header.Tick, serverTick);
-                    if (sequenceDifference < 0)
+                    if (Utils.SequenceDiff(rpc.Header.Tick, entityManager.ServerTick) > 0)
                         return;
-                    if (mode == RpcExecutionMode.FastForward && sequenceDifference == 0)
+                    if (Utils.SequenceDiff(rpc.Header.Tick, minimalTick) < 0)
                         return;
-                    if (mode == RpcExecutionMode.Interpolated && sequenceDifference > 0)
-                        return;
+                    //Logger.Log($"Executing rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}. Min: {minimalTick}, A->B: {entityManager.ServerTick}");
                 }
-                rpcCache.Executed = true;
-                var entity = entityManager.GetEntityById<InternalEntity>(rpcCache.EntityId);
-                //Logger.Log($"Executing rpc. Entity: {rpcCache.EntityId}. Tick {rpcCache.Header.Tick}. Id: {rpcCache.Header.Id}");
-                var rpcData = new ReadOnlySpan<byte>(Data, rpcCache.Offset, rpcCache.Header.TypeSize * rpcCache.Header.Count);
-                if (rpcCache.SyncableOffset == -1)
+                rpc.Executed = true;
+                var entity = entityManager.GetEntityById<InternalEntity>(rpc.EntityId);
+                var rpcData = new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.TypeSize * rpc.Header.Count);
+                if (rpc.SyncableOffset == -1)
                 {
-                    rpcCache.Delegate(entity, rpcData);
+                    rpc.Delegate(entity, rpcData);
                 }
                 else
                 {
-                    var syncableField = Utils.RefFieldValue<SyncableField>(entity, rpcCache.SyncableOffset);
-                    rpcCache.Delegate(syncableField, rpcData);
+                    var syncableField = Utils.RefFieldValue<SyncableField>(entity, rpc.SyncableOffset);
+                    rpc.Delegate(syncableField, rpcData);
                 }
             }
         }

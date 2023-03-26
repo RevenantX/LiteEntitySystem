@@ -250,7 +250,7 @@ namespace LiteEntitySystem
                 _inputCommands.Clear();
                 _isSyncReceived = true;
                 _jitterTimer.Restart();
-                ConstructAndSync(true);
+                ConstructAndSync(true, firstState.Tick);
                 Logger.Log($"[CEM] Got baseline sync. Assigned player id: {header.PlayerId}, Original: {decodedBytes}, Tick: {header.Tick}, SendRate: {_serverSendRate}");
             }
             else
@@ -366,7 +366,8 @@ namespace LiteEntitySystem
 
         private unsafe void GoToNextState()
         {
-            _receivedStates[_stateAIndex].Status = ServerDataStatus.Executed;
+            ref var stateA = ref _receivedStates[_stateAIndex];
+            stateA.Status = ServerDataStatus.Executed;
             _stateAIndex = _stateBIndex;
             _stateBIndex = -1;
 
@@ -383,7 +384,7 @@ namespace LiteEntitySystem
                         return;
                 }
             }
-            ConstructAndSync(false);
+            ConstructAndSync(false, stateA.Tick);
             
             _timer -= _lerpTime;
 
@@ -491,7 +492,7 @@ namespace LiteEntitySystem
                 ref var stateB = ref _receivedStates[_stateBIndex]; 
                 _logicLerpMsec = (float)(_timer / _lerpTime);
                 ServerTick = Utils.LerpSequence(stateA.Tick, stateB.Tick, _logicLerpMsec);
-                stateB.ExecuteRpcs(this, ServerTick, RpcExecutionMode.Interpolated);
+                stateB.ExecuteRpcs(this, stateA.Tick, false);
             }
 
             if (_inputCommands.Count > InputBufferSize)
@@ -703,13 +704,13 @@ namespace LiteEntitySystem
             _spawnPredictedEntities.Enqueue((_tick, e));
         }
 
-        private void ConstructAndSync(bool firstSync)
+        private void ConstructAndSync(bool firstSync, ushort minimalTick)
         {
             ref var stateA = ref _receivedStates[_stateAIndex];
-            ServerTick = stateA.Tick;
-            
+
             //execute all previous rpcs
-            stateA.ExecuteRpcs(this, ServerTick, firstSync ? RpcExecutionMode.FirstSync : RpcExecutionMode.FastForward);
+            ServerTick = stateA.Tick;
+            stateA.ExecuteRpcs(this, minimalTick, firstSync);
 
             //Call construct methods
             for (int i = 0; i < _entitiesToConstructCount; i++)
