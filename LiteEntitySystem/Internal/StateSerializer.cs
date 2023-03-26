@@ -117,10 +117,15 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        public void Destroy(ushort serverTick, ushort minimalTick)
+        public void Destroy(ushort serverTick, ushort minimalTick, bool instantly)
         {
             if (_state != SerializerState.Active)
                 return;
+            if (instantly)
+            {
+                _state = SerializerState.Freed;
+                return;
+            }
             Write((ushort)(serverTick+1), minimalTick);
             _state = SerializerState.Destroyed;
             _ticksOnDestroy = serverTick;

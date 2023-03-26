@@ -562,7 +562,10 @@ namespace LiteEntitySystem
         
         internal void DestroySavedData(InternalEntity entityLogic)
         {
-            _stateSerializers[entityLogic.Id].Destroy(_tick, _minimalTick);
+            _stateSerializers[entityLogic.Id].Destroy(_tick, _minimalTick, PlayersCount == 0);
+            //destroy instantly when no players to free ids
+            if (PlayersCount == 0)
+                _entityIdQueue.Enqueue(entityLogic.Id);
         }
         
         internal void PoolRpc(RemoteCallPacket rpcNode)
