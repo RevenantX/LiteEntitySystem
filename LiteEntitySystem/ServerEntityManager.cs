@@ -497,6 +497,7 @@ namespace LiteEntitySystem
                 
                 initMethod?.Invoke(entity);
                 ConstructEntity(entity);
+                stateSerializer.RequestSync();
             }
             //Debug.Log($"[SEM] Entity create. clsId: {classData.ClassId}, id: {entityId}, v: {version}");
             return entity;

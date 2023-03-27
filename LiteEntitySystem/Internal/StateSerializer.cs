@@ -39,6 +39,7 @@ namespace LiteEntitySystem.Internal
         private bool _lagCompensationEnabled;
         private byte _controllerOwner;
         private uint _fullDataSize;
+        private int _lastSyncRequestTick;
         
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
@@ -59,6 +60,7 @@ namespace LiteEntitySystem.Internal
 
         public unsafe void Init(ref EntityClassData classData, InternalEntity e)
         {
+            _lastSyncRequestTick = -1;
             _classData = classData;
             _entity = e;
             _state = SerializerState.Active;
@@ -147,6 +149,9 @@ namespace LiteEntitySystem.Internal
 
         public void RequestSync()
         {
+            if(_lastSyncRequestTick == _entity.ServerManager.Tick)
+                return;
+            _lastSyncRequestTick = _entity.ServerManager.Tick;
             for (int i = 0; i < _classData.SyncableFields.Length; i++)
             {
                 var syncableField = _classData.SyncableFields[i];
