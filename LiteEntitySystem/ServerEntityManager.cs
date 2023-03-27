@@ -47,6 +47,7 @@ namespace LiteEntitySystem
 
         private byte[] _compressionBuffer = new byte[4096];
         private int _netPlayersCount;
+        private bool _playersAdded;
 
         /// <summary>
         /// Network players count
@@ -102,6 +103,7 @@ namespace LiteEntitySystem
             _netPlayersArray[_netPlayersCount++] = player;
             if (assignToTag)
                 peer.Tag = player;
+            _playersAdded = true;
             return player;
         }
 
@@ -141,7 +143,6 @@ namespace LiteEntitySystem
                 _netPlayersArray[player.ArrayIndex].ArrayIndex = player.ArrayIndex;
             }
             _netPlayersArray[_netPlayersCount] = null;
-
             return true;
         }
 
@@ -331,12 +332,21 @@ namespace LiteEntitySystem
         public override unsafe void Update()
         {
             ushort prevTick = _tick;
+            
+            if (_playersAdded)
+            {
+                _playersAdded = false;
+                for (ushort eId = FirstEntityId; eId <= MaxSyncedEntityId; eId++)
+                {
+                    _stateSerializers[eId].RequestSync();
+                }
+            }
             base.Update();
             
             //send only if tick changed
             if (_netPlayersCount == 0 || prevTick == _tick || _tick % (int) SendRate != 0)
                 return;
-            
+
             //calculate minimalTick and potential baseline size
             ushort executedTick = (ushort)(_tick - 1);
             _minimalTick = executedTick;

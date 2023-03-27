@@ -212,7 +212,6 @@ namespace LiteEntitySystem.Internal
             fixed (byte* lastEntityData = _latestEntityData)
                 RefMagic.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
             position += (int)_fullDataSize;
-            RequestSync();
             WriteRPCs(serverTick, minimalTick, resultData, ref position, _entity.IsControlledBy(playerId), true);
         }
 
@@ -253,7 +252,6 @@ namespace LiteEntitySystem.Internal
                     RefMagic.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
                     position += (int)_fullDataSize;
                     hasChanges = true;
-                    RequestSync();
                 }
                 else //make diff
                 {
