@@ -42,6 +42,7 @@ namespace LiteEntitySystem.Internal
         
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
+            //Logger.Log($"AddRpc for tick: {rpc.Header.Tick}, St: {_entity.ServerManager.Tick}, Id: {rpc.Header.Id}");
             if (_rpcHead == null)
                 _rpcHead = rpc;
             else
@@ -177,7 +178,7 @@ namespace LiteEntitySystem.Internal
                         RefMagic.CopyBlock(resultData + position, rpcData, (uint)rpcNode.TotalSize);
                     position += rpcNode.TotalSize;
                     (*rpcCount)++;
-                    //Logger.Log($"[Sever] SendRPC Tick: {rpcNode.Header.Tick}, Id: {rpcNode.Header.Id}, EntityId: {_entity.Id}, TypeSize: {rpcNode.Header.TypeSize}, Count: {rpcNode.Header.Count}");
+                    //Logger.Log($"[Sever] T: {_entity.ServerManager.Tick}, SendRPC Tick: {rpcNode.Header.Tick}, Id: {rpcNode.Header.Id}, EntityId: {_entity.Id}, TypeSize: {rpcNode.Header.TypeSize}, Count: {rpcNode.Header.Count}");
                 }
                 else if (!firstSync && Utils.SequenceDiff(rpcNode.Header.Tick, minimalTick) < 0)
                 {

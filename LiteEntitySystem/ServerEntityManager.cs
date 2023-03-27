@@ -338,7 +338,8 @@ namespace LiteEntitySystem
                 return;
             
             //calculate minimalTick and potential baseline size
-            _minimalTick = _tick;
+            ushort executedTick = (ushort)(_tick - 1);
+            _minimalTick = executedTick;
             int maxBaseline = 0;
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
             {
@@ -359,7 +360,7 @@ namespace LiteEntitySystem
                     _minimalTick = Utils.SequenceDiff(player.StateATick, _minimalTick) < 0 ? player.StateATick : _minimalTick;
                 }
             }
-
+            
             //make packets
             fixed (byte* packetBuffer = _packetBuffer, compressionBuffer = _compressionBuffer)
             // ReSharper disable once BadChildStatementIndent
@@ -370,7 +371,7 @@ namespace LiteEntitySystem
                 {
                     int originalLength = 0;
                     for (ushort i = FirstEntityId; i <= MaxSyncedEntityId; i++)
-                        _stateSerializers[i].MakeBaseline(player.Id, _tick, _minimalTick, packetBuffer, ref originalLength);
+                        _stateSerializers[i].MakeBaseline(player.Id, executedTick, _minimalTick, packetBuffer, ref originalLength);
                     int encodedLength = LZ4Codec.Encode(
                         packetBuffer,
                         originalLength,
@@ -404,7 +405,7 @@ namespace LiteEntitySystem
                 var header = (DiffPartHeader*)packetBuffer;
                 header->UserHeader = HeaderByte;
                 header->Part = 0;
-                header->Tick = _tick;
+                header->Tick = executedTick;
                 int writePosition = sizeof(DiffPartHeader);
                 
                 ushort maxPartSize = (ushort)(player.Peer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable) - sizeof(LastPartData));
@@ -412,7 +413,7 @@ namespace LiteEntitySystem
                 {
                     var diffResult = _stateSerializers[eId].MakeDiff(
                         player.Id,
-                        _tick,
+                        executedTick,
                         _minimalTick,
                         player.CurrentServerTick,
                         packetBuffer,
@@ -428,7 +429,7 @@ namespace LiteEntitySystem
                         {
                             if (header->Part == MaxParts-1)
                             {
-                                Logger.Log($"P:{pidx} Request baseline {_tick}");
+                                Logger.Log($"P:{pidx} Request baseline {executedTick}");
                                 player.State = NetPlayerState.RequestBaseline;
                                 break;
                             }
@@ -570,8 +571,10 @@ namespace LiteEntitySystem
             _rpcPool.Enqueue(rpcNode);
         }
         
-        internal void AddRemoteCall(ushort entityId, ushort rpcId, ExecuteFlags flags) 
+        internal void AddRemoteCall(ushort entityId, ushort rpcId, ExecuteFlags flags)
         {
+            if (PlayersCount == 0)
+                return;
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             rpc.Init(_tick, 0, rpcId, flags, 0);
             _stateSerializers[entityId].AddRpcPacket(rpc);
@@ -579,6 +582,8 @@ namespace LiteEntitySystem
         
         internal unsafe void AddRemoteCall<T>(ushort entityId, T value, ushort rpcId, ExecuteFlags flags) where T : unmanaged
         {
+            if (PlayersCount == 0)
+                return;
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             rpc.Init(_tick, (ushort)sizeof(T), rpcId, flags, 1);
             fixed (byte* rawData = rpc.Data)
@@ -588,6 +593,8 @@ namespace LiteEntitySystem
         
         internal unsafe void AddRemoteCall<T>(ushort entityId, ReadOnlySpan<T> value, ushort rpcId, ExecuteFlags flags) where T : unmanaged
         {
+            if (PlayersCount == 0)
+                return;
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             rpc.Init(_tick, (ushort)sizeof(T), rpcId, flags, value.Length);
             fixed(void* rawValue = value, rawData = rpc.Data)

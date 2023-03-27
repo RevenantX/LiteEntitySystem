@@ -173,6 +173,8 @@ namespace LiteEntitySystem.Internal
         
         public void ExecuteRpcs(ClientEntityManager entityManager, ushort minimalTick, bool firstSync)
         {
+            //if(_remoteCallsCount > 0)
+            //    Logger.Log($"Executing rpcs (ST: {Tick}) for tick: {entityManager.ServerTick}, Min: {minimalTick}, Count: {_remoteCallsCount}");
             for (int i = 0; i < _remoteCallsCount; i++)
             {
                 ref var rpc = ref _remoteCallsCaches[i];
@@ -181,12 +183,20 @@ namespace LiteEntitySystem.Internal
                 if (!firstSync)
                 {
                     if (Utils.SequenceDiff(rpc.Header.Tick, entityManager.ServerTick) > 0)
-                        return;
+                    {
+                        //Logger.Log($"Skip rpc (T>ST). Entity: {rpc.EntityId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}.");
+                        continue;
+                    }
+
                     if (Utils.SequenceDiff(rpc.Header.Tick, minimalTick) <= 0)
-                        return;
-                    //Logger.Log($"Executing rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}. Min: {minimalTick}, A->B: {entityManager.ServerTick}");
+                    {
+                        //Logger.Log($"Skip rpc (T<=MT). Entity: {rpc.EntityId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}.");
+                        continue;
+                    }
                 }
+
                 rpc.Executed = true;
+                //Logger.Log($"Executing rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}.");
                 var entity = entityManager.GetEntityById<InternalEntity>(rpc.EntityId);
                 var rpcData = new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.TypeSize * rpc.Header.Count);
                 if (rpc.SyncableOffset == -1)

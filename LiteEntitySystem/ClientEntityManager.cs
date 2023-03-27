@@ -366,12 +366,12 @@ namespace LiteEntitySystem
 
         private unsafe void GoToNextState()
         {
-            ref var stateA = ref _receivedStates[_stateAIndex];
-            stateA.Status = ServerDataStatus.Executed;
+            _receivedStates[_stateAIndex].Status = ServerDataStatus.Executed;
             _stateAIndex = _stateBIndex;
             _stateBIndex = -1;
 
             ref var newState = ref _receivedStates[_stateAIndex];
+            //Logger.Log($"GotoState: {newState.Tick}");
             _simulatePosition = newState.Tick;
 
             fixed (byte* readerData = newState.Data)

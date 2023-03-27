@@ -590,8 +590,8 @@ namespace LiteEntitySystem
                     _accumulator = 0;
                     return;
                 }
-                _tick++;
                 OnLogicTick();
+                _tick++;
 
                 _accumulator -= _deltaTimeTicks;
                 updates++;
