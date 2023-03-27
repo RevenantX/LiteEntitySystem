@@ -332,15 +332,6 @@ namespace LiteEntitySystem
         public override unsafe void Update()
         {
             ushort prevTick = _tick;
-            
-            if (_playersAdded)
-            {
-                _playersAdded = false;
-                for (ushort eId = FirstEntityId; eId <= MaxSyncedEntityId; eId++)
-                {
-                    _stateSerializers[eId].RequestSync();
-                }
-            }
             base.Update();
             
             //send only if tick changed
@@ -518,6 +509,13 @@ namespace LiteEntitySystem
 
         protected override void OnLogicTick()
         {
+            if (_playersAdded)
+            {
+                _playersAdded = false;
+                for (ushort eId = FirstEntityId; eId <= MaxSyncedEntityId; eId++)
+                    _stateSerializers[eId].RequestSync();
+            }
+            
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
             {
                 var player = _netPlayersArray[pidx];
