@@ -179,7 +179,7 @@ namespace LiteEntitySystem.Internal
             {
                 ref var rpc = ref _remoteCallsCaches[i];
                 if (rpc.Executed)
-                    return;
+                    continue;
                 if (!firstSync)
                 {
                     if (Utils.SequenceDiff(rpc.Header.Tick, entityManager.ServerTick) > 0)

@@ -233,7 +233,7 @@ namespace LiteEntitySystem
         /// <returns>true if first byte is == headerByte</returns>
         public bool DeserializeWithHeaderCheck(NetPlayer player, NetDataReader reader)
         {
-            if (reader.PeekByte() == _packetBuffer[0])
+            if (reader.PeekByte() == HeaderByte)
             {
                 reader.SkipBytes(1);
                 Deserialize(player, reader);
@@ -251,7 +251,7 @@ namespace LiteEntitySystem
         /// <returns>true if first byte is == headerByte</returns>
         public bool DeserializeWithHeaderCheck(NetPeer peer, NetDataReader reader)
         {
-            if (reader.PeekByte() == _packetBuffer[0])
+            if (reader.PeekByte() == HeaderByte)
             {
                 reader.SkipBytes(1);
                 Deserialize((NetPlayer)peer.Tag, reader);
@@ -384,13 +384,13 @@ namespace LiteEntitySystem
                         UserHeader = HeaderByte,
                         PacketType = InternalPackets.BaselineSync,
                         OriginalLength = originalLength,
-                        Tick = _tick,
+                        Tick = executedTick,
                         PlayerId = player.Id,
                         SendRate = (byte)SendRate
                     };
                     player.Peer.Send(_compressionBuffer, 0, sizeof(BaselineDataHeader) + encodedLength, DeliveryMethod.ReliableOrdered);
-                    player.StateATick = _tick;
-                    player.CurrentServerTick = _tick;
+                    player.StateATick = executedTick;
+                    player.CurrentServerTick = executedTick;
                     player.State = NetPlayerState.WaitingForFirstInput;
                     Logger.Log($"[SEM] SendWorld to player {player.Id}. orig: {originalLength}, bytes, compressed: {encodedLength}");
                     continue;
