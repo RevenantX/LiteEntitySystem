@@ -37,6 +37,7 @@ namespace LiteEntitySystem.Extensions
         {
             Utils.ResizeIfFull(ref _data, data.Length);
             data.CopyTo(_data);
+            _count = data.Length;
         }
 
         public SyncList()
