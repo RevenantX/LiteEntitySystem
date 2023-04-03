@@ -395,7 +395,7 @@ namespace LiteEntitySystem
                     continue;
                 
                 ref var classData = ref entity.GetClassData();
-                if(entity.IsServerControlled && !classData.HasRemotePredictedFields)
+                if(entity.IsServerControlled && !classData.HasRemoteRollbackFields)
                     continue;
 
                 fixed (byte* predictedData = _predictedEntities[entity.Id])
@@ -403,8 +403,7 @@ namespace LiteEntitySystem
                     for (int i = 0; i < classData.FieldsCount; i++)
                     {
                         ref var field = ref classData.Fields[i];
-                        if ((entity.IsServerControlled && !field.Flags.HasFlagFast(SyncFlags.AlwaysPredict)) ||
-                            (entity.IsLocalControlled && field.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers)))
+                        if (!field.ShouldRollback(entity))
                             continue;
                         if (field.FieldType == FieldType.SyncableSyncVar)
                         {
@@ -790,9 +789,7 @@ namespace LiteEntitySystem
                     ref var field = ref classData.Fields[i];
                     byte* readDataPtr = rawData + readerPosition;
                     
-                    if(fullSync || 
-                       (entity.IsServerControlled && field.Flags.HasFlagFast(SyncFlags.AlwaysPredict)) || 
-                       (entity.IsLocalControlled && !field.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers)))
+                    if(fullSync || field.ShouldRollback(entity))
                         RefMagic.CopyBlock(predictedData + field.PredictedOffset, readDataPtr, field.Size);
                     
                     if (field.FieldType == FieldType.SyncableSyncVar)

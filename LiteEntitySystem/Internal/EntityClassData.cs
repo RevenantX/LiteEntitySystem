@@ -43,7 +43,7 @@ namespace LiteEntitySystem.Internal
         public readonly int FieldsFlagsSize;
         public readonly int FixedFieldsSize;
         public readonly int PredictedSize;
-        public readonly bool HasRemotePredictedFields;
+        public readonly bool HasRemoteRollbackFields;
         public readonly EntityFieldInfo[] Fields;
         public readonly SyncableFieldInfo[] SyncableFields;
         public readonly RpcOffset[] RpcOffsets;
@@ -118,7 +118,7 @@ namespace LiteEntitySystem.Internal
         public EntityClassData(ushort filterId, Type entType, RegisteredTypeInfo typeInfo)
         {
             IsRpcBound = false;
-            HasRemotePredictedFields = false;
+            HasRemoteRollbackFields = false;
             PredictedSize = 0;
             FixedFieldsSize = 0;
             LagCompensatedSize = 0;
@@ -212,8 +212,8 @@ namespace LiteEntitySystem.Internal
                             lagCompensatedFields.Add(fieldInfo);
                             LagCompensatedSize += fieldSize;
                         }
-                        if (syncFlags.HasFlagFast(SyncFlags.AlwaysPredict))
-                            HasRemotePredictedFields = true;
+                        if (syncFlags.HasFlagFast(SyncFlags.AlwaysRollback))
+                            HasRemoteRollbackFields = true;
 
                         if (fieldInfo.IsPredicted)
                             PredictedSize += fieldSize;

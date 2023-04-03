@@ -12,7 +12,7 @@ namespace LiteEntitySystem
         LagCompensated      = 1 << 1,
         OnlyForOtherPlayers = 1 << 2,
         OnlyForOwner        = 1 << 3,
-        AlwaysPredict       = 1 << 4
+        AlwaysRollback       = 1 << 4
     }
     
     [AttributeUsage(AttributeTargets.Field)]

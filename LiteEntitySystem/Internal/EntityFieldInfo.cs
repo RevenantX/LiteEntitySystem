@@ -1,4 +1,6 @@
-﻿namespace LiteEntitySystem.Internal
+﻿using System.Runtime.CompilerServices;
+
+namespace LiteEntitySystem.Internal
 {
     internal enum FieldType
     {
@@ -18,9 +20,15 @@
         public readonly SyncFlags Flags;
 
         public MethodCallDelegate OnSync;
-        public bool IsPredicted => Flags.HasFlagFast(SyncFlags.AlwaysPredict) || !Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers);
+        public bool IsPredicted => Flags.HasFlagFast(SyncFlags.AlwaysRollback) || !Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers);
         public int FixedOffset;
         public int PredictedOffset;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool ShouldRollback(InternalEntity entity)
+        {
+            return Flags.HasFlagFast(SyncFlags.AlwaysRollback) || (entity.IsLocalControlled && !Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers));
+        }
 
         //for value type
         public EntityFieldInfo(
