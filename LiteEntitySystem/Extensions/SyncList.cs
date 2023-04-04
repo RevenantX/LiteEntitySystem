@@ -15,7 +15,6 @@ namespace LiteEntitySystem.Extensions
 
         private RemoteCall<T> _addAction;
         private RemoteCall _clearAction;
-        private RemoteCall _fullClearAction;
         private RemoteCall<int> _removeAtAction;
         private RemoteCallSpan<T> _initAction;
 
@@ -23,7 +22,6 @@ namespace LiteEntitySystem.Extensions
         {
             r.CreateClientAction(this, Add, ref _addAction);
             r.CreateClientAction(this, Clear, ref _clearAction);
-            r.CreateClientAction(this, FullClear, ref _fullClearAction);
             r.CreateClientAction(this, RemoveAt, ref _removeAtAction);
             r.CreateClientAction(this, Init, ref _initAction);
         }
@@ -70,15 +68,6 @@ namespace LiteEntitySystem.Extensions
         {
             _count = 0;
             ExecuteRPC(_clearAction);
-        }
-        
-        public void FullClear()
-        {
-            if (_count == 0)
-                return;
-            Array.Clear(_data, 0, _count);
-            _count = 0;
-            ExecuteRPC(_fullClearAction);
         }
 
         public bool Contains(T item)
@@ -143,7 +132,12 @@ namespace LiteEntitySystem.Extensions
 
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
+            int index = 0;
+            while (index < _count)
+            {
+                yield return _data[index];
+                index++;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()

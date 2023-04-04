@@ -47,7 +47,7 @@ namespace LiteEntitySystem
     public readonly ref struct RPCRegistrator
     {
         /// <summary>
-        /// Bind notification of SyncVarWithNotify to action
+        /// Bind notification of SyncVarWithNotify changes to action
         /// </summary>
         /// <param name="self">Target entity for binding</param>
         /// <param name="syncVar">Variable to bind</param>
@@ -57,6 +57,20 @@ namespace LiteEntitySystem
             if (onChangedAction.Target != self)
                 throw new Exception("You can call this only on this class methods");
             self.GetClassData().Fields[syncVar.FieldId].OnSync = MethodCallGenerator.Generate<TEntity, T>(onChangedAction.Method);
+        }
+        
+        /// <summary>
+        /// Bind notification of SyncableField changes to action
+        /// </summary>
+        /// <param name="self">Target entity for binding</param>
+        /// <param name="syncField">Variable to bind</param>
+        /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
+        public void BindOnChange<T, TEntity>(TEntity self, T syncField, Action<T> onChangedAction) where T : SyncableField where TEntity : InternalEntity
+        {
+            if (onChangedAction.Target != self)
+                throw new Exception("You can call this only on this class methods");
+            var d = onChangedAction.Method.CreateDelegateHelper<Action<TEntity,T>>();
+            self.GetClassData().SyncableFields[syncField.Id].OnSync = (entity, field) => d((TEntity)entity, (T)field);
         }
 
         private static Delegate Create<TEntity, T>(

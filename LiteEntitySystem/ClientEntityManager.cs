@@ -92,6 +92,7 @@ namespace LiteEntitySystem
             public int PrevDataPos;
         }
         private SyncCallInfo[] _syncCalls;
+        private HashSet<SyncableField> _changedSyncableFields = new();
         private int _syncCallsCount;
         
         private InternalEntity[] _entitiesToConstruct = new InternalEntity[64];
@@ -202,6 +203,9 @@ namespace LiteEntitySystem
             byte packetType = rawData[1];
             if(packetType == InternalPackets.BaselineSync)
             {
+                _entitiesToConstructCount = 0;
+                _syncCallsCount = 0;
+                _changedSyncableFields.Clear();
                 //read header and decode
                 int decodedBytes;
                 var header = *(BaselineDataHeader*)rawData;
@@ -718,6 +722,12 @@ namespace LiteEntitySystem
             _entitiesToConstructCount = 0;
             
             //Make OnSyncCalls
+            foreach (var syncableField in _changedSyncableFields)
+            {
+                var entity = EntitiesDict[syncableField.ParentEntityId];
+                entity.GetClassData().SyncableFields[syncableField.Id].OnSync?.Invoke(entity, syncableField);
+            }
+            _changedSyncableFields.Clear();
             for (int i = 0; i < _syncCallsCount; i++)
             {
                 ref var syncCall = ref _syncCalls[i];
@@ -727,6 +737,12 @@ namespace LiteEntitySystem
             
             foreach (var lagCompensatedEntity in LagCompensatedEntities)
                 lagCompensatedEntity.WriteHistory(ServerTick);
+        }
+
+        internal void MarkSyncableFieldChanged(SyncableField syncableField)
+        {
+            if (!_changedSyncableFields.Contains(syncableField))
+                _changedSyncableFields.Add(syncableField);
         }
 
         private unsafe void ReadEntityState(byte* rawData, ref int readerPosition, ushort entityInstanceId, bool fullSync)
@@ -777,8 +793,7 @@ namespace LiteEntitySystem
             int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
             bool writeInterpolationData = entity.IsServerControlled || fullSync;
             Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
-
-            entity.OnSyncStart();
+            
             fixed (byte* interpDataPtr = interpolatedInitialData, predictedData = _predictedEntities[entity.Id])
             {
                 for (int i = 0; i < classData.FieldsCount; i++)
@@ -796,6 +811,8 @@ namespace LiteEntitySystem
                     {
                         var syncableField = Utils.RefFieldValue<SyncableField>(entity, field.Offset);
                         field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, readDataPtr);
+                        if (classData.SyncableFields[syncableField.Id].OnSync != null && !_changedSyncableFields.Contains(syncableField))
+                            _changedSyncableFields.Add(syncableField);
                     }
                     else
                     {
@@ -826,7 +843,6 @@ namespace LiteEntitySystem
 
             if (fullSync)
                 _receivedStates[_stateAIndex].ReadRPCs(rawData, ref readerPosition, new EntitySharedReference(entity.Id, entity.Version), classData);
-            entity.OnSyncEnd();
         }
     }
 }

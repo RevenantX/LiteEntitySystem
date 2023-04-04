@@ -5,6 +5,7 @@ namespace LiteEntitySystem
 {
     public abstract class SyncableField
     {
+        internal ushort Id;
         internal ushort ParentEntityId;
         internal ExecuteFlags Flags;
 

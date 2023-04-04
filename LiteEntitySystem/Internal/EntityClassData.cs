@@ -5,15 +5,15 @@ using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
 {
-    internal readonly struct SyncableFieldInfo
+    internal struct SyncableFieldInfo
     {
         public readonly int Offset;
-        public readonly SyncFlags Flags;
+        public Action<InternalEntity, SyncableField> OnSync;
 
-        public SyncableFieldInfo(int offset, SyncFlags flags)
+        public SyncableFieldInfo(int offset)
         {
             Offset = offset;
-            Flags = flags;
+            OnSync = null;
         }
     }
     
@@ -226,7 +226,7 @@ namespace LiteEntitySystem.Internal
                         if (!field.IsInitOnly)
                             throw new Exception($"Syncable fields should be readonly! (Class: {entType} Field: {field.Name})");
                         
-                        syncableFields.Add(new SyncableFieldInfo(offset, syncFlags));
+                        syncableFields.Add(new SyncableFieldInfo(offset));
                         foreach (var syncableType in GetBaseTypes(ft, SyncableFieldType, true))
                         {
                             //syncable fields
