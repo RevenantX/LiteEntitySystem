@@ -244,7 +244,7 @@ namespace LiteEntitySystem
                             return;
                         }
 
-                        ReadEntityState(stateData, ref bytesRead, entityId, true);
+                        ReadEntityState(stateData, ref bytesRead, entityId, true, true);
                         if (bytesRead == -1)
                             return;
                     }
@@ -383,7 +383,7 @@ namespace LiteEntitySystem
                 for (int i = 0; i < newState.PreloadDataCount; i++)
                 {
                     ref var preloadData = ref newState.PreloadDataArray[i];
-                    ReadEntityState(readerData, ref preloadData.DataOffset, preloadData.EntityId, preloadData.EntityFieldsOffset == -1);
+                    ReadEntityState(readerData, ref preloadData.DataOffset, preloadData.EntityId, preloadData.EntityFieldsOffset == -1, false);
                     if (preloadData.DataOffset == -1)
                         return;
                 }
@@ -494,7 +494,7 @@ namespace LiteEntitySystem
             {
                 ref var stateB = ref _receivedStates[_stateBIndex]; 
                 _logicLerpMsec = (float)(_timer / _lerpTime);
-                ServerTick = Utils.LerpSequence(stateA.Tick, stateB.Tick, _logicLerpMsec);
+                ServerTick = Utils.LerpSequence(stateA.Tick, (ushort)(stateB.Tick-1), _logicLerpMsec);
                 stateB.ExecuteRpcs(this, stateA.Tick, false);
             }
 
@@ -741,11 +741,10 @@ namespace LiteEntitySystem
 
         internal void MarkSyncableFieldChanged(SyncableField syncableField)
         {
-            if (!_changedSyncableFields.Contains(syncableField))
-                _changedSyncableFields.Add(syncableField);
+            _changedSyncableFields.Add(syncableField);
         }
 
-        private unsafe void ReadEntityState(byte* rawData, ref int readerPosition, ushort entityInstanceId, bool fullSync)
+        private unsafe void ReadEntityState(byte* rawData, ref int readerPosition, ushort entityInstanceId, bool fullSync, bool fistSync)
         {
             var entity = EntitiesDict[entityInstanceId];
             
@@ -779,6 +778,11 @@ namespace LiteEntitySystem
                     Utils.ResizeIfFull(ref _entitiesToConstruct, _entitiesToConstructCount);
                     _entitiesToConstruct[_entitiesToConstructCount++] = entity;
                     //Logger.Log($"[CEM] Add entity: {entity.GetType()}");
+                }
+                else if(!fistSync)
+                {
+                    //skip full sync data if we already have correct entity
+                    return;
                 }
             }
             else if (entity == null)

@@ -43,6 +43,8 @@ namespace LiteEntitySystem
         private readonly NetPlayer[] _netPlayersArray = new NetPlayer[MaxPlayers];
         private readonly NetPlayer[] _netPlayersDict = new NetPlayer[MaxPlayers+1];
         private readonly StateSerializer[] _stateSerializers = new StateSerializer[MaxSyncedEntityCount];
+        private StateSerializer[] _syncRequestedSerializers = new StateSerializer[8];
+        private int _syncRequestedSerializersCount;
         public const int MaxStoredInputs = 30;
 
         private byte[] _compressionBuffer = new byte[4096];
@@ -497,7 +499,7 @@ namespace LiteEntitySystem
                 
                 initMethod?.Invoke(entity);
                 ConstructEntity(entity);
-                stateSerializer.RequestSync();
+                RequestSyncFor(stateSerializer);
             }
             //Debug.Log($"[SEM] Entity create. clsId: {classData.ClassId}, id: {entityId}, v: {version}");
             return entity;
@@ -508,13 +510,20 @@ namespace LiteEntitySystem
             return _netPlayersDict[ownerId];
         }
 
+        private void RequestSyncFor(StateSerializer stateSerializer)
+        {
+            Utils.ResizeIfFull(ref _syncRequestedSerializers, _syncRequestedSerializersCount);
+            _syncRequestedSerializers[_syncRequestedSerializersCount] = stateSerializer;
+            _syncRequestedSerializersCount++;
+        }
+
         protected override void OnLogicTick()
         {
             if (_playersAdded)
             {
                 _playersAdded = false;
                 for (ushort eId = FirstEntityId; eId <= MaxSyncedEntityId; eId++)
-                    _stateSerializers[eId].RequestSync();
+                    RequestSyncFor(_stateSerializers[eId]);
             }
             
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
@@ -565,6 +574,10 @@ namespace LiteEntitySystem
 
             foreach (var lagCompensatedEntity in LagCompensatedEntities)
                 lagCompensatedEntity.WriteHistory(_tick);
+            
+            for(int i = 0; i < _syncRequestedSerializersCount; i++)
+                _syncRequestedSerializers[i].MakeOnSync();
+            _syncRequestedSerializersCount = 0;
         }
         
         internal void DestroySavedData(InternalEntity entityLogic)
@@ -613,7 +626,7 @@ namespace LiteEntitySystem
 
         internal void OnOwnerChanged(EntityLogic entityLogic)
         {
-            _stateSerializers[entityLogic.Id].RequestSync();
+            RequestSyncFor(_stateSerializers[entityLogic.Id]);
         }
     }
 }

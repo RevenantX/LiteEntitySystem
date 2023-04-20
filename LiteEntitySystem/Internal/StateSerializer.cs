@@ -36,8 +36,7 @@ namespace LiteEntitySystem.Internal
         private bool _lagCompensationEnabled;
         private byte _controllerOwner;
         private uint _fullDataSize;
-        private bool _syncRequested;
-        
+
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
             //Logger.Log($"AddRpc for tick: {rpc.Header.Tick}, St: {_entity.ServerManager.Tick}, Id: {rpc.Header.Id}");
@@ -57,7 +56,6 @@ namespace LiteEntitySystem.Internal
 
         public unsafe void Init(ref EntityClassData classData, InternalEntity e)
         {
-            _syncRequested = true;
             _classData = classData;
             _entity = e;
             _state = SerializerState.Active;
@@ -144,23 +142,18 @@ namespace LiteEntitySystem.Internal
             return totalSize;
         }
 
-        public void RequestSync()
+        public void MakeOnSync()
         {
-            _syncRequested = true;
+            for (int i = 0; i < _classData.SyncableFields.Length; i++)
+            {
+                var syncableField = _classData.SyncableFields[i];
+                var obj = Utils.RefFieldValue<SyncableField>(_entity, syncableField.Offset);
+                obj.InternalOnSyncRequested();
+            }
         }
 
         private unsafe bool WriteRPCs(ushort playerTick, ushort minimalTick, byte* resultData, ref int position, bool isOwned, bool firstSync)
         {
-            if (_syncRequested)
-            {
-                _syncRequested = false;
-                for (int i = 0; i < _classData.SyncableFields.Length; i++)
-                {
-                    var syncableField = _classData.SyncableFields[i];
-                    var obj = Utils.RefFieldValue<SyncableField>(_entity, syncableField.Offset);
-                    obj.InternalOnSyncRequested();
-                }
-            }
             //add RPCs count
             ushort* rpcCount = (ushort*)(resultData + position);
             *rpcCount = 0;
