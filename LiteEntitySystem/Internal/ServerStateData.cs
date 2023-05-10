@@ -45,16 +45,7 @@ namespace LiteEntitySystem.Internal
         }
     }
 
-    internal enum ServerDataStatus
-    {
-        Empty,
-        Partial,
-        Ready,
-        Preloaded,
-        Executed
-    }
-
-    internal struct ServerStateData
+    internal class ServerStateData
     {
         public byte[] Data;
         public int Size;
@@ -65,17 +56,16 @@ namespace LiteEntitySystem.Internal
         public int PreloadDataCount;
         public int[] InterpolatedFields;
         public int InterpolatedCount;
-        public ServerDataStatus Status;
 
         private int _remoteCallsCount;
         private RemoteCallsCache[] _remoteCallsCaches;
-        private bool[] _receivedParts;
+        private readonly bool[] _receivedParts;
         private int _totalPartsCount;
         private int _receivedPartsCount;
         private byte _maxReceivedPart;
         private ushort _partMtu;
 
-        public void Init()
+        public ServerStateData()
         {
             Data = new byte[1500];
             PreloadDataArray = new StatePreloadData[32];
@@ -86,13 +76,6 @@ namespace LiteEntitySystem.Internal
 
         public unsafe void Preload(InternalEntity[] entityDict)
         {
-            if (Status != ServerDataStatus.Ready)
-            {
-                Logger.LogError($"Invalid status on preload: {Status}");
-                return;
-            }
-            Status = ServerDataStatus.Preloaded;
-            
             int bytesRead = 0;
             //preload some data
             while (bytesRead < Size)
@@ -215,10 +198,12 @@ namespace LiteEntitySystem.Internal
         public unsafe void ReadRPCs(byte* rawData, ref int position, EntitySharedReference entityId, EntityClassData classData)
         {
             int prevCount = _remoteCallsCount;
-            _remoteCallsCount += *(ushort*)(rawData + position);
-            Utils.ResizeOrCreate(ref _remoteCallsCaches, _remoteCallsCount);
-            //Logger.Log($"[CEM] ReadRPC Entity: {entityId.Id} Count: {RemoteCallsCount} posAfterData: {position}");
+            int readCount = *(ushort*)(rawData + position);
+            //if(readCount > 0)
+            //    Logger.Log($"[CEM] ReadRPC Entity: {entityId.Id} Count: {readCount} posAfterData: {position}");
             position += sizeof(ushort);
+            _remoteCallsCount += readCount;
+            Utils.ResizeOrCreate(ref _remoteCallsCaches, _remoteCallsCount);
             for (int i = prevCount; i < _remoteCallsCount; i++)
             {
                 var header = *(RPCHeader*)(rawData + position);
@@ -234,28 +219,27 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        public unsafe void ReadPart(DiffPartHeader partHeader, byte* rawData, int partSize)
+        public void Reset(ushort tick)
         {
-            //reset if not same
-            if (Tick != partHeader.Tick)
-            {
-                Tick = partHeader.Tick;
-                Array.Clear(_receivedParts, 0, _maxReceivedPart+1);
-                InterpolatedCount = 0;
-                PreloadDataCount = 0;
-                _maxReceivedPart = 0;
-                _receivedPartsCount = 0;
-                _totalPartsCount = 0;
-                _remoteCallsCount = 0;
-                Size = 0;
-                _partMtu = 0;
-            }
-            else if (_receivedParts[partHeader.Part])
+            Tick = tick;
+            Array.Clear(_receivedParts, 0, _maxReceivedPart+1);
+            InterpolatedCount = 0;
+            PreloadDataCount = 0;
+            _maxReceivedPart = 0;
+            _receivedPartsCount = 0;
+            _totalPartsCount = 0;
+            _remoteCallsCount = 0;
+            Size = 0;
+            _partMtu = 0;
+        }
+
+        public unsafe bool ReadPart(DiffPartHeader partHeader, byte* rawData, int partSize)
+        {
+            if (_receivedParts[partHeader.Part])
             {
                 //duplicate ?
-                return;
+                return false;
             }
-            Status = ServerDataStatus.Partial;
             if (partHeader.PacketType == InternalPackets.DiffSyncLast)
             {
                 partSize -= sizeof(LastPartData);
@@ -278,8 +262,7 @@ namespace LiteEntitySystem.Internal
             Size += partSize;
             _receivedPartsCount++;
             _maxReceivedPart = Math.Max(_maxReceivedPart, partHeader.Part);
-            if (_receivedPartsCount == _totalPartsCount)
-                Status = ServerDataStatus.Ready;
+            return _receivedPartsCount == _totalPartsCount;
         }
     }
 }

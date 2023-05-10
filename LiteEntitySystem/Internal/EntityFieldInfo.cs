@@ -11,6 +11,7 @@ namespace LiteEntitySystem.Internal
 
     internal struct EntityFieldInfo
     {
+        public readonly string Name;
         public readonly ValueTypeProcessor TypeProcessor;
         public readonly int Offset;
         public readonly int SyncableSyncVarOffset;
@@ -32,11 +33,13 @@ namespace LiteEntitySystem.Internal
 
         //for value type
         public EntityFieldInfo(
+            string name,
             ValueTypeProcessor valueTypeProcessor,
             int offset,
             FieldType fieldType,
             SyncFlags flags)
         {
+            Name = name;
             TypeProcessor = valueTypeProcessor;
             SyncableSyncVarOffset = -1;
             Offset = offset;
@@ -51,11 +54,13 @@ namespace LiteEntitySystem.Internal
 
         //For syncable syncvar
         public EntityFieldInfo(
+            string name,
             ValueTypeProcessor valueTypeProcessor,
             int offset,
             int syncableSyncVarOffset,
             SyncFlags flags)
         {
+            Name = name;
             TypeProcessor = valueTypeProcessor;
             SyncableSyncVarOffset = syncableSyncVarOffset;
             Offset = offset;

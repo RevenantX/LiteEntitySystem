@@ -107,12 +107,5 @@ namespace LiteEntitySystem.Internal
         {
             return mi.CreateDelegateHelper<SpanAction<T, TArgument>>();
         }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool SkipSync(SyncFlags flags, bool isOwned)
-        {
-            return ((flags & SyncFlags.OnlyForOwner) != 0 && !isOwned) || 
-                   ((flags & SyncFlags.OnlyForOtherPlayers) != 0 && isOwned);
-        }
     }
 }

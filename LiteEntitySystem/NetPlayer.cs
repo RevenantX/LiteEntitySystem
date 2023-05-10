@@ -1,4 +1,5 @@
-﻿using LiteNetLib;
+﻿using LiteEntitySystem.Internal;
+using LiteNetLib;
 
 namespace LiteEntitySystem
 {
@@ -16,9 +17,7 @@ namespace LiteEntitySystem
         internal float LerpTime;
         internal NetPlayerState State;
         internal int ArrayIndex;
-
-        internal ushort AvailableInputCount;
-        internal readonly InputBuffer[] AvailableInput = new InputBuffer[ServerEntityManager.MaxStoredInputs];
+        internal readonly SequenceBinaryHeap<InputBuffer> AvailableInput = new (ServerEntityManager.MaxStoredInputs);
 
         internal NetPlayer(NetPeer peer, byte id)
         {

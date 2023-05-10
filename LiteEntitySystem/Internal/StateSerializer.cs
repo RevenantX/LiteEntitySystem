@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace LiteEntitySystem.Internal
 {
     internal enum DiffResult
@@ -152,8 +154,13 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        private unsafe bool WriteRPCs(ushort playerTick, ushort minimalTick, byte* resultData, ref int position, bool isOwned, bool firstSync)
+        //initial state with compression
+        private unsafe void WriteInitialState(bool isOwned, ushort serverTick, byte* resultData, ref int position)
         {
+            fixed (byte* lastEntityData = _latestEntityData)
+                RefMagic.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
+            position += (int)_fullDataSize;
+            
             //add RPCs count
             ushort* rpcCount = (ushort*)(resultData + position);
             *rpcCount = 0;
@@ -163,13 +170,14 @@ namespace LiteEntitySystem.Internal
             var rpcNode = _rpcHead;
             while (rpcNode != null)
             {
-                bool send = (isOwned && (rpcNode.Flags & ExecuteFlags.SendToOwner) != 0) ||
-                            (!isOwned && (rpcNode.Flags & ExecuteFlags.SendToOther) != 0);
-                
-                if (send && (firstSync || Utils.SequenceDiff(playerTick, rpcNode.Header.Tick) < 0))
+                if ((isOwned && (rpcNode.Flags & ExecuteFlags.SendToOwner) != 0) ||
+                    (!isOwned && (rpcNode.Flags & ExecuteFlags.SendToOther) != 0))
                 {
                     //put new
-                    *(RPCHeader*)(resultData + position) = rpcNode.Header;
+                    var header = rpcNode.Header;
+                    //refresh tick
+                    header.Tick = serverTick;
+                    *(RPCHeader*)(resultData + position) = header;
                     position += sizeof(RPCHeader);
                     fixed (byte* rpcData = rpcNode.Data)
                         RefMagic.CopyBlock(resultData + position, rpcData, (uint)rpcNode.TotalSize);
@@ -177,21 +185,8 @@ namespace LiteEntitySystem.Internal
                     (*rpcCount)++;
                     //Logger.Log($"[Sever] T: {_entity.ServerManager.Tick}, SendRPC Tick: {rpcNode.Header.Tick}, Id: {rpcNode.Header.Id}, EntityId: {_entity.Id}, TypeSize: {rpcNode.Header.TypeSize}, Count: {rpcNode.Header.Count}");
                 }
-                else if (!firstSync && Utils.SequenceDiff(rpcNode.Header.Tick, minimalTick) < 0)
-                {
-                    //remove old RPCs (they should be at first place)
-                    _entity.ServerManager.PoolRpc(rpcNode);
-                    if (_rpcTail == _rpcHead)
-                        _rpcTail = null;
-                    _rpcHead = rpcNode.Next;
-                    rpcNode.Next = null;
-                    rpcNode = _rpcHead;
-                    continue;
-                }
                 rpcNode = rpcNode.Next;
             }
-            //Logger.Log($"[SEM] SendRPC EntityId: {_entity.Id}, Count: {*rpcCount}, pos: {position}");
-            return *rpcCount > 0;
         }
 
         public unsafe void MakeBaseline(byte playerId, ushort serverTick, ushort minimalTick, byte* resultData, ref int position)
@@ -202,14 +197,9 @@ namespace LiteEntitySystem.Internal
             Write(serverTick, minimalTick);
             if (_controllerOwner != EntityManager.ServerPlayerId && playerId != _controllerOwner)
                 return;
-            //Logger.Log($"[SEM] SendBaseline for entity: {_entity.Id}, pos: {position}, posAfterData: {position + _fullDataSize}");
-            
-            //initial state with compression
             //don't write total size in full sync and fields
-            fixed (byte* lastEntityData = _latestEntityData)
-                RefMagic.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
-            position += (int)_fullDataSize;
-            WriteRPCs(serverTick, minimalTick, resultData, ref position, _entity.IsControlledBy(playerId), true);
+            WriteInitialState(_entity.IsControlledBy(playerId), serverTick, resultData, ref position);
+            //Logger.Log($"[SEM] SendBaseline for entity: {_entity.Id}, pos: {position}, posAfterData: {position + _fullDataSize}");
         }
 
         public unsafe DiffResult MakeDiff(byte playerId, ushort serverTick, ushort minimalTick, ushort playerTick, byte* resultData, ref int position)
@@ -231,68 +221,105 @@ namespace LiteEntitySystem.Internal
             //make diff
             int startPos = position;
             bool isOwned = _entity.IsControlledBy(playerId);
-
-            fixed (byte* lastEntityData = _latestEntityData)
+            
+            //at 0 ushort
+            ushort* fieldFlagAndSize = (ushort*)(resultData + startPos);
+            position += sizeof(ushort);
+            
+            if (Utils.SequenceDiff(_versionChangedTick, playerTick) > 0)
             {
-                bool hasChanges;
-                
-                //at 0 ushort
-                ushort* fieldFlagAndSize = (ushort*)(resultData + startPos);
+                //write full header here (totalSize + eid)
+                //also all fields
+                *fieldFlagAndSize = 1;
+                WriteInitialState(isOwned, serverTick, resultData, ref position);
+            } 
+            else fixed (byte* lastEntityData = _latestEntityData) //make diff
+            {
+                byte* entityDataAfterHeader = lastEntityData + HeaderSize;
+                // -1 for cycle
+                byte* fields = resultData + startPos + DiffHeaderSize - 1;
+                //put entity id at 2
+                *(ushort*)(resultData + position) = *(ushort*)lastEntityData;
+                *fieldFlagAndSize = 0;
+                position += sizeof(ushort) + _classData.FieldsFlagsSize;
+                int positionBeforeDeltaCompression = position;
+
+                //write fields
+                for (int i = 0; i < _classData.FieldsCount; i++)
+                {
+                    if (i % 8 == 0)
+                    {
+                        fields++;
+                        *fields = 0;
+                    }
+
+                    ref var field = ref _classData.Fields[i];
+                    if (((field.Flags & SyncFlags.OnlyForOwner) != 0 && !isOwned) || 
+                        ((field.Flags & SyncFlags.OnlyForOtherPlayers) != 0 && isOwned))
+                    {
+                        //Logger.Log($"SkipSync: {field.Name}, isOwned: {isOwned}");
+                        continue;
+                    }
+                    if (Utils.SequenceDiff(_fieldChangeTicks[i], playerTick) <= 0)
+                    {
+                        //Logger.Log($"SkipOld: {field.Name}");
+                        //old data
+                        continue;
+                    }
+                    *fields |= (byte)(1 << i % 8);
+                    RefMagic.CopyBlock(resultData + position, entityDataAfterHeader + field.FixedOffset, field.Size);
+                    position += field.IntSize;
+                }
+
+                bool hasChanges = position > positionBeforeDeltaCompression;
+                //add RPCs count
+                ushort* rpcCount = (ushort*)(resultData + position);
+                *rpcCount = 0;
                 position += sizeof(ushort);
 
-                //initial state with compression
-                if (Utils.SequenceDiff(_versionChangedTick, playerTick) > 0)
+                //actual write rpcs
+                var rpcNode = _rpcHead;
+                while (rpcNode != null)
                 {
-                    //write full header here (totalSize + eid)
-                    //also all fields
-                    *fieldFlagAndSize = 1;
-                    RefMagic.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
-                    position += (int)_fullDataSize;
-                    hasChanges = true;
-                }
-                else //make diff
-                {
-                    byte* entityDataAfterHeader = lastEntityData + HeaderSize;
-                    // -1 for cycle
-                    byte* fields = resultData + startPos + DiffHeaderSize - 1;
-                    //put entity id at 2
-                    *(ushort*)(resultData + position) = *(ushort*)lastEntityData;
-                    *fieldFlagAndSize = 0;
-                    position += sizeof(ushort) + _classData.FieldsFlagsSize;
-                    int positionBeforeDeltaCompression = position;
-
-                    for (int i = 0; i < _classData.FieldsCount; i++)
+                    bool send = (isOwned && (rpcNode.Flags & ExecuteFlags.SendToOwner) != 0) ||
+                                (!isOwned && (rpcNode.Flags & ExecuteFlags.SendToOther) != 0);
+            
+                    if (send && Utils.SequenceDiff(playerTick, rpcNode.Header.Tick) < 0)
                     {
-                        if (i % 8 == 0)
-                        {
-                            fields++;
-                            *fields = 0;
-                        }
-
-                        ref var field = ref _classData.Fields[i];
-                        if (Utils.SkipSync(field.Flags, isOwned) || Utils.SequenceDiff(_fieldChangeTicks[i], playerTick) <= 0) 
-                            continue;
-                        *fields |= (byte)(1 << i % 8);
-                        RefMagic.CopyBlock(resultData + position, entityDataAfterHeader + field.FixedOffset, field.Size);
-                        position += field.IntSize;
+                        //put new
+                        var header = rpcNode.Header;
+                        *(RPCHeader*)(resultData + position) = header;
+                        position += sizeof(RPCHeader);
+                        fixed (byte* rpcData = rpcNode.Data)
+                            RefMagic.CopyBlock(resultData + position, rpcData, (uint)rpcNode.TotalSize);
+                        position += rpcNode.TotalSize;
+                        (*rpcCount)++;
+                        //Logger.Log($"[Sever] T: {_entity.ServerManager.Tick}, SendRPC Tick: {rpcNode.Header.Tick}, Id: {rpcNode.Header.Id}, EntityId: {_entity.Id}, TypeSize: {rpcNode.Header.TypeSize}, Count: {rpcNode.Header.Count}");
                     }
-                    hasChanges = position > positionBeforeDeltaCompression;
+                    else if (Utils.SequenceDiff(rpcNode.Header.Tick, minimalTick) < 0)
+                    {
+                        //remove old RPCs (they should be at first place)
+                        _entity.ServerManager.PoolRpc(rpcNode);
+                        if (_rpcTail == _rpcHead)
+                            _rpcTail = null;
+                        _rpcHead = rpcNode.Next;
+                        rpcNode.Next = null;
+                        rpcNode = _rpcHead;
+                        continue;
+                    }
+                    rpcNode = rpcNode.Next;
                 }
-
-                if (WriteRPCs(playerTick, minimalTick, resultData, ref position, isOwned, false))
-                    hasChanges = true;
                 
-                if (!hasChanges)
+                if (*rpcCount == 0 && !hasChanges)
                 {
                     position = startPos;
                     return DiffResult.Skip;
                 }
-
-                //write totalSize
-                int resultSize = position - startPos;
-                *fieldFlagAndSize |= (ushort)(resultSize << 1);
             }
 
+            //write totalSize
+            int resultSize = position - startPos;
+            *fieldFlagAndSize |= (ushort)(resultSize << 1);
             return DiffResult.Done;
         }
     }

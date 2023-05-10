@@ -53,7 +53,7 @@ namespace LiteEntitySystem
 
         private void OnServerResponse(ServerResponse response)
         {
-            Logger.Log($"OnServerResponse Id: {response.RequestId} - {response.Success}");
+            //Logger.Log($"OnServerResponse Id: {response.RequestId} - {response.Success}");
             while (_awaitingRequests.Count > 0)
             {
                 var awaitingRequest = _awaitingRequests.Dequeue();

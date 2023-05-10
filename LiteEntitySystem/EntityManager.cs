@@ -407,7 +407,12 @@ namespace LiteEntitySystem
         /// <returns>true if entity exists</returns>
         public bool TryGetSingleton<T>(out T singleton) where T : SingletonEntityLogic
         {
-            var s = _singletonEntities[_registeredTypeIds[typeof(T)]];
+            if (!_registeredTypeIds.TryGetValue(typeof(T), out ushort registeredId))
+            {
+                singleton = null;
+                return false;
+            }
+            var s = _singletonEntities[registeredId];
             if (s != null)
             {
                 singleton = (T)s;

@@ -312,18 +312,18 @@ namespace LiteEntitySystem
                     player.CurrentServerTick = input.StateB;
                     
                 //read input
-                if (player.AvailableInput[inputBuffer.Tick % MaxStoredInputs].Data == null && Utils.SequenceDiff(inputBuffer.Tick, player.LastProcessedTick) > 0)
+                if (player.State == NetPlayerState.WaitingForFirstInput || Utils.SequenceDiff(inputBuffer.Tick, player.LastReceivedTick) > 0)
                 {
                     _inputPool.TryDequeue(out inputBuffer.Data);
                     Utils.ResizeOrCreate(ref inputBuffer.Data, inputBuffer.Size);
                     fixed(byte* inputData = inputBuffer.Data, readerData = reader.RawData)
                         RefMagic.CopyBlock(inputData, readerData + reader.Position, inputBuffer.Size);
-                    player.AvailableInput[inputBuffer.Tick % MaxStoredInputs] = inputBuffer;
-                    player.AvailableInputCount++;
+                    if (player.AvailableInput.Count == MaxStoredInputs)
+                        _inputPool.Enqueue(player.AvailableInput.ExtractMin().Data);
+                    player.AvailableInput.Add(inputBuffer, inputBuffer.Tick);
 
                     //to reduce data
-                    if (Utils.SequenceDiff(inputBuffer.Tick, player.LastReceivedTick) > 0)
-                        player.LastReceivedTick = inputBuffer.Tick;
+                    player.LastReceivedTick = inputBuffer.Tick;
                 }
                 reader.SkipBytes(inputBuffer.Size);
             }
@@ -531,34 +531,20 @@ namespace LiteEntitySystem
                 var player = _netPlayersArray[pidx];
                 if (player.State == NetPlayerState.RequestBaseline) 
                     continue;
-                if (player.AvailableInputCount == 0)
+                if (player.AvailableInput.Count == 0)
                 {
                     //Logger.LogWarning($"Inputs of player {pidx} is zero");
                     continue;
                 }
-
-                var emptyInputBuffer = new InputBuffer();
-                ref var inputFrame = ref emptyInputBuffer;
-                int nextInputTick = player.LastProcessedTick;
-                while (inputFrame.Data == null)
-                {
-                    nextInputTick = (nextInputTick+1) % MaxStoredInputs;
-                    inputFrame = ref player.AvailableInput[nextInputTick];
-                    if (player.LastProcessedTick == nextInputTick)
-                    {
-                        Logger.LogError("This shouldn't be happen");
-                        break;
-                    }
-                }
-
-                player.AvailableInputCount--;
+                
+                var inputFrame = player.AvailableInput.ExtractMin();
                 ref var inputData = ref inputFrame.Input;
                 player.LastProcessedTick = inputFrame.Tick;
                 player.StateATick = inputData.StateA;
                 player.StateBTick = inputData.StateB;
                 player.LerpTime = inputData.LerpMsec;
                 //Logger.Log($"[SEM] CT: {player.LastProcessedTick}, stateA: {player.StateATick}, stateB: {player.StateBTick}");
-                player.SimulatedServerTick = Utils.LerpSequence(inputData.StateA, inputData.StateB, inputData.LerpMsec);
+                player.SimulatedServerTick = Utils.LerpSequence(inputData.StateA, (ushort)(inputData.StateB-1), inputData.LerpMsec);
                 if (player.State == NetPlayerState.WaitingForFirstInputProcess)
                     player.State = NetPlayerState.Active;
 

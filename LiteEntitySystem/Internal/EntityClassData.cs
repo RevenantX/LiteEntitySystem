@@ -206,7 +206,7 @@ namespace LiteEntitySystem.Internal
                             InterpolatedFieldsSize += fieldSize;
                             InterpolatedCount++;
                         }
-                        var fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, internalFieldType, syncFlags);
+                        var fieldInfo = new EntityFieldInfo($"{baseType.Name}-{field.Name}", valueTypeProcessor, offset, internalFieldType, syncFlags);
                         if (syncFlags.HasFlagFast(SyncFlags.LagCompensated))
                         {
                             lagCompensatedFields.Add(fieldInfo);
@@ -252,7 +252,7 @@ namespace LiteEntitySystem.Internal
                                     continue;
                                 }
                                 int syncvarOffset = Marshal.ReadInt32(syncableField.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
-                                var fieldInfo = new EntityFieldInfo(valueTypeProcessor, offset, syncvarOffset, syncFlags);
+                                var fieldInfo = new EntityFieldInfo($"{baseType.Name}-{field.Name}:{syncableField.Name}", valueTypeProcessor, offset, syncvarOffset, syncFlags);
                                 fields.Add(fieldInfo);
                                 FixedFieldsSize += fieldInfo.IntSize;
                                 if (fieldInfo.IsPredicted)
