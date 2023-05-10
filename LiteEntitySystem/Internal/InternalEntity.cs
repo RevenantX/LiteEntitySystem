@@ -37,7 +37,7 @@ namespace LiteEntitySystem.Internal
         /// <summary>
         /// Is entity is controlled by server
         /// </summary>
-        public bool IsServerControlled => !IsControlledBy(EntityManager.InternalPlayerId);
+        public bool IsServerControlled => IsControlledBy(EntityManager.ServerPlayerId);
         
         /// <summary>
         /// ClientEntityManager that available only on client. Will throw exception if called on server
