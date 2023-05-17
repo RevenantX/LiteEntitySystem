@@ -513,7 +513,7 @@ namespace LiteEntitySystem
             return classData.IsUpdateable && (IsServer || entity.IsLocal || (IsClient && (classData.UpdateOnClient || classData.HasRemoteRollbackFields)));
         }
 
-        internal void RemoveEntity(InternalEntity e)
+        internal virtual void RemoveEntity(InternalEntity e)
         {
             ref var classData = ref ClassDataDict[e.ClassId];
             

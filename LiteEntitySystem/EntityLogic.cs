@@ -235,7 +235,7 @@ namespace LiteEntitySystem
         {
             
         }
-        
+
         internal override bool IsControlledBy(byte playerId)
         {
             return playerId == InternalOwnerId;

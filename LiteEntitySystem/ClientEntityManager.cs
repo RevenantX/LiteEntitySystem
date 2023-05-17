@@ -65,6 +65,7 @@ namespace LiteEntitySystem
         
         private const int InputBufferSize = 128;
 
+        private readonly EntityFilter<InternalEntity> _predictedEntityFilter = new();
         private readonly NetPeer _localPeer;
         private readonly Queue<ServerStateData> _statesPool = new(MaxSavedStateDiff);
         private readonly Dictionary<ushort, ServerStateData> _receivedStates = new();
@@ -84,14 +85,25 @@ namespace LiteEntitySystem
         private double _timer;
         private bool _isSyncReceived;
 
-        private struct SyncCallInfo
+        private readonly struct SyncCallInfo
         {
-            public MethodCallDelegate OnSync;
-            public InternalEntity Entity;
-            public int PrevDataPos;
+            public readonly MethodCallDelegate OnSync;
+            public readonly InternalEntity Entity;
+            public readonly int PrevDataPos;
+
+            public SyncCallInfo(MethodCallDelegate onSync, InternalEntity entity, int prevDataPos)
+            {
+                OnSync = onSync;
+                Entity = entity;
+                PrevDataPos = prevDataPos;
+            }
+
+            public void Execute(ServerStateData serverStateData)
+            {
+                OnSync(Entity, new ReadOnlySpan<byte>(serverStateData.Data, PrevDataPos, serverStateData.Size-PrevDataPos));
+            }
         }
         private SyncCallInfo[] _syncCalls;
-        private readonly HashSet<SyncableField> _changedSyncableFields = new();
         private int _syncCallsCount;
         
         private InternalEntity[] _entitiesToConstruct = new InternalEntity[64];
@@ -129,11 +141,21 @@ namespace LiteEntitySystem
             _sendBuffer[1] = InternalPackets.ClientInput;
 
             AliveEntities.SubscribeToConstructed(OnAliveConstructed, false);
-            AliveEntities.OnDestroyed += OnAliveDestroyed;
 
             for (int i = 0; i < MaxSavedStateDiff; i++)
             {
                 _statesPool.Enqueue(new ServerStateData());
+            }
+        }
+
+        internal override void RemoveEntity(InternalEntity e)
+        {
+            base.RemoveEntity(e);
+            if (_predictedEntityFilter.Contains(e))
+            {
+                _predictedEntities[e.Id] = null;
+                _predictedEntityFilter.Remove(e);
+                _predictedEntityFilter.Refresh();
             }
         }
 
@@ -201,7 +223,6 @@ namespace LiteEntitySystem
                     return;
                 _entitiesToConstructCount = 0;
                 _syncCallsCount = 0;
-                _changedSyncableFields.Clear();
                 //read header and decode
                 int decodedBytes;
                 var header = *(BaselineDataHeader*)rawData;
@@ -385,11 +406,8 @@ namespace LiteEntitySystem
             _timer -= _lerpTime;
 
             //reset owned entities
-            foreach (var entity in AliveEntities)
+            foreach (var entity in _predictedEntityFilter)
             {
-                if(entity.IsLocal)
-                    continue;
-                
                 ref var classData = ref entity.GetClassData();
                 if(entity.IsServerControlled && !classData.HasRemoteRollbackFields)
                     continue;
@@ -708,12 +726,6 @@ namespace LiteEntitySystem
             _entitiesToConstructCount = 0;
             
             //Make OnSyncCalls
-            foreach (var syncableField in _changedSyncableFields)
-            {
-                var entity = EntitiesDict[syncableField.ParentEntityId];
-                entity.GetClassData().SyncableFields[syncableField.Id].OnSync?.Invoke(entity, syncableField);
-            }
-            _changedSyncableFields.Clear();
             for (int i = 0; i < _syncCallsCount; i++)
             {
                 ref var syncCall = ref _syncCalls[i];
@@ -723,11 +735,6 @@ namespace LiteEntitySystem
             
             foreach (var lagCompensatedEntity in LagCompensatedEntities)
                 lagCompensatedEntity.WriteHistory(ServerTick);
-        }
-
-        internal void MarkSyncableFieldChanged(SyncableField syncableField)
-        {
-            _changedSyncableFields.Add(syncableField);
         }
 
         private unsafe void ReadEntityState(byte* rawData, ref int readerPosition, ushort entityInstanceId, bool fullSync, bool fistSync)
@@ -756,8 +763,11 @@ namespace LiteEntitySystem
                     //create new
                     entity = AddEntity(new EntityParams(classId, entityInstanceId, version, this));
                     ref var cd = ref ClassDataDict[entity.ClassId];
-                    if(cd.PredictedSize > 0)
+                    if (cd.PredictedSize > 0)
+                    {
                         Utils.ResizeOrCreate(ref _predictedEntities[entity.Id], cd.PredictedSize);
+                        _predictedEntityFilter.Add(entity);
+                    }
                     if(cd.InterpolatedFieldsSize > 0)
                         Utils.ResizeOrCreate(ref _interpolatedInitialData[entity.Id], cd.InterpolatedFieldsSize);
 
@@ -801,8 +811,6 @@ namespace LiteEntitySystem
                     {
                         var syncableField = Utils.RefFieldValue<SyncableField>(entity, field.Offset);
                         field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, readDataPtr);
-                        if (classData.SyncableFields[syncableField.Id].OnSync != null)
-                            _changedSyncableFields.Add(syncableField);
                     }
                     else
                     {
@@ -815,12 +823,7 @@ namespace LiteEntitySystem
                         if (field.OnSync != null)
                         {
                             if (field.TypeProcessor.SetFromAndSync(entity, field.Offset, readDataPtr))
-                                _syncCalls[_syncCallsCount++] = new SyncCallInfo
-                                {
-                                    OnSync = field.OnSync,
-                                    Entity = entity,
-                                    PrevDataPos = readerPosition
-                                };
+                                _syncCalls[_syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition);
                         }
                         else
                         {

@@ -190,7 +190,6 @@ namespace LiteEntitySystem.Internal
                 {
                     var syncableField = Utils.RefFieldValue<SyncableField>(entity, rpc.SyncableOffset);
                     rpc.Delegate(syncableField, rpcData);
-                    entityManager.MarkSyncableFieldChanged(syncableField);
                 }
             }
         }

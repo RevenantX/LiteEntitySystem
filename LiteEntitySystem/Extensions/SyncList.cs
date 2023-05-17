@@ -5,7 +5,7 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncList<T> : SyncableField, IList<T>, IReadOnlyList<T> where T : unmanaged
+    public class SyncList<T> : SyncableField, ICollection<T>, IReadOnlyList<T> where T : unmanaged
     {
         public int Count => _count;
         public bool IsReadOnly => false;
@@ -108,23 +108,12 @@ namespace LiteEntitySystem.Extensions
             return -1;
         }
 
-        public void Insert(int index, T item)
-        {
-            throw new NotImplementedException();
-        }
-        
         public void RemoveAt(int index)
         {
             _data[index] = _data[_count - 1];
             _data[_count - 1] = default;
             _count--;
             ExecuteRPC(_removeAtAction, index);
-        }
-
-        T IList<T>.this[int index]
-        {
-            get => _data[index];
-            set => _data[index] = value;
         }
 
         public ref T this[int index] => ref _data[index];

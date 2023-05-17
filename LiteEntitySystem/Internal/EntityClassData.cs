@@ -5,15 +5,13 @@ using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
 {
-    internal struct SyncableFieldInfo
+    internal readonly struct SyncableFieldInfo
     {
         public readonly int Offset;
-        public Action<InternalEntity, SyncableField> OnSync;
 
         public SyncableFieldInfo(int offset)
         {
             Offset = offset;
-            OnSync = null;
         }
     }
     
@@ -33,8 +31,7 @@ namespace LiteEntitySystem.Internal
     
     internal struct EntityClassData
     {
-        public readonly bool IsCreated;
-        
+        public bool IsRpcBound;
         public readonly ushort ClassId;
         public readonly ushort FilterId;
         public readonly bool IsSingleton;
@@ -51,12 +48,15 @@ namespace LiteEntitySystem.Internal
         public readonly int InterpolatedCount;
         public readonly EntityFieldInfo[] LagCompensatedFields;
         public readonly int LagCompensatedSize;
-
         public readonly bool UpdateOnClient;
         public readonly bool IsUpdateable;
         public readonly bool IsLocalOnly;
-        public readonly Type[] BaseTypes;
         public readonly EntityConstructor<InternalEntity> EntityConstructor;
+        public readonly MethodCallDelegate[] RemoteCallsClient;
+        public readonly Delegate[] RemoteCallsServer;
+        
+        private readonly bool _isCreated;
+        private readonly Type[] _baseTypes;
 
         private static readonly int NativeFieldOffset;
         private static readonly Type InternalEntityType = typeof(InternalEntity);
@@ -67,10 +67,6 @@ namespace LiteEntitySystem.Internal
         {
             public readonly uint TestValue = 0xDEADBEEF;
         }
-        
-        public bool IsRpcBound;
-        public readonly MethodCallDelegate[] RemoteCallsClient;
-        public readonly Delegate[] RemoteCallsServer;
 
         static EntityClassData()
         {
@@ -81,14 +77,13 @@ namespace LiteEntitySystem.Internal
             int monoFieldOffset = Marshal.ReadInt32(field.FieldHandle.Value + monoOffset) & 0xFFFFFF;
             int dotnetFieldOffset = Marshal.ReadInt32(field.FieldHandle.Value + dotnetOffset) & 0xFFFFFF;
 
-            TestOffset to = new TestOffset();
-
+            var to = new TestOffset();
             if (Utils.RefFieldValue<uint>(to, monoFieldOffset) == to.TestValue)
                 NativeFieldOffset = monoOffset;
             else if (Utils.RefFieldValue<uint>(to, dotnetFieldOffset) == to.TestValue)
                 NativeFieldOffset = dotnetOffset;
             else
-                Logger.Log("Unknown native field offset");
+                Logger.LogError("Unknown native field offset");
         }
 
         private static List<Type> GetBaseTypes(Type ofType, Type until, bool includeSelf)
@@ -145,7 +140,7 @@ namespace LiteEntitySystem.Internal
             FilterId = filterId;
 
             var baseTypes = GetBaseTypes(entType, InternalEntityType, false);
-            BaseTypes = baseTypes.ToArray();
+            _baseTypes = baseTypes.ToArray();
             BaseIds = new ushort[baseTypes.Count];
             
             var fields = new List<EntityFieldInfo>();
@@ -299,21 +294,21 @@ namespace LiteEntitySystem.Internal
                 }
             }
 
-            IsCreated = true;
+            _isCreated = true;
         }
 
         public void PrepareBaseTypes(Dictionary<Type, ushort> registeredTypeIds, ref ushort singletonCount, ref ushort filterCount)
         {
-            if (!IsCreated)
+            if (!_isCreated)
                 return;
             for (int i = 0; i < BaseIds.Length; i++)
             {
-                if (!registeredTypeIds.TryGetValue(BaseTypes[i], out BaseIds[i]))
+                if (!registeredTypeIds.TryGetValue(_baseTypes[i], out BaseIds[i]))
                 {
                     BaseIds[i] = IsSingleton
                         ? singletonCount++
                         : filterCount++;
-                    registeredTypeIds.Add(BaseTypes[i], BaseIds[i]);
+                    registeredTypeIds.Add(_baseTypes[i], BaseIds[i]);
                 }
                 //Logger.Log($"Base type of {classData.ClassId} - {baseTypes[i]}");
             }

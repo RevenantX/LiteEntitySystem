@@ -2,7 +2,7 @@
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncFixedArray<T> : SyncableField where T : unmanaged
+    public class SyncArray<T> : SyncableField where T : unmanaged
     {
         private struct SetCallData
         {
@@ -10,16 +10,30 @@ namespace LiteEntitySystem.Extensions
             public ushort Index;
         }
         
-        private readonly T[] _data;
+        private T[] _data;
         private RemoteCall<SetCallData> _setRpcAction;
+        private RemoteCall<int> _resizeRpcAction;
         private RemoteCallSpan<T> _initArrayAction;
+        private RemoteCall _clearAction;
+        
+        public int Length => _data.Length;
 
-        public readonly int Length;
-
-        public SyncFixedArray(int size)
+        public SyncArray(int size)
         {
-            Length = size;
             _data = new T[size];
+        }
+
+        public void Resize(int newSize)
+        {
+            if(_data.Length != newSize)
+                Array.Resize(ref _data, newSize);
+            ExecuteRPC(_resizeRpcAction, newSize);
+        }
+
+        public void Clear()
+        {
+            Array.Clear(_data, 0, _data.Length);
+            ExecuteRPC(_clearAction);
         }
 
         protected override void OnSyncRequested()
@@ -31,11 +45,15 @@ namespace LiteEntitySystem.Extensions
         {
             r.CreateClientAction(this, SetValueRPC, ref _setRpcAction);
             r.CreateClientAction(this, InitArrayRPC, ref _initArrayAction);
+            r.CreateClientAction(this, Resize, ref _resizeRpcAction);
+            r.CreateClientAction(this, Clear, ref _clearAction);
         }
 
-        private void InitArrayRPC(ReadOnlySpan<T> data)
+        private void InitArrayRPC(ReadOnlySpan<T> inData)
         {
-            data.CopyTo(_data);
+            if (inData.Length != _data.Length)
+                _data = new T[inData.Length];
+            inData.CopyTo(_data);
         }
         
         private void SetValueRPC(SetCallData setCallData)
