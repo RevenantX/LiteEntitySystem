@@ -45,6 +45,12 @@ namespace LiteEntitySystem.Internal
         }
     }
 
+    internal enum RPCExecutionMode
+    {
+        Entity,
+        SyncableField
+    }
+
     internal class ServerStateData
     {
         public byte[] Data;
@@ -57,6 +63,8 @@ namespace LiteEntitySystem.Internal
         public int[] InterpolatedFields;
         public int InterpolatedCount;
 
+        private int _syncableRemoteCallsCount;
+        private RemoteCallsCache[] _syncableRemoteCallCaches;
         private int _remoteCallsCount;
         private RemoteCallsCache[] _remoteCallsCaches;
         private readonly bool[] _receivedParts;
@@ -154,13 +162,15 @@ namespace LiteEntitySystem.Internal
             }
         }
         
-        public void ExecuteRpcs(ClientEntityManager entityManager, ushort minimalTick, bool firstSync)
+        public void ExecuteRpcs(ClientEntityManager entityManager, ushort minimalTick, bool firstSync, RPCExecutionMode rpcType)
         {
+            var count = rpcType == RPCExecutionMode.Entity ? _remoteCallsCount : _syncableRemoteCallsCount;
+            var array = rpcType == RPCExecutionMode.Entity ? _remoteCallsCaches : _syncableRemoteCallCaches;
             //if(_remoteCallsCount > 0)
             //    Logger.Log($"Executing rpcs (ST: {Tick}) for tick: {entityManager.ServerTick}, Min: {minimalTick}, Count: {_remoteCallsCount}");
-            for (int i = 0; i < _remoteCallsCount; i++)
+            for (int i = 0; i < count; i++)
             {
-                ref var rpc = ref _remoteCallsCaches[i];
+                ref var rpc = ref array[i];
                 if (rpc.Executed)
                     continue;
                 if (!firstSync)
@@ -196,14 +206,13 @@ namespace LiteEntitySystem.Internal
 
         public unsafe void ReadRPCs(byte* rawData, ref int position, EntitySharedReference entityId, EntityClassData classData)
         {
-            int prevCount = _remoteCallsCount;
             int readCount = *(ushort*)(rawData + position);
             //if(readCount > 0)
             //    Logger.Log($"[CEM] ReadRPC Entity: {entityId.Id} Count: {readCount} posAfterData: {position}");
             position += sizeof(ushort);
-            _remoteCallsCount += readCount;
-            Utils.ResizeOrCreate(ref _remoteCallsCaches, _remoteCallsCount);
-            for (int i = prevCount; i < _remoteCallsCount; i++)
+            Utils.ResizeOrCreate(ref _remoteCallsCaches, _remoteCallsCount + readCount);
+            Utils.ResizeOrCreate(ref _syncableRemoteCallCaches, _syncableRemoteCallsCount + readCount);
+            for (int i = 0; i < readCount; i++)
             {
                 var header = *(RPCHeader*)(rawData + position);
                 position += sizeof(RPCHeader);
@@ -213,7 +222,19 @@ namespace LiteEntitySystem.Internal
                 {
                     Logger.LogError($"ZeroRPC: {header.Id}");
                 }
-                _remoteCallsCaches[i] = rpcCache;
+
+                //this is entity rpc
+                if (classData.RpcOffsets[header.Id].SyncableOffset == -1)
+                {
+                    _remoteCallsCaches[_remoteCallsCount] = rpcCache;
+                    _remoteCallsCount++;
+                }
+                else
+                {
+                    _syncableRemoteCallCaches[_syncableRemoteCallsCount] = rpcCache;
+                    _syncableRemoteCallsCount++;
+                }
+     
                 position += header.TypeSize * header.Count;
             }
         }

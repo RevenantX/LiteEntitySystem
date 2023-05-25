@@ -502,7 +502,8 @@ namespace LiteEntitySystem
             {
                 _logicLerpMsec = (float)(_timer / _lerpTime);
                 ServerTick = Utils.LerpSequence(_stateA.Tick, (ushort)(_stateB.Tick-1), _logicLerpMsec);
-                _stateB.ExecuteRpcs(this, _stateA.Tick, false);
+                _stateB.ExecuteRpcs(this, _stateA.Tick, false, RPCExecutionMode.SyncableField);
+                _stateB.ExecuteRpcs(this, _stateA.Tick, false, RPCExecutionMode.Entity);
             }
 
             if (_inputCommands.Count > InputBufferSize)
@@ -718,13 +719,15 @@ namespace LiteEntitySystem
             //execute all previous rpcs
             ushort minimalTick = ServerTick;
             ServerTick = _stateA.Tick;
-            _stateA.ExecuteRpcs(this, minimalTick, firstSync);
+            
+            //execute syncable fields first
+            _stateA.ExecuteRpcs(this, minimalTick, firstSync, RPCExecutionMode.SyncableField);
 
             //Call construct methods
             for (int i = 0; i < _entitiesToConstructCount; i++)
                 ConstructEntity(_entitiesToConstruct[i]);
             _entitiesToConstructCount = 0;
-            
+
             //Make OnSyncCalls
             for (int i = 0; i < _syncCallsCount; i++)
             {
@@ -732,6 +735,9 @@ namespace LiteEntitySystem
                 syncCall.OnSync(syncCall.Entity, new ReadOnlySpan<byte>(_stateA.Data, syncCall.PrevDataPos, _stateA.Size-syncCall.PrevDataPos));
             }
             _syncCallsCount = 0;
+            
+            //execute entity rpcs
+            _stateA.ExecuteRpcs(this, minimalTick, firstSync, RPCExecutionMode.Entity);
             
             foreach (var lagCompensatedEntity in LagCompensatedEntities)
                 lagCompensatedEntity.WriteHistory(ServerTick);

@@ -223,7 +223,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Called when lag compensation was started for this entity
         /// </summary>
-        public virtual void OnLagCompensationStart()
+        protected virtual void OnLagCompensationStart()
         {
             
         }
@@ -231,7 +231,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Called when lag compensation ended for this entity
         /// </summary>
-        public virtual void OnLagCompensationEnd()
+        protected virtual void OnLagCompensationEnd()
         {
             
         }
