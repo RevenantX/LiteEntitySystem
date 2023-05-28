@@ -328,6 +328,11 @@ namespace LiteEntitySystem
                     if (Utils.SequenceDiff(serverState.Tick, _lastReadyTick) > 0)
                         _lastReadyTick = serverState.Tick;
                     _receivedStates.Remove(serverState.Tick);
+                    //remove oldest state if count maximum
+                    if (_readyStates.Count == MaxSavedStateDiff)
+                    {
+                        _statesPool.Enqueue(_readyStates.ExtractMin());
+                    }
                     _readyStates.Add(serverState, serverState.Tick);
                     PreloadNextState();
                 }
