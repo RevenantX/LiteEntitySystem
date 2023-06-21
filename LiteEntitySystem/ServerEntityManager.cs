@@ -49,7 +49,6 @@ namespace LiteEntitySystem
 
         private byte[] _compressionBuffer = new byte[4096];
         private int _netPlayersCount;
-        private bool _playersAdded;
 
         /// <summary>
         /// Network players count
@@ -105,7 +104,6 @@ namespace LiteEntitySystem
             _netPlayersArray[_netPlayersCount++] = player;
             if (assignToTag)
                 peer.Tag = player;
-            _playersAdded = true;
             return player;
         }
 
@@ -499,7 +497,6 @@ namespace LiteEntitySystem
                 
                 initMethod?.Invoke(entity);
                 ConstructEntity(entity);
-                RequestSyncFor(stateSerializer);
             }
             //Debug.Log($"[SEM] Entity create. clsId: {classData.ClassId}, id: {entityId}, v: {version}");
             return entity;
@@ -510,22 +507,8 @@ namespace LiteEntitySystem
             return _netPlayersDict[ownerId];
         }
 
-        private void RequestSyncFor(StateSerializer stateSerializer)
-        {
-            Utils.ResizeIfFull(ref _syncRequestedSerializers, _syncRequestedSerializersCount);
-            _syncRequestedSerializers[_syncRequestedSerializersCount] = stateSerializer;
-            _syncRequestedSerializersCount++;
-        }
-
         protected override void OnLogicTick()
         {
-            if (_playersAdded)
-            {
-                _playersAdded = false;
-                for (ushort eId = FirstEntityId; eId <= MaxSyncedEntityId; eId++)
-                    RequestSyncFor(_stateSerializers[eId]);
-            }
-            
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
             {
                 var player = _netPlayersArray[pidx];
@@ -612,7 +595,10 @@ namespace LiteEntitySystem
 
         internal void OnOwnerChanged(EntityLogic entityLogic)
         {
-            RequestSyncFor(_stateSerializers[entityLogic.Id]);
+            //request resync because owner changed
+            Utils.ResizeIfFull(ref _syncRequestedSerializers, _syncRequestedSerializersCount);
+            _syncRequestedSerializers[_syncRequestedSerializersCount] = _stateSerializers[entityLogic.Id];
+            _syncRequestedSerializersCount++;
         }
     }
 }

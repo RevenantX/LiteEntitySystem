@@ -22,6 +22,7 @@ namespace LiteEntitySystem.Extensions
     {
         [SerializeField, HideInInspector] private ResourceInfo[] _resourcePaths;
         [SerializeField, HideInInspector] private int _resourcesHash;
+        [SerializeField, HideInInspector] private string _serializedName;
         private Type _type;
         private static readonly Type SpriteType = typeof(Sprite);
         
@@ -61,9 +62,11 @@ namespace LiteEntitySystem.Extensions
                 resourceInfoCache.Add(new ResourceInfo { FieldName = field.Name, Path = assetPath });
                 newHash ^= assetPath.GetHashCode();
             }
+            newHash ^= name.GetHashCode();
 
             if (newHash != _resourcesHash)
             {
+                _serializedName = name;
                 _resourcesHash = newHash;
                 _resourcePaths = resourceInfoCache.ToArray();
                 EditorUtility.SetDirty(this);
@@ -80,19 +83,12 @@ namespace LiteEntitySystem.Extensions
         {
             if (_resourcePaths == null || _resourcePaths.Length == 0)
                 return;
+            name = _serializedName;
             _type ??= GetType();
             foreach (var resourceInfo in _resourcePaths)
             {
                 var field = _type.GetField(resourceInfo.FieldName);
-                //Debug.Log($"Load resource: {resourceInfo.FieldName} - {resourceInfo.Path}");
-                if (field.FieldType == SpriteType)
-                {
-                    field.SetValue(this, Resources.Load<Sprite>(resourceInfo.Path));
-                }
-                else
-                {
-                    field.SetValue(this, Resources.Load(resourceInfo.Path));
-                }
+                field.SetValue(this, Resources.Load(resourceInfo.Path, field.FieldType));
             }
         }
     }

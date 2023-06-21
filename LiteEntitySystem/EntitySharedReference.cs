@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem
 {
@@ -9,8 +8,11 @@ namespace LiteEntitySystem
         public readonly ushort Id;
         public readonly byte Version;
 
+        public bool IsValid => Id != EntityManager.InvalidEntityId;
         public bool IsInvalid => Id == EntityManager.InvalidEntityId;
         public bool IsLocal => Id >= EntityManager.MaxSyncedEntityCount;
+
+        public static readonly EntitySharedReference Empty;
 
         internal EntitySharedReference(ushort id, byte version)
         {

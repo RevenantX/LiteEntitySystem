@@ -50,13 +50,14 @@ namespace LiteEntitySystem.Extensions
             }
             foreach (var kv in _data)
             {
-                KvCache[cacheCount] = new KeyValue(kv.Key, kv.Value);
+                KvCache[cacheCount++] = new KeyValue(kv.Key, kv.Value);
             }
             ExecuteRPC(_initAction, new ReadOnlySpan<KeyValue>(KvCache, 0, cacheCount));
         }
 
         private void InitAction(ReadOnlySpan<KeyValue> data)
         {
+            _data.Clear();
             foreach (var kv in data)
             {
                 _data.Add(kv.Key, kv.Value);

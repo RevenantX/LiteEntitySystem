@@ -191,6 +191,8 @@ namespace LiteEntitySystem.Internal
                 rpc.Executed = true;
                 //Logger.Log($"Executing rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}.");
                 var entity = entityManager.GetEntityById<InternalEntity>(rpc.EntityId);
+                if (entity == null)
+                    continue;
                 var rpcData = new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.TypeSize * rpc.Header.Count);
                 if (rpc.SyncableOffset == -1)
                 {

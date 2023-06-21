@@ -146,17 +146,21 @@ namespace LiteEntitySystem.Internal
 
         public void MakeOnSync()
         {
+            if (_state != SerializerState.Active)
+                return;
             for (int i = 0; i < _classData.SyncableFields.Length; i++)
             {
                 var syncableField = _classData.SyncableFields[i];
                 var obj = Utils.RefFieldValue<SyncableField>(_entity, syncableField.Offset);
                 obj.InternalOnSyncRequested();
             }
+            _entity.InternalOnSyncRequested();
         }
 
         //initial state with compression
         private unsafe void WriteInitialState(bool isOwned, ushort serverTick, byte* resultData, ref int position)
         {
+            MakeOnSync();
             fixed (byte* lastEntityData = _latestEntityData)
                 RefMagic.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
             position += (int)_fullDataSize;

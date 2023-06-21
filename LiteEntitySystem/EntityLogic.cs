@@ -255,6 +255,10 @@ namespace LiteEntitySystem
             {
                 parent.Childs.Remove(this);
             }
+            foreach (var entityLogic in Childs)
+            {
+                entityLogic.Destroy();
+            }
         }
         
         private void OnOwnerChange(byte prevOwner)

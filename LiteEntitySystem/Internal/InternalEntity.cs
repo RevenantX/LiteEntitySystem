@@ -89,6 +89,13 @@ namespace LiteEntitySystem.Internal
 
         }
 
+        protected virtual void OnFullSync()
+        {
+            
+        }
+
+        internal void InternalOnSyncRequested() => OnFullSync();
+
         internal virtual void DestroyInternal()
         {
             if (_isDestroyed)
@@ -115,10 +122,7 @@ namespace LiteEntitySystem.Internal
             
         }
 
-        internal void CallConstruct()
-        {
-            OnConstructed();
-        }
+        internal void CallConstruct() => OnConstructed();
 
         /// <summary>
         /// Called when entity constructed
