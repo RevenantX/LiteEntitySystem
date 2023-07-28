@@ -45,6 +45,16 @@ namespace LiteEntitySystem
         private ushort _requestId;
         private readonly Queue<(ushort,Action<bool>)> _awaitingRequests;
 
+        public NetPlayer GetAssignedPlayer()
+        {
+            if (InternalOwnerId == EntityManager.ServerPlayerId)
+                return null;
+            if (EntityManager.IsClient)
+                return ClientManager.LocalPlayer;
+
+            return ServerManager.GetPlayer(InternalOwnerId);
+        }
+
         protected override void RegisterRPC(in RPCRegistrator r)
         {
             base.RegisterRPC(in r);

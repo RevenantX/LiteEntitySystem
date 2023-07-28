@@ -38,6 +38,7 @@ namespace LiteEntitySystem.Internal
         private bool _lagCompensationEnabled;
         private byte _controllerOwner;
         private uint _fullDataSize;
+        private ushort _syncFrame;
 
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
@@ -131,8 +132,13 @@ namespace LiteEntitySystem.Internal
             _ticksOnDestroy = serverTick;
         }
 
-        public unsafe int GetMaximumSize()
+        public unsafe int GetMaximumSize(ushort forTick)
         {
+            if (_state != SerializerState.Active)
+                return 0;
+            if(forTick != _syncFrame)
+                MakeOnSync(forTick);
+            
             int totalSize = (int)_fullDataSize + sizeof(ushort);
             var rpcNode = _rpcHead;
             int rpcHeaderSize = sizeof(RPCHeader);
@@ -144,23 +150,23 @@ namespace LiteEntitySystem.Internal
             return totalSize;
         }
 
-        public void MakeOnSync()
+        public void MakeOnSync(ushort tick)
         {
-            if (_state != SerializerState.Active)
+            if (_state != SerializerState.Active || tick == _syncFrame)
                 return;
+            _syncFrame = tick;
             for (int i = 0; i < _classData.SyncableFields.Length; i++)
             {
                 var syncableField = _classData.SyncableFields[i];
                 var obj = Utils.RefFieldValue<SyncableField>(_entity, syncableField.Offset);
                 obj.InternalOnSyncRequested();
             }
-            _entity.InternalOnSyncRequested();
         }
 
         //initial state with compression
         private unsafe void WriteInitialState(bool isOwned, ushort serverTick, byte* resultData, ref int position)
         {
-            MakeOnSync();
+            MakeOnSync(serverTick);
             fixed (byte* lastEntityData = _latestEntityData)
                 RefMagic.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
             position += (int)_fullDataSize;

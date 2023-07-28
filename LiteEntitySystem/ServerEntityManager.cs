@@ -341,27 +341,32 @@ namespace LiteEntitySystem
             //calculate minimalTick and potential baseline size
             ushort executedTick = (ushort)(_tick - 1);
             _minimalTick = executedTick;
+            
+            for(int i = 0; i < _syncRequestedSerializersCount; i++)
+                _syncRequestedSerializers[i].MakeOnSync(executedTick);
+            _syncRequestedSerializersCount = 0;
+            
             int maxBaseline = 0;
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
             {
                 var player = _netPlayersArray[pidx];
-                if (player.State == NetPlayerState.RequestBaseline && maxBaseline == 0)
+                if (player.State == NetPlayerState.Active)
+                    _minimalTick = Utils.SequenceDiff(player.StateATick, _minimalTick) < 0 ? player.StateATick : _minimalTick;
+                else if (player.State == NetPlayerState.RequestBaseline && maxBaseline == 0)
                 {
                     maxBaseline = sizeof(BaselineDataHeader);
                     for (ushort i = FirstEntityId; i <= MaxSyncedEntityId; i++)
-                        maxBaseline += _stateSerializers[i].GetMaximumSize();
+                    {
+                        maxBaseline += _stateSerializers[i].GetMaximumSize(executedTick);
+                    }
                     if (_packetBuffer.Length < maxBaseline)
-                        _packetBuffer = new byte[maxBaseline + maxBaseline / 2];
+                        _packetBuffer = new byte[maxBaseline];
                     int maxCompressedSize = LZ4Codec.MaximumOutputSize(_packetBuffer.Length) + sizeof(BaselineDataHeader);
                     if (_compressionBuffer.Length < maxCompressedSize)
                         _compressionBuffer = new byte[maxCompressedSize];
                 }
-                else
-                {
-                    _minimalTick = Utils.SequenceDiff(player.StateATick, _minimalTick) < 0 ? player.StateATick : _minimalTick;
-                }
             }
-            
+
             //make packets
             fixed (byte* packetBuffer = _packetBuffer, compressionBuffer = _compressionBuffer)
             // ReSharper disable once BadChildStatementIndent
@@ -373,13 +378,8 @@ namespace LiteEntitySystem
                     int originalLength = 0;
                     for (ushort i = FirstEntityId; i <= MaxSyncedEntityId; i++)
                         _stateSerializers[i].MakeBaseline(player.Id, executedTick, _minimalTick, packetBuffer, ref originalLength);
-                    int encodedLength = LZ4Codec.Encode(
-                        packetBuffer,
-                        originalLength,
-                        compressionBuffer + sizeof(BaselineDataHeader),
-                        _compressionBuffer.Length - sizeof(BaselineDataHeader),
-                        LZ4Level.L00_FAST);
                     
+                    //set header
                     *(BaselineDataHeader*)compressionBuffer = new BaselineDataHeader
                     {
                         UserHeader = HeaderByte,
@@ -389,6 +389,15 @@ namespace LiteEntitySystem
                         PlayerId = player.Id,
                         SendRate = (byte)SendRate
                     };
+                    
+                    //compress
+                    int encodedLength = LZ4Codec.Encode(
+                        packetBuffer,
+                        originalLength,
+                        compressionBuffer + sizeof(BaselineDataHeader),
+                        _compressionBuffer.Length - sizeof(BaselineDataHeader),
+                        LZ4Level.L00_FAST);
+                    
                     player.Peer.Send(_compressionBuffer, 0, sizeof(BaselineDataHeader) + encodedLength, DeliveryMethod.ReliableOrdered);
                     player.StateATick = executedTick;
                     player.CurrentServerTick = executedTick;
@@ -444,9 +453,17 @@ namespace LiteEntitySystem
                             writePosition = sizeof(DiffPartHeader) + overflow;
                             overflow = writePosition - maxPartSize;
                         }
+                        //if request baseline break entity loop
+                        if(player.State == NetPlayerState.RequestBaseline)
+                            break;
                     }
                     //else skip
                 }
+                
+                //if request baseline continue to other players
+                if(player.State == NetPlayerState.RequestBaseline)
+                    continue;
+
                 //Debug.Log($"PARTS: {partCount} {_netDataWriter.Data[4]}");
                 header->PacketType = InternalPackets.DiffSyncLast;
                 //put mtu at last packet
@@ -543,10 +560,6 @@ namespace LiteEntitySystem
 
             foreach (var lagCompensatedEntity in LagCompensatedEntities)
                 lagCompensatedEntity.WriteHistory(_tick);
-            
-            for(int i = 0; i < _syncRequestedSerializersCount; i++)
-                _syncRequestedSerializers[i].MakeOnSync();
-            _syncRequestedSerializersCount = 0;
         }
         
         internal void DestroySavedData(InternalEntity entityLogic)

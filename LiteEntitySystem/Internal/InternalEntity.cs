@@ -89,13 +89,6 @@ namespace LiteEntitySystem.Internal
 
         }
 
-        protected virtual void OnFullSync()
-        {
-            
-        }
-
-        internal void InternalOnSyncRequested() => OnFullSync();
-
         internal virtual void DestroyInternal()
         {
             if (_isDestroyed)
