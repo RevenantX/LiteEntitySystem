@@ -136,7 +136,7 @@ namespace LiteEntitySystem
         protected const int MaxSavedStateDiff = 30;
         protected const ushort FirstEntityId = 1;
         internal const int MaxParts = 256;
-        private const int MaxTicksPerUpdate = 5;
+        private const int MaxTicksPerUpdate = 3;
 
         public double VisualDeltaTime { get; private set; }
         public const int MaxPlayers = byte.MaxValue-1;
@@ -592,6 +592,7 @@ namespace LiteEntitySystem
                 //Lag
                 if (updates >= MaxTicksPerUpdate)
                 {
+                    _lastTime = _stopwatch.ElapsedTicks;
                     _accumulator = 0;
                     return;
                 }

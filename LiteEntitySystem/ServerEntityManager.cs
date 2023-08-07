@@ -39,12 +39,11 @@ namespace LiteEntitySystem
         private readonly Queue<byte> _playerIdQueue = new(MaxPlayers);
         private readonly Queue<RemoteCallPacket> _rpcPool = new();
         private readonly Queue<byte[]> _inputPool = new();
+        private readonly Queue<NetDataReader> _pendingClientRequests = new();
         private byte[] _packetBuffer = new byte[(MaxParts+1) * NetConstants.MaxPacketSize];
         private readonly NetPlayer[] _netPlayersArray = new NetPlayer[MaxPlayers];
         private readonly NetPlayer[] _netPlayersDict = new NetPlayer[MaxPlayers+1];
         private readonly StateSerializer[] _stateSerializers = new StateSerializer[MaxSyncedEntityCount];
-        private StateSerializer[] _syncRequestedSerializers = new StateSerializer[8];
-        private int _syncRequestedSerializersCount;
         public const int MaxStoredInputs = 30;
 
         private byte[] _compressionBuffer = new byte[4096];
@@ -144,6 +143,25 @@ namespace LiteEntitySystem
             }
             _netPlayersArray[_netPlayersCount] = null;
             return true;
+        }
+
+        /// <summary>
+        /// Returns controller owned by the player
+        /// </summary>
+        /// <param name="player">player to remove</param>
+        /// <returns>Instance if found, null if not</returns>
+        public ControllerLogic GetPlayerController(NetPeer player)
+        {
+            var netPlayer = player.Tag as NetPlayer;
+            if (netPlayer == null || _netPlayersDict[netPlayer.Id] == null)
+                return null;
+
+            for (int i = FirstEntityId; i < MaxSyncedEntityId; i++)
+            {
+                if (EntitiesDict[i] is ControllerLogic controllerLogic && controllerLogic.OwnerId == netPlayer.Id)
+                    return controllerLogic;
+            }
+            return null;
         }
 
         /// <summary>
@@ -277,7 +295,7 @@ namespace LiteEntitySystem
             byte packetType = reader.GetByte();
             if (packetType == InternalPackets.ClientRequest)
             {
-                InputProcessor.ReadClientRequest(this, reader);
+                _pendingClientRequests.Enqueue(new NetDataReader(reader.GetRemainingBytes()));
                 return;
             }
             if (packetType != InternalPackets.ClientInput)
@@ -342,10 +360,6 @@ namespace LiteEntitySystem
             ushort executedTick = (ushort)(_tick - 1);
             _minimalTick = executedTick;
             
-            for(int i = 0; i < _syncRequestedSerializersCount; i++)
-                _syncRequestedSerializers[i].MakeOnSync(executedTick);
-            _syncRequestedSerializersCount = 0;
-            
             int maxBaseline = 0;
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
             {
@@ -402,7 +416,7 @@ namespace LiteEntitySystem
                     player.StateATick = executedTick;
                     player.CurrentServerTick = executedTick;
                     player.State = NetPlayerState.WaitingForFirstInput;
-                    Logger.Log($"[SEM] SendWorld to player {player.Id}. orig: {originalLength}, bytes, compressed: {encodedLength}");
+                    Logger.Log($"[SEM] SendWorld to player {player.Id}. orig: {originalLength}, bytes, compressed: {encodedLength}, ExecutedTick: {executedTick}");
                     continue;
                 }
                 if (player.State != NetPlayerState.Active)
@@ -526,6 +540,10 @@ namespace LiteEntitySystem
 
         protected override void OnLogicTick()
         {
+            //read pending client requests
+            while (_pendingClientRequests.Count > 0)
+                InputProcessor.ReadClientRequest(this, _pendingClientRequests.Dequeue());
+            
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
             {
                 var player = _netPlayersArray[pidx];
@@ -604,14 +622,6 @@ namespace LiteEntitySystem
             fixed(void* rawValue = value, rawData = rpc.Data)
                 RefMagic.CopyBlock(rawData, rawValue, (uint)rpc.TotalSize);
             _stateSerializers[entityId].AddRpcPacket(rpc);
-        }
-
-        internal void OnOwnerChanged(EntityLogic entityLogic)
-        {
-            //request resync because owner changed
-            Utils.ResizeIfFull(ref _syncRequestedSerializers, _syncRequestedSerializersCount);
-            _syncRequestedSerializers[_syncRequestedSerializersCount] = _stateSerializers[entityLogic.Id];
-            _syncRequestedSerializersCount++;
         }
     }
 }

@@ -24,7 +24,6 @@ namespace LiteEntitySystem.Extensions
         [SerializeField, HideInInspector] private int _resourcesHash;
         [SerializeField, HideInInspector] private string _serializedName;
         private Type _type;
-        private static readonly Type SpriteType = typeof(Sprite);
         
 #if UNITY_EDITOR
         private FieldInfo[] _fields;

@@ -5,14 +5,8 @@ namespace LiteEntitySystem
 {
     public abstract class SyncableField
     {
-        internal ushort Id;
-        internal ushort ParentEntityId;
+        internal ushort ParentEntityId = EntityManager.InvalidEntityId;
         internal ExecuteFlags Flags;
-
-        protected SyncableField()
-        {
-            ParentEntityId = EntityManager.InvalidEntityId;
-        }
 
         internal void InternalInit(in SyncableRPCRegistrator r)
         {

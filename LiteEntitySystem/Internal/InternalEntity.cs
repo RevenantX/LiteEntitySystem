@@ -30,9 +30,14 @@ namespace LiteEntitySystem.Internal
         public bool IsDestroyed => _isDestroyed;
 
         /// <summary>
-        /// Is entity is local controlled
+        /// Is entity local controlled
         /// </summary>
         public bool IsLocalControlled => IsControlledBy(EntityManager.InternalPlayerId);
+
+        /// <summary>
+        /// Is entity remote controlled
+        /// </summary>
+        public bool IsRemoteControlled => IsControlledBy(EntityManager.InternalPlayerId) == false;
         
         /// <summary>
         /// Is entity is controlled by server
@@ -164,7 +169,6 @@ namespace LiteEntitySystem.Internal
                 for (int i = 0; i < classData.SyncableFields.Length; i++)
                 {
                     var syncField = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
-                    syncField.Id = (ushort)i;
                     syncField.ParentEntityId = Id;
                     syncField.InternalInit(new SyncableRPCRegistrator(this));
                 }
@@ -178,7 +182,6 @@ namespace LiteEntitySystem.Internal
                 for (int i = 0; i < classData.SyncableFields.Length; i++)
                 {
                     var syncField = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
-                    syncField.Id = (ushort)i;
                     syncField.ParentEntityId = Id;
                 }
             }

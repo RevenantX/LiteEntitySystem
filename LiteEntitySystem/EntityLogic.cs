@@ -31,8 +31,9 @@ namespace LiteEntitySystem
     /// </summary>
     public abstract class EntityLogic : InternalEntity
     {
-        private SyncVarWithNotify<EntitySharedReference> _parentId;
+        //It should be in such order because later it checks rollbacks
         internal SyncVarWithNotify<byte> InternalOwnerId;
+        private SyncVarWithNotify<EntitySharedReference> _parentId;
 
         /// <summary>
         /// Child entities (can be used for transforms or as components)
@@ -43,6 +44,8 @@ namespace LiteEntitySystem
         /// Owner player id
         /// </summary>
         public byte OwnerId => InternalOwnerId;
+
+        public EntitySharedReference ParentId => _parentId;
 
         private readonly byte[] _tempHistory;
         private readonly byte[] _history;
@@ -277,10 +280,6 @@ namespace LiteEntitySystem
 
         internal static void SetOwner(EntityLogic entity, byte ownerId)
         {
-            if (entity.EntityManager.IsServer)
-            {
-                entity.ServerManager.OnOwnerChanged(entity);
-            }
             entity.InternalOwnerId = ownerId;
             foreach (var child in entity.Childs)
             {

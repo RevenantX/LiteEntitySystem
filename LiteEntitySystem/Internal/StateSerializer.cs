@@ -38,7 +38,7 @@ namespace LiteEntitySystem.Internal
         private bool _lagCompensationEnabled;
         private byte _controllerOwner;
         private uint _fullDataSize;
-        private ushort _syncFrame;
+        private int _syncFrame;
 
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
@@ -62,6 +62,7 @@ namespace LiteEntitySystem.Internal
             _classData = classData;
             _entity = e;
             _state = SerializerState.Active;
+            _syncFrame = -1;
 
             _fullDataSize = (uint)(HeaderSize + _classData.FixedFieldsSize);
             Utils.ResizeOrCreate(ref _latestEntityData, (int)_fullDataSize);
@@ -81,9 +82,14 @@ namespace LiteEntitySystem.Internal
             if (serverTick == _lastWriteTick || _state != SerializerState.Active) 
                 return;
 
-            _controllerOwner = _entity is ControllerLogic controller
+            byte currentOwner = _entity is ControllerLogic controller
                 ? controller.InternalOwnerId
                 : EntityManager.ServerPlayerId;
+            if (_controllerOwner != currentOwner)
+            {
+                _controllerOwner = currentOwner;
+                MakeOnSync(serverTick);
+            }
             
             if (Utils.SequenceDiff(minimalTick, _versionChangedTick) > 0)
                 _versionChangedTick = minimalTick;
@@ -136,8 +142,7 @@ namespace LiteEntitySystem.Internal
         {
             if (_state != SerializerState.Active)
                 return 0;
-            if(forTick != _syncFrame)
-                MakeOnSync(forTick);
+            MakeOnSync(forTick);
             
             int totalSize = (int)_fullDataSize + sizeof(ushort);
             var rpcNode = _rpcHead;
@@ -150,7 +155,7 @@ namespace LiteEntitySystem.Internal
             return totalSize;
         }
 
-        public void MakeOnSync(ushort tick)
+        private void MakeOnSync(ushort tick)
         {
             if (_state != SerializerState.Active || tick == _syncFrame)
                 return;

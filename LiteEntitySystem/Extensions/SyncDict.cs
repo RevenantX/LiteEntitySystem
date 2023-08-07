@@ -26,7 +26,6 @@ namespace LiteEntitySystem.Extensions
         private RemoteCall _clearAction;
         private RemoteCall<TKey> _removeAction;
         private RemoteCallSpan<KeyValue> _initAction;
-        private RemoteCall<KeyValue> _setAction;
 
         public Dictionary<TKey, TValue>.KeyCollection Keys => _data.Keys;
         public Dictionary<TKey, TValue>.ValueCollection Values => _data.Values;
@@ -38,7 +37,6 @@ namespace LiteEntitySystem.Extensions
             r.CreateClientAction(this, Clear, ref _clearAction);
             r.CreateClientAction(this, RemoveAction, ref _removeAction);
             r.CreateClientAction(this, InitAction, ref _initAction);
-            r.CreateClientAction(this, SetAction, ref _setAction);
         }
 
         protected override void OnSyncRequested()
@@ -66,7 +64,7 @@ namespace LiteEntitySystem.Extensions
 
         private void AddAction(KeyValue kv)
         {
-            _data.Add(kv.Key, kv.Value);
+            _data[kv.Key] = kv.Value;
         }
 
         public void Add(TKey key, TValue value)
@@ -101,11 +99,6 @@ namespace LiteEntitySystem.Extensions
             _data.Remove(key);
         }
 
-        private void SetAction(KeyValue kv)
-        {
-            _data[kv.Key] = kv.Value;
-        }
-
         public bool Remove(TKey key)
         {
             if (!_data.Remove(key)) 
@@ -120,7 +113,7 @@ namespace LiteEntitySystem.Extensions
             set
             {
                 _data[index] = value;
-                ExecuteRPC(_setAction, new KeyValue(index, value));
+                ExecuteRPC(_addAction, new KeyValue(index, value));
             }
         }
 

@@ -507,7 +507,6 @@ namespace LiteEntitySystem
             {
                 _logicLerpMsec = (float)(_timer / _lerpTime);
                 ServerTick = Utils.LerpSequence(_stateA.Tick, (ushort)(_stateB.Tick-1), _logicLerpMsec);
-                _stateB.ExecuteRpcs(this, _stateA.Tick, false, RPCExecutionMode.SyncableField);
                 _stateB.ExecuteRpcs(this, _stateA.Tick, false, RPCExecutionMode.Entity);
             }
 
