@@ -36,6 +36,7 @@ namespace LiteEntitySystem.Extensions
         [SerializeField, HideInInspector] private ResourceInfo[] _resourcePaths;
         [SerializeField, HideInInspector] private int _resourcesHash;
         [SerializeField, HideInInspector] private string _serializedName;
+        public string ResourceName => _serializedName;
         private Type _type;
         
 #if UNITY_EDITOR
@@ -95,7 +96,6 @@ namespace LiteEntitySystem.Extensions
         {
             if (_resourcePaths == null || _resourcePaths.Length == 0)
                 return;
-            name = _serializedName;
             _type ??= GetType();
             foreach (var resourceInfo in _resourcePaths)
             {
@@ -121,7 +121,7 @@ namespace LiteEntitySystem.Extensions
             _resourcePaths = new ResourceInfo[resourcesCount];
             for (int i = 0; i < resourcesCount; i++)
                 _resourcePaths[i].Deserialize(reader);
-            name = reader.GetString();
+            _serializedName = reader.GetString();
             LoadResources();
         }
     }
