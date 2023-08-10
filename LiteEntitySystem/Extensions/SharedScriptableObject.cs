@@ -3,19 +3,32 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
+using LiteNetLib.Utils;
 using UnityEditor;
 using UnityEngine;
 
 namespace LiteEntitySystem.Extensions
 {
     [Serializable]
-    public struct ResourceInfo
+    public struct ResourceInfo : INetSerializable
     {
         public string FieldName;
         public string Path;
+        
+        public void Serialize(NetDataWriter writer)
+        {
+            writer.Put(FieldName);
+            writer.Put(Path);
+        }
+
+        public void Deserialize(NetDataReader reader)
+        {
+            FieldName = reader.GetString();
+            Path = reader.GetString();
+        }
     }
     
-    public class SharedScriptableObject : ScriptableObject
+    public class SharedScriptableObject : ScriptableObject, INetSerializable
 #if UNITY_EDITOR
         , ISerializationCallbackReceiver
 #endif
@@ -89,6 +102,27 @@ namespace LiteEntitySystem.Extensions
                 var field = _type.GetField(resourceInfo.FieldName);
                 field.SetValue(this, Resources.Load(resourceInfo.Path, field.FieldType));
             }
+        }
+
+        //INetSerializable
+        public virtual void Serialize(NetDataWriter writer)
+        {
+            if (_resourcePaths == null || _resourcePaths.Length == 0)
+                return;
+            writer.Put((ushort)_resourcePaths.Length);
+            for (int i = 0; i < _resourcePaths.Length; i++)
+                _resourcePaths[i].Serialize(writer);
+            writer.Put(_serializedName);
+        }
+
+        public virtual void Deserialize(NetDataReader reader)
+        {
+            ushort resourcesCount = reader.GetUShort();
+            _resourcePaths = new ResourceInfo[resourcesCount];
+            for (int i = 0; i < resourcesCount; i++)
+                _resourcePaths[i].Deserialize(reader);
+            name = reader.GetString();
+            LoadResources();
         }
     }
 }

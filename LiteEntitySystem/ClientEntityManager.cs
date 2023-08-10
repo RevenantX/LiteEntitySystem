@@ -97,11 +97,6 @@ namespace LiteEntitySystem
                 Entity = entity;
                 PrevDataPos = prevDataPos;
             }
-
-            public void Execute(ServerStateData serverStateData)
-            {
-                OnSync(Entity, new ReadOnlySpan<byte>(serverStateData.Data, PrevDataPos, serverStateData.Size-PrevDataPos));
-            }
         }
         private SyncCallInfo[] _syncCalls;
         private int _syncCallsCount;
@@ -179,12 +174,6 @@ namespace LiteEntitySystem
                     field.TypeProcessor.WriteTo(entity, field.Offset, interpDataPtr + field.FixedOffset);
                 }
             }
-        }
-
-        private void OnAliveDestroyed(InternalEntity e)
-        {
-            if(e.Id < MaxSyncedEntityCount)
-                _predictedEntities[e.Id] = null;
         }
 
         /// <summary>
@@ -323,6 +312,8 @@ namespace LiteEntitySystem
                 }
                 if(serverState.ReadPart(diffHeader, rawData, size))
                 {
+                    //if(serverState.TotalPartsCount > 1)
+                    //    Logger.Log($"Parts: {serverState.TotalPartsCount}");
                     if (Utils.SequenceDiff(serverState.LastReceivedTick, _lastReceivedInputTick) > 0)
                         _lastReceivedInputTick = serverState.LastReceivedTick;
                     if (Utils.SequenceDiff(serverState.Tick, _lastReadyTick) > 0)
@@ -763,9 +754,8 @@ namespace LiteEntitySystem
                 {
                     //this can be only on logics (not on singletons)
                     Logger.Log($"[CEM] Replace entity by new: {version}");
-                    var entityLogic = (EntityLogic) entity;
-                    if(!entityLogic.IsDestroyed)
-                        entityLogic.DestroyInternal();
+                    if(!entity.IsDestroyed)
+                        entity.DestroyInternal();
                     entity = null;
                 }
                 if(entity == null)

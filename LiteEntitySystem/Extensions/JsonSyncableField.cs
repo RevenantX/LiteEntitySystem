@@ -12,8 +12,18 @@ namespace LiteEntitySystem.Extensions
         private static readonly UTF8Encoding Encoding = new(false, true);
         private static byte[] StringBuffer;
         private static byte[] CompressionBuffer;
-        
-        public T Value;
+
+        private T _value;
+
+        public T Value
+        {
+            get => _value;
+            set
+            {
+                _value = value;
+                OnSyncRequested();
+            }
+        }
 
         private RemoteCallSpan<byte> _initAction;
 
@@ -24,10 +34,10 @@ namespace LiteEntitySystem.Extensions
 
         protected override void OnSyncRequested()
         {
-            if (Value == null)
-                Value = ScriptableObject.CreateInstance<T>();
+            if (_value == null)
+                _value = ScriptableObject.CreateInstance<T>();
             
-            string str = JsonUtility.ToJson(Value, false);
+            string str = JsonUtility.ToJson(_value, false);
             int maxBytes = Encoding.GetMaxByteCount(str.Length);
             if (StringBuffer == null || StringBuffer.Length < maxBytes)
             {
@@ -54,16 +64,16 @@ namespace LiteEntitySystem.Extensions
                 CompressionBuffer = new byte[origSize];
             LZ4Codec.Decode(data[4..], new Span<byte>(CompressionBuffer));
             
-            if (Value == null)
-                Value = ScriptableObject.CreateInstance<T>();
-            JsonUtility.FromJsonOverwrite(Encoding.GetString(CompressionBuffer, 0, origSize), Value);
-            if(Value is SharedScriptableObject sso)
+            if (_value == null)
+                _value = ScriptableObject.CreateInstance<T>();
+            JsonUtility.FromJsonOverwrite(Encoding.GetString(CompressionBuffer, 0, origSize), _value);
+            if(_value is SharedScriptableObject sso)
                 sso.LoadResources();
         }
 
         public static implicit operator T(JsonSyncableField<T> field)
         {
-            return field.Value;
+            return field._value;
         }
     }
 }

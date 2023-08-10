@@ -370,9 +370,7 @@ namespace LiteEntitySystem
                 {
                     maxBaseline = sizeof(BaselineDataHeader);
                     for (ushort i = FirstEntityId; i <= MaxSyncedEntityId; i++)
-                    {
                         maxBaseline += _stateSerializers[i].GetMaximumSize(executedTick);
-                    }
                     if (_packetBuffer.Length < maxBaseline)
                         _packetBuffer = new byte[maxBaseline];
                     int maxCompressedSize = LZ4Codec.MaximumOutputSize(_packetBuffer.Length) + sizeof(BaselineDataHeader);

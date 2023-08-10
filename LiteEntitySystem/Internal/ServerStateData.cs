@@ -47,34 +47,25 @@ namespace LiteEntitySystem.Internal
 
     internal class ServerStateData
     {
-        public byte[] Data;
+        public byte[] Data = new byte[1500];
         public int Size;
         public ushort Tick;
         public ushort ProcessedTick;
         public ushort LastReceivedTick;
-        public StatePreloadData[] PreloadDataArray;
+        public StatePreloadData[] PreloadDataArray = new StatePreloadData[32];
         public int PreloadDataCount;
-        public int[] InterpolatedFields;
+        public int[] InterpolatedFields = new int[8];
         public int InterpolatedCount;
+        public int TotalPartsCount;
 
         private int _syncableRemoteCallsCount;
-        private RemoteCallsCache[] _syncableRemoteCallCaches;
+        private RemoteCallsCache[] _syncableRemoteCallCaches = new RemoteCallsCache[32];
         private int _remoteCallsCount;
-        private RemoteCallsCache[] _remoteCallsCaches;
-        private readonly bool[] _receivedParts;
-        private int _totalPartsCount;
+        private RemoteCallsCache[] _remoteCallsCaches = new RemoteCallsCache[32];
+        private readonly bool[] _receivedParts = new bool[EntityManager.MaxParts];
         private int _receivedPartsCount;
         private byte _maxReceivedPart;
         private ushort _partMtu;
-
-        public ServerStateData()
-        {
-            Data = new byte[1500];
-            PreloadDataArray = new StatePreloadData[32];
-            InterpolatedFields = new int[8];
-            _remoteCallsCaches = new RemoteCallsCache[32];
-            _receivedParts = new bool[EntityManager.MaxParts];
-        }
 
         public unsafe void Preload(InternalEntity[] entityDict)
         {
@@ -260,7 +251,7 @@ namespace LiteEntitySystem.Internal
             PreloadDataCount = 0;
             _maxReceivedPart = 0;
             _receivedPartsCount = 0;
-            _totalPartsCount = 0;
+            TotalPartsCount = 0;
             _remoteCallsCount = 0;
             _syncableRemoteCallsCount = 0;
             Size = 0;
@@ -278,7 +269,7 @@ namespace LiteEntitySystem.Internal
             {
                 partSize -= sizeof(LastPartData);
                 var lastPartData = *(LastPartData*)(rawData + partSize);
-                _totalPartsCount = partHeader.Part + 1;
+                TotalPartsCount = partHeader.Part + 1;
                 _partMtu = (ushort)(lastPartData.Mtu - sizeof(DiffPartHeader));
                 LastReceivedTick = lastPartData.LastReceivedTick;
                 ProcessedTick = lastPartData.LastProcessedTick;
@@ -287,8 +278,8 @@ namespace LiteEntitySystem.Internal
             partSize -= sizeof(DiffPartHeader);
             if(_partMtu == 0)
                 _partMtu = (ushort)partSize;
-            Utils.ResizeIfFull(ref Data, _totalPartsCount > 1 
-                ? _partMtu * _totalPartsCount 
+            Utils.ResizeIfFull(ref Data, TotalPartsCount > 1 
+                ? _partMtu * TotalPartsCount 
                 : _partMtu * partHeader.Part + partSize);
             fixed(byte* stateData = Data)
                 RefMagic.CopyBlock(stateData + _partMtu * partHeader.Part, rawData + sizeof(DiffPartHeader), (uint)partSize);
@@ -296,7 +287,7 @@ namespace LiteEntitySystem.Internal
             Size += partSize;
             _receivedPartsCount++;
             _maxReceivedPart = Math.Max(_maxReceivedPart, partHeader.Part);
-            return _receivedPartsCount == _totalPartsCount;
+            return _receivedPartsCount == TotalPartsCount;
         }
     }
 }
