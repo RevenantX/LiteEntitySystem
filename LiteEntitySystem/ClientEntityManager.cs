@@ -431,7 +431,7 @@ namespace LiteEntitySystem
             //reapply input
             UpdateMode = UpdateMode.PredictionRollback;
             RollBackTick = (ushort)(_tick - _inputCommands.Count + 1);
-            foreach (var inputCommand in _inputCommands)
+            foreach (byte[] inputCommand in _inputCommands)
             {
                 //reapply input data
                 fixed (byte* rawInputData = inputCommand)
@@ -441,7 +441,7 @@ namespace LiteEntitySystem
                     _localPlayer.StateBTick = header.StateB;
                     _localPlayer.LerpTime = header.LerpMsec;
                 }
-                InputProcessor.ReadInputs(this, _localPlayer.Id, inputCommand, sizeof(InputPacketHeader), inputCommand.Length);
+                InputProcessor.ReadInput(this, _localPlayer.Id, inputCommand[sizeof(InputPacketHeader)..]);
                 foreach (var entity in AliveEntities)
                 {
                     if(entity.IsLocal || !entity.IsLocalControlled)
@@ -500,32 +500,27 @@ namespace LiteEntitySystem
                 ServerTick = Utils.LerpSequence(_stateA.Tick, (ushort)(_stateB.Tick-1), _logicLerpMsec);
                 _stateB.ExecuteRpcs(this, _stateA.Tick, false);
             }
+            
+            //remove overflow
+            while(_inputCommands.Count >= InputBufferSize)
+                _inputPool.Enqueue(_inputCommands.Dequeue());
+            
+            if (!_inputPool.TryDequeue(out byte[] inputWriter) || inputWriter.Length < InputProcessor.InputSizeWithHeader)
+                inputWriter = new byte[InputProcessor.InputSizeWithHeader];
 
-            if (_inputCommands.Count > InputBufferSize)
+            //generate input
+            var inputHeader = new InputPacketHeader
             {
-                _inputCommands.Clear();
-            }
-            
-            int maxResultSize = sizeof(InputPacketHeader) + InputProcessor.GetInputsSize(this);
-            if (_inputPool.TryDequeue(out byte[] inputWriter))
-                Utils.ResizeIfFull(ref inputWriter, maxResultSize);
-            else
-                inputWriter = new byte[maxResultSize];
-            
+                StateA = _stateA.Tick,
+                StateB = RawTargetServerTick,
+                LerpMsec = _logicLerpMsec
+            };
             fixed(byte* writerData = inputWriter)
-                *(InputPacketHeader*)writerData = new InputPacketHeader
-                {
-                    StateA   = _stateA.Tick,
-                    StateB   = RawTargetServerTick,
-                    LerpMsec = _logicLerpMsec
-                };
-
-            //generate inputs
-            int offset = sizeof(InputPacketHeader);
-            InputProcessor.GenerateAndWriteInputs(this, inputWriter, ref offset);
+                *(InputPacketHeader*)writerData = inputHeader;
+            InputProcessor.GenerateAndWriteInput(this, _localPlayer.Id, inputWriter, sizeof(InputPacketHeader));
 
             //read
-            InputProcessor.ReadInputs(this, _localPlayer.Id, inputWriter, sizeof(InputPacketHeader), offset);
+            InputProcessor.ReadInput(this, _localPlayer.Id, inputWriter[sizeof(InputPacketHeader)..]);
             _inputCommands.Enqueue(inputWriter);
 
             //local only and UpdateOnClient
@@ -639,10 +634,13 @@ namespace LiteEntitySystem
             {
                 //pack tick first
                 int offset = 4;
+                int maxSinglePacketSize = _localPeer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable);
+                
                 fixed (byte* sendBuffer = _sendBuffer)
                 {
                     ushort currentTick = (ushort)(_tick - _inputCommands.Count + 1);
                     ushort tickIndex = 0;
+                    byte[] prevCommand = null;
                     
                     //Logger.Log($"SendingCommands start {_tick}");
                     foreach (byte[] inputCommand in _inputCommands)
@@ -652,32 +650,42 @@ namespace LiteEntitySystem
                             currentTick++;
                             continue;
                         }
-                        fixed (byte* inputData = inputCommand)
+                        if(prevCommand != null)//make delta
                         {
-                            if (offset + inputCommand.Length + sizeof(ushort) > _localPeer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable))
+                            //overflow
+                            if (offset + sizeof(InputPacketHeader) + InputProcessor.MaxDeltaSize > maxSinglePacketSize)
                             {
+                                prevCommand = null;
                                 *(ushort*)(sendBuffer + 2) = currentTick;
                                 _localPeer.Send(_sendBuffer, 0, offset, DeliveryMethod.Unreliable);
                                 offset = 4;
-                                
                                 currentTick += tickIndex;
                                 tickIndex = 0;
                             }
-                            
-                            //put size
-                            *(ushort*)(sendBuffer + offset) = (ushort)(inputCommand.Length - sizeof(InputPacketHeader));
-                            offset += sizeof(ushort);
-                            
-                            //put data
-                            RefMagic.CopyBlock(sendBuffer + offset, inputData, (uint)inputCommand.Length);
-                            offset += inputCommand.Length;
+                            else
+                            {
+                                //put header
+                                fixed (byte* inputData = inputCommand)
+                                    RefMagic.CopyBlock(sendBuffer + offset, inputData, (uint)sizeof(InputPacketHeader));
+                                offset += sizeof(InputPacketHeader);
+                                //put delta
+                                offset += InputProcessor.DeltaEncode(
+                                    prevCommand[sizeof(InputPacketHeader)..], 
+                                    inputCommand[sizeof(InputPacketHeader)..], 
+                                    new Span<byte>(sendBuffer + offset, InputProcessor.MaxDeltaSize));
+                            }
                         }
-
+                        if (prevCommand == null) //first full input
+                        {
+                            //put data
+                            fixed (byte* rawInputCommand = inputCommand)
+                                RefMagic.CopyBlock(sendBuffer + offset, rawInputCommand, (uint)InputProcessor.InputSizeWithHeader);
+                            offset += InputProcessor.InputSizeWithHeader;
+                        }
+                        prevCommand = inputCommand;
                         tickIndex++;
                         if (tickIndex == ServerEntityManager.MaxStoredInputs)
-                        {
                             break;
-                        }
                     }
                     *(ushort*)(sendBuffer + 2) = currentTick;
                     _localPeer.Send(_sendBuffer, 0, offset, DeliveryMethod.Unreliable);

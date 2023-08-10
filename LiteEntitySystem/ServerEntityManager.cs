@@ -10,9 +10,8 @@ namespace LiteEntitySystem
     internal struct InputBuffer
     {
         public ushort Tick;
-        public InputPacketHeader Input;
+        public InputPacketHeader InputHeader;
         public byte[] Data;
-        public ushort Size;
     }
 
     public enum NetPlayerState
@@ -280,6 +279,8 @@ namespace LiteEntitySystem
             return false;
         }
         
+        private readonly byte[] _inputDecodeBuffer = new byte[NetConstants.MaxUnreliableDataSize];
+        
         /// <summary>
         /// Read data from NetPlayer
         /// </summary>
@@ -304,36 +305,63 @@ namespace LiteEntitySystem
                 return;
             }
             ushort clientTick = reader.GetUShort();
-            while (reader.AvailableBytes >= sizeof(ushort) + sizeof(InputPacketHeader))
+            bool isFirstInput = true;
+            while (reader.AvailableBytes >= sizeof(InputPacketHeader))
             {
-                var inputBuffer = new InputBuffer
+                var inputBuffer = new InputBuffer{ Tick = clientTick };
+                fixed (byte* rawData = reader.RawData)
+                    inputBuffer.InputHeader = *(InputPacketHeader*)(rawData + reader.Position);
+                reader.SkipBytes(sizeof(InputPacketHeader));
+                
+                //possibly empty but with header
+                if (isFirstInput && reader.AvailableBytes < InputProcessor.InputSize)
                 {
-                    Size = reader.GetUShort(),
-                    Tick = clientTick
-                };
-                if (inputBuffer.Size > NetConstants.MaxUnreliableDataSize || inputBuffer.Size > reader.AvailableBytes)
-                {
-                    Logger.LogError($"Bad input from: {player.Id} - {player.Peer.EndPoint}");
+                    Logger.LogError($"Bad input from: {player.Id} - {player.Peer.EndPoint} too small input");
                     return;
                 }
+                if (!isFirstInput && reader.AvailableBytes < InputProcessor.MinDeltaSize)
+                {
+                    Logger.LogError($"Bad input from: {player.Id} - {player.Peer.EndPoint} too small delta");
+                    return;
+                }
+                if (Utils.SequenceDiff(inputBuffer.InputHeader.StateA, Tick) > 0 ||
+                    Utils.SequenceDiff(inputBuffer.InputHeader.StateB, Tick) > 0)
+                {
+                    Logger.LogError($"Bad input from: {player.Id} - {player.Peer.EndPoint} invalid sequence");
+                    return;
+                }
+                inputBuffer.InputHeader.LerpMsec = Math.Clamp(inputBuffer.InputHeader.LerpMsec, 0f, 1f);
+                
+                //decode delta
+                Span<byte> decodedData;
+                if (!isFirstInput) //delta
+                {
+                    Array.Clear(_inputDecodeBuffer, 0, InputProcessor.InputSize);
+                    decodedData = new Span<byte>(_inputDecodeBuffer, 0, InputProcessor.InputSize);
+                    int readBytes = InputProcessor.DeltaDecode(new ReadOnlySpan<byte>(reader.RawData, reader.Position, reader.AvailableBytes), decodedData);
+                    reader.SkipBytes(readBytes);
+                }
+                else //full
+                {
+                    isFirstInput = false;
+                    decodedData = new Span<byte>(reader.RawData, reader.Position, InputProcessor.InputSize);
+                    InputProcessor.DeltaDecodeInit(decodedData);
+                    reader.SkipBytes(InputProcessor.InputSize);
+                }
+                //Logger.Log($"ReadInput: {clientTick} stateA: {inputBuffer.InputHeader.StateA}");
                 clientTick++;
                 
-                ref var input = ref inputBuffer.Input;
-                fixed (byte* rawData = reader.RawData)
-                    input = *(InputPacketHeader*)(rawData + reader.Position);
-                
-                reader.SkipBytes(sizeof(InputPacketHeader));
-
-                if (Utils.SequenceDiff(input.StateB, player.CurrentServerTick) > 0)
-                    player.CurrentServerTick = input.StateB;
+                if (Utils.SequenceDiff(inputBuffer.InputHeader.StateB, player.CurrentServerTick) > 0)
+                    player.CurrentServerTick = inputBuffer.InputHeader.StateB;
                     
                 //read input
                 if (player.State == NetPlayerState.WaitingForFirstInput || Utils.SequenceDiff(inputBuffer.Tick, player.LastReceivedTick) > 0)
                 {
                     _inputPool.TryDequeue(out inputBuffer.Data);
-                    Utils.ResizeOrCreate(ref inputBuffer.Data, inputBuffer.Size);
-                    fixed(byte* inputData = inputBuffer.Data, readerData = reader.RawData)
-                        RefMagic.CopyBlock(inputData, readerData + reader.Position, inputBuffer.Size);
+                    Utils.ResizeOrCreate(ref inputBuffer.Data, InputProcessor.InputSize);
+                    fixed(byte* inputData = inputBuffer.Data, rawDecodedData = decodedData)
+                        RefMagic.CopyBlock(inputData, rawDecodedData, (uint)InputProcessor.InputSize);
+
                     if (player.AvailableInput.Count == MaxStoredInputs)
                         _inputPool.Enqueue(player.AvailableInput.ExtractMin().Data);
                     player.AvailableInput.Add(inputBuffer, inputBuffer.Tick);
@@ -341,7 +369,6 @@ namespace LiteEntitySystem
                     //to reduce data
                     player.LastReceivedTick = inputBuffer.Tick;
                 }
-                reader.SkipBytes(inputBuffer.Size);
             }
             if(player.State == NetPlayerState.WaitingForFirstInput)
                 player.State = NetPlayerState.WaitingForFirstInputProcess;
@@ -554,7 +581,7 @@ namespace LiteEntitySystem
                 }
                 
                 var inputFrame = player.AvailableInput.ExtractMin();
-                ref var inputData = ref inputFrame.Input;
+                ref var inputData = ref inputFrame.InputHeader;
                 player.LastProcessedTick = inputFrame.Tick;
                 player.StateATick = inputData.StateA;
                 player.StateBTick = inputData.StateB;
@@ -565,10 +592,12 @@ namespace LiteEntitySystem
                     player.State = NetPlayerState.Active;
 
                 //process input
-                InputProcessor.ReadInputs(this, player.Id, inputFrame.Data, 0, inputFrame.Size);
-
-                _inputPool.Enqueue(inputFrame.Data);
-                inputFrame.Data = null;
+                if (inputFrame.Data != null)
+                {
+                    InputProcessor.ReadInput(this, player.Id, inputFrame.Data);
+                    _inputPool.Enqueue(inputFrame.Data);
+                    inputFrame.Data = null;
+                }
             }
 
             foreach (var aliveEntity in AliveEntities)
