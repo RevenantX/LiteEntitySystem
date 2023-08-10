@@ -29,7 +29,7 @@ Pure C# HighLevel API for multiplayer games using .NET Standard 2.1
 * Basic hierarchy system (childs, parent)
 * Controllers and Pawns concept
 * Interpolation system
-* Delta-compressed state synchronization
+* Delta-compressed state synchronization and input
 * LZ4 compression of initial world state
 * Also works as game logic engine
 * LiteNetLib as core transport with tight integration and without abstractions for maximum speed
