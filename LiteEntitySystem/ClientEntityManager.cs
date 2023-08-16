@@ -75,7 +75,7 @@ namespace LiteEntitySystem
         private readonly Queue<(ushort id, EntityLogic entity)> _spawnPredictedEntities = new ();
         private readonly byte[][] _interpolatedInitialData = new byte[MaxEntityCount][];
         private readonly byte[][] _interpolatePrevData = new byte[MaxEntityCount][];
-        private readonly byte[][] _predictedEntities = new byte[MaxSyncedEntityCount][];
+        private readonly byte[][] _predictedEntitiesData = new byte[MaxSyncedEntityCount][];
         private readonly byte[] _sendBuffer = new byte[NetConstants.MaxPacketSize];
 
         private ServerSendRate _serverSendRate;
@@ -148,7 +148,7 @@ namespace LiteEntitySystem
             base.RemoveEntity(e);
             if (_predictedEntityFilter.Contains(e))
             {
-                _predictedEntities[e.Id] = null;
+                _predictedEntitiesData[e.Id] = null;
                 _predictedEntityFilter.Remove(e);
                 _predictedEntityFilter.Refresh();
             }
@@ -319,10 +319,13 @@ namespace LiteEntitySystem
                     if (Utils.SequenceDiff(serverState.Tick, _lastReadyTick) > 0)
                         _lastReadyTick = serverState.Tick;
                     _receivedStates.Remove(serverState.Tick);
-                    //remove oldest state if count maximum
+                    
                     if (_readyStates.Count == MaxSavedStateDiff)
                     {
-                        _statesPool.Enqueue(_readyStates.ExtractMin());
+                        //one state should be already preloaded
+                        _timer = _lerpTime;
+                        //fast-forward
+                        GoToNextState();
                     }
                     _readyStates.Add(serverState, serverState.Tick);
                     PreloadNextState();
@@ -381,6 +384,7 @@ namespace LiteEntitySystem
 
         private unsafe void GoToNextState()
         {
+            ushort minimalTick = _stateA.Tick;
             _statesPool.Enqueue(_stateA);
             _stateA = _stateB;
             _stateB = null;
@@ -397,7 +401,7 @@ namespace LiteEntitySystem
                         return;
                 }
             }
-            ConstructAndSync(false);
+            ConstructAndSync(false, minimalTick);
             
             _timer -= _lerpTime;
 
@@ -405,10 +409,10 @@ namespace LiteEntitySystem
             foreach (var entity in _predictedEntityFilter)
             {
                 ref var classData = ref entity.GetClassData();
-                if(entity.IsServerControlled && !classData.HasRemoteRollbackFields)
+                if(entity.IsRemoteControlled && !classData.HasRemoteRollbackFields)
                     continue;
 
-                fixed (byte* predictedData = _predictedEntities[entity.Id])
+                fixed (byte* predictedData = _predictedEntitiesData[entity.Id])
                 {
                     for (int i = 0; i < classData.FieldsCount; i++)
                     {
@@ -717,10 +721,9 @@ namespace LiteEntitySystem
             _spawnPredictedEntities.Enqueue((_tick, e));
         }
 
-        private void ConstructAndSync(bool firstSync)
+        private void ConstructAndSync(bool firstSync, ushort minimalTick = 0)
         {
             //execute all previous rpcs
-            ushort minimalTick = ServerTick;
             ServerTick = _stateA.Tick;
             
             //execute syncable fields first
@@ -773,7 +776,7 @@ namespace LiteEntitySystem
                     ref var cd = ref ClassDataDict[entity.ClassId];
                     if (cd.PredictedSize > 0)
                     {
-                        Utils.ResizeOrCreate(ref _predictedEntities[entity.Id], cd.PredictedSize);
+                        Utils.ResizeOrCreate(ref _predictedEntitiesData[entity.Id], cd.PredictedSize);
                         _predictedEntityFilter.Add(entity);
                     }
                     if(cd.InterpolatedFieldsSize > 0)
@@ -802,7 +805,7 @@ namespace LiteEntitySystem
             bool writeInterpolationData = entity.IsServerControlled || fullSync;
             Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
             
-            fixed (byte* interpDataPtr = interpolatedInitialData, predictedData = _predictedEntities[entity.Id])
+            fixed (byte* interpDataPtr = interpolatedInitialData, predictedData = _predictedEntitiesData[entity.Id])
             {
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {

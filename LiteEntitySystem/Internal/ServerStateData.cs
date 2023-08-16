@@ -158,16 +158,16 @@ namespace LiteEntitySystem.Internal
                     continue;
                 if (!firstSync && Utils.SequenceDiff(rpc.Header.Tick, minimalTick) <= 0)
                 {
-                    //Logger.Log($"Skip rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick} <= MinimalTick: {minimalTick}. Id: {rpc.Header.Id}.");
+                    //Logger.Log($"Skip rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick} <= MinimalTick: {minimalTick}. Current: {entityManager.RawServerTick}. Id: {rpc.Header.Id}.");
                     continue;
                 }
-                //Logger.Log($"Executing rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}. Type: {rpcType}");
                 var entity = entityManager.GetEntityById<InternalEntity>(rpc.EntityId);
                 if (entity == null)
                 {
                     Logger.Log($"Entity is null: {rpc.EntityId}");
                     continue;
                 }
+                //Logger.Log($"Executing rpc. Entity: {rpc.EntityId} Class: {entity.ClassId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}");
                 var syncableField = Utils.RefFieldValue<SyncableField>(entity, rpc.SyncableOffset);
                 rpc.Executed = true;
                 rpc.Delegate(syncableField, new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.TypeSize * rpc.Header.Count));

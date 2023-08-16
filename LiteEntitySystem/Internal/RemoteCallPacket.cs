@@ -15,11 +15,9 @@ namespace LiteEntitySystem.Internal
         public ExecuteFlags Flags;
         public RemoteCallPacket Next;
         public int TotalSize => Header.TypeSize * Header.Count;
-        public bool OnSync;
         
         public void Init(ushort tick, ushort typeSize, ushort rpcId, ExecuteFlags flags, int count)
         {
-            OnSync = false;
             Header.Tick = tick;
             Header.Id = rpcId;
             Flags = flags;

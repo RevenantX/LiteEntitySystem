@@ -16,6 +16,13 @@ namespace LiteEntitySystem.Internal
 
     internal struct StateSerializer
     {
+        private enum RPCMode
+        {
+            Normal,
+            Sync,
+            OwnerChange
+        }
+        
         private const int HeaderSize = 5;
         private const int TicksToDestroy = 32;
         public const int DiffHeaderSize = 4;
@@ -30,22 +37,44 @@ namespace LiteEntitySystem.Internal
         private ushort _lastWriteTick;
         private RemoteCallPacket _rpcHead;
         private RemoteCallPacket _rpcTail;
+        private RemoteCallPacket _syncRpcHead;
+        private RemoteCallPacket _syncRpcTail;
         private ushort _ticksOnDestroy;
         private byte _controllerOwner;
         private byte _owner;
         private uint _fullDataSize;
         private int _syncFrame;
-        private bool _onSyncRpcs;
+        private RPCMode _rpcMode;
 
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
-            rpc.OnSync = _onSyncRpcs;
             //Logger.Log($"AddRpc for tick: {rpc.Header.Tick}, St: {_entity.ServerManager.Tick}, Id: {rpc.Header.Id}");
-            if (_rpcHead == null)
-                _rpcHead = rpc;
-            else
-                _rpcTail.Next = rpc;
-            _rpcTail = rpc;
+            
+            switch (_rpcMode)
+            {
+                case RPCMode.OwnerChange:
+                case RPCMode.Normal:
+                {
+                    if (_rpcHead == null)
+                        _rpcHead = rpc;
+                    else
+                        _rpcTail.Next = rpc;
+                    _rpcTail = rpc;
+                    if (_rpcMode == RPCMode.OwnerChange)
+                        rpc.Flags |= ExecuteFlags.SendToOwner;
+                    break;
+                }
+
+                case RPCMode.Sync:
+                {
+                    if (_syncRpcHead == null)
+                        _syncRpcHead = rpc;
+                    else
+                        _syncRpcTail.Next = rpc;
+                    _syncRpcTail = rpc;
+                    break;
+                }
+            }
         }
 
         public byte IncrementVersion(ushort tick)
@@ -55,15 +84,35 @@ namespace LiteEntitySystem.Internal
             return _version++;
         }
 
+        private void CleanPendingRpcs(ref RemoteCallPacket head, ref RemoteCallPacket tail)
+        {
+            while (head != null)
+            {
+                _entity.ServerManager.PoolRpc(head);
+                var tempNode = head;
+                head = head.Next;
+                tempNode.Next = null;
+            }
+            tail = null;
+        }
+
         public unsafe void Init(ref EntityClassData classData, InternalEntity e)
         {
+            if (_state != SerializerState.Freed)
+            {
+                Logger.LogError($"State serializer isn't freed: {_state}");
+            }
             _classData = classData;
             _entity = e;
             _state = SerializerState.Active;
             _syncFrame = -1;
-            _onSyncRpcs = false;
             _owner = 0;
             _controllerOwner = 0;
+            _rpcMode = RPCMode.Normal;
+            
+            //wipe previous rpcs
+            CleanPendingRpcs(ref _rpcHead, ref _rpcTail);
+            CleanPendingRpcs(ref _syncRpcHead, ref _syncRpcTail);
 
             _fullDataSize = (uint)(HeaderSize + _classData.FixedFieldsSize);
             Utils.ResizeOrCreate(ref _latestEntityData, (int)_fullDataSize);
@@ -87,7 +136,7 @@ namespace LiteEntitySystem.Internal
                 ? controller.InternalOwnerId
                 : EntityManager.ServerPlayerId;
             
-            //sync on owner change
+            //TODO: correct sync on owner change
             if (_controllerOwner != controllerOwner)
             {
                 _controllerOwner = controllerOwner;
@@ -160,6 +209,12 @@ namespace LiteEntitySystem.Internal
                 totalSize += rpcNode.TotalSize + rpcHeaderSize;
                 rpcNode = rpcNode.Next;
             }
+            rpcNode = _syncRpcHead;
+            while (rpcNode != null)
+            {
+                totalSize += rpcNode.TotalSize + rpcHeaderSize;
+                rpcNode = rpcNode.Next;
+            }
             return totalSize;
         }
 
@@ -168,11 +223,12 @@ namespace LiteEntitySystem.Internal
             if (tick == _syncFrame)
                 return;
             _syncFrame = tick;
-            _onSyncRpcs = true;
+            CleanPendingRpcs(ref _syncRpcHead, ref _syncRpcTail);
+            _rpcMode = RPCMode.Sync;
             for (int i = 0; i < _classData.SyncableFields.Length; i++)
                 Utils.RefFieldValue<SyncableField>(_entity, _classData.SyncableFields[i].Offset)
                     .InternalOnSyncRequested();
-            _onSyncRpcs = false;
+            _rpcMode = RPCMode.Normal;
         }
 
         //initial state with compression
@@ -188,18 +244,15 @@ namespace LiteEntitySystem.Internal
             *rpcCount = 0;
             position += sizeof(ushort);
 
-            //actual write rpcs
-            var rpcNode = _rpcHead;
+            //actual write sync RPCs
+            var rpcNode = _syncRpcHead;
             while (rpcNode != null)
             {
                 if ((isOwned && (rpcNode.Flags & ExecuteFlags.SendToOwner) != 0) ||
                     (!isOwned && (rpcNode.Flags & ExecuteFlags.SendToOther) != 0))
                 {
                     //put new
-                    var header = rpcNode.Header;
-                    //refresh tick
-                    header.Tick = serverTick;
-                    *(RPCHeader*)(resultData + position) = header;
+                    *(RPCHeader*)(resultData + position) = rpcNode.Header;
                     position += sizeof(RPCHeader);
                     fixed (byte* rpcData = rpcNode.Data)
                         RefMagic.CopyBlock(resultData + position, rpcData, (uint)rpcNode.TotalSize);
@@ -304,11 +357,10 @@ namespace LiteEntitySystem.Internal
                 {
                     bool send = (isOwned && (rpcNode.Flags & ExecuteFlags.SendToOwner) != 0) ||
                                 (!isOwned && (rpcNode.Flags & ExecuteFlags.SendToOther) != 0);
-                    if (!rpcNode.OnSync && send && Utils.SequenceDiff(playerTick, rpcNode.Header.Tick) < 0)
+                    if (send && Utils.SequenceDiff(playerTick, rpcNode.Header.Tick) < 0)
                     {
                         //put new
-                        var header = rpcNode.Header;
-                        *(RPCHeader*)(resultData + position) = header;
+                        *(RPCHeader*)(resultData + position) = rpcNode.Header;
                         position += sizeof(RPCHeader);
                         fixed (byte* rpcData = rpcNode.Data)
                             RefMagic.CopyBlock(resultData + position, rpcData, (uint)rpcNode.TotalSize);
@@ -318,6 +370,10 @@ namespace LiteEntitySystem.Internal
                     }
                     else if (Utils.SequenceDiff(rpcNode.Header.Tick, minimalTick) < 0)
                     {
+                        if (rpcNode != _rpcHead)
+                        {
+                            Logger.LogError("MinimalTickNode isn't first!");
+                        }
                         //remove old RPCs (they should be at first place)
                         _entity.ServerManager.PoolRpc(rpcNode);
                         if (_rpcTail == _rpcHead)

@@ -124,16 +124,12 @@ namespace LiteEntitySystem
         {
             if (player == null || _netPlayersDict[player.Id] == null)
                 return false;
-            
-            for(int i = FirstEntityId; i < MaxSyncedEntityId; i++)
-            {
-                if (EntitiesDict[i] is ControllerLogic controllerLogic && controllerLogic.OwnerId == player.Id)
-                    controllerLogic.DestroyWithControlledEntity();
-            }
+
+            GetPlayerController(player)?.DestroyWithControlledEntity();
             
             _netPlayersDict[player.Id] = null;
             _netPlayersCount--;
-            _entityIdQueue.Enqueue(player.Id);
+            _playerIdQueue.Enqueue(player.Id);
             
             if (player.ArrayIndex != _netPlayersCount)
             {
@@ -147,18 +143,26 @@ namespace LiteEntitySystem
         /// <summary>
         /// Returns controller owned by the player
         /// </summary>
-        /// <param name="player">player to remove</param>
+        /// <param name="player">player</param>
         /// <returns>Instance if found, null if not</returns>
         public ControllerLogic GetPlayerController(NetPeer player)
         {
-            var netPlayer = player.Tag as NetPlayer;
-            if (netPlayer == null || _netPlayersDict[netPlayer.Id] == null)
+            return GetPlayerController(player.Tag as NetPlayer);
+        }
+        
+        /// <summary>
+        /// Returns controller owned by the player
+        /// </summary>
+        /// <param name="player">player to remove</param>
+        /// <returns>Instance if found, null if not</returns>
+        public ControllerLogic GetPlayerController(NetPlayer player)
+        {
+            if (player == null || _netPlayersDict[player.Id] == null)
                 return null;
-
-            for (int i = FirstEntityId; i < MaxSyncedEntityId; i++)
+            foreach (var controller in GetControllers<ControllerLogic>())
             {
-                if (EntitiesDict[i] is ControllerLogic controllerLogic && controllerLogic.OwnerId == netPlayer.Id)
-                    return controllerLogic;
+                if (controller.OwnerId == player.Id)
+                    return controller;
             }
             return null;
         }
@@ -391,9 +395,9 @@ namespace LiteEntitySystem
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
             {
                 var player = _netPlayersArray[pidx];
-                if (player.State == NetPlayerState.Active)
+                if (player.State != NetPlayerState.RequestBaseline)
                     _minimalTick = Utils.SequenceDiff(player.StateATick, _minimalTick) < 0 ? player.StateATick : _minimalTick;
-                else if (player.State == NetPlayerState.RequestBaseline && maxBaseline == 0)
+                else if (maxBaseline == 0)
                 {
                     maxBaseline = sizeof(BaselineDataHeader);
                     for (ushort i = FirstEntityId; i <= MaxSyncedEntityId; i++)
@@ -541,7 +545,7 @@ namespace LiteEntitySystem
                     Logger.Log($"Cannot add entity. Max entity count reached: {MaxSyncedEntityCount}");
                     return null;
                 }
-                ushort entityId =_entityIdQueue.Dequeue();
+                ushort entityId = _entityIdQueue.Dequeue();
                 ref var stateSerializer = ref _stateSerializers[entityId];
 
                 entity = (T)AddEntity(new EntityParams(
@@ -606,13 +610,17 @@ namespace LiteEntitySystem
             foreach (var lagCompensatedEntity in LagCompensatedEntities)
                 lagCompensatedEntity.WriteHistory(_tick);
         }
-        
-        internal void DestroySavedData(InternalEntity entityLogic)
+
+        internal override void RemoveEntity(InternalEntity e)
         {
-            _stateSerializers[entityLogic.Id].Destroy(_tick, _minimalTick, PlayersCount == 0);
-            //destroy instantly when no players to free ids
-            if (PlayersCount == 0)
-                _entityIdQueue.Enqueue(entityLogic.Id);
+            base.RemoveEntity(e);
+            if (!e.IsLocal)
+            {
+                _stateSerializers[e.Id].Destroy(_tick, _minimalTick, PlayersCount == 0);
+                //destroy instantly when no players to free ids
+                if (PlayersCount == 0)
+                    _entityIdQueue.Enqueue(e.Id);
+            }
         }
         
         internal void PoolRpc(RemoteCallPacket rpcNode)
