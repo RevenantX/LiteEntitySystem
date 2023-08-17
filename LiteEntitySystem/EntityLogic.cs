@@ -32,7 +32,10 @@ namespace LiteEntitySystem
     public abstract class EntityLogic : InternalEntity
     {
         //It should be in such order because later it checks rollbacks
+        [SyncVarFlags(SyncFlags.NeverRollBack)]
         internal SyncVarWithNotify<byte> InternalOwnerId;
+        
+        [SyncVarFlags(SyncFlags.NeverRollBack)]
         private SyncVarWithNotify<EntitySharedReference> _parentId;
 
         /// <summary>

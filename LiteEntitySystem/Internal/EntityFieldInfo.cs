@@ -11,7 +11,7 @@ namespace LiteEntitySystem.Internal
 
     internal struct EntityFieldInfo
     {
-        public readonly string Name;
+        public readonly string Name; //used for debug
         public readonly ValueTypeProcessor TypeProcessor;
         public readonly int Offset;
         public readonly int SyncableSyncVarOffset;
@@ -21,13 +21,15 @@ namespace LiteEntitySystem.Internal
         public readonly SyncFlags Flags;
 
         public MethodCallDelegate OnSync;
-        public bool IsPredicted => Flags.HasFlagFast(SyncFlags.AlwaysRollback) || !Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers);
+        public bool IsPredicted => Flags.HasFlagFast(SyncFlags.AlwaysRollback) || (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) && !Flags.HasFlagFast(SyncFlags.NeverRollBack));
         public int FixedOffset;
         public int PredictedOffset;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool ShouldRollback(InternalEntity entity)
         {
+            if (Flags.HasFlagFast(SyncFlags.NeverRollBack))
+                return false;
             return Flags.HasFlagFast(SyncFlags.AlwaysRollback) || (entity.IsLocalControlled && !Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers));
         }
 

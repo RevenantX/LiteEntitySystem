@@ -22,6 +22,7 @@ namespace LiteEntitySystem.Internal
         
         internal readonly byte Version;
         
+        [SyncVarFlags(SyncFlags.NeverRollBack)]
         private SyncVarWithNotify<bool> _isDestroyed;
         
         /// <summary>

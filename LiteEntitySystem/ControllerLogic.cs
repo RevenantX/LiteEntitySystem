@@ -7,7 +7,10 @@ namespace LiteEntitySystem
     /// </summary>
     public abstract class ControllerLogic : InternalEntity
     {
+        [SyncVarFlags(SyncFlags.NeverRollBack)]
         internal SyncVar<byte> InternalOwnerId;
+        
+        [SyncVarFlags(SyncFlags.NeverRollBack)]
         private SyncVar<EntitySharedReference> _controlledEntity;
 
         public byte OwnerId => InternalOwnerId;

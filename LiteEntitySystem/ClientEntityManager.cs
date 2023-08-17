@@ -815,7 +815,7 @@ namespace LiteEntitySystem
                     ref var field = ref classData.Fields[i];
                     byte* readDataPtr = rawData + readerPosition;
                     
-                    if(fullSync || field.ShouldRollback(entity))
+                    if((fullSync || field.ShouldRollback(entity)) && predictedData != null)
                         RefMagic.CopyBlock(predictedData + field.PredictedOffset, readDataPtr, field.Size);
                     
                     if (field.FieldType == FieldType.SyncableSyncVar)

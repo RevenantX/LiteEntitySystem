@@ -251,9 +251,7 @@ namespace LiteEntitySystem.Internal
                                 fields.Add(fieldInfo);
                                 FixedFieldsSize += fieldInfo.IntSize;
                                 if (fieldInfo.IsPredicted)
-                                {
                                     PredictedSize += fieldInfo.IntSize;
-                                }
                             }
                         }
                     }
