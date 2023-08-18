@@ -510,7 +510,7 @@ namespace LiteEntitySystem
 
         private bool IsEntityAlive(EntityClassData classData, InternalEntity entity)
         {
-            return classData.IsUpdateable && (IsServer || entity.IsLocal || (IsClient && (classData.UpdateOnClient || classData.HasRemoteRollbackFields)));
+            return classData.IsUpdateable && (IsServer || entity.IsLocal || (IsClient && classData.UpdateOnClient));
         }
 
         internal virtual void RemoveEntity(InternalEntity e)

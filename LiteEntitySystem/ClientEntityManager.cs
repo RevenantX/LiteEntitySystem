@@ -802,7 +802,7 @@ namespace LiteEntitySystem
             ref var classData = ref entity.GetClassData();
             ref byte[] interpolatedInitialData = ref _interpolatedInitialData[entity.Id];
             int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
-            bool writeInterpolationData = entity.IsServerControlled || fullSync;
+            bool writeInterpolationData = entity.IsRemoteControlled || fullSync;
             Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
             
             fixed (byte* interpDataPtr = interpolatedInitialData, predictedData = _predictedEntitiesData[entity.Id])

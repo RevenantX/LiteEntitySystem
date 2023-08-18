@@ -120,7 +120,7 @@ namespace LiteEntitySystem.Internal
                 int stateReaderOffset = preloadData.DataOffset;
 
                 //preload interpolation info
-                if (entity.IsServerControlled && classData.InterpolatedCount > 0)
+                if (entity.IsRemoteControlled && classData.InterpolatedCount > 0)
                 {
                     Utils.ResizeIfFull(ref InterpolatedFields, InterpolatedCount);
                     Utils.ResizeOrCreate(ref preloadData.InterpolatedCaches, classData.InterpolatedCount);
@@ -131,7 +131,7 @@ namespace LiteEntitySystem.Internal
                     if (!Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, i))
                         continue;
                     var field = fields[i];
-                    if (entity.IsServerControlled && field.Flags.HasFlagFast(SyncFlags.Interpolated))
+                    if (entity.IsRemoteControlled && field.Flags.HasFlagFast(SyncFlags.Interpolated))
                         preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache(i, stateReaderOffset);
                     stateReaderOffset += field.IntSize;
                 }
