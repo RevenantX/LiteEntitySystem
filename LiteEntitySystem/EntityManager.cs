@@ -545,7 +545,7 @@ namespace LiteEntitySystem
         
         public void EnableLagCompensation(NetPlayer player)
         {
-            if (_lagCompensationEnabled)
+            if (_lagCompensationEnabled || (IsClient && InNormalState))
                 return;
 
             _lagCompensationEnabled = true;

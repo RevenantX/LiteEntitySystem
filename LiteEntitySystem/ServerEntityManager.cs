@@ -591,7 +591,7 @@ namespace LiteEntitySystem
                 player.StateBTick = inputData.StateB;
                 player.LerpTime = inputData.LerpMsec;
                 //Logger.Log($"[SEM] CT: {player.LastProcessedTick}, stateA: {player.StateATick}, stateB: {player.StateBTick}");
-                player.SimulatedServerTick = Utils.LerpSequence(inputData.StateA, (ushort)(inputData.StateB-1), inputData.LerpMsec);
+                player.SimulatedServerTick = Utils.LerpSequence(inputData.StateA, inputData.StateB, inputData.LerpMsec);
                 if (player.State == NetPlayerState.WaitingForFirstInputProcess)
                     player.State = NetPlayerState.Active;
 

@@ -500,8 +500,7 @@ namespace LiteEntitySystem
         {
             if (_stateB != null)
             {
-                _logicLerpMsec = (float)(_timer / _lerpTime);
-                ServerTick = Utils.LerpSequence(_stateA.Tick, (ushort)(_stateB.Tick-1), _logicLerpMsec);
+                ServerTick = Utils.LerpSequence(_stateA.Tick, _stateB.Tick, (float)(_timer/_lerpTime));
                 _stateB.ExecuteRpcs(this, _stateA.Tick, false);
             }
             
@@ -587,7 +586,7 @@ namespace LiteEntitySystem
             if (_stateB != null)
             {
                 //remote interpolation
-                float fTimer = (float)(_timer/_lerpTime);
+                _logicLerpMsec = (float)(_timer/_lerpTime);
                 for(int i = 0; i < _stateB.InterpolatedCount; i++)
                 {
                     ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
@@ -604,7 +603,7 @@ namespace LiteEntitySystem
                                 field.Offset,
                                 initialDataPtr + field.FixedOffset,
                                 nextDataPtr + interpolatedCache.StateReaderOffset, 
-                                fTimer);
+                                _logicLerpMsec);
                         }
                     }
                 }

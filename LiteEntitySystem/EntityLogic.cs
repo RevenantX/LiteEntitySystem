@@ -49,8 +49,7 @@ namespace LiteEntitySystem
         public byte OwnerId => InternalOwnerId;
 
         public EntitySharedReference ParentId => _parentId;
-
-        private readonly byte[] _tempHistory;
+        
         private readonly byte[] _history;
         private readonly EntityFieldInfo[] _lagCompensatedFields;
         private readonly int _lagCompensatedSize;
@@ -65,7 +64,7 @@ namespace LiteEntitySystem
         {
             byte maxHistory = (byte)EntityManager.MaxHistorySize;
             _filledHistory = Math.Min(_filledHistory + 1, maxHistory);
-            int historyOffset = (tick % maxHistory)*_lagCompensatedSize;
+            int historyOffset = ((tick % maxHistory)+1)*_lagCompensatedSize;
             fixed (byte* history = _history)
             {
                 for (int i = 0; i < _lagCompensatedFields.Length; i++)
@@ -80,7 +79,7 @@ namespace LiteEntitySystem
         //on client it works only in rollback
         internal unsafe void EnableLagCompensation(NetPlayer player)
         {
-            if (IsControlledBy(player.Id))
+            if (_lagCompensationEnabled || IsControlledBy(player.Id))
                 return;
             ushort tick = EntityManager.IsClient ? ClientManager.ServerTick : EntityManager.Tick;
             byte maxHistory = (byte)EntityManager.MaxHistorySize;
@@ -89,11 +88,11 @@ namespace LiteEntitySystem
                 Logger.Log($"LagCompensationMiss. Tick: {tick}, StateA: {player.StateATick}, StateB: {player.StateBTick}");
                 return;
             }
-            int historyAOffset = (player.StateATick % maxHistory)*_lagCompensatedSize;
-            int historyBOffset = (player.StateBTick % maxHistory)*_lagCompensatedSize;
+            int historyAOffset = ((player.StateATick % maxHistory)+1)*_lagCompensatedSize;
+            int historyBOffset = ((player.StateBTick % maxHistory)+1)*_lagCompensatedSize;
             int historyCurrent = 0;
 
-            fixed (byte* history = _history, tempHistory = _tempHistory)
+            fixed (byte* history = _history)
             {
                 for (int i = 0; i < _lagCompensatedFields.Length; i++)
                 {
@@ -101,7 +100,7 @@ namespace LiteEntitySystem
                     field.TypeProcessor.LoadHistory(
                         this, 
                         field.Offset,
-                        tempHistory + historyCurrent,
+                        history + historyCurrent,
                         history + historyAOffset,
                         history + historyBOffset,
                         player.LerpTime);
@@ -121,12 +120,12 @@ namespace LiteEntitySystem
                 return;
             _lagCompensationEnabled = false;
             int historyOffset = 0;
-            fixed (byte* tempHistory = _tempHistory)
+            fixed (byte* history = _history)
             {
                 for (int i = 0; i < _lagCompensatedFields.Length; i++)
                 {
                     ref var field = ref _lagCompensatedFields[i];
-                    field.TypeProcessor.SetFrom(this, field.Offset, tempHistory + historyOffset);
+                    field.TypeProcessor.SetFrom(this, field.Offset, history + historyOffset);
                     historyOffset += field.IntSize;
                 }
             }
@@ -303,9 +302,8 @@ namespace LiteEntitySystem
             _lagCompensatedSize = classData.LagCompensatedSize;
             if (_lagCompensatedSize > 0)
             {
-                _history = new byte[(byte)EntityManager.MaxHistorySize * _lagCompensatedSize];
+                _history = new byte[((byte)EntityManager.MaxHistorySize+1) * _lagCompensatedSize];
                 _lagCompensatedFields = classData.LagCompensatedFields;
-                _tempHistory = new byte[_lagCompensatedSize];
             }
         }
     }

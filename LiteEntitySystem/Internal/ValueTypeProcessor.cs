@@ -218,6 +218,13 @@ namespace LiteEntitySystem.Internal
             ref var a = ref Utils.RefFieldValue<T>(obj, offset);
             a = _interpDelegate(*(T*)prev, *(T*)current, fTimer);
         }
+        
+        internal override void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
+        {
+            ref var a = ref Utils.RefFieldValue<T>(obj, offset);
+            *(T*)tempHistory = a;
+            a = _interpDelegate != null ? _interpDelegate(*(T*)historyA, *(T*)historyB, lerpTime) : *(T*)historyA;
+        }
 
         public UserTypeProcessor(InterpolatorDelegateWithReturn<T> interpolationDelegate)
         {
