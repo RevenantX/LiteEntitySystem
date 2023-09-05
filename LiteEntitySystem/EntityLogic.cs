@@ -33,10 +33,10 @@ namespace LiteEntitySystem
     {
         //It should be in such order because later it checks rollbacks
         [SyncVarFlags(SyncFlags.NeverRollBack)]
-        internal SyncVarWithNotify<byte> InternalOwnerId;
+        internal SyncVar<byte> InternalOwnerId;
         
         [SyncVarFlags(SyncFlags.NeverRollBack)]
-        private SyncVarWithNotify<EntitySharedReference> _parentId;
+        private SyncVar<EntitySharedReference> _parentId;
 
         /// <summary>
         /// Child entities (can be used for transforms or as components)

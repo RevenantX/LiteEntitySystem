@@ -47,12 +47,12 @@ namespace LiteEntitySystem
     public readonly ref struct RPCRegistrator
     {
         /// <summary>
-        /// Bind notification of SyncVarWithNotify changes to action
+        /// Bind notification of SyncVar changes to action
         /// </summary>
         /// <param name="self">Target entity for binding</param>
         /// <param name="syncVar">Variable to bind</param>
         /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
-        public void BindOnChange<T, TEntity>(TEntity self, ref SyncVarWithNotify<T> syncVar, Action<T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
+        public void BindOnChange<T, TEntity>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
         {
             if (onChangedAction.Target != self)
                 throw new Exception("You can call this only on this class methods");

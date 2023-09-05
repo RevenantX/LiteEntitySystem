@@ -5,7 +5,6 @@ namespace LiteEntitySystem.Internal
     internal enum FieldType
     {
         SyncVar,
-        SyncVarWithNotification,
         SyncableSyncVar
     }
 

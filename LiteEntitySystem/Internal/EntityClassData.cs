@@ -180,8 +180,6 @@ namespace LiteEntitySystem.Internal
                         
                         if (genericType == typeof(SyncVar<>))
                             internalFieldType = FieldType.SyncVar;
-                        else if (genericType == typeof(SyncVarWithNotify<>))
-                            internalFieldType = FieldType.SyncVarWithNotification;
                         else
                             continue;
                         

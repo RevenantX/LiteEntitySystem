@@ -23,7 +23,7 @@ namespace LiteEntitySystem.Internal
         internal readonly byte Version;
         
         [SyncVarFlags(SyncFlags.NeverRollBack)]
-        private SyncVarWithNotify<bool> _isDestroyed;
+        private SyncVar<bool> _isDestroyed;
         
         /// <summary>
         /// Is entity is destroyed
@@ -159,7 +159,7 @@ namespace LiteEntitySystem.Internal
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
                     ref var field = ref classData.Fields[i];
-                    if (field.FieldType == FieldType.SyncVarWithNotification)
+                    if (field.FieldType == FieldType.SyncVar)
                     {
                         ref byte id = ref Utils.RefFieldValue<byte>(this, field.Offset + field.IntSize);
                         id = (byte)i;
