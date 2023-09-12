@@ -53,6 +53,7 @@ namespace LiteEntitySystem
         private readonly byte[] _history;
         private readonly EntityFieldInfo[] _lagCompensatedFields;
         private readonly int _lagCompensatedSize;
+        private readonly int _lagCompensatedCount;
         private int _filledHistory;
         private bool _lagCompensationEnabled;
 
@@ -67,7 +68,7 @@ namespace LiteEntitySystem
             int historyOffset = ((tick % maxHistory)+1)*_lagCompensatedSize;
             fixed (byte* history = _history)
             {
-                for (int i = 0; i < _lagCompensatedFields.Length; i++)
+                for (int i = 0; i < _lagCompensatedCount; i++)
                 {
                     ref var field = ref _lagCompensatedFields[i];
                     field.TypeProcessor.WriteTo(this, field.Offset, history + historyOffset);
@@ -94,7 +95,7 @@ namespace LiteEntitySystem
 
             fixed (byte* history = _history)
             {
-                for (int i = 0; i < _lagCompensatedFields.Length; i++)
+                for (int i = 0; i < _lagCompensatedCount; i++)
                 {
                     ref var field = ref _lagCompensatedFields[i];
                     field.TypeProcessor.LoadHistory(
@@ -122,7 +123,7 @@ namespace LiteEntitySystem
             int historyOffset = 0;
             fixed (byte* history = _history)
             {
-                for (int i = 0; i < _lagCompensatedFields.Length; i++)
+                for (int i = 0; i < _lagCompensatedCount; i++)
                 {
                     ref var field = ref _lagCompensatedFields[i];
                     field.TypeProcessor.SetFrom(this, field.Offset, history + historyOffset);
@@ -304,6 +305,7 @@ namespace LiteEntitySystem
             {
                 _history = new byte[((byte)EntityManager.MaxHistorySize+1) * _lagCompensatedSize];
                 _lagCompensatedFields = classData.LagCompensatedFields;
+                _lagCompensatedCount = classData.LagCompensatedCount;
             }
         }
     }
