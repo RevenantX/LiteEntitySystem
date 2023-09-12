@@ -1,8 +1,6 @@
 # LiteEntitySystem
 Pure C# HighLevel API for multiplayer games using .NET Standard 2.1
 
-**Warning: there is some things "to do" and there is some known bugs, but because i use for my own games they will be fixed asap**
-
 [![Made in Ukraine](https://img.shields.io/badge/made_in-ukraine-ffd700.svg?labelColor=0057b7)](https://stand-with-ukraine.pp.ua)
 
 **Discord chat**: [![Discord](https://img.shields.io/discord/501682175930925058.svg)](https://discord.gg/FATFPdy)
