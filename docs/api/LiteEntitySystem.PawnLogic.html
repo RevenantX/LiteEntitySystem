@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,6 +70,7 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.PawnLogic">
 
 
+
   <h1 id="LiteEntitySystem_PawnLogic" data-uid="LiteEntitySystem.PawnLogic" class="text-break">Class PawnLogic
 </h1>
   <div class="markdown level0 summary"><p>Base class for entites that can be controlled by Controller</p>
@@ -77,14 +78,14 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></div>
     <div class="level2"><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></div>
     <div class="level3"><span class="xref">PawnLogic</span></div>
   </div>
   <div class="implements">
     <h5>Implements</h5>
-    <div><span class="xref">System.IComparable&lt;T&gt;</span>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</div>
+    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -95,7 +96,13 @@
       <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_OwnerId">EntityLogic.OwnerId</a>
     </div>
     <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_ParentId">EntityLogic.ParentId</a>
+    </div>
+    <div>
       <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_HasLagCompensation">EntityLogic.HasLagCompensation</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_SharedReference">EntityLogic.SharedReference</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_EnableLagCompensationForOwner">EntityLogic.EnableLagCompensationForOwner()</a>
@@ -122,7 +129,7 @@
       <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_OnLagCompensationEnd">EntityLogic.OnLagCompensationEnd()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_RegisterRPC_LiteEntitySystem_RPCRegistrator__">EntityLogic.RegisterRPC(RPCRegistrator)</a>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_RegisterRPC_LiteEntitySystem_RPCRegistrator__">EntityLogic.RegisterRPC(in RPCRegistrator)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ClassId">InternalEntity.ClassId</a>
@@ -138,6 +145,9 @@
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsLocalControlled">InternalEntity.IsLocalControlled</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsRemoteControlled">InternalEntity.IsRemoteControlled</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsServerControlled">InternalEntity.IsServerControlled</a>
@@ -164,22 +174,13 @@
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnConstructed">InternalEntity.OnConstructed()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnSyncStart">InternalEntity.OnSyncStart()</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_LiteEntitySystem_RemoteCall__">InternalEntity.ExecuteRPC(in RemoteCall)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnSyncEnd">InternalEntity.OnSyncEnd()</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">InternalEntity.ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt;, T)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_LiteEntitySystem_RemoteCall__">InternalEntity.ExecuteRPC(RemoteCall)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">InternalEntity.ExecuteRPC&lt;T&gt;(RemoteCall&lt;T&gt;, T)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">InternalEntity.ExecuteRPC&lt;T&gt;(RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_System_IComparable_LiteEntitySystem_Internal_InternalEntity__CompareTo_LiteEntitySystem_Internal_InternalEntity_">InternalEntity.IComparable&lt;InternalEntity&gt;.CompareTo(InternalEntity)</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">InternalEntity.ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_GetHashCode">InternalEntity.GetHashCode()</a>
@@ -208,7 +209,7 @@ public abstract class PawnLogic : EntityLogic, IComparable&lt;InternalEntity&gt;
     <pre><code class="lang-csharp hljs">protected PawnLogic(EntityParams entityParams)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -237,7 +238,7 @@ public abstract class PawnLogic : EntityLogic, IComparable&lt;InternalEntity&gt;
     <pre><code class="lang-csharp hljs">public ControllerLogic Controller { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -257,7 +258,8 @@ public abstract class PawnLogic : EntityLogic, IComparable&lt;InternalEntity&gt;
 
   <a id="LiteEntitySystem_PawnLogic_Update_" data-uid="LiteEntitySystem.PawnLogic.Update*"></a>
   <h4 id="LiteEntitySystem_PawnLogic_Update" data-uid="LiteEntitySystem.PawnLogic.Update">Update()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Fixed update. Called if entity has attribute <a class="xref" href="LiteEntitySystem.UpdateableEntity.html">UpdateableEntity</a></p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
@@ -267,8 +269,9 @@ public abstract class PawnLogic : EntityLogic, IComparable&lt;InternalEntity&gt;
   <div><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Update">InternalEntity.Update()</a></div>
   <h3 id="implements">Implements</h3>
   <div>
-      <span class="xref">System.IComparable&lt;T&gt;</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable&lt;T&gt;</a>
   </div>
+
 </article>
           </div>
 
@@ -301,7 +304,7 @@ public abstract class PawnLogic : EntityLogic, IComparable&lt;InternalEntity&gt;
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

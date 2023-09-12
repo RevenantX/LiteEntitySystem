@@ -1,6 +1,6 @@
 {
   "homepages": [],
-  "source_base_path": "D:/Projects/LiteEntitySystem/docfx_project",
+  "source_base_path": "E:/Projects/LiteEntitySystem/docfx_project",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -8,8 +8,7 @@
       "source_relative_path": "api/LiteEntitySystem.AiControllerLogic-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.AiControllerLogic-1.html",
-          "hash": "dh4ZrXcWAeZJvf9566/Src+lQfpsrOTEm1/kFSjt0m4="
+          "relative_path": "api/LiteEntitySystem.AiControllerLogic-1.html"
         }
       },
       "version": ""
@@ -19,8 +18,7 @@
       "source_relative_path": "api/LiteEntitySystem.AiControllerLogic.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.AiControllerLogic.html",
-          "hash": "Kt71htlXzNPzKXFA+HQ36iI4a9TDjJzwmqXRpr9JGYc="
+          "relative_path": "api/LiteEntitySystem.AiControllerLogic.html"
         }
       },
       "version": ""
@@ -30,8 +28,7 @@
       "source_relative_path": "api/LiteEntitySystem.ClientEntityManager.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.ClientEntityManager.html",
-          "hash": "3AgihjNEv+EVqVA5eBepbttNZsBOI5gdyH0N3eKgcYQ="
+          "relative_path": "api/LiteEntitySystem.ClientEntityManager.html"
         }
       },
       "version": ""
@@ -41,8 +38,7 @@
       "source_relative_path": "api/LiteEntitySystem.ControllerLogic.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.ControllerLogic.html",
-          "hash": "I07e5yGJpWnzziAqORwyZNw3yGEERRCHgJmIsqDecjU="
+          "relative_path": "api/LiteEntitySystem.ControllerLogic.html"
         }
       },
       "version": ""
@@ -52,8 +48,7 @@
       "source_relative_path": "api/LiteEntitySystem.EntityFilter-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.EntityFilter-1.html",
-          "hash": "lJSPFc9EwYeTfmdlxY77k/p1bAt616Z0gAd2ncOb3Vg="
+          "relative_path": "api/LiteEntitySystem.EntityFilter-1.html"
         }
       },
       "version": ""
@@ -63,8 +58,7 @@
       "source_relative_path": "api/LiteEntitySystem.EntityFilter.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.EntityFilter.html",
-          "hash": "QuE49tqLFN53W5VA5DEUsJJ78q/soJmvO1+PciqDx7c="
+          "relative_path": "api/LiteEntitySystem.EntityFilter.html"
         }
       },
       "version": ""
@@ -74,8 +68,7 @@
       "source_relative_path": "api/LiteEntitySystem.EntityList-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.EntityList-1.html",
-          "hash": "Ip361vAQfiBeJVlwFJvVHAVyVlwvMSRm+Jf93FrfTMA="
+          "relative_path": "api/LiteEntitySystem.EntityList-1.html"
         }
       },
       "version": ""
@@ -85,8 +78,7 @@
       "source_relative_path": "api/LiteEntitySystem.EntityLogic.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.EntityLogic.html",
-          "hash": "eiW7no2vvs2oSOzD0LmIrdnXuYUnVoeJ44lx2nK3hx0="
+          "relative_path": "api/LiteEntitySystem.EntityLogic.html"
         }
       },
       "version": ""
@@ -96,8 +88,7 @@
       "source_relative_path": "api/LiteEntitySystem.EntityManager.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.EntityManager.html",
-          "hash": "GVW+3sc+HaYsbf27ikMOXU+kcTjgVWd8YAgTsv2gk1A="
+          "relative_path": "api/LiteEntitySystem.EntityManager.html"
         }
       },
       "version": ""
@@ -107,8 +98,7 @@
       "source_relative_path": "api/LiteEntitySystem.EntityParams.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.EntityParams.html",
-          "hash": "DGPkbbxpXHNo6oVuyq9EBPmHaFGSZIc2dTsg6fGkKl0="
+          "relative_path": "api/LiteEntitySystem.EntityParams.html"
         }
       },
       "version": ""
@@ -118,8 +108,7 @@
       "source_relative_path": "api/LiteEntitySystem.EntitySharedReference.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.EntitySharedReference.html",
-          "hash": "C6IdsAIXihusHWmZvMofc3L4wAgC3YZNwz0jYot+c+w="
+          "relative_path": "api/LiteEntitySystem.EntitySharedReference.html"
         }
       },
       "version": ""
@@ -129,8 +118,7 @@
       "source_relative_path": "api/LiteEntitySystem.EntityTypesMap-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.EntityTypesMap-1.html",
-          "hash": "gvBssKZtQ5OQSN9T6MQD8I5w8cqfVCELG8deSDY/pHs="
+          "relative_path": "api/LiteEntitySystem.EntityTypesMap-1.html"
         }
       },
       "version": ""
@@ -140,8 +128,7 @@
       "source_relative_path": "api/LiteEntitySystem.EntityTypesMap.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.EntityTypesMap.html",
-          "hash": "UOZiiJ9PzbtsCLrHKzF24E30HUyoiWDx+uU5tt4Ln8s="
+          "relative_path": "api/LiteEntitySystem.EntityTypesMap.html"
         }
       },
       "version": ""
@@ -151,8 +138,7 @@
       "source_relative_path": "api/LiteEntitySystem.ExecuteFlags.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.ExecuteFlags.html",
-          "hash": "KFYjxfYKAQswqXM//UAt+QIiZT+che5HUkQm/zp7ifQ="
+          "relative_path": "api/LiteEntitySystem.ExecuteFlags.html"
         }
       },
       "version": ""
@@ -162,8 +148,27 @@
       "source_relative_path": "api/LiteEntitySystem.Extensions.StateCalls.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.StateCalls.html",
-          "hash": "Ifz/Av0foYTxwXAantdCuQLqY/W3LYB3QNVNK5TgDBM="
+          "relative_path": "api/LiteEntitySystem.Extensions.StateCalls.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncArray-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncArray-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncDict-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncDict-2.html"
         }
       },
       "version": ""
@@ -173,8 +178,7 @@
       "source_relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.SetCallData.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.SetCallData.html",
-          "hash": "/+VuNdPIwJDNolLumeXPjWBWLVnFmjKyV055K4pXya0="
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.SetCallData.html"
         }
       },
       "version": ""
@@ -184,8 +188,7 @@
       "source_relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.html",
-          "hash": "88mYWEELRqrURbgVH+AqT10lQ6IQv+mu1tYYdIn4aGE="
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.html"
         }
       },
       "version": ""
@@ -195,8 +198,17 @@
       "source_relative_path": "api/LiteEntitySystem.Extensions.SyncList-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncList-1.html",
-          "hash": "oRcPkEnPnRtRgz/0VTTKTQHVjlEW+Yf5DdGF5ogDC5U="
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncList-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncNetSerializable-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncNetSerializable-1.html"
         }
       },
       "version": ""
@@ -206,8 +218,7 @@
       "source_relative_path": "api/LiteEntitySystem.Extensions.SyncStateMachine-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncStateMachine-1.html",
-          "hash": "+pJErqXYxYgcf8voqp9BYgcPmbjcuoUYK2E/YtRFEac="
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncStateMachine-1.html"
         }
       },
       "version": ""
@@ -217,8 +228,7 @@
       "source_relative_path": "api/LiteEntitySystem.Extensions.SyncString.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncString.html",
-          "hash": "1M5xIUe/D5FttuMCPdjI2xaPmRF/GeBCWO1teQ8+Ses="
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncString.html"
         }
       },
       "version": ""
@@ -228,8 +238,7 @@
       "source_relative_path": "api/LiteEntitySystem.Extensions.SyncTimer.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncTimer.html",
-          "hash": "pwxIxviNPgFUUY4NwnZlgQzaaxiowwqaybjuBKiiWL4="
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncTimer.html"
         }
       },
       "version": ""
@@ -239,8 +248,7 @@
       "source_relative_path": "api/LiteEntitySystem.Extensions.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.html",
-          "hash": "vix5BiHzztL1DKJzkLYoEus2lBQf//Se3M2Kd0Crbj8="
+          "relative_path": "api/LiteEntitySystem.Extensions.html"
         }
       },
       "version": ""
@@ -250,8 +258,7 @@
       "source_relative_path": "api/LiteEntitySystem.FloatAngle.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.FloatAngle.html",
-          "hash": "V5Am9AgA0JBNf3TV3QETCSDI5n5rx2KNR+Rr5OB8KhE="
+          "relative_path": "api/LiteEntitySystem.FloatAngle.html"
         }
       },
       "version": ""
@@ -261,8 +268,7 @@
       "source_relative_path": "api/LiteEntitySystem.Helpers.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Helpers.html",
-          "hash": "iAIsb9up4KU/JP3TRx5PynkvGqg6eR1yNRAm12Qyrv0="
+          "relative_path": "api/LiteEntitySystem.Helpers.html"
         }
       },
       "version": ""
@@ -272,8 +278,7 @@
       "source_relative_path": "api/LiteEntitySystem.HumanControllerLogic-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.HumanControllerLogic-1.html",
-          "hash": "CvaJjwuokn1YgXLUQlu/IZHNySungIHdGT01xHYO5tA="
+          "relative_path": "api/LiteEntitySystem.HumanControllerLogic-1.html"
         }
       },
       "version": ""
@@ -283,8 +288,7 @@
       "source_relative_path": "api/LiteEntitySystem.HumanControllerLogic-2.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.HumanControllerLogic-2.html",
-          "hash": "phK4xSGMhovdxopqt7GDJtTZrnpncKu/s8oI1PGA2Ho="
+          "relative_path": "api/LiteEntitySystem.HumanControllerLogic-2.html"
         }
       },
       "version": ""
@@ -294,8 +298,7 @@
       "source_relative_path": "api/LiteEntitySystem.ILogger.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.ILogger.html",
-          "hash": "roym5/jbqugWIqFF583Iew86R6qSLYHTsPov2IgVOXM="
+          "relative_path": "api/LiteEntitySystem.ILogger.html"
         }
       },
       "version": ""
@@ -305,8 +308,7 @@
       "source_relative_path": "api/LiteEntitySystem.InputProcessor-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.InputProcessor-1.html",
-          "hash": "VeELqALEqKYfoMZigfCgycCdbrRqJ6wfnvMqrC1svLc="
+          "relative_path": "api/LiteEntitySystem.InputProcessor-1.html"
         }
       },
       "version": ""
@@ -316,8 +318,27 @@
       "source_relative_path": "api/LiteEntitySystem.InputProcessor.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.InputProcessor.html",
-          "hash": "GnokMU/OWHQUUhvUd3MK7md1vQQql8OyvBHK5NusdzA="
+          "relative_path": "api/LiteEntitySystem.InputProcessor.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Internal.BitReadOnlySpan.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Internal.BitReadOnlySpan.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Internal.BitSpan.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Internal.BitSpan.html"
         }
       },
       "version": ""
@@ -327,8 +348,7 @@
       "source_relative_path": "api/LiteEntitySystem.Internal.InternalEntity.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.InternalEntity.html",
-          "hash": "STjQ5MBbWTtkyQYUhXnGh7mzbg0DchTjNaiGy8nC0qs="
+          "relative_path": "api/LiteEntitySystem.Internal.InternalEntity.html"
         }
       },
       "version": ""
@@ -338,8 +358,7 @@
       "source_relative_path": "api/LiteEntitySystem.Internal.Utils.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.Utils.html",
-          "hash": "K2NFINLssnWapNC6UJQHJBre3XN+aW8dGvZUVoUDakE="
+          "relative_path": "api/LiteEntitySystem.Internal.Utils.html"
         }
       },
       "version": ""
@@ -349,8 +368,7 @@
       "source_relative_path": "api/LiteEntitySystem.Internal.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.html",
-          "hash": "IBW7aPYooQNWJmg1AHU7vWLLa0w3y4+gMx1+C+ZIs9Y="
+          "relative_path": "api/LiteEntitySystem.Internal.html"
         }
       },
       "version": ""
@@ -360,8 +378,7 @@
       "source_relative_path": "api/LiteEntitySystem.LocalOnly.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.LocalOnly.html",
-          "hash": "LZW1WUenUFQPVV6AtsfqTIUskOD/tIWP56xnWJenWX4="
+          "relative_path": "api/LiteEntitySystem.LocalOnly.html"
         }
       },
       "version": ""
@@ -371,8 +388,7 @@
       "source_relative_path": "api/LiteEntitySystem.Logger.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Logger.html",
-          "hash": "sQUbSgLcTyOPECHP0g7hXXnQ3BwQplWq3uOaAAfkb28="
+          "relative_path": "api/LiteEntitySystem.Logger.html"
         }
       },
       "version": ""
@@ -382,8 +398,7 @@
       "source_relative_path": "api/LiteEntitySystem.MaxHistorySize.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.MaxHistorySize.html",
-          "hash": "NhBWGB9xR5e/RYszv55k4tTnNjZTEFKpzU1Fs2HRp6Q="
+          "relative_path": "api/LiteEntitySystem.MaxHistorySize.html"
         }
       },
       "version": ""
@@ -393,8 +408,7 @@
       "source_relative_path": "api/LiteEntitySystem.NetPlayer.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.NetPlayer.html",
-          "hash": "2xUt144thZuu9G56Rv4Ke6dCJPMi/Dhqp8UD76TfIC8="
+          "relative_path": "api/LiteEntitySystem.NetPlayer.html"
         }
       },
       "version": ""
@@ -404,8 +418,7 @@
       "source_relative_path": "api/LiteEntitySystem.NetPlayerState.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.NetPlayerState.html",
-          "hash": "v1qwbwkP5H6HOmpff1mbcJkvPovr2kd5zI6I0CRNFwQ="
+          "relative_path": "api/LiteEntitySystem.NetPlayerState.html"
         }
       },
       "version": ""
@@ -415,8 +428,7 @@
       "source_relative_path": "api/LiteEntitySystem.NetworkMode.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.NetworkMode.html",
-          "hash": "P71x250MO7UQdlmuRhTiGp4F+RuJA3ppSfVwC3dDsGI="
+          "relative_path": "api/LiteEntitySystem.NetworkMode.html"
         }
       },
       "version": ""
@@ -426,8 +438,7 @@
       "source_relative_path": "api/LiteEntitySystem.PawnLogic.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.PawnLogic.html",
-          "hash": "JHciuxLhf4nV5uAkVzTspkNFbOacHixD7xH5C4HDdT0="
+          "relative_path": "api/LiteEntitySystem.PawnLogic.html"
         }
       },
       "version": ""
@@ -437,8 +448,17 @@
       "source_relative_path": "api/LiteEntitySystem.RPCRegistrator.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.RPCRegistrator.html",
-          "hash": "HahiukCNciUfuMVXFrte3Y4Yao7HCnnJgLyRFKyqI1A="
+          "relative_path": "api/LiteEntitySystem.RPCRegistrator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.RPCType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.RPCType.html"
         }
       },
       "version": ""
@@ -448,8 +468,7 @@
       "source_relative_path": "api/LiteEntitySystem.RemoteCall-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.RemoteCall-1.html",
-          "hash": "z4McX8lsmYVD/IE9KWlZeGG20FmM9OFDoR7qjAwNhnY="
+          "relative_path": "api/LiteEntitySystem.RemoteCall-1.html"
         }
       },
       "version": ""
@@ -459,8 +478,7 @@
       "source_relative_path": "api/LiteEntitySystem.RemoteCall.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.RemoteCall.html",
-          "hash": "gcr8K1wlBmCw/zGI6Txchz0BDl9KHMNV/YS60XD3o2M="
+          "relative_path": "api/LiteEntitySystem.RemoteCall.html"
         }
       },
       "version": ""
@@ -470,8 +488,7 @@
       "source_relative_path": "api/LiteEntitySystem.RemoteCallSpan-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.RemoteCallSpan-1.html",
-          "hash": "zINJCbSOa1zEcG1K10ExGgmjhEZpQ1sqRuqSX217xb4="
+          "relative_path": "api/LiteEntitySystem.RemoteCallSpan-1.html"
         }
       },
       "version": ""
@@ -481,8 +498,7 @@
       "source_relative_path": "api/LiteEntitySystem.ServerEntityManager.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.ServerEntityManager.html",
-          "hash": "yfnyEGJDSbKTP1qhRfr6xNToC01Q8fAdBFfh4OCESZo="
+          "relative_path": "api/LiteEntitySystem.ServerEntityManager.html"
         }
       },
       "version": ""
@@ -492,8 +508,7 @@
       "source_relative_path": "api/LiteEntitySystem.ServerSendRate.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.ServerSendRate.html",
-          "hash": "gWGjTWYLPQrqrrHry02rm+YYiC3sGuNGLxvGLZkQNfM="
+          "relative_path": "api/LiteEntitySystem.ServerSendRate.html"
         }
       },
       "version": ""
@@ -503,8 +518,7 @@
       "source_relative_path": "api/LiteEntitySystem.SingletonEntityLogic.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.SingletonEntityLogic.html",
-          "hash": "HxQ0ILtLO+NooF12qBmvUXcp+7WSikLCViQ25MSl2c0="
+          "relative_path": "api/LiteEntitySystem.SingletonEntityLogic.html"
         }
       },
       "version": ""
@@ -514,8 +528,7 @@
       "source_relative_path": "api/LiteEntitySystem.SyncFlags.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.SyncFlags.html",
-          "hash": "RvAYRQTUeOXd+Yju3fwCDtQKAsLmLfHAy+csxGQ2j8I="
+          "relative_path": "api/LiteEntitySystem.SyncFlags.html"
         }
       },
       "version": ""
@@ -525,8 +538,7 @@
       "source_relative_path": "api/LiteEntitySystem.SyncVar-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.SyncVar-1.html",
-          "hash": "NaI8celik9Qf6XPqMph03Pd7gxuxyLBfk+juThTLoCM="
+          "relative_path": "api/LiteEntitySystem.SyncVar-1.html"
         }
       },
       "version": ""
@@ -536,8 +548,7 @@
       "source_relative_path": "api/LiteEntitySystem.SyncVarFlags.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.SyncVarFlags.html",
-          "hash": "xK+IuuBFja2NGpZ/fnz8E+FvnMnMHy4f6tFam9nPgvc="
+          "relative_path": "api/LiteEntitySystem.SyncVarFlags.html"
         }
       },
       "version": ""
@@ -547,8 +558,7 @@
       "source_relative_path": "api/LiteEntitySystem.SyncVarWithNotify-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.SyncVarWithNotify-1.html",
-          "hash": "Fo92K86uxAduRxDT5SPkjVFokLKEKPm2cypAWZViMXA="
+          "relative_path": "api/LiteEntitySystem.SyncVarWithNotify-1.html"
         }
       },
       "version": ""
@@ -558,8 +568,7 @@
       "source_relative_path": "api/LiteEntitySystem.SyncableField.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.SyncableField.html",
-          "hash": "zmcIIjJKy7tnASD5lByVWDM07CIdYiB0FdvwocwKzfc="
+          "relative_path": "api/LiteEntitySystem.SyncableField.html"
         }
       },
       "version": ""
@@ -569,8 +578,7 @@
       "source_relative_path": "api/LiteEntitySystem.SyncableRPCRegistrator.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.SyncableRPCRegistrator.html",
-          "hash": "UcFNSBFG9LzVvUvrjhH9FQ6l3oM3Qabbe8FAyxeC2sk="
+          "relative_path": "api/LiteEntitySystem.SyncableRPCRegistrator.html"
         }
       },
       "version": ""
@@ -580,8 +588,7 @@
       "source_relative_path": "api/LiteEntitySystem.UpdateMode.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.UpdateMode.html",
-          "hash": "UxfTn5dIr0A+1OlX9IICgYPXEhtjXzfBau1bReJVNt4="
+          "relative_path": "api/LiteEntitySystem.UpdateMode.html"
         }
       },
       "version": ""
@@ -591,8 +598,7 @@
       "source_relative_path": "api/LiteEntitySystem.UpdateableEntity.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.UpdateableEntity.html",
-          "hash": "FHx+CFGrDZMz2sMyuIghEggNPdHuUxzl489ycGg2jNk="
+          "relative_path": "api/LiteEntitySystem.UpdateableEntity.html"
         }
       },
       "version": ""
@@ -602,8 +608,27 @@
       "source_relative_path": "api/LiteEntitySystem.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.html",
-          "hash": "BCsW8rCWoK9WcweTMxgdNAMY+rGgAKgJvHebO/mmbUw="
+          "relative_path": "api/LiteEntitySystem.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteNetLib.Utils.NetDataEnumExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteNetLib.Utils.NetDataEnumExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteNetLib.Utils.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteNetLib.Utils.html"
         }
       },
       "version": ""
@@ -613,8 +638,7 @@
       "source_relative_path": "api/index.md",
       "output": {
         ".html": {
-          "relative_path": "api/index.html",
-          "hash": "5Pd/7iVEl8M/TxaRf0jSFRITv2KddfHidLNSvT6eygE="
+          "relative_path": "api/index.html"
         }
       },
       "version": ""
@@ -624,8 +648,7 @@
       "source_relative_path": "api/toc.yml",
       "output": {
         ".html": {
-          "relative_path": "api/toc.html",
-          "hash": "yDh4usQoCDhlu5uQJjfdJ7NRKYe5VlLlvJC8gq7tcS8="
+          "relative_path": "api/toc.html"
         }
       },
       "version": ""
@@ -635,8 +658,7 @@
       "source_relative_path": "index.md",
       "output": {
         ".html": {
-          "relative_path": "index.html",
-          "hash": "nYj7XLR1ZrOgB+5xyr7l3GyYunNQlhfFW1CT2fm52is="
+          "relative_path": "index.html"
         }
       },
       "version": ""
@@ -646,8 +668,7 @@
       "source_relative_path": "toc.yml",
       "output": {
         ".html": {
-          "relative_path": "toc.html",
-          "hash": "4MLStj1GmQm7Bm/9VLvC/K0SydbxBuexPq4gTPqQ5rQ="
+          "relative_path": "toc.html"
         }
       },
       "version": ""

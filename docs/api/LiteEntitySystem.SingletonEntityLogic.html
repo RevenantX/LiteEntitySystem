@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,6 +70,7 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.SingletonEntityLogic">
 
 
+
   <h1 id="LiteEntitySystem_SingletonEntityLogic" data-uid="LiteEntitySystem.SingletonEntityLogic" class="text-break">Class SingletonEntityLogic
 </h1>
   <div class="markdown level0 summary"><p>Base class for singletons entity that can exists in only one instance</p>
@@ -77,13 +78,13 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></div>
     <div class="level2"><span class="xref">SingletonEntityLogic</span></div>
   </div>
   <div class="implements">
     <h5>Implements</h5>
-    <div><span class="xref">System.IComparable&lt;T&gt;</span>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</div>
+    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -101,6 +102,9 @@
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsLocalControlled">InternalEntity.IsLocalControlled</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsRemoteControlled">InternalEntity.IsRemoteControlled</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsServerControlled">InternalEntity.IsServerControlled</a>
@@ -130,25 +134,16 @@
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnConstructed">InternalEntity.OnConstructed()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnSyncStart">InternalEntity.OnSyncStart()</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_LiteEntitySystem_RemoteCall__">InternalEntity.ExecuteRPC(in RemoteCall)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnSyncEnd">InternalEntity.OnSyncEnd()</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">InternalEntity.ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt;, T)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_LiteEntitySystem_RemoteCall__">InternalEntity.ExecuteRPC(RemoteCall)</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">InternalEntity.ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">InternalEntity.ExecuteRPC&lt;T&gt;(RemoteCall&lt;T&gt;, T)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">InternalEntity.ExecuteRPC&lt;T&gt;(RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_RegisterRPC_LiteEntitySystem_RPCRegistrator__">InternalEntity.RegisterRPC(RPCRegistrator)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_System_IComparable_LiteEntitySystem_Internal_InternalEntity__CompareTo_LiteEntitySystem_Internal_InternalEntity_">InternalEntity.IComparable&lt;InternalEntity&gt;.CompareTo(InternalEntity)</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_RegisterRPC_LiteEntitySystem_RPCRegistrator__">InternalEntity.RegisterRPC(in RPCRegistrator)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_GetHashCode">InternalEntity.GetHashCode()</a>
@@ -176,7 +171,7 @@
     <pre><code class="lang-csharp hljs">protected SingletonEntityLogic(EntityParams entityParams)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -194,8 +189,9 @@
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <span class="xref">System.IComparable&lt;T&gt;</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable&lt;T&gt;</a>
   </div>
+
 </article>
           </div>
 
@@ -228,7 +224,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

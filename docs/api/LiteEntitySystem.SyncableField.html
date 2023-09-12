@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,16 +70,20 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.SyncableField">
 
 
+
   <h1 id="LiteEntitySystem_SyncableField" data-uid="LiteEntitySystem.SyncableField" class="text-break">Class SyncableField
 </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><span class="xref">SyncableField</span></div>
+      <div class="level2"><a class="xref" href="LiteEntitySystem.Extensions.SyncArray-1.html">SyncArray&lt;T&gt;</a></div>
+      <div class="level2"><a class="xref" href="LiteEntitySystem.Extensions.SyncDict-2.html">SyncDict&lt;TKey, TValue&gt;</a></div>
       <div class="level2"><a class="xref" href="LiteEntitySystem.Extensions.SyncFixedArray-1.html">SyncFixedArray&lt;T&gt;</a></div>
       <div class="level2"><a class="xref" href="LiteEntitySystem.Extensions.SyncList-1.html">SyncList&lt;T&gt;</a></div>
+      <div class="level2"><a class="xref" href="LiteEntitySystem.Extensions.SyncNetSerializable-1.html">SyncNetSerializable&lt;T&gt;</a></div>
       <div class="level2"><a class="xref" href="LiteEntitySystem.Extensions.SyncStateMachine-1.html">SyncStateMachine&lt;T&gt;</a></div>
       <div class="level2"><a class="xref" href="LiteEntitySystem.Extensions.SyncString.html">SyncString</a></div>
       <div class="level2"><a class="xref" href="LiteEntitySystem.Extensions.SyncTimer.html">SyncTimer</a></div>
@@ -89,18 +93,6 @@
   <h5 id="LiteEntitySystem_SyncableField_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public abstract class SyncableField</code></pre>
-  </div>
-  <h3 id="constructors">Constructors
-</h3>
-
-
-  <a id="LiteEntitySystem_SyncableField__ctor_" data-uid="LiteEntitySystem.SyncableField.#ctor*"></a>
-  <h4 id="LiteEntitySystem_SyncableField__ctor" data-uid="LiteEntitySystem.SyncableField.#ctor">SyncableField()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected SyncableField()</code></pre>
   </div>
   <h3 id="methods">Methods
 </h3>
@@ -115,7 +107,7 @@
     <pre><code class="lang-csharp hljs">protected void ExecuteRPC(in RemoteCall rpc)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -139,11 +131,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt; rpc, T value)
-    where T : struct</code></pre>
+    <pre><code class="lang-csharp hljs">protected void ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt; rpc, T value) where T : unmanaged</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -165,7 +156,7 @@
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -187,11 +178,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt; rpc, ReadOnlySpan&lt;T&gt; value)
-    where T : struct</code></pre>
+    <pre><code class="lang-csharp hljs">protected void ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt; rpc, ReadOnlySpan&lt;T&gt; value) where T : unmanaged</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -206,14 +196,14 @@
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.ReadOnlySpan&lt;T&gt;</span>&lt;T&gt;</td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;T&gt;</td>
         <td><span class="parametername">value</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -229,68 +219,14 @@
   </table>
 
 
-  <a id="LiteEntitySystem_SyncableField_FullSyncRead_" data-uid="LiteEntitySystem.SyncableField.FullSyncRead*"></a>
-  <h4 id="LiteEntitySystem_SyncableField_FullSyncRead_System_ReadOnlySpan_System_Byte__System_Int32__" data-uid="LiteEntitySystem.SyncableField.FullSyncRead(System.ReadOnlySpan{System.Byte},System.Int32@)">FullSyncRead(ReadOnlySpan&lt;Byte&gt;, ref Int32)</h4>
+  <a id="LiteEntitySystem_SyncableField_OnSyncRequested_" data-uid="LiteEntitySystem.SyncableField.OnSyncRequested*"></a>
+  <h4 id="LiteEntitySystem_SyncableField_OnSyncRequested" data-uid="LiteEntitySystem.SyncableField.OnSyncRequested">OnSyncRequested()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual void FullSyncRead(ReadOnlySpan&lt;byte&gt; dataSpan, ref int position)</code></pre>
+    <pre><code class="lang-csharp hljs">protected virtual void OnSyncRequested()</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ReadOnlySpan&lt;T&gt;</span>&lt;<span class="xref">System.Byte</span>&gt;</td>
-        <td><span class="parametername">dataSpan</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">position</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_SyncableField_FullSyncWrite_" data-uid="LiteEntitySystem.SyncableField.FullSyncWrite*"></a>
-  <h4 id="LiteEntitySystem_SyncableField_FullSyncWrite_System_Span_System_Byte__System_Int32__" data-uid="LiteEntitySystem.SyncableField.FullSyncWrite(System.Span{System.Byte},System.Int32@)">FullSyncWrite(Span&lt;Byte&gt;, ref Int32)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual void FullSyncWrite(Span&lt;byte&gt; dataSpan, ref int position)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Span&lt;T&gt;</span>&lt;<span class="xref">System.Byte</span>&gt;</td>
-        <td><span class="parametername">dataSpan</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">position</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 
 
   <a id="LiteEntitySystem_SyncableField_RegisterRPC_" data-uid="LiteEntitySystem.SyncableField.RegisterRPC*"></a>
@@ -299,10 +235,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual void RegisterRPC(in SyncableRPCRegistrator r)</code></pre>
+    <pre><code class="lang-csharp hljs">protected virtual void RegisterRPC(in SyncableRPCRegistrator r)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -318,6 +254,7 @@
       </tr>
     </tbody>
   </table>
+
 </article>
           </div>
 
@@ -350,7 +287,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,36 +70,37 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1">
 
 
+
   <h1 id="LiteEntitySystem_Extensions_SyncFixedArray_1" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1" class="text-break">Class SyncFixedArray&lt;T&gt;
 </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><a class="xref" href="LiteEntitySystem.SyncableField.html">SyncableField</a></div>
     <div class="level2"><span class="xref">SyncFixedArray&lt;T&gt;</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__">SyncableField.ExecuteRPC(RemoteCall)</a>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__">SyncableField.ExecuteRPC(in RemoteCall)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">SyncableField.ExecuteRPC&lt;T&gt;(RemoteCall&lt;T&gt;, T)</a>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">SyncableField.ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt;, T)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">SyncableField.ExecuteRPC&lt;T&gt;(RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">SyncableField.ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.Extensions.html">LiteEntitySystem.Extensions</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a>.<a class="xref" href="LiteEntitySystem.Extensions.html">Extensions</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_Extensions_SyncFixedArray_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SyncFixedArray&lt;T&gt; : SyncableField where T : struct</code></pre>
+    <pre><code class="lang-csharp hljs">public class SyncFixedArray&lt;T&gt; : SyncableField where T : unmanaged</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -118,7 +119,7 @@
 
 
   <a id="LiteEntitySystem_Extensions_SyncFixedArray_1__ctor_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.#ctor*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncFixedArray_1__ctor_System_Int32_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.#ctor(System.Int32)">SyncFixedArray(Int32)</h4>
+  <h4 id="LiteEntitySystem_Extensions_SyncFixedArray_1__ctor_System_Int32_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.#ctor(System.Int32)">SyncFixedArray(int)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -126,7 +127,7 @@
     <pre><code class="lang-csharp hljs">public SyncFixedArray(int size)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -136,7 +137,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">size</span></td>
         <td></td>
       </tr>
@@ -144,30 +145,6 @@
   </table>
   <h3 id="fields">Fields
 </h3>
-
-
-  <h4 id="LiteEntitySystem_Extensions_SyncFixedArray_1_Data" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.Data">Data</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly T[] Data</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>T[]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 
 
   <h4 id="LiteEntitySystem_Extensions_SyncFixedArray_1_Length" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.Length">Length</h4>
@@ -178,7 +155,7 @@
     <pre><code class="lang-csharp hljs">public readonly int Length</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -187,7 +164,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -197,7 +174,7 @@
 
 
   <a id="LiteEntitySystem_Extensions_SyncFixedArray_1_Item_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.Item*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncFixedArray_1_Item_System_Int32_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.Item(System.Int32)">Item[Int32]</h4>
+  <h4 id="LiteEntitySystem_Extensions_SyncFixedArray_1_Item_System_Int32_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.Item(System.Int32)">this[int]</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -205,7 +182,7 @@
     <pre><code class="lang-csharp hljs">public T this[int index] { get; set; }</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -215,14 +192,14 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">index</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -240,72 +217,16 @@
 </h3>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncFixedArray_1_FullSyncRead_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.FullSyncRead*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncFixedArray_1_FullSyncRead_System_ReadOnlySpan_System_Byte__System_Int32__" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.FullSyncRead(System.ReadOnlySpan{System.Byte},System.Int32@)">FullSyncRead(ReadOnlySpan&lt;Byte&gt;, ref Int32)</h4>
+  <a id="LiteEntitySystem_Extensions_SyncFixedArray_1_OnSyncRequested_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.OnSyncRequested*"></a>
+  <h4 id="LiteEntitySystem_Extensions_SyncFixedArray_1_OnSyncRequested" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.OnSyncRequested">OnSyncRequested()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void FullSyncRead(ReadOnlySpan&lt;byte&gt; dataSpan, ref int position)</code></pre>
+    <pre><code class="lang-csharp hljs">protected override void OnSyncRequested()</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ReadOnlySpan&lt;T&gt;</span>&lt;<span class="xref">System.Byte</span>&gt;</td>
-        <td><span class="parametername">dataSpan</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">position</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_FullSyncRead_System_ReadOnlySpan_System_Byte__System_Int32__">SyncableField.FullSyncRead(ReadOnlySpan&lt;Byte&gt;, ref Int32)</a></div>
-
-
-  <a id="LiteEntitySystem_Extensions_SyncFixedArray_1_FullSyncWrite_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.FullSyncWrite*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncFixedArray_1_FullSyncWrite_System_Span_System_Byte__System_Int32__" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.FullSyncWrite(System.Span{System.Byte},System.Int32@)">FullSyncWrite(Span&lt;Byte&gt;, ref Int32)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void FullSyncWrite(Span&lt;byte&gt; dataSpan, ref int position)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Span&lt;T&gt;</span>&lt;<span class="xref">System.Byte</span>&gt;</td>
-        <td><span class="parametername">dataSpan</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">position</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_FullSyncWrite_System_Span_System_Byte__System_Int32__">SyncableField.FullSyncWrite(Span&lt;Byte&gt;, ref Int32)</a></div>
+  <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnSyncRequested">SyncableField.OnSyncRequested()</a></div>
 
 
   <a id="LiteEntitySystem_Extensions_SyncFixedArray_1_RegisterRPC_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.RegisterRPC*"></a>
@@ -314,10 +235,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void RegisterRPC(in SyncableRPCRegistrator registrator)</code></pre>
+    <pre><code class="lang-csharp hljs">protected override void RegisterRPC(in SyncableRPCRegistrator r)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -328,13 +249,14 @@
     <tbody>
       <tr>
         <td><a class="xref" href="LiteEntitySystem.SyncableRPCRegistrator.html">SyncableRPCRegistrator</a></td>
-        <td><span class="parametername">registrator</span></td>
+        <td><span class="parametername">r</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__">SyncableField.RegisterRPC(in SyncableRPCRegistrator)</a></div>
+
 </article>
           </div>
 
@@ -367,7 +289,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

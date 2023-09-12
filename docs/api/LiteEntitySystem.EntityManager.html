@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,6 +70,7 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.EntityManager">
 
 
+
   <h1 id="LiteEntitySystem_EntityManager" data-uid="LiteEntitySystem.EntityManager" class="text-break">Class EntityManager
 </h1>
   <div class="markdown level0 summary"><p>Base class for client and server manager</p>
@@ -77,7 +78,7 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><span class="xref">EntityManager</span></div>
       <div class="level2"><a class="xref" href="LiteEntitySystem.ClientEntityManager.html">ClientEntityManager</a></div>
       <div class="level2"><a class="xref" href="LiteEntitySystem.ServerEntityManager.html">ServerEntityManager</a></div>
@@ -93,15 +94,15 @@
 
 
   <a id="LiteEntitySystem_EntityManager__ctor_" data-uid="LiteEntitySystem.EntityManager.#ctor*"></a>
-  <h4 id="LiteEntitySystem_EntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteEntitySystem_NetworkMode_System_Byte_" data-uid="LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteEntitySystem.NetworkMode,System.Byte)">EntityManager(EntityTypesMap, InputProcessor, NetworkMode, Byte)</h4>
+  <h4 id="LiteEntitySystem_EntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteEntitySystem_NetworkMode_System_Byte_System_Byte_" data-uid="LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteEntitySystem.NetworkMode,System.Byte,System.Byte)">EntityManager(EntityTypesMap, InputProcessor, NetworkMode, byte, byte)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected EntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetworkMode mode, byte framesPerSecond)</code></pre>
+    <pre><code class="lang-csharp hljs">protected EntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetworkMode mode, byte framesPerSecond, byte headerByte)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -126,8 +127,13 @@
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Byte</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
         <td><span class="parametername">framesPerSecond</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
+        <td><span class="parametername">headerByte</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -144,7 +150,7 @@
     <pre><code class="lang-csharp hljs">protected ushort _tick</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -153,7 +159,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -168,7 +174,7 @@
     <pre><code class="lang-csharp hljs">protected readonly EntityFilter&lt;InternalEntity&gt; AliveEntities</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -193,7 +199,7 @@
     <pre><code class="lang-csharp hljs">public readonly double DeltaTime</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -202,7 +208,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Double</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -218,7 +224,7 @@
     <pre><code class="lang-csharp hljs">public readonly float DeltaTimeF</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -227,7 +233,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -242,7 +248,7 @@
     <pre><code class="lang-csharp hljs">protected const ushort FirstEntityId = 1</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -251,7 +257,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -267,7 +273,7 @@
     <pre><code class="lang-csharp hljs">public readonly int FramesPerSecond</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -276,7 +282,31 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <h4 id="LiteEntitySystem_EntityManager_HeaderByte" data-uid="LiteEntitySystem.EntityManager.HeaderByte">HeaderByte</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly byte HeaderByte</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -291,7 +321,7 @@
     <pre><code class="lang-csharp hljs">protected readonly InputProcessor InputProcessor</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -316,7 +346,7 @@
     <pre><code class="lang-csharp hljs">public const ushort InvalidEntityId = 0</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -325,7 +355,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -341,7 +371,7 @@
     <pre><code class="lang-csharp hljs">public readonly bool IsClient</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -350,7 +380,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -366,7 +396,7 @@
     <pre><code class="lang-csharp hljs">public readonly bool IsServer</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -375,7 +405,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -390,7 +420,7 @@
     <pre><code class="lang-csharp hljs">protected readonly EntityFilter&lt;EntityLogic&gt; LagCompensatedEntities</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -414,7 +444,7 @@
     <pre><code class="lang-csharp hljs">public const int MaxEntityCount = 16384</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -423,31 +453,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <h4 id="LiteEntitySystem_EntityManager_MaxFieldSize" data-uid="LiteEntitySystem.EntityManager.MaxFieldSize">MaxFieldSize</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected const int MaxFieldSize = 1024</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -455,7 +461,7 @@
 
 
   <h4 id="LiteEntitySystem_EntityManager_MaxHistorySize" data-uid="LiteEntitySystem.EntityManager.MaxHistorySize">MaxHistorySize</h4>
-  <div class="markdown level1 summary"><p>Size of history (in ticks) for lag compensation. Tune for your game fps </p>
+  <div class="markdown level1 summary"><p>Size of history (in ticks) for lag compensation. Tune for your game fps</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -463,7 +469,7 @@
     <pre><code class="lang-csharp hljs">public MaxHistorySize MaxHistorySize</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -487,7 +493,7 @@
     <pre><code class="lang-csharp hljs">protected int MaxLocalEntityId</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -496,7 +502,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -511,7 +517,7 @@
     <pre><code class="lang-csharp hljs">public const int MaxPlayers = 254</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -520,7 +526,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -535,7 +541,7 @@
     <pre><code class="lang-csharp hljs">protected const int MaxSavedStateDiff = 30</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -544,7 +550,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -560,7 +566,7 @@
     <pre><code class="lang-csharp hljs">public const int MaxSyncedEntityCount = 8192</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -569,7 +575,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -584,7 +590,7 @@
     <pre><code class="lang-csharp hljs">protected int MaxSyncedEntityId</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -593,7 +599,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -609,7 +615,7 @@
     <pre><code class="lang-csharp hljs">public readonly NetworkMode Mode</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -625,102 +631,6 @@
   </table>
 
 
-  <h4 id="LiteEntitySystem_EntityManager_PacketBaselineSync" data-uid="LiteEntitySystem.EntityManager.PacketBaselineSync">PacketBaselineSync</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected const byte PacketBaselineSync = 3</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Byte</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <h4 id="LiteEntitySystem_EntityManager_PacketClientSync" data-uid="LiteEntitySystem.EntityManager.PacketClientSync">PacketClientSync</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected const byte PacketClientSync = 2</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Byte</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <h4 id="LiteEntitySystem_EntityManager_PacketDiffSync" data-uid="LiteEntitySystem.EntityManager.PacketDiffSync">PacketDiffSync</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected const byte PacketDiffSync = 1</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Byte</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <h4 id="LiteEntitySystem_EntityManager_PacketDiffSyncLast" data-uid="LiteEntitySystem.EntityManager.PacketDiffSyncLast">PacketDiffSyncLast</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected const byte PacketDiffSyncLast = 4</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Byte</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
   <h4 id="LiteEntitySystem_EntityManager_ServerPlayerId" data-uid="LiteEntitySystem.EntityManager.ServerPlayerId">ServerPlayerId</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
@@ -729,7 +639,7 @@
     <pre><code class="lang-csharp hljs">public const byte ServerPlayerId = 0</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -738,7 +648,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Byte</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -757,7 +667,7 @@
     <pre><code class="lang-csharp hljs">public ushort EntitiesCount { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -766,7 +676,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -782,7 +692,7 @@
     <pre><code class="lang-csharp hljs">public bool InNormalState { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -791,7 +701,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -807,7 +717,7 @@
     <pre><code class="lang-csharp hljs">public bool InRollBackState { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -816,7 +726,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -833,7 +743,7 @@
     <pre><code class="lang-csharp hljs">public float LerpFactor { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -842,7 +752,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -859,7 +769,7 @@
     <pre><code class="lang-csharp hljs">public byte PlayerId { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -868,7 +778,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Byte</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -885,7 +795,7 @@
     <pre><code class="lang-csharp hljs">public ushort Tick { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -894,7 +804,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -911,7 +821,7 @@
     <pre><code class="lang-csharp hljs">public UpdateMode UpdateMode { get; protected set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -936,7 +846,7 @@
     <pre><code class="lang-csharp hljs">public double VisualDeltaTime { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -945,7 +855,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Double</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -963,7 +873,7 @@
     <pre><code class="lang-csharp hljs">protected InternalEntity AddEntity(EntityParams entityParams)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -980,7 +890,7 @@
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1003,11 +913,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T AddLocalEntity&lt;T&gt;(Action&lt;T&gt; initMethod = null)
-    where T : InternalEntity</code></pre>
+    <pre><code class="lang-csharp hljs">public T AddLocalEntity&lt;T&gt;(Action&lt;T&gt; initMethod = null) where T : InternalEntity</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1017,14 +926,14 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Action&lt;T&gt;</span>&lt;T&gt;</td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
         <td><span class="parametername">initMethod</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1040,7 +949,7 @@
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -1066,7 +975,7 @@
     <pre><code class="lang-csharp hljs">protected void ConstructEntity(InternalEntity e)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1095,15 +1004,15 @@
 
 
   <a id="LiteEntitySystem_EntityManager_EnableLagCompensation_" data-uid="LiteEntitySystem.EntityManager.EnableLagCompensation*"></a>
-  <h4 id="LiteEntitySystem_EntityManager_EnableLagCompensation_System_Byte_" data-uid="LiteEntitySystem.EntityManager.EnableLagCompensation(System.Byte)">EnableLagCompensation(Byte)</h4>
+  <h4 id="LiteEntitySystem_EntityManager_EnableLagCompensation_LiteEntitySystem_NetPlayer_" data-uid="LiteEntitySystem.EntityManager.EnableLagCompensation(LiteEntitySystem.NetPlayer)">EnableLagCompensation(NetPlayer)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void EnableLagCompensation(byte playerId)</code></pre>
+    <pre><code class="lang-csharp hljs">public void EnableLagCompensation(NetPlayer player)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1113,8 +1022,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Byte</span></td>
-        <td><span class="parametername">playerId</span></td>
+        <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
+        <td><span class="parametername">player</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -1128,11 +1037,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EntityFilter&lt;T&gt; GetControllers&lt;T&gt;()
-    where T : ControllerLogic</code></pre>
+    <pre><code class="lang-csharp hljs">public EntityFilter&lt;T&gt; GetControllers&lt;T&gt;() where T : ControllerLogic</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1148,7 +1056,7 @@
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -1172,11 +1080,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EntityFilter&lt;T&gt; GetEntities&lt;T&gt;()
-    where T : EntityLogic</code></pre>
+    <pre><code class="lang-csharp hljs">public EntityFilter&lt;T&gt; GetEntities&lt;T&gt;() where T : EntityLogic</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1192,7 +1099,7 @@
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -1216,11 +1123,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T GetEntityById&lt;T&gt;(EntitySharedReference id)
-    where T : InternalEntity</code></pre>
+    <pre><code class="lang-csharp hljs">public T GetEntityById&lt;T&gt;(EntitySharedReference id) where T : InternalEntity</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1238,7 +1144,7 @@
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1254,7 +1160,7 @@
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -1277,11 +1183,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T GetSingleton&lt;T&gt;()
-    where T : SingletonEntityLogic</code></pre>
+    <pre><code class="lang-csharp hljs">public T GetSingleton&lt;T&gt;() where T : SingletonEntityLogic</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1297,7 +1202,7 @@
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -1321,11 +1226,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void GetSingleton&lt;T&gt;(out T singleton)
-    where T : SingletonEntityLogic</code></pre>
+    <pre><code class="lang-csharp hljs">public void GetSingleton&lt;T&gt;(out T singleton) where T : SingletonEntityLogic</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1343,7 +1247,7 @@
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -1367,11 +1271,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T GetSingletonSafe&lt;T&gt;()
-    where T : SingletonEntityLogic</code></pre>
+    <pre><code class="lang-csharp hljs">public T GetSingletonSafe&lt;T&gt;() where T : SingletonEntityLogic</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1381,13 +1284,13 @@
     <tbody>
       <tr>
         <td><span class="xref">T</span></td>
-        <td><p>Singleton entity or null if it didn&apos;t exists</p>
+        <td><p>Singleton entity or null if it didn't exists</p>
 </td>
       </tr>
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -1411,11 +1314,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool HasSingleton&lt;T&gt;()
-    where T : SingletonEntityLogic</code></pre>
+    <pre><code class="lang-csharp hljs">public bool HasSingleton&lt;T&gt;() where T : SingletonEntityLogic</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1424,13 +1326,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -1462,11 +1364,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void RegisterFieldType&lt;T&gt;()
-    where T : struct</code></pre>
+    <pre><code class="lang-csharp hljs">public static void RegisterFieldType&lt;T&gt;() where T : unmanaged</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -1488,11 +1389,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void RegisterFieldType&lt;T&gt;(InterpolatorDelegateWithReturn&lt;T&gt; interpolationDelegate)
-    where T : struct</code></pre>
+    <pre><code class="lang-csharp hljs">public static void RegisterFieldType&lt;T&gt;(InterpolatorDelegateWithReturn&lt;T&gt; interpolationDelegate) where T : unmanaged</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1502,14 +1402,14 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">LiteEntitySystem.Internal.InterpolatorDelegateWithReturn&lt;T&gt;</span>&lt;T&gt;</td>
+        <td><a class="xref" href="LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html">InterpolatorDelegateWithReturn</a>&lt;T&gt;</td>
         <td><span class="parametername">interpolationDelegate</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -1544,11 +1444,10 @@ throws exception if entity is null or invalid type</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool TryGetEntityById&lt;T&gt;(EntitySharedReference id, out T entity)
-    where T : InternalEntity</code></pre>
+    <pre><code class="lang-csharp hljs">public bool TryGetEntityById&lt;T&gt;(EntitySharedReference id, out T entity) where T : InternalEntity</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1572,7 +1471,7 @@ throws exception if entity is null or invalid type</p>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1581,14 +1480,14 @@ throws exception if entity is null or invalid type</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td><p>true if it exists, false if id == InvalidEntityId or entity is another type or version</p>
 </td>
       </tr>
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -1611,11 +1510,10 @@ throws exception if entity is null or invalid type</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool TryGetSingleton&lt;T&gt;(out T singleton)
-    where T : SingletonEntityLogic</code></pre>
+    <pre><code class="lang-csharp hljs">public bool TryGetSingleton&lt;T&gt;(out T singleton) where T : SingletonEntityLogic</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1633,7 +1531,7 @@ throws exception if entity is null or invalid type</p>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -1642,14 +1540,14 @@ throws exception if entity is null or invalid type</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td><p>true if entity exists</p>
 </td>
       </tr>
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -1675,6 +1573,7 @@ throws exception if entity is null or invalid type</p>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public virtual void Update()</code></pre>
   </div>
+
 </article>
           </div>
 
@@ -1707,7 +1606,7 @@ throws exception if entity is null or invalid type</p>
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

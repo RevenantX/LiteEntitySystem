@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,16 +70,17 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.Internal.Utils">
 
 
+
   <h1 id="LiteEntitySystem_Internal_Utils" data-uid="LiteEntitySystem.Internal.Utils" class="text-break">Class Utils
 </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><span class="xref">Utils</span></div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.Internal.html">LiteEntitySystem.Internal</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a>.<a class="xref" href="LiteEntitySystem.Internal.html">Internal</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_Internal_Utils_syntax">Syntax</h5>
   <div class="codewrapper">
@@ -90,54 +91,7 @@
 
 
   <a id="LiteEntitySystem_Internal_Utils_IsBitSet_" data-uid="LiteEntitySystem.Internal.Utils.IsBitSet*"></a>
-  <h4 id="LiteEntitySystem_Internal_Utils_IsBitSet_System_Byte__System_Int32_" data-uid="LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte*,System.Int32)">IsBitSet(Byte*, Int32)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool IsBitSet(byte *byteArray, int bitNumber)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Byte</span>*</td>
-        <td><span class="parametername">byteArray</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">bitNumber</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_Internal_Utils_IsBitSet_" data-uid="LiteEntitySystem.Internal.Utils.IsBitSet*"></a>
-  <h4 id="LiteEntitySystem_Internal_Utils_IsBitSet_System_Byte___System_Int32_System_Int32_" data-uid="LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte[],System.Int32,System.Int32)">IsBitSet(Byte[], Int32, Int32)</h4>
+  <h4 id="LiteEntitySystem_Internal_Utils_IsBitSet_System_Byte___System_Int32_System_Int32_" data-uid="LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte[],System.Int32,System.Int32)">IsBitSet(byte[], int, int)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -145,7 +99,7 @@
     <pre><code class="lang-csharp hljs">public static bool IsBitSet(byte[] byteArray, int offset, int bitNumber)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -155,24 +109,24 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Byte</span>[]</td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</td>
         <td><span class="parametername">byteArray</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">offset</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">bitNumber</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -181,7 +135,54 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_Internal_Utils_IsBitSet_" data-uid="LiteEntitySystem.Internal.Utils.IsBitSet*"></a>
+  <h4 id="LiteEntitySystem_Internal_Utils_IsBitSet_System_Byte__System_Int32_" data-uid="LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte*,System.Int32)">IsBitSet(byte*, int)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsBitSet(byte* byteArray, int bitNumber)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>*</td>
+        <td><span class="parametername">byteArray</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">int</span></td>
+        <td><span class="parametername">bitNumber</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -189,7 +190,7 @@
 
 
   <a id="LiteEntitySystem_Internal_Utils_Lerp_" data-uid="LiteEntitySystem.Internal.Utils.Lerp*"></a>
-  <h4 id="LiteEntitySystem_Internal_Utils_Lerp_System_Double_System_Double_System_Single_" data-uid="LiteEntitySystem.Internal.Utils.Lerp(System.Double,System.Double,System.Single)">Lerp(Double, Double, Single)</h4>
+  <h4 id="LiteEntitySystem_Internal_Utils_Lerp_System_Double_System_Double_System_Single_" data-uid="LiteEntitySystem.Internal.Utils.Lerp(System.Double,System.Double,System.Single)">Lerp(double, double, float)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -197,7 +198,7 @@
     <pre><code class="lang-csharp hljs">public static double Lerp(double a, double b, float t)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -207,24 +208,24 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Double</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></td>
         <td><span class="parametername">a</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Double</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></td>
         <td><span class="parametername">b</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td><span class="parametername">t</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -233,7 +234,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Double</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -241,7 +242,7 @@
 
 
   <a id="LiteEntitySystem_Internal_Utils_Lerp_" data-uid="LiteEntitySystem.Internal.Utils.Lerp*"></a>
-  <h4 id="LiteEntitySystem_Internal_Utils_Lerp_System_Int32_System_Int32_System_Single_" data-uid="LiteEntitySystem.Internal.Utils.Lerp(System.Int32,System.Int32,System.Single)">Lerp(Int32, Int32, Single)</h4>
+  <h4 id="LiteEntitySystem_Internal_Utils_Lerp_System_Int32_System_Int32_System_Single_" data-uid="LiteEntitySystem.Internal.Utils.Lerp(System.Int32,System.Int32,System.Single)">Lerp(int, int, float)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -249,7 +250,7 @@
     <pre><code class="lang-csharp hljs">public static int Lerp(int a, int b, float t)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -259,24 +260,24 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">a</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">b</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td><span class="parametername">t</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -285,7 +286,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -293,7 +294,7 @@
 
 
   <a id="LiteEntitySystem_Internal_Utils_Lerp_" data-uid="LiteEntitySystem.Internal.Utils.Lerp*"></a>
-  <h4 id="LiteEntitySystem_Internal_Utils_Lerp_System_Int64_System_Int64_System_Single_" data-uid="LiteEntitySystem.Internal.Utils.Lerp(System.Int64,System.Int64,System.Single)">Lerp(Int64, Int64, Single)</h4>
+  <h4 id="LiteEntitySystem_Internal_Utils_Lerp_System_Int64_System_Int64_System_Single_" data-uid="LiteEntitySystem.Internal.Utils.Lerp(System.Int64,System.Int64,System.Single)">Lerp(long, long, float)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -301,7 +302,7 @@
     <pre><code class="lang-csharp hljs">public static long Lerp(long a, long b, float t)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -311,24 +312,24 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int64</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></td>
         <td><span class="parametername">a</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Int64</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></td>
         <td><span class="parametername">b</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td><span class="parametername">t</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -337,7 +338,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int64</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -345,7 +346,7 @@
 
 
   <a id="LiteEntitySystem_Internal_Utils_Lerp_" data-uid="LiteEntitySystem.Internal.Utils.Lerp*"></a>
-  <h4 id="LiteEntitySystem_Internal_Utils_Lerp_System_Single_System_Single_System_Single_" data-uid="LiteEntitySystem.Internal.Utils.Lerp(System.Single,System.Single,System.Single)">Lerp(Single, Single, Single)</h4>
+  <h4 id="LiteEntitySystem_Internal_Utils_Lerp_System_Single_System_Single_System_Single_" data-uid="LiteEntitySystem.Internal.Utils.Lerp(System.Single,System.Single,System.Single)">Lerp(float, float, float)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -353,7 +354,7 @@
     <pre><code class="lang-csharp hljs">public static float Lerp(float a, float b, float t)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -363,24 +364,24 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td><span class="parametername">a</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td><span class="parametername">b</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td><span class="parametername">t</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -389,7 +390,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -397,7 +398,7 @@
 
 
   <a id="LiteEntitySystem_Internal_Utils_LerpSequence_" data-uid="LiteEntitySystem.Internal.Utils.LerpSequence*"></a>
-  <h4 id="LiteEntitySystem_Internal_Utils_LerpSequence_System_UInt16_System_UInt16_System_Single_" data-uid="LiteEntitySystem.Internal.Utils.LerpSequence(System.UInt16,System.UInt16,System.Single)">LerpSequence(UInt16, UInt16, Single)</h4>
+  <h4 id="LiteEntitySystem_Internal_Utils_LerpSequence_System_UInt16_System_UInt16_System_Single_" data-uid="LiteEntitySystem.Internal.Utils.LerpSequence(System.UInt16,System.UInt16,System.Single)">LerpSequence(ushort, ushort, float)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -405,7 +406,7 @@
     <pre><code class="lang-csharp hljs">public static ushort LerpSequence(ushort seq1, ushort seq2, float t)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -415,24 +416,24 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td><span class="parametername">seq1</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td><span class="parametername">seq2</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td><span class="parametername">t</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -441,7 +442,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -449,7 +450,7 @@
 
 
   <a id="LiteEntitySystem_Internal_Utils_RefFieldValue_" data-uid="LiteEntitySystem.Internal.Utils.RefFieldValue*"></a>
-  <h4 id="LiteEntitySystem_Internal_Utils_RefFieldValue__1_System_Object_System_Int32_" data-uid="LiteEntitySystem.Internal.Utils.RefFieldValue``1(System.Object,System.Int32)">RefFieldValue&lt;U&gt;(Object, Int32)</h4>
+  <h4 id="LiteEntitySystem_Internal_Utils_RefFieldValue__1_System_Object_System_Int32_" data-uid="LiteEntitySystem.Internal.Utils.RefFieldValue``1(System.Object,System.Int32)">RefFieldValue&lt;U&gt;(object, int)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -457,7 +458,7 @@
     <pre><code class="lang-csharp hljs">public static ref U RefFieldValue&lt;U&gt;(object obj, int offset)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -467,19 +468,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Object</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></td>
         <td><span class="parametername">obj</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">offset</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -494,7 +495,7 @@
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -511,7 +512,7 @@
 
 
   <a id="LiteEntitySystem_Internal_Utils_ResizeIfFull_" data-uid="LiteEntitySystem.Internal.Utils.ResizeIfFull*"></a>
-  <h4 id="LiteEntitySystem_Internal_Utils_ResizeIfFull__1___0____System_Int32_" data-uid="LiteEntitySystem.Internal.Utils.ResizeIfFull``1(``0[]@,System.Int32)">ResizeIfFull&lt;T&gt;(ref T[], Int32)</h4>
+  <h4 id="LiteEntitySystem_Internal_Utils_ResizeIfFull__1___0____System_Int32_" data-uid="LiteEntitySystem.Internal.Utils.ResizeIfFull``1(``0[]@,System.Int32)">ResizeIfFull&lt;T&gt;(ref T[], int)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -519,7 +520,7 @@
     <pre><code class="lang-csharp hljs">public static void ResizeIfFull&lt;T&gt;(ref T[] arr, int count)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -534,14 +535,14 @@
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">count</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -558,7 +559,7 @@
 
 
   <a id="LiteEntitySystem_Internal_Utils_ResizeOrCreate_" data-uid="LiteEntitySystem.Internal.Utils.ResizeOrCreate*"></a>
-  <h4 id="LiteEntitySystem_Internal_Utils_ResizeOrCreate__1___0____System_Int32_" data-uid="LiteEntitySystem.Internal.Utils.ResizeOrCreate``1(``0[]@,System.Int32)">ResizeOrCreate&lt;T&gt;(ref T[], Int32)</h4>
+  <h4 id="LiteEntitySystem_Internal_Utils_ResizeOrCreate__1___0____System_Int32_" data-uid="LiteEntitySystem.Internal.Utils.ResizeOrCreate``1(``0[]@,System.Int32)">ResizeOrCreate&lt;T&gt;(ref T[], int)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -566,7 +567,7 @@
     <pre><code class="lang-csharp hljs">public static void ResizeOrCreate&lt;T&gt;(ref T[] arr, int count)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -581,14 +582,14 @@
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">count</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -605,7 +606,7 @@
 
 
   <a id="LiteEntitySystem_Internal_Utils_SequenceDiff_" data-uid="LiteEntitySystem.Internal.Utils.SequenceDiff*"></a>
-  <h4 id="LiteEntitySystem_Internal_Utils_SequenceDiff_System_UInt16_System_UInt16_" data-uid="LiteEntitySystem.Internal.Utils.SequenceDiff(System.UInt16,System.UInt16)">SequenceDiff(UInt16, UInt16)</h4>
+  <h4 id="LiteEntitySystem_Internal_Utils_SequenceDiff_System_UInt16_System_UInt16_" data-uid="LiteEntitySystem.Internal.Utils.SequenceDiff(System.UInt16,System.UInt16)">SequenceDiff(ushort, ushort)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -613,7 +614,7 @@
     <pre><code class="lang-csharp hljs">public static int SequenceDiff(ushort newer, ushort older)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -623,19 +624,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td><span class="parametername">newer</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td><span class="parametername">older</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -644,11 +645,12 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+
 </article>
           </div>
 
@@ -681,7 +683,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

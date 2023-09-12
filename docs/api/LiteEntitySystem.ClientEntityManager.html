@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,6 +70,7 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.ClientEntityManager">
 
 
+
   <h1 id="LiteEntitySystem_ClientEntityManager" data-uid="LiteEntitySystem.ClientEntityManager" class="text-break">Class ClientEntityManager
 </h1>
   <div class="markdown level0 summary"><p>Client entity manager</p>
@@ -77,7 +78,7 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><a class="xref" href="LiteEntitySystem.EntityManager.html">EntityManager</a></div>
     <div class="level2"><span class="xref">ClientEntityManager</span></div>
   </div>
@@ -132,55 +133,19 @@
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_PlayerId">EntityManager.PlayerId</a>
     </div>
     <div>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_HeaderByte">EntityManager.HeaderByte</a>
+    </div>
+    <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_InRollBackState">EntityManager.InRollBackState</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_InNormalState">EntityManager.InNormalState</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_PacketDiffSync">EntityManager.PacketDiffSync</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_PacketClientSync">EntityManager.PacketClientSync</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_PacketBaselineSync">EntityManager.PacketBaselineSync</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_PacketDiffSyncLast">EntityManager.PacketDiffSyncLast</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxFieldSize">EntityManager.MaxFieldSize</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxSavedStateDiff">EntityManager.MaxSavedStateDiff</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_FirstEntityId">EntityManager.FirstEntityId</a>
-    </div>
-    <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_VisualDeltaTime">EntityManager.VisualDeltaTime</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxPlayers">EntityManager.MaxPlayers</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxSyncedEntityId">EntityManager.MaxSyncedEntityId</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxLocalEntityId">EntityManager.MaxLocalEntityId</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager__tick">EntityManager._tick</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_AliveEntities">EntityManager.AliveEntities</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_LagCompensatedEntities">EntityManager.LagCompensatedEntities</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_InputProcessor">EntityManager.InputProcessor</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_RegisterFieldType__1_LiteEntitySystem_Internal_InterpolatorDelegateWithReturn___0__">EntityManager.RegisterFieldType&lt;T&gt;(InterpolatorDelegateWithReturn&lt;T&gt;)</a>
@@ -195,7 +160,7 @@
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetEntityById__1_LiteEntitySystem_EntitySharedReference_">EntityManager.GetEntityById&lt;T&gt;(EntitySharedReference)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_TryGetEntityById__1_LiteEntitySystem_EntitySharedReference___0__">EntityManager.TryGetEntityById&lt;T&gt;(EntitySharedReference, T)</a>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_TryGetEntityById__1_LiteEntitySystem_EntitySharedReference___0__">EntityManager.TryGetEntityById&lt;T&gt;(EntitySharedReference, out T)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetEntities__1">EntityManager.GetEntities&lt;T&gt;()</a>
@@ -207,7 +172,7 @@
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetSingleton__1">EntityManager.GetSingleton&lt;T&gt;()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetSingleton__1___0__">EntityManager.GetSingleton&lt;T&gt;(T)</a>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetSingleton__1___0__">EntityManager.GetSingleton&lt;T&gt;(out T)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetSingletonSafe__1">EntityManager.GetSingletonSafe&lt;T&gt;()</a>
@@ -216,19 +181,13 @@
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_HasSingleton__1">EntityManager.HasSingleton&lt;T&gt;()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_TryGetSingleton__1___0__">EntityManager.TryGetSingleton&lt;T&gt;(T)</a>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_TryGetSingleton__1___0__">EntityManager.TryGetSingleton&lt;T&gt;(out T)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_AddLocalEntity__1_System_Action___0__">EntityManager.AddLocalEntity&lt;T&gt;(Action&lt;T&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_AddEntity_LiteEntitySystem_EntityParams_">EntityManager.AddEntity(EntityParams)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_ConstructEntity_LiteEntitySystem_Internal_InternalEntity_">EntityManager.ConstructEntity(InternalEntity)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_EnableLagCompensation_System_Byte_">EntityManager.EnableLagCompensation(Byte)</a>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_EnableLagCompensation_LiteEntitySystem_NetPlayer_">EntityManager.EnableLagCompensation(NetPlayer)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_DisableLagCompensation">EntityManager.DisableLagCompensation()</a>
@@ -245,7 +204,7 @@
 
 
   <a id="LiteEntitySystem_ClientEntityManager__ctor_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteNetLib_NetPeer_System_Byte_System_Byte_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteNetLib.NetPeer,System.Byte,System.Byte)">ClientEntityManager(EntityTypesMap, InputProcessor, NetPeer, Byte, Byte)</h4>
+  <h4 id="LiteEntitySystem_ClientEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteNetLib_NetPeer_System_Byte_System_Byte_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteNetLib.NetPeer,System.Byte,System.Byte)">ClientEntityManager(EntityTypesMap, InputProcessor, NetPeer, byte, byte)</h4>
   <div class="markdown level1 summary"><p>Constructor</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -254,7 +213,7 @@
     <pre><code class="lang-csharp hljs">public ClientEntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetPeer localPeer, byte headerByte, byte framesPerSecond)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -276,19 +235,19 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">LiteNetLib.NetPeer</span></td>
+        <td><span class="xref">NetPeer</span></td>
         <td><span class="parametername">localPeer</span></td>
         <td><p>Local NetPeer</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Byte</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
         <td><span class="parametername">headerByte</span></td>
         <td><p>Header byte that will be used for packets (to distinguish entity system packets)</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Byte</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
         <td><span class="parametername">framesPerSecond</span></td>
         <td><p>Fixed framerate of game logic</p>
 </td>
@@ -309,7 +268,7 @@
     <pre><code class="lang-csharp hljs">public ushort LastProcessedTick { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -318,7 +277,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -327,14 +286,15 @@
 
   <a id="LiteEntitySystem_ClientEntityManager_LastReceivedTick_" data-uid="LiteEntitySystem.ClientEntityManager.LastReceivedTick*"></a>
   <h4 id="LiteEntitySystem_ClientEntityManager_LastReceivedTick" data-uid="LiteEntitySystem.ClientEntityManager.LastReceivedTick">LastReceivedTick</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Last received player tick by server</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ushort LastReceivedTick { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -343,7 +303,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -360,7 +320,7 @@
     <pre><code class="lang-csharp hljs">public int LerpBufferCount { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -369,7 +329,33 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_ClientEntityManager_LocalPlayer_" data-uid="LiteEntitySystem.ClientEntityManager.LocalPlayer*"></a>
+  <h4 id="LiteEntitySystem_ClientEntityManager_LocalPlayer" data-uid="LiteEntitySystem.ClientEntityManager.LocalPlayer">LocalPlayer</h4>
+  <div class="markdown level1 summary"><p>Our local player</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public NetPlayer LocalPlayer { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -378,14 +364,15 @@
 
   <a id="LiteEntitySystem_ClientEntityManager_RawServerTick_" data-uid="LiteEntitySystem.ClientEntityManager.RawServerTick*"></a>
   <h4 id="LiteEntitySystem_ClientEntityManager_RawServerTick" data-uid="LiteEntitySystem.ClientEntityManager.RawServerTick">RawServerTick</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Current state server tick</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ushort RawServerTick { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -394,7 +381,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -403,14 +390,15 @@
 
   <a id="LiteEntitySystem_ClientEntityManager_RawTargetServerTick_" data-uid="LiteEntitySystem.ClientEntityManager.RawTargetServerTick*"></a>
   <h4 id="LiteEntitySystem_ClientEntityManager_RawTargetServerTick" data-uid="LiteEntitySystem.ClientEntityManager.RawTargetServerTick">RawTargetServerTick</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Target state server tick</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ushort RawTargetServerTick { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -419,7 +407,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -428,14 +416,15 @@
 
   <a id="LiteEntitySystem_ClientEntityManager_RollBackTick_" data-uid="LiteEntitySystem.ClientEntityManager.RollBackTick*"></a>
   <h4 id="LiteEntitySystem_ClientEntityManager_RollBackTick" data-uid="LiteEntitySystem.ClientEntityManager.RollBackTick">RollBackTick</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Current rollback tick (valid only in Rollback state)</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ushort RollBackTick { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -444,7 +433,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -461,7 +450,7 @@
     <pre><code class="lang-csharp hljs">public ServerSendRate ServerSendRate { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -487,7 +476,7 @@
     <pre><code class="lang-csharp hljs">public ushort ServerTick { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -496,7 +485,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt16</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -513,7 +502,7 @@
     <pre><code class="lang-csharp hljs">public int StoredCommands { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -522,7 +511,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -532,16 +521,16 @@
 
 
   <a id="LiteEntitySystem_ClientEntityManager_Deserialize_" data-uid="LiteEntitySystem.ClientEntityManager.Deserialize*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_Deserialize_LiteNetLib_NetPacketReader_" data-uid="LiteEntitySystem.ClientEntityManager.Deserialize(LiteNetLib.NetPacketReader)">Deserialize(NetPacketReader)</h4>
+  <h4 id="LiteEntitySystem_ClientEntityManager_Deserialize_LiteNetLib_Utils_NetDataReader_" data-uid="LiteEntitySystem.ClientEntityManager.Deserialize(LiteNetLib.Utils.NetDataReader)">Deserialize(NetDataReader)</h4>
   <div class="markdown level1 summary"><p>Read incoming data omitting header byte</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Deserialize(NetPacketReader reader)</code></pre>
+    <pre><code class="lang-csharp hljs">public void Deserialize(NetDataReader reader)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -551,25 +540,26 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">LiteNetLib.NetPacketReader</span></td>
+        <td><span class="xref">NetDataReader</span></td>
         <td><span class="parametername">reader</span></td>
-        <td></td>
+        <td><p>NetDataReader with data</p>
+</td>
       </tr>
     </tbody>
   </table>
 
 
   <a id="LiteEntitySystem_ClientEntityManager_DeserializeWithHeaderCheck_" data-uid="LiteEntitySystem.ClientEntityManager.DeserializeWithHeaderCheck*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_DeserializeWithHeaderCheck_LiteNetLib_NetPacketReader_" data-uid="LiteEntitySystem.ClientEntityManager.DeserializeWithHeaderCheck(LiteNetLib.NetPacketReader)">DeserializeWithHeaderCheck(NetPacketReader)</h4>
+  <h4 id="LiteEntitySystem_ClientEntityManager_DeserializeWithHeaderCheck_LiteNetLib_Utils_NetDataReader_" data-uid="LiteEntitySystem.ClientEntityManager.DeserializeWithHeaderCheck(LiteNetLib.Utils.NetDataReader)">DeserializeWithHeaderCheck(NetDataReader)</h4>
   <div class="markdown level1 summary"><p>Read incoming data in case of first byte is == headerByte</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool DeserializeWithHeaderCheck(NetPacketReader reader)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool DeserializeWithHeaderCheck(NetDataReader reader)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -579,7 +569,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">LiteNetLib.NetPacketReader</span></td>
+        <td><span class="xref">NetDataReader</span></td>
         <td><span class="parametername">reader</span></td>
         <td><p>Reader with data (will be recycled inside, also works with autorecycle)</p>
 </td>
@@ -587,7 +577,7 @@
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -596,7 +586,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td><p>true if first byte is == headerByte</p>
 </td>
       </tr>
@@ -618,7 +608,8 @@
 
   <a id="LiteEntitySystem_ClientEntityManager_Update_" data-uid="LiteEntitySystem.ClientEntityManager.Update*"></a>
   <h4 id="LiteEntitySystem_ClientEntityManager_Update" data-uid="LiteEntitySystem.ClientEntityManager.Update">Update()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Update method, call this every frame</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
@@ -626,6 +617,7 @@
   </div>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Update">EntityManager.Update()</a></div>
+
 </article>
           </div>
 
@@ -658,7 +650,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

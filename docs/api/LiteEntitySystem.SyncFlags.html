@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,6 +70,8 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.SyncFlags">
 
 
+
+
   <h1 id="LiteEntitySystem_SyncFlags" data-uid="LiteEntitySystem.SyncFlags" class="text-break">Enum SyncFlags
 </h1>
   <div class="markdown level0 summary"></div>
@@ -83,7 +85,7 @@ public enum SyncFlags : byte</code></pre>
   </div>
   <h3 id="fields">Fields
 </h3>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -92,7 +94,7 @@ public enum SyncFlags : byte</code></pre>
     <thead>
     <tbody>
       <tr>
-        <td id="LiteEntitySystem_SyncFlags_AlwaysPredict">AlwaysPredict</td>
+        <td id="LiteEntitySystem_SyncFlags_AlwaysRollback">AlwaysRollback</td>
         <td></td>
       </tr>
       <tr>
@@ -101,6 +103,10 @@ public enum SyncFlags : byte</code></pre>
       </tr>
       <tr>
         <td id="LiteEntitySystem_SyncFlags_LagCompensated">LagCompensated</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td id="LiteEntitySystem_SyncFlags_NeverRollBack">NeverRollBack</td>
         <td></td>
       </tr>
       <tr>
@@ -119,10 +125,10 @@ public enum SyncFlags : byte</code></pre>
   </thead></thead></table>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_HasFlagFast__1___0___0_">Helpers.HasFlagFast&lt;SyncFlags&gt;(SyncFlags)</a>
+      <a class="xref" href="LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_GetEnumValue__1___0_">Helpers.GetEnumValue&lt;SyncFlags&gt;(SyncFlags)</a>
   </div>
   <div>
-      <a class="xref" href="LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_GetEnumValue__1___0_">Helpers.GetEnumValue&lt;SyncFlags&gt;()</a>
+      <a class="xref" href="LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_HasFlagFast__1___0___0_">Helpers.HasFlagFast&lt;SyncFlags&gt;(SyncFlags, SyncFlags)</a>
   </div>
 </article>
           </div>
@@ -156,7 +162,7 @@ public enum SyncFlags : byte</code></pre>
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

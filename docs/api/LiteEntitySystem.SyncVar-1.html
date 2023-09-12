@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,6 +70,7 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.SyncVar`1">
 
 
+
   <h1 id="LiteEntitySystem_SyncVar_1" data-uid="LiteEntitySystem.SyncVar`1" class="text-break">Struct SyncVar&lt;T&gt;
 </h1>
   <div class="markdown level0 summary"></div>
@@ -78,11 +79,10 @@
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_SyncVar_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct SyncVar&lt;T&gt;
-    where T : struct</code></pre>
+    <pre><code class="lang-csharp hljs">public struct SyncVar&lt;T&gt; where T : unmanaged</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -109,7 +109,7 @@
     <pre><code class="lang-csharp hljs">public SyncVar(T value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -137,7 +137,7 @@
     <pre><code class="lang-csharp hljs">public T Value</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -156,7 +156,7 @@
 
 
   <a id="LiteEntitySystem_SyncVar_1_Equals_" data-uid="LiteEntitySystem.SyncVar`1.Equals*"></a>
-  <h4 id="LiteEntitySystem_SyncVar_1_Equals_System_Object_" data-uid="LiteEntitySystem.SyncVar`1.Equals(System.Object)">Equals(Object)</h4>
+  <h4 id="LiteEntitySystem_SyncVar_1_Equals_System_Object_" data-uid="LiteEntitySystem.SyncVar`1.Equals(System.Object)">Equals(object)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -164,7 +164,7 @@
     <pre><code class="lang-csharp hljs">public override bool Equals(object o)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -174,14 +174,14 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Object</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></td>
         <td><span class="parametername">o</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -190,7 +190,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -208,7 +208,7 @@
     <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -217,7 +217,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -235,7 +235,7 @@
     <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -244,7 +244,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">string</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -256,7 +256,7 @@
 
 
   <a id="LiteEntitySystem_SyncVar_1_op_Equality_" data-uid="LiteEntitySystem.SyncVar`1.op_Equality*"></a>
-  <h4 id="LiteEntitySystem_SyncVar_1_op_Equality__0_LiteEntitySystem_SyncVar__0__" data-uid="LiteEntitySystem.SyncVar`1.op_Equality(`0,LiteEntitySystem.SyncVar{`0})">Equality(T, SyncVar&lt;T&gt;)</h4>
+  <h4 id="LiteEntitySystem_SyncVar_1_op_Equality__0_LiteEntitySystem_SyncVar__0__" data-uid="LiteEntitySystem.SyncVar`1.op_Equality(`0,LiteEntitySystem.SyncVar{`0})">operator ==(T, SyncVar&lt;T&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -264,7 +264,7 @@
     <pre><code class="lang-csharp hljs">public static bool operator ==(T a, SyncVar&lt;T&gt; b)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -286,7 +286,7 @@
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -295,7 +295,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -303,7 +303,7 @@
 
 
   <a id="LiteEntitySystem_SyncVar_1_op_Equality_" data-uid="LiteEntitySystem.SyncVar`1.op_Equality*"></a>
-  <h4 id="LiteEntitySystem_SyncVar_1_op_Equality_LiteEntitySystem_SyncVar__0__LiteEntitySystem_SyncVar__0__" data-uid="LiteEntitySystem.SyncVar`1.op_Equality(LiteEntitySystem.SyncVar{`0},LiteEntitySystem.SyncVar{`0})">Equality(SyncVar&lt;T&gt;, SyncVar&lt;T&gt;)</h4>
+  <h4 id="LiteEntitySystem_SyncVar_1_op_Equality_LiteEntitySystem_SyncVar__0__LiteEntitySystem_SyncVar__0__" data-uid="LiteEntitySystem.SyncVar`1.op_Equality(LiteEntitySystem.SyncVar{`0},LiteEntitySystem.SyncVar{`0})">operator ==(SyncVar&lt;T&gt;, SyncVar&lt;T&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -311,7 +311,7 @@
     <pre><code class="lang-csharp hljs">public static bool operator ==(SyncVar&lt;T&gt; a, SyncVar&lt;T&gt; b)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -333,7 +333,7 @@
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -342,7 +342,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -350,7 +350,7 @@
 
 
   <a id="LiteEntitySystem_SyncVar_1_op_Implicit_" data-uid="LiteEntitySystem.SyncVar`1.op_Implicit*"></a>
-  <h4 id="LiteEntitySystem_SyncVar_1_op_Implicit__0__LiteEntitySystem_SyncVar__0_" data-uid="LiteEntitySystem.SyncVar`1.op_Implicit(`0)~LiteEntitySystem.SyncVar{`0}">Implicit(T to SyncVar&lt;T&gt;)</h4>
+  <h4 id="LiteEntitySystem_SyncVar_1_op_Implicit__0__LiteEntitySystem_SyncVar__0_" data-uid="LiteEntitySystem.SyncVar`1.op_Implicit(`0)~LiteEntitySystem.SyncVar{`0}">implicit operator SyncVar&lt;T&gt;(T)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -358,7 +358,7 @@
     <pre><code class="lang-csharp hljs">public static implicit operator SyncVar&lt;T&gt;(T v)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -375,7 +375,7 @@
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -392,7 +392,7 @@
 
 
   <a id="LiteEntitySystem_SyncVar_1_op_Implicit_" data-uid="LiteEntitySystem.SyncVar`1.op_Implicit*"></a>
-  <h4 id="LiteEntitySystem_SyncVar_1_op_Implicit_LiteEntitySystem_SyncVar__0____0" data-uid="LiteEntitySystem.SyncVar`1.op_Implicit(LiteEntitySystem.SyncVar{`0})~`0">Implicit(SyncVar&lt;T&gt; to T)</h4>
+  <h4 id="LiteEntitySystem_SyncVar_1_op_Implicit_LiteEntitySystem_SyncVar__0____0" data-uid="LiteEntitySystem.SyncVar`1.op_Implicit(LiteEntitySystem.SyncVar{`0})~`0">implicit operator T(SyncVar&lt;T&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -400,7 +400,7 @@
     <pre><code class="lang-csharp hljs">public static implicit operator T(SyncVar&lt;T&gt; sv)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -417,7 +417,7 @@
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -434,7 +434,7 @@
 
 
   <a id="LiteEntitySystem_SyncVar_1_op_Inequality_" data-uid="LiteEntitySystem.SyncVar`1.op_Inequality*"></a>
-  <h4 id="LiteEntitySystem_SyncVar_1_op_Inequality__0_LiteEntitySystem_SyncVar__0__" data-uid="LiteEntitySystem.SyncVar`1.op_Inequality(`0,LiteEntitySystem.SyncVar{`0})">Inequality(T, SyncVar&lt;T&gt;)</h4>
+  <h4 id="LiteEntitySystem_SyncVar_1_op_Inequality__0_LiteEntitySystem_SyncVar__0__" data-uid="LiteEntitySystem.SyncVar`1.op_Inequality(`0,LiteEntitySystem.SyncVar{`0})">operator !=(T, SyncVar&lt;T&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -442,7 +442,7 @@
     <pre><code class="lang-csharp hljs">public static bool operator !=(T a, SyncVar&lt;T&gt; b)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -464,7 +464,7 @@
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -473,7 +473,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -481,7 +481,7 @@
 
 
   <a id="LiteEntitySystem_SyncVar_1_op_Inequality_" data-uid="LiteEntitySystem.SyncVar`1.op_Inequality*"></a>
-  <h4 id="LiteEntitySystem_SyncVar_1_op_Inequality_LiteEntitySystem_SyncVar__0__LiteEntitySystem_SyncVar__0__" data-uid="LiteEntitySystem.SyncVar`1.op_Inequality(LiteEntitySystem.SyncVar{`0},LiteEntitySystem.SyncVar{`0})">Inequality(SyncVar&lt;T&gt;, SyncVar&lt;T&gt;)</h4>
+  <h4 id="LiteEntitySystem_SyncVar_1_op_Inequality_LiteEntitySystem_SyncVar__0__LiteEntitySystem_SyncVar__0__" data-uid="LiteEntitySystem.SyncVar`1.op_Inequality(LiteEntitySystem.SyncVar{`0},LiteEntitySystem.SyncVar{`0})">operator !=(SyncVar&lt;T&gt;, SyncVar&lt;T&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -489,7 +489,7 @@
     <pre><code class="lang-csharp hljs">public static bool operator !=(SyncVar&lt;T&gt; a, SyncVar&lt;T&gt; b)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -511,7 +511,7 @@
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -520,11 +520,12 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+
 </article>
           </div>
 
@@ -557,7 +558,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

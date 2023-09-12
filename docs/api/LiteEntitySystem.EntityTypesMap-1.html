@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,6 +70,7 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.EntityTypesMap`1">
 
 
+
   <h1 id="LiteEntitySystem_EntityTypesMap_1" data-uid="LiteEntitySystem.EntityTypesMap`1" class="text-break">Class EntityTypesMap&lt;T&gt;
 </h1>
   <div class="markdown level0 summary"><p>Entity types map that will be used for EntityManager</p>
@@ -77,7 +78,7 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><a class="xref" href="LiteEntitySystem.EntityTypesMap.html">EntityTypesMap</a></div>
     <div class="level2"><span class="xref">EntityTypesMap&lt;T&gt;</span></div>
   </div>
@@ -85,10 +86,10 @@
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_EntityTypesMap_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class EntityTypesMap&lt;T&gt; : EntityTypesMap where T : struct, Enum</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class EntityTypesMap&lt;T&gt; : EntityTypesMap where T : unmanaged, Enum</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -113,11 +114,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EntityTypesMap&lt;T&gt; Register&lt;TEntity&gt;(T id, EntityConstructor&lt;TEntity&gt; constructor)
-    where TEntity : InternalEntity</code></pre>
+    <pre><code class="lang-csharp hljs">public EntityTypesMap&lt;T&gt; Register&lt;TEntity&gt;(T id, EntityConstructor&lt;TEntity&gt; constructor) where TEntity : InternalEntity</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -133,7 +133,7 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">LiteEntitySystem.EntityConstructor&lt;T&gt;</span>&lt;TEntity&gt;</td>
+        <td><a class="xref" href="LiteEntitySystem.EntityConstructor-1.html">EntityConstructor</a>&lt;TEntity&gt;</td>
         <td><span class="parametername">constructor</span></td>
         <td><p>Constructor of entity</p>
 </td>
@@ -141,7 +141,7 @@
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -156,7 +156,7 @@
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -171,6 +171,7 @@
       </tr>
     </tbody>
   </table>
+
 </article>
           </div>
 
@@ -203,7 +204,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

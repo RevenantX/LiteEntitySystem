@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,6 +70,7 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.HumanControllerLogic`2">
 
 
+
   <h1 id="LiteEntitySystem_HumanControllerLogic_2" data-uid="LiteEntitySystem.HumanControllerLogic`2" class="text-break">Class HumanControllerLogic&lt;TInput, T&gt;
 </h1>
   <div class="markdown level0 summary"><p>Base class for human Controller entities with typed ControlledEntity field</p>
@@ -77,7 +78,7 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></div>
     <div class="level2"><a class="xref" href="LiteEntitySystem.ControllerLogic.html">ControllerLogic</a></div>
     <div class="level3"><a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html">HumanControllerLogic</a>&lt;TInput&gt;</div>
@@ -85,18 +86,57 @@
   </div>
   <div class="implements">
     <h5>Implements</h5>
-    <div><span class="xref">System.IComparable&lt;T&gt;</span>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</div>
+    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_ReadInput__0__">HumanControllerLogic&lt;TInput&gt;.ReadInput(TInput)</a>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_ReadInput__0__">HumanControllerLogic&lt;TInput&gt;.ReadInput(in TInput)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GenerateInput__0__">HumanControllerLogic&lt;TInput&gt;.GenerateInput(TInput)</a>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GenerateInput__0__">HumanControllerLogic&lt;TInput&gt;.GenerateInput(out TInput)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_IsBot">HumanControllerLogic&lt;TInput&gt;.IsBot</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_StringSizeLimit">HumanControllerLogic&lt;TInput&gt;.StringSizeLimit</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GetAssignedPlayer">HumanControllerLogic&lt;TInput&gt;.GetAssignedPlayer()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_RegisterRPC_LiteEntitySystem_RPCRegistrator__">HumanControllerLogic&lt;TInput&gt;.RegisterRPC(in RPCRegistrator)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_RegisterClientCustomType__1">HumanControllerLogic&lt;TInput&gt;.RegisterClientCustomType&lt;T&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_RegisterClientCustomType__1_System_Action_LiteNetLib_Utils_NetDataWriter___0__System_Func_LiteNetLib_Utils_NetDataReader___0__">HumanControllerLogic&lt;TInput&gt;.RegisterClientCustomType&lt;T&gt;(Action&lt;NetDataWriter, T&gt;, Func&lt;NetDataReader, T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SendRequest__1___0_">HumanControllerLogic&lt;TInput&gt;.SendRequest&lt;T&gt;(T)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SendRequest__1___0_System_Action_System_Boolean__">HumanControllerLogic&lt;TInput&gt;.SendRequest&lt;T&gt;(T, Action&lt;bool&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SendRequestStruct__1___0_">HumanControllerLogic&lt;TInput&gt;.SendRequestStruct&lt;T&gt;(T)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SendRequestStruct__1___0_System_Action_System_Boolean__">HumanControllerLogic&lt;TInput&gt;.SendRequestStruct&lt;T&gt;(T, Action&lt;bool&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequestStruct__1_System_Action___0__">HumanControllerLogic&lt;TInput&gt;.SubscribeToClientRequestStruct&lt;T&gt;(Action&lt;T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequestStruct__1_System_Func___0_System_Boolean__">HumanControllerLogic&lt;TInput&gt;.SubscribeToClientRequestStruct&lt;T&gt;(Func&lt;T, bool&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequest__1_System_Action___0__">HumanControllerLogic&lt;TInput&gt;.SubscribeToClientRequest&lt;T&gt;(Action&lt;T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequest__1_System_Func___0_System_Boolean__">HumanControllerLogic&lt;TInput&gt;.SubscribeToClientRequest&lt;T&gt;(Func&lt;T, bool&gt;)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.ControllerLogic.html#LiteEntitySystem_ControllerLogic_OwnerId">ControllerLogic.OwnerId</a>
@@ -132,6 +172,9 @@
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsLocalControlled">InternalEntity.IsLocalControlled</a>
     </div>
     <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsRemoteControlled">InternalEntity.IsRemoteControlled</a>
+    </div>
+    <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsServerControlled">InternalEntity.IsServerControlled</a>
     </div>
     <div>
@@ -159,25 +202,13 @@
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnConstructed">InternalEntity.OnConstructed()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnSyncStart">InternalEntity.OnSyncStart()</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_LiteEntitySystem_RemoteCall__">InternalEntity.ExecuteRPC(in RemoteCall)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnSyncEnd">InternalEntity.OnSyncEnd()</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">InternalEntity.ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt;, T)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_LiteEntitySystem_RemoteCall__">InternalEntity.ExecuteRPC(RemoteCall)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">InternalEntity.ExecuteRPC&lt;T&gt;(RemoteCall&lt;T&gt;, T)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">InternalEntity.ExecuteRPC&lt;T&gt;(RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_RegisterRPC_LiteEntitySystem_RPCRegistrator__">InternalEntity.RegisterRPC(RPCRegistrator)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_System_IComparable_LiteEntitySystem_Internal_InternalEntity__CompareTo_LiteEntitySystem_Internal_InternalEntity_">InternalEntity.IComparable&lt;InternalEntity&gt;.CompareTo(InternalEntity)</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">InternalEntity.ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_GetHashCode">InternalEntity.GetHashCode()</a>
@@ -190,10 +221,10 @@
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_HumanControllerLogic_2_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class HumanControllerLogic&lt;TInput, T&gt; : HumanControllerLogic&lt;TInput&gt;, IComparable&lt;InternalEntity&gt; where TInput : struct where T : PawnLogic</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class HumanControllerLogic&lt;TInput, T&gt; : HumanControllerLogic&lt;TInput&gt;, IComparable&lt;InternalEntity&gt; where TInput : unmanaged where T : PawnLogic</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -224,7 +255,7 @@
     <pre><code class="lang-csharp hljs">protected HumanControllerLogic(EntityParams entityParams)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -253,7 +284,7 @@
     <pre><code class="lang-csharp hljs">public T ControlledEntity { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -269,8 +300,9 @@
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <span class="xref">System.IComparable&lt;T&gt;</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable&lt;T&gt;</a>
   </div>
+
 </article>
           </div>
 
@@ -303,7 +335,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

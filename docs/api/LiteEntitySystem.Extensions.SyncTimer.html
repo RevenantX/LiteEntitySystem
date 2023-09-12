@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,38 +70,36 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.Extensions.SyncTimer">
 
 
+
   <h1 id="LiteEntitySystem_Extensions_SyncTimer" data-uid="LiteEntitySystem.Extensions.SyncTimer" class="text-break">Class SyncTimer
 </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><a class="xref" href="LiteEntitySystem.SyncableField.html">SyncableField</a></div>
     <div class="level2"><span class="xref">SyncTimer</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_FullSyncWrite_System_Span_System_Byte__System_Int32__">SyncableField.FullSyncWrite(Span&lt;Byte&gt;, Int32)</a>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnSyncRequested">SyncableField.OnSyncRequested()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_FullSyncRead_System_ReadOnlySpan_System_Byte__System_Int32__">SyncableField.FullSyncRead(ReadOnlySpan&lt;Byte&gt;, Int32)</a>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__">SyncableField.RegisterRPC(in SyncableRPCRegistrator)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__">SyncableField.RegisterRPC(SyncableRPCRegistrator)</a>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__">SyncableField.ExecuteRPC(in RemoteCall)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__">SyncableField.ExecuteRPC(RemoteCall)</a>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">SyncableField.ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt;, T)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">SyncableField.ExecuteRPC&lt;T&gt;(RemoteCall&lt;T&gt;, T)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">SyncableField.ExecuteRPC&lt;T&gt;(RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">SyncableField.ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.Extensions.html">LiteEntitySystem.Extensions</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a>.<a class="xref" href="LiteEntitySystem.Extensions.html">Extensions</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_Extensions_SyncTimer_syntax">Syntax</h5>
   <div class="codewrapper">
@@ -122,7 +120,7 @@
 
 
   <a id="LiteEntitySystem_Extensions_SyncTimer__ctor_" data-uid="LiteEntitySystem.Extensions.SyncTimer.#ctor*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncTimer__ctor_System_Single_" data-uid="LiteEntitySystem.Extensions.SyncTimer.#ctor(System.Single)">SyncTimer(Single)</h4>
+  <h4 id="LiteEntitySystem_Extensions_SyncTimer__ctor_System_Single_" data-uid="LiteEntitySystem.Extensions.SyncTimer.#ctor(System.Single)">SyncTimer(float)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -130,7 +128,7 @@
     <pre><code class="lang-csharp hljs">public SyncTimer(float maxTime)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -140,7 +138,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td><span class="parametername">maxTime</span></td>
         <td></td>
       </tr>
@@ -159,7 +157,7 @@
     <pre><code class="lang-csharp hljs">public float ElapsedTime { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -168,7 +166,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -184,7 +182,7 @@
     <pre><code class="lang-csharp hljs">public bool IsTimeElapsed { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -193,7 +191,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -209,7 +207,7 @@
     <pre><code class="lang-csharp hljs">public float MaxTime { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -218,7 +216,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -234,7 +232,7 @@
     <pre><code class="lang-csharp hljs">public float Progress { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -243,7 +241,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -261,7 +259,7 @@
     <pre><code class="lang-csharp hljs">public bool CheckAndSubtractMaxTime()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -270,7 +268,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -288,54 +286,7 @@
 
 
   <a id="LiteEntitySystem_Extensions_SyncTimer_LerpByProgress_" data-uid="LiteEntitySystem.Extensions.SyncTimer.LerpByProgress*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncTimer_LerpByProgress_System_Single_System_Single_" data-uid="LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single,System.Single)">LerpByProgress(Single, Single)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float LerpByProgress(float a, float b)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td><span class="parametername">a</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td><span class="parametername">b</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_Extensions_SyncTimer_LerpByProgress_" data-uid="LiteEntitySystem.Extensions.SyncTimer.LerpByProgress*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncTimer_LerpByProgress_System_Single_System_Single_System_Boolean_" data-uid="LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single,System.Single,System.Boolean)">LerpByProgress(Single, Single, Boolean)</h4>
+  <h4 id="LiteEntitySystem_Extensions_SyncTimer_LerpByProgress_System_Single_System_Single_System_Boolean_" data-uid="LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single,System.Single,System.Boolean)">LerpByProgress(float, float, bool)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -343,7 +294,7 @@
     <pre><code class="lang-csharp hljs">public float LerpByProgress(float a, float b, bool inverse)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -353,24 +304,24 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td><span class="parametername">a</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td><span class="parametername">b</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td><span class="parametername">inverse</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -379,7 +330,54 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_Extensions_SyncTimer_LerpByProgress_" data-uid="LiteEntitySystem.Extensions.SyncTimer.LerpByProgress*"></a>
+  <h4 id="LiteEntitySystem_Extensions_SyncTimer_LerpByProgress_System_Single_System_Single_" data-uid="LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single,System.Single)">LerpByProgress(float, float)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float LerpByProgress(float a, float b)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td><span class="parametername">a</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td><span class="parametername">b</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -397,7 +395,7 @@
 
 
   <a id="LiteEntitySystem_Extensions_SyncTimer_Reset_" data-uid="LiteEntitySystem.Extensions.SyncTimer.Reset*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncTimer_Reset_System_Single_" data-uid="LiteEntitySystem.Extensions.SyncTimer.Reset(System.Single)">Reset(Single)</h4>
+  <h4 id="LiteEntitySystem_Extensions_SyncTimer_Reset_System_Single_" data-uid="LiteEntitySystem.Extensions.SyncTimer.Reset(System.Single)">Reset(float)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -405,7 +403,7 @@
     <pre><code class="lang-csharp hljs">public void Reset(float maxTime)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -415,7 +413,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td><span class="parametername">maxTime</span></td>
         <td></td>
       </tr>
@@ -424,7 +422,7 @@
 
 
   <a id="LiteEntitySystem_Extensions_SyncTimer_Update_" data-uid="LiteEntitySystem.Extensions.SyncTimer.Update*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncTimer_Update_System_Single_" data-uid="LiteEntitySystem.Extensions.SyncTimer.Update(System.Single)">Update(Single)</h4>
+  <h4 id="LiteEntitySystem_Extensions_SyncTimer_Update_System_Single_" data-uid="LiteEntitySystem.Extensions.SyncTimer.Update(System.Single)">Update(float)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -432,7 +430,7 @@
     <pre><code class="lang-csharp hljs">public bool Update(float delta)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -442,14 +440,14 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td><span class="parametername">delta</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -458,7 +456,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -466,7 +464,7 @@
 
 
   <a id="LiteEntitySystem_Extensions_SyncTimer_UpdateAndCheck_" data-uid="LiteEntitySystem.Extensions.SyncTimer.UpdateAndCheck*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncTimer_UpdateAndCheck_System_Single_" data-uid="LiteEntitySystem.Extensions.SyncTimer.UpdateAndCheck(System.Single)">UpdateAndCheck(Single)</h4>
+  <h4 id="LiteEntitySystem_Extensions_SyncTimer_UpdateAndCheck_System_Single_" data-uid="LiteEntitySystem.Extensions.SyncTimer.UpdateAndCheck(System.Single)">UpdateAndCheck(float)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -474,7 +472,7 @@
     <pre><code class="lang-csharp hljs">public bool UpdateAndCheck(float delta)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -484,14 +482,14 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td><span class="parametername">delta</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -500,7 +498,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -508,7 +506,7 @@
 
 
   <a id="LiteEntitySystem_Extensions_SyncTimer_UpdateAndReset_" data-uid="LiteEntitySystem.Extensions.SyncTimer.UpdateAndReset*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncTimer_UpdateAndReset_System_Single_" data-uid="LiteEntitySystem.Extensions.SyncTimer.UpdateAndReset(System.Single)">UpdateAndReset(Single)</h4>
+  <h4 id="LiteEntitySystem_Extensions_SyncTimer_UpdateAndReset_System_Single_" data-uid="LiteEntitySystem.Extensions.SyncTimer.UpdateAndReset(System.Single)">UpdateAndReset(float)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -516,7 +514,7 @@
     <pre><code class="lang-csharp hljs">public bool UpdateAndReset(float delta)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -526,14 +524,14 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td><span class="parametername">delta</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -542,11 +540,12 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+
 </article>
           </div>
 
@@ -579,7 +578,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

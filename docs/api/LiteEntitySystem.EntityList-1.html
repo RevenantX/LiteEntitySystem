@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,21 +70,22 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.EntityList`1">
 
 
+
   <h1 id="LiteEntitySystem_EntityList_1" data-uid="LiteEntitySystem.EntityList`1" class="text-break">Class EntityList&lt;T&gt;
 </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><a class="xref" href="LiteEntitySystem.EntityFilter.html">EntityFilter</a></div>
     <div class="level2"><a class="xref" href="LiteEntitySystem.EntityFilter-1.html">EntityFilter</a>&lt;T&gt;</div>
     <div class="level3"><span class="xref">EntityList&lt;T&gt;</span></div>
   </div>
   <div class="implements">
     <h5>Implements</h5>
-    <div><span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>&lt;T&gt;</div>
-    <div><span class="xref">System.Collections.IEnumerable</span></div>
+    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;T&gt;</div>
+    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -92,7 +93,7 @@
       <a class="xref" href="LiteEntitySystem.EntityFilter-1.html#LiteEntitySystem_EntityFilter_1_OnDestroyed">EntityFilter&lt;T&gt;.OnDestroyed</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.EntityFilter-1.html#LiteEntitySystem_EntityFilter_1_SubscribeToConstructed_System_Action__0__System_Boolean_">EntityFilter&lt;T&gt;.SubscribeToConstructed(Action&lt;T&gt;, Boolean)</a>
+      <a class="xref" href="LiteEntitySystem.EntityFilter-1.html#LiteEntitySystem_EntityFilter_1_SubscribeToConstructed_System_Action__0__System_Boolean_">EntityFilter&lt;T&gt;.SubscribeToConstructed(Action&lt;T&gt;, bool)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityFilter-1.html#LiteEntitySystem_EntityFilter_1_Count">EntityFilter&lt;T&gt;.Count</a>
@@ -106,12 +107,6 @@
     <div>
       <a class="xref" href="LiteEntitySystem.EntityFilter-1.html#LiteEntitySystem_EntityFilter_1_GetEnumerator">EntityFilter&lt;T&gt;.GetEnumerator()</a>
     </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityFilter-1.html#LiteEntitySystem_EntityFilter_1_System_Collections_Generic_IEnumerable_T__GetEnumerator">EntityFilter&lt;T&gt;.IEnumerable&lt;T&gt;.GetEnumerator()</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityFilter-1.html#LiteEntitySystem_EntityFilter_1_System_Collections_IEnumerable_GetEnumerator">EntityFilter&lt;T&gt;.IEnumerable.GetEnumerator()</a>
-    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
@@ -120,7 +115,7 @@
     <pre><code class="lang-csharp hljs">public class EntityList&lt;T&gt; : EntityFilter&lt;T&gt;, IEnumerable&lt;T&gt;, IEnumerable where T : InternalEntity</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -147,7 +142,7 @@
     <pre><code class="lang-csharp hljs">public void Add(InternalEntity entity)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -184,7 +179,7 @@
     <pre><code class="lang-csharp hljs">public void Remove(InternalEntity entity)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -202,11 +197,12 @@
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a>
   </div>
   <div>
-      <span class="xref">System.Collections.IEnumerable</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a>
   </div>
+
 </article>
           </div>
 
@@ -239,7 +235,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

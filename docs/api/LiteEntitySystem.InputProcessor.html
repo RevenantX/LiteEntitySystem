@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,13 +70,14 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.InputProcessor">
 
 
+
   <h1 id="LiteEntitySystem_InputProcessor" data-uid="LiteEntitySystem.InputProcessor" class="text-break">Class InputProcessor
 </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><span class="xref">InputProcessor</span></div>
       <div class="level2"><a class="xref" href="LiteEntitySystem.InputProcessor-1.html">InputProcessor&lt;TInput&gt;</a></div>
   </div>
@@ -86,20 +87,171 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public abstract class InputProcessor</code></pre>
   </div>
+  <h3 id="constructors">Constructors
+</h3>
+
+
+  <a id="LiteEntitySystem_InputProcessor__ctor_" data-uid="LiteEntitySystem.InputProcessor.#ctor*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor__ctor_System_Int32_" data-uid="LiteEntitySystem.InputProcessor.#ctor(System.Int32)">InputProcessor(int)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected InputProcessor(int inputFixedSize)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">int</span></td>
+        <td><span class="parametername">inputFixedSize</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="fields">Fields
+</h3>
+
+
+  <h4 id="LiteEntitySystem_InputProcessor_DeltaBits" data-uid="LiteEntitySystem.InputProcessor.DeltaBits">DeltaBits</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly int DeltaBits</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">int</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <h4 id="LiteEntitySystem_InputProcessor_InputSize" data-uid="LiteEntitySystem.InputProcessor.InputSize">InputSize</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly int InputSize</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">int</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <h4 id="LiteEntitySystem_InputProcessor_InputSizeWithHeader" data-uid="LiteEntitySystem.InputProcessor.InputSizeWithHeader">InputSizeWithHeader</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly int InputSizeWithHeader</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">int</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <h4 id="LiteEntitySystem_InputProcessor_MaxDeltaSize" data-uid="LiteEntitySystem.InputProcessor.MaxDeltaSize">MaxDeltaSize</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly int MaxDeltaSize</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">int</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <h4 id="LiteEntitySystem_InputProcessor_MinDeltaSize" data-uid="LiteEntitySystem.InputProcessor.MinDeltaSize">MinDeltaSize</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly int MinDeltaSize</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">int</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
 </h3>
 
 
-  <a id="LiteEntitySystem_InputProcessor_GenerateAndWriteInputs_" data-uid="LiteEntitySystem.InputProcessor.GenerateAndWriteInputs*"></a>
-  <h4 id="LiteEntitySystem_InputProcessor_GenerateAndWriteInputs_LiteEntitySystem_EntityManager_System_Byte___System_Int32__" data-uid="LiteEntitySystem.InputProcessor.GenerateAndWriteInputs(LiteEntitySystem.EntityManager,System.Byte[],System.Int32@)">GenerateAndWriteInputs(EntityManager, Byte[], ref Int32)</h4>
+  <a id="LiteEntitySystem_InputProcessor_DeltaDecode_" data-uid="LiteEntitySystem.InputProcessor.DeltaDecode*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_DeltaDecode_System_ReadOnlySpan_System_Byte__System_Span_System_Byte__" data-uid="LiteEntitySystem.InputProcessor.DeltaDecode(System.ReadOnlySpan{System.Byte},System.Span{System.Byte})">DeltaDecode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract void GenerateAndWriteInputs(EntityManager manager, byte[] data, ref int offset)</code></pre>
+    <pre><code class="lang-csharp hljs">public int DeltaDecode(ReadOnlySpan&lt;byte&gt; currentDeltaInput, Span&lt;byte&gt; result)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -109,51 +261,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityManager.html">EntityManager</a></td>
-        <td><span class="parametername">manager</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
+        <td><span class="parametername">currentDeltaInput</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Byte</span>[]</td>
-        <td><span class="parametername">data</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">offset</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_InputProcessor_GetInputsSize_" data-uid="LiteEntitySystem.InputProcessor.GetInputsSize*"></a>
-  <h4 id="LiteEntitySystem_InputProcessor_GetInputsSize_LiteEntitySystem_EntityManager_" data-uid="LiteEntitySystem.InputProcessor.GetInputsSize(LiteEntitySystem.EntityManager)">GetInputsSize(EntityManager)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract int GetInputsSize(EntityManager manager)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityManager.html">EntityManager</a></td>
-        <td><span class="parametername">manager</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
+        <td><span class="parametername">result</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -162,23 +282,102 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
 
 
-  <a id="LiteEntitySystem_InputProcessor_ReadInputs_" data-uid="LiteEntitySystem.InputProcessor.ReadInputs*"></a>
-  <h4 id="LiteEntitySystem_InputProcessor_ReadInputs_LiteEntitySystem_EntityManager_System_Byte_System_Byte___System_Int32_System_Int32_" data-uid="LiteEntitySystem.InputProcessor.ReadInputs(LiteEntitySystem.EntityManager,System.Byte,System.Byte[],System.Int32,System.Int32)">ReadInputs(EntityManager, Byte, Byte[], Int32, Int32)</h4>
+  <a id="LiteEntitySystem_InputProcessor_DeltaDecodeInit_" data-uid="LiteEntitySystem.InputProcessor.DeltaDecodeInit*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_DeltaDecodeInit_System_ReadOnlySpan_System_Byte__" data-uid="LiteEntitySystem.InputProcessor.DeltaDecodeInit(System.ReadOnlySpan{System.Byte})">DeltaDecodeInit(ReadOnlySpan&lt;byte&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract int ReadInputs(EntityManager manager, byte ownerId, byte[] data, int offset, int size)</code></pre>
+    <pre><code class="lang-csharp hljs">public void DeltaDecodeInit(ReadOnlySpan&lt;byte&gt; fullInput)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
+        <td><span class="parametername">fullInput</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_InputProcessor_DeltaEncode_" data-uid="LiteEntitySystem.InputProcessor.DeltaEncode*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_DeltaEncode_System_ReadOnlySpan_System_Byte__System_ReadOnlySpan_System_Byte__System_Span_System_Byte__" data-uid="LiteEntitySystem.InputProcessor.DeltaEncode(System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.Span{System.Byte})">DeltaEncode(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int DeltaEncode(ReadOnlySpan&lt;byte&gt; prevInput, ReadOnlySpan&lt;byte&gt; currentInput, Span&lt;byte&gt; result)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
+        <td><span class="parametername">prevInput</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
+        <td><span class="parametername">currentInput</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
+        <td><span class="parametername">result</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">int</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_InputProcessor_GenerateAndWriteInput_" data-uid="LiteEntitySystem.InputProcessor.GenerateAndWriteInput*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_GenerateAndWriteInput_LiteEntitySystem_EntityManager_System_Byte_System_Byte___System_Int32_" data-uid="LiteEntitySystem.InputProcessor.GenerateAndWriteInput(LiteEntitySystem.EntityManager,System.Byte,System.Byte[],System.Int32)">GenerateAndWriteInput(EntityManager, byte, byte[], int)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void GenerateAndWriteInput(EntityManager manager, byte ownerId, byte[] data, int offset)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -193,42 +392,92 @@
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Byte</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
         <td><span class="parametername">ownerId</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Byte</span>[]</td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</td>
         <td><span class="parametername">data</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">offset</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">size</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
+
+
+  <a id="LiteEntitySystem_InputProcessor_ReadClientRequest_" data-uid="LiteEntitySystem.InputProcessor.ReadClientRequest*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_ReadClientRequest_LiteEntitySystem_EntityManager_LiteNetLib_Utils_NetDataReader_" data-uid="LiteEntitySystem.InputProcessor.ReadClientRequest(LiteEntitySystem.EntityManager,LiteNetLib.Utils.NetDataReader)">ReadClientRequest(EntityManager, NetDataReader)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void ReadClientRequest(EntityManager manager, NetDataReader reader)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
+        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><a class="xref" href="LiteEntitySystem.EntityManager.html">EntityManager</a></td>
+        <td><span class="parametername">manager</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">NetDataReader</span></td>
+        <td><span class="parametername">reader</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+
+
+  <a id="LiteEntitySystem_InputProcessor_ReadInput_" data-uid="LiteEntitySystem.InputProcessor.ReadInput*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_ReadInput_LiteEntitySystem_EntityManager_System_Byte_System_ReadOnlySpan_System_Byte__" data-uid="LiteEntitySystem.InputProcessor.ReadInput(LiteEntitySystem.EntityManager,System.Byte,System.ReadOnlySpan{System.Byte})">ReadInput(EntityManager, byte, ReadOnlySpan&lt;byte&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void ReadInput(EntityManager manager, byte ownerId, ReadOnlySpan&lt;byte&gt; inputsData)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.EntityManager.html">EntityManager</a></td>
+        <td><span class="parametername">manager</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
+        <td><span class="parametername">ownerId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
+        <td><span class="parametername">inputsData</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
 </article>
           </div>
 
@@ -261,7 +510,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,6 +70,8 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.ExecuteFlags">
 
 
+
+
   <h1 id="LiteEntitySystem_ExecuteFlags" data-uid="LiteEntitySystem.ExecuteFlags" class="text-break">Enum ExecuteFlags
 </h1>
   <div class="markdown level0 summary"></div>
@@ -83,7 +85,7 @@ public enum ExecuteFlags : byte</code></pre>
   </div>
   <h3 id="fields">Fields
 </h3>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -93,40 +95,42 @@ public enum ExecuteFlags : byte</code></pre>
     <tbody>
       <tr>
         <td id="LiteEntitySystem_ExecuteFlags_All">All</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_ExecuteOnClinet">ExecuteOnClinet</td>
-        <td></td>
+        <td><p>All flags, send to owner, to others, execute on prediction and on server</p>
+</td>
       </tr>
       <tr>
         <td id="LiteEntitySystem_ExecuteFlags_ExecuteOnPrediction">ExecuteOnPrediction</td>
-        <td></td>
+        <td><p>Execute RPC on client for owner of entity on prediction</p>
+</td>
       </tr>
       <tr>
         <td id="LiteEntitySystem_ExecuteFlags_ExecuteOnServer">ExecuteOnServer</td>
-        <td></td>
+        <td><p>Execute RPC directly on server</p>
+</td>
       </tr>
       <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_None">None</td>
-        <td></td>
+        <td id="LiteEntitySystem_ExecuteFlags_SendToAll">SendToAll</td>
+        <td><p>Execute RPC for all players</p>
+</td>
       </tr>
       <tr>
         <td id="LiteEntitySystem_ExecuteFlags_SendToOther">SendToOther</td>
-        <td></td>
+        <td><p>Execute RPC for non owners</p>
+</td>
       </tr>
       <tr>
         <td id="LiteEntitySystem_ExecuteFlags_SendToOwner">SendToOwner</td>
-        <td></td>
+        <td><p>Execute RPC for owner of entity</p>
+</td>
       </tr>
     </tbody>
   </thead></thead></table>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_HasFlagFast__1___0___0_">Helpers.HasFlagFast&lt;ExecuteFlags&gt;(ExecuteFlags)</a>
+      <a class="xref" href="LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_GetEnumValue__1___0_">Helpers.GetEnumValue&lt;ExecuteFlags&gt;(ExecuteFlags)</a>
   </div>
   <div>
-      <a class="xref" href="LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_GetEnumValue__1___0_">Helpers.GetEnumValue&lt;ExecuteFlags&gt;()</a>
+      <a class="xref" href="LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_HasFlagFast__1___0___0_">Helpers.HasFlagFast&lt;ExecuteFlags&gt;(ExecuteFlags, ExecuteFlags)</a>
   </div>
 </article>
           </div>
@@ -160,7 +164,7 @@ public enum ExecuteFlags : byte</code></pre>
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>

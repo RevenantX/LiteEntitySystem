@@ -12,7 +12,7 @@
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
       <link rel="stylesheet" href="../styles/main.css">
       <meta property="docfx:navrel" content="../toc.html">
@@ -70,6 +70,7 @@
             <article class="content wrap" id="_content" data-uid="LiteEntitySystem.RPCRegistrator">
 
 
+
   <h1 id="LiteEntitySystem_RPCRegistrator" data-uid="LiteEntitySystem.RPCRegistrator" class="text-break">Struct RPCRegistrator
 </h1>
   <div class="markdown level0 summary"></div>
@@ -78,23 +79,23 @@
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_RPCRegistrator_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ref readonly struct RPCRegistrator</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly ref struct RPCRegistrator</code></pre>
   </div>
   <h3 id="methods">Methods
 </h3>
 
 
   <a id="LiteEntitySystem_RPCRegistrator_BindOnChange_" data-uid="LiteEntitySystem.RPCRegistrator.BindOnChange*"></a>
-  <h4 id="LiteEntitySystem_RPCRegistrator_BindOnChange__2___1_LiteEntitySystem_SyncVarWithNotify___0___System_Action___0__" data-uid="LiteEntitySystem.RPCRegistrator.BindOnChange``2(``1,LiteEntitySystem.SyncVarWithNotify{``0}@,System.Action{``0})">BindOnChange&lt;T, TEntity&gt;(TEntity, ref SyncVarWithNotify&lt;T&gt;, Action&lt;T&gt;)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="LiteEntitySystem_RPCRegistrator_BindOnChange__2___1_LiteEntitySystem_SyncVar___0___System_Action___0__" data-uid="LiteEntitySystem.RPCRegistrator.BindOnChange``2(``1,LiteEntitySystem.SyncVar{``0}@,System.Action{``0})">BindOnChange&lt;T, TEntity&gt;(TEntity, ref SyncVar&lt;T&gt;, Action&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"><p>Bind notification of SyncVar changes to action</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly void BindOnChange&lt;T, TEntity&gt;(TEntity self, ref SyncVarWithNotify&lt;T&gt; syncVar, Action&lt;T&gt; onChangedAction)
-    where T : struct where TEntity : InternalEntity</code></pre>
+    <pre><code class="lang-csharp hljs">public void BindOnChange&lt;T, TEntity&gt;(TEntity self, ref SyncVar&lt;T&gt; syncVar, Action&lt;T&gt; onChangedAction) where T : unmanaged where TEntity : InternalEntity</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -106,22 +107,25 @@
       <tr>
         <td><span class="xref">TEntity</span></td>
         <td><span class="parametername">self</span></td>
-        <td></td>
+        <td><p>Target entity for binding</p>
+</td>
       </tr>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.SyncVarWithNotify-1.html">SyncVarWithNotify</a>&lt;T&gt;</td>
+        <td><a class="xref" href="LiteEntitySystem.SyncVar-1.html">SyncVar</a>&lt;T&gt;</td>
         <td><span class="parametername">syncVar</span></td>
-        <td></td>
+        <td><p>Variable to bind</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">System.Action&lt;T&gt;</span>&lt;T&gt;</td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
         <td><span class="parametername">onChangedAction</span></td>
-        <td></td>
+        <td><p>Action that will be called when variable changes by sync</p>
+</td>
       </tr>
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -148,11 +152,10 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly void CreateRPCAction&lt;TEntity&gt;(TEntity self, Action methodToCall, ref RemoteCall remoteCallHandle, ExecuteFlags flags = ExecuteFlags.None)
-    where TEntity : InternalEntity</code></pre>
+    <pre><code class="lang-csharp hljs">public void CreateRPCAction&lt;TEntity&gt;(TEntity self, Action methodToCall, ref RemoteCall remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -164,10 +167,11 @@
       <tr>
         <td><span class="xref">TEntity</span></td>
         <td><span class="parametername">self</span></td>
-        <td></td>
+        <td><p>Target entity with RPC</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">System.Action</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></td>
         <td><span class="parametername">methodToCall</span></td>
         <td><p>RPC method to call</p>
 </td>
@@ -175,17 +179,19 @@
       <tr>
         <td><a class="xref" href="LiteEntitySystem.RemoteCall.html">RemoteCall</a></td>
         <td><span class="parametername">remoteCallHandle</span></td>
-        <td></td>
+        <td><p>output handle that should be used to call rpc</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="LiteEntitySystem.ExecuteFlags.html">ExecuteFlags</a></td>
         <td><span class="parametername">flags</span></td>
-        <td></td>
+        <td><p>RPC execution flags</p>
+</td>
       </tr>
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -203,16 +209,15 @@
 
   <a id="LiteEntitySystem_RPCRegistrator_CreateRPCAction_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction*"></a>
   <h4 id="LiteEntitySystem_RPCRegistrator_CreateRPCAction__2___0_LiteEntitySystem_SpanAction___1__LiteEntitySystem_RemoteCallSpan___1___LiteEntitySystem_ExecuteFlags_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(``0,LiteEntitySystem.SpanAction{``1},LiteEntitySystem.RemoteCallSpan{``1}@,LiteEntitySystem.ExecuteFlags)">CreateRPCAction&lt;TEntity, T&gt;(TEntity, SpanAction&lt;T&gt;, ref RemoteCallSpan&lt;T&gt;, ExecuteFlags)</h4>
-  <div class="markdown level1 summary"><p>Creates cached rpc action</p>
+  <div class="markdown level1 summary"><p>Creates cached rpc action with Span argument</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly void CreateRPCAction&lt;TEntity, T&gt;(TEntity self, SpanAction&lt;T&gt; methodToCall, ref RemoteCallSpan&lt;T&gt; remoteCallHandle, ExecuteFlags flags = ExecuteFlags.None)
-    where TEntity : InternalEntity where T : struct</code></pre>
+    <pre><code class="lang-csharp hljs">public void CreateRPCAction&lt;TEntity, T&gt;(TEntity self, SpanAction&lt;T&gt; methodToCall, ref RemoteCallSpan&lt;T&gt; remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity where T : unmanaged</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -224,10 +229,11 @@
       <tr>
         <td><span class="xref">TEntity</span></td>
         <td><span class="parametername">self</span></td>
-        <td></td>
+        <td><p>Target entity with RPC</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">LiteEntitySystem.SpanAction&lt;T&gt;</span>&lt;T&gt;</td>
+        <td><a class="xref" href="LiteEntitySystem.SpanAction-1.html">SpanAction</a>&lt;T&gt;</td>
         <td><span class="parametername">methodToCall</span></td>
         <td><p>RPC method to call</p>
 </td>
@@ -235,17 +241,19 @@
       <tr>
         <td><a class="xref" href="LiteEntitySystem.RemoteCallSpan-1.html">RemoteCallSpan</a>&lt;T&gt;</td>
         <td><span class="parametername">remoteCallHandle</span></td>
-        <td></td>
+        <td><p>output handle that should be used to call rpc</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="LiteEntitySystem.ExecuteFlags.html">ExecuteFlags</a></td>
         <td><span class="parametername">flags</span></td>
-        <td></td>
+        <td><p>RPC execution flags</p>
+</td>
       </tr>
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -267,16 +275,15 @@
 
   <a id="LiteEntitySystem_RPCRegistrator_CreateRPCAction_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction*"></a>
   <h4 id="LiteEntitySystem_RPCRegistrator_CreateRPCAction__2___0_System_Action___1__LiteEntitySystem_RemoteCall___1___LiteEntitySystem_ExecuteFlags_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCall{``1}@,LiteEntitySystem.ExecuteFlags)">CreateRPCAction&lt;TEntity, T&gt;(TEntity, Action&lt;T&gt;, ref RemoteCall&lt;T&gt;, ExecuteFlags)</h4>
-  <div class="markdown level1 summary"><p>Creates cached rpc action</p>
+  <div class="markdown level1 summary"><p>Creates cached rpc action with valueType argument</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly void CreateRPCAction&lt;TEntity, T&gt;(TEntity self, Action&lt;T&gt; methodToCall, ref RemoteCall&lt;T&gt; remoteCallHandle, ExecuteFlags flags = ExecuteFlags.None)
-    where TEntity : InternalEntity where T : struct</code></pre>
+    <pre><code class="lang-csharp hljs">public void CreateRPCAction&lt;TEntity, T&gt;(TEntity self, Action&lt;T&gt; methodToCall, ref RemoteCall&lt;T&gt; remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity where T : unmanaged</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
@@ -288,10 +295,11 @@
       <tr>
         <td><span class="xref">TEntity</span></td>
         <td><span class="parametername">self</span></td>
-        <td></td>
+        <td><p>Target entity with RPC</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">System.Action&lt;T&gt;</span>&lt;T&gt;</td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
         <td><span class="parametername">methodToCall</span></td>
         <td><p>RPC method to call</p>
 </td>
@@ -299,17 +307,19 @@
       <tr>
         <td><a class="xref" href="LiteEntitySystem.RemoteCall-1.html">RemoteCall</a>&lt;T&gt;</td>
         <td><span class="parametername">remoteCallHandle</span></td>
-        <td></td>
+        <td><p>output handle that should be used to call rpc</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="LiteEntitySystem.ExecuteFlags.html">ExecuteFlags</a></td>
         <td><span class="parametername">flags</span></td>
-        <td></td>
+        <td><p>RPC execution flags</p>
+</td>
       </tr>
     </tbody>
   </table>
   <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
+  <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Name</th>
@@ -327,6 +337,7 @@
       </tr>
     </tbody>
   </table>
+
 </article>
           </div>
 
@@ -359,7 +370,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
     <script type="text/javascript" src="../styles/docfx.js"></script>
     <script type="text/javascript" src="../styles/main.js"></script>
   </body>
