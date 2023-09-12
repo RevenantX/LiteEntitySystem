@@ -48,6 +48,7 @@ namespace LiteEntitySystem.Internal
         public readonly int InterpolatedCount;
         public readonly EntityFieldInfo[] LagCompensatedFields;
         public readonly int LagCompensatedSize;
+        public readonly int LagCompensatedCount;
         public readonly bool UpdateOnClient;
         public readonly bool IsUpdateable;
         public readonly bool IsLocalOnly;
@@ -117,6 +118,7 @@ namespace LiteEntitySystem.Internal
             PredictedSize = 0;
             FixedFieldsSize = 0;
             LagCompensatedSize = 0;
+            LagCompensatedCount = 0;
             InterpolatedCount = 0;
             InterpolatedFieldsSize = 0;
 
@@ -269,6 +271,7 @@ namespace LiteEntitySystem.Internal
             FieldsCount = Fields.Length;
             FieldsFlagsSize = (FieldsCount-1) / 8 + 1;
             LagCompensatedFields = lagCompensatedFields.ToArray();
+            LagCompensatedCount = LagCompensatedFields.Length;
             RemoteCallsClient = new MethodCallDelegate[RpcOffsets.Length];
             RemoteCallsServer = new Delegate[RpcOffsets.Length];
 
