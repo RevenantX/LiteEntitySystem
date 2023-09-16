@@ -79,7 +79,7 @@ namespace LiteEntitySystem.Internal
             int dotnetFieldOffset = Marshal.ReadInt32(field.FieldHandle.Value + dotnetOffset) & 0xFFFFFF;
 
             var to = new TestOffset();
-            if (Utils.RefFieldValue<uint>(to, monoFieldOffset) == to.TestValue)
+            if (Utils.IsMono && Utils.RefFieldValue<uint>(to, monoFieldOffset) == to.TestValue)
                 NativeFieldOffset = monoOffset;
             else if (Utils.RefFieldValue<uint>(to, dotnetFieldOffset) == to.TestValue)
                 NativeFieldOffset = dotnetOffset;

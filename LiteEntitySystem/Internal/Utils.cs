@@ -6,6 +6,8 @@ namespace LiteEntitySystem.Internal
 {
     public static class Utils
     {
+        public static readonly bool IsMono = Type.GetType("Mono.Runtime") != null;
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ResizeIfFull<T>(ref T[] arr, int count)
         {
@@ -77,11 +79,9 @@ namespace LiteEntitySystem.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref U RefFieldValue<U>(object obj, int offset)
         {
-#if UNITY_2021_2_OR_NEWER
-            return ref RefMagic.RefFieldValueMono<U>(obj, offset);
-#else
-            return ref RefMagic.RefFieldValueDotNet<U>(obj, offset + IntPtr.Size);
-#endif
+            return ref IsMono
+                ? ref RefMagic.RefFieldValueMono<U>(obj, offset)
+                : ref RefMagic.RefFieldValueDotNet<U>(obj, offset + IntPtr.Size);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
