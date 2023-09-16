@@ -503,9 +503,9 @@ namespace LiteEntitySystem
             if (IsEntityAlive(classData, e))
             {
                 AliveEntities.Add(e);
-                if(!e.IsLocal && e is EntityLogic entityLogic && entityLogic.HasLagCompensation)
-                    LagCompensatedEntities.Add(entityLogic);
             }
+            if(!e.IsLocal && e is EntityLogic entityLogic && entityLogic.HasLagCompensation)
+                LagCompensatedEntities.Add(entityLogic);
         }
 
         private bool IsEntityAlive(EntityClassData classData, InternalEntity entity)
