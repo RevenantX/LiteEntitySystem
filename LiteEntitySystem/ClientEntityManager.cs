@@ -417,7 +417,9 @@ namespace LiteEntitySystem
                     for (int i = 0; i < classData.FieldsCount; i++)
                     {
                         ref var field = ref classData.Fields[i];
-                        if (!field.ShouldRollback(entity))
+                        if ((entity.IsRemoteControlled && !field.Flags.HasFlagFast(SyncFlags.AlwaysRollback)) ||
+                            field.Flags.HasFlagFast(SyncFlags.NeverRollBack) ||
+                            field.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
                             continue;
                         if (field.FieldType == FieldType.SyncableSyncVar)
                         {
@@ -814,7 +816,7 @@ namespace LiteEntitySystem
                     ref var field = ref classData.Fields[i];
                     byte* readDataPtr = rawData + readerPosition;
                     
-                    if(predictedData != null)
+                    if(field.IsPredicted)
                         RefMagic.CopyBlock(predictedData + field.PredictedOffset, readDataPtr, field.Size);
                     
                     if (field.FieldType == FieldType.SyncableSyncVar)

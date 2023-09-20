@@ -24,14 +24,6 @@ namespace LiteEntitySystem.Internal
         public int FixedOffset;
         public int PredictedOffset;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool ShouldRollback(InternalEntity entity)
-        {
-            if (Flags.HasFlagFast(SyncFlags.NeverRollBack))
-                return false;
-            return Flags.HasFlagFast(SyncFlags.AlwaysRollback) || (entity.IsLocalControlled && !Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers));
-        }
-
         //for value type
         public EntityFieldInfo(
             string name,
