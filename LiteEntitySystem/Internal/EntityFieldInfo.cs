@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace LiteEntitySystem.Internal
+﻿namespace LiteEntitySystem.Internal
 {
     internal enum FieldType
     {
