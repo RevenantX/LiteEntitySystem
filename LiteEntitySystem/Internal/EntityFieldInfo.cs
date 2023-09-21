@@ -18,9 +18,9 @@ namespace LiteEntitySystem.Internal
         public readonly int IntSize;
         public readonly FieldType FieldType;
         public readonly SyncFlags Flags;
+        public readonly bool IsPredicted;
 
         public MethodCallDelegate OnSync;
-        public bool IsPredicted => Flags.HasFlagFast(SyncFlags.AlwaysRollback) || (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) && !Flags.HasFlagFast(SyncFlags.NeverRollBack));
         public int FixedOffset;
         public int PredictedOffset;
 
@@ -43,6 +43,9 @@ namespace LiteEntitySystem.Internal
             PredictedOffset = 0;
             Flags = flags;
             OnSync = null;
+            IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
+                          (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
+                           !Flags.HasFlagFast(SyncFlags.NeverRollBack));
         }
 
         //For syncable syncvar
@@ -64,6 +67,9 @@ namespace LiteEntitySystem.Internal
             PredictedOffset = 0;
             Flags = flags;
             OnSync = null;
+            IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
+                          (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
+                           !Flags.HasFlagFast(SyncFlags.NeverRollBack));
         }
     }
 }
