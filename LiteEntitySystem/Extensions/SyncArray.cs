@@ -18,6 +18,12 @@ namespace LiteEntitySystem.Extensions
         
         public int Length => _data.Length;
 
+        /// <summary>
+        /// Changes to this array will NOT sync,
+        /// so it should be used as readonly!
+        /// </summary>
+        public T[] Value => _data;
+
         public SyncArray(int size)
         {
             _data = new T[size];
