@@ -18,6 +18,8 @@ namespace LiteEntitySystem.Extensions
         
         public int Length => _data.Length;
 
+        public T[] Value => _data;
+
         public SyncArray(int size)
         {
             _data = new T[size];
