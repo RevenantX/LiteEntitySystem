@@ -32,7 +32,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Called when entity created and synced
         /// <param name="onConstructed">callback</param>
-        /// <param name="callOnExisting">call that callback on existing entities in this fitler/list</param>
+        /// <param name="callOnExisting">call that callback on existing entities in this filter/list</param>
         /// </summary>
         public void SubscribeToConstructed(Action<T> onConstructed, bool callOnExisting)
         {
