@@ -1,12 +1,13 @@
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
 {
     public static class Utils
     {
-        public static readonly bool IsMono = Type.GetType("Mono.Runtime") != null;
+        public static readonly bool IsMono = Type.GetType("Mono.Runtime") != null || RuntimeInformation.OSDescription.Contains("android");
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ResizeIfFull<T>(ref T[] arr, int count)
