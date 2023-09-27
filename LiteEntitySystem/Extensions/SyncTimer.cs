@@ -7,7 +7,7 @@ namespace LiteEntitySystem.Extensions
         public float MaxTime => _maxTime;
         public float ElapsedTime => _time;
         public bool IsTimeElapsed => _time >= _maxTime;
-        public bool CountdownTime => _maxTime - _time;
+        public float CountdownTime => _maxTime - _time;
         public bool HasStarted => ElapsedTime > 0;
         
         private SyncVar<float> _time;
