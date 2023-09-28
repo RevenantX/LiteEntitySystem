@@ -7,7 +7,7 @@ namespace LiteEntitySystem.Internal
 {
     public static class Utils
     {
-        public static readonly bool IsMono = Type.GetType("Mono.Runtime") != null || RuntimeInformation.OSDescription.Contains("android");
+        public static readonly bool IsMono;
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ResizeIfFull<T>(ref T[] arr, int count)
@@ -107,6 +107,63 @@ namespace LiteEntitySystem.Internal
         internal static SpanAction<T, TArgument> CreateSelfDelegateSpan<T, TArgument>(this MethodInfo mi) where TArgument : unmanaged
         {
             return mi.CreateDelegateHelper<SpanAction<T, TArgument>>();
+        }
+        
+        private class TestOffset
+        {
+            public readonly uint TestValue = 0xDEADBEEF;
+        }
+        
+        /*
+        Offsets
+        [StructLayout(LayoutKind.Explicit)]
+        public unsafe struct DotnetClassField
+        {
+            [FieldOffset(0)] private readonly void* _pMTOfEnclosingClass;
+            [FieldOffset(8)] private readonly uint _dword1;
+            [FieldOffset(12)] private readonly uint _dword2;
+            public int Offset => (int) (_dword2 & 0x7FFFFFF);
+        }
+
+        public unsafe struct MonoClassField
+        {
+            private void *_type;
+            private void *_name;
+            private	void *_parent_and_flags;
+            public int Offset;
+        }
+        */
+        
+        private static readonly int NativeFieldOffset;
+
+        public static int GetFieldOffset(FieldInfo fieldInfo)
+        {
+            //build offsets in runtime metadata
+            if(fieldInfo.DeclaringType != null)
+                RuntimeHelpers.RunClassConstructor(fieldInfo.DeclaringType.TypeHandle);
+            return Marshal.ReadInt32(fieldInfo.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
+        }
+
+        static Utils()
+        {            
+            IsMono = Type.GetType("Mono.Runtime") != null
+                     || RuntimeInformation.OSDescription.Contains("android")
+                     || RuntimeInformation.OSDescription.Contains("ios");
+            
+            //check field offset
+            var field = typeof(TestOffset).GetField("TestValue");
+            int monoOffset = IntPtr.Size * 3;
+            int dotnetOffset = IntPtr.Size + 4;
+            int monoFieldOffset = Marshal.ReadInt32(field.FieldHandle.Value + monoOffset);
+            int dotnetFieldOffset = Marshal.ReadInt32(field.FieldHandle.Value + dotnetOffset) & 0xFFFFFF;
+
+            var to = new TestOffset();
+            if (IsMono && RefFieldValue<uint>(to, monoFieldOffset) == to.TestValue)
+                NativeFieldOffset = monoOffset;
+            else if (RefFieldValue<uint>(to, dotnetFieldOffset) == to.TestValue)
+                NativeFieldOffset = dotnetOffset;
+            else
+                Logger.LogError("Unknown native field offset");
         }
     }
 }

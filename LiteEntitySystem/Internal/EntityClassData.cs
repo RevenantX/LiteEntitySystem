@@ -59,54 +59,10 @@ namespace LiteEntitySystem.Internal
         
         private readonly bool _isCreated;
         private readonly Type[] _baseTypes;
-
-        private static readonly int NativeFieldOffset;
+        
         private static readonly Type InternalEntityType = typeof(InternalEntity);
         private static readonly Type SingletonEntityType = typeof(SingletonEntityLogic);
         private static readonly Type SyncableFieldType = typeof(SyncableField);
-
-        private class TestOffset
-        {
-            public readonly uint TestValue = 0xDEADBEEF;
-        }
-        
-        /*
-        Offsets
-        [StructLayout(LayoutKind.Explicit)]
-        public unsafe struct DotnetClassField
-        {
-            [FieldOffset(0)] private readonly void* m_pMTOfEnclosingClass;
-            [FieldOffset(8)] private readonly uint _dword1;
-            [FieldOffset(12)] private readonly uint _dword2;
-            public int Offset => (int) (_dword2 & 0x7FFFFFF);
-        }
-        
-        public unsafe struct MonoClassField
-        {
-            private void *_type;
-            private void *_name;
-            private	void *_parent_and_flags;
-            public int Offset;
-        }
-        */
-
-        static EntityClassData()
-        {
-            //check field offset
-            var field = typeof(TestOffset).GetField("TestValue");
-            int monoOffset = 3 * IntPtr.Size;
-            int dotnetOffset = IntPtr.Size + 4;
-            int monoFieldOffset = Marshal.ReadInt32(field.FieldHandle.Value + monoOffset) & 0xFFFFFF;
-            int dotnetFieldOffset = Marshal.ReadInt32(field.FieldHandle.Value + dotnetOffset) & 0xFFFFFF;
-
-            var to = new TestOffset();
-            if (Utils.IsMono && Utils.RefFieldValue<uint>(to, monoFieldOffset) == to.TestValue)
-                NativeFieldOffset = monoOffset;
-            else if (Utils.RefFieldValue<uint>(to, dotnetFieldOffset) == to.TestValue)
-                NativeFieldOffset = dotnetOffset;
-            else
-                Logger.LogError("Unknown native field offset");
-        }
 
         private static List<Type> GetBaseTypes(Type ofType, Type until, bool includeSelf)
         {
@@ -182,8 +138,6 @@ namespace LiteEntitySystem.Internal
             
             foreach (var baseType in baseTypes)
             {
-                //build offsets in runtime metadata
-                RuntimeHelpers.RunClassConstructor(baseType.TypeHandle);
                 //cache fields
                 foreach (var field in baseType.GetFields(bindingFlags))
                 {
@@ -191,7 +145,7 @@ namespace LiteEntitySystem.Internal
                     
                     var syncVarAttribute = field.GetCustomAttribute<SyncVarFlags>();
                     var syncFlags = syncVarAttribute?.Flags ?? SyncFlags.None;
-                    int offset = Marshal.ReadInt32(field.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
+                    int offset = Utils.GetFieldOffset(field);
                     
                     if(IsRemoteCallType(ft))
                     {
@@ -247,14 +201,13 @@ namespace LiteEntitySystem.Internal
                         syncableFields.Add(new SyncableFieldInfo(offset));
                         foreach (var syncableType in GetBaseTypes(ft, SyncableFieldType, true))
                         {
-                            RuntimeHelpers.RunClassConstructor(syncableType.TypeHandle);
                             //syncable fields
                             foreach (var syncableField in syncableType.GetFields(bindingFlags))
                             {
                                 var syncableFieldType = syncableField.FieldType;
                                 if(IsRemoteCallType(syncableFieldType))
                                 {
-                                    int rpcOffset = Marshal.ReadInt32(syncableField.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
+                                    int rpcOffset = Utils.GetFieldOffset(syncableField);
                                     remoteCallOffsets.Add(new RpcOffset(offset, rpcOffset, syncFlags));
                                     continue;
                                 }
@@ -270,7 +223,7 @@ namespace LiteEntitySystem.Internal
                                     Logger.LogError($"Unregistered field type: {syncableFieldType}");
                                     continue;
                                 }
-                                int syncvarOffset = Marshal.ReadInt32(syncableField.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
+                                int syncvarOffset = Utils.GetFieldOffset(syncableField);
                                 var fieldInfo = new EntityFieldInfo($"{baseType.Name}-{field.Name}:{syncableField.Name}", valueTypeProcessor, offset, syncvarOffset, syncFlags);
                                 fields.Add(fieldInfo);
                                 FixedFieldsSize += fieldInfo.IntSize;
