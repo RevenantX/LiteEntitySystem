@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
@@ -68,6 +69,26 @@ namespace LiteEntitySystem.Internal
         {
             public readonly uint TestValue = 0xDEADBEEF;
         }
+        
+        /*
+        Offsets
+        [StructLayout(LayoutKind.Explicit)]
+        public unsafe struct DotnetClassField
+        {
+            [FieldOffset(0)] private readonly void* m_pMTOfEnclosingClass;
+            [FieldOffset(8)] private readonly uint _dword1;
+            [FieldOffset(12)] private readonly uint _dword2;
+            public int Offset => (int) (_dword2 & 0x7FFFFFF);
+        }
+        
+        public unsafe struct MonoClassField
+        {
+            private void *_type;
+            private void *_name;
+            private	void *_parent_and_flags;
+            public int Offset;
+        }
+        */
 
         static EntityClassData()
         {
@@ -161,6 +182,8 @@ namespace LiteEntitySystem.Internal
             
             foreach (var baseType in baseTypes)
             {
+                //build offsets in runtime metadata
+                RuntimeHelpers.RunClassConstructor(baseType.TypeHandle);
                 //cache fields
                 foreach (var field in baseType.GetFields(bindingFlags))
                 {
@@ -224,6 +247,7 @@ namespace LiteEntitySystem.Internal
                         syncableFields.Add(new SyncableFieldInfo(offset));
                         foreach (var syncableType in GetBaseTypes(ft, SyncableFieldType, true))
                         {
+                            RuntimeHelpers.RunClassConstructor(syncableType.TypeHandle);
                             //syncable fields
                             foreach (var syncableField in syncableType.GetFields(bindingFlags))
                             {
