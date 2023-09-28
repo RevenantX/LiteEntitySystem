@@ -135,7 +135,7 @@ namespace LiteEntitySystem.Internal
                 RuntimeHelpers.RunClassConstructor(fieldInfo.DeclaringType.TypeHandle);
             return IsMono
                 ? Marshal.ReadInt32(fieldInfo.FieldHandle.Value + MonoOffset)
-                : Marshal.ReadInt32(fieldInfo.FieldHandle.Value + DotNetOffset) & 0xFFFFFF + IntPtr.Size;
+                : (Marshal.ReadInt32(fieldInfo.FieldHandle.Value + DotNetOffset) & 0xFFFFFF) + IntPtr.Size;
         }
 
         static Utils()
