@@ -74,14 +74,6 @@ namespace LiteEntitySystem.Internal
         {
             return (newer - older + MaxSeq15) % MaxSequence - MaxSeq2;
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ref U RefFieldValue<U>(object obj, int offset)
-        {
-            return ref IsMono
-                ? ref RefMagic.RefFieldValueMono<U>(obj, offset)
-                : ref RefMagic.RefFieldValueDotNet<U>(obj, offset + IntPtr.Size);
-        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static T CreateDelegateHelper<T>(this MethodInfo method) where T : Delegate
@@ -131,8 +123,9 @@ namespace LiteEntitySystem.Internal
             public int Offset;
         }
         */
-        
-        private static readonly int NativeFieldOffset;
+
+        private static readonly int MonoOffset = IntPtr.Size * 3;
+        private static readonly int DotNetOffset = IntPtr.Size + 4;
         private static readonly bool IsMono;
 
         public static int GetFieldOffset(FieldInfo fieldInfo)
@@ -140,7 +133,9 @@ namespace LiteEntitySystem.Internal
             //build offsets in runtime metadata
             if(fieldInfo.DeclaringType != null)
                 RuntimeHelpers.RunClassConstructor(fieldInfo.DeclaringType.TypeHandle);
-            return Marshal.ReadInt32(fieldInfo.FieldHandle.Value + NativeFieldOffset) & 0xFFFFFF;
+            return IsMono
+                ? Marshal.ReadInt32(fieldInfo.FieldHandle.Value + MonoOffset)
+                : Marshal.ReadInt32(fieldInfo.FieldHandle.Value + DotNetOffset) & 0xFFFFFF + IntPtr.Size;
         }
 
         static Utils()
@@ -151,17 +146,9 @@ namespace LiteEntitySystem.Internal
             
             //check field offset
             var field = typeof(TestOffset).GetField("TestValue");
-            int monoOffset = IntPtr.Size * 3;
-            int dotnetOffset = IntPtr.Size + 4;
-            int monoFieldOffset = Marshal.ReadInt32(field.FieldHandle.Value + monoOffset);
-            int dotnetFieldOffset = Marshal.ReadInt32(field.FieldHandle.Value + dotnetOffset) & 0xFFFFFF;
-
+            int offset = GetFieldOffset(field);
             var to = new TestOffset();
-            if (IsMono && RefFieldValue<uint>(to, monoFieldOffset) == to.TestValue)
-                NativeFieldOffset = monoOffset;
-            else if (RefFieldValue<uint>(to, dotnetFieldOffset) == to.TestValue)
-                NativeFieldOffset = dotnetOffset;
-            else
+            if (RefMagic.RefFieldValue<uint>(to, offset) != to.TestValue)
                 Logger.LogError("Unknown native field offset");
         }
     }

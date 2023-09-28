@@ -168,7 +168,7 @@ namespace LiteEntitySystem.Internal
                     continue;
                 }
                 //Logger.Log($"Executing rpc. Entity: {rpc.EntityId} Class: {entity.ClassId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}");
-                var syncableField = Utils.RefFieldValue<SyncableField>(entity, rpc.SyncableOffset);
+                var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, rpc.SyncableOffset);
                 rpc.Executed = true;
                 rpc.Delegate(syncableField, new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.TypeSize * rpc.Header.Count));
             }

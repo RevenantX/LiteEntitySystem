@@ -423,7 +423,7 @@ namespace LiteEntitySystem
                             continue;
                         if (field.FieldType == FieldType.SyncableSyncVar)
                         {
-                            var syncableField = Utils.RefFieldValue<SyncableField>(entity, field.Offset);
+                            var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, field.Offset);
                             field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, predictedData + field.PredictedOffset);
                         }
                         else
@@ -821,7 +821,7 @@ namespace LiteEntitySystem
                     
                     if (field.FieldType == FieldType.SyncableSyncVar)
                     {
-                        var syncableField = Utils.RefFieldValue<SyncableField>(entity, field.Offset);
+                        var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, field.Offset);
                         field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, readDataPtr);
                     }
                     else

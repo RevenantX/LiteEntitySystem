@@ -137,13 +137,13 @@ namespace LiteEntitySystem.Internal
                 var rpcOffset = classData.RpcOffsets[i];
                 if (rpcOffset.SyncableOffset == -1)
                 {
-                    ref var remoteCall = ref Utils.RefFieldValue<RemoteCall>(this, rpcOffset.Offset);
+                    ref var remoteCall = ref RefMagic.RefFieldValue<RemoteCall>(this, rpcOffset.Offset);
                     remoteCall = new RemoteCall(i, classData.RemoteCallsServer[i]);
                 }
                 else
                 {
-                    var syncable = Utils.RefFieldValue<SyncableField>(this, rpcOffset.SyncableOffset);
-                    ref var remoteCall = ref Utils.RefFieldValue<RemoteCall>(syncable, rpcOffset.Offset);
+                    var syncable = RefMagic.RefFieldValue<SyncableField>(this, rpcOffset.SyncableOffset);
+                    ref var remoteCall = ref RefMagic.RefFieldValue<RemoteCall>(syncable, rpcOffset.Offset);
                     remoteCall = new RemoteCall(i, classData.RemoteCallsServer[i]);
                     syncable.ParentEntityId = Id;
                     if (rpcOffset.Flags.HasFlagFast(SyncFlags.OnlyForOwner))
@@ -161,13 +161,13 @@ namespace LiteEntitySystem.Internal
                     ref var field = ref classData.Fields[i];
                     if (field.FieldType == FieldType.SyncVar)
                     {
-                        ref byte id = ref Utils.RefFieldValue<byte>(this, field.Offset + field.IntSize);
+                        ref byte id = ref RefMagic.RefFieldValue<byte>(this, field.Offset + field.IntSize);
                         id = (byte)i;
                     }
                 }
                 for (int i = 0; i < classData.SyncableFields.Length; i++)
                 {
-                    var syncField = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
+                    var syncField = RefMagic.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
                     syncField.ParentEntityId = Id;
                     syncField.InternalInit(new SyncableRPCRegistrator(this));
                 }
@@ -180,7 +180,7 @@ namespace LiteEntitySystem.Internal
                 //setup id for later sync calls
                 for (int i = 0; i < classData.SyncableFields.Length; i++)
                 {
-                    var syncField = Utils.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
+                    var syncField = RefMagic.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
                     syncField.ParentEntityId = Id;
                 }
             }

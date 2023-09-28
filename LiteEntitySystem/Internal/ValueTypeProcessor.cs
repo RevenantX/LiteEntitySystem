@@ -40,20 +40,20 @@ namespace LiteEntitySystem.Internal
         
         internal override void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
-            ref var a = ref Utils.RefFieldValue<T>(obj, offset);
+            ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
             *(T*)tempHistory = a;
             a = *(T*)historyA;
         }
         
         internal override void SetFrom(object obj, int offset, byte* data)
         {
-            ref var a = ref Utils.RefFieldValue<T>(obj, offset);
+            ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
             a = *(T*)data;
         }
 
         internal override bool SetFromAndSync(object obj, int offset, byte* data)
         {
-            ref var a = ref Utils.RefFieldValue<T>(obj, offset);
+            ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
             if (!Compare(ref a, ref *(T*)data))
             {
                 T temp = a;
@@ -66,12 +66,12 @@ namespace LiteEntitySystem.Internal
 
         internal override void WriteTo(object obj, int offset, byte* data)
         {
-            *(T*)data = Utils.RefFieldValue<T>(obj, offset);
+            *(T*)data = RefMagic.RefFieldValue<T>(obj, offset);
         }
         
         internal override bool CompareAndWrite(object obj, int offset, byte* data)
         {
-            ref var a = ref Utils.RefFieldValue<T>(obj, offset);
+            ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
             if (Compare(ref a, ref *(T*)data))
                 return false;
             *(T*)data = a;
@@ -107,12 +107,12 @@ namespace LiteEntitySystem.Internal
         
         internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
-            ref var a = ref Utils.RefFieldValue<int>(obj, offset);
+            ref var a = ref RefMagic.RefFieldValue<int>(obj, offset);
             a = Utils.Lerp(*(int*)prev, *(int*)current, fTimer);
         }
         internal override unsafe void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
-            ref var a = ref Utils.RefFieldValue<int>(obj, offset);
+            ref var a = ref RefMagic.RefFieldValue<int>(obj, offset);
             *(int*)tempHistory = a;
             a = Utils.Lerp(*(int*)historyA, *(int*)historyB, lerpTime);
         }
@@ -128,12 +128,12 @@ namespace LiteEntitySystem.Internal
         protected override bool Compare(ref long a, ref long b) => a == b;
         internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
-            ref var a = ref Utils.RefFieldValue<long>(obj, offset);
+            ref var a = ref RefMagic.RefFieldValue<long>(obj, offset);
             a = Utils.Lerp(*(long*)prev, *(long*)current, fTimer);
         }
         internal override unsafe void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
-            ref var a = ref Utils.RefFieldValue<long>(obj, offset);
+            ref var a = ref RefMagic.RefFieldValue<long>(obj, offset);
             *(long*)tempHistory = a;
             a = Utils.Lerp(*(long*)historyA, *(long*)historyB, lerpTime);
         }
@@ -149,12 +149,12 @@ namespace LiteEntitySystem.Internal
         protected override bool Compare(ref float a, ref float b) => a == b;
         internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
-            ref var a = ref Utils.RefFieldValue<float>(obj, offset);
+            ref var a = ref RefMagic.RefFieldValue<float>(obj, offset);
             a = Utils.Lerp(*(float*)prev, *(float*)current, fTimer);
         }
         internal override unsafe void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
-            ref var a = ref Utils.RefFieldValue<float>(obj, offset);
+            ref var a = ref RefMagic.RefFieldValue<float>(obj, offset);
             *(float*)tempHistory = a;
             a = Utils.Lerp(*(float*)historyA, *(float*)historyB, lerpTime);
         }
@@ -165,12 +165,12 @@ namespace LiteEntitySystem.Internal
         protected override bool Compare(ref double a, ref double b) => a == b;
         internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
-            ref var a = ref Utils.RefFieldValue<double>(obj, offset);
+            ref var a = ref RefMagic.RefFieldValue<double>(obj, offset);
             a = Utils.Lerp(*(double*)prev, *(double*)current, fTimer);
         }
         internal override unsafe void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
-            ref var a = ref Utils.RefFieldValue<double>(obj, offset);
+            ref var a = ref RefMagic.RefFieldValue<double>(obj, offset);
             *(double*)tempHistory = a;
             a = Utils.Lerp(*(double*)historyA, *(double*)historyB, lerpTime);
         }
@@ -188,7 +188,7 @@ namespace LiteEntitySystem.Internal
         internal override unsafe bool CompareAndWrite(object obj, int offset, byte* data)
         {
             //skip local ids
-            var sharedRef = Utils.RefFieldValue<EntitySharedReference>(obj, offset);
+            var sharedRef = RefMagic.RefFieldValue<EntitySharedReference>(obj, offset);
             if (sharedRef.IsLocal)
                 sharedRef = null;
             var latestRefPtr = (EntitySharedReference*)data;
@@ -215,13 +215,13 @@ namespace LiteEntitySystem.Internal
 
         internal override void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
-            ref var a = ref Utils.RefFieldValue<T>(obj, offset);
+            ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
             a = _interpDelegate(*(T*)prev, *(T*)current, fTimer);
         }
         
         internal override void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
-            ref var a = ref Utils.RefFieldValue<T>(obj, offset);
+            ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
             *(T*)tempHistory = a;
             a = _interpDelegate != null ? _interpDelegate(*(T*)historyA, *(T*)historyB, lerpTime) : *(T*)historyA;
         }

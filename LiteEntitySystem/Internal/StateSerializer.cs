@@ -165,7 +165,7 @@ namespace LiteEntitySystem.Internal
                     //update only changed fields
                     if (field.FieldType == FieldType.SyncableSyncVar)
                     {
-                        obj = Utils.RefFieldValue<SyncableField>(_entity, field.Offset);
+                        obj = RefMagic.RefFieldValue<SyncableField>(_entity, field.Offset);
                         offset = field.SyncableSyncVarOffset;
                     }
                     else
@@ -226,7 +226,7 @@ namespace LiteEntitySystem.Internal
             CleanPendingRpcs(ref _syncRpcHead, ref _syncRpcTail);
             _rpcMode = RPCMode.Sync;
             for (int i = 0; i < _classData.SyncableFields.Length; i++)
-                Utils.RefFieldValue<SyncableField>(_entity, _classData.SyncableFields[i].Offset)
+                RefMagic.RefFieldValue<SyncableField>(_entity, _classData.SyncableFields[i].Offset)
                     .InternalOnSyncRequested();
             _rpcMode = RPCMode.Normal;
         }

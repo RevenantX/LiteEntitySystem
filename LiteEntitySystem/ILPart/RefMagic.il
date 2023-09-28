@@ -28,17 +28,10 @@
 
 .class public abstract auto ansi sealed beforefieldinit LiteEntitySystem.Internal.RefMagic extends [netstandard]System.Object
 {
-    .method public hidebysig static !!T& RefFieldValueMono<T>(object obj, int32 offs) cil managed aggressiveinlining
+    .method public hidebysig static !!T& RefFieldValue<T>(object obj, int32 offs) cil managed aggressiveinlining
     {
         ldarg obj
-        ldarg offs
-        call native int [netstandard]System.IntPtr::op_Addition(native int, int32)
-        ret
-    }
-
-    .method public hidebysig static !!T& RefFieldValueDotNet<T>(object obj, int32 offs) cil managed aggressiveinlining
-    {
-        ldarg obj
+        conv.i
         ldarg offs
         add
         ret
