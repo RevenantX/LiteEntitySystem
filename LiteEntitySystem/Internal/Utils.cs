@@ -7,8 +7,6 @@ namespace LiteEntitySystem.Internal
 {
     public static class Utils
     {
-        public static readonly bool IsMono;
-        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ResizeIfFull<T>(ref T[] arr, int count)
         {
@@ -135,6 +133,7 @@ namespace LiteEntitySystem.Internal
         */
         
         private static readonly int NativeFieldOffset;
+        private static readonly bool IsMono;
 
         public static int GetFieldOffset(FieldInfo fieldInfo)
         {
