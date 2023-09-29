@@ -40,12 +40,11 @@
     .method public hidebysig static !!T& RefFieldValuePin<T>(object obj, int32 offs) cil managed aggressiveinlining
     {
         .locals init (
-          [0] object pinned V_1
+          [0] object& pinned V_1
         )
         ldarg obj
         stloc.0
         ldloc.0
-        conv.i
         ldarg offs
         add
         ret
