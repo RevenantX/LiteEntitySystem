@@ -107,11 +107,10 @@ namespace LiteEntitySystem.Extensions
         //INetSerializable
         public virtual void Serialize(NetDataWriter writer)
         {
-            if (_resourcePaths == null || _resourcePaths.Length == 0)
-                return;
-            writer.Put((ushort)_resourcePaths.Length);
-            for (int i = 0; i < _resourcePaths.Length; i++)
-                _resourcePaths[i].Serialize(writer);
+            ushort resourcesCount = (ushort)(_resourcePaths?.Length ?? 0);
+            writer.Put(resourcesCount);
+            for (int i = 0; i < resourcesCount; i++)
+                _resourcePaths![i].Serialize(writer);
             writer.Put(_serializedName);
         }
 
