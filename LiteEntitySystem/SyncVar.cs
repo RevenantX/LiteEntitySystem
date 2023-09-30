@@ -16,7 +16,7 @@ namespace LiteEntitySystem
         NeverRollBack       = 1 << 5
     }
     
-    [AttributeUsage(AttributeTargets.Field)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Class)]
     public class SyncVarFlags : Attribute
     {
         internal readonly SyncFlags Flags;
