@@ -143,8 +143,11 @@ namespace LiteEntitySystem.Internal
                 {
                     var ft = field.FieldType;
                     
-                    var syncVarAttribute = field.GetCustomAttribute<SyncVarFlags>();
-                    var syncFlags = syncVarAttribute?.Flags ?? SyncFlags.None;
+                    var syncVarFieldAttribute = field.GetCustomAttribute<SyncVarFlags>();
+                    var syncVarClassAttribute = baseType.GetCustomAttribute<SyncVarFlags>();
+                    var syncFlags = syncVarFieldAttribute?.Flags
+                                 ?? syncVarClassAttribute?.Flags
+                                 ?? SyncFlags.None;
                     int offset = Utils.GetFieldOffset(field);
                     
                     if(IsRemoteCallType(ft))
