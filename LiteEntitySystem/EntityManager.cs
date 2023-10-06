@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using LiteEntitySystem.Extensions;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using LiteEntitySystem.Internal;
-using LiteNetLib;
 using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
@@ -41,7 +40,6 @@ namespace LiteEntitySystem
         private readonly NetPacketProcessor _packetProcessor = new(StringSizeLimit);
         private readonly NetDataWriter _requestWriter = new();
         private RemoteCall<ServerResponse> _serverResponseRpc;
-        private readonly NetPeer _localPeer;
         private ushort _requestId;
         private readonly Queue<(ushort,Action<bool>)> _awaitingRequests;
 
@@ -112,7 +110,7 @@ namespace LiteEntitySystem
             _requestWriter.Put(_requestId);
             _packetProcessor.Write(_requestWriter, request);
             _requestId++;
-            _localPeer.Send(_requestWriter, 0, DeliveryMethod.ReliableOrdered);
+            ClientManager.NetPeer.SendReliableOrdered(new ReadOnlySpan<byte>(_requestWriter.Data, 0, _requestWriter.Length));
         }
         
         protected void SendRequest<T>(T request, Action<bool> onResult) where T : class, new()
@@ -122,7 +120,7 @@ namespace LiteEntitySystem
             _packetProcessor.Write(_requestWriter, request);
             _awaitingRequests.Enqueue((_requestId, onResult));
             _requestId++;
-            _localPeer.Send(_requestWriter, 0, DeliveryMethod.ReliableOrdered);
+            ClientManager.NetPeer.SendReliableOrdered(new ReadOnlySpan<byte>(_requestWriter.Data, 0, _requestWriter.Length));
         }
         
         protected void SendRequestStruct<T>(T request) where T : struct, INetSerializable
@@ -131,7 +129,7 @@ namespace LiteEntitySystem
             _requestWriter.Put(_requestId);
             _packetProcessor.WriteNetSerializable(_requestWriter, ref request);
             _requestId++;
-            _localPeer.Send(_requestWriter, 0, DeliveryMethod.ReliableOrdered);
+            ClientManager.NetPeer.SendReliableOrdered(new ReadOnlySpan<byte>(_requestWriter.Data, 0, _requestWriter.Length));
         }
         
         protected void SendRequestStruct<T>(T request, Action<bool> onResult) where T : struct, INetSerializable
@@ -141,7 +139,7 @@ namespace LiteEntitySystem
             _packetProcessor.WriteNetSerializable(_requestWriter, ref request);
             _awaitingRequests.Enqueue((_requestId, onResult));
             _requestId++;
-            _localPeer.Send(_requestWriter, 0, DeliveryMethod.ReliableOrdered);
+            ClientManager.NetPeer.SendReliableOrdered(new ReadOnlySpan<byte>(_requestWriter.Data, 0, _requestWriter.Length));
         }
         
         protected void SubscribeToClientRequestStruct<T>(Action<T> onRequestReceived) where T : struct, INetSerializable
@@ -184,7 +182,6 @@ namespace LiteEntitySystem
         {
             if (EntityManager.IsClient)
             {
-                _localPeer = ClientManager.LocalPlayer.Peer;
                 _awaitingRequests = new Queue<(ushort, Action<bool>)>();
             }
             _requestWriter.Put(EntityManager.HeaderByte);

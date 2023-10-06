@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using K4os.Compression.LZ4;
 using LiteEntitySystem.Internal;
+using LiteEntitySystem.Transport;
 using LiteNetLib;
-using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
 {
@@ -62,11 +62,13 @@ namespace LiteEntitySystem
         /// States count in interpolation buffer
         /// </summary>
         public int LerpBufferCount => _readyStates.Count;
+
+        public AbstractNetPeer NetPeer => _netPeer;
         
         private const int InputBufferSize = 128;
 
         private readonly EntityFilter<InternalEntity> _predictedEntityFilter = new();
-        private readonly NetPeer _localPeer;
+        private readonly AbstractNetPeer _netPeer;
         private readonly Queue<ServerStateData> _statesPool = new(MaxSavedStateDiff);
         private readonly Dictionary<ushort, ServerStateData> _receivedStates = new();
         private readonly SequenceBinaryHeap<ServerStateData> _readyStates = new(MaxSavedStateDiff);
@@ -121,17 +123,17 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="typesMap">EntityTypesMap with registered entity types</param>
         /// <param name="inputProcessor">Input processor (you can use default InputProcessor/<T/> or derive from abstract one to make your own input serialization</param>
-        /// <param name="localPeer">Local NetPeer</param>
+        /// <param name="netPeer">Local AbstractPeer</param>
         /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
         /// <param name="framesPerSecond">Fixed framerate of game logic</param>
         public ClientEntityManager(
             EntityTypesMap typesMap, 
             InputProcessor inputProcessor, 
-            NetPeer localPeer, 
+            AbstractNetPeer netPeer, 
             byte headerByte, 
             byte framesPerSecond) : base(typesMap, inputProcessor, NetworkMode.Client, framesPerSecond, headerByte)
         {
-            _localPeer = localPeer;
+            _netPeer = netPeer;
             _sendBuffer[0] = headerByte;
             _sendBuffer[1] = InternalPackets.ClientInput;
 
@@ -176,40 +178,21 @@ namespace LiteEntitySystem
             }
         }
 
-        /// <summary>
-        /// Read incoming data in case of first byte is == headerByte
-        /// </summary>
-        /// <param name="reader">Reader with data (will be recycled inside, also works with autorecycle)</param>
-        /// <returns>true if first byte is == headerByte</returns>
-        public bool DeserializeWithHeaderCheck(NetDataReader reader)
+        /// Read incoming data
+        /// <param name="inData">Data</param>
+        /// <param name="checkHeaderByte">Read incoming data only in case of first byte is == headerByte</param>
+        public unsafe bool Deserialize(ReadOnlySpan<byte> inData, bool checkHeaderByte)
         {
-            if (reader.PeekByte() == _sendBuffer[0])
+            if (checkHeaderByte)
             {
-                reader.SkipBytes(1);
-                Deserialize(reader);
-                return true;
+                if (inData[0] != HeaderByte)
+                    return false;
+                inData = inData.Slice(1);
             }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Read incoming data omitting header byte
-        /// </summary>
-        /// <param name="reader">NetDataReader with data</param>
-        public unsafe void Deserialize(NetDataReader reader)
-        {
-            fixed (byte* rawData = reader.RawData)
-                Deserialize(rawData + reader.UserDataOffset, reader.UserDataSize);
-        }
-        
-        private unsafe void Deserialize(byte* rawData, int size)
-        {
-            byte packetType = rawData[1];
-            if(packetType == InternalPackets.BaselineSync)
+            if(inData[0] == InternalPackets.BaselineSync)
             {
-                if (size < sizeof(BaselineDataHeader) + 2)
-                    return;
+                if (inData.Length < sizeof(BaselineDataHeader) + 2)
+                    return true;
                 _entitiesToConstructCount = 0;
                 _syncCallsCount = 0;
                 //read header and decode
@@ -238,7 +221,7 @@ namespace LiteEntitySystem
                 _stateA.Size = header.OriginalLength;
                 _stateA.Data = new byte[header.OriginalLength];
                 InternalPlayerId = header.PlayerId;
-                _localPlayer = new NetPlayer(_localPeer, InternalPlayerId);
+                _localPlayer = new NetPlayer(_netPeer, InternalPlayerId);
 
                 fixed (byte* stateData = _stateA.Data)
                 {
@@ -250,7 +233,7 @@ namespace LiteEntitySystem
                     if (decodedBytes != header.OriginalLength)
                     {
                         Logger.LogError("Error on decompress");
-                        return;
+                        return true;
                     }
                     int bytesRead = 0;
                     while (bytesRead < _stateA.Size)
@@ -262,12 +245,12 @@ namespace LiteEntitySystem
                         if (entityId == InvalidEntityId || entityId >= MaxSyncedEntityCount)
                         {
                             Logger.LogError($"Bad data (id > {MaxSyncedEntityCount} or Id == 0) Id: {entityId}");
-                            return;
+                            return true;
                         }
 
                         ReadEntityState(stateData, ref bytesRead, entityId, true, true);
                         if (bytesRead == -1)
-                            return;
+                            return true;
                     }
                 }
                 ServerTick = _stateA.Tick;
@@ -281,13 +264,13 @@ namespace LiteEntitySystem
             else
             {
                 if (size < sizeof(DiffPartHeader) + 2)
-                    return;
+                    return true;
                 var diffHeader = *(DiffPartHeader*)rawData;
                 int tickDifference = Utils.SequenceDiff(diffHeader.Tick, _lastReadyTick);
                 if (tickDifference <= 0)
                 {
                     //old state
-                    return;
+                    return true;
                 }
                 
                 //sample jitter
@@ -331,6 +314,7 @@ namespace LiteEntitySystem
                     PreloadNextState();
                 }
             }
+            return true;
         }
 
         private bool PreloadNextState()
@@ -639,7 +623,7 @@ namespace LiteEntitySystem
             {
                 //pack tick first
                 int offset = 4;
-                int maxSinglePacketSize = _localPeer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable);
+                int maxSinglePacketSize = _netPeer.GetMaxUnreliablePacketSize();
                 
                 fixed (byte* sendBuffer = _sendBuffer)
                 {
@@ -662,7 +646,7 @@ namespace LiteEntitySystem
                             {
                                 prevCommand = null;
                                 *(ushort*)(sendBuffer + 2) = currentTick;
-                                _localPeer.Send(_sendBuffer, 0, offset, DeliveryMethod.Unreliable);
+                                _netPeer.SendUnreliable(new ReadOnlySpan<byte>(_sendBuffer, 0, offset));
                                 offset = 4;
                                 currentTick += tickIndex;
                                 tickIndex = 0;
@@ -693,8 +677,8 @@ namespace LiteEntitySystem
                             break;
                     }
                     *(ushort*)(sendBuffer + 2) = currentTick;
-                    _localPeer.Send(_sendBuffer, 0, offset, DeliveryMethod.Unreliable);
-                    _localPeer.NetManager.TriggerUpdate();
+                    _netPeer.SendUnreliable(new ReadOnlySpan<byte>(_sendBuffer, 0, offset));
+                    _netPeer.TriggerSend();
                 }
             }
             
