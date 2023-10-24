@@ -26,6 +26,7 @@ namespace LiteEntitySystem.Internal
         private const int HeaderSize = 5;
         private const int TicksToDestroy = 32;
         public const int DiffHeaderSize = 4;
+        public const int MaxStateSize = 32767; //half of ushort
 
         private byte _version;
         private EntityClassData _classData;
@@ -186,7 +187,7 @@ namespace LiteEntitySystem.Internal
         {
             if (_state != SerializerState.Active)
                 return;
-            if (instantly)
+            if (instantly || serverTick == _versionChangedTick)
             {
                 _state = SerializerState.Freed;
                 return;
@@ -287,6 +288,7 @@ namespace LiteEntitySystem.Internal
                 _state = SerializerState.Freed;
                 return DiffResult.DoneAndDestroy;
             }
+            
             Write(serverTick, minimalTick);
             if (_controllerOwner != EntityManager.ServerPlayerId && playerId != _controllerOwner)
                 return DiffResult.Skip;
@@ -396,6 +398,12 @@ namespace LiteEntitySystem.Internal
             //write totalSize
             int resultSize = position - startPos;
             //Logger.Log($"rsz: {resultSize} e: {_entity.GetType()} eid: {_entity.Id}");
+            if (resultSize > MaxStateSize)
+            {
+                position = startPos;
+                Logger.LogError($"Entity {_entity.Id}, Class: {_entity.ClassId} state size is more than: {MaxStateSize}");
+                return DiffResult.Skip;
+            }
             *fieldFlagAndSize |= (ushort)(resultSize << 1);
             return DiffResult.Done;
         }

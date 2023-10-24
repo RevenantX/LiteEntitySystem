@@ -42,7 +42,7 @@ namespace LiteEntitySystem
         private readonly Queue<RemoteCallPacket> _rpcPool = new();
         private readonly Queue<byte[]> _inputPool = new();
         private readonly Queue<NetDataReader> _pendingClientRequests = new();
-        private byte[] _packetBuffer = new byte[(MaxParts+1) * NetConstants.MaxPacketSize];
+        private byte[] _packetBuffer = new byte[(MaxParts+1) * NetConstants.MaxPacketSize + StateSerializer.MaxStateSize];
         private readonly NetPlayer[] _netPlayersArray = new NetPlayer[MaxPlayers];
         private readonly NetPlayer[] _netPlayersDict = new NetPlayer[MaxPlayers+1];
         private readonly StateSerializer[] _stateSerializers = new StateSerializer[MaxSyncedEntityCount];

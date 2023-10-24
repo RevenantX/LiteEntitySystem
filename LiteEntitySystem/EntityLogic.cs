@@ -156,7 +156,7 @@ namespace LiteEntitySystem
         public int GetFrameSeed()
         {
             return EntityManager.IsClient
-                ? (EntityManager.InRollBackState ? ClientManager.RollBackTick : (ushort)(EntityManager.Tick + 1)) 
+                ? (EntityManager.InRollBackState ? ClientManager.RollBackTick : EntityManager.Tick) 
                 : (InternalOwnerId == EntityManager.ServerPlayerId ? EntityManager.Tick : ServerManager.GetPlayer(InternalOwnerId).LastProcessedTick);
         }
         
