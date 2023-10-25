@@ -438,7 +438,14 @@ namespace LiteEntitySystem
                     _localPlayer.LerpTime = header.LerpMsec;
                 }
                 RollBackTick = inputCommand.Tick;
-                InputProcessor.ReadInput(this, _localPlayer.Id, inputCommand.Data[sizeof(InputPacketHeader)..]);
+                InputProcessor.ReadInput(
+                    this,
+                    _localPlayer.Id, 
+                    new ReadOnlySpan<byte>(
+                        inputCommand.Data,
+                        InputPacketHeader.Size, 
+                        inputCommand.Data.Length-InputPacketHeader.Size));
+                
                 foreach (var entity in AliveEntities)
                 {
                     if(entity.IsLocal || !entity.IsLocalControlled)
@@ -507,10 +514,13 @@ namespace LiteEntitySystem
             };
             fixed(byte* writerData = inputWriter)
                 *(InputPacketHeader*)writerData = inputHeader;
-            InputProcessor.GenerateAndWriteInput(this, _localPlayer.Id, inputWriter, sizeof(InputPacketHeader));
+            InputProcessor.GenerateAndWriteInput(this, _localPlayer.Id, inputWriter, InputPacketHeader.Size);
 
             //read
-            InputProcessor.ReadInput(this, _localPlayer.Id, inputWriter[sizeof(InputPacketHeader)..]);
+            InputProcessor.ReadInput(
+                this,
+                _localPlayer.Id,
+                new ReadOnlySpan<byte>(inputWriter, InputPacketHeader.Size, inputWriter.Length - InputPacketHeader.Size));
             _inputCommands.Enqueue(new InputCommand(_tick, inputWriter));
 
             //local only and UpdateOnClient
@@ -643,7 +653,7 @@ namespace LiteEntitySystem
                         if(prevCommand != null)//make delta
                         {
                             //overflow
-                            if (offset + sizeof(InputPacketHeader) + InputProcessor.MaxDeltaSize > maxSinglePacketSize)
+                            if (offset + InputPacketHeader.Size + InputProcessor.MaxDeltaSize > maxSinglePacketSize)
                             {
                                 prevCommand = null;
                                 *(ushort*)(sendBuffer + 2) = currentTick;
@@ -656,12 +666,12 @@ namespace LiteEntitySystem
                             {
                                 //put header
                                 fixed (byte* inputData = inputCommand.Data)
-                                    RefMagic.CopyBlock(sendBuffer + offset, inputData, (uint)sizeof(InputPacketHeader));
-                                offset += sizeof(InputPacketHeader);
+                                    RefMagic.CopyBlock(sendBuffer + offset, inputData, (uint)InputPacketHeader.Size);
+                                offset += InputPacketHeader.Size;
                                 //put delta
                                 offset += InputProcessor.DeltaEncode(
-                                    prevCommand[sizeof(InputPacketHeader)..], 
-                                    inputCommand.Data[sizeof(InputPacketHeader)..], 
+                                    new ReadOnlySpan<byte>(prevCommand, InputPacketHeader.Size, prevCommand.Length - InputPacketHeader.Size), 
+                                    new ReadOnlySpan<byte>(inputCommand.Data, InputPacketHeader.Size, inputCommand.Data.Length - InputPacketHeader.Size), 
                                     new Span<byte>(sendBuffer + offset, InputProcessor.MaxDeltaSize));
                             }
                         }
