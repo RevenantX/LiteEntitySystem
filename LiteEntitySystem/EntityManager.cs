@@ -42,6 +42,13 @@ namespace LiteEntitySystem
         PredictionRollback
     }
     
+    public enum DeserializeResult
+    {
+        Done,
+        Error,
+        HeaderCheckFailed
+    }
+    
     public enum MaxHistorySize : byte
     {
         Size16 = 16,

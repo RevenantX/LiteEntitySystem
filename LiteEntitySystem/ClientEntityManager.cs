@@ -193,140 +193,152 @@ namespace LiteEntitySystem
         /// Read incoming data
         /// <param name="inData">Data</param>
         /// <param name="checkHeaderByte">Read incoming data only in case of first byte is == headerByte</param>
-        public unsafe bool Deserialize(ReadOnlySpan<byte> inData, bool checkHeaderByte)
+        public unsafe DeserializeResult Deserialize(ReadOnlySpan<byte> inData, bool checkHeaderByte)
         {
             if (checkHeaderByte)
             {
                 if (inData[0] != HeaderByte)
-                    return false;
+                    return DeserializeResult.HeaderCheckFailed;
                 inData = inData.Slice(1);
             }
-            if(inData[0] == InternalPackets.BaselineSync)
+
+            fixed (byte* rawData = inData)
             {
-                if (inData.Length < sizeof(BaselineDataHeader) + 2)
-                    return true;
-                _entitiesToConstructCount = 0;
-                _syncCallsCount = 0;
-                //read header and decode
-                int decodedBytes;
-                var header = *(BaselineDataHeader*)rawData;
-                _serverSendRate = (ServerSendRate)header.SendRate;
-                
-                //reset pooled
-                if (_stateB != null)
+                if (inData[0] == InternalPackets.BaselineSync)
                 {
-                    _statesPool.Enqueue(_stateB);
-                    _stateB = null;
-                }
-                while (_readyStates.Count > 0)
-                {
-                    _statesPool.Enqueue(_readyStates.ExtractMin());
-                }
-                foreach (var stateData in _receivedStates.Values)
-                {
-                    _statesPool.Enqueue(stateData);
-                }
-                _receivedStates.Clear();
+                    if (inData.Length < sizeof(BaselineDataHeader) + 2)
+                        return DeserializeResult.Error;
+                    _entitiesToConstructCount = 0;
+                    _syncCallsCount = 0;
+                    //read header and decode
+                    int decodedBytes;
+                    var header = *(BaselineDataHeader*)rawData;
+                    _serverSendRate = (ServerSendRate)header.SendRate;
 
-                _stateA ??= _statesPool.Dequeue();
-                _stateA.Reset(header.Tick);
-                _stateA.Size = header.OriginalLength;
-                _stateA.Data = new byte[header.OriginalLength];
-                InternalPlayerId = header.PlayerId;
-                _localPlayer = new NetPlayer(_netPeer, InternalPlayerId);
-
-                fixed (byte* stateData = _stateA.Data)
-                {
-                    decodedBytes = LZ4Codec.Decode(
-                        rawData + sizeof(BaselineDataHeader),
-                        size - sizeof(BaselineDataHeader),
-                        stateData,
-                        _stateA.Size);
-                    if (decodedBytes != header.OriginalLength)
+                    //reset pooled
+                    if (_stateB != null)
                     {
-                        Logger.LogError("Error on decompress");
-                        return true;
+                        _statesPool.Enqueue(_stateB);
+                        _stateB = null;
                     }
-                    int bytesRead = 0;
-                    while (bytesRead < _stateA.Size)
+
+                    while (_readyStates.Count > 0)
                     {
-                        ushort entityId = *(ushort*)(stateData + bytesRead);
-                        //Logger.Log($"[CEM] ReadBaseline Entity: {entityId} pos: {bytesRead}");
-                        bytesRead += sizeof(ushort);
-                        
-                        if (entityId == InvalidEntityId || entityId >= MaxSyncedEntityCount)
+                        _statesPool.Enqueue(_readyStates.ExtractMin());
+                    }
+
+                    foreach (var stateData in _receivedStates.Values)
+                    {
+                        _statesPool.Enqueue(stateData);
+                    }
+
+                    _receivedStates.Clear();
+
+                    _stateA ??= _statesPool.Dequeue();
+                    _stateA.Reset(header.Tick);
+                    _stateA.Size = header.OriginalLength;
+                    _stateA.Data = new byte[header.OriginalLength];
+                    InternalPlayerId = header.PlayerId;
+                    _localPlayer = new NetPlayer(_netPeer, InternalPlayerId);
+
+                    fixed (byte* stateData = _stateA.Data)
+                    {
+                        decodedBytes = LZ4Codec.Decode(
+                            rawData + sizeof(BaselineDataHeader),
+                            inData.Length - sizeof(BaselineDataHeader),
+                            stateData,
+                            _stateA.Size);
+                        if (decodedBytes != header.OriginalLength)
                         {
-                            Logger.LogError($"Bad data (id > {MaxSyncedEntityCount} or Id == 0) Id: {entityId}");
-                            return true;
+                            Logger.LogError("Error on decompress");
+                            return DeserializeResult.Error;
                         }
 
-                        ReadEntityState(stateData, ref bytesRead, entityId, true, true);
-                        if (bytesRead == -1)
-                            return true;
-                    }
-                }
-                ServerTick = _stateA.Tick;
-                _lastReadyTick = ServerTick;
-                _inputCommands.Clear();
-                _isSyncReceived = true;
-                _jitterTimer.Restart();
-                ConstructAndSync(true);
-                Logger.Log($"[CEM] Got baseline sync. Assigned player id: {header.PlayerId}, Original: {decodedBytes}, Tick: {header.Tick}, SendRate: {_serverSendRate}");
-            }
-            else
-            {
-                if (size < sizeof(DiffPartHeader) + 2)
-                    return true;
-                var diffHeader = *(DiffPartHeader*)rawData;
-                int tickDifference = Utils.SequenceDiff(diffHeader.Tick, _lastReadyTick);
-                if (tickDifference <= 0)
-                {
-                    //old state
-                    return true;
-                }
-                
-                //sample jitter
-                _jitterSamples[_jitterSampleIdx] = _jitterTimer.ElapsedMilliseconds / 1000f;
-                _jitterSampleIdx = (_jitterSampleIdx + 1) % _jitterSamples.Length;
-                //reset timer
-                _jitterTimer.Reset();
+                        int bytesRead = 0;
+                        while (bytesRead < _stateA.Size)
+                        {
+                            ushort entityId = *(ushort*)(stateData + bytesRead);
+                            //Logger.Log($"[CEM] ReadBaseline Entity: {entityId} pos: {bytesRead}");
+                            bytesRead += sizeof(ushort);
 
-                if (!_receivedStates.TryGetValue(diffHeader.Tick, out var serverState))
-                {
-                    if (_statesPool.Count == 0)
-                    {
-                        serverState = new ServerStateData { Tick = diffHeader.Tick };
+                            if (entityId == InvalidEntityId || entityId >= MaxSyncedEntityCount)
+                            {
+                                Logger.LogError($"Bad data (id > {MaxSyncedEntityCount} or Id == 0) Id: {entityId}");
+                                return DeserializeResult.Error;
+                            }
+
+                            ReadEntityState(stateData, ref bytesRead, entityId, true, true);
+                            if (bytesRead == -1)
+                                return DeserializeResult.Error;
+                        }
                     }
-                    else
-                    {
-                        serverState = _statesPool.Dequeue();
-                        serverState.Reset(diffHeader.Tick);
-                    }
-                    
-                    _receivedStates.Add(diffHeader.Tick, serverState);
+
+                    ServerTick = _stateA.Tick;
+                    _lastReadyTick = ServerTick;
+                    _inputCommands.Clear();
+                    _isSyncReceived = true;
+                    _jitterTimer.Restart();
+                    ConstructAndSync(true);
+                    Logger.Log($"[CEM] Got baseline sync. Assigned player id: {header.PlayerId}, Original: {decodedBytes}, Tick: {header.Tick}, SendRate: {_serverSendRate}");
                 }
-                if(serverState.ReadPart(diffHeader, rawData, size))
+                else
                 {
-                    //if(serverState.TotalPartsCount > 1)
-                    //    Logger.Log($"Parts: {serverState.TotalPartsCount}");
-                    if (Utils.SequenceDiff(serverState.LastReceivedTick, _lastReceivedInputTick) > 0)
-                        _lastReceivedInputTick = serverState.LastReceivedTick;
-                    if (Utils.SequenceDiff(serverState.Tick, _lastReadyTick) > 0)
-                        _lastReadyTick = serverState.Tick;
-                    _receivedStates.Remove(serverState.Tick);
-                    
-                    if (_readyStates.Count == MaxSavedStateDiff)
+                    if (inData.Length < sizeof(DiffPartHeader) + 2)
+                        return DeserializeResult.Error;
+                    var diffHeader = *(DiffPartHeader*)rawData;
+                    int tickDifference = Utils.SequenceDiff(diffHeader.Tick, _lastReadyTick);
+                    if (tickDifference <= 0)
                     {
-                        //one state should be already preloaded
-                        _timer = _lerpTime;
-                        //fast-forward
-                        GoToNextState();
+                        //old state
+                        return DeserializeResult.Done;
                     }
-                    _readyStates.Add(serverState, serverState.Tick);
-                    PreloadNextState();
+
+                    //sample jitter
+                    _jitterSamples[_jitterSampleIdx] = _jitterTimer.ElapsedMilliseconds / 1000f;
+                    _jitterSampleIdx = (_jitterSampleIdx + 1) % _jitterSamples.Length;
+                    //reset timer
+                    _jitterTimer.Reset();
+
+                    if (!_receivedStates.TryGetValue(diffHeader.Tick, out var serverState))
+                    {
+                        if (_statesPool.Count == 0)
+                        {
+                            serverState = new ServerStateData { Tick = diffHeader.Tick };
+                        }
+                        else
+                        {
+                            serverState = _statesPool.Dequeue();
+                            serverState.Reset(diffHeader.Tick);
+                        }
+
+                        _receivedStates.Add(diffHeader.Tick, serverState);
+                    }
+
+                    if (serverState.ReadPart(diffHeader, rawData, inData.Length))
+                    {
+                        //if(serverState.TotalPartsCount > 1)
+                        //    Logger.Log($"Parts: {serverState.TotalPartsCount}");
+                        if (Utils.SequenceDiff(serverState.LastReceivedTick, _lastReceivedInputTick) > 0)
+                            _lastReceivedInputTick = serverState.LastReceivedTick;
+                        if (Utils.SequenceDiff(serverState.Tick, _lastReadyTick) > 0)
+                            _lastReadyTick = serverState.Tick;
+                        _receivedStates.Remove(serverState.Tick);
+
+                        if (_readyStates.Count == MaxSavedStateDiff)
+                        {
+                            //one state should be already preloaded
+                            _timer = _lerpTime;
+                            //fast-forward
+                            GoToNextState();
+                        }
+
+                        _readyStates.Add(serverState, serverState.Tick);
+                        PreloadNextState();
+                    }
                 }
             }
-            return true;
+
+            return DeserializeResult.Done;
         }
 
         private bool PreloadNextState()
