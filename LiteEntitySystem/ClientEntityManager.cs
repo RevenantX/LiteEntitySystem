@@ -191,20 +191,15 @@ namespace LiteEntitySystem
         }
 
         /// Read incoming data
-        /// <param name="inData">Data</param>
-        /// <param name="checkHeaderByte">Read incoming data only in case of first byte is == headerByte</param>
-        public unsafe DeserializeResult Deserialize(ReadOnlySpan<byte> inData, bool checkHeaderByte)
+        /// <param name="inData">Incoming data including header byte</param>
+        /// <returns>Deserialization result</returns>
+        public unsafe DeserializeResult Deserialize(ReadOnlySpan<byte> inData)
         {
-            if (checkHeaderByte)
-            {
-                if (inData[0] != HeaderByte)
-                    return DeserializeResult.HeaderCheckFailed;
-                inData = inData.Slice(1);
-            }
-
+            if (inData[0] != HeaderByte)
+                return DeserializeResult.HeaderCheckFailed;
             fixed (byte* rawData = inData)
             {
-                if (inData[0] == InternalPackets.BaselineSync)
+                if (inData[1] == InternalPackets.BaselineSync)
                 {
                     if (inData.Length < sizeof(BaselineDataHeader) + 2)
                         return DeserializeResult.Error;
@@ -213,6 +208,8 @@ namespace LiteEntitySystem
                     //read header and decode
                     int decodedBytes;
                     var header = *(BaselineDataHeader*)rawData;
+                    if (header.OriginalLength <= 0)
+                        return DeserializeResult.Error;
                     _serverSendRate = (ServerSendRate)header.SendRate;
 
                     //reset pooled

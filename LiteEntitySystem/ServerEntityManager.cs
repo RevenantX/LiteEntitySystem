@@ -241,25 +241,21 @@ namespace LiteEntitySystem
         /// Read data for player linked to AbstractNetPeer
         /// </summary>
         /// <param name="peer">Player that sent input</param>
-        /// <param name="inData">incoming data</param>
-        /// <param name="checkHeaderByte">Read incoming data only in case of first byte is == headerByte</param>
-        public DeserializeResult Deserialize(AbstractNetPeer peer, ReadOnlySpan<byte> inData, bool checkHeaderByte) =>
-            Deserialize(peer.AssignedPlayer, inData, checkHeaderByte);
+        /// <param name="inData">incoming data with header</param>
+        public DeserializeResult Deserialize(AbstractNetPeer peer, ReadOnlySpan<byte> inData) =>
+            Deserialize(peer.AssignedPlayer, inData);
 
         /// <summary>
         /// Read data from NetPlayer
         /// </summary>
         /// <param name="player">Player that sent input</param>
-        /// <param name="inData">incoming data</param>
-        /// <param name="checkHeaderByte">Read incoming data in case of first byte is == headerByte</param>
-        public unsafe DeserializeResult Deserialize(NetPlayer player, ReadOnlySpan<byte> inData, bool checkHeaderByte)
+        /// <param name="inData">incoming data with header</param>
+        public unsafe DeserializeResult Deserialize(NetPlayer player, ReadOnlySpan<byte> inData)
         {
-            if (checkHeaderByte)
-            {
-                if (inData[0] != HeaderByte)
-                    return DeserializeResult.HeaderCheckFailed;
-                inData = inData.Slice(1);
-            }
+            if (inData[0] != HeaderByte)
+                return DeserializeResult.HeaderCheckFailed;
+            inData = inData.Slice(1);
+            
             if (inData.Length < 3)
             {
                 Logger.LogWarning($"Invalid data received. Length < 3: {inData.Length}");
