@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using LiteEntitySystem.Extensions;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
@@ -39,6 +40,13 @@ namespace LiteEntitySystem
     {
         Normal,
         PredictionRollback
+    }
+    
+    public enum DeserializeResult
+    {
+        Done,
+        Error,
+        HeaderCheckFailed
     }
     
     public enum MaxHistorySize : byte

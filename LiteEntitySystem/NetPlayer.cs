@@ -1,12 +1,12 @@
 ﻿using LiteEntitySystem.Internal;
-using LiteNetLib;
+using LiteEntitySystem.Transport;
 
 namespace LiteEntitySystem
 {
     public class NetPlayer
     {
         public readonly byte Id;
-        public readonly NetPeer Peer;
+        public readonly AbstractNetPeer Peer;
         
         internal ushort LastProcessedTick;
         internal ushort LastReceivedTick;
@@ -19,10 +19,10 @@ namespace LiteEntitySystem
         internal int ArrayIndex;
         internal readonly SequenceBinaryHeap<InputBuffer> AvailableInput = new (ServerEntityManager.MaxStoredInputs);
 
-        internal NetPlayer(NetPeer peer, byte id)
+        internal NetPlayer(AbstractNetPeer peer, byte id)
         {
-            Peer = peer;
             Id = id;
+            Peer = peer;
         }
     }
 }

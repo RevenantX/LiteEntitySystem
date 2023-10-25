@@ -1,8 +1,11 @@
 using System;
 using System.Globalization;
 
-namespace LiteEntitySystem
+namespace LiteEntitySystem.Extensions
 {
+    /// <summary>
+    /// Float angle in degress with correct interpolation and overlaps
+    /// </summary>
     public struct FloatAngle
     {
         public const float PI = (float)Math.PI;
@@ -75,6 +78,11 @@ namespace LiteEntitySystem
             if (num > 180.0)
                 num -= 360f;
             return a + num * t;
+        }
+
+        public static FloatAngle FromRadians(float inputRotation)
+        {
+            return new FloatAngle(inputRotation * Rad2Deg);
         }
     }
 }

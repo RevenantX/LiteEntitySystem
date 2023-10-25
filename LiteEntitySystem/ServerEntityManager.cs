@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using K4os.Compression.LZ4;
 using LiteNetLib;
 using LiteEntitySystem.Internal;
+using LiteEntitySystem.Transport;
 using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
@@ -34,17 +35,19 @@ namespace LiteEntitySystem
     /// </summary>
     public sealed class ServerEntityManager : EntityManager
     {
+        public const int MaxStoredInputs = 30;
+        
         private readonly Queue<ushort> _entityIdQueue = new(MaxSyncedEntityCount);
         private readonly Queue<byte> _playerIdQueue = new(MaxPlayers);
         private readonly Queue<RemoteCallPacket> _rpcPool = new();
         private readonly Queue<byte[]> _inputPool = new();
-        private readonly Queue<NetDataReader> _pendingClientRequests = new();
+        private readonly Queue<byte[]> _pendingClientRequests = new();
         private byte[] _packetBuffer = new byte[(MaxParts+1) * NetConstants.MaxPacketSize + StateSerializer.MaxStateSize];
         private readonly NetPlayer[] _netPlayersArray = new NetPlayer[MaxPlayers];
         private readonly NetPlayer[] _netPlayersDict = new NetPlayer[MaxPlayers+1];
         private readonly StateSerializer[] _stateSerializers = new StateSerializer[MaxSyncedEntityCount];
-        public const int MaxStoredInputs = 30;
-
+        private readonly byte[] _inputDecodeBuffer = new byte[NetConstants.MaxUnreliableDataSize];
+        private readonly NetDataReader _requestsReader = new();
         private byte[] _compressionBuffer = new byte[4096];
         private int _netPlayersCount;
 
@@ -89,10 +92,9 @@ namespace LiteEntitySystem
         /// <summary>
         /// Create and add new player
         /// </summary>
-        /// <param name="peer">NetPeer to use</param>
-        /// <param name="assignToTag">assign new player to NetPeer.Tag for usability</param>
+        /// <param name="peer">AbstractPeer to use</param>
         /// <returns>Newly created player, null if players count is maximum</returns>
-        public NetPlayer AddPlayer(NetPeer peer, bool assignToTag)
+        public NetPlayer AddPlayer(AbstractNetPeer peer)
         {
             if (_netPlayersCount == MaxPlayers)
                 return null;
@@ -100,8 +102,7 @@ namespace LiteEntitySystem
             _netPlayersDict[player.Id] = player;
             player.ArrayIndex = _netPlayersCount;
             _netPlayersArray[_netPlayersCount++] = player;
-            if (assignToTag)
-                peer.Tag = player;
+            peer.AssignedPlayer = player;
             return player;
         }
 
@@ -110,11 +111,10 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="player">player to remove</param>
         /// <returns>true if player removed successfully, false if player not found</returns>
-        public bool RemovePlayerFromPeerTag(NetPeer player)
+        public bool RemovePlayer(AbstractNetPeer player)
         {
-            return RemovePlayer(player.Tag as NetPlayer);
+            return RemovePlayer(player.AssignedPlayer);
         }
-
         /// <summary>
         /// Remove player and it's owned entities
         /// </summary>
@@ -145,9 +145,9 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="player">player</param>
         /// <returns>Instance if found, null if not</returns>
-        public ControllerLogic GetPlayerController(NetPeer player)
+        public ControllerLogic GetPlayerController(AbstractNetPeer player)
         {
-            return GetPlayerController(player.Tag as NetPlayer);
+            return GetPlayerController(player.AssignedPlayer);
         }
         
         /// <summary>
@@ -236,121 +236,88 @@ namespace LiteEntitySystem
             entity.SetParent(parent);
             return entity;
         }
-        
+
         /// <summary>
-        /// Read data from NetPeer with assigned NetPlayer to NetPeer.Tag
+        /// Read data for player linked to AbstractNetPeer
         /// </summary>
         /// <param name="peer">Player that sent input</param>
-        /// <param name="reader">Reader with data</param>
-        public void Deserialize(NetPeer peer, NetDataReader reader)
-        {
-            Deserialize((NetPlayer)peer.Tag, reader);
-        }
+        /// <param name="inData">incoming data with header</param>
+        public DeserializeResult Deserialize(AbstractNetPeer peer, ReadOnlySpan<byte> inData) =>
+            Deserialize(peer.AssignedPlayer, inData);
 
-        /// <summary>
-        /// Read incoming data in case of first byte is == headerByte
-        /// </summary>
-        /// <param name="player">Player that sent input</param>
-        /// <param name="reader">Reader with data</param>
-        /// <returns>true if first byte is == headerByte</returns>
-        public bool DeserializeWithHeaderCheck(NetPlayer player, NetDataReader reader)
-        {
-            if (reader.PeekByte() == HeaderByte)
-            {
-                reader.SkipBytes(1);
-                Deserialize(player, reader);
-                return true;
-            }
-
-            return false;
-        }
-        
-        /// <summary>
-        /// Read incoming data in case of first byte is == headerByte from NetPeer with assigned NetPlayer to NetPeer.Tag
-        /// </summary>
-        /// <param name="peer">Player that sent input</param>
-        /// <param name="reader">Reader with data</param>
-        /// <returns>true if first byte is == headerByte</returns>
-        public bool DeserializeWithHeaderCheck(NetPeer peer, NetDataReader reader)
-        {
-            if (reader.PeekByte() == HeaderByte)
-            {
-                reader.SkipBytes(1);
-                Deserialize((NetPlayer)peer.Tag, reader);
-                return true;
-            }
-
-            return false;
-        }
-        
-        private readonly byte[] _inputDecodeBuffer = new byte[NetConstants.MaxUnreliableDataSize];
-        
         /// <summary>
         /// Read data from NetPlayer
         /// </summary>
         /// <param name="player">Player that sent input</param>
-        /// <param name="reader">Reader with data</param>
-        public unsafe void Deserialize(NetPlayer player, NetDataReader reader)
+        /// <param name="inData">incoming data with header</param>
+        public unsafe DeserializeResult Deserialize(NetPlayer player, ReadOnlySpan<byte> inData)
         {
-            if (reader.AvailableBytes < 3)
+            if (inData[0] != HeaderByte)
+                return DeserializeResult.HeaderCheckFailed;
+            inData = inData.Slice(1);
+            
+            if (inData.Length < 3)
             {
-                Logger.LogWarning($"Invalid data received: {reader.AvailableBytes}");
-                return;
+                Logger.LogWarning($"Invalid data received. Length < 3: {inData.Length}");
+                return DeserializeResult.Error;
             }
-            byte packetType = reader.GetByte();
+            byte packetType = inData[0];
+            inData = inData.Slice(1);
             if (packetType == InternalPackets.ClientRequest)
             {
-                _pendingClientRequests.Enqueue(new NetDataReader(reader.GetRemainingBytes()));
-                return;
+                _pendingClientRequests.Enqueue(inData.ToArray());
+                return DeserializeResult.Done;
             }
             if (packetType != InternalPackets.ClientInput)
             {
                 Logger.LogWarning($"[SEM] Unknown packet type: {packetType}");
-                return;
+                return DeserializeResult.Error;
             }
-            ushort clientTick = reader.GetUShort();
+            ushort clientTick = BitConverter.ToUInt16(inData);
+            inData = inData.Slice(2);
             bool isFirstInput = true;
-            while (reader.AvailableBytes >= sizeof(InputPacketHeader))
+            while (inData.Length >= sizeof(InputPacketHeader))
             {
                 var inputBuffer = new InputBuffer{ Tick = clientTick };
-                fixed (byte* rawData = reader.RawData)
-                    inputBuffer.InputHeader = *(InputPacketHeader*)(rawData + reader.Position);
-                reader.SkipBytes(sizeof(InputPacketHeader));
+                fixed (byte* rawData = inData)
+                    inputBuffer.InputHeader = *(InputPacketHeader*)rawData;
+                inData = inData.Slice(sizeof(InputPacketHeader));
                 
                 //possibly empty but with header
-                if (isFirstInput && reader.AvailableBytes < InputProcessor.InputSize)
+                if (isFirstInput && inData.Length < InputProcessor.InputSize)
                 {
-                    Logger.LogError($"Bad input from: {player.Id} - {player.Peer.EndPoint} too small input");
-                    return;
+                    Logger.LogError($"Bad input from: {player.Id} - {player.Peer} too small input");
+                    return DeserializeResult.Error;
                 }
-                if (!isFirstInput && reader.AvailableBytes < InputProcessor.MinDeltaSize)
+                if (!isFirstInput && inData.Length < InputProcessor.MinDeltaSize)
                 {
-                    Logger.LogError($"Bad input from: {player.Id} - {player.Peer.EndPoint} too small delta");
-                    return;
+                    Logger.LogError($"Bad input from: {player.Id} - {player.Peer} too small delta");
+                    return DeserializeResult.Error;
                 }
                 if (Utils.SequenceDiff(inputBuffer.InputHeader.StateA, Tick) > 0 ||
                     Utils.SequenceDiff(inputBuffer.InputHeader.StateB, Tick) > 0)
                 {
-                    Logger.LogError($"Bad input from: {player.Id} - {player.Peer.EndPoint} invalid sequence");
-                    return;
+                    Logger.LogError($"Bad input from: {player.Id} - {player.Peer} invalid sequence");
+                    return DeserializeResult.Error;
                 }
                 inputBuffer.InputHeader.LerpMsec = Math.Clamp(inputBuffer.InputHeader.LerpMsec, 0f, 1f);
                 
                 //decode delta
-                Span<byte> decodedData;
+                ReadOnlySpan<byte> actualData;
                 if (!isFirstInput) //delta
                 {
                     Array.Clear(_inputDecodeBuffer, 0, InputProcessor.InputSize);
-                    decodedData = new Span<byte>(_inputDecodeBuffer, 0, InputProcessor.InputSize);
-                    int readBytes = InputProcessor.DeltaDecode(new ReadOnlySpan<byte>(reader.RawData, reader.Position, reader.AvailableBytes), decodedData);
-                    reader.SkipBytes(readBytes);
+                    var decodedData = new Span<byte>(_inputDecodeBuffer, 0, InputProcessor.InputSize);
+                    int readBytes = InputProcessor.DeltaDecode(inData, decodedData);
+                    actualData = decodedData;
+                    inData = inData.Slice(readBytes);
                 }
                 else //full
                 {
                     isFirstInput = false;
-                    decodedData = new Span<byte>(reader.RawData, reader.Position, InputProcessor.InputSize);
-                    InputProcessor.DeltaDecodeInit(decodedData);
-                    reader.SkipBytes(InputProcessor.InputSize);
+                    actualData = inData.Slice(0, InputProcessor.InputSize);
+                    InputProcessor.DeltaDecodeInit(actualData);
+                    inData = inData.Slice(InputProcessor.InputSize);
                 }
                 //Logger.Log($"ReadInput: {clientTick} stateA: {inputBuffer.InputHeader.StateA}");
                 clientTick++;
@@ -363,7 +330,7 @@ namespace LiteEntitySystem
                 {
                     _inputPool.TryDequeue(out inputBuffer.Data);
                     Utils.ResizeOrCreate(ref inputBuffer.Data, InputProcessor.InputSize);
-                    fixed(byte* inputData = inputBuffer.Data, rawDecodedData = decodedData)
+                    fixed(byte* inputData = inputBuffer.Data, rawDecodedData = actualData)
                         RefMagic.CopyBlock(inputData, rawDecodedData, (uint)InputProcessor.InputSize);
 
                     if (player.AvailableInput.Count == MaxStoredInputs)
@@ -376,6 +343,7 @@ namespace LiteEntitySystem
             }
             if(player.State == NetPlayerState.WaitingForFirstInput)
                 player.State = NetPlayerState.WaitingForFirstInputProcess;
+            return DeserializeResult.Done;
         }
 
         public override unsafe void Update()
@@ -441,7 +409,7 @@ namespace LiteEntitySystem
                         _compressionBuffer.Length - sizeof(BaselineDataHeader),
                         LZ4Level.L00_FAST);
                     
-                    player.Peer.Send(_compressionBuffer, 0, sizeof(BaselineDataHeader) + encodedLength, DeliveryMethod.ReliableOrdered);
+                    player.Peer.SendReliableOrdered(new ReadOnlySpan<byte>(_compressionBuffer, 0, sizeof(BaselineDataHeader) + encodedLength));
                     player.StateATick = executedTick;
                     player.CurrentServerTick = executedTick;
                     player.State = NetPlayerState.WaitingForFirstInput;
@@ -461,7 +429,7 @@ namespace LiteEntitySystem
                 header->Tick = executedTick;
                 int writePosition = sizeof(DiffPartHeader);
                 
-                ushort maxPartSize = (ushort)(player.Peer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable) - sizeof(LastPartData));
+                ushort maxPartSize = (ushort)(player.Peer.GetMaxUnreliablePacketSize() - sizeof(LastPartData));
                 for (ushort eId = FirstEntityId; eId <= MaxSyncedEntityId; eId++)
                 {
                     var diffResult = _stateSerializers[eId].MakeDiff(
@@ -488,7 +456,7 @@ namespace LiteEntitySystem
                             }
                             header->PacketType = InternalPackets.DiffSync;
                             //Logger.LogWarning($"P:{pidx} Sending diff part {*partCount}: {_tick}");
-                            player.Peer.Send(_packetBuffer, 0, maxPartSize, DeliveryMethod.Unreliable);
+                            player.Peer.SendUnreliable(new ReadOnlySpan<byte>(_packetBuffer, 0, maxPartSize));
                             header->Part++;
 
                             //repeat in next packet
@@ -517,11 +485,11 @@ namespace LiteEntitySystem
                     Mtu = maxPartSize
                 };
                 writePosition += sizeof(LastPartData);
-                player.Peer.Send(_packetBuffer, 0, writePosition, DeliveryMethod.Unreliable);
+                player.Peer.SendUnreliable(new ReadOnlySpan<byte>(_packetBuffer, 0, writePosition));
             }
 
             //trigger only when there is data
-            _netPlayersArray[0].Peer.NetManager.TriggerUpdate();
+            _netPlayersArray[0].Peer.TriggerSend();
         }
         
         private T Add<T>(Action<T> initMethod) where T : InternalEntity
@@ -571,7 +539,10 @@ namespace LiteEntitySystem
         {
             //read pending client requests
             while (_pendingClientRequests.Count > 0)
-                InputProcessor.ReadClientRequest(this, _pendingClientRequests.Dequeue());
+            {
+                _requestsReader.SetSource(_pendingClientRequests.Dequeue());
+                InputProcessor.ReadClientRequest(this, _requestsReader);
+            }
             
             for (int pidx = 0; pidx < _netPlayersCount; pidx++)
             {
