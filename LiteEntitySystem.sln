@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteEntitySystem", "LiteEntitySystem/LiteEntitySystem.csproj", "{7360A185-B509-43CB-AC8A-636044EBDBD3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteEntitySystem.Trim.Dummy", "LiteEntitySystem.Trim.Dummy\LiteEntitySystem.Trim.Dummy.csproj", "{A9758970-5C12-446F-A812-8E37FFBC3932}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteEntitySystem.Generator", "LiteEntitySystem.Generator\LiteEntitySystem.Generator.csproj", "{2F47328B-A28F-4AE2-ACFA-FC633A50055D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{7360A185-B509-43CB-AC8A-636044EBDBD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7360A185-B509-43CB-AC8A-636044EBDBD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7360A185-B509-43CB-AC8A-636044EBDBD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9758970-5C12-446F-A812-8E37FFBC3932}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9758970-5C12-446F-A812-8E37FFBC3932}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9758970-5C12-446F-A812-8E37FFBC3932}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9758970-5C12-446F-A812-8E37FFBC3932}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F47328B-A28F-4AE2-ACFA-FC633A50055D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F47328B-A28F-4AE2-ACFA-FC633A50055D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F47328B-A28F-4AE2-ACFA-FC633A50055D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F47328B-A28F-4AE2-ACFA-FC633A50055D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

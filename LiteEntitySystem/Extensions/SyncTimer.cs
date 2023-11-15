@@ -2,7 +2,7 @@
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncTimer : SyncableField
+    public partial class SyncTimer : SyncableField
     {
         public float MaxTime => _maxTime;
         public float ElapsedTime => _time;
@@ -51,14 +51,14 @@ namespace LiteEntitySystem.Extensions
 
         public float LerpByProgress(float a, float b)
         {
-            return Utils.Lerp(a, b, Progress);
+            return Helpers.Lerp(a, b, Progress);
         }
 
         public float LerpByProgress(float a, float b, bool inverse)
         {
             return inverse
-                ? Utils.Lerp(a, b, Progress)
-                : Utils.Lerp(b, a, Progress);
+                ? Helpers.Lerp(a, b, Progress)
+                : Helpers.Lerp(b, a, Progress);
         }
 
         public bool UpdateAndCheck(float delta)

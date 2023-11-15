@@ -4,7 +4,7 @@
     /// Base class for entites that can be controlled by Controller
     /// </summary>
     [UpdateableEntity]
-    public abstract class PawnLogic : EntityLogic
+    public abstract partial class PawnLogic : EntityLogic
     {
         [SyncVarFlags(SyncFlags.OnlyForOwner)]
         private SyncVar<EntitySharedReference> _controller;

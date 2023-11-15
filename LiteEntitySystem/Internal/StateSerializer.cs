@@ -1,3 +1,5 @@
+using System;
+
 namespace LiteEntitySystem.Internal
 {
     internal enum DiffResult
@@ -25,6 +27,7 @@ namespace LiteEntitySystem.Internal
         
         private const int HeaderSize = 5;
         private const int TicksToDestroy = 32;
+        private static readonly Type EntitySharedReferenceType = typeof(EntitySharedReference);
         public const int DiffHeaderSize = 4;
         public const int MaxStateSize = 32767; //half of ushort
 
@@ -116,8 +119,8 @@ namespace LiteEntitySystem.Internal
             CleanPendingRpcs(ref _syncRpcHead, ref _syncRpcTail);
 
             _fullDataSize = (uint)(HeaderSize + _classData.FixedFieldsSize);
-            Utils.ResizeOrCreate(ref _latestEntityData, (int)_fullDataSize);
-            Utils.ResizeOrCreate(ref _fieldChangeTicks, classData.FieldsCount);
+            Helpers.ResizeOrCreate(ref _latestEntityData, (int)_fullDataSize);
+            Helpers.ResizeOrCreate(ref _fieldChangeTicks, classData.FieldsCount);
 
             fixed (byte* data = _latestEntityData)
             {
@@ -150,7 +153,7 @@ namespace LiteEntitySystem.Internal
                 MakeOnSync(serverTick);
             }
             
-            if (Utils.SequenceDiff(minimalTick, _versionChangedTick) > 0)
+            if (Helpers.SequenceDiff(minimalTick, _versionChangedTick) > 0)
                 _versionChangedTick = minimalTick;
 
             _lastWriteTick = serverTick;
@@ -160,25 +163,30 @@ namespace LiteEntitySystem.Internal
                 {
                     ref var field = ref _classData.Fields[i];
                     byte* latestDataPtr = latestEntityData + HeaderSize + field.FixedOffset;
-                    object obj;
-                    int offset;
                     
-                    //update only changed fields
-                    if (field.FieldType == FieldType.SyncableSyncVar)
+                    //skip local ids
+                    if (field.TypeProcessor.ValueType == EntitySharedReferenceType)
                     {
-                        obj = RefMagic.RefFieldValue<SyncableField>(_entity, field.Offset);
-                        offset = field.SyncableSyncVarOffset;
+                        var sharedRef = new EntitySharedReference();
+                        _entity.FieldSave(in field, new Span<byte>(&sharedRef, sizeof(EntitySharedReference)));
+                        if (sharedRef.IsLocal)
+                            sharedRef = null;
+                        var latestRefPtr = (EntitySharedReference*)latestDataPtr;
+                        if (*latestRefPtr != sharedRef)
+                        {
+                            *latestRefPtr = sharedRef;
+                            _fieldChangeTicks[i] = serverTick;
+                        }
+                        else if (Helpers.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
+                            _fieldChangeTicks[i] = minimalTick;
                     }
                     else
                     {
-                        obj = _entity;
-                        offset = field.Offset;
+                        if (_entity.FieldSaveIfDifferent(in field, new Span<byte>(latestDataPtr, field.IntSize)))
+                            _fieldChangeTicks[i] = serverTick;
+                        else if (Helpers.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
+                            _fieldChangeTicks[i] = minimalTick;
                     }
-                    
-                    if (field.TypeProcessor.CompareAndWrite(obj, offset, latestDataPtr))
-                        _fieldChangeTicks[i] = serverTick;
-                    else if (Utils.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
-                        _fieldChangeTicks[i] = minimalTick;
                 }
             }
         }
@@ -226,9 +234,7 @@ namespace LiteEntitySystem.Internal
             _syncFrame = tick;
             CleanPendingRpcs(ref _syncRpcHead, ref _syncRpcTail);
             _rpcMode = RPCMode.Sync;
-            for (int i = 0; i < _classData.SyncableFields.Length; i++)
-                RefMagic.RefFieldValue<SyncableField>(_entity, _classData.SyncableFields[i].Offset)
-                    .InternalOnSyncRequested();
+            _entity.InternalSyncablesResync();
             _rpcMode = RPCMode.Normal;
         }
 
@@ -283,7 +289,7 @@ namespace LiteEntitySystem.Internal
             if (_state == SerializerState.Freed)
                 return DiffResult.Skip;
             
-            if (_state == SerializerState.Destroyed && Utils.SequenceDiff(serverTick, _ticksOnDestroy) >= TicksToDestroy)
+            if (_state == SerializerState.Destroyed && Helpers.SequenceDiff(serverTick, _ticksOnDestroy) >= TicksToDestroy)
             {
                 _state = SerializerState.Freed;
                 return DiffResult.DoneAndDestroy;
@@ -301,7 +307,7 @@ namespace LiteEntitySystem.Internal
             ushort* fieldFlagAndSize = (ushort*)(resultData + startPos);
             position += sizeof(ushort);
             
-            if (Utils.SequenceDiff(_versionChangedTick, playerTick) > 0)
+            if (Helpers.SequenceDiff(_versionChangedTick, playerTick) > 0)
             {
                 //write full header here (totalSize + eid)
                 //also all fields
@@ -335,7 +341,7 @@ namespace LiteEntitySystem.Internal
                         //Logger.Log($"SkipSync: {field.Name}, isOwned: {isOwned}");
                         continue;
                     }
-                    if (Utils.SequenceDiff(_fieldChangeTicks[i], playerTick) <= 0)
+                    if (Helpers.SequenceDiff(_fieldChangeTicks[i], playerTick) <= 0)
                     {
                         //Logger.Log($"SkipOld: {field.Name}");
                         //old data
@@ -359,7 +365,7 @@ namespace LiteEntitySystem.Internal
                 {
                     bool send = (isOwned && (rpcNode.Flags & ExecuteFlags.SendToOwner) != 0) ||
                                 (!isOwned && (rpcNode.Flags & ExecuteFlags.SendToOther) != 0);
-                    if (send && Utils.SequenceDiff(playerTick, rpcNode.Header.Tick) < 0)
+                    if (send && Helpers.SequenceDiff(playerTick, rpcNode.Header.Tick) < 0)
                     {
                         //put new
                         *(RPCHeader*)(resultData + position) = rpcNode.Header;
@@ -370,7 +376,7 @@ namespace LiteEntitySystem.Internal
                         (*rpcCount)++;
                         //Logger.Log($"[Sever] T: {_entity.ServerManager.Tick}, SendRPC Tick: {rpcNode.Header.Tick}, Id: {rpcNode.Header.Id}, EntityId: {_entity.Id}, TypeSize: {rpcNode.Header.TypeSize}, Count: {rpcNode.Header.Count}");
                     }
-                    else if (Utils.SequenceDiff(rpcNode.Header.Tick, minimalTick) < 0)
+                    else if (Helpers.SequenceDiff(rpcNode.Header.Tick, minimalTick) < 0)
                     {
                         if (rpcNode != _rpcHead)
                         {

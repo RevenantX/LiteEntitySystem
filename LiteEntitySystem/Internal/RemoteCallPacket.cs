@@ -23,7 +23,7 @@ namespace LiteEntitySystem.Internal
             Flags = flags;
             Header.TypeSize = typeSize;
             Header.Count = (ushort)count;
-            Utils.ResizeOrCreate(ref Data, typeSize*count);
+            Helpers.ResizeOrCreate(ref Data, typeSize*count);
         }
     }
 }

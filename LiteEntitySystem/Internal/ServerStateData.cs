@@ -75,7 +75,7 @@ namespace LiteEntitySystem.Internal
             {
                 int initialReaderPosition = bytesRead;
                 
-                Utils.ResizeIfFull(ref PreloadDataArray, PreloadDataCount);
+                Helpers.ResizeIfFull(ref PreloadDataArray, PreloadDataCount);
                 ref var preloadData = ref PreloadDataArray[PreloadDataCount++];
                 ushort fullSyncAndTotalSize = BitConverter.ToUInt16(Data, bytesRead);
 
@@ -122,13 +122,13 @@ namespace LiteEntitySystem.Internal
                 //preload interpolation info
                 if (entity.IsRemoteControlled && classData.InterpolatedCount > 0)
                 {
-                    Utils.ResizeIfFull(ref InterpolatedFields, InterpolatedCount);
-                    Utils.ResizeOrCreate(ref preloadData.InterpolatedCaches, classData.InterpolatedCount);
+                    Helpers.ResizeIfFull(ref InterpolatedFields, InterpolatedCount);
+                    Helpers.ResizeOrCreate(ref preloadData.InterpolatedCaches, classData.InterpolatedCount);
                     InterpolatedFields[InterpolatedCount++] = PreloadDataCount - 1;
                 }
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
-                    if (!Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, i))
+                    if (!Helpers.IsBitSet(Data, preloadData.EntityFieldsOffset, i))
                         continue;
                     var field = fields[i];
                     if (entity.IsRemoteControlled && field.Flags.HasFlagFast(SyncFlags.Interpolated))
@@ -156,7 +156,7 @@ namespace LiteEntitySystem.Internal
                 ref var rpc = ref _syncableRemoteCallCaches[i];
                 if (rpc.Executed)
                     continue;
-                if (!firstSync && Utils.SequenceDiff(rpc.Header.Tick, minimalTick) <= 0)
+                if (!firstSync && Helpers.SequenceDiff(rpc.Header.Tick, minimalTick) <= 0)
                 {
                     //Logger.Log($"Skip rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick} <= MinimalTick: {minimalTick}. Current: {entityManager.RawServerTick}. Id: {rpc.Header.Id}.");
                     continue;
@@ -185,12 +185,12 @@ namespace LiteEntitySystem.Internal
                     continue;
                 if (!firstSync)
                 {
-                    if (Utils.SequenceDiff(rpc.Header.Tick, entityManager.ServerTick) > 0)
+                    if (Helpers.SequenceDiff(rpc.Header.Tick, entityManager.ServerTick) > 0)
                     {
                         //Logger.Log($"Skip rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick} > ServerTick: {entityManager.ServerTick}. Id: {rpc.Header.Id}.");
                         continue;
                     }
-                    if (Utils.SequenceDiff(rpc.Header.Tick, minimalTick) <= 0)
+                    if (Helpers.SequenceDiff(rpc.Header.Tick, minimalTick) <= 0)
                     {
                         //Logger.Log($"Skip rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick} <= MinimalTick: {minimalTick}. Id: {rpc.Header.Id}.");
                         continue;
@@ -214,8 +214,8 @@ namespace LiteEntitySystem.Internal
             //if(readCount > 0)
             //    Logger.Log($"[CEM] ReadRPC Entity: {entityId.Id} Count: {readCount} posAfterData: {position}");
             position += sizeof(ushort);
-            Utils.ResizeOrCreate(ref _remoteCallsCaches, _remoteCallsCount + readCount);
-            Utils.ResizeOrCreate(ref _syncableRemoteCallCaches, _syncableRemoteCallsCount + readCount);
+            Helpers.ResizeOrCreate(ref _remoteCallsCaches, _remoteCallsCount + readCount);
+            Helpers.ResizeOrCreate(ref _syncableRemoteCallCaches, _syncableRemoteCallsCount + readCount);
             for (int i = 0; i < readCount; i++)
             {
                 var header = *(RPCHeader*)(rawData + position);
@@ -278,7 +278,7 @@ namespace LiteEntitySystem.Internal
             partSize -= sizeof(DiffPartHeader);
             if(_partMtu == 0)
                 _partMtu = (ushort)partSize;
-            Utils.ResizeIfFull(ref Data, TotalPartsCount > 1 
+            Helpers.ResizeIfFull(ref Data, TotalPartsCount > 1 
                 ? _partMtu * TotalPartsCount 
                 : _partMtu * partHeader.Part + partSize);
             fixed(byte* stateData = Data)

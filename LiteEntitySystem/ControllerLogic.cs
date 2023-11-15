@@ -5,7 +5,7 @@ namespace LiteEntitySystem
     /// <summary>
     /// Base class for Controller entities
     /// </summary>
-    public abstract class ControllerLogic : InternalEntity
+    public abstract partial class ControllerLogic : InternalEntity
     {
         [SyncVarFlags(SyncFlags.NeverRollBack)]
         internal SyncVar<byte> InternalOwnerId;
@@ -70,7 +70,7 @@ namespace LiteEntitySystem
     /// Base class for AI Controller entities
     /// </summary>
     [LocalOnly, UpdateableEntity]
-    public abstract class AiControllerLogic : ControllerLogic
+    public abstract partial class AiControllerLogic : ControllerLogic
     {
         public override bool IsBot => true;
         
@@ -81,7 +81,7 @@ namespace LiteEntitySystem
     /// Base class for AI Controller entities with typed ControlledEntity field
     /// </summary>
     [LocalOnly, UpdateableEntity]
-    public abstract class AiControllerLogic<T> : AiControllerLogic where T : PawnLogic
+    public abstract partial class AiControllerLogic<T> : AiControllerLogic where T : PawnLogic
     {
         public T ControlledEntity => GetControlledEntity<T>();
         

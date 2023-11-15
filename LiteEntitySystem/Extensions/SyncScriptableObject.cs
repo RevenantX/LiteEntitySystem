@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncScriptableObject<T> : SyncNetSerializable<T> where T : ScriptableObject, INetSerializable
+    public partial class SyncScriptableObject<T> : SyncNetSerializable<T> where T : ScriptableObject, INetSerializable
     {
         private static readonly Func<T> Constructor = ScriptableObject.CreateInstance<T>;
         

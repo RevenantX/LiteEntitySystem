@@ -101,13 +101,13 @@ namespace LiteEntitySystem
 
         private readonly struct SyncCallInfo
         {
-            public readonly MethodCallDelegate OnSync;
+            public readonly EntityFieldInfo Field;
             public readonly InternalEntity Entity;
             public readonly int PrevDataPos;
 
-            public SyncCallInfo(MethodCallDelegate onSync, InternalEntity entity, int prevDataPos)
+            public SyncCallInfo(ref EntityFieldInfo field, InternalEntity entity, int prevDataPos)
             {
-                OnSync = onSync;
+                Field = field;
                 Entity = entity;
                 PrevDataPos = prevDataPos;
             }
@@ -174,18 +174,18 @@ namespace LiteEntitySystem
 
             if (classData.InterpolatedFieldsSize > 0)
             {
-                Utils.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
+                Helpers.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
                 
                 //for local interpolated
-                Utils.ResizeOrCreate(ref _interpolatedInitialData[entity.Id], classData.InterpolatedFieldsSize);
+                Helpers.ResizeOrCreate(ref _interpolatedInitialData[entity.Id], classData.InterpolatedFieldsSize);
             }
 
             fixed (byte* interpDataPtr = _interpolatedInitialData[entity.Id])
             {
                 for (int i = 0; i < classData.InterpolatedCount; i++)
                 {
-                    var field = classData.Fields[i];
-                    field.TypeProcessor.WriteTo(entity, field.Offset, interpDataPtr + field.FixedOffset);
+                    ref var field = ref classData.Fields[i];
+                    entity.FieldSave(in field, new Span<byte>(interpDataPtr + field.FixedOffset, field.IntSize));
                 }
             }
         }
@@ -283,7 +283,7 @@ namespace LiteEntitySystem
                     if (inData.Length < sizeof(DiffPartHeader) + 2)
                         return DeserializeResult.Error;
                     var diffHeader = *(DiffPartHeader*)rawData;
-                    int tickDifference = Utils.SequenceDiff(diffHeader.Tick, _lastReadyTick);
+                    int tickDifference = Helpers.SequenceDiff(diffHeader.Tick, _lastReadyTick);
                     if (tickDifference <= 0)
                     {
                         //old state
@@ -315,9 +315,9 @@ namespace LiteEntitySystem
                     {
                         //if(serverState.TotalPartsCount > 1)
                         //    Logger.Log($"Parts: {serverState.TotalPartsCount}");
-                        if (Utils.SequenceDiff(serverState.LastReceivedTick, _lastReceivedInputTick) > 0)
+                        if (Helpers.SequenceDiff(serverState.LastReceivedTick, _lastReceivedInputTick) > 0)
                             _lastReceivedInputTick = serverState.LastReceivedTick;
-                        if (Utils.SequenceDiff(serverState.Tick, _lastReadyTick) > 0)
+                        if (Helpers.SequenceDiff(serverState.Tick, _lastReadyTick) > 0)
                             _lastReadyTick = serverState.Tick;
                         _receivedStates.Remove(serverState.Tick);
 
@@ -365,18 +365,18 @@ namespace LiteEntitySystem
             if (!adaptiveIncreased)
             {
                 jitterSum /= _jitterSamples.Length;
-                _adaptiveMiddlePoint = Utils.Lerp(_adaptiveMiddlePoint, Math.Max(1f, jitterSum), 0.05f);
+                _adaptiveMiddlePoint = Helpers.Lerp(_adaptiveMiddlePoint, Math.Max(1f, jitterSum), 0.05f);
             }
             
             _stateB = _readyStates.ExtractMin();
             _stateB.Preload(EntitiesDict);
             //Logger.Log($"Preload A: {_stateA.Tick}, B: {_stateB.Tick}");
             _lerpTime = 
-                Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTimeF *
+                Helpers.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTimeF *
                 (1f - (_readyStates.Count + 1 - _adaptiveMiddlePoint) * 0.02f);
 
             //remove processed inputs
-            while (_inputCommands.Count > 0 && Utils.SequenceDiff(_stateB.ProcessedTick, _inputCommands.Peek().Tick) >= 0)
+            while (_inputCommands.Count > 0 && Helpers.SequenceDiff(_stateB.ProcessedTick, _inputCommands.Peek().Tick) >= 0)
                 _inputPool.Enqueue(_inputCommands.Dequeue().Data);
 
             return true;
@@ -421,15 +421,7 @@ namespace LiteEntitySystem
                             field.Flags.HasFlagFast(SyncFlags.NeverRollBack) ||
                             field.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
                             continue;
-                        if (field.FieldType == FieldType.SyncableSyncVar)
-                        {
-                            var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, field.Offset);
-                            field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, predictedData + field.PredictedOffset);
-                        }
-                        else
-                        {
-                            field.TypeProcessor.SetFrom(entity, field.Offset, predictedData + field.PredictedOffset);
-                        }
+                        entity.FieldLoad(in field, new ReadOnlySpan<byte>(predictedData + field.PredictedOffset, field.IntSize));
                     }
                 }
             }
@@ -476,7 +468,7 @@ namespace LiteEntitySystem
                     fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id])
                     {
                         ref var field = ref classData.Fields[i];
-                        field.TypeProcessor.WriteTo(entity, field.Offset, currentDataPtr + field.FixedOffset);
+                        entity.FieldSave(in field, new Span<byte>(currentDataPtr + field.FixedOffset, field.IntSize));
                     }
                 }
             }
@@ -484,7 +476,7 @@ namespace LiteEntitySystem
             //delete predicted
             while (_spawnPredictedEntities.TryPeek(out var info))
             {
-                if (Utils.SequenceDiff(_stateA.ProcessedTick, info.id) >= 0)
+                if (Helpers.SequenceDiff(_stateA.ProcessedTick, info.id) >= 0)
                 {
                     _spawnPredictedEntities.Dequeue();
                     info.entity.DestroyInternal();
@@ -503,7 +495,7 @@ namespace LiteEntitySystem
         {
             if (_stateB != null)
             {
-                ServerTick = Utils.LerpSequence(_stateA.Tick, _stateB.Tick, (float)(_timer/_lerpTime));
+                ServerTick = Helpers.LerpSequence(_stateA.Tick, _stateB.Tick, (float)(_timer/_lerpTime));
                 _stateB.ExecuteRpcs(this, _stateA.Tick, false);
             }
             
@@ -545,8 +537,8 @@ namespace LiteEntitySystem
                         //restore previous
                         for(int i = 0; i < classData.InterpolatedCount; i++)
                         {
-                            var field = classData.Fields[i];
-                            field.TypeProcessor.SetFrom(entity, field.Offset, currentDataPtr + field.FixedOffset);
+                            ref var field = ref classData.Fields[i];
+                            entity.FieldLoad(in field, new ReadOnlySpan<byte>(currentDataPtr + field.FixedOffset, field.IntSize));
                         }
 
                         //update
@@ -556,8 +548,8 @@ namespace LiteEntitySystem
                         RefMagic.CopyBlock(prevDataPtr, currentDataPtr, (uint)classData.InterpolatedFieldsSize);
                         for(int i = 0; i < classData.InterpolatedCount; i++)
                         {
-                            var field = classData.Fields[i];
-                            field.TypeProcessor.WriteTo(entity, field.Offset, currentDataPtr + field.FixedOffset);
+                            ref var field = ref classData.Fields[i];
+                            entity.FieldSave(in field, new Span<byte>(currentDataPtr + field.FixedOffset, field.IntSize));
                         }
                     }
                 }
@@ -603,12 +595,11 @@ namespace LiteEntitySystem
                         for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
                         {
                             var interpolatedCache = preloadData.InterpolatedCaches[j];
-                            var field = fields[interpolatedCache.Field];
-                            field.TypeProcessor.SetInterpolation(
-                                entity, 
-                                field.Offset,
-                                initialDataPtr + field.FixedOffset,
-                                nextDataPtr + interpolatedCache.StateReaderOffset, 
+                            ref var field = ref fields[interpolatedCache.Field];
+                            entity.FieldSetInterpolation(
+                                in field,
+                                new ReadOnlySpan<byte>(initialDataPtr + field.FixedOffset, field.IntSize),
+                                new ReadOnlySpan<byte>(nextDataPtr + interpolatedCache.StateReaderOffset, field.IntSize),
                                 _logicLerpMsec);
                         }
                     }
@@ -627,12 +618,11 @@ namespace LiteEntitySystem
                 {
                     for(int i = 0; i < classData.InterpolatedCount; i++)
                     {
-                        var field = classData.Fields[i];
-                        field.TypeProcessor.SetInterpolation(
-                            entity,
-                            field.Offset,
-                            prevDataPtr + field.FixedOffset,
-                            currentDataPtr + field.FixedOffset,
+                        ref var field = ref classData.Fields[i];
+                        entity.FieldSetInterpolation(
+                            in field,
+                            new ReadOnlySpan<byte>(prevDataPtr + field.FixedOffset, field.IntSize),
+                            new ReadOnlySpan<byte>(currentDataPtr + field.FixedOffset, field.IntSize),
                             localLerpT);
                     }
                 }
@@ -654,7 +644,7 @@ namespace LiteEntitySystem
                     //Logger.Log($"SendingCommands start {_tick}");
                     foreach (var inputCommand in _inputCommands)
                     {
-                        if (Utils.SequenceDiff(currentTick, _lastReceivedInputTick) <= 0)
+                        if (Helpers.SequenceDiff(currentTick, _lastReceivedInputTick) <= 0)
                         {
                             currentTick++;
                             continue;
@@ -743,7 +733,7 @@ namespace LiteEntitySystem
             for (int i = 0; i < _syncCallsCount; i++)
             {
                 ref var syncCall = ref _syncCalls[i];
-                syncCall.OnSync(syncCall.Entity, new ReadOnlySpan<byte>(_stateA.Data, syncCall.PrevDataPos, _stateA.Size-syncCall.PrevDataPos));
+                syncCall.Entity.FieldOnChange(in syncCall.Field, new ReadOnlySpan<byte>(_stateA.Data, syncCall.PrevDataPos, _stateA.Size-syncCall.PrevDataPos));
             }
             _syncCallsCount = 0;
             
@@ -781,13 +771,13 @@ namespace LiteEntitySystem
                     ref var cd = ref ClassDataDict[entity.ClassId];
                     if (cd.PredictedSize > 0)
                     {
-                        Utils.ResizeOrCreate(ref _predictedEntitiesData[entity.Id], cd.PredictedSize);
+                        Helpers.ResizeOrCreate(ref _predictedEntitiesData[entity.Id], cd.PredictedSize);
                         _predictedEntityFilter.Add(entity);
                     }
                     if(cd.InterpolatedFieldsSize > 0)
-                        Utils.ResizeOrCreate(ref _interpolatedInitialData[entity.Id], cd.InterpolatedFieldsSize);
+                        Helpers.ResizeOrCreate(ref _interpolatedInitialData[entity.Id], cd.InterpolatedFieldsSize);
 
-                    Utils.ResizeIfFull(ref _entitiesToConstruct, _entitiesToConstructCount);
+                    Helpers.ResizeIfFull(ref _entitiesToConstruct, _entitiesToConstructCount);
                     _entitiesToConstruct[_entitiesToConstructCount++] = entity;
                     //Logger.Log($"[CEM] Add entity: {entity.GetType()}");
                 }
@@ -808,13 +798,13 @@ namespace LiteEntitySystem
             ref byte[] interpolatedInitialData = ref _interpolatedInitialData[entity.Id];
             int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
             bool writeInterpolationData = entity.IsRemoteControlled || fullSync;
-            Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
+            Helpers.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
             
             fixed (byte* interpDataPtr = interpolatedInitialData, predictedData = _predictedEntitiesData[entity.Id])
             {
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
-                    if (!fullSync && !Utils.IsBitSet(rawData + fieldsFlagsOffset, i))
+                    if (!fullSync && !Helpers.IsBitSet(rawData + fieldsFlagsOffset, i))
                         continue;
                     
                     ref var field = ref classData.Fields[i];
@@ -825,8 +815,7 @@ namespace LiteEntitySystem
                     
                     if (field.FieldType == FieldType.SyncableSyncVar)
                     {
-                        var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, field.Offset);
-                        field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, readDataPtr);
+                        entity.FieldLoad(in field, new ReadOnlySpan<byte>(readDataPtr, field.IntSize));
                     }
                     else
                     {
@@ -836,14 +825,14 @@ namespace LiteEntitySystem
                             RefMagic.CopyBlock(interpDataPtr + field.FixedOffset, readDataPtr, field.Size);
                         }
 
-                        if (field.OnSync != null)
+                        if (field.HasChangeNotification)
                         {
-                            if (field.TypeProcessor.SetFromAndSync(entity, field.Offset, readDataPtr))
-                                _syncCalls[_syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition);
+                            if (entity.FieldLoadIfDifferent(in field, new ReadOnlySpan<byte>(readDataPtr, field.IntSize)))
+                                _syncCalls[_syncCallsCount++] = new SyncCallInfo(ref field, entity, readerPosition);
                         }
                         else
                         {
-                            field.TypeProcessor.SetFrom(entity, field.Offset, readDataPtr);
+                            entity.FieldLoad(in field, new ReadOnlySpan<byte>(readDataPtr, field.IntSize));
                         }
                     }
                     //Logger.Log($"E {entity.Id} Field updated: {field.Name}");

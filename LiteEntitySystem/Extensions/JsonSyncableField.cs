@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class JsonSyncableField<T> : SyncableField where T : ScriptableObject
+    public partial class JsonSyncableField<T> : SyncableField where T : ScriptableObject
     {
         private static readonly UTF8Encoding Encoding = new(false, true);
         private static byte[] StringBuffer;

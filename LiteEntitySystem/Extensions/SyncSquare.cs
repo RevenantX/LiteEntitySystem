@@ -2,7 +2,7 @@ using System;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncSquare<T> : SyncableField where T : unmanaged
+    public partial class SyncSquare<T> : SyncableField where T : unmanaged
     {
         private struct SetCallData
         {
@@ -44,10 +44,10 @@ namespace LiteEntitySystem.Extensions
             ExecuteRPC(_clearAction);
         }
 
-        protected override void OnSyncRequested()
+        protected internal override void OnSyncRequested()
             => ExecuteRPC(_initArrayAction, _data);
 
-        protected override void RegisterRPC(in SyncableRPCRegistrator r)
+        protected internal override void RegisterRPC(in SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, SetValueRPC, ref _setRpcAction);
             r.CreateClientAction(this, InitArrayRPC, ref _initArrayAction);

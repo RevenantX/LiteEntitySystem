@@ -44,7 +44,7 @@ namespace LiteEntitySystem.Internal
         
         private void MoveUp(int position)
         {
-            while (position > 0 && Utils.SequenceDiff(_data[Parent(position)].Sequence, _data[position].Sequence) > 0)
+            while (position > 0 && Helpers.SequenceDiff(_data[Parent(position)].Sequence, _data[position].Sequence) > 0)
             {
                 int originalParentPos = Parent(position);
                 (_data[position], _data[originalParentPos]) = (_data[originalParentPos], _data[position]);
@@ -58,8 +58,8 @@ namespace LiteEntitySystem.Internal
             {
                 int lchild = LeftChild(position);
                 int rchild = RightChild(position);
-                int largest = lchild < _count && Utils.SequenceDiff(_data[lchild].Sequence, _data[position].Sequence) < 0 ? lchild : position;
-                if (rchild < _count && Utils.SequenceDiff(_data[rchild].Sequence, _data[largest].Sequence) < 0)
+                int largest = lchild < _count && Helpers.SequenceDiff(_data[lchild].Sequence, _data[position].Sequence) < 0 ? lchild : position;
+                if (rchild < _count && Helpers.SequenceDiff(_data[rchild].Sequence, _data[largest].Sequence) < 0)
                 {
                     largest = rchild;
                 }

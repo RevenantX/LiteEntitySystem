@@ -58,14 +58,14 @@ namespace LiteEntitySystem
 
         internal override void Add(InternalEntity entity)
         {
-            Utils.ResizeOrCreate(ref _entitiesToAdd, _entitiesToAddCount+1);
+            Helpers.ResizeOrCreate(ref _entitiesToAdd, _entitiesToAddCount+1);
             _entitiesToAdd[_entitiesToAddCount++] = (T)entity;
             OnConstructed?.Invoke((T)entity);
         }
 
         internal override void Remove(InternalEntity entity)
         {
-            Utils.ResizeOrCreate(ref _entitiesToRemove, _entitiesToRemoveCount + 1);
+            Helpers.ResizeOrCreate(ref _entitiesToRemove, _entitiesToRemoveCount + 1);
             _entitiesToRemove[_entitiesToRemoveCount++] = (T)entity;
             OnDestroyed?.Invoke((T)entity);
         }

@@ -1,29 +1,20 @@
 using System;
 using System.Runtime.CompilerServices;
+using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
-    public abstract class SyncableField
+    public abstract class SyncableField : InternalSyncType
     {
         internal ushort ParentEntityId = EntityManager.InvalidEntityId;
         internal ExecuteFlags Flags;
 
-        internal void InternalInit(in SyncableRPCRegistrator r)
-        {
-            RegisterRPC(in r);
-        }
-
-        internal void InternalOnSyncRequested()
-        {
-            OnSyncRequested();
-        }
-
-        protected virtual void OnSyncRequested()
+        protected internal virtual void OnSyncRequested()
         {
             
         }
 
-        protected virtual void RegisterRPC(in SyncableRPCRegistrator r)
+        protected internal virtual void RegisterRPC(in SyncableRPCRegistrator r)
         {
 
         }

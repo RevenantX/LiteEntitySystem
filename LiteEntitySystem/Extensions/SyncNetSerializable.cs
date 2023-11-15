@@ -4,7 +4,7 @@ using LiteNetLib.Utils;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncNetSerializable<T> : SyncableField where T : INetSerializable
+    public partial class SyncNetSerializable<T> : SyncableField where T : INetSerializable
     {
         private static readonly NetDataWriter WriterCache = new();
         private static readonly NetDataReader ReaderCache = new();
@@ -31,12 +31,12 @@ namespace LiteEntitySystem.Extensions
             _constructor = constructor;
         }
 
-        protected override void RegisterRPC(in SyncableRPCRegistrator r)
+        protected internal override void RegisterRPC(in SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, Init, ref _initAction);
         }
 
-        protected override void OnSyncRequested()
+        protected internal override void OnSyncRequested()
         {
             WriterCache.Reset();
             _value.Serialize(WriterCache);

@@ -294,8 +294,8 @@ namespace LiteEntitySystem
                     Logger.LogError($"Bad input from: {player.Id} - {player.Peer} too small delta");
                     return DeserializeResult.Error;
                 }
-                if (Utils.SequenceDiff(inputBuffer.InputHeader.StateA, Tick) > 0 ||
-                    Utils.SequenceDiff(inputBuffer.InputHeader.StateB, Tick) > 0)
+                if (Helpers.SequenceDiff(inputBuffer.InputHeader.StateA, Tick) > 0 ||
+                    Helpers.SequenceDiff(inputBuffer.InputHeader.StateB, Tick) > 0)
                 {
                     Logger.LogError($"Bad input from: {player.Id} - {player.Peer} invalid sequence");
                     return DeserializeResult.Error;
@@ -322,14 +322,14 @@ namespace LiteEntitySystem
                 //Logger.Log($"ReadInput: {clientTick} stateA: {inputBuffer.InputHeader.StateA}");
                 clientTick++;
                 
-                if (Utils.SequenceDiff(inputBuffer.InputHeader.StateB, player.CurrentServerTick) > 0)
+                if (Helpers.SequenceDiff(inputBuffer.InputHeader.StateB, player.CurrentServerTick) > 0)
                     player.CurrentServerTick = inputBuffer.InputHeader.StateB;
                     
                 //read input
-                if (player.State == NetPlayerState.WaitingForFirstInput || Utils.SequenceDiff(inputBuffer.Tick, player.LastReceivedTick) > 0)
+                if (player.State == NetPlayerState.WaitingForFirstInput || Helpers.SequenceDiff(inputBuffer.Tick, player.LastReceivedTick) > 0)
                 {
                     _inputPool.TryDequeue(out inputBuffer.Data);
-                    Utils.ResizeOrCreate(ref inputBuffer.Data, InputProcessor.InputSize);
+                    Helpers.ResizeOrCreate(ref inputBuffer.Data, InputProcessor.InputSize);
                     fixed(byte* inputData = inputBuffer.Data, rawDecodedData = actualData)
                         RefMagic.CopyBlock(inputData, rawDecodedData, (uint)InputProcessor.InputSize);
 
@@ -364,7 +364,7 @@ namespace LiteEntitySystem
             {
                 var player = _netPlayersArray[pidx];
                 if (player.State != NetPlayerState.RequestBaseline)
-                    _minimalTick = Utils.SequenceDiff(player.StateATick, _minimalTick) < 0 ? player.StateATick : _minimalTick;
+                    _minimalTick = Helpers.SequenceDiff(player.StateATick, _minimalTick) < 0 ? player.StateATick : _minimalTick;
                 else if (maxBaseline == 0)
                 {
                     maxBaseline = sizeof(BaselineDataHeader);
@@ -562,7 +562,7 @@ namespace LiteEntitySystem
                 player.StateBTick = inputData.StateB;
                 player.LerpTime = inputData.LerpMsec;
                 //Logger.Log($"[SEM] CT: {player.LastProcessedTick}, stateA: {player.StateATick}, stateB: {player.StateBTick}");
-                player.SimulatedServerTick = Utils.LerpSequence(inputData.StateA, inputData.StateB, inputData.LerpMsec);
+                player.SimulatedServerTick = Helpers.LerpSequence(inputData.StateA, inputData.StateB, inputData.LerpMsec);
                 if (player.State == NetPlayerState.WaitingForFirstInputProcess)
                     player.State = NetPlayerState.Active;
 

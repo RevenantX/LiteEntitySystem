@@ -5,7 +5,7 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncList<T> : SyncableField, ICollection<T>, IReadOnlyList<T> where T : unmanaged
+    public partial class SyncList<T> : SyncableField, ICollection<T>, IReadOnlyList<T> where T : unmanaged
     {
         public int Count => _count;
         public bool IsReadOnly => false;
@@ -18,7 +18,7 @@ namespace LiteEntitySystem.Extensions
         private RemoteCall<int> _removeAtAction;
         private RemoteCallSpan<T> _initAction;
 
-        protected override void RegisterRPC(in SyncableRPCRegistrator r)
+        protected internal override void RegisterRPC(in SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, Add, ref _addAction);
             r.CreateClientAction(this, Clear, ref _clearAction);
@@ -26,14 +26,14 @@ namespace LiteEntitySystem.Extensions
             r.CreateClientAction(this, Init, ref _initAction);
         }
 
-        protected override void OnSyncRequested()
+        protected internal override void OnSyncRequested()
         {
             ExecuteRPC(_initAction, new ReadOnlySpan<T>(_data, 0, _count));
         }
 
         private void Init(ReadOnlySpan<T> data)
         {
-            Utils.ResizeIfFull(ref _data, data.Length);
+            Helpers.ResizeIfFull(ref _data, data.Length);
             data.CopyTo(_data);
             _count = data.Length;
         }

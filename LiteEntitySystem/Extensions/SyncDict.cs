@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncDict<TKey,TValue> : SyncableField, IEnumerable<KeyValuePair<TKey,TValue>> where TKey : unmanaged where TValue : unmanaged
+    public partial class SyncDict<TKey,TValue> : SyncableField, IEnumerable<KeyValuePair<TKey,TValue>> where TKey : unmanaged where TValue : unmanaged
     {
         private struct KeyValue
         {
@@ -31,7 +31,7 @@ namespace LiteEntitySystem.Extensions
         public Dictionary<TKey, TValue>.ValueCollection Values => _data.Values;
         private static KeyValue[] KvCache = new KeyValue[8];
 
-        protected override void RegisterRPC(in SyncableRPCRegistrator r)
+        protected internal override void RegisterRPC(in SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, AddAction, ref _addAction);
             r.CreateClientAction(this, Clear, ref _clearAction);
@@ -39,7 +39,7 @@ namespace LiteEntitySystem.Extensions
             r.CreateClientAction(this, InitAction, ref _initAction);
         }
 
-        protected override void OnSyncRequested()
+        protected internal override void OnSyncRequested()
         {
             int cacheCount = 0;
             if (_data.Count > KvCache.Length)

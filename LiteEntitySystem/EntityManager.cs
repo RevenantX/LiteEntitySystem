@@ -177,17 +177,12 @@ namespace LiteEntitySystem
         
         public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged
         {
-            ValueProcessors.RegisteredProcessors[typeof(T)] = new UserTypeProcessor<T>(interpolationDelegate);
+            ValueProcessors.RegisteredProcessors[typeof(T)] = new ValueTypeProcessor<T>(interpolationDelegate);
         }
         
         public static void RegisterFieldType<T>() where T : unmanaged
         {
-            ValueProcessors.RegisteredProcessors[typeof(T)] = new UserTypeProcessor<T>(null);
-        }
-
-        private static void RegisterBasicFieldType<T>(ValueTypeProcessor<T> proc) where T : unmanaged
-        {
-            ValueProcessors.RegisteredProcessors.Add(typeof(T), proc);
+            ValueProcessors.RegisteredProcessors[typeof(T)] = new ValueTypeProcessor<T>(null);
         }
 
         static EntityManager()
@@ -196,18 +191,18 @@ namespace LiteEntitySystem
             if (IntPtr.Size == 4)
                 K4os.Compression.LZ4.LZ4Codec.Enforce32 = true;
 #endif
-            RegisterBasicFieldType(new ValueTypeProcessorByte());
-            RegisterBasicFieldType(new ValueTypeProcessorSByte());
-            RegisterBasicFieldType(new ValueTypeProcessorShort());
-            RegisterBasicFieldType(new ValueTypeProcessorUShort());
-            RegisterBasicFieldType(new ValueTypeProcessorInt());
-            RegisterBasicFieldType(new ValueTypeProcessorUInt());
-            RegisterBasicFieldType(new ValueTypeProcessorLong());
-            RegisterBasicFieldType(new ValueTypeProcessorULong());
-            RegisterBasicFieldType(new ValueTypeProcessorFloat());
-            RegisterBasicFieldType(new ValueTypeProcessorDouble());
-            RegisterBasicFieldType(new ValueTypeProcessorBool());
-            RegisterBasicFieldType(new ValueTypeProcessorEntitySharedReference());
+            RegisterFieldType<byte>();
+            RegisterFieldType<sbyte>();
+            RegisterFieldType<short>();
+            RegisterFieldType<ushort>();
+            RegisterFieldType<int>(Helpers.Lerp);
+            RegisterFieldType<uint>();
+            RegisterFieldType<long>(Helpers.Lerp);
+            RegisterFieldType<ulong>();
+            RegisterFieldType<float>(Helpers.Lerp);
+            RegisterFieldType<double>(Helpers.Lerp);
+            RegisterFieldType<bool>();
+            RegisterFieldType<EntitySharedReference>();
             RegisterFieldType<FloatAngle>(FloatAngle.Lerp);
         }
 

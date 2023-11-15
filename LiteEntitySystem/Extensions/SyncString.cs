@@ -4,7 +4,7 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncString : SyncableField
+    public partial class SyncString : SyncableField
     {
         private static readonly UTF8Encoding Encoding = new(false, true);
         private byte[] _stringData;
@@ -21,13 +21,13 @@ namespace LiteEntitySystem.Extensions
                 if (_string == value)
                     return;
                 _string = value;
-                Utils.ResizeOrCreate(ref _stringData, Encoding.GetMaxByteCount(_string.Length));
+                Helpers.ResizeOrCreate(ref _stringData, Encoding.GetMaxByteCount(_string.Length));
                 _size = Encoding.GetBytes(_string, 0, _string.Length, _stringData, 0);
                 ExecuteRPC(_setStringClientCall, new ReadOnlySpan<byte>(_stringData, 0, _size));
             }
         }
 
-        protected override void RegisterRPC(in SyncableRPCRegistrator r)
+        protected internal override void RegisterRPC(in SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, SetNewString, ref _setStringClientCall);
         }
@@ -47,7 +47,7 @@ namespace LiteEntitySystem.Extensions
             _string = Encoding.GetString(data);
         }
 
-        protected override void OnSyncRequested()
+        protected internal override void OnSyncRequested()
         {
             ExecuteRPC(_setStringClientCall, new ReadOnlySpan<byte>(_stringData, 0, _size));
         }

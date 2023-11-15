@@ -29,13 +29,13 @@ namespace LiteEntitySystem
     /// <summary>
     /// Base class for simple (not controlled by controller) entity
     /// </summary>
-    public abstract class EntityLogic : InternalEntity
+    public abstract partial class EntityLogic : InternalEntity
     {
         //It should be in such order because later it checks rollbacks
-        [SyncVarFlags(SyncFlags.NeverRollBack)]
+        [SyncVarFlags(SyncFlags.NeverRollBack), BindOnChange(nameof(OnOwnerChange))]
         internal SyncVar<byte> InternalOwnerId;
         
-        [SyncVarFlags(SyncFlags.NeverRollBack)]
+        [SyncVarFlags(SyncFlags.NeverRollBack), BindOnChange(nameof(OnParentChange))]
         private SyncVar<EntitySharedReference> _parentId;
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace LiteEntitySystem
                 for (int i = 0; i < _lagCompensatedCount; i++)
                 {
                     ref var field = ref _lagCompensatedFields[i];
-                    field.TypeProcessor.WriteTo(this, field.Offset, history + historyOffset);
+                    FieldSave(in field, new Span<byte>(history + historyOffset, field.IntSize));
                     historyOffset += field.IntSize;
                 }
             }
@@ -84,7 +84,7 @@ namespace LiteEntitySystem
                 return;
             ushort tick = EntityManager.IsClient ? ClientManager.ServerTick : EntityManager.Tick;
             byte maxHistory = (byte)EntityManager.MaxHistorySize;
-            if (Utils.SequenceDiff(player.StateATick, tick) >= 0 || Utils.SequenceDiff(player.StateBTick, tick) > 0)
+            if (Helpers.SequenceDiff(player.StateATick, tick) >= 0 || Helpers.SequenceDiff(player.StateBTick, tick) > 0)
             {
                 Logger.Log($"LagCompensationMiss. Tick: {tick}, StateA: {player.StateATick}, StateB: {player.StateBTick}");
                 return;
@@ -98,12 +98,11 @@ namespace LiteEntitySystem
                 for (int i = 0; i < _lagCompensatedCount; i++)
                 {
                     ref var field = ref _lagCompensatedFields[i];
-                    field.TypeProcessor.LoadHistory(
-                        this, 
-                        field.Offset,
-                        history + historyCurrent,
-                        history + historyAOffset,
-                        history + historyBOffset,
+                    FieldLoadHistory(
+                        in field,
+                        new Span<byte>(history + historyCurrent, field.IntSize),
+                        new ReadOnlySpan<byte>(history + historyAOffset, field.IntSize),
+                        new ReadOnlySpan<byte>(history + historyBOffset, field.IntSize),
                         player.LerpTime);
                     historyAOffset += field.IntSize;
                     historyBOffset += field.IntSize;
@@ -126,7 +125,7 @@ namespace LiteEntitySystem
                 for (int i = 0; i < _lagCompensatedCount; i++)
                 {
                     ref var field = ref _lagCompensatedFields[i];
-                    field.TypeProcessor.SetFrom(this, field.Offset, history + historyOffset);
+                    FieldLoad(in field, new ReadOnlySpan<byte>(history + historyOffset, field.IntSize));
                     historyOffset += field.IntSize;
                 }
             }
@@ -288,13 +287,6 @@ namespace LiteEntitySystem
             {
                 SetOwner(child, ownerId);
             }
-        }
-
-        protected override void RegisterRPC(in RPCRegistrator r)
-        {
-            base.RegisterRPC(in r);
-            r.BindOnChange(this, ref _parentId, OnParentChange);
-            r.BindOnChange(this, ref InternalOwnerId, OnOwnerChange);
         }
 
         protected EntityLogic(EntityParams entityParams) : base(entityParams)

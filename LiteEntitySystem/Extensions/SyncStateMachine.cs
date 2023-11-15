@@ -9,7 +9,7 @@ namespace LiteEntitySystem.Extensions
         public Action OnExit;
     }
     
-    public class SyncStateMachine<T> : SyncableField where T : unmanaged, Enum
+    public partial class SyncStateMachine<T> : SyncableField where T : unmanaged, Enum
     {
         private SyncVar<T> _state;
 

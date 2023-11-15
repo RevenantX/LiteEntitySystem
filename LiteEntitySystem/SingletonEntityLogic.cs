@@ -5,7 +5,7 @@ namespace LiteEntitySystem
     /// <summary>
     /// Base class for singletons entity that can exists in only one instance
     /// </summary>
-    public abstract class SingletonEntityLogic : InternalEntity
+    public abstract partial class SingletonEntityLogic : InternalEntity
     {
         internal override bool IsControlledBy(byte playerId)
         {

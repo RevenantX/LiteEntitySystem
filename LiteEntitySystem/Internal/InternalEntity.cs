@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
-    public abstract class InternalEntity : IComparable<InternalEntity>
+    public abstract partial class InternalEntity : InternalSyncType, IComparable<InternalEntity>
     {
         /// <summary>
         /// Entity class id
@@ -22,7 +22,7 @@ namespace LiteEntitySystem.Internal
         
         internal readonly byte Version;
         
-        [SyncVarFlags(SyncFlags.NeverRollBack)]
+        [SyncVarFlags(SyncFlags.NeverRollBack), BindOnChange(nameof(OnDestroyChange))]
         private SyncVar<bool> _isDestroyed;
         
         /// <summary>
@@ -161,28 +161,19 @@ namespace LiteEntitySystem.Internal
                     ref var field = ref classData.Fields[i];
                     if (field.FieldType == FieldType.SyncVar)
                     {
-                        ref byte id = ref RefMagic.RefFieldValue<byte>(this, field.Offset + field.IntSize);
-                        id = (byte)i;
+                        //TODO ?
+                        //ref byte id = ref RefMagic.RefFieldValue<byte>(this, field.Offset + field.IntSize);
+                        //id = (byte)i;
                     }
                 }
-                for (int i = 0; i < classData.SyncableFields.Length; i++)
-                {
-                    var syncField = RefMagic.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
-                    syncField.ParentEntityId = Id;
-                    syncField.InternalInit(new SyncableRPCRegistrator(this));
-                }
+                InternalSyncablesInit();
                 RegisterRPC(new RPCRegistrator());
                 //Logger.Log($"RegisterRPCs for class: {classData.ClassId}");
                 classData.IsRpcBound = true;
             }
             else
             {
-                //setup id for later sync calls
-                for (int i = 0; i < classData.SyncableFields.Length; i++)
-                {
-                    var syncField = RefMagic.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
-                    syncField.ParentEntityId = Id;
-                }
+                InternalSyncablesSetId();
             }
         }
 
@@ -210,7 +201,7 @@ namespace LiteEntitySystem.Internal
         /// <param name="r"></param>
         protected virtual void RegisterRPC(in RPCRegistrator r)
         {
-            r.BindOnChange(this, ref _isDestroyed, OnDestroyChange);
+            
         }
 
         protected InternalEntity(EntityParams entityParams)
@@ -237,5 +228,9 @@ namespace LiteEntitySystem.Internal
         {
             return $"Entity. Id: {Id}, ClassId: {ClassId}, Version: {Version}";
         }
+        
+        protected internal virtual void InternalSyncablesResync() {}
+        protected internal virtual void InternalSyncablesInit() {}
+        protected internal virtual void InternalSyncablesSetId() {}
     }
 }

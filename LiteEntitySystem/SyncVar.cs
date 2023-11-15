@@ -27,16 +27,20 @@ namespace LiteEntitySystem
         }
     }
 
+    [AttributeUsage(AttributeTargets.Field)]
+    public class BindOnChange : Attribute
+    {
+        public BindOnChange(string methodName) { }
+    }
+
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct SyncVar<T> where T : unmanaged
     {
         public T Value;
-        internal byte FieldId;
 
         public SyncVar(T value)
         {
             Value = value;
-            FieldId = 0;
         }
 
         public static implicit operator T(SyncVar<T> sv)
@@ -46,7 +50,7 @@ namespace LiteEntitySystem
         
         public static implicit operator SyncVar<T>(T v)
         {
-            return new SyncVar<T> { Value = v };
+            return new SyncVar<T>(v);
         }
 
         public override string ToString()

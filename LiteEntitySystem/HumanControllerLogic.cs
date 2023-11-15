@@ -9,7 +9,7 @@ namespace LiteEntitySystem
     /// Base class for human Controller entities
     /// </summary>
     [UpdateableEntity(true)]
-    public abstract class HumanControllerLogic<TInput> : ControllerLogic where TInput : unmanaged
+    public abstract partial class HumanControllerLogic<TInput> : ControllerLogic where TInput : unmanaged
     {
         private struct ServerResponse
         {
@@ -65,7 +65,7 @@ namespace LiteEntitySystem
             while (_awaitingRequests.Count > 0)
             {
                 var awaitingRequest = _awaitingRequests.Dequeue();
-                int diff = Utils.SequenceDiff(response.RequestId, awaitingRequest.Item1);
+                int diff = Helpers.SequenceDiff(response.RequestId, awaitingRequest.Item1);
                 if (diff == 0)
                 {
                     awaitingRequest.Item2(response.Success);
@@ -194,7 +194,7 @@ namespace LiteEntitySystem
     /// <summary>
     /// Base class for human Controller entities with typed ControlledEntity field
     /// </summary>
-    public abstract class HumanControllerLogic<TInput, T> : HumanControllerLogic<TInput> where T : PawnLogic where TInput : unmanaged
+    public abstract partial class HumanControllerLogic<TInput, T> : HumanControllerLogic<TInput> where T : PawnLogic where TInput : unmanaged
     {
         public T ControlledEntity => GetControlledEntity<T>();
 
