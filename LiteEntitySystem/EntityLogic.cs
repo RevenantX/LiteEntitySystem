@@ -137,7 +137,7 @@ namespace LiteEntitySystem
         /// </summary>
         public void EnableLagCompensationForOwner()
         {
-            if (InternalOwnerId == EntityManager.ServerPlayerId)
+            if (InternalOwnerId.Value == EntityManager.ServerPlayerId)
                 return;
             EntityManager.EnableLagCompensation(EntityManager.IsClient
                 ? ClientManager.LocalPlayer
@@ -156,7 +156,7 @@ namespace LiteEntitySystem
         {
             return EntityManager.IsClient
                 ? (EntityManager.InRollBackState ? ClientManager.RollBackTick : EntityManager.Tick) 
-                : (InternalOwnerId == EntityManager.ServerPlayerId ? EntityManager.Tick : ServerManager.GetPlayer(InternalOwnerId).LastProcessedTick);
+                : (InternalOwnerId.Value == EntityManager.ServerPlayerId ? EntityManager.Tick : ServerManager.GetPlayer(InternalOwnerId).LastProcessedTick);
         }
         
         /// <summary>
@@ -169,7 +169,7 @@ namespace LiteEntitySystem
         {
             if (EntityManager.IsServer)
             {
-                if (InternalOwnerId == EntityManager.ServerPlayerId)
+                if (InternalOwnerId.Value == EntityManager.ServerPlayerId)
                 {
                     return ServerManager.AddEntity(initMethod);
                 }
@@ -201,7 +201,7 @@ namespace LiteEntitySystem
                 return;
             
             var id = new EntitySharedReference(parentEntity);
-            if (id == _parentId)
+            if (id == _parentId.Value)
                 return;
             
             EntitySharedReference oldId = _parentId;
@@ -209,7 +209,7 @@ namespace LiteEntitySystem
             OnParentChange(oldId);
             
             var newParent = EntityManager.GetEntityById<EntityLogic>(_parentId)?.InternalOwnerId ?? EntityManager.ServerPlayerId;
-            if (InternalOwnerId != newParent)
+            if (InternalOwnerId.Value != newParent.Value)
             {
                 SetOwner(this, newParent);
             }
@@ -243,7 +243,7 @@ namespace LiteEntitySystem
 
         internal override bool IsControlledBy(byte playerId)
         {
-            return playerId == InternalOwnerId;
+            return playerId == InternalOwnerId.Value;
         }
 
         internal override void DestroyInternal()

@@ -147,7 +147,7 @@ namespace LiteEntitySystem.Internal
                 _owner = controllerOwner;
                 MakeOnSync(serverTick);
             }
-            else if (_entity is EntityLogic entityLogic && _owner != entityLogic.InternalOwnerId)
+            else if (_entity is EntityLogic entityLogic && _owner != entityLogic.InternalOwnerId.Value)
             {
                 _owner = entityLogic.InternalOwnerId;
                 MakeOnSync(serverTick);

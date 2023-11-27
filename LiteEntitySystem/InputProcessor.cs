@@ -92,7 +92,7 @@ namespace LiteEntitySystem
             {
                 foreach (var controller in manager.GetControllers<HumanControllerLogic<TInput>>())
                 {
-                    if(controller.InternalOwnerId != ownerId)
+                    if(controller.InternalOwnerId.Value != ownerId)
                         continue;
                     controller.ReadInput(*(TInput*)rawData);
                     return;
@@ -106,7 +106,7 @@ namespace LiteEntitySystem
             {
                 foreach (var controller in manager.GetControllers<HumanControllerLogic<TInput>>())
                 {
-                    if(controller.InternalOwnerId != ownerId)
+                    if(controller.InternalOwnerId.Value != ownerId)
                         continue;
                     controller.GenerateInput(out var input);
                     *(TInput*)(rawData + offset) = input;
