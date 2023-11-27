@@ -45,7 +45,7 @@ namespace LiteEntitySystem
 
         public NetPlayer GetAssignedPlayer()
         {
-            if (InternalOwnerId == EntityManager.ServerPlayerId)
+            if (InternalOwnerId.Value == EntityManager.ServerPlayerId)
                 return null;
             if (EntityManager.IsClient)
                 return ClientManager.LocalPlayer;

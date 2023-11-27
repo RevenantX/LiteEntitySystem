@@ -27,7 +27,7 @@ namespace LiteEntitySystem
 
         internal override bool IsControlledBy(byte playerId)
         {
-            return InternalOwnerId == playerId;
+            return InternalOwnerId.Value == playerId;
         }
         
         public virtual void BeforeControlledUpdate()

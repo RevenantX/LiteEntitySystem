@@ -67,8 +67,6 @@ namespace LiteEntitySystem.Extensions
             if (_value == null)
                 _value = ScriptableObject.CreateInstance<T>();
             JsonUtility.FromJsonOverwrite(Encoding.GetString(CompressionBuffer, 0, origSize), _value);
-            if(_value is SharedScriptableObject sso)
-                sso.LoadResources();
         }
 
         public static implicit operator T(JsonSyncableField<T> field)
