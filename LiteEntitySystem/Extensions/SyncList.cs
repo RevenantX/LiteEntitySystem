@@ -13,10 +13,10 @@ namespace LiteEntitySystem.Extensions
         private T[] _data;
         private int _count;
 
-        private RemoteCall<T> _addAction;
-        private RemoteCall _clearAction;
-        private RemoteCall<int> _removeAtAction;
-        private RemoteCallSpan<T> _initAction;
+        private static RemoteCall<T> _addAction;
+        private static RemoteCall _clearAction;
+        private static RemoteCall<int> _removeAtAction;
+        private static RemoteCallSpan<T> _initAction;
 
         protected internal override void RegisterRPC(in SyncableRPCRegistrator r)
         {

@@ -22,7 +22,7 @@ namespace LiteEntitySystem.Extensions
             }
         }
 
-        private RemoteCallSpan<byte> _initAction;
+        private static RemoteCallSpan<byte> _initAction;
 
         private readonly Func<T> _constructor;
 

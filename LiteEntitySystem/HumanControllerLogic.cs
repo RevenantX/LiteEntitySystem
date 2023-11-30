@@ -39,7 +39,7 @@ namespace LiteEntitySystem
         public const int StringSizeLimit = 1024;
         private readonly NetPacketProcessor _packetProcessor = new(StringSizeLimit);
         private readonly NetDataWriter _requestWriter = new();
-        private RemoteCall<ServerResponse> _serverResponseRpc;
+        private static RemoteCall<ServerResponse> _serverResponseRpc;
         private ushort _requestId;
         private readonly Queue<(ushort,Action<bool>)> _awaitingRequests;
 

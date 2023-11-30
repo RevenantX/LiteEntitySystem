@@ -22,10 +22,10 @@ namespace LiteEntitySystem.Extensions
 
         private readonly Dictionary<TKey, TValue> _data = new ();
 
-        private RemoteCall<KeyValue> _addAction;
-        private RemoteCall _clearAction;
-        private RemoteCall<TKey> _removeAction;
-        private RemoteCallSpan<KeyValue> _initAction;
+        private static RemoteCall<KeyValue> _addAction;
+        private static RemoteCall _clearAction;
+        private static RemoteCall<TKey> _removeAction;
+        private static RemoteCallSpan<KeyValue> _initAction;
 
         public Dictionary<TKey, TValue>.KeyCollection Keys => _data.Keys;
         public Dictionary<TKey, TValue>.ValueCollection Values => _data.Values;

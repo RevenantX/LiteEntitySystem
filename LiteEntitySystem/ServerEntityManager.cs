@@ -500,6 +500,7 @@ namespace LiteEntitySystem
             }
             //create entity data and filters
             ref var classData = ref ClassDataDict[EntityClassInfo<T>.ClassId];
+            var classMetadata = GeneratedClassDataHandler<T>.ClassMetadata;
             T entity;
             
             if (classData.IsLocalOnly)
@@ -521,7 +522,7 @@ namespace LiteEntitySystem
                     entityId,
                     stateSerializer.IncrementVersion(_tick),
                     this));
-                stateSerializer.Init(ref classData, entity);
+                stateSerializer.Init(entity);
                 
                 initMethod?.Invoke(entity);
                 ConstructEntity(entity);

@@ -472,7 +472,7 @@ namespace LiteEntitySystem
                 throw new Exception($"Unregistered entity class: {entityParams.ClassId}");
             }
             var entity = classData.EntityConstructor(entityParams);
-            entity.RegisterRpcInternal();
+            entity.GetClassMetadata();
 
             if(entityParams.Id < MaxSyncedEntityCount)
                 MaxSyncedEntityId = MaxSyncedEntityId < entityParams.Id ? entityParams.Id : MaxSyncedEntityId;
@@ -488,7 +488,7 @@ namespace LiteEntitySystem
         {
             ref var classData = ref ClassDataDict[e.ClassId];
             
-            e.CallConstruct();
+            e.OnConstructed();
 
             if (classData.IsSingleton)
             {
@@ -503,7 +503,7 @@ namespace LiteEntitySystem
                     _entityFilters[baseId]?.Add(e);
             }
             
-            if (IsEntityAlive(classData, e))
+            if (IsEntityAlive(e))
             {
                 AliveEntities.Add(e);
             }
@@ -511,9 +511,9 @@ namespace LiteEntitySystem
                 LagCompensatedEntities.Add(entityLogic);
         }
 
-        private bool IsEntityAlive(EntityClassData classData, InternalEntity entity)
+        private bool IsEntityAlive(InternalEntity entity)
         {
-            return classData.IsUpdateable && (IsServer || entity.IsLocal || (IsClient && classData.UpdateOnClient));
+            return entity.GetClassMetadata().IsUpdateable && (IsServer || entity.IsLocal || (IsClient &&  entity.GetClassMetadata().UpdateOnClient));
         }
 
         internal virtual void RemoveEntity(InternalEntity e)
@@ -533,7 +533,7 @@ namespace LiteEntitySystem
                     _entityFilters[baseId]?.Remove(e);
             }
 
-            if (IsEntityAlive(classData, e))
+            if (IsEntityAlive(e))
             {
                 AliveEntities.Remove(e);
                 if(!e.IsLocal && e is EntityLogic entityLogic && entityLogic.HasLagCompensation)

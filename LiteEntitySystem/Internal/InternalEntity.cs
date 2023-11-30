@@ -57,12 +57,6 @@ namespace LiteEntitySystem.Internal
 
         internal abstract bool IsControlledBy(byte playerId);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal ref EntityClassData GetClassData()
-        {
-            return ref EntityManager.ClassDataDict[ClassId];
-        }
-
         /// <summary>
         /// Is locally created entity
         /// </summary>
@@ -103,96 +97,52 @@ namespace LiteEntitySystem.Internal
             OnDestroy();
             EntityManager.RemoveEntity(this);
         }
+        
+        protected internal virtual void InternalSyncablesResync() {}
+
+        protected internal virtual SyncableField InternalGetSyncableFieldById(int id)
+        {
+            return null;
+        }
 
         /// <summary>
         /// Fixed update. Called if entity has attribute <see cref="UpdateableEntity"/>
         /// </summary>
-        public virtual void Update()
+        protected internal virtual void Update()
         {
         }
 
         /// <summary>
         /// Called only on <see cref="ClientEntityManager.Update"/> and if entity has attribute <see cref="UpdateableEntity"/>
         /// </summary>
-        public virtual void VisualUpdate()
+        protected internal virtual void VisualUpdate()
         {
             
         }
 
-        internal void CallConstruct() => OnConstructed();
-
         /// <summary>
         /// Called when entity constructed
         /// </summary>
-        protected virtual void OnConstructed()
+        protected internal virtual void OnConstructed()
         {
-        }
-
-        internal void RegisterRpcInternal()
-        {
-            ref var classData = ref GetClassData();
-            //load cache and/or init RpcIds
-            for (ushort i = 0; i < classData.RpcOffsets.Length; i++)
-            {
-                var rpcOffset = classData.RpcOffsets[i];
-                if (rpcOffset.SyncableOffset == -1)
-                {
-                    ref var remoteCall = ref RefMagic.RefFieldValue<RemoteCall>(this, rpcOffset.Offset);
-                    remoteCall = new RemoteCall(i, classData.RemoteCallsServer[i]);
-                }
-                else
-                {
-                    var syncable = RefMagic.RefFieldValue<SyncableField>(this, rpcOffset.SyncableOffset);
-                    ref var remoteCall = ref RefMagic.RefFieldValue<RemoteCall>(syncable, rpcOffset.Offset);
-                    remoteCall = new RemoteCall(i, classData.RemoteCallsServer[i]);
-                    syncable.ParentEntityId = Id;
-                    if (rpcOffset.Flags.HasFlagFast(SyncFlags.OnlyForOwner))
-                        syncable.Flags = ExecuteFlags.SendToOwner;
-                    else if (rpcOffset.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
-                        syncable.Flags = ExecuteFlags.SendToOther;
-                    else
-                        syncable.Flags = ExecuteFlags.SendToAll;
-                }
-            }
-            if(!classData.IsRpcBound)
-            {
-                for (int i = 0; i < classData.FieldsCount; i++)
-                {
-                    ref var field = ref classData.Fields[i];
-                    if (field.FieldType == FieldType.SyncVar)
-                    {
-                        //TODO ?
-                        //ref byte id = ref RefMagic.RefFieldValue<byte>(this, field.Offset + field.IntSize);
-                        //id = (byte)i;
-                    }
-                }
-                InternalSyncablesInit();
-                RegisterRPC(new RPCRegistrator());
-                //Logger.Log($"RegisterRPCs for class: {classData.ClassId}");
-                classData.IsRpcBound = true;
-            }
-            else
-            {
-                InternalSyncablesSetId();
-            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void ExecuteRPC(in RemoteCall rpc)
         {
-            ((Action<InternalEntity>)rpc.CachedAction)(this);
+            (EntityManager.IsServer ? rpc.CachedActionServer : rpc.CachedActionClient)(this);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void ExecuteRPC<T>(in RemoteCall<T> rpc, T value) where T : unmanaged
         {
-            ((Action<InternalEntity, T>)rpc.CachedAction)(this, value);
+            (EntityManager.IsServer ? rpc.CachedActionServer : rpc.CachedActionClient)(this, value);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void ExecuteRPC<T>(in RemoteCallSpan<T> rpc, ReadOnlySpan<T> value) where T : unmanaged
         {
-            ((SpanAction<InternalEntity, T>)rpc.CachedAction)(this, value);
+            (EntityManager.IsServer ? rpc.CachedActionServer : rpc.CachedActionClient)(this, value);
         }
 
         /// <summary>
@@ -228,9 +178,5 @@ namespace LiteEntitySystem.Internal
         {
             return $"Entity. Id: {Id}, ClassId: {ClassId}, Version: {Version}";
         }
-        
-        protected internal virtual void InternalSyncablesResync() {}
-        protected internal virtual void InternalSyncablesInit() {}
-        protected internal virtual void InternalSyncablesSetId() {}
     }
 }

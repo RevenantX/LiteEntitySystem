@@ -63,6 +63,7 @@ namespace LiteEntitySystem
 
         internal unsafe void WriteHistory(ushort tick)
         {
+            var fieldManipulator = GetFieldManipulator();
             byte maxHistory = (byte)EntityManager.MaxHistorySize;
             _filledHistory = Math.Min(_filledHistory + 1, maxHistory);
             int historyOffset = ((tick % maxHistory)+1)*_lagCompensatedSize;
@@ -71,7 +72,7 @@ namespace LiteEntitySystem
                 for (int i = 0; i < _lagCompensatedCount; i++)
                 {
                     ref var field = ref _lagCompensatedFields[i];
-                    FieldSave(in field, new Span<byte>(history + historyOffset, field.IntSize));
+                    fieldManipulator.Save(in field, new Span<byte>(history + historyOffset, field.IntSize));
                     historyOffset += field.IntSize;
                 }
             }
@@ -92,13 +93,14 @@ namespace LiteEntitySystem
             int historyAOffset = ((player.StateATick % maxHistory)+1)*_lagCompensatedSize;
             int historyBOffset = ((player.StateBTick % maxHistory)+1)*_lagCompensatedSize;
             int historyCurrent = 0;
+            var fieldManipulator = GetFieldManipulator();
 
             fixed (byte* history = _history)
             {
                 for (int i = 0; i < _lagCompensatedCount; i++)
                 {
                     ref var field = ref _lagCompensatedFields[i];
-                    FieldLoadHistory(
+                    fieldManipulator.LoadHistory(
                         in field,
                         new Span<byte>(history + historyCurrent, field.IntSize),
                         new ReadOnlySpan<byte>(history + historyAOffset, field.IntSize),
@@ -118,6 +120,7 @@ namespace LiteEntitySystem
         {
             if (!_lagCompensationEnabled)
                 return;
+            var fieldManipulator = GetFieldManipulator();
             _lagCompensationEnabled = false;
             int historyOffset = 0;
             fixed (byte* history = _history)
@@ -125,7 +128,7 @@ namespace LiteEntitySystem
                 for (int i = 0; i < _lagCompensatedCount; i++)
                 {
                     ref var field = ref _lagCompensatedFields[i];
-                    FieldLoad(in field, new ReadOnlySpan<byte>(history + historyOffset, field.IntSize));
+                    fieldManipulator.Load(in field, new ReadOnlySpan<byte>(history + historyOffset, field.IntSize));
                     historyOffset += field.IntSize;
                 }
             }
@@ -291,7 +294,7 @@ namespace LiteEntitySystem
 
         protected EntityLogic(EntityParams entityParams) : base(entityParams)
         {
-            ref var classData = ref GetClassData();
+            var classData = GetClassMetadata();
             _lagCompensatedSize = classData.LagCompensatedSize;
             if (_lagCompensatedSize > 0)
             {

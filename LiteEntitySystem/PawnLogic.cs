@@ -25,7 +25,7 @@
             }
         }
 
-        public override void Update()
+        protected internal override void Update()
         {
             base.Update();
             Controller?.BeforeControlledUpdate();

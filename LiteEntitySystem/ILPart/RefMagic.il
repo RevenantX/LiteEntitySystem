@@ -28,28 +28,6 @@
 
 .class public abstract auto ansi sealed beforefieldinit LiteEntitySystem.Internal.RefMagic extends [netstandard]System.Object
 {
-    .method public hidebysig static !!T& RefFieldValue<T>(object obj, int32 offs) cil managed aggressiveinlining
-    {
-        ldarg obj
-        conv.i
-        ldarg offs
-        add
-        ret
-    }
-    
-    .method public hidebysig static !!T& RefFieldValuePin<T>(object obj, int32 offs) cil managed aggressiveinlining
-    {
-        .locals init (
-          [0] object& pinned V_1
-        )
-        ldarg obj
-        stloc.0
-        ldloc.0
-        ldarg offs
-        add
-        ret
-    }
-
     .method public hidebysig static void CopyBlock(void* destination, void* source, unsigned int32 byteCount) cil managed
     {
         .maxstack 3

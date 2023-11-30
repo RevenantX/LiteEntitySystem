@@ -170,22 +170,23 @@ namespace LiteEntitySystem
 
         private unsafe void OnAliveConstructed(InternalEntity entity)
         {
-            ref var classData = ref ClassDataDict[entity.ClassId];
+            var classMetadata = entity.GetClassMetadata();
+            var fieldManipulator = entity.GetFieldManipulator();
 
-            if (classData.InterpolatedFieldsSize > 0)
+            if (classMetadata.InterpolatedFieldsSize > 0)
             {
-                Helpers.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classData.InterpolatedFieldsSize);
+                Helpers.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classMetadata.InterpolatedFieldsSize);
                 
                 //for local interpolated
-                Helpers.ResizeOrCreate(ref _interpolatedInitialData[entity.Id], classData.InterpolatedFieldsSize);
+                Helpers.ResizeOrCreate(ref _interpolatedInitialData[entity.Id], classMetadata.InterpolatedFieldsSize);
             }
 
             fixed (byte* interpDataPtr = _interpolatedInitialData[entity.Id])
             {
-                for (int i = 0; i < classData.InterpolatedCount; i++)
+                for (int i = 0; i < classMetadata.InterpolatedCount; i++)
                 {
-                    ref var field = ref classData.Fields[i];
-                    entity.FieldSave(in field, new Span<byte>(interpDataPtr + field.FixedOffset, field.IntSize));
+                    ref var field = ref classMetadata.Fields[i];
+                    fieldManipulator.Save(in field, new Span<byte>(interpDataPtr + field.FixedOffset, field.IntSize));
                 }
             }
         }
@@ -408,20 +409,21 @@ namespace LiteEntitySystem
             //reset owned entities
             foreach (var entity in _predictedEntityFilter)
             {
-                ref var classData = ref entity.GetClassData();
-                if(entity.IsRemoteControlled && !classData.HasRemoteRollbackFields)
+                var classMetadata = entity.GetClassMetadata();
+                var fieldManipulator = entity.GetFieldManipulator();
+                if(entity.IsRemoteControlled && !classMetadata.HasRemoteRollbackFields)
                     continue;
 
                 fixed (byte* predictedData = _predictedEntitiesData[entity.Id])
                 {
-                    for (int i = 0; i < classData.FieldsCount; i++)
+                    for (int i = 0; i < classMetadata.FieldsCount; i++)
                     {
-                        ref var field = ref classData.Fields[i];
+                        ref var field = ref classMetadata.Fields[i];
                         if ((entity.IsRemoteControlled && !field.Flags.HasFlagFast(SyncFlags.AlwaysRollback)) ||
                             field.Flags.HasFlagFast(SyncFlags.NeverRollBack) ||
                             field.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
                             continue;
-                        entity.FieldLoad(in field, new ReadOnlySpan<byte>(predictedData + field.PredictedOffset, field.IntSize));
+                        fieldManipulator.Load(in field, new ReadOnlySpan<byte>(predictedData + field.PredictedOffset, field.IntSize));
                     }
                 }
             }
@@ -462,13 +464,14 @@ namespace LiteEntitySystem
                 if(entity.IsLocal || !entity.IsLocalControlled)
                     continue;
                 
-                ref var classData = ref entity.GetClassData();
-                for(int i = 0; i < classData.InterpolatedCount; i++)
+                var classMetadata = entity.GetClassMetadata();
+                var fieldManipulator = entity.GetFieldManipulator();
+                for(int i = 0; i < classMetadata.InterpolatedCount; i++)
                 {
                     fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id])
                     {
-                        ref var field = ref classData.Fields[i];
-                        entity.FieldSave(in field, new Span<byte>(currentDataPtr + field.FixedOffset, field.IntSize));
+                        ref var field = ref classMetadata.Fields[i];
+                        fieldManipulator.Save(in field, new Span<byte>(currentDataPtr + field.FixedOffset, field.IntSize));
                     }
                 }
             }
@@ -527,7 +530,8 @@ namespace LiteEntitySystem
             //local only and UpdateOnClient
             foreach (var entity in AliveEntities)
             {
-                ref var classData = ref ClassDataDict[entity.ClassId];
+                var classMetadata = entity.GetClassMetadata();
+                var fieldManipulator = entity.GetFieldManipulator();
                 if (entity.IsLocal || entity.IsLocalControlled)
                 {
                     //save data for interpolation before update
@@ -535,25 +539,25 @@ namespace LiteEntitySystem
                            prevDataPtr = _interpolatePrevData[entity.Id])
                     {
                         //restore previous
-                        for(int i = 0; i < classData.InterpolatedCount; i++)
+                        for(int i = 0; i < classMetadata.InterpolatedCount; i++)
                         {
-                            ref var field = ref classData.Fields[i];
-                            entity.FieldLoad(in field, new ReadOnlySpan<byte>(currentDataPtr + field.FixedOffset, field.IntSize));
+                            ref var field = ref classMetadata.Fields[i];
+                            fieldManipulator.Load(in field, new ReadOnlySpan<byte>(currentDataPtr + field.FixedOffset, field.IntSize));
                         }
 
                         //update
                         entity.Update();
                 
                         //save current
-                        RefMagic.CopyBlock(prevDataPtr, currentDataPtr, (uint)classData.InterpolatedFieldsSize);
-                        for(int i = 0; i < classData.InterpolatedCount; i++)
+                        RefMagic.CopyBlock(prevDataPtr, currentDataPtr, (uint)classMetadata.InterpolatedFieldsSize);
+                        for(int i = 0; i < classMetadata.InterpolatedCount; i++)
                         {
-                            ref var field = ref classData.Fields[i];
-                            entity.FieldSave(in field, new Span<byte>(currentDataPtr + field.FixedOffset, field.IntSize));
+                            ref var field = ref classMetadata.Fields[i];
+                            fieldManipulator.Save(in field, new Span<byte>(currentDataPtr + field.FixedOffset, field.IntSize));
                         }
                     }
                 }
-                else if(classData.UpdateOnClient)
+                else if(classMetadata.UpdateOnClient)
                 {
                     entity.Update();
                 }
@@ -589,14 +593,15 @@ namespace LiteEntitySystem
                 {
                     ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
                     var entity = EntitiesDict[preloadData.EntityId];
-                    var fields = entity.GetClassData().Fields;
+                    var fields = entity.GetClassMetadata().Fields;
+                    var fieldManipulator = entity.GetFieldManipulator();
                     fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr = _stateB.Data)
                     {
                         for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
                         {
                             var interpolatedCache = preloadData.InterpolatedCaches[j];
                             ref var field = ref fields[interpolatedCache.Field];
-                            entity.FieldSetInterpolation(
+                            fieldManipulator.SetInterpolation(
                                 in field,
                                 new ReadOnlySpan<byte>(initialDataPtr + field.FixedOffset, field.IntSize),
                                 new ReadOnlySpan<byte>(nextDataPtr + interpolatedCache.StateReaderOffset, field.IntSize),
@@ -613,13 +618,14 @@ namespace LiteEntitySystem
                 if (!entity.IsLocalControlled && !entity.IsLocal)
                     continue;
                 
-                ref var classData = ref entity.GetClassData();
+                var classData = entity.GetClassMetadata();
+                var fieldManipulator = entity.GetFieldManipulator();
                 fixed (byte* currentDataPtr = _interpolatedInitialData[entity.Id], prevDataPtr = _interpolatePrevData[entity.Id])
                 {
                     for(int i = 0; i < classData.InterpolatedCount; i++)
                     {
                         ref var field = ref classData.Fields[i];
-                        entity.FieldSetInterpolation(
+                        fieldManipulator.SetInterpolation(
                             in field,
                             new ReadOnlySpan<byte>(prevDataPtr + field.FixedOffset, field.IntSize),
                             new ReadOnlySpan<byte>(currentDataPtr + field.FixedOffset, field.IntSize),
@@ -701,13 +707,13 @@ namespace LiteEntitySystem
 
         internal void AddOwned(EntityLogic entity)
         {
-            if (entity.GetClassData().IsUpdateable && !entity.GetClassData().UpdateOnClient)
+            if (entity.GetClassMetadata().IsUpdateable && !entity.GetClassMetadata().UpdateOnClient)
                 AliveEntities.Add(entity);
         }
         
         internal void RemoveOwned(EntityLogic entity)
         {
-            if (entity.GetClassData().IsUpdateable && !entity.GetClassData().UpdateOnClient)
+            if (entity.GetClassMetadata().IsUpdateable && !entity.GetClassMetadata().UpdateOnClient)
                 AliveEntities.Remove(entity);
         }
 
@@ -733,7 +739,7 @@ namespace LiteEntitySystem
             for (int i = 0; i < _syncCallsCount; i++)
             {
                 ref var syncCall = ref _syncCalls[i];
-                syncCall.Entity.FieldOnChange(in syncCall.Field, new ReadOnlySpan<byte>(_stateA.Data, syncCall.PrevDataPos, _stateA.Size-syncCall.PrevDataPos));
+                syncCall.Entity.GetFieldManipulator().OnChange(in syncCall.Field, new ReadOnlySpan<byte>(_stateA.Data, syncCall.PrevDataPos, _stateA.Size-syncCall.PrevDataPos));
             }
             _syncCallsCount = 0;
             
@@ -768,7 +774,7 @@ namespace LiteEntitySystem
                 {
                     //create new
                     entity = AddEntity(new EntityParams(classId, entityInstanceId, version, this));
-                    ref var cd = ref ClassDataDict[entity.ClassId];
+                    var cd = entity.GetClassMetadata();
                     if (cd.PredictedSize > 0)
                     {
                         Helpers.ResizeOrCreate(ref _predictedEntitiesData[entity.Id], cd.PredictedSize);
@@ -794,7 +800,8 @@ namespace LiteEntitySystem
                 return;
             }
             
-            ref var classData = ref entity.GetClassData();
+            var classData = entity.GetClassMetadata();
+            var fieldManipulator = entity.GetFieldManipulator();
             ref byte[] interpolatedInitialData = ref _interpolatedInitialData[entity.Id];
             int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
             bool writeInterpolationData = entity.IsRemoteControlled || fullSync;
@@ -815,7 +822,7 @@ namespace LiteEntitySystem
                     
                     if (field.FieldType == FieldType.SyncableSyncVar)
                     {
-                        entity.FieldLoad(in field, new ReadOnlySpan<byte>(readDataPtr, field.IntSize));
+                        fieldManipulator.Load(in field, new ReadOnlySpan<byte>(readDataPtr, field.IntSize));
                     }
                     else
                     {
@@ -827,12 +834,12 @@ namespace LiteEntitySystem
 
                         if (field.HasChangeNotification)
                         {
-                            if (entity.FieldLoadIfDifferent(in field, new ReadOnlySpan<byte>(readDataPtr, field.IntSize)))
+                            if (fieldManipulator.LoadIfDifferent(in field, new ReadOnlySpan<byte>(readDataPtr, field.IntSize)))
                                 _syncCalls[_syncCallsCount++] = new SyncCallInfo(ref field, entity, readerPosition);
                         }
                         else
                         {
-                            entity.FieldLoad(in field, new ReadOnlySpan<byte>(readDataPtr, field.IntSize));
+                            fieldManipulator.Load(in field, new ReadOnlySpan<byte>(readDataPtr, field.IntSize));
                         }
                     }
                     //Logger.Log($"E {entity.Id} Field updated: {field.Name}");

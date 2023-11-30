@@ -11,7 +11,7 @@ namespace LiteEntitySystem.Extensions
         private string _string;
         private int _size;
 
-        private RemoteCallSpan<byte> _setStringClientCall;
+        private static RemoteCallSpan<byte> _setStringClientCall;
 
         public string Value
         {

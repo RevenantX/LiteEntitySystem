@@ -1,4 +1,6 @@
-﻿namespace LiteEntitySystem.Internal
+﻿using System;
+
+namespace LiteEntitySystem.Internal
 {
     public enum FieldType
     {
@@ -19,25 +21,24 @@
         public readonly bool HasChangeNotification;
 
         internal readonly ValueTypeProcessor TypeProcessor;
-        internal int FixedOffset;
-        internal int PredictedOffset;
+        public int FixedOffset;
+        public int PredictedOffset;
 
         //for value type
-        internal EntityFieldInfo(
+        public EntityFieldInfo(
             string name,
-            ValueTypeProcessor valueTypeProcessor,
+            Type type,
             ushort id,
-            FieldType fieldType,
             SyncFlags flags,
             bool hasChangeNotification)
         {
             Name = name;
-            TypeProcessor = valueTypeProcessor;
+            TypeProcessor = ValueProcessors.RegisteredProcessors[type];
             SyncableId = 0;
             Id = id;
             Size = (uint)TypeProcessor.Size;
             IntSize = TypeProcessor.Size;
-            FieldType = fieldType;
+            FieldType = FieldType.SyncVar;
             FixedOffset = 0;
             PredictedOffset = 0;
             Flags = flags;
@@ -48,18 +49,17 @@
         }
 
         //For syncable syncvar
-        internal EntityFieldInfo(
+        public EntityFieldInfo(
             string name,
-            ValueTypeProcessor valueTypeProcessor,
-            ushort id,
+            Type type,
             ushort syncableId,
             SyncFlags flags)
         {
             HasChangeNotification = false;
             Name = name;
-            TypeProcessor = valueTypeProcessor;
+            TypeProcessor = ValueProcessors.RegisteredProcessors[type];
             SyncableId = syncableId;
-            Id = id;
+            Id = 0;
             Size = (uint)TypeProcessor.Size;
             IntSize = TypeProcessor.Size;
             FieldType = FieldType.SyncableSyncVar;

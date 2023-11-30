@@ -11,10 +11,10 @@ namespace LiteEntitySystem.Extensions
         }
         
         private T[] _data;
-        private RemoteCall<SetCallData> _setRpcAction;
-        private RemoteCall<int> _resizeRpcAction;
-        private RemoteCallSpan<T> _initArrayAction;
-        private RemoteCall _clearAction;
+        private static RemoteCall<SetCallData> _setRpcAction;
+        private static RemoteCall<int> _resizeRpcAction;
+        private static RemoteCallSpan<T> _initArrayAction;
+        private static RemoteCall _clearAction;
         
         public int Length => _data.Length;
 

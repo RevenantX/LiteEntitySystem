@@ -11,8 +11,8 @@ namespace LiteEntitySystem.Extensions
         }
         
         private readonly T[] _data;
-        private RemoteCall<SetCallData> _setRpcAction;
-        private RemoteCallSpan<T> _initArrayAction;
+        private static RemoteCall<SetCallData> _setRpcAction;
+        private static RemoteCallSpan<T> _initArrayAction;
 
         public readonly int Length;
 

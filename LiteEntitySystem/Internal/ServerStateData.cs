@@ -18,17 +18,17 @@ namespace LiteEntitySystem.Internal
         public readonly RPCHeader Header;
         public readonly EntitySharedReference EntityId;
         public readonly int Offset;
-        public readonly int SyncableOffset;
+        public readonly int SyncableId;
         public readonly MethodCallDelegate Delegate;
         public bool Executed;
 
-        public RemoteCallsCache(RPCHeader header, EntitySharedReference entityId, MethodCallDelegate callDelegate, int offset, int syncableOffset)
+        public RemoteCallsCache(RPCHeader header, EntitySharedReference entityId, MethodCallDelegate callDelegate, int offset, int syncableId)
         {
             Header = header;
             EntityId = entityId;
             Delegate = callDelegate;
             Offset = offset;
-            SyncableOffset = syncableOffset;
+            SyncableId = syncableId;
             Executed = false;
         }
     }
@@ -113,9 +113,9 @@ namespace LiteEntitySystem.Internal
                 preloadData.DataOffset =
                     initialReaderPosition +
                     StateSerializer.DiffHeaderSize +
-                    entity.GetClassData().FieldsFlagsSize;
+                    entity.GetClassMetadata().FieldsFlagsSize;
                 
-                ref var classData = ref entity.GetClassData();
+                var classData = entity.GetClassMetadata();
                 var fields = classData.Fields;
                 int stateReaderOffset = preloadData.DataOffset;
 
@@ -168,7 +168,7 @@ namespace LiteEntitySystem.Internal
                     continue;
                 }
                 //Logger.Log($"Executing rpc. Entity: {rpc.EntityId} Class: {entity.ClassId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}");
-                var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, rpc.SyncableOffset);
+                var syncableField = entity.InternalGetSyncableFieldById(rpc.SyncableId);
                 rpc.Executed = true;
                 rpc.Delegate(syncableField, new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.TypeSize * rpc.Header.Count));
             }
@@ -208,7 +208,7 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        public unsafe void ReadRPCs(byte* rawData, ref int position, EntitySharedReference entityId, EntityClassData classData)
+        public unsafe void ReadRPCs(byte* rawData, ref int position, EntitySharedReference entityId, GeneratedClassMetadata classData)
         {
             int readCount = *(ushort*)(rawData + position);
             //if(readCount > 0)
@@ -220,7 +220,7 @@ namespace LiteEntitySystem.Internal
             {
                 var header = *(RPCHeader*)(rawData + position);
                 position += sizeof(RPCHeader);
-                var rpcCache = new RemoteCallsCache(header, entityId, classData.RemoteCallsClient[header.Id], position, classData.RpcOffsets[header.Id].SyncableOffset);
+                var rpcCache = new RemoteCallsCache(header, entityId, classData.RpcData[header.Id].ClientMethod, position, classData.RpcData[header.Id].SyncableId);
                 //Logger.Log($"[CEM] ReadRPC. RpcId: {header.Id}, Tick: {header.Tick}, TypeSize: {header.TypeSize}, Count: {header.Count}");
                 if (rpcCache.Delegate == null)
                 {
@@ -228,7 +228,7 @@ namespace LiteEntitySystem.Internal
                 }
 
                 //this is entity rpc
-                if (classData.RpcOffsets[header.Id].SyncableOffset == -1)
+                if (classData.RpcData[header.Id].SyncableId == -1)
                 {
                     _remoteCallsCaches[_remoteCallsCount] = rpcCache;
                     _remoteCallsCount++;

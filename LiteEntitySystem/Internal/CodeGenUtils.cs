@@ -6,45 +6,9 @@ namespace LiteEntitySystem.Internal
     public static class CodeGenUtils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void FieldSave(SyncableField s, in EntityFieldInfo field, Span<byte> result)
+        public static FieldManipulator GetFieldManipulator(SyncableField s)
         {
-            s.FieldSave(in field, result);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void FieldLoad(SyncableField s, in EntityFieldInfo field, ReadOnlySpan<byte> data)
-        {
-            s.FieldLoad(in field, data);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool FieldSaveIfDifferent(SyncableField s, in EntityFieldInfo field, Span<byte> result)
-        {
-            return s.FieldSaveIfDifferent(in field, result);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool FieldLoadIfDifferent(SyncableField s, in EntityFieldInfo field, ReadOnlySpan<byte> data)
-        {
-            return s.FieldLoadIfDifferent(in field, data);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void FieldSetInterpolation(SyncableField s, in EntityFieldInfo field, ReadOnlySpan<byte> prev, ReadOnlySpan<byte> current, float fTimer)
-        {
-            s.FieldSetInterpolation(in field, prev, current, fTimer);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void FieldLoadHistory(SyncableField s, in EntityFieldInfo field, Span<byte> tempHistory, ReadOnlySpan<byte> historyA, ReadOnlySpan<byte> historyB, float lerpTime)
-        {
-            s.FieldLoadHistory(in field, tempHistory, historyA, historyB, lerpTime);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void FieldOnChange(SyncableField s, in EntityFieldInfo field, ReadOnlySpan<byte> prevData)
-        {
-            s.FieldOnChange(in field, prevData);
+            return s.GetFieldManipulator();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -54,15 +18,52 @@ namespace LiteEntitySystem.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RegisterRPC(SyncableField s, InternalEntity entity)
+        public static void RegisterRPC(SyncableField s)
         {
-            s.ParentEntityId = entity.Id;
-            s.RegisterRPC(new SyncableRPCRegistrator(entity));
+            s.RegisterRPC(new SyncableRPCRegistrator());
         }
 
-        public static void InternalSyncablesSetId(SyncableField s, ushort parentId)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void InternalSyncablesSetup(SyncableField s, InternalEntity parent, ushort rpcOffset)
         {
-            s.ParentEntityId = parentId;
+            s.ParentEntity = parent;
+            s.RpcOffset = rpcOffset;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void InitRPCData(InternalEntity entity, ushort size)
+        {
+            entity.GetClassMetadata().RpcData = new RpcData[size];
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool CheckInitialized(InternalEntity entity)
+        {
+            return entity.GetClassMetadata().IsRpcBound;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void MarkInitialized(InternalEntity entity)
+        {
+            entity.GetClassMetadata().IsRpcBound = true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetRemoteCallId(ref RemoteCall rc, ushort rpcId)
+        {
+            rc.RpcId = rpcId;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetRemoteCallId<T>(ref RemoteCall<T> rc, ushort rpcId) where T : unmanaged
+        {
+            rc.RpcId = rpcId;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetRemoteCallId<T>(ref RemoteCallSpan<T> rc, ushort rpcId) where T : unmanaged
+        {
+            rc.RpcId = rpcId;
         }
     }
 }

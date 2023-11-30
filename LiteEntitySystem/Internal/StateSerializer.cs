@@ -32,7 +32,7 @@ namespace LiteEntitySystem.Internal
         public const int MaxStateSize = 32767; //half of ushort
 
         private byte _version;
-        private EntityClassData _classData;
+        private GeneratedClassMetadata _classData;
         private InternalEntity _entity;
         private byte[] _latestEntityData;
         private ushort[] _fieldChangeTicks;
@@ -100,13 +100,13 @@ namespace LiteEntitySystem.Internal
             tail = null;
         }
 
-        public unsafe void Init(ref EntityClassData classData, InternalEntity e)
+        public unsafe void Init(InternalEntity e)
         {
             if (_state != SerializerState.Freed)
             {
                 Logger.LogError($"State serializer isn't freed: {_state}");
             }
-            _classData = classData;
+            _classData = e.GetClassMetadata();
             _entity = e;
             _state = SerializerState.Active;
             _syncFrame = -1;
@@ -120,7 +120,7 @@ namespace LiteEntitySystem.Internal
 
             _fullDataSize = (uint)(HeaderSize + _classData.FixedFieldsSize);
             Helpers.ResizeOrCreate(ref _latestEntityData, (int)_fullDataSize);
-            Helpers.ResizeOrCreate(ref _fieldChangeTicks, classData.FieldsCount);
+            Helpers.ResizeOrCreate(ref _fieldChangeTicks, _classData.FieldsCount);
 
             fixed (byte* data = _latestEntityData)
             {
@@ -157,6 +157,7 @@ namespace LiteEntitySystem.Internal
                 _versionChangedTick = minimalTick;
 
             _lastWriteTick = serverTick;
+            var fieldManipulator = _entity.GetFieldManipulator();
             fixed (byte* latestEntityData = _latestEntityData)
             {
                 for (int i = 0; i < _classData.FieldsCount; i++)
@@ -168,7 +169,7 @@ namespace LiteEntitySystem.Internal
                     if (field.TypeProcessor.ValueType == EntitySharedReferenceType)
                     {
                         var sharedRef = new EntitySharedReference();
-                        _entity.FieldSave(in field, new Span<byte>(&sharedRef, sizeof(EntitySharedReference)));
+                        fieldManipulator.Save(in field, new Span<byte>(&sharedRef, sizeof(EntitySharedReference)));
                         if (sharedRef.IsLocal)
                             sharedRef = null;
                         var latestRefPtr = (EntitySharedReference*)latestDataPtr;
@@ -182,7 +183,7 @@ namespace LiteEntitySystem.Internal
                     }
                     else
                     {
-                        if (_entity.FieldSaveIfDifferent(in field, new Span<byte>(latestDataPtr, field.IntSize)))
+                        if (fieldManipulator.SaveIfDifferent(in field, new Span<byte>(latestDataPtr, field.IntSize)))
                             _fieldChangeTicks[i] = serverTick;
                         else if (Helpers.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
                             _fieldChangeTicks[i] = minimalTick;
