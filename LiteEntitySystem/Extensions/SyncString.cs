@@ -11,6 +11,7 @@ namespace LiteEntitySystem.Extensions
         private string _string;
         private int _size;
 
+        [BindRpc(nameof(SetNewString))]
         private static RemoteCallSpan<byte> _setStringClientCall;
 
         public string Value
@@ -25,11 +26,6 @@ namespace LiteEntitySystem.Extensions
                 _size = Encoding.GetBytes(_string, 0, _string.Length, _stringData, 0);
                 ExecuteRPC(_setStringClientCall, new ReadOnlySpan<byte>(_stringData, 0, _size));
             }
-        }
-
-        protected internal override void RegisterRPC(in SyncableRPCRegistrator r)
-        {
-            r.CreateClientAction(this, SetNewString, ref _setStringClientCall);
         }
 
         public override string ToString()

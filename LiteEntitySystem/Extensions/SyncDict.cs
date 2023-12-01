@@ -22,22 +22,18 @@ namespace LiteEntitySystem.Extensions
 
         private readonly Dictionary<TKey, TValue> _data = new ();
 
+        [BindRpc(nameof(AddAction))]
         private static RemoteCall<KeyValue> _addAction;
+        [BindRpc(nameof(Clear))]
         private static RemoteCall _clearAction;
+        [BindRpc(nameof(RemoveAction))]
         private static RemoteCall<TKey> _removeAction;
+        [BindRpc(nameof(InitAction))]
         private static RemoteCallSpan<KeyValue> _initAction;
 
         public Dictionary<TKey, TValue>.KeyCollection Keys => _data.Keys;
         public Dictionary<TKey, TValue>.ValueCollection Values => _data.Values;
         private static KeyValue[] KvCache = new KeyValue[8];
-
-        protected internal override void RegisterRPC(in SyncableRPCRegistrator r)
-        {
-            r.CreateClientAction(this, AddAction, ref _addAction);
-            r.CreateClientAction(this, Clear, ref _clearAction);
-            r.CreateClientAction(this, RemoveAction, ref _removeAction);
-            r.CreateClientAction(this, InitAction, ref _initAction);
-        }
 
         protected internal override void OnSyncRequested()
         {

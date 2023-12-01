@@ -7,15 +7,11 @@ namespace LiteEntitySystem
     public abstract class SyncableField : InternalSyncType
     {
         internal InternalEntity ParentEntity;
+        internal ushort SyncableId;
         
         protected internal virtual void OnSyncRequested()
         {
             
-        }
-
-        protected internal virtual void RegisterRPC(in SyncableRPCRegistrator r)
-        {
-
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

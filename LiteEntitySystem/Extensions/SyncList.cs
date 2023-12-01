@@ -13,18 +13,14 @@ namespace LiteEntitySystem.Extensions
         private T[] _data;
         private int _count;
 
+        [BindRpc(nameof(Add))]
         private static RemoteCall<T> _addAction;
+        [BindRpc(nameof(Clear))]
         private static RemoteCall _clearAction;
+        [BindRpc(nameof(RemoveAt))]
         private static RemoteCall<int> _removeAtAction;
+        [BindRpc(nameof(Init))]
         private static RemoteCallSpan<T> _initAction;
-
-        protected internal override void RegisterRPC(in SyncableRPCRegistrator r)
-        {
-            r.CreateClientAction(this, Add, ref _addAction);
-            r.CreateClientAction(this, Clear, ref _clearAction);
-            r.CreateClientAction(this, RemoveAt, ref _removeAtAction);
-            r.CreateClientAction(this, Init, ref _initAction);
-        }
 
         protected internal override void OnSyncRequested()
         {

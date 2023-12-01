@@ -52,7 +52,7 @@ namespace LiteEntitySystem.Internal
 
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
-            Logger.Log($"AddRpc for tick: {rpc.Header.Tick}, St: {_entity.ServerManager.Tick}, Id: {rpc.Header.Id}");
+            //Logger.Log($"AddRpc for tick: {rpc.Header.Tick}, St: {_entity.ServerManager.Tick}, Id: {rpc.Header.Id}");
             
             switch (_rpcMode)
             {

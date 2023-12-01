@@ -14,6 +14,12 @@ namespace LiteEntitySystem.Internal
             ClientMethod = null;
         }
     }
+
+    public struct SyncableAdditionalData
+    {
+        public ushort RpcOffset;
+        public ExecuteFlags ExecuteFlags;
+    }
     
     public class GeneratedClassMetadata
     {
@@ -31,16 +37,17 @@ namespace LiteEntitySystem.Internal
         public int LagCompensatedCount;
         public bool UpdateOnClient;
         public bool IsUpdateable;
-        public bool IsRpcBound;
         public RpcData[] RpcData;
+        public SyncableAdditionalData[] Syncables;
 
-        public readonly ushort BaseFieldsCount;
+        public ushort FieldIdCounter;
+        public readonly ushort BaseFieldIdCounter;
         public readonly ushort BaseSyncablesCount;
-        public readonly List<ushort> SyncablesRpcOffsets = new();
         
         private List<EntityFieldInfo> _fieldsTemp;
         private List<EntityFieldInfo> _lagCompensatedFieldsTemp;
         private List<RpcData> _rpcList;
+        private List<SyncableAdditionalData> _syncables;
 
         public GeneratedClassMetadata()
         {
@@ -49,6 +56,7 @@ namespace LiteEntitySystem.Internal
             _fieldsTemp = new List<EntityFieldInfo>();
             _lagCompensatedFieldsTemp = new List<EntityFieldInfo>();
             _rpcList = new List<RpcData>();
+            _syncables = new List<SyncableAdditionalData>();
         }
         
         public GeneratedClassMetadata(GeneratedClassMetadata baseClassMetadata)
@@ -63,9 +71,15 @@ namespace LiteEntitySystem.Internal
             HasRemoteRollbackFields = baseClassMetadata.HasRemoteRollbackFields;
             _fieldsTemp = new List<EntityFieldInfo>(baseClassMetadata.Fields);
             _lagCompensatedFieldsTemp = new List<EntityFieldInfo>(baseClassMetadata.LagCompensatedFields);
-            _rpcList = baseClassMetadata.RpcData != null ? new List<RpcData>(baseClassMetadata.RpcData) : new List<RpcData>();
-            BaseFieldsCount = (ushort)baseClassMetadata.FieldsCount;
+            _rpcList = baseClassMetadata.RpcData != null 
+                ? new List<RpcData>(baseClassMetadata.RpcData) 
+                : new List<RpcData>();
+            _syncables = baseClassMetadata.Syncables != null
+                ? new List<SyncableAdditionalData>(baseClassMetadata.Syncables)
+                : new List<SyncableAdditionalData>();
             BaseSyncablesCount = (ushort)baseClassMetadata.SyncablesCount;
+            FieldIdCounter = baseClassMetadata.FieldIdCounter;
+            BaseFieldIdCounter = FieldIdCounter;
         }
 
         public void Init()
@@ -74,16 +88,18 @@ namespace LiteEntitySystem.Internal
                 return;
             
             _fieldsTemp.Sort((a, b) =>
-            {{
+            {
                 int wa = a.Flags.HasFlagFast(SyncFlags.Interpolated) ? 1 : 0;
                 int wb = b.Flags.HasFlagFast(SyncFlags.Interpolated) ? 1 : 0;
                 return wb - wa;
-            }});
+            });
             
             Fields = _fieldsTemp.ToArray();
             _fieldsTemp = null;
             LagCompensatedFields = _lagCompensatedFieldsTemp.ToArray();
             _lagCompensatedFieldsTemp = null;
+            Syncables = _syncables.ToArray();
+            _syncables = null;
             RpcData = _rpcList.ToArray();
             _rpcList = null;
             FieldsCount = Fields.Length;
@@ -109,31 +125,129 @@ namespace LiteEntitySystem.Internal
             }
         }
         
-        public void AddRpc(ref RemoteCall rc)
+        public void AddRpc<TEntity>(ref RemoteCall rc, ExecuteFlags flags, Action<TEntity> directMethod, MethodCallDelegate clientMethod) where TEntity : InternalEntity
         {
-            rc.RpcId = (ushort)_rpcList.Count;
-            _rpcList.Add(new RpcData());
+            ushort rpcId = rc.LocalId = (ushort)_rpcList.Count;
+            if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
+                rc.CachedActionServer = e =>
+                {
+                    var te = (TEntity)e;
+                    directMethod(te);
+                    te.ServerManager.AddRemoteCall(te.Id, rpcId, flags);
+                };
+            else
+                rc.CachedActionServer = e =>
+                {
+                    var te = (TEntity)e;
+                    te.ServerManager.AddRemoteCall(te.Id, rpcId, flags);
+                };
+            if(flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction))
+                rc.CachedActionClient = e =>
+                {
+                    var te = (TEntity)e;
+                    if (te.IsLocalControlled)
+                        directMethod(te);
+                };
+            else
+                rc.CachedActionClient = _ => { };
+            _rpcList.Add(new RpcData(-1){ClientMethod = clientMethod});
         }
         
-        public void AddRpc<T>(ref RemoteCall<T> rc) where T : unmanaged
+        public void AddRpc<TEntity, T>(ref RemoteCall<T> rc, ExecuteFlags flags, Action<TEntity, T> directMethod, MethodCallDelegate clientMethod) where T : unmanaged where TEntity : InternalEntity
         {
-            rc.RpcId = (ushort)_rpcList.Count;
-            _rpcList.Add(new RpcData());
+            ushort rpcId = rc.LocalId = (ushort)_rpcList.Count;
+            if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
+                rc.CachedActionServer = (e, value) =>
+                {
+                    var te = (TEntity)e;
+                    directMethod(te, value); 
+                    te.ServerManager.AddRemoteCall(te.Id, value, rpcId, flags);
+                };
+            else
+                rc.CachedActionServer = (e, value) =>
+                {
+                    var te = (TEntity)e;
+                    te.ServerManager.AddRemoteCall(te.Id, value, rpcId, flags);
+                };
+            if (flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction))
+                rc.CachedActionClient = (e, value) =>
+                {
+                    var te = (TEntity)e;
+                    if (te.IsLocalControlled) 
+                        directMethod(te, value);
+                };
+            else
+                rc.CachedActionClient = (_, _) => { };
+            _rpcList.Add(new RpcData(-1){ClientMethod = clientMethod});
         }
         
-        public void AddRpc<T>(ref RemoteCallSpan<T> rc) where T : unmanaged
+        public void AddRpcSpan<TEntity, T>(ref RemoteCallSpan<T> rc, ExecuteFlags flags, SpanAction<TEntity, T> directMethod, MethodCallDelegate clientMethod) where T : unmanaged where TEntity : InternalEntity
         {
-            rc.LocalId = (ushort)_rpcList.Count;
-            _rpcList.Add(new RpcData());
+            ushort rpcId = rc.LocalId = (ushort)_rpcList.Count;
+            if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
+                rc.CachedActionServer = (e, value) =>
+                {
+                    var te = (TEntity)e;
+                    directMethod(te, value); 
+                    te.ServerManager.AddRemoteCall(te.Id, value, rpcId, flags);
+                };
+            else
+                rc.CachedActionServer = (e, value) =>
+                {
+                    var te = (TEntity)e;
+                    te.ServerManager.AddRemoteCall(te.Id, value, rpcId, flags);
+                };
+            if (flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction))
+                rc.CachedActionClient = (e, value) =>
+                {
+                    var te = (TEntity)e;
+                    if (te.IsLocalControlled) 
+                        directMethod(te, value);
+                };
+            else
+                rc.CachedActionClient = (_, _) => { };
+            _rpcList.Add(new RpcData(-1){ClientMethod = clientMethod});
+        }
+        
+        public void AddRpcSyncable(ref RemoteCall rc, MethodCallDelegate clientMethod)
+        {
+            ushort rpcId = rc.LocalId = (ushort)_rpcList.Count;
+            rc.CachedActionServer = s =>
+            {
+                var sf = (SyncableField)s;
+                var syncData = sf.ParentEntity.GetClassMetadata().Syncables[sf.SyncableId];
+                sf.ParentEntity.ServerManager.AddRemoteCall(sf.ParentEntity.Id, (ushort)(syncData.RpcOffset + rpcId), syncData.ExecuteFlags);
+            };
+            _rpcList.Add(new RpcData(-1){ClientMethod = clientMethod});
+        }
+        
+        public void AddRpcSyncable<T>(ref RemoteCall<T> rc, MethodCallDelegate clientMethod) where T : unmanaged
+        {
+            ushort rpcId = rc.LocalId = (ushort)_rpcList.Count;
+            rc.CachedActionServer = (s, value) =>
+            {
+                var sf = (SyncableField)s;
+                var syncData = sf.ParentEntity.GetClassMetadata().Syncables[sf.SyncableId];
+                sf.ParentEntity.ServerManager.AddRemoteCall(sf.ParentEntity.Id, value, (ushort)(syncData.RpcOffset + rpcId), syncData.ExecuteFlags);
+            };
+            _rpcList.Add(new RpcData(-1){ClientMethod = clientMethod});
+        }
+        
+        public void AddRpcSyncable<T>(ref RemoteCallSpan<T> rc, MethodCallDelegate clientMethod) where T : unmanaged
+        {
+            ushort rpcId = rc.LocalId = (ushort)_rpcList.Count;
+            rc.CachedActionServer = (s, value) =>
+            {
+                var sf = (SyncableField)s;
+                var syncData = sf.ParentEntity.GetClassMetadata().Syncables[sf.SyncableId];
+                sf.ParentEntity.ServerManager.AddRemoteCall(sf.ParentEntity.Id, value, (ushort)(syncData.RpcOffset + rpcId), syncData.ExecuteFlags);
+            };
+            _rpcList.Add(new RpcData(-1){ClientMethod = clientMethod});
         }
 
-        public void AddField<T>(
-            string name, 
-            FieldType fieldType, 
-            SyncFlags flags, 
-            bool hasChangeNotification) where T : unmanaged
+        public void AddField<T>(string name, FieldType fieldType, SyncFlags flags, bool hasChangeNotification) where T : unmanaged
         {
-            var fi = new EntityFieldInfo(name, fieldType, typeof(T), (ushort)_fieldsTemp.Count, 0, flags, hasChangeNotification);
+            var fi = new EntityFieldInfo(name, fieldType, typeof(T), FieldIdCounter, 0, flags, hasChangeNotification);
             int size = Helpers.SizeOfStruct<T>();
             if(flags.HasFlagFast(SyncFlags.Interpolated) && !typeof(T).IsEnum)
             {
@@ -151,22 +265,32 @@ namespace LiteEntitySystem.Internal
                 PredictedSize += size;
             FixedFieldsSize += size;
             _fieldsTemp.Add(fi);
+            FieldIdCounter++;
         }
 
-        public void AddSyncableField(GeneratedClassMetadata syncableMetadata)
+        public void AddSyncableField(GeneratedClassMetadata syncableMetadata, SyncFlags fieldSyncFlags)
         {
-            ushort idOffset = (ushort)_fieldsTemp.Count;
             foreach (var fld in syncableMetadata.Fields)
             {
-                _fieldsTemp.Add(new EntityFieldInfo(fld.Name, FieldType.SyncableSyncVar, fld.ActualType, (ushort)_fieldsTemp.Count, idOffset, fld.Flags, false));
+                _fieldsTemp.Add(new EntityFieldInfo(fld.Name, FieldType.SyncableSyncVar, fld.ActualType, FieldIdCounter, fld.Id, fld.Flags, false));
             }
-            SyncablesRpcOffsets.Add((ushort)_rpcList.Count);
+
+            ExecuteFlags executeFlags;
+            if (fieldSyncFlags.HasFlagFast(SyncFlags.OnlyForOwner))
+                executeFlags = ExecuteFlags.SendToOwner;
+            else if (fieldSyncFlags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
+                executeFlags = ExecuteFlags.SendToOther;
+            else
+                executeFlags = ExecuteFlags.SendToAll;
+            
+            _syncables.Add(new SyncableAdditionalData { RpcOffset = (ushort)_rpcList.Count, ExecuteFlags = executeFlags});
             foreach (var rpcData in syncableMetadata.RpcData)
             {
-                _rpcList.Add(new RpcData(SyncablesCount));
+                _rpcList.Add(new RpcData(SyncablesCount) {ClientMethod = rpcData.ClientMethod});
             }
             SyncablesCount++;
             FixedFieldsSize += syncableMetadata.FixedFieldsSize;
+            FieldIdCounter++;
         }
     }
 

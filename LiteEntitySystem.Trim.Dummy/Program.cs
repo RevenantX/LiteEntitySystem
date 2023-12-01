@@ -1,7 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using LiteEntitySystem;
 using LiteEntitySystem.Extensions;
-using LiteEntitySystem.Internal;
 using LiteEntitySystem.Transport;
 
 struct MyInput
@@ -21,6 +20,18 @@ partial class SyncableTest : SyncableField
 {
     public SyncVar<int> IntVar;
     public SyncVar<float> FloatVar;
+    [BindRpc(nameof(RPCExec))]
+    private static RemoteCall _testRpc;
+
+    private void RPCExec()
+    {
+        Console.WriteLine("GOT SYNCABLE RPC");
+    }
+    
+    public void TriggerRPC()
+    {
+        ExecuteRPC(_testRpc);
+    }
 }
 
 partial class SyncableTestDerived : SyncableTest
@@ -32,14 +43,17 @@ partial class SyncableTestDerived : SyncableTest
 [UpdateableEntity(true)]
 partial class BasePlayer : PawnLogic
 {
+    [BindRpc(nameof(RpcMethod2), ExecuteFlags.SendToAll)]
     private static RemoteCall RpcTest2;
     public readonly SyncList<int> SyncLst = new SyncList<int>();
-    public SyncVar<int> TestSyncVar;
     private SyncVar<float> TestSyncVar2;
+    public SyncVar<int> TestSyncVar;
     private readonly SyncString SyncStr = new SyncString();
     public readonly SyncString SyncStr2 = new SyncString();
     public SyncVar<long> TestSyncVar3;
+    [BindRpc(nameof(RpcMethod1), ExecuteFlags.SendToAll)]
     private static RemoteCall RpcTest;
+    public readonly SyncableTestDerived SyncTest = new SyncableTestDerived();
 
     [SyncVarFlags(SyncFlags.Interpolated)]
     public SyncVar<float> FlagsTest1;
@@ -47,8 +61,13 @@ partial class BasePlayer : PawnLogic
     [SyncVarFlags(SyncFlags.LagCompensated)]
     public SyncVar<float> FlagsTest2;
     
-    [SyncVarFlags(SyncFlags.LagCompensated | SyncFlags.Interpolated)]
+    [BindOnChange(nameof(OnFlagTest3Changed))]
     public SyncVar<float> FlagsTest3;
+
+    private void OnFlagTest3Changed(float prev)
+    {
+        Console.WriteLine($"Flagstest3 changed {FlagsTest3}");
+    }
     
     public BasePlayer(EntityParams entityParams) : base(entityParams)
     {
@@ -62,6 +81,11 @@ partial class BasePlayer : PawnLogic
         {
             SyncStr.Value = "Ass";
             SyncStr2.Value = "1234567";
+            SyncTest.IntVar = 1;
+            SyncTest.IntVar2 = 2;
+            SyncTest.FloatVar = 3f;
+            SyncTest.FloatVar2 = 4f;
+            TestSyncVar.Value = 15;
         }
     }
 
@@ -70,25 +94,27 @@ partial class BasePlayer : PawnLogic
         base.Update();
         if (EntityManager.IsServer)
         {
-            ExecuteRPC(RpcTest);
+            FlagsTest3 += EntityManager.DeltaTimeF;
+            SyncTest.TriggerRPC();
+            //ExecuteRPC(RpcTest);
+            ExecuteRPC(RpcTest2);
         }
     }
 
-    private void RpcMethod()
+    private void RpcMethod1()
     {
-        Console.WriteLine($"GOT {SyncStr.Value} {SyncStr2.Value}");
+        Console.WriteLine($"1GOT {TestSyncVar} {SyncStr.Value} {SyncStr2.Value} {SyncTest.IntVar} {SyncTest.IntVar2} {SyncTest.FloatVar} {SyncTest.FloatVar2}");
     }
-
-    protected override void RegisterRPC(in RPCRegistrator r)
+    
+    private void RpcMethod2()
     {
-        base.RegisterRPC(in r);
-        Console.WriteLine($"RegisterRPC {GetType().Name}");
-        r.CreateRPCAction(this, RpcMethod, ref RpcTest, ExecuteFlags.SendToAll);
+        Console.WriteLine($"2GOT {TestSyncVar} {SyncStr.Value} {SyncStr2.Value} {SyncTest.IntVar} {SyncTest.IntVar2} {SyncTest.FloatVar} {SyncTest.FloatVar2}");
     }
 }
 
 partial class BasePlayerTest : BasePlayer
 {
+    [BindRpc(nameof(BPRPC1))]
     private static RemoteCall BPTest1;
     public readonly SyncList<int> BPTest2 = new SyncList<int>();
     public SyncVar<int> BPTest3;
@@ -96,7 +122,18 @@ partial class BasePlayerTest : BasePlayer
     public readonly SyncString BPTest5 = new SyncString();
     public readonly SyncString BPTest6 = new SyncString();
     public SyncVar<long> BPTest7;
+    [BindRpc(nameof(BPRPC2))]
     private static RemoteCall BPTest8;
+
+    private void BPRPC1()
+    {
+        
+    }
+
+    private void BPRPC2()
+    {
+        
+    }
 
     public BasePlayerTest(EntityParams entityParams) : base(entityParams)
     {
@@ -183,13 +220,17 @@ class Program
         serverPeer.ClientTarget = cem;
         var player = sem.AddPlayer(serverPeer);
         var playerEntity = sem.AddEntity<BasePlayer>();
-        var testPlayerEntity = sem.AddEntity<BasePlayerTest>();
+        //var testPlayerEntity = sem.AddEntity<BasePlayerTest>();
         var playerController = sem.AddController<BasePlayerController>(player, e => e.StartControl(playerEntity));
-        
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 100; i++)
         {
             sem.Update();
+            Thread.Sleep(1);
+        }
+        for (int i = 0; i < 100; i++)
+        {
             cem.Update();
+            sem.Update();
             Thread.Sleep(1);
         }
     }

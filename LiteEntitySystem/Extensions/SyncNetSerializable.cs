@@ -22,6 +22,7 @@ namespace LiteEntitySystem.Extensions
             }
         }
 
+        [BindRpc(nameof(Init))]
         private static RemoteCallSpan<byte> _initAction;
 
         private readonly Func<T> _constructor;
@@ -29,11 +30,6 @@ namespace LiteEntitySystem.Extensions
         public SyncNetSerializable(Func<T> constructor)
         {
             _constructor = constructor;
-        }
-
-        protected internal override void RegisterRPC(in SyncableRPCRegistrator r)
-        {
-            r.CreateClientAction(this, Init, ref _initAction);
         }
 
         protected internal override void OnSyncRequested()

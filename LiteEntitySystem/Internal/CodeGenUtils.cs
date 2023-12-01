@@ -9,6 +9,12 @@ namespace LiteEntitySystem.Internal
         {
             return s.GetFieldManipulator();
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static GeneratedClassMetadata GetMetadata(SyncableField s)
+        {
+            return s.GetClassMetadata();
+        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OnSyncRequested(SyncableField s)
@@ -17,9 +23,10 @@ namespace LiteEntitySystem.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void InternalSyncablesSetup(SyncableField s, InternalEntity parent)
+        public static void InternalSyncablesSetup(SyncableField s, InternalEntity parent, ushort syncableId)
         {
             s.ParentEntity = parent;
+            s.SyncableId = syncableId;
         }
     }
 }

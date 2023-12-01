@@ -182,29 +182,5 @@ namespace LiteEntitySystem
         {
             return (newer - older + MaxSeq15) % MaxSequence - MaxSeq2;
         }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static T CreateDelegateHelper<T>(this MethodInfo method) where T : Delegate
-        {
-            return (T)method.CreateDelegate(typeof(T));
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static Action<T> CreateSelfDelegate<T>(this MethodInfo mi)
-        {
-            return mi.CreateDelegateHelper<Action<T>>();
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static Action<T, TArgument> CreateSelfDelegate<T, TArgument>(this MethodInfo mi) where TArgument : unmanaged
-        {
-            return mi.CreateDelegateHelper<Action<T, TArgument>>();
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static SpanAction<T, TArgument> CreateSelfDelegateSpan<T, TArgument>(this MethodInfo mi) where TArgument : unmanaged
-        {
-            return mi.CreateDelegateHelper<SpanAction<T, TArgument>>();
-        }
     }
 }

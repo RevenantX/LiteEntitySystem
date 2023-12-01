@@ -13,7 +13,7 @@ namespace LiteEntitySystem.Generator
     {
         private static readonly StringBuilder ResultCode = new StringBuilder(); 
         
-        private static readonly DiagnosticDescriptor NoPartialOnClass = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor NoPartialOnClass = new (
             id: "LES001",
             title: "Class derived from SyncableField or InternalEntity must be partial",
             messageFormat: "Class derived from SyncableField or InternalEntity must be partial '{0}'",
@@ -21,7 +21,7 @@ namespace LiteEntitySystem.Generator
             DiagnosticSeverity.Error,
             isEnabledByDefault: true);
         
-        private static readonly DiagnosticDescriptor RemoteCallShouldBeStatic = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor RemoteCallShouldBeStatic = new (
             id: "LES002",
             title: "RemoteCall should be static",
             messageFormat: "RemoteCall should be static '{0}'",
@@ -29,10 +29,18 @@ namespace LiteEntitySystem.Generator
             DiagnosticSeverity.Error,
             isEnabledByDefault: true);
         
-        private static readonly DiagnosticDescriptor SyncableReadOnly = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor SyncableReadOnly = new (
             id: "LES003",
             title: "Syncable fields should be readonly",
             messageFormat: "Syncable fields should be readonly",
+            category: "LiteEntitySystem",
+            DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
+        
+        private static readonly DiagnosticDescriptor RemoteCallShouldHaveBind = new (
+            id: "LES004",
+            title: "RemoteCall should have [BindRpc] attribute",
+            messageFormat: "RemoteCall should have [BindRpc] attribute '{0}'",
             category: "LiteEntitySystem",
             DiagnosticSeverity.Error,
             isEnabledByDefault: true);
@@ -59,27 +67,6 @@ namespace LiteEntitySystem.Generator
         {
             return SymbolEqualityComparer.Default.Equals(x, y);
         }
-        
-        private static IEnumerable<ITypeSymbol> GetBaseTypes(ITypeSymbol type)
-        {
-            var current = type.BaseType;
-            while (current != null)
-            {
-                yield return current;
-                current = current.BaseType;
-            }
-        }
-        
-        private static IEnumerable<ITypeSymbol> GetBaseTypesIncludeSelf(ITypeSymbol type)
-        {
-            var current = type.BaseType;
-            while (current != null)
-            {
-                yield return current;
-                current = current.BaseType;
-            }
-            yield return type;
-        }
 
         private static string TAB(int count)
         {
@@ -91,12 +78,14 @@ namespace LiteEntitySystem.Generator
             var compilation = context.Compilation;
             var baseSyncType = compilation.GetTypeByMetadataName("LiteEntitySystem.Internal.InternalSyncType");
             var internalEntityType = compilation.GetTypeByMetadataName("LiteEntitySystem.Internal.InternalEntity");
-            var singletonEntityType = compilation.GetTypeByMetadataName("LiteEntitySystem.SingletonEntity");
+            var singletonEntityType = compilation.GetTypeByMetadataName("LiteEntitySystem.SingletonEntityLogic");
             var syncableFieldType = compilation.GetTypeByMetadataName("LiteEntitySystem.SyncableField");
             var bindOnChangeAttribType = compilation.GetTypeByMetadataName("LiteEntitySystem.BindOnChange");
+            var bindRpcAttribType = compilation.GetTypeByMetadataName("LiteEntitySystem.BindRpc");
             var syncVarFlagsAttribType = compilation.GetTypeByMetadataName("LiteEntitySystem.SyncVarFlags");
             var localOnlyAttribType = compilation.GetTypeByMetadataName("LiteEntitySystem.LocalOnly");
             var updateableEntityAttribType = compilation.GetTypeByMetadataName("LiteEntitySystem.UpdateableEntity");
+            var readonlyspanType = compilation.GetTypeByMetadataName("System.ReadOnlySpan");
 
             Func<IFieldSymbol, bool> correctSyncVarPredicate = x =>
                 x.Type.Name == "SyncVar" || InheritsFrom(syncableFieldType, x.Type) || x.Type.Name.StartsWith("RemoteCall");
@@ -156,6 +145,7 @@ namespace LiteEntitySystem.Generator
 using System;
 using System.Runtime.CompilerServices;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using LiteEntitySystem;
 using LiteEntitySystem.Internal;");
                     
@@ -198,7 +188,7 @@ using LiteEntitySystem.Internal;");
                     }
                     string className = classSymbol.Name + genericArgs;
 
-                    string fieldIdString = InheritsFrom(syncableFieldType, classSymbol) ? "field.Id - field.IdOffset" : "field.Id - MetadataCache.BaseFieldsCount";
+                    string fieldIdString = InheritsFrom(syncableFieldType, classSymbol) ? "field.SyncableId - MetadataCache.BaseFieldIdCounter" : "field.Id - MetadataCache.BaseFieldIdCounter";
                     string internalAddition = classSymbol.ContainingNamespace.ToString().StartsWith("LiteEntitySystem") 
                         ? " internal" 
                         : string.Empty;
@@ -209,12 +199,53 @@ using LiteEntitySystem.Internal;");
                     foreach (var fieldSymbol in currentSyncVars)
                     {
                         string fieldName = $"_target.{fieldSymbol.Name}";
-                        
                         if (fieldSymbol.Type.Name.StartsWith("RemoteCall"))
                         {
                             if (!fieldSymbol.IsStatic)
+                            {
                                 context.ReportDiagnostic(Diagnostic.Create(RemoteCallShouldBeStatic, fieldSymbol.Locations[0], fieldSymbol.Name));
-                            classMetadataText.AppendLine($"{TAB(4)}classMetadata.AddRpc(ref {fieldSymbol.Name});");
+                                continue;
+                            }
+                            
+                            if (!fieldSymbol.GetAttributes().Any(x => TypeEquals(x.AttributeClass, bindRpcAttribType)))
+                            {
+                                context.ReportDiagnostic(Diagnostic.Create(RemoteCallShouldHaveBind, fieldSymbol.Locations[0], fieldSymbol.Name));
+                                continue;
+                            }
+
+                            var bindRpcAttrib = fieldSymbol.GetAttributes().First(x => TypeEquals(x.AttributeClass, bindRpcAttribType));
+                            string methodName = bindRpcAttrib.ConstructorArguments[0].Value.ToString();
+                            string flags = bindRpcAttrib.ConstructorArguments.Length > 1
+                                ? "(ExecuteFlags)" + bindRpcAttrib.ConstructorArguments[1].Value
+                                : "ExecuteFlags.SendToAll";
+
+                            var namedFieldSym = (INamedTypeSymbol)fieldSymbol.Type;
+                            string typeArgs = namedFieldSym.IsGenericType
+                                ? $", {namedFieldSym.TypeArguments[0].Name}"
+                                : string.Empty;
+                            string typedRpc = namedFieldSym.IsGenericType
+                                ? ", value"
+                                : string.Empty;
+                            string typedRpcArg = namedFieldSym.IsGenericType
+                                ? "value"
+                                : string.Empty;
+                            string spanString = fieldSymbol.Type.Name.StartsWith("RemoteCallSpan")
+                                ? "Span"
+                                : string.Empty;
+                            string methodCallGenerator = fieldSymbol.Type.Name.StartsWith("RemoteCallSpan")
+                                ? $"(classPtr, buffer) => (({className})classPtr).{methodName}(MemoryMarshal.Cast<byte, {namedFieldSym.TypeArguments[0].Name}>(buffer))"
+                                : namedFieldSym.IsGenericType
+                                    ? $"(classPtr, buffer) => (({className})classPtr).{methodName}(Helpers.ReadStruct<{namedFieldSym.TypeArguments[0].Name}>(buffer))"
+                                    : $"(classPtr, _) => (({className})classPtr).{methodName}()";
+
+                            if (InheritsFrom(syncableFieldType, classSymbol))
+                            {
+                                classMetadataText.AppendLine($"{TAB(4)}classMetadata.AddRpcSyncable(ref {fieldSymbol.Name}, {methodCallGenerator});");
+                            }
+                            else
+                            {
+                                classMetadataText.AppendLine($"{TAB(4)}classMetadata.AddRpc{spanString}<{className}{typeArgs}>(ref {fieldSymbol.Name}, {flags}, (e{typedRpc}) => e.{methodName}({typedRpcArg}), {methodCallGenerator});");
+                            }
                             continue;
                         }
                         
@@ -240,7 +271,7 @@ using LiteEntitySystem.Internal;");
                             {
                                 context.ReportDiagnostic(Diagnostic.Create(SyncableReadOnly, fieldSymbol.Locations[0]));
                             }
-                            classMetadataText.AppendLine($"{TAB(4)}classMetadata.AddSyncableField({fieldSymbol.Type}.CreateMetadata());");
+                            classMetadataText.AppendLine($"{TAB(4)}classMetadata.AddSyncableField(CodeGenUtils.GetMetadata({fieldSymbol.Name}), {syncFlagsStr});");
                             fieldSaveIfDifferentInnerText.Append($" return CodeGenUtils.GetFieldManipulator({fieldName}).SaveIfDifferent(in field, data);");
                             fieldLoadIfDifferentInnerText.Append($" return CodeGenUtils.GetFieldManipulator({fieldName}).LoadIfDifferent(in field, data);");
                             fieldSaveInnerText.Append($" CodeGenUtils.GetFieldManipulator({fieldName}).Save(in field, data); break;");
@@ -248,7 +279,7 @@ using LiteEntitySystem.Internal;");
                             fieldLoadHistoryInnerText.Append($" CodeGenUtils.GetFieldManipulator({fieldName}).LoadHistory(in field, tempHistory, historyA, historyB, lerpTime); break;");
                             fieldSetInterpolationInnerText.Append($" CodeGenUtils.GetFieldManipulator({fieldName}).SetInterpolation(in field, prev, current, fTimer); break;");
                             syncablesResyncInnerText.Append($"\n{TAB(3)}CodeGenUtils.OnSyncRequested({fieldSymbol.Name});");
-                            syncablesSetIdInnerText.Append($"\n{TAB(4)}CodeGenUtils.InternalSyncablesSetup({fieldSymbol.Name}, this, MetadataCache.SyncablesRpcOffsets[{syncableId}]);");
+                            syncablesSetIdInnerText.Append($"\n{TAB(4)}CodeGenUtils.InternalSyncablesSetup({fieldSymbol.Name}, this, (ushort)({syncableId}+classMetadata.BaseSyncablesCount));");
                             syncablesGetByIdText.Append($"\n{TAB(3)}case {syncableId}: return {fieldSymbol.Name};");
                             syncableId++;
                         }
@@ -340,13 +371,10 @@ namespace {classSymbol.ContainingNamespace}
                         : " : base(target)";
                     string baseclassMetadata = baseTypeIsSimple
                         ? "new GeneratedClassMetadata()"
-                        : $"{classSymbol.BaseType.Name}.CreateMetadata()";
+                        : $"base.GetClassMetadata()";
                     string newAddition = baseTypeIsSimple
                         ? string.Empty
                         : " new";
-                    string rpcRegisterString = InheritsFrom(syncableFieldType, classSymbol)
-                        ? "RegisterRPC(new SyncableRPCRegistrator());"
-                        : "RegisterRPC(new RPCRegistrator());";
 
                     ResultCode.Append($@"
 
@@ -419,20 +447,7 @@ namespace {classSymbol.ContainingNamespace}
         }}
 
         private {classSymbol.Name}FieldManipulator _fieldManipulator;
-        private static readonly GeneratedClassMetadata MetadataCache = CreateMetadata();
-
-        public static{newAddition} GeneratedClassMetadata CreateMetadata()
-        {{
-            ref var classMetadata = ref GeneratedClassDataHandler<{className}>.ClassMetadata;
-            if (classMetadata == null)
-            {{
-                var baseClassMetadata = {baseclassMetadata};
-                classMetadata = new GeneratedClassMetadata(baseClassMetadata);
-{classMetadataText}
-                classMetadata.Init();
-            }}
-            return classMetadata;
-        }}
+        private static GeneratedClassMetadata MetadataCache;
 
         protected{internalAddition} override FieldManipulator GetFieldManipulator()
         {{
@@ -443,17 +458,23 @@ namespace {classSymbol.ContainingNamespace}
 
         protected{internalAddition} override GeneratedClassMetadata GetClassMetadata()
         {{
-            if(!MetadataCache.IsRpcBound)
+            ref var classMetadata = ref GeneratedClassDataHandler<{className}>.ClassMetadata;
+            if (classMetadata == null)
             {{
-                {rpcRegisterString}
-                MetadataCache.IsRpcBound = true;
+                var baseClassMetadata = {baseclassMetadata};
+                classMetadata = new GeneratedClassMetadata(baseClassMetadata);
+                MetadataCache = classMetadata;
+                _syncablesInitialized = true;
+{syncablesSetIdInnerText}
+{classMetadataText}
+                classMetadata.Init();
             }}
-            if(!_syncablesInitialized)
+            else if(!_syncablesInitialized)
             {{
                 _syncablesInitialized = true;
 {syncablesSetIdInnerText}
             }}
-            return MetadataCache;
+            return classMetadata;
         }}
 {syncablesPart}
     }}

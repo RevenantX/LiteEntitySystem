@@ -196,7 +196,7 @@ namespace LiteEntitySystem.Internal
                         continue;
                     }
                 }
-                //Logger.Log($"Executing rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}. Type: {rpcType}");
+                //Logger.Log($"Executing rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}.");
                 var entity = entityManager.GetEntityById<InternalEntity>(rpc.EntityId);
                 if (entity == null)
                 {

@@ -12,6 +12,7 @@ namespace LiteEntitySystem.Internal
     {
         public readonly string Name; //used for debug
         public readonly ushort Id;
+        public readonly ushort SyncableId;
         public readonly uint Size;
         public readonly int IntSize;
         public readonly FieldType FieldType;
@@ -19,7 +20,6 @@ namespace LiteEntitySystem.Internal
         public readonly bool IsPredicted;
         public readonly bool HasChangeNotification;
         public readonly Type ActualType;
-        public readonly ushort IdOffset;
 
         internal readonly ValueTypeProcessor TypeProcessor;
         public int FixedOffset;
@@ -30,7 +30,7 @@ namespace LiteEntitySystem.Internal
             FieldType fieldType,
             Type type,
             ushort id,
-            ushort idOffset,
+            ushort syncableId,
             SyncFlags flags,
             bool hasChangeNotification)
         {
@@ -38,7 +38,7 @@ namespace LiteEntitySystem.Internal
             Name = name;
             TypeProcessor = ValueProcessors.RegisteredProcessors[type];
             Id = id;
-            IdOffset = idOffset;
+            SyncableId = syncableId;
             Size = (uint)TypeProcessor.Size;
             IntSize = TypeProcessor.Size;
             FieldType = fieldType;

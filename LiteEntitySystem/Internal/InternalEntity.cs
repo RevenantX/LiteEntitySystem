@@ -145,15 +145,6 @@ namespace LiteEntitySystem.Internal
             (EntityManager.IsServer ? rpc.CachedActionServer : rpc.CachedActionClient)(this, value);
         }
 
-        /// <summary>
-        /// Method for registering RPCs and OnChange notifications
-        /// </summary>
-        /// <param name="r"></param>
-        protected virtual void RegisterRPC(in RPCRegistrator r)
-        {
-            
-        }
-
         protected InternalEntity(EntityParams entityParams)
         {
             EntityManager = entityParams.EntityManager;
