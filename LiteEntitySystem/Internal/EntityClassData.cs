@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace LiteEntitySystem.Internal
 {
@@ -36,7 +35,7 @@ namespace LiteEntitySystem.Internal
         public EntityClassData(ushort filterId, Type entType, RegisteredTypeInfo typeInfo)
         {
             ClassId = typeInfo.ClassId;
-            IsLocalOnly = entType.GetCustomAttribute<LocalOnly>() != null;
+            IsLocalOnly = entType.GetCustomAttributes(typeof(LocalOnly), true).Length > 0;
             EntityConstructor = typeInfo.Constructor;
             IsSingleton = entType.IsSubclassOf(SingletonEntityType);
             FilterId = filterId;
