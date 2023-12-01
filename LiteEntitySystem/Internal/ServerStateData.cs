@@ -22,13 +22,13 @@ namespace LiteEntitySystem.Internal
         public readonly MethodCallDelegate Delegate;
         public bool Executed;
 
-        public RemoteCallsCache(RPCHeader header, EntitySharedReference entityId, MethodCallDelegate callDelegate, int offset, int syncableId)
+        public RemoteCallsCache(RPCHeader header, EntitySharedReference entityId, RpcData rpcData, int offset)
         {
             Header = header;
             EntityId = entityId;
-            Delegate = callDelegate;
+            Delegate = rpcData.ClientMethod;
             Offset = offset;
-            SyncableId = syncableId;
+            SyncableId = rpcData.SyncableId;
             Executed = false;
         }
     }
@@ -220,7 +220,7 @@ namespace LiteEntitySystem.Internal
             {
                 var header = *(RPCHeader*)(rawData + position);
                 position += sizeof(RPCHeader);
-                var rpcCache = new RemoteCallsCache(header, entityId, classData.RpcData[header.Id].ClientMethod, position, classData.RpcData[header.Id].SyncableId);
+                var rpcCache = new RemoteCallsCache(header, entityId, classData.RpcData[header.Id], position);
                 //Logger.Log($"[CEM] ReadRPC. RpcId: {header.Id}, Tick: {header.Tick}, TypeSize: {header.TypeSize}, Count: {header.Count}");
                 if (rpcCache.Delegate == null)
                 {

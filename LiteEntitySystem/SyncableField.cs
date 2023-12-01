@@ -7,9 +7,7 @@ namespace LiteEntitySystem
     public abstract class SyncableField : InternalSyncType
     {
         internal InternalEntity ParentEntity;
-        internal ushort RpcOffset;
-        internal ExecuteFlags Flags;
-
+        
         protected internal virtual void OnSyncRequested()
         {
             

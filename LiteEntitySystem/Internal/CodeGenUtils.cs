@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
@@ -18,52 +17,9 @@ namespace LiteEntitySystem.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RegisterRPC(SyncableField s)
-        {
-            s.RegisterRPC(new SyncableRPCRegistrator());
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void InternalSyncablesSetup(SyncableField s, InternalEntity parent, ushort rpcOffset)
+        public static void InternalSyncablesSetup(SyncableField s, InternalEntity parent)
         {
             s.ParentEntity = parent;
-            s.RpcOffset = rpcOffset;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void InitRPCData(InternalEntity entity, ushort size)
-        {
-            entity.GetClassMetadata().RpcData = new RpcData[size];
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool CheckInitialized(InternalEntity entity)
-        {
-            return entity.GetClassMetadata().IsRpcBound;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void MarkInitialized(InternalEntity entity)
-        {
-            entity.GetClassMetadata().IsRpcBound = true;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetRemoteCallId(ref RemoteCall rc, ushort rpcId)
-        {
-            rc.RpcId = rpcId;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetRemoteCallId<T>(ref RemoteCall<T> rc, ushort rpcId) where T : unmanaged
-        {
-            rc.RpcId = rpcId;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetRemoteCallId<T>(ref RemoteCallSpan<T> rc, ushort rpcId) where T : unmanaged
-        {
-            rc.RpcId = rpcId;
         }
     }
 }

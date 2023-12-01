@@ -13,7 +13,8 @@ struct MyInput
 enum MyIds
 {
     BasePlayer,
-    BaseController
+    BaseController,
+    BasePlayerTest
 }
 
 partial class SyncableTest : SyncableField
@@ -28,7 +29,7 @@ partial class SyncableTestDerived : SyncableTest
     public SyncVar<float> FloatVar2;
 }
 
-[UpdateableEntity(true), LocalOnly]
+[UpdateableEntity(true)]
 partial class BasePlayer : PawnLogic
 {
     private static RemoteCall RpcTest2;
@@ -81,7 +82,7 @@ partial class BasePlayer : PawnLogic
     protected override void RegisterRPC(in RPCRegistrator r)
     {
         base.RegisterRPC(in r);
-        Console.WriteLine("RegisterRPC");
+        Console.WriteLine($"RegisterRPC {GetType().Name}");
         r.CreateRPCAction(this, RpcMethod, ref RpcTest, ExecuteFlags.SendToAll);
     }
 }
@@ -170,7 +171,8 @@ class Program
         Logger.LoggerImpl = new TestLogger();
         var typesMap = new EntityTypesMap<MyIds>()
             .Register(MyIds.BasePlayer, e => new BasePlayer(e))
-            .Register(MyIds.BaseController, e => new BasePlayerController(e));
+            .Register(MyIds.BaseController, e => new BasePlayerController(e))
+            .Register(MyIds.BasePlayerTest, e => new BasePlayerTest(e));
 
         var clientPeer = new TestPeer();
         var serverPeer = new TestPeer();
@@ -181,7 +183,9 @@ class Program
         serverPeer.ClientTarget = cem;
         var player = sem.AddPlayer(serverPeer);
         var playerEntity = sem.AddEntity<BasePlayer>();
+        var testPlayerEntity = sem.AddEntity<BasePlayerTest>();
         var playerController = sem.AddController<BasePlayerController>(player, e => e.StartControl(playerEntity));
+        
         for (int i = 0; i < 1000; i++)
         {
             sem.Update();
