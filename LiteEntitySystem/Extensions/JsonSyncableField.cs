@@ -25,14 +25,10 @@ namespace LiteEntitySystem.Extensions
             }
         }
 
-        private RemoteCallSpan<byte> _initAction;
+        [BindRpc(nameof(Init))]
+        private static RemoteCallSpan<byte> _initAction;
 
-        protected override void RegisterRPC(in SyncableRPCRegistrator r)
-        {
-            r.CreateClientAction(this, Init, ref _initAction);
-        }
-
-        protected override void OnSyncRequested()
+        protected internal override void OnSyncRequested()
         {
             if (_value == null)
                 _value = ScriptableObject.CreateInstance<T>();
