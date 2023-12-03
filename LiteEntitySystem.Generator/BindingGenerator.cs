@@ -286,14 +286,11 @@ using LiteEntitySystem.Internal;");
                                 .Any(x => TypeEquals(x.AttributeClass, bindOnChangeAttribType))
                                 ? "true"
                                 : "false";
+                            //here it should use parent syncflags
                             var syncVarGenericArg = ((INamedTypeSymbol)fieldSymbol.Type).TypeArguments[0];
-                            
-                            if(InheritsFrom(classSymbol, syncableFieldType))
-                                classMetadataText.AppendLine($"{TAB(4)}classMetadata.AddField<{syncVarGenericArg}>(\"{fieldSymbol.Name}\", FieldType.SyncableSyncVar, {syncFlagsStr}, false);");
-                            else
-                                classMetadataText.AppendLine($"{TAB(4)}classMetadata.AddField<{syncVarGenericArg}>(\"{fieldSymbol.Name}\", FieldType.SyncVar, {syncFlagsStr}, {hasChangeNotify});");
-                            
+                            //when SyncVar<T>
                             string dotValueText = classSymbol.TypeArguments.Contains(syncVarGenericArg) ? string.Empty : ".Value";
+                            classMetadataText.AppendLine($"{TAB(4)}classMetadata.AddField<{syncVarGenericArg}>(\"{fieldSymbol.Name}\", {syncFlagsStr}, {hasChangeNotify});");
                             
                             fieldSaveIfDifferentInnerText.Append(@$"   
                     if({fieldName}{dotValueText} != Helpers.ReadStruct<{syncVarGenericArg}>(data))       
@@ -307,7 +304,9 @@ using LiteEntitySystem.Internal;");
                     var {fieldSymbol.Name}Stored = Helpers.ReadStruct<{syncVarGenericArg}>(data);
                     if({fieldName}{dotValueText} != {fieldSymbol.Name}Stored)
                     {{
+                        var old = {fieldName}.Value;
                         {fieldName}.Value = {fieldSymbol.Name}Stored;
+                        Helpers.WriteStruct(data, old);
                         return true;
                     }}
                     return false;");
@@ -394,7 +393,7 @@ namespace {classSymbol.ContainingNamespace}
                 }}
             }}
 
-            public override bool LoadIfDifferent(in EntityFieldInfo field, ReadOnlySpan<byte> data)
+            public override bool LoadIfDifferent(in EntityFieldInfo field, Span<byte> data)
             {{
                 switch({fieldIdString})
                 {{{fieldLoadIfDifferentInnerText}

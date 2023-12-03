@@ -740,6 +740,7 @@ namespace LiteEntitySystem
             {
                 ref var syncCall = ref _syncCalls[i];
                 syncCall.Entity.GetFieldManipulator().OnChange(in syncCall.Field, new ReadOnlySpan<byte>(_stateA.Data, syncCall.PrevDataPos, _stateA.Size-syncCall.PrevDataPos));
+                Logger.Log($"OnChange: {syncCall.Field.Name} - {syncCall.Field.Id}");
             }
             _syncCallsCount = 0;
             
@@ -820,27 +821,22 @@ namespace LiteEntitySystem
                     if(field.IsPredicted)
                         RefMagic.CopyBlock(predictedData + field.PredictedOffset, readDataPtr, field.Size);
                     
-                    if (field.FieldType == FieldType.SyncableSyncVar)
+                    if (field.Flags.HasFlagFast(SyncFlags.Interpolated) && writeInterpolationData)
                     {
-                        fieldManipulator.Load(in field, new ReadOnlySpan<byte>(readDataPtr, field.IntSize));
+                        //this is interpolated save for future
+                        RefMagic.CopyBlock(interpDataPtr + field.FixedOffset, readDataPtr, field.Size);
+                    }
+
+                    if (field.HasChangeNotification)
+                    {
+                        if (fieldManipulator.LoadIfDifferent(in field, new Span<byte>(readDataPtr, field.IntSize)))
+                        {
+                            _syncCalls[_syncCallsCount++] = new SyncCallInfo(ref field, entity, readerPosition);
+                        }
                     }
                     else
                     {
-                        if (field.Flags.HasFlagFast(SyncFlags.Interpolated) && writeInterpolationData)
-                        {
-                            //this is interpolated save for future
-                            RefMagic.CopyBlock(interpDataPtr + field.FixedOffset, readDataPtr, field.Size);
-                        }
-
-                        if (field.HasChangeNotification)
-                        {
-                            if (fieldManipulator.LoadIfDifferent(in field, new ReadOnlySpan<byte>(readDataPtr, field.IntSize)))
-                                _syncCalls[_syncCallsCount++] = new SyncCallInfo(ref field, entity, readerPosition);
-                        }
-                        else
-                        {
-                            fieldManipulator.Load(in field, new ReadOnlySpan<byte>(readDataPtr, field.IntSize));
-                        }
+                        fieldManipulator.Load(in field, new ReadOnlySpan<byte>(readDataPtr, field.IntSize));
                     }
                     //Logger.Log($"E {entity.Id} Field updated: {field.Name}");
                     readerPosition += field.IntSize;

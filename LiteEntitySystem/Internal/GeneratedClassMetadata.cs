@@ -245,9 +245,9 @@ namespace LiteEntitySystem.Internal
             _rpcList.Add(new RpcData(-1){ClientMethod = clientMethod});
         }
 
-        public void AddField<T>(string name, FieldType fieldType, SyncFlags flags, bool hasChangeNotification) where T : unmanaged
+        public void AddField<T>(string name, SyncFlags flags, bool hasChangeNotification) where T : unmanaged
         {
-            var fi = new EntityFieldInfo(name, fieldType, typeof(T), FieldIdCounter, 0, flags, hasChangeNotification);
+            var fi = new EntityFieldInfo(name, typeof(T), FieldIdCounter, 0, flags, hasChangeNotification);
             int size = Helpers.SizeOfStruct<T>();
             if(flags.HasFlagFast(SyncFlags.Interpolated) && !typeof(T).IsEnum)
             {
@@ -272,7 +272,7 @@ namespace LiteEntitySystem.Internal
         {
             foreach (var fld in syncableMetadata.Fields)
             {
-                _fieldsTemp.Add(new EntityFieldInfo(fld.Name, FieldType.SyncableSyncVar, fld.ActualType, FieldIdCounter, fld.Id, fld.Flags, false));
+                _fieldsTemp.Add(new EntityFieldInfo(fld.Name, fld.ActualType, FieldIdCounter, fld.Id, fld.Flags, false));
             }
 
             ExecuteFlags executeFlags;
