@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -11,7 +10,7 @@ namespace LiteEntitySystem.Generator
     [Generator]
     public class BindingGenerator : ISourceGenerator
     {
-        private static readonly StringBuilder ResultCode = new StringBuilder(); 
+        private static readonly StringBuilder ResultCode = new (); 
         
         private static readonly DiagnosticDescriptor NoPartialOnClass = new (
             id: "LES001",
@@ -78,14 +77,12 @@ namespace LiteEntitySystem.Generator
             var compilation = context.Compilation;
             var baseSyncType = compilation.GetTypeByMetadataName("LiteEntitySystem.Internal.InternalSyncType");
             var internalEntityType = compilation.GetTypeByMetadataName("LiteEntitySystem.Internal.InternalEntity");
-            var singletonEntityType = compilation.GetTypeByMetadataName("LiteEntitySystem.SingletonEntityLogic");
             var syncableFieldType = compilation.GetTypeByMetadataName("LiteEntitySystem.SyncableField");
             var bindOnChangeAttribType = compilation.GetTypeByMetadataName("LiteEntitySystem.BindOnChange");
             var bindRpcAttribType = compilation.GetTypeByMetadataName("LiteEntitySystem.BindRpc");
             var syncVarFlagsAttribType = compilation.GetTypeByMetadataName("LiteEntitySystem.SyncVarFlags");
             var localOnlyAttribType = compilation.GetTypeByMetadataName("LiteEntitySystem.LocalOnly");
             var updateableEntityAttribType = compilation.GetTypeByMetadataName("LiteEntitySystem.UpdateableEntity");
-            var readonlyspanType = compilation.GetTypeByMetadataName("System.ReadOnlySpan");
 
             Func<IFieldSymbol, bool> correctSyncVarPredicate = x =>
                 x.Type.Name == "SyncVar" || InheritsFrom(syncableFieldType, x.Type) || x.Type.Name.StartsWith("RemoteCall");
@@ -364,8 +361,8 @@ namespace {classSymbol.ContainingNamespace}
                         TypeEquals(classSymbol.BaseType, baseSyncType);
                     
                     string baseFieldManipulator = baseTypeIsSimple
-                        ? "FieldManipulator"
-                        : $"{classSymbol.BaseType.Name}FieldManipulator";
+                        ? string.Empty
+                        : $"{classSymbol.BaseType.Name}.Inner";
                     string baseConstructorCall = baseTypeIsSimple
                         ? string.Empty
                         : " : base(target)";
@@ -374,17 +371,17 @@ namespace {classSymbol.ContainingNamespace}
                         : $"base.GetClassMetadata()";
                     string newAddition = baseTypeIsSimple
                         ? string.Empty
-                        : " new";
+                        : "new ";
 
                     ResultCode.Append($@"
 
     partial class {className}
     {{
-        protected class {classSymbol.Name}FieldManipulator : {baseFieldManipulator}
+        protected {newAddition}class InnerFieldManipulator : {baseFieldManipulator}FieldManipulator
         {{
             private {className} _target;
 
-            public {classSymbol.Name}FieldManipulator({className} target){baseConstructorCall}
+            public InnerFieldManipulator({className} target){baseConstructorCall}
             {{
                 _target = target;
             }}
@@ -446,12 +443,12 @@ namespace {classSymbol.ContainingNamespace}
             }}
         }}
 
-        private {classSymbol.Name}FieldManipulator _fieldManipulator;
+        private FieldManipulator _fieldManipulator;
         private static GeneratedClassMetadata MetadataCache;
 
         protected{internalAddition} override FieldManipulator GetFieldManipulator()
         {{
-            return _fieldManipulator ??= new {classSymbol.Name}FieldManipulator(this);
+            return _fieldManipulator ??= new InnerFieldManipulator(this);
         }}
 
         private bool _syncablesInitialized;

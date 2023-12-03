@@ -40,6 +40,15 @@ partial class SyncableTestDerived : SyncableTest
     public SyncVar<float> FloatVar2;
 }
 
+partial class BotLogic : AiControllerLogic<BasePlayer>
+{
+    private readonly SyncTimer _rotationChangeTimer = new SyncTimer(0.5f);
+    
+    public BotLogic(EntityParams entityParams) : base(entityParams)
+    {
+    }
+}
+
 [UpdateableEntity(true)]
 partial class BasePlayer : PawnLogic
 {
