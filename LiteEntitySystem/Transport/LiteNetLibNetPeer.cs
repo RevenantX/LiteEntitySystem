@@ -5,46 +5,51 @@ namespace LiteEntitySystem.Transport
 {
     public class LiteNetLibNetPeer : AbstractNetPeer
     {
-        private readonly NetPeer _localPeer;
+        public readonly NetPeer NetPeer;
         
-        public LiteNetLibNetPeer(NetPeer localPeer, bool assignToTag)
+        public LiteNetLibNetPeer(NetPeer netPeer, bool assignToTag)
         {
-            _localPeer = localPeer;
+            NetPeer = netPeer;
             if(assignToTag)
-                _localPeer.Tag = this;
+                NetPeer.Tag = this;
         }
         
         public override void TriggerSend()
         {
-            _localPeer.NetManager.TriggerUpdate();
+            NetPeer.NetManager.TriggerUpdate();
         }
 
         public override void SendReliableOrdered(ReadOnlySpan<byte> data)
         {
-            _localPeer.Send(data, 0, DeliveryMethod.ReliableOrdered);
+            NetPeer.Send(data, 0, DeliveryMethod.ReliableOrdered);
         }
 
         public override void SendUnreliable(ReadOnlySpan<byte> data)
         {
-            _localPeer.Send(data, 0, DeliveryMethod.Unreliable);
+            NetPeer.Send(data, 0, DeliveryMethod.Unreliable);
         }
 
         public override int GetMaxUnreliablePacketSize()
         {
-            return _localPeer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable);
+            return NetPeer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable);
         }
 
         public override string ToString()
         {
-            return _localPeer.EndPoint.ToString();
+            return NetPeer.EndPoint.ToString();
         }
     }
 
     public static class LiteNetLibExtensions
     {
-        public static AbstractNetPeer GetAbstractNetPeerFromTag(this NetPeer peer)
+        public static LiteNetLibNetPeer GetLiteNetLibNetPeerFromTag(this NetPeer peer)
         {
-            return (AbstractNetPeer)peer.Tag;
+            return (LiteNetLibNetPeer)peer.Tag;
+        }
+
+        public static LiteNetLibNetPeer GetLiteNetLibNetPeer(this NetPlayer player)
+        {
+            return (LiteNetLibNetPeer)player.Peer;
         }
     }
 }
