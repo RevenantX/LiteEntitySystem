@@ -4,7 +4,7 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
-    public delegate void SpanAction<TCaller, T>(TCaller caller, ReadOnlySpan<T> data) where T : unmanaged;
+    public delegate void SpanAction<TCaller, T>(TCaller caller, ReadOnlySpan<T> data) where TCaller : InternalSyncType where T : unmanaged;
 
     [AttributeUsage(AttributeTargets.Field)]
     public class BindRpc : Attribute
@@ -42,5 +42,5 @@ namespace LiteEntitySystem
         internal SpanAction<InternalSyncType, T> CachedActionClient;
     }
     
-    public delegate void MethodCallDelegate(object classPtr, ReadOnlySpan<byte> buffer);
+    public delegate void MethodCallDelegate(InternalSyncType classPtr, ReadOnlySpan<byte> buffer);
 }

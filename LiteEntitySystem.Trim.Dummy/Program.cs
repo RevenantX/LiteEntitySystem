@@ -25,7 +25,7 @@ partial class SyncableTest : SyncableField
 
     private void RPCExec()
     {
-        Console.WriteLine("GOT SYNCABLE RPC");
+        //Console.WriteLine("GOT SYNCABLE RPC");
     }
     
     public void TriggerRPC()
@@ -75,7 +75,7 @@ partial class BasePlayer : PawnLogic
 
     private void OnFlagTest3Changed(float prev)
     {
-        Console.WriteLine($"Flagstest3 changed {FlagsTest3}");
+        //Console.WriteLine($"Flagstest3 changed {FlagsTest3}");
     }
     
     public BasePlayer(EntityParams entityParams) : base(entityParams)
@@ -107,17 +107,29 @@ partial class BasePlayer : PawnLogic
             SyncTest.TriggerRPC();
             //ExecuteRPC(RpcTest);
             ExecuteRPC(RpcTest2);
+            if(EntityManager.Tick > 50)
+                Destroy();
         }
+        else
+        {
+            //Console.WriteLine($"CliDestroyed: {IsDestroyed}");
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        Console.WriteLine("Destroyed: " + (EntityManager.IsServer ? "server" : "client"));
     }
 
     private void RpcMethod1()
     {
-        Console.WriteLine($"1GOT {TestSyncVar} {SyncStr.Value} {SyncStr2.Value} {SyncTest.IntVar} {SyncTest.IntVar2} {SyncTest.FloatVar} {SyncTest.FloatVar2}");
+        //Console.WriteLine($"1GOT {TestSyncVar} {SyncStr.Value} {SyncStr2.Value} {SyncTest.IntVar} {SyncTest.IntVar2} {SyncTest.FloatVar} {SyncTest.FloatVar2}");
     }
     
     private void RpcMethod2()
     {
-        Console.WriteLine($"2GOT {TestSyncVar} {SyncStr.Value} {SyncStr2.Value} {SyncTest.IntVar} {SyncTest.IntVar2} {SyncTest.FloatVar} {SyncTest.FloatVar2}");
+        //Console.WriteLine($"2GOT {TestSyncVar} {SyncStr.Value} {SyncStr2.Value} {SyncTest.IntVar} {SyncTest.IntVar2} {SyncTest.FloatVar} {SyncTest.FloatVar2}");
     }
 }
 
@@ -228,15 +240,10 @@ class Program
         clientPeer.ServerPeer = serverPeer;
         serverPeer.ClientTarget = cem;
         var player = sem.AddPlayer(serverPeer);
-        var playerEntity = sem.AddEntity<BasePlayer>();
+        var playerEntity = sem.AddEntity<BasePlayerTest>();
         //var testPlayerEntity = sem.AddEntity<BasePlayerTest>();
         var playerController = sem.AddController<BasePlayerController>(player, e => e.StartControl(playerEntity));
-        for (int i = 0; i < 100; i++)
-        {
-            sem.Update();
-            Thread.Sleep(1);
-        }
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 1000; i++)
         {
             cem.Update();
             sem.Update();
