@@ -89,7 +89,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Interpolation time between logic and render
         /// </summary>
-        public float LerpFactor => _accumulator / (float)_deltaTimeTicks;
+        public float LerpFactor => _lerpFactor;
         
         /// <summary>
         /// Current update mode (can be used inside entities to separate logic for rollbacks)
@@ -172,6 +172,7 @@ namespace LiteEntitySystem
         private long _lastTime;
         private ushort _localIdCounter = MaxSyncedEntityCount;
         private bool _lagCompensationEnabled;
+        private float _lerpFactor;
         protected bool SlowDownEnabled;
 
         internal byte InternalPlayerId;
@@ -616,6 +617,7 @@ namespace LiteEntitySystem
                 _accumulator -= maxTicks;
                 updates++;
             }
+            _lerpFactor = (float)_accumulator / maxTicks;
         }
     }
 }
