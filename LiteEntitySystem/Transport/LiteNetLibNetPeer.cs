@@ -34,6 +34,8 @@ namespace LiteEntitySystem.Transport
             return NetPeer.GetMaxSinglePacketSize(DeliveryMethod.Unreliable);
         }
 
+        public override int RoundTripTimeMs => NetPeer.RoundTripTime;
+
         public override string ToString()
         {
             return NetPeer.EndPoint.ToString();

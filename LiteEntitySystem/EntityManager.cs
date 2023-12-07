@@ -167,10 +167,12 @@ namespace LiteEntitySystem
         internal readonly EntityClassData[] ClassDataDict;
 
         private readonly long _deltaTimeTicks;
+        private readonly long _slowdownTicks;
         private long _accumulator;
         private long _lastTime;
         private ushort _localIdCounter = MaxSyncedEntityCount;
         private bool _lagCompensationEnabled;
+        protected bool SlowDownEnabled;
 
         internal byte InternalPlayerId;
         protected readonly InputProcessor InputProcessor;
@@ -253,6 +255,9 @@ namespace LiteEntitySystem
             DeltaTimeF = (float) DeltaTime;
             _stopwatchFrequency = 1.0 / Stopwatch.Frequency;
             _deltaTimeTicks = (long)(DeltaTime * Stopwatch.Frequency);
+            _slowdownTicks = (long)(DeltaTime * 0.01f * Stopwatch.Frequency);
+            if (_slowdownTicks < 100)
+                _slowdownTicks = 100;
         }
 
         /// <summary>
@@ -593,9 +598,10 @@ namespace LiteEntitySystem
             VisualDeltaTime = ticksDelta * _stopwatchFrequency;
             _accumulator += ticksDelta;
             _lastTime = elapsedTicks;
+            long maxTicks = _deltaTimeTicks + (SlowDownEnabled ? _slowdownTicks : 0);
 
             int updates = 0;
-            while (_accumulator >= _deltaTimeTicks)
+            while (_accumulator >= maxTicks)
             {
                 //Lag
                 if (updates >= MaxTicksPerUpdate)
@@ -607,7 +613,7 @@ namespace LiteEntitySystem
                 OnLogicTick();
                 _tick++;
 
-                _accumulator -= _deltaTimeTicks;
+                _accumulator -= maxTicks;
                 updates++;
             }
         }
