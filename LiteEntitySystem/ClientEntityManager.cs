@@ -187,6 +187,7 @@ namespace LiteEntitySystem
                 {
                     ref var field = ref classMetadata.Fields[i];
                     fieldManipulator.Save(in field, new Span<byte>(interpDataPtr + field.FixedOffset, field.IntSize));
+                    fieldManipulator.Save(in field, new Span<byte>(prevDataPtr + field.FixedOffset, field.IntSize));
                 }
             }
         }
