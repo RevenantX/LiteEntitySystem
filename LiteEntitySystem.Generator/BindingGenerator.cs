@@ -458,16 +458,14 @@ namespace {classSymbol.ContainingNamespace}
             }}
         }}
 
+        private bool _syncablesInitialized;
         private FieldManipulator _fieldManipulator;
         private static GeneratedClassMetadata MetadataCache;
-
 
         protected{internalAddition} override FieldManipulator GetFieldManipulator()
         {{
             return _fieldManipulator ??= new InnerFieldManipulator(this);
         }}
-
-        private bool _syncablesInitialized;
 
         protected{internalAddition} override GeneratedClassMetadata GetClassMetadata()
         {{
