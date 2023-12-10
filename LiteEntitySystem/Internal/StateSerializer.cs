@@ -50,7 +50,7 @@ namespace LiteEntitySystem.Internal
         private int _syncFrame;
         private RPCMode _rpcMode;
 
-        public void AddRpcPacket(RemoteCallPacket rpc)
+        internal void AddRpcPacket(RemoteCallPacket rpc)
         {
             //Logger.Log($"AddRpc for tick: {rpc.Header.Tick}, St: {_entity.ServerManager.Tick}, Id: {rpc.Header.Id}");
             
@@ -81,7 +81,7 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        public byte IncrementVersion(ushort tick)
+        internal byte IncrementVersion(ushort tick)
         {
             _lastWriteTick = (ushort)(tick - 1);
             _versionChangedTick = tick;
@@ -100,7 +100,7 @@ namespace LiteEntitySystem.Internal
             tail = null;
         }
 
-        public unsafe void Init(InternalEntity e)
+        internal unsafe void Init(InternalEntity e)
         {
             if (_state != SerializerState.Freed)
             {
@@ -158,41 +158,17 @@ namespace LiteEntitySystem.Internal
 
             _lastWriteTick = serverTick;
             var fieldManipulator = _entity.GetFieldManipulator();
-            fixed (byte* latestEntityData = _latestEntityData)
+            for (int i = 0; i < _classData.FieldsCount; i++)
             {
-                for (int i = 0; i < _classData.FieldsCount; i++)
-                {
-                    ref var field = ref _classData.Fields[i];
-                    byte* latestDataPtr = latestEntityData + HeaderSize + field.FixedOffset;
-                    
-                    //skip local ids
-                    if (field.TypeProcessor.ValueType == EntitySharedReferenceType)
-                    {
-                        var sharedRef = new EntitySharedReference();
-                        fieldManipulator.Save(in field, new Span<byte>(&sharedRef, sizeof(EntitySharedReference)));
-                        if (sharedRef.IsLocal)
-                            sharedRef = null;
-                        var latestRefPtr = (EntitySharedReference*)latestDataPtr;
-                        if (*latestRefPtr != sharedRef)
-                        {
-                            *latestRefPtr = sharedRef;
-                            _fieldChangeTicks[i] = serverTick;
-                        }
-                        else if (Helpers.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
-                            _fieldChangeTicks[i] = minimalTick;
-                    }
-                    else
-                    {
-                        if (fieldManipulator.SaveIfDifferent(in field, new Span<byte>(latestDataPtr, field.IntSize)))
-                            _fieldChangeTicks[i] = serverTick;
-                        else if (Helpers.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
-                            _fieldChangeTicks[i] = minimalTick;
-                    }
-                }
+                ref var field = ref _classData.Fields[i];
+                if (fieldManipulator.SaveIfDifferent(in field, new Span<byte>(_latestEntityData, HeaderSize + field.FixedOffset, field.IntSize)))
+                    _fieldChangeTicks[i] = serverTick;
+                else if (Helpers.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
+                    _fieldChangeTicks[i] = minimalTick;
             }
         }
 
-        public void Destroy(ushort serverTick, ushort minimalTick, bool instantly)
+        internal void Destroy(ushort serverTick, ushort minimalTick, bool instantly)
         {
             if (_state != SerializerState.Active)
                 return;
@@ -206,7 +182,7 @@ namespace LiteEntitySystem.Internal
             _ticksOnDestroy = serverTick;
         }
 
-        public unsafe int GetMaximumSize(ushort forTick)
+        internal unsafe int GetMaximumSize(ushort forTick)
         {
             if (_state != SerializerState.Active)
                 return 0;
@@ -272,7 +248,7 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        public unsafe void MakeBaseline(byte playerId, ushort serverTick, ushort minimalTick, byte* resultData, ref int position)
+        internal unsafe void MakeBaseline(byte playerId, ushort serverTick, ushort minimalTick, byte* resultData, ref int position)
         {
             if (_state != SerializerState.Active)
                 return;
@@ -285,7 +261,7 @@ namespace LiteEntitySystem.Internal
             //Logger.Log($"[SEM] SendBaseline for entity: {_entity.Id}, pos: {position}, posAfterData: {position + _fullDataSize}");
         }
 
-        public unsafe DiffResult MakeDiff(byte playerId, ushort serverTick, ushort minimalTick, ushort playerTick, byte* resultData, ref int position)
+        internal unsafe DiffResult MakeDiff(byte playerId, ushort serverTick, ushort minimalTick, ushort playerTick, byte* resultData, ref int position)
         {
             if (_state == SerializerState.Freed)
                 return DiffResult.Skip;

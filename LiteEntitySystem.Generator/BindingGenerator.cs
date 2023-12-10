@@ -83,6 +83,7 @@ namespace LiteEntitySystem.Generator
             var syncVarFlagsAttribType = compilation.GetTypeByMetadataName("LiteEntitySystem.SyncVarFlags");
             var localOnlyAttribType = compilation.GetTypeByMetadataName("LiteEntitySystem.LocalOnly");
             var updateableEntityAttribType = compilation.GetTypeByMetadataName("LiteEntitySystem.UpdateableEntity");
+            var entitySharedRefType = compilation.GetTypeByMetadataName("LiteEntitySystem.EntitySharedReference");
 
             Func<IFieldSymbol, bool> correctSyncVarPredicate = x =>
                 x.Type.Name == "SyncVar" || InheritsFrom(syncableFieldType, x.Type) || x.Type.Name.StartsWith("RemoteCall");
@@ -291,8 +292,23 @@ using LiteEntitySystem.Internal;");
                             //when SyncVar<T>
                             string dotValueText = classSymbol.TypeArguments.Contains(syncVarGenericArg) ? string.Empty : ".Value";
                             classMetadataText.AppendLine($"{TAB(4)}classMetadata.AddField<{syncVarGenericArg}>(\"{fieldSymbol.Name}\", {syncFlagsStr}, {hasChangeNotify});");
-                            
-                            fieldSaveIfDifferentInnerText.Append(@$"   
+
+                            //skip local ids
+                            if (TypeEquals(syncVarGenericArg, entitySharedRefType))
+                                fieldSaveIfDifferentInnerText.Append(@$"
+                    {{
+                        var sharedRef = {fieldName}.Value;
+                        if (sharedRef.IsLocal)
+                            sharedRef = null;
+                        if (sharedRef != Helpers.ReadStruct<{syncVarGenericArg}>(data))
+                        {{
+                            Helpers.WriteStruct(data, sharedRef);
+                            return true;
+                        }}
+                        return false;
+                    }}");
+                            else
+                                fieldSaveIfDifferentInnerText.Append(@$"   
                     if({fieldName}{dotValueText} != Helpers.ReadStruct<{syncVarGenericArg}>(data))       
                     {{
                         Helpers.WriteStruct(data, {fieldName}.Value);
@@ -444,6 +460,7 @@ namespace {classSymbol.ContainingNamespace}
 
         private FieldManipulator _fieldManipulator;
         private static GeneratedClassMetadata MetadataCache;
+
 
         protected{internalAddition} override FieldManipulator GetFieldManipulator()
         {{

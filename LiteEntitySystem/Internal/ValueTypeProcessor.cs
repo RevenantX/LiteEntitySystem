@@ -12,12 +12,10 @@ namespace LiteEntitySystem.Internal
     
     public abstract class ValueTypeProcessor
     {
-        internal readonly Type ValueType;
         internal readonly int Size;
 
-        protected ValueTypeProcessor(Type valueType, int size)
+        protected ValueTypeProcessor(int size)
         {
-            ValueType = valueType;
             Size = size;
         }
     }
@@ -26,7 +24,7 @@ namespace LiteEntitySystem.Internal
     {
         public static InterpolatorDelegateWithReturn<T> InterpDelegate { get; private set; }
         
-        public ValueTypeProcessor(InterpolatorDelegateWithReturn<T> interpDelegate) : base(typeof(T), sizeof(T))
+        public ValueTypeProcessor(InterpolatorDelegateWithReturn<T> interpDelegate) : base(sizeof(T))
         {
             InterpDelegate ??= interpDelegate;
         }

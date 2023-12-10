@@ -64,6 +64,8 @@ partial class BasePlayer : PawnLogic
     private static RemoteCall RpcTest;
     public readonly SyncableTestDerived SyncTest = new SyncableTestDerived();
 
+    public SyncVar<EntitySharedReference> SharedRefSyncvar;
+
     [SyncVarFlags(SyncFlags.Interpolated)]
     public SyncVar<float> FlagsTest1;
     
@@ -202,6 +204,7 @@ class TestPeer : AbstractNetPeer
     }
 
     public override int GetMaxUnreliablePacketSize() => 1024;
+    public override int RoundTripTimeMs => 0;
 }
 
 class TestLogger : ILogger
