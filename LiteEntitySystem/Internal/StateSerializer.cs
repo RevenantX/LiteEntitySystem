@@ -130,7 +130,7 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        private unsafe void Write(ushort serverTick, ushort minimalTick)
+        private void Write(ushort serverTick, ushort minimalTick)
         {
             //write if there new tick
             if (serverTick == _lastWriteTick) 
