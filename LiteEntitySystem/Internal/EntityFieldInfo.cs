@@ -13,8 +13,7 @@ namespace LiteEntitySystem.Internal
         public readonly bool IsPredicted;
         public readonly bool HasChangeNotification;
         public readonly Type ActualType;
-
-        internal readonly ValueTypeProcessor TypeProcessor;
+        
         public int FixedOffset;
         public int PredictedOffset;
         
@@ -23,16 +22,16 @@ namespace LiteEntitySystem.Internal
             Type type,
             ushort id,
             ushort syncableId,
+            int size,
             SyncFlags flags,
             bool hasChangeNotification)
         {
             ActualType = type;
             Name = name;
-            TypeProcessor = ValueProcessors.RegisteredProcessors[type];
             Id = id;
             SyncableId = syncableId;
-            Size = (uint)TypeProcessor.Size;
-            IntSize = TypeProcessor.Size;
+            Size = (uint)size;
+            IntSize = size;
             FixedOffset = 0;
             PredictedOffset = 0;
             Flags = flags;

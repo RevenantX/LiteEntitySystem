@@ -247,8 +247,8 @@ namespace LiteEntitySystem.Internal
 
         public void AddField<T>(string name, SyncFlags flags, bool hasChangeNotification) where T : unmanaged
         {
-            var fi = new EntityFieldInfo(name, typeof(T), FieldIdCounter, 0, flags, hasChangeNotification);
             int size = Helpers.SizeOfStruct<T>();
+            var fi = new EntityFieldInfo(name, typeof(T), FieldIdCounter, 0, size, flags, hasChangeNotification);
             if(flags.HasFlagFast(SyncFlags.Interpolated) && !typeof(T).IsEnum)
             {
                 InterpolatedFieldsSize += size;
@@ -272,7 +272,7 @@ namespace LiteEntitySystem.Internal
         {
             foreach (var fld in syncableMetadata.Fields)
             {
-                _fieldsTemp.Add(new EntityFieldInfo(fld.Name, fld.ActualType, FieldIdCounter, fld.Id, fld.Flags, false));
+                _fieldsTemp.Add(new EntityFieldInfo(fld.Name, fld.ActualType, FieldIdCounter, fld.Id, fld.IntSize, fld.Flags, false));
             }
 
             ExecuteFlags executeFlags;

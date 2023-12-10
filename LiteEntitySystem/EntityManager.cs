@@ -180,12 +180,7 @@ namespace LiteEntitySystem
         
         public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged
         {
-            ValueProcessors.RegisteredProcessors[typeof(T)] = new ValueTypeProcessor<T>(interpolationDelegate);
-        }
-        
-        public static void RegisterFieldType<T>() where T : unmanaged
-        {
-            ValueProcessors.RegisteredProcessors[typeof(T)] = new ValueTypeProcessor<T>(null);
+            new ValueTypeProcessor<T>(interpolationDelegate);
         }
 
         static EntityManager()
@@ -194,18 +189,10 @@ namespace LiteEntitySystem
             if (IntPtr.Size == 4)
                 K4os.Compression.LZ4.LZ4Codec.Enforce32 = true;
 #endif
-            RegisterFieldType<byte>();
-            RegisterFieldType<sbyte>();
-            RegisterFieldType<short>();
-            RegisterFieldType<ushort>();
             RegisterFieldType<int>(Helpers.Lerp);
-            RegisterFieldType<uint>();
             RegisterFieldType<long>(Helpers.Lerp);
-            RegisterFieldType<ulong>();
             RegisterFieldType<float>(Helpers.Lerp);
             RegisterFieldType<double>(Helpers.Lerp);
-            RegisterFieldType<bool>();
-            RegisterFieldType<EntitySharedReference>();
             RegisterFieldType<FloatAngle>(FloatAngle.Lerp);
         }
 
