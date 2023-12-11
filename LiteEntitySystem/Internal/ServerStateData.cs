@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
@@ -282,7 +283,7 @@ namespace LiteEntitySystem.Internal
                 ? _partMtu * TotalPartsCount 
                 : _partMtu * partHeader.Part + partSize);
             fixed(byte* stateData = Data)
-                RefMagic.CopyBlock(stateData + _partMtu * partHeader.Part, rawData + sizeof(DiffPartHeader), (uint)partSize);
+                Unsafe.CopyBlock(stateData + _partMtu * partHeader.Part, rawData + sizeof(DiffPartHeader), (uint)partSize);
             _receivedParts[partHeader.Part] = true;
             Size += partSize;
             _receivedPartsCount++;

@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
@@ -220,7 +221,7 @@ namespace LiteEntitySystem.Internal
         {
             MakeOnSync(serverTick);
             fixed (byte* lastEntityData = _latestEntityData)
-                RefMagic.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
+                Unsafe.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
             position += (int)_fullDataSize;
             
             //add RPCs count
@@ -239,7 +240,7 @@ namespace LiteEntitySystem.Internal
                     *(RPCHeader*)(resultData + position) = rpcNode.Header;
                     position += sizeof(RPCHeader);
                     fixed (byte* rpcData = rpcNode.Data)
-                        RefMagic.CopyBlock(resultData + position, rpcData, (uint)rpcNode.TotalSize);
+                        Unsafe.CopyBlock(resultData + position, rpcData, (uint)rpcNode.TotalSize);
                     position += rpcNode.TotalSize;
                     (*rpcCount)++;
                     //Logger.Log($"[Sever] T: {_entity.ServerManager.Tick}, SendRPC Tick: {rpcNode.Header.Tick}, Id: {rpcNode.Header.Id}, EntityId: {_entity.Id}, TypeSize: {rpcNode.Header.TypeSize}, Count: {rpcNode.Header.Count}");
@@ -325,7 +326,7 @@ namespace LiteEntitySystem.Internal
                         continue;
                     }
                     *fields |= (byte)(1 << i % 8);
-                    RefMagic.CopyBlock(resultData + position, entityDataAfterHeader + field.FixedOffset, field.Size);
+                    Unsafe.CopyBlock(resultData + position, entityDataAfterHeader + field.FixedOffset, field.Size);
                     position += field.IntSize;
                     //Logger.Log($"WF {_entity.GetType()} f: {_classData.Fields[i].Name}");
                 }
@@ -348,7 +349,7 @@ namespace LiteEntitySystem.Internal
                         *(RPCHeader*)(resultData + position) = rpcNode.Header;
                         position += sizeof(RPCHeader);
                         fixed (byte* rpcData = rpcNode.Data)
-                            RefMagic.CopyBlock(resultData + position, rpcData, (uint)rpcNode.TotalSize);
+                            Unsafe.CopyBlock(resultData + position, rpcData, (uint)rpcNode.TotalSize);
                         position += rpcNode.TotalSize;
                         (*rpcCount)++;
                         //Logger.Log($"[Sever] T: {_entity.ServerManager.Tick}, SendRPC Tick: {rpcNode.Header.Tick}, Id: {rpcNode.Header.Id}, EntityId: {_entity.Id}, TypeSize: {rpcNode.Header.TypeSize}, Count: {rpcNode.Header.Count}");

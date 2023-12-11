@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using K4os.Compression.LZ4;
 using LiteEntitySystem.Internal;
 using LiteEntitySystem.Transport;
@@ -550,7 +551,7 @@ namespace LiteEntitySystem
                         entity.Update();
                 
                         //save current
-                        RefMagic.CopyBlock(prevDataPtr, currentDataPtr, (uint)classMetadata.InterpolatedFieldsSize);
+                        Unsafe.CopyBlock(prevDataPtr, currentDataPtr, (uint)classMetadata.InterpolatedFieldsSize);
                         for(int i = 0; i < classMetadata.InterpolatedCount; i++)
                         {
                             ref var field = ref classMetadata.Fields[i];
@@ -683,7 +684,7 @@ namespace LiteEntitySystem
                             {
                                 //put header
                                 fixed (byte* inputData = inputCommand.Data)
-                                    RefMagic.CopyBlock(sendBuffer + offset, inputData, (uint)InputPacketHeader.Size);
+                                    Unsafe.CopyBlock(sendBuffer + offset, inputData, (uint)InputPacketHeader.Size);
                                 offset += InputPacketHeader.Size;
                                 //put delta
                                 offset += InputProcessor.DeltaEncode(
@@ -696,7 +697,7 @@ namespace LiteEntitySystem
                         {
                             //put data
                             fixed (byte* rawInputCommand = inputCommand.Data)
-                                RefMagic.CopyBlock(sendBuffer + offset, rawInputCommand, (uint)InputProcessor.InputSizeWithHeader);
+                                Unsafe.CopyBlock(sendBuffer + offset, rawInputCommand, (uint)InputProcessor.InputSizeWithHeader);
                             offset += InputProcessor.InputSizeWithHeader;
                         }
                         prevCommand = inputCommand.Data;
@@ -831,12 +832,12 @@ namespace LiteEntitySystem
                     byte* readDataPtr = rawData + readerPosition;
                     
                     if(field.IsPredicted)
-                        RefMagic.CopyBlock(predictedData + field.PredictedOffset, readDataPtr, field.Size);
+                        Unsafe.CopyBlock(predictedData + field.PredictedOffset, readDataPtr, field.Size);
                     
                     if (field.Flags.HasFlagFast(SyncFlags.Interpolated) && writeInterpolationData)
                     {
                         //this is interpolated save for future
-                        RefMagic.CopyBlock(interpDataPtr + field.FixedOffset, readDataPtr, field.Size);
+                        Unsafe.CopyBlock(interpDataPtr + field.FixedOffset, readDataPtr, field.Size);
                     }
 
                     if (field.HasChangeNotification)

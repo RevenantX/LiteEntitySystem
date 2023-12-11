@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using K4os.Compression.LZ4;
 using LiteNetLib;
 using LiteEntitySystem.Internal;
@@ -331,7 +332,7 @@ namespace LiteEntitySystem
                     _inputPool.TryDequeue(out inputBuffer.Data);
                     Helpers.ResizeOrCreate(ref inputBuffer.Data, InputProcessor.InputSize);
                     fixed(byte* inputData = inputBuffer.Data, rawDecodedData = actualData)
-                        RefMagic.CopyBlock(inputData, rawDecodedData, (uint)InputProcessor.InputSize);
+                        Unsafe.CopyBlock(inputData, rawDecodedData, (uint)InputProcessor.InputSize);
 
                     if (player.AvailableInput.Count == MaxStoredInputs)
                         _inputPool.Enqueue(player.AvailableInput.ExtractMin().Data);
@@ -460,7 +461,7 @@ namespace LiteEntitySystem
                             header->Part++;
 
                             //repeat in next packet
-                            RefMagic.CopyBlock(packetBuffer + sizeof(DiffPartHeader), packetBuffer + maxPartSize, (uint)overflow);
+                            Unsafe.CopyBlock(packetBuffer + sizeof(DiffPartHeader), packetBuffer + maxPartSize, (uint)overflow);
                             writePosition = sizeof(DiffPartHeader) + overflow;
                             overflow = writePosition - maxPartSize;
                         }
@@ -627,7 +628,7 @@ namespace LiteEntitySystem
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             rpc.Init(_tick, (ushort)sizeof(T), rpcId, flags, value.Length);
             fixed(void* rawValue = value, rawData = rpc.Data)
-                RefMagic.CopyBlock(rawData, rawValue, (uint)rpc.TotalSize);
+                Unsafe.CopyBlock(rawData, rawValue, (uint)rpc.TotalSize);
             _stateSerializers[entityId].AddRpcPacket(rpc);
         }
     }
