@@ -67,10 +67,10 @@ namespace LiteEntitySystem
         
         private const int InputBufferSize = 128;
 
-        struct InputCommand
+        private struct InputCommand
         {
-            public ushort Tick;
-            public byte[] Data;
+            public readonly ushort Tick;
+            public readonly byte[] Data;
 
             public InputCommand(ushort tick, byte[] data)
             {
