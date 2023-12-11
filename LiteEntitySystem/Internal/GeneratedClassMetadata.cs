@@ -272,7 +272,7 @@ namespace LiteEntitySystem.Internal
         {
             foreach (var fld in syncableMetadata.Fields)
             {
-                _fieldsTemp.Add(new EntityFieldInfo(fld.Name, fld.ActualType, FieldIdCounter, fld.Id, fld.IntSize, fld.Flags, false));
+                _fieldsTemp.Add(new EntityFieldInfo(fld.Name, fld.ActualType, FieldIdCounter, fld.Id, fld.IntSize, fieldSyncFlags, false));
             }
 
             ExecuteFlags executeFlags;
