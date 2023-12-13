@@ -330,6 +330,7 @@ namespace LiteEntitySystem
                             _timer = _lerpTime;
                             //fast-forward
                             GoToNextState();
+                            PreloadNextState();
                         }
 
                         _readyStates.Add(serverState, serverState.Tick);
@@ -491,9 +492,6 @@ namespace LiteEntitySystem
                     break;
                 }
             }
-            
-            //load next state
-            PreloadNextState();
         }
 
         protected override unsafe void OnLogicTick()
@@ -592,9 +590,11 @@ namespace LiteEntitySystem
             if (PreloadNextState())
             {
                 _timer += VisualDeltaTime;
-                if (_timer >= _lerpTime)
+                while(_timer >= _lerpTime)
                 {
                     GoToNextState();
+                    if (!PreloadNextState())
+                        break;
                 }
             }
 

@@ -15,7 +15,6 @@ Pure C# HighLevel API for multiplayer games using .NET Standard 2.1
 * Can be used with Unity (2021.2 and later), Godot, Monogame or just pure .net
 * Can be used for creation any multiplayer game (2d,3d,4d,...)
 * Works with Unity IL2CPP
-* No code generation
 * Epic speed
 * Lag compensation
 * Serialization of custom types (like strings,lists,arrays,jsons,etc)
