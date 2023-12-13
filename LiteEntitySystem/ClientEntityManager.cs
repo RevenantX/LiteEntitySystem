@@ -328,6 +328,7 @@ namespace LiteEntitySystem
                             _timer = _lerpTime;
                             //fast-forward
                             GoToNextState();
+                            PreloadNextState();
                         }
 
                         _readyStates.Add(serverState, serverState.Tick);
