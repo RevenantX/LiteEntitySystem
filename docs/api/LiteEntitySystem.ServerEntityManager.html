@@ -275,7 +275,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">int</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -328,7 +328,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">int</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -594,13 +594,13 @@
 
 
   <a id="LiteEntitySystem_ServerEntityManager_AddPlayer_" data-uid="LiteEntitySystem.ServerEntityManager.AddPlayer*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_AddPlayer_LiteNetLib_NetPeer_System_Boolean_" data-uid="LiteEntitySystem.ServerEntityManager.AddPlayer(LiteNetLib.NetPeer,System.Boolean)">AddPlayer(NetPeer, bool)</h4>
+  <h4 id="LiteEntitySystem_ServerEntityManager_AddPlayer_LiteEntitySystem_Transport_AbstractNetPeer_" data-uid="LiteEntitySystem.ServerEntityManager.AddPlayer(LiteEntitySystem.Transport.AbstractNetPeer)">AddPlayer(AbstractNetPeer)</h4>
   <div class="markdown level1 summary"><p>Create and add new player</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public NetPlayer AddPlayer(NetPeer peer, bool assignToTag)</code></pre>
+    <pre><code class="lang-csharp hljs">public NetPlayer AddPlayer(AbstractNetPeer peer)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -613,15 +613,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">NetPeer</span></td>
+        <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
         <td><span class="parametername">peer</span></td>
-        <td><p>NetPeer to use</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td><span class="parametername">assignToTag</span></td>
-        <td><p>assign new player to NetPeer.Tag for usability</p>
+        <td><p>AbstractPeer to use</p>
 </td>
       </tr>
     </tbody>
@@ -706,13 +700,13 @@
 
 
   <a id="LiteEntitySystem_ServerEntityManager_Deserialize_" data-uid="LiteEntitySystem.ServerEntityManager.Deserialize*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_Deserialize_LiteEntitySystem_NetPlayer_LiteNetLib_Utils_NetDataReader_" data-uid="LiteEntitySystem.ServerEntityManager.Deserialize(LiteEntitySystem.NetPlayer,LiteNetLib.Utils.NetDataReader)">Deserialize(NetPlayer, NetDataReader)</h4>
+  <h4 id="LiteEntitySystem_ServerEntityManager_Deserialize_LiteEntitySystem_NetPlayer_System_ReadOnlySpan_System_Byte__" data-uid="LiteEntitySystem.ServerEntityManager.Deserialize(LiteEntitySystem.NetPlayer,System.ReadOnlySpan{System.Byte})">Deserialize(NetPlayer, ReadOnlySpan&lt;byte&gt;)</h4>
   <div class="markdown level1 summary"><p>Read data from NetPlayer</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Deserialize(NetPlayer player, NetDataReader reader)</code></pre>
+    <pre><code class="lang-csharp hljs">public DeserializeResult Deserialize(NetPlayer player, ReadOnlySpan&lt;byte&gt; inData)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -731,23 +725,38 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">NetDataReader</span></td>
-        <td><span class="parametername">reader</span></td>
-        <td><p>Reader with data</p>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
+        <td><span class="parametername">inData</span></td>
+        <td><p>incoming data with header</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.DeserializeResult.html">DeserializeResult</a></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
 
 
   <a id="LiteEntitySystem_ServerEntityManager_Deserialize_" data-uid="LiteEntitySystem.ServerEntityManager.Deserialize*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_Deserialize_LiteNetLib_NetPeer_LiteNetLib_Utils_NetDataReader_" data-uid="LiteEntitySystem.ServerEntityManager.Deserialize(LiteNetLib.NetPeer,LiteNetLib.Utils.NetDataReader)">Deserialize(NetPeer, NetDataReader)</h4>
-  <div class="markdown level1 summary"><p>Read data from NetPeer with assigned NetPlayer to NetPeer.Tag</p>
+  <h4 id="LiteEntitySystem_ServerEntityManager_Deserialize_LiteEntitySystem_Transport_AbstractNetPeer_System_ReadOnlySpan_System_Byte__" data-uid="LiteEntitySystem.ServerEntityManager.Deserialize(LiteEntitySystem.Transport.AbstractNetPeer,System.ReadOnlySpan{System.Byte})">Deserialize(AbstractNetPeer, ReadOnlySpan&lt;byte&gt;)</h4>
+  <div class="markdown level1 summary"><p>Read data for player linked to AbstractNetPeer</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Deserialize(NetPeer peer, NetDataReader reader)</code></pre>
+    <pre><code class="lang-csharp hljs">public DeserializeResult Deserialize(AbstractNetPeer peer, ReadOnlySpan&lt;byte&gt; inData)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -760,50 +769,15 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">NetPeer</span></td>
+        <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
         <td><span class="parametername">peer</span></td>
         <td><p>Player that sent input</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">NetDataReader</span></td>
-        <td><span class="parametername">reader</span></td>
-        <td><p>Reader with data</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_ServerEntityManager_DeserializeWithHeaderCheck_" data-uid="LiteEntitySystem.ServerEntityManager.DeserializeWithHeaderCheck*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_DeserializeWithHeaderCheck_LiteEntitySystem_NetPlayer_LiteNetLib_Utils_NetDataReader_" data-uid="LiteEntitySystem.ServerEntityManager.DeserializeWithHeaderCheck(LiteEntitySystem.NetPlayer,LiteNetLib.Utils.NetDataReader)">DeserializeWithHeaderCheck(NetPlayer, NetDataReader)</h4>
-  <div class="markdown level1 summary"><p>Read incoming data in case of first byte is == headerByte</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool DeserializeWithHeaderCheck(NetPlayer player, NetDataReader reader)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
-        <td><span class="parametername">player</span></td>
-        <td><p>Player that sent input</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">NetDataReader</span></td>
-        <td><span class="parametername">reader</span></td>
-        <td><p>Reader with data</p>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
+        <td><span class="parametername">inData</span></td>
+        <td><p>incoming data with header</p>
 </td>
       </tr>
     </tbody>
@@ -818,60 +792,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td><p>true if first byte is == headerByte</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_ServerEntityManager_DeserializeWithHeaderCheck_" data-uid="LiteEntitySystem.ServerEntityManager.DeserializeWithHeaderCheck*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_DeserializeWithHeaderCheck_LiteNetLib_NetPeer_LiteNetLib_Utils_NetDataReader_" data-uid="LiteEntitySystem.ServerEntityManager.DeserializeWithHeaderCheck(LiteNetLib.NetPeer,LiteNetLib.Utils.NetDataReader)">DeserializeWithHeaderCheck(NetPeer, NetDataReader)</h4>
-  <div class="markdown level1 summary"><p>Read incoming data in case of first byte is == headerByte from NetPeer with assigned NetPlayer to NetPeer.Tag</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool DeserializeWithHeaderCheck(NetPeer peer, NetDataReader reader)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">NetPeer</span></td>
-        <td><span class="parametername">peer</span></td>
-        <td><p>Player that sent input</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">NetDataReader</span></td>
-        <td><span class="parametername">reader</span></td>
-        <td><p>Reader with data</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td><p>true if first byte is == headerByte</p>
-</td>
+        <td><a class="xref" href="LiteEntitySystem.DeserializeResult.html">DeserializeResult</a></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -965,13 +887,13 @@
 
 
   <a id="LiteEntitySystem_ServerEntityManager_GetPlayerController_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayerController*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_GetPlayerController_LiteNetLib_NetPeer_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayerController(LiteNetLib.NetPeer)">GetPlayerController(NetPeer)</h4>
+  <h4 id="LiteEntitySystem_ServerEntityManager_GetPlayerController_LiteEntitySystem_Transport_AbstractNetPeer_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayerController(LiteEntitySystem.Transport.AbstractNetPeer)">GetPlayerController(AbstractNetPeer)</h4>
   <div class="markdown level1 summary"><p>Returns controller owned by the player</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ControllerLogic GetPlayerController(NetPeer player)</code></pre>
+    <pre><code class="lang-csharp hljs">public ControllerLogic GetPlayerController(AbstractNetPeer player)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -984,7 +906,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">NetPeer</span></td>
+        <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
         <td><span class="parametername">player</span></td>
         <td><p>player</p>
 </td>
@@ -1108,14 +1030,14 @@
   </table>
 
 
-  <a id="LiteEntitySystem_ServerEntityManager_RemovePlayerFromPeerTag_" data-uid="LiteEntitySystem.ServerEntityManager.RemovePlayerFromPeerTag*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_RemovePlayerFromPeerTag_LiteNetLib_NetPeer_" data-uid="LiteEntitySystem.ServerEntityManager.RemovePlayerFromPeerTag(LiteNetLib.NetPeer)">RemovePlayerFromPeerTag(NetPeer)</h4>
-  <div class="markdown level1 summary"><p>Remove player using NetPeer.Tag (is you assigned it or used <a class="xref" href="LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager_AddPlayer_LiteNetLib_NetPeer_System_Boolean_">AddPlayer(NetPeer, bool)</a> with assignToTag)</p>
+  <a id="LiteEntitySystem_ServerEntityManager_RemovePlayer_" data-uid="LiteEntitySystem.ServerEntityManager.RemovePlayer*"></a>
+  <h4 id="LiteEntitySystem_ServerEntityManager_RemovePlayer_LiteEntitySystem_Transport_AbstractNetPeer_" data-uid="LiteEntitySystem.ServerEntityManager.RemovePlayer(LiteEntitySystem.Transport.AbstractNetPeer)">RemovePlayer(AbstractNetPeer)</h4>
+  <div class="markdown level1 summary"><p>Remove player using NetPeer.Tag (is you assigned it or used <a class="xref" href="LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager_AddPlayer_LiteEntitySystem_Transport_AbstractNetPeer_">AddPlayer(AbstractNetPeer)</a> with assignToTag)</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool RemovePlayerFromPeerTag(NetPeer player)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool RemovePlayer(AbstractNetPeer player)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -1128,7 +1050,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">NetPeer</span></td>
+        <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
         <td><span class="parametername">player</span></td>
         <td><p>player to remove</p>
 </td>

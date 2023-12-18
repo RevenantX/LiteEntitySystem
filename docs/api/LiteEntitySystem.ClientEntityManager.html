@@ -204,13 +204,13 @@
 
 
   <a id="LiteEntitySystem_ClientEntityManager__ctor_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteNetLib_NetPeer_System_Byte_System_Byte_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteNetLib.NetPeer,System.Byte,System.Byte)">ClientEntityManager(EntityTypesMap, InputProcessor, NetPeer, byte, byte)</h4>
+  <h4 id="LiteEntitySystem_ClientEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteEntitySystem_Transport_AbstractNetPeer_System_Byte_System_Byte_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,System.Byte)">ClientEntityManager(EntityTypesMap, InputProcessor, AbstractNetPeer, byte, byte)</h4>
   <div class="markdown level1 summary"><p>Constructor</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ClientEntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetPeer localPeer, byte headerByte, byte framesPerSecond)</code></pre>
+    <pre><code class="lang-csharp hljs">public ClientEntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, AbstractNetPeer netPeer, byte headerByte, byte framesPerSecond)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -235,9 +235,9 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">NetPeer</span></td>
-        <td><span class="parametername">localPeer</span></td>
-        <td><p>Local NetPeer</p>
+        <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
+        <td><span class="parametername">netPeer</span></td>
+        <td><p>Local AbstractPeer</p>
 </td>
       </tr>
       <tr>
@@ -256,6 +256,58 @@
   </table>
   <h3 id="properties">Properties
 </h3>
+
+
+  <a id="LiteEntitySystem_ClientEntityManager_CurrentRPCTick_" data-uid="LiteEntitySystem.ClientEntityManager.CurrentRPCTick*"></a>
+  <h4 id="LiteEntitySystem_ClientEntityManager_CurrentRPCTick" data-uid="LiteEntitySystem.ClientEntityManager.CurrentRPCTick">CurrentRPCTick</h4>
+  <div class="markdown level1 summary"><p>Tick of currently executing rpc (check only in client RPC methods)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort CurrentRPCTick { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_ClientEntityManager_IsExecutingRPC_" data-uid="LiteEntitySystem.ClientEntityManager.IsExecutingRPC*"></a>
+  <h4 id="LiteEntitySystem_ClientEntityManager_IsExecutingRPC" data-uid="LiteEntitySystem.ClientEntityManager.IsExecutingRPC">IsExecutingRPC</h4>
+  <div class="markdown level1 summary"><p>Is rpc currently executing</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsExecutingRPC { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 
 
   <a id="LiteEntitySystem_ClientEntityManager_LastProcessedTick_" data-uid="LiteEntitySystem.ClientEntityManager.LastProcessedTick*"></a>
@@ -329,7 +381,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">int</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -356,6 +408,31 @@
     <tbody>
       <tr>
         <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_ClientEntityManager_NetPeer_" data-uid="LiteEntitySystem.ClientEntityManager.NetPeer*"></a>
+  <h4 id="LiteEntitySystem_ClientEntityManager_NetPeer" data-uid="LiteEntitySystem.ClientEntityManager.NetPeer">NetPeer</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AbstractNetPeer NetPeer { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -511,7 +588,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">int</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -521,13 +598,12 @@
 
 
   <a id="LiteEntitySystem_ClientEntityManager_Deserialize_" data-uid="LiteEntitySystem.ClientEntityManager.Deserialize*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_Deserialize_LiteNetLib_Utils_NetDataReader_" data-uid="LiteEntitySystem.ClientEntityManager.Deserialize(LiteNetLib.Utils.NetDataReader)">Deserialize(NetDataReader)</h4>
-  <div class="markdown level1 summary"><p>Read incoming data omitting header byte</p>
-</div>
+  <h4 id="LiteEntitySystem_ClientEntityManager_Deserialize_System_ReadOnlySpan_System_Byte__" data-uid="LiteEntitySystem.ClientEntityManager.Deserialize(System.ReadOnlySpan{System.Byte})">Deserialize(ReadOnlySpan&lt;byte&gt;)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Deserialize(NetDataReader reader)</code></pre>
+    <pre><code class="lang-csharp hljs">public DeserializeResult Deserialize(ReadOnlySpan&lt;byte&gt; inData)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -540,38 +616,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">NetDataReader</span></td>
-        <td><span class="parametername">reader</span></td>
-        <td><p>NetDataReader with data</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_ClientEntityManager_DeserializeWithHeaderCheck_" data-uid="LiteEntitySystem.ClientEntityManager.DeserializeWithHeaderCheck*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_DeserializeWithHeaderCheck_LiteNetLib_Utils_NetDataReader_" data-uid="LiteEntitySystem.ClientEntityManager.DeserializeWithHeaderCheck(LiteNetLib.Utils.NetDataReader)">DeserializeWithHeaderCheck(NetDataReader)</h4>
-  <div class="markdown level1 summary"><p>Read incoming data in case of first byte is == headerByte</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool DeserializeWithHeaderCheck(NetDataReader reader)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">NetDataReader</span></td>
-        <td><span class="parametername">reader</span></td>
-        <td><p>Reader with data (will be recycled inside, also works with autorecycle)</p>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
+        <td><span class="parametername">inData</span></td>
+        <td><p>Incoming data including header byte</p>
 </td>
       </tr>
     </tbody>
@@ -586,8 +633,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td><p>true if first byte is == headerByte</p>
+        <td><a class="xref" href="LiteEntitySystem.DeserializeResult.html">DeserializeResult</a></td>
+        <td><p>Deserialization result</p>
 </td>
       </tr>
     </tbody>
