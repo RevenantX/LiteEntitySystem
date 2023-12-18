@@ -39,7 +39,7 @@ namespace LiteEntitySystem.Extensions
             r.CreateClientAction(this, InitAction, ref _initAction);
         }
 
-        protected override void OnSyncRequested()
+        protected internal override void OnSyncRequested()
         {
             int cacheCount = 0;
             if (_data.Count > KvCache.Length)

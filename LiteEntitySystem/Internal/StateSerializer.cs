@@ -228,7 +228,7 @@ namespace LiteEntitySystem.Internal
             _rpcMode = RPCMode.Sync;
             for (int i = 0; i < _classData.SyncableFields.Length; i++)
                 RefMagic.RefFieldValue<SyncableField>(_entity, _classData.SyncableFields[i].Offset)
-                    .InternalOnSyncRequested();
+                    .OnSyncRequested();
             _rpcMode = RPCMode.Normal;
         }
 

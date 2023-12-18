@@ -47,7 +47,7 @@ namespace LiteEntitySystem.Extensions
             _string = Encoding.GetString(data);
         }
 
-        protected override void OnSyncRequested()
+        protected internal override void OnSyncRequested()
         {
             ExecuteRPC(_setStringClientCall, new ReadOnlySpan<byte>(_stringData, 0, _size));
         }

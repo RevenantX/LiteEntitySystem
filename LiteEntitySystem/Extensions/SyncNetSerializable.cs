@@ -36,7 +36,7 @@ namespace LiteEntitySystem.Extensions
             r.CreateClientAction(this, Init, ref _initAction);
         }
 
-        protected override void OnSyncRequested()
+        protected internal override void OnSyncRequested()
         {
             WriterCache.Reset();
             _value.Serialize(WriterCache);

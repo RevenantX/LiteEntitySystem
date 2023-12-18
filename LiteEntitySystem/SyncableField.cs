@@ -13,12 +13,7 @@ namespace LiteEntitySystem
             RegisterRPC(in r);
         }
 
-        internal void InternalOnSyncRequested()
-        {
-            OnSyncRequested();
-        }
-
-        protected virtual void OnSyncRequested()
+        protected internal virtual void OnSyncRequested()
         {
             
         }

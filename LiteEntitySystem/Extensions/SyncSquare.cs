@@ -44,7 +44,7 @@ namespace LiteEntitySystem.Extensions
             ExecuteRPC(_clearAction);
         }
 
-        protected override void OnSyncRequested()
+        protected internal override void OnSyncRequested()
             => ExecuteRPC(_initArrayAction, _data);
 
         protected override void RegisterRPC(in SyncableRPCRegistrator r)

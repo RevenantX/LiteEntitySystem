@@ -22,7 +22,7 @@ namespace LiteEntitySystem.Extensions
             _data = new T[size];
         }
 
-        protected override void OnSyncRequested()
+        protected internal override void OnSyncRequested()
         {
             ExecuteRPC(_initArrayAction, _data);
         }

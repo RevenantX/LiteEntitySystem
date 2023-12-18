@@ -26,7 +26,7 @@ namespace LiteEntitySystem.Extensions
             r.CreateClientAction(this, Init, ref _initAction);
         }
 
-        protected override void OnSyncRequested()
+        protected internal override void OnSyncRequested()
         {
             ExecuteRPC(_initAction, new ReadOnlySpan<T>(_data, 0, _count));
         }
