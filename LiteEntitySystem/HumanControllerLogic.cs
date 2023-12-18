@@ -27,12 +27,12 @@ namespace LiteEntitySystem
         /// Called on client and server to read generated from <see cref="GenerateInput"/> input
         /// </summary>
         /// <param name="input">user defined input structure</param>
-        public abstract void ReadInput(in TInput input);
+        protected internal abstract void ReadInput(in TInput input);
         
         /// <summary>
         /// Called on client to generate input
         /// </summary>
-        public abstract void GenerateInput(out TInput input);
+        protected internal abstract void GenerateInput(out TInput input);
 
         public override bool IsBot => false;
         

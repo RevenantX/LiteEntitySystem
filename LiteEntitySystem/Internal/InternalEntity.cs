@@ -107,24 +107,22 @@ namespace LiteEntitySystem.Internal
         /// <summary>
         /// Fixed update. Called if entity has attribute <see cref="UpdateableEntity"/>
         /// </summary>
-        public virtual void Update()
+        protected internal virtual void Update()
         {
         }
 
         /// <summary>
         /// Called only on <see cref="ClientEntityManager.Update"/> and if entity has attribute <see cref="UpdateableEntity"/>
         /// </summary>
-        public virtual void VisualUpdate()
+        protected internal virtual void VisualUpdate()
         {
             
         }
 
-        internal void CallConstruct() => OnConstructed();
-
         /// <summary>
         /// Called when entity constructed
         /// </summary>
-        protected virtual void OnConstructed()
+        protected internal virtual void OnConstructed()
         {
         }
 

@@ -24,6 +24,16 @@ namespace LiteEntitySystem
         public ushort RollBackTick { get; private set; }
 
         /// <summary>
+        /// Tick of currently executing rpc (check only in client RPC methods)
+        /// </summary>
+        public ushort CurrentRPCTick { get; internal set; }
+
+        /// <summary>
+        /// Is rpc currently executing
+        /// </summary>
+        public bool IsExecutingRPC { get; internal set; }
+
+        /// <summary>
         /// Current state server tick
         /// </summary>
         public ushort RawServerTick => _stateA?.Tick ?? 0;
@@ -782,8 +792,7 @@ namespace LiteEntitySystem
                 {
                     //this can be only on logics (not on singletons)
                     Logger.Log($"[CEM] Replace entity by new: {version}");
-                    if(!entity.IsDestroyed)
-                        entity.DestroyInternal();
+                    entity.DestroyInternal();
                     entity = null;
                 }
                 if(entity == null)

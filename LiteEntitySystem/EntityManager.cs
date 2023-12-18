@@ -499,7 +499,7 @@ namespace LiteEntitySystem
         {
             ref var classData = ref ClassDataDict[e.ClassId];
             
-            e.CallConstruct();
+            e.OnConstructed();
 
             if (classData.IsSingleton)
             {
