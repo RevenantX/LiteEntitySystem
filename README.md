@@ -29,7 +29,7 @@ Pure C# HighLevel API for multiplayer games using .NET Standard 2.1
 * Delta-compressed state synchronization and input
 * LZ4 compression of initial world state
 * Also works as game logic engine
-* LiteNetLib as core transport with tight integration and without abstractions for maximum speed
+* LiteNetLib as default transport, but you can implement any other transport
 
 ## Dependencies
 

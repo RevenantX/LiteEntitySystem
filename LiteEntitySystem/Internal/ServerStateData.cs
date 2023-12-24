@@ -177,6 +177,7 @@ namespace LiteEntitySystem.Internal
         
         public void ExecuteRpcs(ClientEntityManager entityManager, ushort minimalTick, bool firstSync)
         {
+            entityManager.IsExecutingRPC = true;
             //if(_remoteCallsCount > 0)
             //    Logger.Log($"Executing rpcs (ST: {Tick}) for tick: {entityManager.ServerTick}, Min: {minimalTick}, Count: {_remoteCallsCount}");
             for (int i = 0; i < _remoteCallsCount; i++)
@@ -205,8 +206,10 @@ namespace LiteEntitySystem.Internal
                     continue;
                 }
                 rpc.Executed = true;
+                entityManager.CurrentRPCTick = rpc.Header.Tick;
                 rpc.Delegate(entity, new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.TypeSize * rpc.Header.Count));
             }
+            entityManager.IsExecutingRPC = false;
         }
 
         public unsafe void ReadRPCs(byte* rawData, ref int position, EntitySharedReference entityId, GeneratedClassMetadata classData)
