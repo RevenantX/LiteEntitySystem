@@ -55,8 +55,8 @@ namespace LiteEntitySystem.Internal
         public ushort LastReceivedTick;
         public StatePreloadData[] PreloadDataArray = new StatePreloadData[32];
         public int PreloadDataCount;
-        public int[] InterpolatedFields = new int[8];
-        public int InterpolatedCount;
+        public int[] InterpolatedEntities = new int[8];
+        public int InterpolatedEntitiesCount;
         public int TotalPartsCount;
 
         private int _syncableRemoteCallsCount;
@@ -123,10 +123,11 @@ namespace LiteEntitySystem.Internal
                 //preload interpolation info
                 if (entity.IsRemoteControlled && classData.InterpolatedCount > 0)
                 {
-                    Helpers.ResizeIfFull(ref InterpolatedFields, InterpolatedCount);
+                    Helpers.ResizeIfFull(ref InterpolatedEntities, InterpolatedEntitiesCount);
                     Helpers.ResizeOrCreate(ref preloadData.InterpolatedCaches, classData.InterpolatedCount);
-                    InterpolatedFields[InterpolatedCount++] = PreloadDataCount - 1;
+                    InterpolatedEntities[InterpolatedEntitiesCount++] = PreloadDataCount - 1;
                 }
+                
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
                     if (!Helpers.IsBitSet(Data, preloadData.EntityFieldsOffset, i))
@@ -251,7 +252,7 @@ namespace LiteEntitySystem.Internal
         {
             Tick = tick;
             Array.Clear(_receivedParts, 0, _maxReceivedPart+1);
-            InterpolatedCount = 0;
+            InterpolatedEntitiesCount = 0;
             PreloadDataCount = 0;
             _maxReceivedPart = 0;
             _receivedPartsCount = 0;

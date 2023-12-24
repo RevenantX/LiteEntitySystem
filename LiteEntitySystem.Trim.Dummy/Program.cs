@@ -75,6 +75,9 @@ partial class BasePlayer : PawnLogic
     [BindOnChange(nameof(OnFlagTest3Changed))]
     public SyncVar<float> FlagsTest3;
 
+    [SyncVarFlags(SyncFlags.Interpolated | SyncFlags.LagCompensated)]
+    public SyncVar<FloatAngle> FloatAngleTest;
+
     private void OnFlagTest3Changed(float prev)
     {
         //Console.WriteLine($"Flagstest3 changed {FlagsTest3}");
@@ -168,12 +171,12 @@ partial class BasePlayerController : HumanControllerLogic<MyInput>
     public BasePlayerController(EntityParams entityParams) : base(entityParams)
     {
     }
-    public override void ReadInput(in MyInput input)
+    protected override void ReadInput(in MyInput input)
     {
         
     }
 
-    public override void GenerateInput(out MyInput input)
+    protected override void GenerateInput(out MyInput input)
     {
         input = new MyInput();
     }

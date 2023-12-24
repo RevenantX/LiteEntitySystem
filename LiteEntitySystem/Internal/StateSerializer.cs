@@ -158,15 +158,14 @@ namespace LiteEntitySystem.Internal
                 _versionChangedTick = minimalTick;
 
             _lastWriteTick = serverTick;
-            var fieldManipulator = _entity.GetFieldManipulator();
-            for (int i = 0; i < _classData.FieldsCount; i++)
+            var writeFieldsData = new WriteFieldsData
             {
-                ref var field = ref _classData.Fields[i];
-                if (fieldManipulator.SaveIfDifferent(in field, new Span<byte>(_latestEntityData, HeaderSize + field.FixedOffset, field.IntSize)))
-                    _fieldChangeTicks[i] = serverTick;
-                else if (Helpers.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
-                    _fieldChangeTicks[i] = minimalTick;
-            }
+                Data = new Span<byte>(_latestEntityData, HeaderSize, (int)_fullDataSize - HeaderSize),
+                FieldChangedTicks = _fieldChangeTicks,
+                MinimalTick = minimalTick,
+                ServerTick = serverTick
+            };
+            _entity.GetFieldManipulator().WriteChanged(ref writeFieldsData);
         }
 
         internal void Destroy(ushort serverTick, ushort minimalTick, bool instantly)

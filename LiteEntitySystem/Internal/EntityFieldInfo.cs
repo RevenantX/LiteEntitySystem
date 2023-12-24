@@ -11,11 +11,9 @@ namespace LiteEntitySystem.Internal
         public readonly int IntSize;
         public readonly SyncFlags Flags;
         public readonly bool IsPredicted;
-        public readonly bool HasChangeNotification;
         public readonly Type ActualType;
         
         public int FixedOffset;
-        public int PredictedOffset;
         
         public EntityFieldInfo(
             string name,
@@ -23,8 +21,7 @@ namespace LiteEntitySystem.Internal
             ushort id,
             ushort syncableId,
             int size,
-            SyncFlags flags,
-            bool hasChangeNotification)
+            SyncFlags flags)
         {
             ActualType = type;
             Name = name;
@@ -33,9 +30,7 @@ namespace LiteEntitySystem.Internal
             Size = (uint)size;
             IntSize = size;
             FixedOffset = 0;
-            PredictedOffset = 0;
             Flags = flags;
-            HasChangeNotification = hasChangeNotification;
             IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
                           (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
                            !Flags.HasFlagFast(SyncFlags.NeverRollBack));

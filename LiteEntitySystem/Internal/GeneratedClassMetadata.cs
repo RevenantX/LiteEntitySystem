@@ -34,7 +34,6 @@ namespace LiteEntitySystem.Internal
         public int InterpolatedCount;
         public EntityFieldInfo[] LagCompensatedFields;
         public int LagCompensatedSize;
-        public int LagCompensatedCount;
         public bool UpdateOnClient;
         public bool IsUpdateable;
         public RpcData[] RpcData;
@@ -103,25 +102,14 @@ namespace LiteEntitySystem.Internal
             RpcData = _rpcList.ToArray();
             _rpcList = null;
             FieldsCount = Fields.Length;
-            LagCompensatedCount = LagCompensatedFields.Length;
             FieldsFlagsSize = (FieldsCount - 1) / 8 + 1;
             
             int fixedOffset = 0;
-            int predictedOffset = 0;
             for (int i = 0; i < Fields.Length; i++)
             {
                 ref var field = ref Fields[i];
                 field.FixedOffset = fixedOffset;
                 fixedOffset += field.IntSize;
-                if (field.IsPredicted)
-                {
-                    field.PredictedOffset = predictedOffset;
-                    predictedOffset += field.IntSize;
-                }
-                else
-                {
-                    field.PredictedOffset = -1;
-                }
             }
         }
         
@@ -245,10 +233,10 @@ namespace LiteEntitySystem.Internal
             _rpcList.Add(new RpcData(-1){ClientMethod = clientMethod});
         }
 
-        public void AddField<T>(string name, SyncFlags flags, bool hasChangeNotification) where T : unmanaged
+        public void AddField<T>(string name, SyncFlags flags) where T : unmanaged
         {
             int size = Helpers.SizeOfStruct<T>();
-            var fi = new EntityFieldInfo(name, typeof(T), FieldIdCounter, 0, size, flags, hasChangeNotification);
+            var fi = new EntityFieldInfo(name, typeof(T), FieldIdCounter, 0, size, flags);
             if(flags.HasFlagFast(SyncFlags.Interpolated) && !typeof(T).IsEnum)
             {
                 InterpolatedFieldsSize += size;
@@ -272,7 +260,7 @@ namespace LiteEntitySystem.Internal
         {
             foreach (var fld in syncableMetadata.Fields)
             {
-                _fieldsTemp.Add(new EntityFieldInfo(fld.Name, fld.ActualType, FieldIdCounter, fld.Id, fld.IntSize, fieldSyncFlags, false));
+                _fieldsTemp.Add(new EntityFieldInfo(fld.Name, fld.ActualType, FieldIdCounter, fld.Id, fld.IntSize, fieldSyncFlags));
             }
 
             ExecuteFlags executeFlags;

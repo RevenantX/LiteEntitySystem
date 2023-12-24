@@ -500,13 +500,13 @@ namespace LiteEntitySystem
             {
                 AliveEntities.Add(e);
             }
-            if(!e.IsLocal && e is EntityLogic entityLogic && entityLogic.HasLagCompensation)
+            if(!e.IsLocal && e is EntityLogic entityLogic && entityLogic.GetClassMetadata().LagCompensatedSize > 0)
                 LagCompensatedEntities.Add(entityLogic);
         }
 
         private bool IsEntityAlive(InternalEntity entity)
         {
-            return entity.GetClassMetadata().IsUpdateable && (IsServer || entity.IsLocal || (IsClient &&  entity.GetClassMetadata().UpdateOnClient));
+            return entity.GetClassMetadata().IsUpdateable && (IsServer || entity.IsLocal || (IsClient && entity.GetClassMetadata().UpdateOnClient));
         }
 
         internal virtual void RemoveEntity(InternalEntity e)
@@ -529,7 +529,7 @@ namespace LiteEntitySystem
             if (IsEntityAlive(e))
             {
                 AliveEntities.Remove(e);
-                if(!e.IsLocal && e is EntityLogic entityLogic && entityLogic.HasLagCompensation)
+                if(!e.IsLocal && e is EntityLogic entityLogic && entityLogic.GetClassMetadata().LagCompensatedSize > 0)
                     LagCompensatedEntities.Remove(entityLogic);
             }
             if (classData.IsLocalOnly)

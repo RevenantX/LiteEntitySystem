@@ -137,6 +137,12 @@ namespace LiteEntitySystem
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsBitSet(ReadOnlySpan<byte> byteArray, int bitNumber)
+        {
+            return (byteArray[bitNumber / 8] & (1 << bitNumber % 8)) != 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool IsBitSet(byte* byteArray, int bitNumber)
         {
             return (byteArray[bitNumber / 8] & (1 << bitNumber % 8)) != 0;

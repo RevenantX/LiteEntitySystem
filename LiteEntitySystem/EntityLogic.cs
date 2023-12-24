@@ -50,38 +50,27 @@ namespace LiteEntitySystem
 
         public EntitySharedReference ParentId => _parentId;
         
-        private readonly byte[] _history;
-        private readonly EntityFieldInfo[] _lagCompensatedFields;
-        private readonly int _lagCompensatedSize;
-        private readonly int _lagCompensatedCount;
+        private byte[] _history;
         private int _filledHistory;
         private bool _lagCompensationEnabled;
 
-        public bool HasLagCompensation => _lagCompensatedSize > 0;
-
         public EntitySharedReference SharedReference => new EntitySharedReference(this);
 
-        internal unsafe void WriteHistory(ushort tick)
+        internal void WriteHistory(ushort tick)
         {
             var fieldManipulator = GetFieldManipulator();
+            var classData = GetClassMetadata();
             byte maxHistory = (byte)EntityManager.MaxHistorySize;
             _filledHistory = Math.Min(_filledHistory + 1, maxHistory);
-            int historyOffset = ((tick % maxHistory)+1)*_lagCompensatedSize;
-            fixed (byte* history = _history)
-            {
-                for (int i = 0; i < _lagCompensatedCount; i++)
-                {
-                    ref var field = ref _lagCompensatedFields[i];
-                    fieldManipulator.Save(in field, new Span<byte>(history + historyOffset, field.IntSize));
-                    historyOffset += field.IntSize;
-                }
-            }
+            int historyOffset = ((tick % maxHistory)+1)*classData.LagCompensatedSize;
+            _history ??= new byte[((byte)EntityManager.MaxHistorySize + 1) * classData.LagCompensatedSize];
+            fieldManipulator.DumpLagCompensated(new Span<byte>(_history, historyOffset, classData.LagCompensatedSize));
         }
         
         //on client it works only in rollback
-        internal unsafe void EnableLagCompensation(NetPlayer player)
+        internal void EnableLagCompensation(NetPlayer player)
         {
-            if (_lagCompensationEnabled || IsControlledBy(player.Id))
+            if (_lagCompensationEnabled || IsControlledBy(player.Id) || _history == null)
                 return;
             ushort tick = EntityManager.IsClient ? ClientManager.ServerTick : EntityManager.Tick;
             byte maxHistory = (byte)EntityManager.MaxHistorySize;
@@ -90,48 +79,26 @@ namespace LiteEntitySystem
                 Logger.Log($"LagCompensationMiss. Tick: {tick}, StateA: {player.StateATick}, StateB: {player.StateBTick}");
                 return;
             }
-            int historyAOffset = ((player.StateATick % maxHistory)+1)*_lagCompensatedSize;
-            int historyBOffset = ((player.StateBTick % maxHistory)+1)*_lagCompensatedSize;
-            int historyCurrent = 0;
+            var classData = GetClassMetadata();
+            int historyAOffset = ((player.StateATick % maxHistory)+1)*classData.LagCompensatedSize;
+            int historyBOffset = ((player.StateBTick % maxHistory)+1)*classData.LagCompensatedSize;
             var fieldManipulator = GetFieldManipulator();
-
-            fixed (byte* history = _history)
-            {
-                for (int i = 0; i < _lagCompensatedCount; i++)
-                {
-                    ref var field = ref _lagCompensatedFields[i];
-                    fieldManipulator.LoadHistory(
-                        in field,
-                        new Span<byte>(history + historyCurrent, field.IntSize),
-                        new ReadOnlySpan<byte>(history + historyAOffset, field.IntSize),
-                        new ReadOnlySpan<byte>(history + historyBOffset, field.IntSize),
-                        player.LerpTime);
-                    historyAOffset += field.IntSize;
-                    historyBOffset += field.IntSize;
-                    historyCurrent += field.IntSize;
-                }
-            }
-
+            fieldManipulator.ApplyLagCompensation(
+                new Span<byte>(_history, 0, classData.LagCompensatedSize),
+                new ReadOnlySpan<byte>(_history, historyAOffset, classData.LagCompensatedSize),
+                new ReadOnlySpan<byte>(_history, historyBOffset, classData.LagCompensatedSize),
+                player.LerpTime);
             OnLagCompensationStart();
             _lagCompensationEnabled = true;
         }
 
-        internal unsafe void DisableLagCompensation()
+        internal void DisableLagCompensation()
         {
             if (!_lagCompensationEnabled)
                 return;
             var fieldManipulator = GetFieldManipulator();
             _lagCompensationEnabled = false;
-            int historyOffset = 0;
-            fixed (byte* history = _history)
-            {
-                for (int i = 0; i < _lagCompensatedCount; i++)
-                {
-                    ref var field = ref _lagCompensatedFields[i];
-                    fieldManipulator.Load(in field, new ReadOnlySpan<byte>(history + historyOffset, field.IntSize));
-                    historyOffset += field.IntSize;
-                }
-            }
+            fieldManipulator.LoadLagCompensated(new ReadOnlySpan<byte>(_history));
             OnLagCompensationEnd();
         }
 
@@ -294,14 +261,7 @@ namespace LiteEntitySystem
 
         protected EntityLogic(EntityParams entityParams) : base(entityParams)
         {
-            var classData = GetClassMetadata();
-            _lagCompensatedSize = classData.LagCompensatedSize;
-            if (_lagCompensatedSize > 0)
-            {
-                _history = new byte[((byte)EntityManager.MaxHistorySize+1) * _lagCompensatedSize];
-                _lagCompensatedFields = classData.LagCompensatedFields;
-                _lagCompensatedCount = classData.LagCompensatedCount;
-            }
+
         }
     }
 }
