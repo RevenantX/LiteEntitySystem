@@ -541,7 +541,7 @@ namespace {classSymbol.ContainingNamespace}
 
             public override void WriteChanged(ref WriteFieldsData fieldsData)
             {{
-                 base.WriteChanged(ref fieldsData);{writeChangedDataText}
+                base.WriteChanged(ref fieldsData);{writeChangedDataText}
             }}
         }}
 

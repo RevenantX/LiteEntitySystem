@@ -182,18 +182,16 @@ namespace LiteEntitySystem
         private void OnAliveConstructed(InternalEntity entity)
         {
             var classMetadata = entity.GetClassMetadata();
-            var fieldManipulator = entity.GetFieldManipulator();
-
             if (classMetadata.InterpolatedFieldsSize > 0)
             {
                 Helpers.ResizeOrCreate(ref _interpolatePrevData[entity.Id], classMetadata.InterpolatedFieldsSize);
                 
                 //for local interpolated
                 Helpers.ResizeOrCreate(ref _interpolateCurrentData[entity.Id], classMetadata.InterpolatedFieldsSize);
+                
+                entity.GetFieldManipulator().DumpInterpolated(new Span<byte>(_interpolateCurrentData[entity.Id], 0, classMetadata.InterpolatedFieldsSize));
+                Buffer.BlockCopy(_interpolateCurrentData[entity.Id], 0, _interpolatePrevData[entity.Id], 0, classMetadata.InterpolatedFieldsSize);
             }
-
-            fieldManipulator.DumpInterpolated(new Span<byte>(_interpolateCurrentData[entity.Id], 0, classMetadata.InterpolatedFieldsSize));
-            Buffer.BlockCopy(_interpolateCurrentData[entity.Id], 0, _interpolatePrevData[entity.Id], 0, classMetadata.InterpolatedFieldsSize);
         }
 
         /// Read incoming data
@@ -386,6 +384,8 @@ namespace LiteEntitySystem
             while (_inputCommands.Count > 0 && Helpers.SequenceDiff(_stateB.ProcessedTick, _inputCommands.Peek().Tick) >= 0)
                 _inputPool.Enqueue(_inputCommands.Dequeue().Data);
             
+            /*
+            TODO: preload interpolate
             for(int i = 0; i < _stateB.InterpolatedEntitiesCount; i++)
             {
                 ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedEntities[i]];
@@ -403,6 +403,7 @@ namespace LiteEntitySystem
                     }
                 }
             }
+            */
 
             return true;
         }

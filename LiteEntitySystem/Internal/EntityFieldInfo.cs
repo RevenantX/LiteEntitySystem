@@ -5,8 +5,6 @@ namespace LiteEntitySystem.Internal
     public struct EntityFieldInfo
     {
         public readonly string Name; //used for debug
-        public readonly ushort Id;
-        public readonly ushort SyncableId;
         public readonly uint Size;
         public readonly int IntSize;
         public readonly SyncFlags Flags;
@@ -18,15 +16,11 @@ namespace LiteEntitySystem.Internal
         public EntityFieldInfo(
             string name,
             Type type,
-            ushort id,
-            ushort syncableId,
             int size,
             SyncFlags flags)
         {
             ActualType = type;
             Name = name;
-            Id = id;
-            SyncableId = syncableId;
             Size = (uint)size;
             IntSize = size;
             FixedOffset = 0;
