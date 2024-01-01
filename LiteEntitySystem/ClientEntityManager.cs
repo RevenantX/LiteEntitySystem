@@ -417,6 +417,12 @@ namespace LiteEntitySystem
             _stateB = null;
             
             //Logger.Log($"GotoState: IST: {ServerTick}, TST:{_stateA.Tick}");
+            for (int i = 0; i < _stateA.InterpolatedEntitiesCount; i++)
+            {
+                var entity = _stateA.InterpolatedEntities[i];
+                var prevSpan = new Span<byte>(_interpolatePrevData[entity.Id]);
+                entity.GetFieldManipulator().DumpInterpolated(ref prevSpan);
+            }
 
             fixed (byte* readerData = _stateA.Data)
             {
