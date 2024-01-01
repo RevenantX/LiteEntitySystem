@@ -5,6 +5,9 @@ namespace LiteEntitySystem
 {
     public static class Helpers
     {
+        public const int BitsInByte = 8;
+        public const int BitsInByteMinusOne = BitsInByte - 1;
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe int WriteStructAndReturnSize<T>(this Span<byte> data, T value) where T : unmanaged
         {
@@ -133,19 +136,19 @@ namespace LiteEntitySystem
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBitSet(byte[] byteArray, int offset, int bitNumber)
         {
-            return (byteArray[offset + bitNumber / 8] & (1 << bitNumber % 8)) != 0;
+            return (byteArray[offset + bitNumber / BitsInByte] & (1 << bitNumber % BitsInByte)) != 0;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBitSet(ReadOnlySpan<byte> byteArray, int bitNumber)
         {
-            return (byteArray[bitNumber / 8] & (1 << bitNumber % 8)) != 0;
+            return (byteArray[bitNumber / BitsInByte] & (1 << bitNumber % BitsInByte)) != 0;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool IsBitSet(byte* byteArray, int bitNumber)
         {
-            return (byteArray[bitNumber / 8] & (1 << bitNumber % 8)) != 0;
+            return (byteArray[bitNumber / BitsInByte] & (1 << bitNumber % BitsInByte)) != 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
@@ -10,8 +9,6 @@ namespace LiteEntitySystem.Internal
         public int EntityFieldsOffset;
         public ushort TotalSize;
         public int DataOffset;
-        public int InterpolatedCachesCount;
-        public InterpolatedCache[] InterpolatedCaches;
     }
 
     internal struct RemoteCallsCache
@@ -34,18 +31,6 @@ namespace LiteEntitySystem.Internal
         }
     }
 
-    internal readonly struct InterpolatedCache
-    {
-        public readonly int Field;
-        public readonly int StateReaderOffset;
-
-        public InterpolatedCache(int fieldId, int offset)
-        {
-            Field = fieldId;
-            StateReaderOffset = offset;
-        }
-    }
-
     internal class ServerStateData
     {
         public byte[] Data = new byte[1500];
@@ -55,8 +40,6 @@ namespace LiteEntitySystem.Internal
         public ushort LastReceivedTick;
         public StatePreloadData[] PreloadDataArray = new StatePreloadData[32];
         public int PreloadDataCount;
-        public int[] InterpolatedEntities = new int[8];
-        public int InterpolatedEntitiesCount;
         public int TotalPartsCount;
 
         private int _syncableRemoteCallsCount;
@@ -68,7 +51,7 @@ namespace LiteEntitySystem.Internal
         private byte _maxReceivedPart;
         private ushort _partMtu;
 
-        public unsafe void Preload(InternalEntity[] entityDict)
+        public unsafe void Preload(InternalEntity[] entityDict, byte[][] interpolationData)
         {
             int bytesRead = 0;
             //preload some data
@@ -83,7 +66,6 @@ namespace LiteEntitySystem.Internal
                 bool fullSync = (fullSyncAndTotalSize & 1) == 1;
                 preloadData.TotalSize = (ushort)(fullSyncAndTotalSize >> 1);
                 preloadData.EntityId = BitConverter.ToUInt16(Data, bytesRead + sizeof(ushort));
-                preloadData.InterpolatedCachesCount = 0;
                 bytesRead += preloadData.TotalSize;
                 
                 if (preloadData.EntityId > EntityManager.MaxSyncedEntityCount)
@@ -110,32 +92,27 @@ namespace LiteEntitySystem.Internal
                     continue;
                 }
 
+                var classData = entity.GetClassMetadata();
                 preloadData.EntityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
+                var fieldBits = new BitReadOnlySpan(Data, preloadData.EntityFieldsOffset, classData.FieldsCount);
                 preloadData.DataOffset =
                     initialReaderPosition +
                     StateSerializer.DiffHeaderSize +
-                    entity.GetClassMetadata().FieldsFlagsSize;
+                    fieldBits.ByteCount;
                 
-                var classData = entity.GetClassMetadata();
-                var fields = classData.Fields;
                 int stateReaderOffset = preloadData.DataOffset;
 
                 //preload interpolation info
-                if (entity.IsRemoteControlled && classData.InterpolatedCount > 0)
+                fixed (byte* nextDataPtr = interpolationData[entity.Id], stateData = Data)
                 {
-                    Helpers.ResizeIfFull(ref InterpolatedEntities, InterpolatedEntitiesCount);
-                    Helpers.ResizeOrCreate(ref preloadData.InterpolatedCaches, classData.InterpolatedCount);
-                    InterpolatedEntities[InterpolatedEntitiesCount++] = PreloadDataCount - 1;
-                }
-                
-                for (int i = 0; i < classData.FieldsCount; i++)
-                {
-                    if (!Helpers.IsBitSet(Data, preloadData.EntityFieldsOffset, i))
-                        continue;
-                    var field = fields[i];
-                    if (entity.IsRemoteControlled && field.Flags.HasFlagFast(SyncFlags.Interpolated))
-                        preloadData.InterpolatedCaches[preloadData.InterpolatedCachesCount++] = new InterpolatedCache(i, stateReaderOffset);
-                    stateReaderOffset += field.IntSize;
+                    var preloadInterpData = new PreloadInterpolationData(
+                        fieldBits,
+                        entity.IsRemoteControlled,
+                        stateData + stateReaderOffset,
+                        nextDataPtr
+                    );
+                    entity.GetFieldManipulator().PreloadInterpolation(ref preloadInterpData);
+                    stateReaderOffset += preloadInterpData.Position;
                 }
 
                 //preload rpcs
@@ -252,7 +229,6 @@ namespace LiteEntitySystem.Internal
         {
             Tick = tick;
             Array.Clear(_receivedParts, 0, _maxReceivedPart+1);
-            InterpolatedEntitiesCount = 0;
             PreloadDataCount = 0;
             _maxReceivedPart = 0;
             _receivedPartsCount = 0;

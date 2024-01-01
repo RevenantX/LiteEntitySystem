@@ -58,12 +58,14 @@ namespace LiteEntitySystem.Internal
         public virtual int DumpInterpolated(Span<byte> data) => 0;
         public virtual int LoadInterpolated(ReadOnlySpan<byte> data) => 0;
         public virtual int Interpolate(ReadOnlySpan<byte> prev, ReadOnlySpan<byte> current, float fTimer) => 0;
+        public virtual void PreloadInterpolation(ref PreloadInterpolationData preloadData) { }
         public virtual int DumpLagCompensated(Span<byte> data) => 0;
         public virtual int LoadLagCompensated(ReadOnlySpan<byte> data) => 0;
         public virtual int ApplyLagCompensation(Span<byte> tempHistory, ReadOnlySpan<byte> historyA, ReadOnlySpan<byte> historyB, float lerpTime) => 0;
         public virtual int LoadPredicted(ReadOnlySpan<byte> data) => 0;
         public virtual void ReadChanged(ref DeltaFieldsData fieldsData) { }
         public virtual void WriteChanged(ref WriteFieldsData fieldsData) { }
+        public virtual void MakeDiff(ref MakeDiffData makeDiffData) { }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected static unsafe void InterpolateStruct<T>(ref ReadOnlySpan<byte> prev, ref ReadOnlySpan<byte> next, float fTimer, out T result) where T : unmanaged

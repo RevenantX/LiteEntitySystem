@@ -28,7 +28,6 @@ namespace LiteEntitySystem.Internal
         
         private const int HeaderSize = 5;
         private const int TicksToDestroy = 32;
-        private static readonly Type EntitySharedReferenceType = typeof(EntitySharedReference);
         public const int DiffHeaderSize = 4;
         public const int MaxStateSize = 32767; //half of ushort
 
@@ -263,15 +262,15 @@ namespace LiteEntitySystem.Internal
 
         internal unsafe DiffResult MakeDiff(byte playerId, ushort serverTick, ushort minimalTick, ushort playerTick, byte* resultData, ref int position)
         {
-            if (_state == SerializerState.Freed)
-                return DiffResult.Skip;
-            
-            if (_state == SerializerState.Destroyed && Helpers.SequenceDiff(serverTick, _ticksOnDestroy) >= TicksToDestroy)
+            switch (_state)
             {
-                _state = SerializerState.Freed;
-                return DiffResult.DoneAndDestroy;
+                case SerializerState.Freed:
+                    return DiffResult.Skip;
+                case SerializerState.Destroyed when Helpers.SequenceDiff(serverTick, _ticksOnDestroy) >= TicksToDestroy:
+                    _state = SerializerState.Freed;
+                    return DiffResult.DoneAndDestroy;
             }
-            
+
             Write(serverTick, minimalTick);
             if (_controllerOwner != EntityManager.ServerPlayerId && playerId != _controllerOwner)
                 return DiffResult.Skip;
@@ -293,42 +292,22 @@ namespace LiteEntitySystem.Internal
             } 
             else fixed (byte* lastEntityData = _latestEntityData) //make diff
             {
-                byte* entityDataAfterHeader = lastEntityData + HeaderSize;
-                // -1 for cycle
-                byte* fields = resultData + startPos + DiffHeaderSize - 1;
+                var fieldsBitSpan = new BitSpan(resultData + startPos + DiffHeaderSize, _classData.FieldsCount);
+                fieldsBitSpan.Clear();
                 //put entity id at 2
                 *(ushort*)(resultData + position) = *(ushort*)lastEntityData;
                 *fieldFlagAndSize = 0;
-                position += sizeof(ushort) + _classData.FieldsFlagsSize;
+                position += sizeof(ushort) + fieldsBitSpan.ByteCount;
                 int positionBeforeDeltaCompression = position;
-
-                //write fields
-                for (int i = 0; i < _classData.FieldsCount; i++)
-                {
-                    if (i % 8 == 0)
-                    {
-                        fields++;
-                        *fields = 0;
-                    }
-
-                    ref var field = ref _classData.Fields[i];
-                    if (((field.Flags & SyncFlags.OnlyForOwner) != 0 && !isOwned) || 
-                        ((field.Flags & SyncFlags.OnlyForOtherPlayers) != 0 && isOwned))
-                    {
-                        //Logger.Log($"SkipSync: {field.Name}, isOwned: {isOwned}");
-                        continue;
-                    }
-                    if (Helpers.SequenceDiff(_fieldChangeTicks[i], playerTick) <= 0)
-                    {
-                        //Logger.Log($"SkipOld: {field.Name}");
-                        //old data
-                        continue;
-                    }
-                    *fields |= (byte)(1 << i % 8);
-                    Unsafe.CopyBlock(resultData + position, entityDataAfterHeader + field.FixedOffset, field.Size);
-                    position += field.IntSize;
-                    //Logger.Log($"WF {_entity.GetType()} f: {_classData.Fields[i].Name}");
-                }
+                var makeDiffData = new MakeDiffData(
+                    fieldsBitSpan, 
+                    _fieldChangeTicks,
+                    playerTick,
+                    lastEntityData + HeaderSize, 
+                    resultData + position,
+                    isOwned);
+                _entity.GetFieldManipulator().MakeDiff(ref makeDiffData);
+                position += makeDiffData.Position;
 
                 bool hasChanges = position > positionBeforeDeltaCompression;
                 //add RPCs count

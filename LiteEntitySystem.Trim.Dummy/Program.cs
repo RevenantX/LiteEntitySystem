@@ -240,8 +240,8 @@ class Program
 
         var clientPeer = new TestPeer();
         var serverPeer = new TestPeer();
-        var cem = new ClientEntityManager(typesMap, new InputProcessor<MyInput>(), clientPeer, 0, 30);
-        var sem = new ServerEntityManager(typesMap, new InputProcessor<MyInput>(), 0, 30, ServerSendRate.EqualToFPS);
+        var cem = ClientEntityManager.Create<MyInput>(typesMap, clientPeer, 0, 30);
+        var sem = ServerEntityManager.Create<MyInput>(typesMap, 0, 30, ServerSendRate.EqualToFPS);
         clientPeer.ServerTarget = sem;
         clientPeer.ServerPeer = serverPeer;
         serverPeer.ClientTarget = cem;

@@ -89,6 +89,8 @@ namespace LiteEntitySystem.Generator
                 x.Type.Name == "SyncVar" || InheritsFrom(syncableFieldType, x.Type) || x.Type.Name.StartsWith("RemoteCall");
 
             var writeChangedDataText = new StringBuilder();
+            var makeDiffText = new StringBuilder();
+            var preloadInterpolationText = new StringBuilder();
             var applyLagCompensationText = new StringBuilder();
             var syncablesResyncInnerText = new StringBuilder();
             var syncablesSetIdInnerText = new StringBuilder();
@@ -130,6 +132,8 @@ namespace LiteEntitySystem.Generator
                     }
                     
                     writeChangedDataText.Clear();
+                    makeDiffText.Clear();
+                    preloadInterpolationText.Clear();
                     applyLagCompensationText.Clear();
                     syncablesResyncInnerText.Clear();
                     syncablesSetIdInnerText.Clear();
@@ -261,6 +265,10 @@ using LiteEntitySystem.Internal;");
                             classMetadataText.AppendLine($"{TAB(4)}classMetadata.AddSyncableField(CodeGenUtils.GetMetadata({fieldSymbol.Name}), {syncFlagsStr});");
                             writeChangedDataText.Append($@"
                 CodeGenUtils.GetFieldManipulator({fieldName}).WriteChanged(ref fieldsData);");
+                            makeDiffText.Append($@"
+                CodeGenUtils.GetFieldManipulator({fieldName}).MakeDiff(ref makeDiffData);");
+                            preloadInterpolationText.Append($@"
+                CodeGenUtils.GetFieldManipulator({fieldName}).PreloadInterpolation(ref preloadData);");
                             loadPredictedText.Append($@"
                 data = data.Slice(CodeGenUtils.GetFieldManipulator({fieldName}).LoadPredicted(data));");
                             readChangedText.Append(@$"
@@ -277,7 +285,7 @@ using LiteEntitySystem.Internal;");
                             var syncVarGenericArg = ((INamedTypeSymbol)fieldSymbol.Type).TypeArguments[0];
                             //when SyncVar<T>
                             string dotValueText = classSymbol.TypeArguments.Contains(syncVarGenericArg) ? string.Empty : ".Value";
-                            classMetadataText.AppendLine($"{TAB(4)}classMetadata.AddField<{syncVarGenericArg}>(\"{fieldSymbol.Name}\", {syncFlagsStr});");
+                            classMetadataText.AppendLine($"{TAB(4)}classMetadata.AddField<{syncVarGenericArg}>({syncFlagsStr});");
 
                             //skip local ids
                             if (TypeEquals(syncVarGenericArg, entitySharedRefType))
@@ -364,6 +372,17 @@ using LiteEntitySystem.Internal;");
                                     isPredicted = true;
                                 }
                             }
+                            
+                            if((syncFlags & (1 << 3)) != 0)  //if OnlyForOwner
+                                makeDiffText.Append($@"
+                makeDiffData.Write<{syncVarGenericArg}>(!makeDiffData.IsOwned);");
+                            else if((syncFlags & (1 << 2)) != 0) //if OnlyForOtherPlayers
+                                makeDiffText.Append($@"
+                makeDiffData.Write<{syncVarGenericArg}>(makeDiffData.IsOwned);");
+                            else
+                                makeDiffText.Append($@"
+                makeDiffData.Write<{syncVarGenericArg}>(false);");
+                            
                             //also if field doesn't have OnlyForOtherPlayers or NeverRollBack
                             if (!isPredicted && (syncFlags & ((1<<2)|(1<<5))) == 0)
                             {
@@ -421,8 +440,15 @@ using LiteEntitySystem.Internal;");
                             }
                             if (isInterpolated)
                             {
+                                preloadInterpolationText.Append($@"
+                preloadData.Preload<{syncVarGenericArg}>();");
                                 readChangedText.Append($@"
                     SliceBySize<{syncVarGenericArg}>(ref fieldsData.InterpolatedData);");
+                            }
+                            else
+                            {
+                                preloadInterpolationText.Append($@"
+                preloadData.Skip<{syncVarGenericArg}>();");
                             }
                             
                             readChangedText.Append(@"
@@ -503,6 +529,11 @@ namespace {classSymbol.ContainingNamespace}
                 return origDataSize - prev.Length;
             }}
 
+            public override void PreloadInterpolation(ref PreloadInterpolationData preloadData) 
+            {{
+                base.PreloadInterpolation(ref preloadData);{preloadInterpolationText}
+            }}
+
             public override int DumpLagCompensated(Span<byte> data)
             {{
                 var origDataSize = data.Length;
@@ -542,6 +573,11 @@ namespace {classSymbol.ContainingNamespace}
             public override void WriteChanged(ref WriteFieldsData fieldsData)
             {{
                 base.WriteChanged(ref fieldsData);{writeChangedDataText}
+            }}
+
+            public override void MakeDiff(ref MakeDiffData makeDiffData) 
+            {{
+                base.MakeDiff(ref makeDiffData);{makeDiffText}
             }}
         }}
 

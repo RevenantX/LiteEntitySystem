@@ -5,14 +5,13 @@ namespace LiteEntitySystem.Internal
     public readonly ref struct BitSpan
     {
         private readonly Span<byte> _bitRegion;
-        private const int BitsInByte = 8;
         
         public readonly int BitCount;
         public readonly int ByteCount;
         
         public BitSpan(Span<byte> bitRegion)
         {
-            BitCount = bitRegion.Length * BitsInByte;
+            BitCount = bitRegion.Length * Helpers.BitsInByte;
             ByteCount = bitRegion.Length;
             _bitRegion = bitRegion;
         }
@@ -20,33 +19,43 @@ namespace LiteEntitySystem.Internal
         public BitSpan(Span<byte> bitRegion, int bitCount)
         {
             BitCount = bitCount;
-            ByteCount = bitCount / BitsInByte + (bitCount % BitsInByte == 0 ? 0 : 1);
+            ByteCount = (bitCount + Helpers.BitsInByteMinusOne) / Helpers.BitsInByte;
             _bitRegion = bitRegion;
         }
         
         public unsafe BitSpan(byte* bitRegion, int bitCount)
         {
             BitCount = bitCount;
-            ByteCount = bitCount / BitsInByte + (bitCount % BitsInByte == 0 ? 0 : 1);
+            ByteCount = (bitCount + Helpers.BitsInByteMinusOne) / Helpers.BitsInByte;
             _bitRegion = new Span<byte>(bitRegion, ByteCount);
         }
         
         public BitSpan(byte[] bitRegion, int offset, int bitCount)
         {
             BitCount = bitCount;
-            ByteCount = bitCount / BitsInByte + (bitCount % BitsInByte == 0 ? 0 : 1);
+            ByteCount = (bitCount + Helpers.BitsInByteMinusOne) / Helpers.BitsInByte;
             _bitRegion = new Span<byte>(bitRegion, offset, ByteCount);
+        }
+
+        public void SetBit(int index)
+        {
+            _bitRegion[index / Helpers.BitsInByte] |= (byte)(1 << (index % Helpers.BitsInByte));
+        }
+
+        public void ClearBit(int index)
+        {
+            _bitRegion[index / Helpers.BitsInByte] &= (byte)~(1 << (index % Helpers.BitsInByte));
         }
 
         public bool this[int index]
         {
-            get => (_bitRegion[index / BitsInByte] & (byte)(1 << (index % BitsInByte))) != 0;
+            get => (_bitRegion[index / Helpers.BitsInByte] & (byte)(1 << (index % Helpers.BitsInByte))) != 0;
             set
             {
                 if (value)
-                    _bitRegion[index / BitsInByte] |= (byte)(1 << (index % BitsInByte));
+                    _bitRegion[index / Helpers.BitsInByte] |= (byte)(1 << (index % Helpers.BitsInByte));
                 else
-                    _bitRegion[index / BitsInByte] &= (byte)~(1 << (index % BitsInByte));
+                    _bitRegion[index / Helpers.BitsInByte] &= (byte)~(1 << (index % Helpers.BitsInByte));
             }
         }
 
@@ -67,14 +76,13 @@ namespace LiteEntitySystem.Internal
     public readonly ref struct BitReadOnlySpan
     {
         private readonly ReadOnlySpan<byte> _bitRegion;
-        private const int BitsInByte = 8;
         
         public readonly int BitCount;
         public readonly int ByteCount;
         
         public BitReadOnlySpan(Span<byte> bitRegion)
         {
-            BitCount = bitRegion.Length * BitsInByte;
+            BitCount = bitRegion.Length * Helpers.BitsInByte;
             ByteCount = bitRegion.Length;
             _bitRegion = bitRegion;
         }
@@ -82,32 +90,32 @@ namespace LiteEntitySystem.Internal
         public BitReadOnlySpan(Span<byte> bitRegion, int bitCount)
         {
             BitCount = bitCount;
-            ByteCount = bitCount / BitsInByte + (bitCount % BitsInByte == 0 ? 0 : 1);
+            ByteCount = (bitCount + Helpers.BitsInByteMinusOne) / Helpers.BitsInByte;
             _bitRegion = bitRegion;
         }
         
         public BitReadOnlySpan(ReadOnlySpan<byte> bitRegion, int bitCount)
         {
             BitCount = bitCount;
-            ByteCount = bitCount / BitsInByte + (bitCount % BitsInByte == 0 ? 0 : 1);
+            ByteCount = (bitCount + Helpers.BitsInByteMinusOne) / Helpers.BitsInByte;
             _bitRegion = bitRegion;
         }
         
         public unsafe BitReadOnlySpan(byte* bitRegion, int bitCount)
         {
             BitCount = bitCount;
-            ByteCount = bitCount / BitsInByte + (bitCount % BitsInByte == 0 ? 0 : 1);
+            ByteCount = (bitCount + Helpers.BitsInByteMinusOne) / Helpers.BitsInByte;
             _bitRegion = new Span<byte>(bitRegion, ByteCount);
         }
         
         public BitReadOnlySpan(byte[] bitRegion, int offset, int bitCount)
         {
             BitCount = bitCount;
-            ByteCount = bitCount / BitsInByte + (bitCount % BitsInByte == 0 ? 0 : 1);
+            ByteCount = (bitCount + Helpers.BitsInByteMinusOne) / Helpers.BitsInByte;
             _bitRegion = new Span<byte>(bitRegion, offset, ByteCount);
         }
 
-        public bool this[int index] => (_bitRegion[index / BitsInByte] & (byte)(1 << (index % BitsInByte))) != 0;
+        public bool this[int index] => (_bitRegion[index / Helpers.BitsInByte] & (byte)(1 << (index % Helpers.BitsInByte))) != 0;
 
         public override unsafe string ToString()
         {

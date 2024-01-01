@@ -14,12 +14,6 @@ namespace LiteEntitySystem.Internal
             ClientMethod = null;
         }
     }
-
-    public struct SyncableAdditionalData
-    {
-        public ushort RpcOffset;
-        public ExecuteFlags ExecuteFlags;
-    }
     
     public class GeneratedClassMetadata
     {
@@ -28,9 +22,7 @@ namespace LiteEntitySystem.Internal
         public int FixedFieldsSize;
         public int PredictedSize;
         public bool HasRemoteRollbackFields;
-        public EntityFieldInfo[] Fields;
         public int InterpolatedFieldsSize;
-        public int InterpolatedCount;
         public int LagCompensatedSize;
         public bool UpdateOnClient;
         public bool IsUpdateable;
@@ -38,29 +30,31 @@ namespace LiteEntitySystem.Internal
         
         public readonly ushort BaseSyncablesCount;
         
+        private struct SyncableAdditionalData
+        {
+            public ushort RpcOffset;
+            public ExecuteFlags ExecuteFlags;
+        }
+        
         private SyncableAdditionalData[] _syncables;
-        private List<EntityFieldInfo> _fieldsTemp;
         private List<RpcData> _rpcTempList;
         private List<SyncableAdditionalData> _syncablesTempList;
 
         public GeneratedClassMetadata()
         {
-            Fields = Array.Empty<EntityFieldInfo>();
-            _fieldsTemp = new List<EntityFieldInfo>();
             _rpcTempList = new List<RpcData>();
             _syncablesTempList = new List<SyncableAdditionalData>();
         }
         
         public GeneratedClassMetadata(GeneratedClassMetadata baseClassMetadata)
         {
+            FieldsCount = baseClassMetadata.FieldsCount;
             FieldsFlagsSize = baseClassMetadata.FieldsFlagsSize;
             FixedFieldsSize = baseClassMetadata.FixedFieldsSize;
             PredictedSize = baseClassMetadata.PredictedSize;
             InterpolatedFieldsSize = baseClassMetadata.InterpolatedFieldsSize;
-            InterpolatedCount = baseClassMetadata.InterpolatedCount;
             LagCompensatedSize = baseClassMetadata.LagCompensatedSize;
             HasRemoteRollbackFields = baseClassMetadata.HasRemoteRollbackFields;
-            _fieldsTemp = new List<EntityFieldInfo>(baseClassMetadata.Fields);
             _rpcTempList = baseClassMetadata.RpcData != null 
                 ? new List<RpcData>(baseClassMetadata.RpcData) 
                 : new List<RpcData>();
@@ -72,27 +66,11 @@ namespace LiteEntitySystem.Internal
 
         public void Init()
         {
-            if (_fieldsTemp == null)
-                return;
-            
-            Fields = _fieldsTemp.ToArray();
-            _fieldsTemp = null;
             _syncables = _syncablesTempList.ToArray();
             _syncablesTempList = null;
             RpcData = _rpcTempList.ToArray();
             _rpcTempList = null;
-            FieldsCount = Fields.Length;
             FieldsFlagsSize = (FieldsCount - 1) / 8 + 1;
-            
-            int fixedOffset = 0;
-            for (int i = 0; i < Fields.Length; i++)
-            {
-                ref var field = ref Fields[i];
-                field.FixedOffset = fixedOffset;
-                fixedOffset += field.IntSize;
-                if(field.IsPredicted)
-                    PredictedSize += field.IntSize;
-            }
         }
         
         public void AddRpc<TEntity>(ref RemoteCall rc, ExecuteFlags flags, Action<TEntity> directMethod, MethodCallDelegate clientMethod) where TEntity : InternalEntity
@@ -215,14 +193,12 @@ namespace LiteEntitySystem.Internal
             _rpcTempList.Add(new RpcData(-1){ClientMethod = clientMethod});
         }
 
-        public void AddField<T>(string name, SyncFlags flags) where T : unmanaged
+        public void AddField<T>(SyncFlags flags) where T : unmanaged
         {
             int size = Helpers.SizeOfStruct<T>();
-            var fi = new EntityFieldInfo(name, typeof(T), size, flags);
             if(flags.HasFlagFast(SyncFlags.Interpolated) && !typeof(T).IsEnum)
             {
                 InterpolatedFieldsSize += size;
-                InterpolatedCount++;
             }
             if(flags.HasFlagFast(SyncFlags.LagCompensated))
             {
@@ -231,14 +207,19 @@ namespace LiteEntitySystem.Internal
             if(flags.HasFlagFast(SyncFlags.AlwaysRollback))
                 HasRemoteRollbackFields = true;
             FixedFieldsSize += size;
-            _fieldsTemp.Add(fi);
+            FieldsCount++;
+            
+            //is predicted
+            if(flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
+               (!flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
+                !flags.HasFlagFast(SyncFlags.NeverRollBack)))
+            {
+                PredictedSize += size;
+            }
         }
 
         public void AddSyncableField(GeneratedClassMetadata syncableMetadata, SyncFlags fieldSyncFlags)
         {
-            foreach (var fld in syncableMetadata.Fields)
-                _fieldsTemp.Add(new EntityFieldInfo(fld.Name, fld.ActualType, fld.IntSize, fieldSyncFlags));
-
             ExecuteFlags executeFlags;
             if (fieldSyncFlags.HasFlagFast(SyncFlags.OnlyForOwner))
                 executeFlags = ExecuteFlags.SendToOwner;
@@ -253,6 +234,8 @@ namespace LiteEntitySystem.Internal
                 _rpcTempList.Add(new RpcData(_syncablesTempList.Count) {ClientMethod = rpcData.ClientMethod});
             _syncablesTempList.Add(syncableData);
             FixedFieldsSize += syncableMetadata.FixedFieldsSize;
+            FieldsCount += syncableMetadata.FieldsCount;
+            PredictedSize += syncableMetadata.PredictedSize;
         }
     }
 

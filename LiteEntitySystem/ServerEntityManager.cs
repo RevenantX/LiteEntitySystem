@@ -89,6 +89,27 @@ namespace LiteEntitySystem
             _packetBuffer[0] = packetHeader;
             SendRate = sendRate;
         }
+        
+        /// <summary>
+        /// Simplified constructor
+        /// </summary>
+        /// <param name="typesMap">EntityTypesMap with registered entity types</param>
+        /// <param name="packetHeader">Header byte that will be used for packets (to distinguish entity system packets)</param>
+        /// <param name="framesPerSecond">Fixed framerate of game logic</param>
+        /// <param name="sendRate">Send rate of server (depends on fps)</param>
+        public static ServerEntityManager Create<TInput>(
+            EntityTypesMap typesMap, 
+            byte packetHeader, 
+            byte framesPerSecond,
+            ServerSendRate sendRate) where TInput : unmanaged
+        {
+            return new ServerEntityManager(
+                typesMap, 
+                new InputProcessor<TInput>(),
+                packetHeader,
+                framesPerSecond,
+                sendRate);
+        }
 
         /// <summary>
         /// Create and add new player

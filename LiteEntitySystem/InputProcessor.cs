@@ -40,7 +40,7 @@ namespace LiteEntitySystem
             {
                 if (prevInput[i] != currentInput[i] || (i < InputSize - 1 && prevInput[i + 1] != currentInput[i + 1]))
                 {
-                    deltaFlags[i / FieldsDivision] = true;
+                    deltaFlags.SetBit(i / FieldsDivision);
                     result[resultSize] = currentInput[i];
                     if(i < InputSize - 1)
                         result[resultSize + 1] = currentInput[i + 1];

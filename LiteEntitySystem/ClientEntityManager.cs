@@ -168,6 +168,27 @@ namespace LiteEntitySystem
             }
         }
 
+        /// <summary>
+        /// Simplified constructor
+        /// </summary>
+        /// <param name="typesMap">EntityTypesMap with registered entity types</param>
+        /// <param name="netPeer">Local AbstractPeer</param>
+        /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
+        /// <param name="framesPerSecond">Fixed framerate of game logic</param>
+        public static ClientEntityManager Create<TInput>(
+            EntityTypesMap typesMap, 
+            AbstractNetPeer netPeer, 
+            byte headerByte, 
+            byte framesPerSecond) where TInput : unmanaged
+        {
+            return new ClientEntityManager(
+                typesMap, 
+                new InputProcessor<TInput>(),
+                netPeer,
+                headerByte,
+                framesPerSecond);
+        }
+
         internal override void RemoveEntity(InternalEntity e)
         {
             base.RemoveEntity(e);
@@ -343,7 +364,7 @@ namespace LiteEntitySystem
             return DeserializeResult.Done;
         }
 
-        private unsafe bool PreloadNextState()
+        private bool PreloadNextState()
         {
             if (_stateB != null)
                 return true;
@@ -374,7 +395,7 @@ namespace LiteEntitySystem
             }
             
             _stateB = _readyStates.ExtractMin();
-            _stateB.Preload(EntitiesDict);
+            _stateB.Preload(EntitiesDict, _interpolateCurrentData);
             //Logger.Log($"Preload A: {_stateA.Tick}, B: {_stateB.Tick}");
             _lerpTime = 
                 Helpers.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTimeF *
@@ -533,8 +554,7 @@ namespace LiteEntitySystem
                 if (entity.IsLocal || entity.IsLocalControlled)
                 {
                     //save data for interpolation before update
-                    fixed (byte* currentDataPtr = _interpolateCurrentData[entity.Id],
-                           prevDataPtr = _interpolatePrevData[entity.Id])
+                    fixed (byte* currentDataPtr = _interpolateCurrentData[entity.Id], prevDataPtr = _interpolatePrevData[entity.Id])
                     {
                         //restore previous
                         fieldManipulator.LoadInterpolated(new Span<byte>(currentDataPtr, classMetadata.InterpolatedFieldsSize));
