@@ -380,7 +380,7 @@ using LiteEntitySystem.Internal;");
                             //also if field doesn't have OnlyForOtherPlayers or NeverRollBack
                             if ((syncFlags & (1<<4)) != 0 || (syncFlags & ((1<<2)|(1<<5))) == 0)
                             {
-                                if (InheritsFrom(syncableFieldType, classSymbol))
+                                if ((syncFlags & (1<<4)) != 0 || InheritsFrom(syncableFieldType, classSymbol))
                                 {
                                     loadPredictedText.Append(@$"
                 ReadStruct(ref data, out {fieldName}.Value);");  
