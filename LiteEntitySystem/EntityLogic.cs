@@ -64,7 +64,8 @@ namespace LiteEntitySystem
             _filledHistory = Math.Min(_filledHistory + 1, maxHistory);
             int historyOffset = ((tick % maxHistory)+1)*classData.LagCompensatedSize;
             _history ??= new byte[((byte)EntityManager.MaxHistorySize + 1) * classData.LagCompensatedSize];
-            fieldManipulator.DumpLagCompensated(new Span<byte>(_history, historyOffset, classData.LagCompensatedSize));
+            var lagCompData = new Span<byte>(_history, historyOffset, classData.LagCompensatedSize);
+            fieldManipulator.DumpLagCompensated(ref lagCompData);
         }
         
         //on client it works only in rollback
@@ -80,13 +81,14 @@ namespace LiteEntitySystem
                 return;
             }
             var classData = GetClassMetadata();
-            int historyAOffset = ((player.StateATick % maxHistory)+1)*classData.LagCompensatedSize;
-            int historyBOffset = ((player.StateBTick % maxHistory)+1)*classData.LagCompensatedSize;
             var fieldManipulator = GetFieldManipulator();
+            var tempHistory = new Span<byte>(_history, 0, classData.LagCompensatedSize);
+            var historyA = new ReadOnlySpan<byte>(_history, ((player.StateATick % maxHistory)+1)*classData.LagCompensatedSize, classData.LagCompensatedSize);
+            var historyB = new ReadOnlySpan<byte>(_history, ((player.StateBTick % maxHistory)+1)*classData.LagCompensatedSize, classData.LagCompensatedSize);
             fieldManipulator.ApplyLagCompensation(
-                new Span<byte>(_history, 0, classData.LagCompensatedSize),
-                new ReadOnlySpan<byte>(_history, historyAOffset, classData.LagCompensatedSize),
-                new ReadOnlySpan<byte>(_history, historyBOffset, classData.LagCompensatedSize),
+                ref tempHistory,
+                ref historyA,
+                ref historyB,
                 player.LerpTime);
             OnLagCompensationStart();
             _lagCompensationEnabled = true;
@@ -98,7 +100,8 @@ namespace LiteEntitySystem
                 return;
             var fieldManipulator = GetFieldManipulator();
             _lagCompensationEnabled = false;
-            fieldManipulator.LoadLagCompensated(new ReadOnlySpan<byte>(_history));
+            var lagCompData = new ReadOnlySpan<byte>(_history);
+            fieldManipulator.LoadLagCompensated(ref lagCompData);
             OnLagCompensationEnd();
         }
 

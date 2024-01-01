@@ -270,7 +270,7 @@ using LiteEntitySystem.Internal;");
                             preloadInterpolationText.Append($@"
                 CodeGenUtils.GetFieldManipulator({fieldName}).PreloadInterpolation(ref preloadData);");
                             loadPredictedText.Append($@"
-                data = data.Slice(CodeGenUtils.GetFieldManipulator({fieldName}).LoadPredicted(data));");
+                CodeGenUtils.GetFieldManipulator({fieldName}).LoadPredicted(ref data);");
                             readChangedText.Append(@$"
                 CodeGenUtils.GetFieldManipulator({fieldName}).ReadChanged(ref fieldsData);");
                             syncablesResyncInnerText.Append($"\n{TAB(3)}CodeGenUtils.OnSyncRequested({fieldSymbol.Name});");
@@ -336,9 +336,6 @@ using LiteEntitySystem.Internal;");
                 ReadStruct(ref data, out {fieldName}.Value);");
                                     interpolateText.Append(@$"
                 InterpolateStruct(ref prev, ref current, fTimer, out {fieldName}.Value);");
-                                    readChangedText.Append(@$"
-                    if(fieldsData.WriteInterpolationData)
-                        WriteStruct(ref fieldsData.InterpolatedData, {fieldName}.Value);");
                                     isInterpolated = true;
                                 }
                                 //lag compensated
@@ -367,24 +364,22 @@ using LiteEntitySystem.Internal;");
                                 //predicted if always rollback
                                 if ((syncFlags & (1<<4)) != 0)
                                 {
-                                    loadPredictedText.Append(@$"
-                ReadStruct(ref data, out {fieldName}.Value);");
                                     isPredicted = true;
                                 }
                             }
                             
                             if((syncFlags & (1 << 3)) != 0)  //if OnlyForOwner
                                 makeDiffText.Append($@"
-                makeDiffData.Write<{syncVarGenericArg}>(!makeDiffData.IsOwned);");
+                makeDiffData.Write<{syncVarGenericArg}>(!makeDiffData.IsOwned); //{fieldName}");
                             else if((syncFlags & (1 << 2)) != 0) //if OnlyForOtherPlayers
                                 makeDiffText.Append($@"
-                makeDiffData.Write<{syncVarGenericArg}>(makeDiffData.IsOwned);");
+                makeDiffData.Write<{syncVarGenericArg}>(makeDiffData.IsOwned); //{fieldName}");
                             else
                                 makeDiffText.Append($@"
-                makeDiffData.Write<{syncVarGenericArg}>(false);");
+                makeDiffData.Write<{syncVarGenericArg}>(false); //{fieldName}");
                             
                             //also if field doesn't have OnlyForOtherPlayers or NeverRollBack
-                            if (!isPredicted && (syncFlags & ((1<<2)|(1<<5))) == 0)
+                            if (isPredicted || (syncFlags & ((1<<2)|(1<<5))) == 0)
                             {
                                 if (InheritsFrom(syncableFieldType, classSymbol))
                                 {
@@ -398,12 +393,6 @@ using LiteEntitySystem.Internal;");
                                 }
 
                                 isPredicted = true;
-                            }
-
-                            if (isPredicted)
-                            {
-                                readChangedText.Append(@$"
-                    WriteStruct(ref fieldsData.PredictedData, {fieldName}.Value);");
                             }
 
 
@@ -428,6 +417,18 @@ using LiteEntitySystem.Internal;");
                             {
                                 readChangedText.Append(@$"
                     ReadStruct(ref fieldsData.RawData, out {fieldName}.Value);");
+                            }
+                            if (isPredicted)
+                            {
+                                readChangedText.Append(@$"
+                    WriteStruct(ref fieldsData.PredictedData, {fieldName}.Value);");
+                            }
+
+                            if (isInterpolated)
+                            {
+                                readChangedText.Append(@$"
+                    if(fieldsData.WriteInterpolationData)
+                        WriteStruct(ref fieldsData.InterpolatedData, {fieldName}.Value);");
                             }
                             readChangedText.Append(@"
                 }
@@ -506,27 +507,19 @@ namespace {classSymbol.ContainingNamespace}
                 _target = target;
             }}
 
-            public override int DumpInterpolated(Span<byte> data) 
+            public override void DumpInterpolated(ref Span<byte> data) 
             {{
-                var origDataSize = data.Length;
-                data = data.Slice(base.DumpInterpolated(data));{dumpInterpolatedText}
-                return origDataSize - data.Length;
+                base.DumpInterpolated(ref data);{dumpInterpolatedText}
             }}
 
-            public override int LoadInterpolated(ReadOnlySpan<byte> data)
+            public override void LoadInterpolated(ref ReadOnlySpan<byte> data)
             {{
-                var origDataSize = data.Length;
-                data = data.Slice(base.LoadInterpolated(data));{loadInterpolatedText}
-                return origDataSize - data.Length;
+                base.LoadInterpolated(ref data);{loadInterpolatedText}
             }}
 
-            public override int Interpolate(ReadOnlySpan<byte> prev, ReadOnlySpan<byte> current, float fTimer)
+            public override void Interpolate(ref ReadOnlySpan<byte> prev, ref ReadOnlySpan<byte> current, float fTimer)
             {{
-                var origDataSize = prev.Length;
-                var size = base.Interpolate(prev, current, fTimer);
-                prev = prev.Slice(size);
-                current = current.Slice(size);{interpolateText}
-                return origDataSize - prev.Length;
+                base.Interpolate(ref prev, ref current, fTimer);{interpolateText}
             }}
 
             public override void PreloadInterpolation(ref PreloadInterpolationData preloadData) 
@@ -534,35 +527,24 @@ namespace {classSymbol.ContainingNamespace}
                 base.PreloadInterpolation(ref preloadData);{preloadInterpolationText}
             }}
 
-            public override int DumpLagCompensated(Span<byte> data)
+            public override void DumpLagCompensated(ref Span<byte> data)
             {{
-                var origDataSize = data.Length;
-                data = data.Slice(base.DumpLagCompensated(data));{dumpLagCompensatedText}
-                return origDataSize - data.Length;
+                base.DumpLagCompensated(ref data);{dumpLagCompensatedText}
             }}
 
-            public override int LoadLagCompensated(ReadOnlySpan<byte> data)
+            public override void LoadLagCompensated(ref ReadOnlySpan<byte> data)
             {{
-                var origDataSize = data.Length;
-                data = data.Slice(base.LoadLagCompensated(data));{loadLagCompensatedText}
-                return origDataSize - data.Length;
+                base.LoadLagCompensated(ref data);{loadLagCompensatedText}
             }}
 
-            public override int ApplyLagCompensation(Span<byte> tempHistory, ReadOnlySpan<byte> historyA, ReadOnlySpan<byte> historyB, float lerpTime)
+            public override void ApplyLagCompensation(ref Span<byte> tempHistory, ref ReadOnlySpan<byte> historyA, ref ReadOnlySpan<byte> historyB, float lerpTime)
             {{
-                var origDataSize = historyA.Length;
-                var size = base.ApplyLagCompensation(tempHistory, historyA, historyB, lerpTime);
-                tempHistory = tempHistory.Slice(size);
-                historyA = historyA.Slice(size);
-                historyB = historyB.Slice(size);{applyLagCompensationText}
-                return origDataSize - historyA.Length;
+                base.ApplyLagCompensation(ref tempHistory, ref historyA, ref historyB, lerpTime);{applyLagCompensationText}
             }}
 
-            public override int LoadPredicted(ReadOnlySpan<byte> data)
+            public override void LoadPredicted(ref ReadOnlySpan<byte> data)
             {{
-                var origDataSize = data.Length;
-                data = data.Slice(base.LoadPredicted(data));{loadPredictedText}
-                return origDataSize - data.Length;
+                base.LoadPredicted(ref data);{loadPredictedText}
             }}
 
             public override void ReadChanged(ref DeltaFieldsData fieldsData)

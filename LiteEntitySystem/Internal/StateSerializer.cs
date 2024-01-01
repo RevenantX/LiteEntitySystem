@@ -280,7 +280,7 @@ namespace LiteEntitySystem.Internal
             bool isOwned = _entity.IsControlledBy(playerId);
             
             //at 0 ushort
-            ushort* fieldFlagAndSize = (ushort*)(resultData + startPos);
+            ushort* fieldFlagAndSize = (ushort*)(resultData + position);
             position += sizeof(ushort);
             
             if (Helpers.SequenceDiff(_versionChangedTick, playerTick) > 0)
@@ -292,15 +292,12 @@ namespace LiteEntitySystem.Internal
             } 
             else fixed (byte* lastEntityData = _latestEntityData) //make diff
             {
-                var fieldsBitSpan = new BitSpan(resultData + startPos + DiffHeaderSize, _classData.FieldsCount);
-                fieldsBitSpan.Clear();
                 //put entity id at 2
                 *(ushort*)(resultData + position) = *(ushort*)lastEntityData;
                 *fieldFlagAndSize = 0;
-                position += sizeof(ushort) + fieldsBitSpan.ByteCount;
-                int positionBeforeDeltaCompression = position;
+                position += sizeof(ushort) + _classData.FieldsFlagsSize;
                 var makeDiffData = new MakeDiffData(
-                    fieldsBitSpan, 
+                    new BitSpan(resultData + startPos + DiffHeaderSize, _classData.FieldsCount), 
                     _fieldChangeTicks,
                     playerTick,
                     lastEntityData + HeaderSize, 
@@ -309,7 +306,7 @@ namespace LiteEntitySystem.Internal
                 _entity.GetFieldManipulator().MakeDiff(ref makeDiffData);
                 position += makeDiffData.Position;
 
-                bool hasChanges = position > positionBeforeDeltaCompression;
+                bool hasChanges = makeDiffData.Position > 0;
                 //add RPCs count
                 ushort* rpcCount = (ushort*)(resultData + position);
                 *rpcCount = 0;

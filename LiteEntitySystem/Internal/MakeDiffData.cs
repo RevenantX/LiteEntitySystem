@@ -4,11 +4,11 @@ namespace LiteEntitySystem.Internal
 {
     public unsafe ref struct MakeDiffData
     {
-        public int Position;
+        internal int Position;
         public readonly bool IsOwned;
         private int _index;
         private readonly BitSpan _bitFlags;
-        private readonly byte* _sourceData;
+        private byte* _sourceData;
         private readonly byte* _destData;
         private readonly ushort[] _fieldChangeTicks;
         private readonly ushort _playerTick;
@@ -22,6 +22,7 @@ namespace LiteEntitySystem.Internal
             bool isOwned)
         {
             _bitFlags = bitFlags;
+            _bitFlags.Clear();
             _fieldChangeTicks = fieldChangeTicks;
             _playerTick = playerTick;
             _index = -1;
@@ -38,6 +39,7 @@ namespace LiteEntitySystem.Internal
             {
                 //Logger.Log($"SkipOld: {field.Name}");
                 //old data
+                _sourceData += sizeof(T);
                 return;
             }
             _bitFlags.SetBit(_index);

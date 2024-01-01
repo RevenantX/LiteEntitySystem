@@ -209,8 +209,9 @@ namespace LiteEntitySystem
                 
                 //for local interpolated
                 Helpers.ResizeOrCreate(ref _interpolateCurrentData[entity.Id], classMetadata.InterpolatedFieldsSize);
-                
-                entity.GetFieldManipulator().DumpInterpolated(new Span<byte>(_interpolateCurrentData[entity.Id], 0, classMetadata.InterpolatedFieldsSize));
+
+                var interpolationDataSpan = new Span<byte>(_interpolateCurrentData[entity.Id], 0, classMetadata.InterpolatedFieldsSize);
+                entity.GetFieldManipulator().DumpInterpolated(ref interpolationDataSpan);
                 Buffer.BlockCopy(_interpolateCurrentData[entity.Id], 0, _interpolatePrevData[entity.Id], 0, classMetadata.InterpolatedFieldsSize);
             }
         }
@@ -404,27 +405,6 @@ namespace LiteEntitySystem
             //remove processed inputs
             while (_inputCommands.Count > 0 && Helpers.SequenceDiff(_stateB.ProcessedTick, _inputCommands.Peek().Tick) >= 0)
                 _inputPool.Enqueue(_inputCommands.Dequeue().Data);
-            
-            /*
-            TODO: preload interpolate
-            for(int i = 0; i < _stateB.InterpolatedEntitiesCount; i++)
-            {
-                ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedEntities[i]];
-                var entity = EntitiesDict[preloadData.EntityId];
-                var classData = entity.GetClassMetadata();
-                var fields = classData.Fields;
-                fixed (byte* nextStateData = _stateB.Data, nextDataPtr = _interpolateCurrentData[entity.Id])
-                {
-                    for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
-                    {
-                        var interpolatedCache = preloadData.InterpolatedCaches[j];
-                        ref var field = ref fields[interpolatedCache.Field];
-                        //TODO: correct interpolate offset
-                        Unsafe.CopyBlock(nextDataPtr + field.FixedOffset, nextStateData + interpolatedCache.StateReaderOffset, field.Size);
-                    }
-                }
-            }
-            */
 
             return true;
         }
@@ -457,7 +437,8 @@ namespace LiteEntitySystem
             {
                 if(entity.IsRemoteControlled && !entity.GetClassMetadata().HasRemoteRollbackFields)
                     continue;
-                entity.GetFieldManipulator().LoadPredicted(_predictedEntitiesData[entity.Id]);
+                var predictedSpan = new ReadOnlySpan<byte>(_predictedEntitiesData[entity.Id]);
+                entity.GetFieldManipulator().LoadPredicted(ref predictedSpan);
             }
 
             //reapply input
@@ -493,9 +474,11 @@ namespace LiteEntitySystem
             //update local interpolated position
             foreach (var entity in AliveEntities)
             {
-                if(entity.IsLocal || !entity.IsLocalControlled)
-                    continue;
-                entity.GetFieldManipulator().DumpInterpolated(_interpolateCurrentData[entity.Id]);
+                if (!entity.IsLocal && entity.IsLocalControlled)
+                {
+                    var interpolationDataSpan = new Span<byte>(_interpolateCurrentData[entity.Id]);
+                    entity.GetFieldManipulator().DumpInterpolated(ref interpolationDataSpan);
+                }
             }
             
             //delete predicted
@@ -557,14 +540,16 @@ namespace LiteEntitySystem
                     fixed (byte* currentDataPtr = _interpolateCurrentData[entity.Id], prevDataPtr = _interpolatePrevData[entity.Id])
                     {
                         //restore previous
-                        fieldManipulator.LoadInterpolated(new Span<byte>(currentDataPtr, classMetadata.InterpolatedFieldsSize));
+                        var interpDataReadSpan = new ReadOnlySpan<byte>(currentDataPtr, classMetadata.InterpolatedFieldsSize);
+                        fieldManipulator.LoadInterpolated(ref interpDataReadSpan);
 
                         //update
                         entity.Update();
                 
                         //save current
                         Unsafe.CopyBlock(prevDataPtr, currentDataPtr, (uint)classMetadata.InterpolatedFieldsSize);
-                        fieldManipulator.DumpInterpolated(new Span<byte>(currentDataPtr, classMetadata.InterpolatedFieldsSize));
+                        var interpDataWriteSpan = new Span<byte>(currentDataPtr, classMetadata.InterpolatedFieldsSize);
+                        fieldManipulator.DumpInterpolated(ref interpDataWriteSpan);
                     }
                 }
                 else if(classMetadata.UpdateOnClient)
@@ -614,9 +599,11 @@ namespace LiteEntitySystem
                 _logicLerpMsec = (float)(_timer/_lerpTime);
             foreach (var entity in AliveEntities)
             {
+                var prevSpan = new ReadOnlySpan<byte>(_interpolatePrevData[entity.Id]);
+                var currSpan = new ReadOnlySpan<byte>(_interpolateCurrentData[entity.Id]);
                 entity.GetFieldManipulator().Interpolate(
-                    _interpolatePrevData[entity.Id],
-                    _interpolateCurrentData[entity.Id],
+                    ref prevSpan,
+                    ref currSpan,
                     !entity.IsLocalControlled && !entity.IsLocal ? _logicLerpMsec : localLerpT);
             }
 

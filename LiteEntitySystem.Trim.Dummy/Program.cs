@@ -72,7 +72,7 @@ partial class BasePlayer : PawnLogic
     [SyncVarFlags(SyncFlags.LagCompensated)]
     public SyncVar<float> FlagsTest2;
     
-    [BindOnChange(nameof(OnFlagTest3Changed))]
+    [SyncVarFlags(SyncFlags.Interpolated), BindOnChange(nameof(OnFlagTest3Changed))]
     public SyncVar<float> FlagsTest3;
 
     [SyncVarFlags(SyncFlags.Interpolated | SyncFlags.LagCompensated)]
@@ -134,7 +134,7 @@ partial class BasePlayer : PawnLogic
     
     private void RpcMethod2()
     {
-        //Console.WriteLine($"2GOT {TestSyncVar} {SyncStr.Value} {SyncStr2.Value} {SyncTest.IntVar} {SyncTest.IntVar2} {SyncTest.FloatVar} {SyncTest.FloatVar2}");
+        Console.WriteLine($"2GOT {TestSyncVar} {SyncStr.Value} {SyncStr2.Value} {SyncTest.IntVar} {SyncTest.IntVar2} {SyncTest.FloatVar} {SyncTest.FloatVar2} {FlagsTest3}");
     }
 }
 

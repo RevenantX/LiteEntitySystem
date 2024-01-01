@@ -55,14 +55,14 @@ namespace LiteEntitySystem.Internal
     
     public abstract class FieldManipulator
     {
-        public virtual int DumpInterpolated(Span<byte> data) => 0;
-        public virtual int LoadInterpolated(ReadOnlySpan<byte> data) => 0;
-        public virtual int Interpolate(ReadOnlySpan<byte> prev, ReadOnlySpan<byte> current, float fTimer) => 0;
+        public virtual void DumpInterpolated(ref Span<byte> data) { }
+        public virtual void LoadInterpolated(ref ReadOnlySpan<byte> data) { }
+        public virtual void Interpolate(ref ReadOnlySpan<byte> prev, ref ReadOnlySpan<byte> current, float fTimer) { }
         public virtual void PreloadInterpolation(ref PreloadInterpolationData preloadData) { }
-        public virtual int DumpLagCompensated(Span<byte> data) => 0;
-        public virtual int LoadLagCompensated(ReadOnlySpan<byte> data) => 0;
-        public virtual int ApplyLagCompensation(Span<byte> tempHistory, ReadOnlySpan<byte> historyA, ReadOnlySpan<byte> historyB, float lerpTime) => 0;
-        public virtual int LoadPredicted(ReadOnlySpan<byte> data) => 0;
+        public virtual void DumpLagCompensated(ref Span<byte> data) { }
+        public virtual void LoadLagCompensated(ref ReadOnlySpan<byte> data) { }
+        public virtual void ApplyLagCompensation(ref Span<byte> tempHistory, ref ReadOnlySpan<byte> historyA, ref ReadOnlySpan<byte> historyB, float lerpTime) { }
+        public virtual void LoadPredicted(ref ReadOnlySpan<byte> data) { }
         public virtual void ReadChanged(ref DeltaFieldsData fieldsData) { }
         public virtual void WriteChanged(ref WriteFieldsData fieldsData) { }
         public virtual void MakeDiff(ref MakeDiffData makeDiffData) { }
