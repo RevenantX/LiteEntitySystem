@@ -596,15 +596,23 @@ namespace LiteEntitySystem
             //interpolation
             float localLerpT = LerpFactor;
             if (_stateB != null)
+            {
                 _logicLerpMsec = (float)(_timer/_lerpTime);
+                for (int i = 0; i < _stateB.InterpolatedEntitiesCount; i++)
+                {
+                    var entity = _stateB.InterpolatedEntities[i];
+                    var prevSpan = new ReadOnlySpan<byte>(_interpolatePrevData[entity.Id]);
+                    var currSpan = new ReadOnlySpan<byte>(_interpolateCurrentData[entity.Id]);
+                    entity.GetFieldManipulator().Interpolate(ref prevSpan, ref currSpan, _logicLerpMsec);
+                }
+            }
             foreach (var entity in AliveEntities)
             {
+                if (!entity.IsLocalControlled && !entity.IsLocal)
+                    continue;
                 var prevSpan = new ReadOnlySpan<byte>(_interpolatePrevData[entity.Id]);
                 var currSpan = new ReadOnlySpan<byte>(_interpolateCurrentData[entity.Id]);
-                entity.GetFieldManipulator().Interpolate(
-                    ref prevSpan,
-                    ref currSpan,
-                    !entity.IsLocalControlled && !entity.IsLocal ? _logicLerpMsec : localLerpT);
+                entity.GetFieldManipulator().Interpolate(ref prevSpan, ref currSpan, localLerpT);
             }
 
             //send buffered input
@@ -754,8 +762,12 @@ namespace LiteEntitySystem
                         Helpers.ResizeOrCreate(ref _predictedEntitiesData[entity.Id], cd.PredictedSize);
                         _predictedEntityFilter.Add(entity);
                     }
-                    if(cd.InterpolatedFieldsSize > 0)
+
+                    if (cd.InterpolatedFieldsSize > 0)
+                    {
                         Helpers.ResizeOrCreate(ref _interpolateCurrentData[entity.Id], cd.InterpolatedFieldsSize);
+                        Helpers.ResizeOrCreate(ref _interpolatePrevData[entity.Id], cd.InterpolatedFieldsSize);
+                    }
 
                     Helpers.ResizeIfFull(ref _entitiesToConstruct, _entitiesToConstructCount);
                     _entitiesToConstruct[_entitiesToConstructCount++] = entity;
@@ -782,7 +794,7 @@ namespace LiteEntitySystem
                 FullSync = fullSync,
                 WriteInterpolationData = entity.IsRemoteControlled || fullSync,
                 RawData = new Span<byte>(rawData + readerPosition, rawDataSize - readerPosition),
-                InterpolatedData = _interpolateCurrentData[entity.Id],
+                InterpolatedData = _interpolatePrevData[entity.Id],
                 PredictedData = _predictedEntitiesData[entity.Id],
                 ReaderPosition = readerPosition,
                 SyncCallInfos = _syncCalls,

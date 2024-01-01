@@ -26,7 +26,7 @@ namespace LiteEntitySystem.Internal
             return contains;
         }
 
-        public void BindOnChange(SpanAction<InternalEntity, byte> onChangeAction, InternalEntity entity, int prevDataPos)
+        public void OnChange(SpanAction<InternalEntity, byte> onChangeAction, InternalEntity entity, int prevDataPos)
         {
             SyncCallInfos[SyncCallsCount++] = new ClientEntityManager.SyncCallInfo(onChangeAction, entity, prevDataPos);
         }

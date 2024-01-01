@@ -41,6 +41,8 @@ namespace LiteEntitySystem.Internal
         public StatePreloadData[] PreloadDataArray = new StatePreloadData[32];
         public int PreloadDataCount;
         public int TotalPartsCount;
+        public InternalEntity[] InterpolatedEntities = new InternalEntity[8];
+        public int InterpolatedEntitiesCount;
 
         private int _syncableRemoteCallsCount;
         private RemoteCallsCache[] _syncableRemoteCallCaches = new RemoteCallsCache[32];
@@ -99,7 +101,7 @@ namespace LiteEntitySystem.Internal
                     initialReaderPosition +
                     StateSerializer.DiffHeaderSize +
                     fieldBits.ByteCount;
-                
+
                 int stateReaderOffset = preloadData.DataOffset;
 
                 //preload interpolation info
@@ -112,6 +114,11 @@ namespace LiteEntitySystem.Internal
                         nextDataPtr
                     );
                     entity.GetFieldManipulator().PreloadInterpolation(ref preloadInterpData);
+                    if (preloadInterpData.Position > 0 && entity.IsRemoteControlled)
+                    {
+                        Helpers.ResizeIfFull(ref InterpolatedEntities, InterpolatedEntitiesCount);
+                        InterpolatedEntities[InterpolatedEntitiesCount++] = entity;
+                    }
                     stateReaderOffset += preloadInterpData.Position;
                 }
 
@@ -230,6 +237,7 @@ namespace LiteEntitySystem.Internal
             Tick = tick;
             Array.Clear(_receivedParts, 0, _maxReceivedPart+1);
             PreloadDataCount = 0;
+            InterpolatedEntitiesCount = 0;
             _maxReceivedPart = 0;
             _receivedPartsCount = 0;
             TotalPartsCount = 0;
