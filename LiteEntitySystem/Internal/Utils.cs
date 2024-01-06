@@ -18,7 +18,7 @@ namespace LiteEntitySystem.Internal
         public static void ResizeOrCreate<T>(ref T[] arr, int count)
         {
             if (arr == null)
-                arr = new T[count];
+                arr = new T[count > 8 ? count : 8];
             else if (count >= arr.Length)
                 Array.Resize(ref arr, count*2);
         }

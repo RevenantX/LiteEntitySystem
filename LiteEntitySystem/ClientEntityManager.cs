@@ -637,21 +637,19 @@ namespace LiteEntitySystem
             {
                 //remote interpolation
                 _logicLerpMsec = (float)(_timer/_lerpTime);
-                for(int i = 0; i < _stateB.InterpolatedCount; i++)
+                for(int i = 0; i < _stateB.InterpolatedEntityCount; i++)
                 {
-                    ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedFields[i]];
+                    ref var preloadData = ref _stateB.PreloadDataArray[_stateB.InterpolatedEntities[i]];
                     var entity = EntitiesDict[preloadData.EntityId];
-                    var fields = entity.GetClassData().Fields;
-                    fixed (byte* initialDataPtr = _interpolatedInitialData[entity.Id], nextDataPtr = _stateB.Data)
+                    fixed (byte* initialDataPtr = _interpolatedInitialData[preloadData.EntityId], nextDataPtr = _stateB.Data)
                     {
                         for (int j = 0; j < preloadData.InterpolatedCachesCount; j++)
                         {
                             var interpolatedCache = preloadData.InterpolatedCaches[j];
-                            var field = fields[interpolatedCache.Field];
-                            field.TypeProcessor.SetInterpolation(
+                            interpolatedCache.TypeProcessor.SetInterpolation(
                                 entity, 
-                                field.Offset,
-                                initialDataPtr + field.FixedOffset,
+                                interpolatedCache.FieldOffset,
+                                initialDataPtr + interpolatedCache.FieldFixedOffset,
                                 nextDataPtr + interpolatedCache.StateReaderOffset, 
                                 _logicLerpMsec);
                         }
