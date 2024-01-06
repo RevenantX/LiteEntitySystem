@@ -248,7 +248,7 @@ class Program
         var player = sem.AddPlayer(serverPeer);
         var playerEntity = sem.AddEntity<BasePlayerTest>();
         //var testPlayerEntity = sem.AddEntity<BasePlayerTest>();
-        var playerController = sem.AddController<BasePlayerController>(player, e => e.StartControl(playerEntity));
+        var playerController = sem.AddController<BasePlayerController>(player, playerEntity);
         for (int i = 0; i < 1000; i++)
         {
             cem.Update();
