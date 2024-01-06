@@ -20,6 +20,13 @@ namespace LiteEntitySystem
                 value = *(T*)rawData;
             return sizeof(T);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe T ReadStruct<T>(this ReadOnlySpan<byte> data) where T : unmanaged
+        {
+            fixed (byte* rawData = data) 
+                return *(T*)rawData;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe int SizeOfStruct<T>() where T : unmanaged

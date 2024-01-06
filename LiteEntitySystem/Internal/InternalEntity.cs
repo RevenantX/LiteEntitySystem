@@ -129,21 +129,13 @@ namespace LiteEntitySystem.Internal
         internal void RegisterRpcInternal()
         {
             ref var classData = ref GetClassData();
-            //load cache and/or init RpcIds
+            //load cache and/or init syncable rpc flags
             for (ushort i = 0; i < classData.RpcOffsets.Length; i++)
             {
                 var rpcOffset = classData.RpcOffsets[i];
-                if (rpcOffset.SyncableOffset == -1)
-                {
-                    ref var remoteCall = ref RefMagic.RefFieldValue<RemoteCall>(this, rpcOffset.Offset);
-                    remoteCall = new RemoteCall(i, classData.RemoteCallsServer[i]);
-                }
-                else
+                if (rpcOffset.SyncableOffset >= 0)
                 {
                     var syncable = RefMagic.RefFieldValue<SyncableField>(this, rpcOffset.SyncableOffset);
-                    ref var remoteCall = ref RefMagic.RefFieldValue<RemoteCall>(syncable, rpcOffset.Offset);
-                    remoteCall = new RemoteCall(i, classData.RemoteCallsServer[i]);
-                    syncable.ParentEntityId = Id;
                     if (rpcOffset.Flags.HasFlagFast(SyncFlags.OnlyForOwner))
                         syncable.Flags = ExecuteFlags.SendToOwner;
                     else if (rpcOffset.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
@@ -154,6 +146,7 @@ namespace LiteEntitySystem.Internal
             }
             if(!classData.IsRpcBound)
             {
+                //setup field ids for BindOnChange
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
                     ref var field = ref classData.Fields[i];
@@ -163,13 +156,16 @@ namespace LiteEntitySystem.Internal
                         id = (byte)i;
                     }
                 }
+
+                var syncablesRegistrator = new SyncableRPCRegistrator(classData.RemoteCallsClient);
                 for (int i = 0; i < classData.SyncableFields.Length; i++)
                 {
                     var syncField = RefMagic.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
-                    syncField.ParentEntityId = Id;
-                    syncField.InternalInit(new SyncableRPCRegistrator(this));
+                    syncField.ParentEntity = this;
+                    syncField.RegisterRPC(ref syncablesRegistrator);
                 }
-                RegisterRPC(new RPCRegistrator());
+                var rpcRegistrator = new RPCRegistrator(syncablesRegistrator.RpcId);
+                RegisterRPC(ref rpcRegistrator);
                 //Logger.Log($"RegisterRPCs for class: {classData.ClassId}");
                 classData.IsRpcBound = true;
             }
@@ -179,7 +175,7 @@ namespace LiteEntitySystem.Internal
                 for (int i = 0; i < classData.SyncableFields.Length; i++)
                 {
                     var syncField = RefMagic.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
-                    syncField.ParentEntityId = Id;
+                    syncField.ParentEntity = this;
                 }
             }
         }
@@ -206,7 +202,7 @@ namespace LiteEntitySystem.Internal
         /// Method for registering RPCs and OnChange notifications
         /// </summary>
         /// <param name="r"></param>
-        protected virtual void RegisterRPC(in RPCRegistrator r)
+        protected virtual void RegisterRPC(ref RPCRegistrator r)
         {
             r.BindOnChange(this, ref _isDestroyed, OnDestroyChange);
         }

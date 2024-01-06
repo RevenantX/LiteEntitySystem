@@ -11,8 +11,8 @@ namespace LiteEntitySystem.Extensions
         }
         
         private readonly T[] _data;
-        private RemoteCall<SetCallData> _setRpcAction;
-        private RemoteCallSpan<T> _initArrayAction;
+        private static RemoteCall<SetCallData> _setRpcAction;
+        private static RemoteCallSpan<T> _initArrayAction;
 
         public readonly int Length;
 
@@ -27,7 +27,7 @@ namespace LiteEntitySystem.Extensions
             ExecuteRPC(_initArrayAction, _data);
         }
 
-        protected override void RegisterRPC(in SyncableRPCRegistrator r)
+        protected internal override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, SetValueRPC, ref _setRpcAction);
             r.CreateClientAction(this, InitArrayRPC, ref _initArrayAction);

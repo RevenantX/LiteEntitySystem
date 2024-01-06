@@ -290,9 +290,9 @@ namespace LiteEntitySystem
             }
         }
 
-        protected override void RegisterRPC(in RPCRegistrator r)
+        protected override void RegisterRPC(ref RPCRegistrator r)
         {
-            base.RegisterRPC(in r);
+            base.RegisterRPC(ref r);
             r.BindOnChange(this, ref _parentId, OnParentChange);
             r.BindOnChange(this, ref InternalOwnerId, OnOwnerChange);
         }

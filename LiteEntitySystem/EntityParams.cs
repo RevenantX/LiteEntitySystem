@@ -1,6 +1,6 @@
 namespace LiteEntitySystem
 {
-    public readonly struct EntityParams
+    public readonly ref struct EntityParams
     {
         public readonly ushort ClassId;
         public readonly ushort Id;

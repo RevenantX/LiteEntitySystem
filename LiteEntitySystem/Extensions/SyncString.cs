@@ -11,7 +11,7 @@ namespace LiteEntitySystem.Extensions
         private string _string;
         private int _size;
 
-        private RemoteCallSpan<byte> _setStringClientCall;
+        private static RemoteCallSpan<byte> _setStringClientCall;
 
         public string Value
         {
@@ -27,7 +27,7 @@ namespace LiteEntitySystem.Extensions
             }
         }
 
-        protected override void RegisterRPC(in SyncableRPCRegistrator r)
+        protected internal override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, SetNewString, ref _setStringClientCall);
         }

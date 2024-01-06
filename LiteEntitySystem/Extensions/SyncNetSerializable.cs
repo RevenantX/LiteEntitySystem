@@ -22,7 +22,7 @@ namespace LiteEntitySystem.Extensions
             }
         }
 
-        private RemoteCallSpan<byte> _initAction;
+        private static RemoteCallSpan<byte> _initAction;
 
         private readonly Func<T> _constructor;
 
@@ -31,7 +31,7 @@ namespace LiteEntitySystem.Extensions
             _constructor = constructor;
         }
 
-        protected override void RegisterRPC(in SyncableRPCRegistrator r)
+        protected internal override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, Init, ref _initAction);
         }

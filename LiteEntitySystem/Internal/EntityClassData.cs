@@ -17,13 +17,11 @@ namespace LiteEntitySystem.Internal
     internal readonly struct RpcOffset
     {
         public readonly int SyncableOffset;
-        public readonly int Offset;
         public readonly SyncFlags Flags;
 
-        public RpcOffset(int syncableOffset, int offset, SyncFlags executeFlags)
+        public RpcOffset(int syncableOffset,SyncFlags executeFlags)
         {
             SyncableOffset = syncableOffset;
-            Offset = offset;
             Flags = executeFlags;
         }
     }
@@ -53,7 +51,6 @@ namespace LiteEntitySystem.Internal
         public readonly bool IsLocalOnly;
         public readonly EntityConstructor<InternalEntity> EntityConstructor;
         public readonly MethodCallDelegate[] RemoteCallsClient;
-        public readonly Delegate[] RemoteCallsServer;
         
         private readonly bool _isCreated;
         private readonly Type[] _baseTypes;
@@ -132,7 +129,8 @@ namespace LiteEntitySystem.Internal
             const BindingFlags bindingFlags = BindingFlags.Instance |
                                               BindingFlags.Public |
                                               BindingFlags.NonPublic |
-                                              BindingFlags.DeclaredOnly;
+                                              BindingFlags.DeclaredOnly |
+                                              BindingFlags.Static;
             
             foreach (var baseType in baseTypes)
             {
@@ -150,7 +148,9 @@ namespace LiteEntitySystem.Internal
                     
                     if(IsRemoteCallType(ft))
                     {
-                        remoteCallOffsets.Add(new RpcOffset(-1, offset, syncFlags));
+                        if (!field.IsStatic)
+                            throw new Exception($"RemoteCalls should be static! (Class: {entType} Field: {field.Name})");
+                        remoteCallOffsets.Add(new RpcOffset(-1, syncFlags));
                     }
                     //syncvars
                     else if (ft.IsValueType && ft.IsGenericType && !ft.IsArray)
@@ -208,8 +208,9 @@ namespace LiteEntitySystem.Internal
                                 var syncableFieldType = syncableField.FieldType;
                                 if(IsRemoteCallType(syncableFieldType))
                                 {
-                                    int rpcOffset = Utils.GetFieldOffset(syncableField);
-                                    remoteCallOffsets.Add(new RpcOffset(offset, rpcOffset, syncFlags));
+                                    if (!syncableField.IsStatic)
+                                        throw new Exception($"RemoteCalls should be static! (Class: {entType} Field: {field.Name})");
+                                    remoteCallOffsets.Add(new RpcOffset(offset, syncFlags));
                                     continue;
                                 }
                                 if (!syncableFieldType.IsValueType || !syncableFieldType.IsGenericType || syncableFieldType.GetGenericTypeDefinition() != typeof(SyncVar<>)) 
@@ -251,7 +252,6 @@ namespace LiteEntitySystem.Internal
             LagCompensatedFields = lagCompensatedFields.ToArray();
             LagCompensatedCount = LagCompensatedFields.Length;
             RemoteCallsClient = new MethodCallDelegate[RpcOffsets.Length];
-            RemoteCallsServer = new Delegate[RpcOffsets.Length];
 
             int fixedOffset = 0;
             int predictedOffset = 0;
