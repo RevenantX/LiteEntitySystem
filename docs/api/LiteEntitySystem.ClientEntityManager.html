@@ -597,6 +597,84 @@
 </h3>
 
 
+  <a id="LiteEntitySystem_ClientEntityManager_Create_" data-uid="LiteEntitySystem.ClientEntityManager.Create*"></a>
+  <h4 id="LiteEntitySystem_ClientEntityManager_Create__1_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_Transport_AbstractNetPeer_System_Byte_System_Byte_" data-uid="LiteEntitySystem.ClientEntityManager.Create``1(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,System.Byte)">Create&lt;TInput&gt;(EntityTypesMap, AbstractNetPeer, byte, byte)</h4>
+  <div class="markdown level1 summary"><p>Simplified constructor</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ClientEntityManager Create&lt;TInput&gt;(EntityTypesMap typesMap, AbstractNetPeer netPeer, byte headerByte, byte framesPerSecond) where TInput : unmanaged</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.EntityTypesMap.html">EntityTypesMap</a></td>
+        <td><span class="parametername">typesMap</span></td>
+        <td><p>EntityTypesMap with registered entity types</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
+        <td><span class="parametername">netPeer</span></td>
+        <td><p>Local AbstractPeer</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
+        <td><span class="parametername">headerByte</span></td>
+        <td><p>Header byte that will be used for packets (to distinguish entity system packets)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
+        <td><span class="parametername">framesPerSecond</span></td>
+        <td><p>Fixed framerate of game logic</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.ClientEntityManager.html">ClientEntityManager</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TInput</span></td>
+        <td><p>Main input packet type</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+
   <a id="LiteEntitySystem_ClientEntityManager_Deserialize_" data-uid="LiteEntitySystem.ClientEntityManager.Deserialize*"></a>
   <h4 id="LiteEntitySystem_ClientEntityManager_Deserialize_System_ReadOnlySpan_System_Byte__" data-uid="LiteEntitySystem.ClientEntityManager.Deserialize(System.ReadOnlySpan{System.Byte})">Deserialize(ReadOnlySpan&lt;byte&gt;)</h4>
   <div class="markdown level1 summary"></div>
@@ -675,7 +753,7 @@
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
+                <h5>In this article</h5>
                 <div></div>
               </nav>
             </div>

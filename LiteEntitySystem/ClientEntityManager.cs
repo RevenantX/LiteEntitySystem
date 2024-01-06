@@ -166,6 +166,28 @@ namespace LiteEntitySystem
                 _statesPool.Enqueue(new ServerStateData());
             }
         }
+        
+        /// <summary>
+        /// Simplified constructor
+        /// </summary>
+        /// <param name="typesMap">EntityTypesMap with registered entity types</param>
+        /// <param name="netPeer">Local AbstractPeer</param>
+        /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
+        /// <param name="framesPerSecond">Fixed framerate of game logic</param>
+        /// <typeparam name="TInput">Main input packet type</typeparam>
+        public static ClientEntityManager Create<TInput>(
+            EntityTypesMap typesMap, 
+            AbstractNetPeer netPeer, 
+            byte headerByte, 
+            byte framesPerSecond) where TInput : unmanaged
+        {
+            return new ClientEntityManager(
+                typesMap, 
+                new InputProcessor<TInput>(),
+                netPeer,
+                headerByte,
+                framesPerSecond);
+        }
 
         internal override void RemoveEntity(InternalEntity e)
         {

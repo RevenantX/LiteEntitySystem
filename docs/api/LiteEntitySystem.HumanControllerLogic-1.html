@@ -464,60 +464,13 @@ public abstract class HumanControllerLogic&lt;TInput&gt; : ControllerLogic, ICom
   <div><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_RegisterRPC_LiteEntitySystem_RPCRegistrator__">InternalEntity.RegisterRPC(in RPCRegistrator)</a></div>
 
 
-  <a id="LiteEntitySystem_HumanControllerLogic_1_SendRequest_" data-uid="LiteEntitySystem.HumanControllerLogic`1.SendRequest*"></a>
-  <h4 id="LiteEntitySystem_HumanControllerLogic_1_SendRequest__1___0_System_Action_System_Boolean__" data-uid="LiteEntitySystem.HumanControllerLogic`1.SendRequest``1(``0,System.Action{System.Boolean})">SendRequest&lt;T&gt;(T, Action&lt;bool&gt;)</h4>
+  <a id="LiteEntitySystem_HumanControllerLogic_1_SendRequestStruct_" data-uid="LiteEntitySystem.HumanControllerLogic`1.SendRequestStruct*"></a>
+  <h4 id="LiteEntitySystem_HumanControllerLogic_1_SendRequestStruct__1___0_" data-uid="LiteEntitySystem.HumanControllerLogic`1.SendRequestStruct``1(``0)">SendRequestStruct&lt;T&gt;(T)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void SendRequest&lt;T&gt;(T request, Action&lt;bool&gt; onResult) where T : class, new()</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><span class="parametername">request</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</td>
-        <td><span class="parametername">onResult</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_HumanControllerLogic_1_SendRequest_" data-uid="LiteEntitySystem.HumanControllerLogic`1.SendRequest*"></a>
-  <h4 id="LiteEntitySystem_HumanControllerLogic_1_SendRequest__1___0_" data-uid="LiteEntitySystem.HumanControllerLogic`1.SendRequest``1(``0)">SendRequest&lt;T&gt;(T)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void SendRequest&lt;T&gt;(T request) where T : class, new()</code></pre>
+    <pre><code class="lang-csharp hljs">protected void SendRequestStruct&lt;T&gt;(T request) where T : struct, INetSerializable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -600,13 +553,13 @@ public abstract class HumanControllerLogic&lt;TInput&gt; : ControllerLogic, ICom
   </table>
 
 
-  <a id="LiteEntitySystem_HumanControllerLogic_1_SendRequestStruct_" data-uid="LiteEntitySystem.HumanControllerLogic`1.SendRequestStruct*"></a>
-  <h4 id="LiteEntitySystem_HumanControllerLogic_1_SendRequestStruct__1___0_" data-uid="LiteEntitySystem.HumanControllerLogic`1.SendRequestStruct``1(``0)">SendRequestStruct&lt;T&gt;(T)</h4>
+  <a id="LiteEntitySystem_HumanControllerLogic_1_SendRequest_" data-uid="LiteEntitySystem.HumanControllerLogic`1.SendRequest*"></a>
+  <h4 id="LiteEntitySystem_HumanControllerLogic_1_SendRequest__1___0_" data-uid="LiteEntitySystem.HumanControllerLogic`1.SendRequest``1(``0)">SendRequest&lt;T&gt;(T)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void SendRequestStruct&lt;T&gt;(T request) where T : struct, INetSerializable</code></pre>
+    <pre><code class="lang-csharp hljs">protected void SendRequest&lt;T&gt;(T request) where T : class, new()</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -642,13 +595,13 @@ public abstract class HumanControllerLogic&lt;TInput&gt; : ControllerLogic, ICom
   </table>
 
 
-  <a id="LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequest_" data-uid="LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequest*"></a>
-  <h4 id="LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequest__1_System_Action___0__" data-uid="LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequest``1(System.Action{``0})">SubscribeToClientRequest&lt;T&gt;(Action&lt;T&gt;)</h4>
+  <a id="LiteEntitySystem_HumanControllerLogic_1_SendRequest_" data-uid="LiteEntitySystem.HumanControllerLogic`1.SendRequest*"></a>
+  <h4 id="LiteEntitySystem_HumanControllerLogic_1_SendRequest__1___0_System_Action_System_Boolean__" data-uid="LiteEntitySystem.HumanControllerLogic`1.SendRequest``1(``0,System.Action{System.Boolean})">SendRequest&lt;T&gt;(T, Action&lt;bool&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void SubscribeToClientRequest&lt;T&gt;(Action&lt;T&gt; onRequestReceived) where T : class, new()</code></pre>
+    <pre><code class="lang-csharp hljs">protected void SendRequest&lt;T&gt;(T request, Action&lt;bool&gt; onResult) where T : class, new()</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -661,50 +614,13 @@ public abstract class HumanControllerLogic&lt;TInput&gt; : ControllerLogic, ICom
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
-        <td><span class="parametername">onRequestReceived</span></td>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">request</span></td>
         <td></td>
       </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
       <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequest_" data-uid="LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequest*"></a>
-  <h4 id="LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequest__1_System_Func___0_System_Boolean__" data-uid="LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequest``1(System.Func{``0,System.Boolean})">SubscribeToClientRequest&lt;T&gt;(Func&lt;T, bool&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void SubscribeToClientRequest&lt;T&gt;(Func&lt;T, bool&gt; onRequestReceived) where T : class, new()</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</td>
-        <td><span class="parametername">onRequestReceived</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</td>
+        <td><span class="parametername">onResult</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -808,6 +724,90 @@ public abstract class HumanControllerLogic&lt;TInput&gt; : ControllerLogic, ICom
       </tr>
     </tbody>
   </table>
+
+
+  <a id="LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequest_" data-uid="LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequest*"></a>
+  <h4 id="LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequest__1_System_Action___0__" data-uid="LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequest``1(System.Action{``0})">SubscribeToClientRequest&lt;T&gt;(Action&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void SubscribeToClientRequest&lt;T&gt;(Action&lt;T&gt; onRequestReceived) where T : class, new()</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
+        <td><span class="parametername">onRequestReceived</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequest_" data-uid="LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequest*"></a>
+  <h4 id="LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequest__1_System_Func___0_System_Boolean__" data-uid="LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequest``1(System.Func{``0,System.Boolean})">SubscribeToClientRequest&lt;T&gt;(Func&lt;T, bool&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void SubscribeToClientRequest&lt;T&gt;(Func&lt;T, bool&gt; onRequestReceived) where T : class, new()</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</td>
+        <td><span class="parametername">onRequestReceived</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable&lt;T&gt;</a>
@@ -823,7 +823,7 @@ public abstract class HumanControllerLogic&lt;TInput&gt; : ControllerLogic, ICom
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
+                <h5>In this article</h5>
                 <div></div>
               </nav>
             </div>

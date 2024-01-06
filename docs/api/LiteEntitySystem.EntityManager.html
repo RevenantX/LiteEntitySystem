@@ -142,30 +142,6 @@
 </h3>
 
 
-  <h4 id="LiteEntitySystem_EntityManager__tick" data-uid="LiteEntitySystem.EntityManager._tick">_tick</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected ushort _tick</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
   <h4 id="LiteEntitySystem_EntityManager_AliveEntities" data-uid="LiteEntitySystem.EntityManager.AliveEntities">AliveEntities</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
@@ -673,6 +649,30 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <h4 id="LiteEntitySystem_EntityManager__tick" data-uid="LiteEntitySystem.EntityManager._tick">_tick</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected ushort _tick</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -1200,6 +1200,49 @@
   </table>
 
 
+  <a id="LiteEntitySystem_EntityManager_GetSingletonSafe_" data-uid="LiteEntitySystem.EntityManager.GetSingletonSafe*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_GetSingletonSafe__1" data-uid="LiteEntitySystem.EntityManager.GetSingletonSafe``1">GetSingletonSafe&lt;T&gt;()</h4>
+  <div class="markdown level1 summary"><p>Get singleton entity</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public T GetSingletonSafe&lt;T&gt;() where T : SingletonEntityLogic</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><p>Singleton entity or null if it didn't exists</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Singleton entity type</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+
   <a id="LiteEntitySystem_EntityManager_GetSingleton_" data-uid="LiteEntitySystem.EntityManager.GetSingleton*"></a>
   <h4 id="LiteEntitySystem_EntityManager_GetSingleton__1" data-uid="LiteEntitySystem.EntityManager.GetSingleton``1">GetSingleton&lt;T&gt;()</h4>
   <div class="markdown level1 summary"><p>Get existing singleton entity</p>
@@ -1266,49 +1309,6 @@
         <td><span class="xref">T</span></td>
         <td><span class="parametername">singleton</span></td>
         <td><p>Singleton entity, can throw exceptions on invalid type</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td><p>Singleton entity type</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_EntityManager_GetSingletonSafe_" data-uid="LiteEntitySystem.EntityManager.GetSingletonSafe*"></a>
-  <h4 id="LiteEntitySystem_EntityManager_GetSingletonSafe__1" data-uid="LiteEntitySystem.EntityManager.GetSingletonSafe``1">GetSingletonSafe&lt;T&gt;()</h4>
-  <div class="markdown level1 summary"><p>Get singleton entity</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T GetSingletonSafe&lt;T&gt;() where T : SingletonEntityLogic</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><p>Singleton entity or null if it didn't exists</p>
 </td>
       </tr>
     </tbody>
@@ -1608,7 +1608,7 @@ throws exception if entity is null or invalid type</p>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
+                <h5>In this article</h5>
                 <div></div>
               </nav>
             </div>

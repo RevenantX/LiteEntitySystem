@@ -399,6 +399,79 @@
 
 
   <a id="LiteEntitySystem_ServerEntityManager_AddController_" data-uid="LiteEntitySystem.ServerEntityManager.AddController*"></a>
+  <h4 id="LiteEntitySystem_ServerEntityManager_AddController__1_LiteEntitySystem_NetPlayer_LiteEntitySystem_PawnLogic_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddController``1(LiteEntitySystem.NetPlayer,LiteEntitySystem.PawnLogic,System.Action{``0})">AddController&lt;T&gt;(NetPlayer, PawnLogic, Action&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"><p>Add new player controller entity and start controlling entityToControl</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public T AddController&lt;T&gt;(NetPlayer owner, PawnLogic entityToControl, Action&lt;T&gt; initMethod = null) where T : ControllerLogic</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
+        <td><span class="parametername">owner</span></td>
+        <td><p>Player that owns this controller</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.PawnLogic.html">PawnLogic</a></td>
+        <td><span class="parametername">entityToControl</span></td>
+        <td><p>pawn that will be controlled</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
+        <td><span class="parametername">initMethod</span></td>
+        <td><p>Method that will be called after entity construction</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><p>Created entity or null in case of limit</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Entity type</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_ServerEntityManager_AddController_" data-uid="LiteEntitySystem.ServerEntityManager.AddController*"></a>
   <h4 id="LiteEntitySystem_ServerEntityManager_AddController__1_LiteEntitySystem_NetPlayer_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddController``1(LiteEntitySystem.NetPlayer,System.Action{``0})">AddController&lt;T&gt;(NetPlayer, Action&lt;T&gt;)</h4>
   <div class="markdown level1 summary"><p>Add new player controller entity</p>
 </div>
@@ -693,6 +766,84 @@
       <tr>
         <td><span class="parametername">T</span></td>
         <td><p>Entity type</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_ServerEntityManager_Create_" data-uid="LiteEntitySystem.ServerEntityManager.Create*"></a>
+  <h4 id="LiteEntitySystem_ServerEntityManager_Create__1_LiteEntitySystem_EntityTypesMap_System_Byte_System_Byte_LiteEntitySystem_ServerSendRate_" data-uid="LiteEntitySystem.ServerEntityManager.Create``1(LiteEntitySystem.EntityTypesMap,System.Byte,System.Byte,LiteEntitySystem.ServerSendRate)">Create&lt;TInput&gt;(EntityTypesMap, byte, byte, ServerSendRate)</h4>
+  <div class="markdown level1 summary"><p>Simplified constructor</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ServerEntityManager Create&lt;TInput&gt;(EntityTypesMap typesMap, byte packetHeader, byte framesPerSecond, ServerSendRate sendRate) where TInput : unmanaged</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.EntityTypesMap.html">EntityTypesMap</a></td>
+        <td><span class="parametername">typesMap</span></td>
+        <td><p>EntityTypesMap with registered entity types</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
+        <td><span class="parametername">packetHeader</span></td>
+        <td><p>Header byte that will be used for packets (to distinguish entity system packets)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
+        <td><span class="parametername">framesPerSecond</span></td>
+        <td><p>Fixed framerate of game logic</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.ServerSendRate.html">ServerSendRate</a></td>
+        <td><span class="parametername">sendRate</span></td>
+        <td><p>Send rate of server (depends on fps)</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.ServerEntityManager.html">ServerEntityManager</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TInput</span></td>
+        <td><p>Main input packet type</p>
 </td>
       </tr>
     </tbody>
@@ -1097,7 +1248,7 @@
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
+                <h5>In this article</h5>
                 <div></div>
               </nav>
             </div>

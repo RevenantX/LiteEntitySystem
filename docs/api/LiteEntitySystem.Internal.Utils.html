@@ -133,12 +133,12 @@
 
 
   <a id="LiteEntitySystem_Internal_Utils_IsBitSet_" data-uid="LiteEntitySystem.Internal.Utils.IsBitSet*"></a>
-  <h4 id="LiteEntitySystem_Internal_Utils_IsBitSet_System_Byte___System_Int32_System_Int32_" data-uid="LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte[],System.Int32,System.Int32)">IsBitSet(byte[], int, int)</h4>
+  <h4 id="LiteEntitySystem_Internal_Utils_IsBitSet_System_Byte__System_Int32_" data-uid="LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte*,System.Int32)">IsBitSet(byte*, int)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool IsBitSet(byte[] byteArray, int offset, int bitNumber)</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool IsBitSet(byte* byteArray, int bitNumber)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -151,13 +151,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>*</td>
         <td><span class="parametername">byteArray</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td><span class="parametername">offset</span></td>
         <td></td>
       </tr>
       <tr>
@@ -185,12 +180,12 @@
 
 
   <a id="LiteEntitySystem_Internal_Utils_IsBitSet_" data-uid="LiteEntitySystem.Internal.Utils.IsBitSet*"></a>
-  <h4 id="LiteEntitySystem_Internal_Utils_IsBitSet_System_Byte__System_Int32_" data-uid="LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte*,System.Int32)">IsBitSet(byte*, int)</h4>
+  <h4 id="LiteEntitySystem_Internal_Utils_IsBitSet_System_Byte___System_Int32_System_Int32_" data-uid="LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte[],System.Int32,System.Int32)">IsBitSet(byte[], int, int)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool IsBitSet(byte* byteArray, int bitNumber)</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool IsBitSet(byte[] byteArray, int offset, int bitNumber)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -203,8 +198,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>*</td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</td>
         <td><span class="parametername">byteArray</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">offset</span></td>
         <td></td>
       </tr>
       <tr>
@@ -641,7 +641,7 @@
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
+                <h5>In this article</h5>
                 <div></div>
               </nav>
             </div>

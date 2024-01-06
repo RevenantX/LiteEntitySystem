@@ -86,6 +86,38 @@
 
 
   <a id="LiteEntitySystem_Internal_BitSpan__ctor_" data-uid="LiteEntitySystem.Internal.BitSpan.#ctor*"></a>
+  <h4 id="LiteEntitySystem_Internal_BitSpan__ctor_System_Byte__System_Int32_" data-uid="LiteEntitySystem.Internal.BitSpan.#ctor(System.Byte*,System.Int32)">BitSpan(byte*, int)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BitSpan(byte* bitRegion, int bitCount)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>*</td>
+        <td><span class="parametername">bitRegion</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">bitCount</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_Internal_BitSpan__ctor_" data-uid="LiteEntitySystem.Internal.BitSpan.#ctor*"></a>
   <h4 id="LiteEntitySystem_Internal_BitSpan__ctor_System_Byte___System_Int32_System_Int32_" data-uid="LiteEntitySystem.Internal.BitSpan.#ctor(System.Byte[],System.Int32,System.Int32)">BitSpan(byte[], int, int)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
@@ -123,12 +155,12 @@
 
 
   <a id="LiteEntitySystem_Internal_BitSpan__ctor_" data-uid="LiteEntitySystem.Internal.BitSpan.#ctor*"></a>
-  <h4 id="LiteEntitySystem_Internal_BitSpan__ctor_System_Byte__System_Int32_" data-uid="LiteEntitySystem.Internal.BitSpan.#ctor(System.Byte*,System.Int32)">BitSpan(byte*, int)</h4>
+  <h4 id="LiteEntitySystem_Internal_BitSpan__ctor_System_Span_System_Byte__" data-uid="LiteEntitySystem.Internal.BitSpan.#ctor(System.Span{System.Byte})">BitSpan(Span&lt;byte&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BitSpan(byte* bitRegion, int bitCount)</code></pre>
+    <pre><code class="lang-csharp hljs">public BitSpan(Span&lt;byte&gt; bitRegion)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -141,13 +173,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>*</td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
         <td><span class="parametername">bitRegion</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td><span class="parametername">bitCount</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -180,33 +207,6 @@
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
         <td><span class="parametername">bitCount</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_Internal_BitSpan__ctor_" data-uid="LiteEntitySystem.Internal.BitSpan.#ctor*"></a>
-  <h4 id="LiteEntitySystem_Internal_BitSpan__ctor_System_Span_System_Byte__" data-uid="LiteEntitySystem.Internal.BitSpan.#ctor(System.Span{System.Byte})">BitSpan(Span&lt;byte&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BitSpan(Span&lt;byte&gt; bitRegion)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
-        <td><span class="parametername">bitRegion</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -321,7 +321,8 @@
 
   <a id="LiteEntitySystem_Internal_BitSpan_ToString_" data-uid="LiteEntitySystem.Internal.BitSpan.ToString*"></a>
   <h4 id="LiteEntitySystem_Internal_BitSpan_ToString" data-uid="LiteEntitySystem.Internal.BitSpan.ToString">ToString()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Returns the fully qualified type name of this instance.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
@@ -338,7 +339,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
-        <td></td>
+        <td><p>The fully qualified type name.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -355,7 +357,7 @@
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
+                <h5>In this article</h5>
                 <div></div>
               </nav>
             </div>
