@@ -22,14 +22,16 @@ namespace LiteEntitySystem.Internal
         public readonly MethodCallDelegate Delegate;
         public bool Executed;
 
-        public RemoteCallsCache(RPCHeader header, EntitySharedReference entityId, MethodCallDelegate callDelegate, int offset, int syncableOffset)
+        public RemoteCallsCache(RPCHeader header, EntitySharedReference entityId, RpcFieldInfo rpcFieldInfo, int offset)
         {
             Header = header;
             EntityId = entityId;
-            Delegate = callDelegate;
+            Delegate = rpcFieldInfo.Method;
             Offset = offset;
-            SyncableOffset = syncableOffset;
+            SyncableOffset = rpcFieldInfo.SyncableOffset;
             Executed = false;
+            if (Delegate == null)
+                Logger.LogError($"ZeroRPC: {header.Id}");
         }
     }
 
@@ -223,15 +225,11 @@ namespace LiteEntitySystem.Internal
             {
                 var header = *(RPCHeader*)(rawData + position);
                 position += sizeof(RPCHeader);
-                var rpcCache = new RemoteCallsCache(header, entityId, classData.RemoteCallsClient[header.Id], position, classData.RpcOffsets[header.Id].SyncableOffset);
+                var rpcCache = new RemoteCallsCache(header, entityId, classData.RemoteCallsClient[header.Id], position);
                 //Logger.Log($"[CEM] ReadRPC. RpcId: {header.Id}, Tick: {header.Tick}, TypeSize: {header.TypeSize}, Count: {header.Count}");
-                if (rpcCache.Delegate == null)
-                {
-                    Logger.LogError($"ZeroRPC: {header.Id}");
-                }
 
                 //this is entity rpc
-                if (classData.RpcOffsets[header.Id].SyncableOffset == -1)
+                if (rpcCache.SyncableOffset == -1)
                 {
                     _remoteCallsCaches[_remoteCallsCount] = rpcCache;
                     _remoteCallsCount++;

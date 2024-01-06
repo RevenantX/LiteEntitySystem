@@ -7,22 +7,24 @@ namespace LiteEntitySystem.Internal
     internal readonly struct SyncableFieldInfo
     {
         public readonly int Offset;
+        public readonly SyncFlags Flags;
 
-        public SyncableFieldInfo(int offset)
+        public SyncableFieldInfo(int offset, SyncFlags executeFlags)
         {
             Offset = offset;
+            Flags = executeFlags;
         }
     }
     
-    internal readonly struct RpcOffset
+    internal struct RpcFieldInfo
     {
         public readonly int SyncableOffset;
-        public readonly SyncFlags Flags;
+        public MethodCallDelegate Method;
 
-        public RpcOffset(int syncableOffset,SyncFlags executeFlags)
+        public RpcFieldInfo(int syncableOffset)
         {
             SyncableOffset = syncableOffset;
-            Flags = executeFlags;
+            Method = null;
         }
     }
     
@@ -40,7 +42,6 @@ namespace LiteEntitySystem.Internal
         public readonly bool HasRemoteRollbackFields;
         public readonly EntityFieldInfo[] Fields;
         public readonly SyncableFieldInfo[] SyncableFields;
-        public readonly RpcOffset[] RpcOffsets;
         public readonly int InterpolatedFieldsSize;
         public readonly int InterpolatedCount;
         public readonly EntityFieldInfo[] LagCompensatedFields;
@@ -50,7 +51,7 @@ namespace LiteEntitySystem.Internal
         public readonly bool IsUpdateable;
         public readonly bool IsLocalOnly;
         public readonly EntityConstructor<InternalEntity> EntityConstructor;
-        public readonly MethodCallDelegate[] RemoteCallsClient;
+        public readonly RpcFieldInfo[] RemoteCallsClient;
         
         private readonly bool _isCreated;
         private readonly Type[] _baseTypes;
@@ -120,7 +121,7 @@ namespace LiteEntitySystem.Internal
             var fields = new List<EntityFieldInfo>();
             var syncableFields = new List<SyncableFieldInfo>();
             var lagCompensatedFields = new List<EntityFieldInfo>();
-            var remoteCallOffsets = new List<RpcOffset>();
+            var rpcFields = new List<RpcFieldInfo>();
 
             //add here to baseTypes to add fields
             baseTypes.Insert(0, typeof(InternalEntity));
@@ -150,7 +151,7 @@ namespace LiteEntitySystem.Internal
                     {
                         if (!field.IsStatic)
                             throw new Exception($"RemoteCalls should be static! (Class: {entType} Field: {field.Name})");
-                        remoteCallOffsets.Add(new RpcOffset(-1, syncFlags));
+                        rpcFields.Add(new RpcFieldInfo(-1));
                     }
                     //syncvars
                     else if (ft.IsValueType && ft.IsGenericType && !ft.IsArray)
@@ -199,7 +200,7 @@ namespace LiteEntitySystem.Internal
                         if (!field.IsInitOnly)
                             throw new Exception($"Syncable fields should be readonly! (Class: {entType} Field: {field.Name})");
                         
-                        syncableFields.Add(new SyncableFieldInfo(offset));
+                        syncableFields.Add(new SyncableFieldInfo(offset, syncFlags));
                         foreach (var syncableType in GetBaseTypes(ft, SyncableFieldType, true))
                         {
                             //syncable fields
@@ -210,7 +211,7 @@ namespace LiteEntitySystem.Internal
                                 {
                                     if (!syncableField.IsStatic)
                                         throw new Exception($"RemoteCalls should be static! (Class: {entType} Field: {field.Name})");
-                                    remoteCallOffsets.Add(new RpcOffset(offset, syncFlags));
+                                    rpcFields.Add(new RpcFieldInfo(offset));
                                     continue;
                                 }
                                 if (!syncableFieldType.IsValueType || !syncableFieldType.IsGenericType || syncableFieldType.GetGenericTypeDefinition() != typeof(SyncVar<>)) 
@@ -245,13 +246,12 @@ namespace LiteEntitySystem.Internal
                 return wb - wa;
             });
             Fields = fields.ToArray();
-            RpcOffsets = remoteCallOffsets.ToArray();
             SyncableFields = syncableFields.ToArray();
             FieldsCount = Fields.Length;
             FieldsFlagsSize = (FieldsCount-1) / 8 + 1;
             LagCompensatedFields = lagCompensatedFields.ToArray();
             LagCompensatedCount = LagCompensatedFields.Length;
-            RemoteCallsClient = new MethodCallDelegate[RpcOffsets.Length];
+            RemoteCallsClient = rpcFields.ToArray();
 
             int fixedOffset = 0;
             int predictedOffset = 0;

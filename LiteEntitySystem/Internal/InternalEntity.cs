@@ -129,21 +129,6 @@ namespace LiteEntitySystem.Internal
         internal void RegisterRpcInternal()
         {
             ref var classData = ref GetClassData();
-            //load cache and/or init syncable rpc flags
-            for (ushort i = 0; i < classData.RpcOffsets.Length; i++)
-            {
-                var rpcOffset = classData.RpcOffsets[i];
-                if (rpcOffset.SyncableOffset >= 0)
-                {
-                    var syncable = RefMagic.RefFieldValue<SyncableField>(this, rpcOffset.SyncableOffset);
-                    if (rpcOffset.Flags.HasFlagFast(SyncFlags.OnlyForOwner))
-                        syncable.Flags = ExecuteFlags.SendToOwner;
-                    else if (rpcOffset.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
-                        syncable.Flags = ExecuteFlags.SendToOther;
-                    else
-                        syncable.Flags = ExecuteFlags.SendToAll;
-                }
-            }
             if(!classData.IsRpcBound)
             {
                 //setup field ids for BindOnChange
@@ -151,32 +136,28 @@ namespace LiteEntitySystem.Internal
                 {
                     ref var field = ref classData.Fields[i];
                     if (field.FieldType == FieldType.SyncVar)
-                    {
-                        ref byte id = ref RefMagic.RefFieldValue<byte>(this, field.Offset + field.IntSize);
-                        id = (byte)i;
-                    }
+                        RefMagic.RefFieldValue<byte>(this, field.Offset + field.IntSize) = (byte)i;
                 }
-
                 var syncablesRegistrator = new SyncableRPCRegistrator(classData.RemoteCallsClient);
                 for (int i = 0; i < classData.SyncableFields.Length; i++)
-                {
-                    var syncField = RefMagic.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
-                    syncField.ParentEntity = this;
-                    syncField.RegisterRPC(ref syncablesRegistrator);
-                }
+                    RefMagic.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset).RegisterRPC(ref syncablesRegistrator);
                 var rpcRegistrator = new RPCRegistrator(syncablesRegistrator.RpcId);
                 RegisterRPC(ref rpcRegistrator);
                 //Logger.Log($"RegisterRPCs for class: {classData.ClassId}");
                 classData.IsRpcBound = true;
             }
-            else
+            //setup id for later sync calls
+            for (int i = 0; i < classData.SyncableFields.Length; i++)
             {
-                //setup id for later sync calls
-                for (int i = 0; i < classData.SyncableFields.Length; i++)
-                {
-                    var syncField = RefMagic.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset);
-                    syncField.ParentEntity = this;
-                }
+                var syncFieldInfo = classData.SyncableFields[i];
+                var syncField = RefMagic.RefFieldValue<SyncableField>(this, syncFieldInfo.Offset);
+                syncField.ParentEntity = this;
+                if (syncFieldInfo.Flags.HasFlagFast(SyncFlags.OnlyForOwner))
+                    syncField.Flags = ExecuteFlags.SendToOwner;
+                else if (syncFieldInfo.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
+                    syncField.Flags = ExecuteFlags.SendToOther;
+                else
+                    syncField.Flags = ExecuteFlags.SendToAll;
             }
         }
 
