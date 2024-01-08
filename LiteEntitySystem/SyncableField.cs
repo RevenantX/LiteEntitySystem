@@ -8,6 +8,7 @@ namespace LiteEntitySystem
     {
         internal InternalEntity ParentEntity;
         internal ExecuteFlags Flags;
+        internal ushort RPCOffset;
 
         protected internal virtual void OnSyncRequested()
         {

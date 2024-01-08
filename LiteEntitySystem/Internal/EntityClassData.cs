@@ -4,33 +4,40 @@ using System.Reflection;
 
 namespace LiteEntitySystem.Internal
 {
-    internal readonly struct SyncableFieldInfo
+    internal struct SyncableFieldInfo
     {
         public readonly int Offset;
         public readonly SyncFlags Flags;
+        public ushort RPCOffset;
 
         public SyncableFieldInfo(int offset, SyncFlags executeFlags)
         {
             Offset = offset;
             Flags = executeFlags;
+            RPCOffset = ushort.MaxValue;
         }
     }
     
-    internal struct RpcFieldInfo
+    internal readonly struct RpcFieldInfo
     {
         public readonly int SyncableOffset;
-        public MethodCallDelegate Method;
+        public readonly MethodCallDelegate Method;
 
-        public RpcFieldInfo(int syncableOffset)
+        public RpcFieldInfo(MethodCallDelegate method)
+        {
+            SyncableOffset = -1;
+            Method = method;
+        }
+        
+        public RpcFieldInfo(int syncableOffset, MethodCallDelegate method)
         {
             SyncableOffset = syncableOffset;
-            Method = null;
+            Method = method;
         }
     }
     
     internal struct EntityClassData
     {
-        public bool IsRpcBound;
         public readonly ushort ClassId;
         public readonly ushort FilterId;
         public readonly bool IsSingleton;
@@ -51,7 +58,7 @@ namespace LiteEntitySystem.Internal
         public readonly bool IsUpdateable;
         public readonly bool IsLocalOnly;
         public readonly EntityConstructor<InternalEntity> EntityConstructor;
-        public readonly RpcFieldInfo[] RemoteCallsClient;
+        public RpcFieldInfo[] RemoteCallsClient;
         
         private readonly bool _isCreated;
         private readonly Type[] _baseTypes;
@@ -86,7 +93,6 @@ namespace LiteEntitySystem.Internal
 
         public EntityClassData(ushort filterId, Type entType, RegisteredTypeInfo typeInfo)
         {
-            IsRpcBound = false;
             HasRemoteRollbackFields = false;
             PredictedSize = 0;
             FixedFieldsSize = 0;
@@ -94,6 +100,7 @@ namespace LiteEntitySystem.Internal
             LagCompensatedCount = 0;
             InterpolatedCount = 0;
             InterpolatedFieldsSize = 0;
+            RemoteCallsClient = null;
 
             ClassId = typeInfo.ClassId;
 
@@ -121,7 +128,6 @@ namespace LiteEntitySystem.Internal
             var fields = new List<EntityFieldInfo>();
             var syncableFields = new List<SyncableFieldInfo>();
             var lagCompensatedFields = new List<EntityFieldInfo>();
-            var rpcFields = new List<RpcFieldInfo>();
 
             //add here to baseTypes to add fields
             baseTypes.Insert(0, typeof(InternalEntity));
@@ -151,7 +157,6 @@ namespace LiteEntitySystem.Internal
                     {
                         if (!field.IsStatic)
                             throw new Exception($"RemoteCalls should be static! (Class: {entType} Field: {field.Name})");
-                        rpcFields.Add(new RpcFieldInfo(-1));
                     }
                     //syncvars
                     else if (ft.IsValueType && ft.IsGenericType && !ft.IsArray)
@@ -211,7 +216,6 @@ namespace LiteEntitySystem.Internal
                                 {
                                     if (!syncableField.IsStatic)
                                         throw new Exception($"RemoteCalls should be static! (Class: {entType} Field: {field.Name})");
-                                    rpcFields.Add(new RpcFieldInfo(offset));
                                     continue;
                                 }
                                 if (!syncableFieldType.IsValueType || !syncableFieldType.IsGenericType || syncableFieldType.GetGenericTypeDefinition() != typeof(SyncVar<>)) 
@@ -251,7 +255,6 @@ namespace LiteEntitySystem.Internal
             FieldsFlagsSize = (FieldsCount-1) / 8 + 1;
             LagCompensatedFields = lagCompensatedFields.ToArray();
             LagCompensatedCount = LagCompensatedFields.Length;
-            RemoteCallsClient = rpcFields.ToArray();
 
             int fixedOffset = 0;
             int predictedOffset = 0;

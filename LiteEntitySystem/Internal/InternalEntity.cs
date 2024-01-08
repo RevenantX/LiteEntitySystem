@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
@@ -129,7 +130,8 @@ namespace LiteEntitySystem.Internal
         internal void RegisterRpcInternal()
         {
             ref var classData = ref GetClassData();
-            if(!classData.IsRpcBound)
+            List<RpcFieldInfo> rpcCahce = null;
+            if(classData.RemoteCallsClient == null)
             {
                 //setup field ids for BindOnChange
                 for (int i = 0; i < classData.FieldsCount; i++)
@@ -138,18 +140,15 @@ namespace LiteEntitySystem.Internal
                     if (field.FieldType == FieldType.SyncVar)
                         RefMagic.RefFieldValue<byte>(this, field.Offset + field.IntSize) = (byte)i;
                 }
-                var syncablesRegistrator = new SyncableRPCRegistrator(classData.RemoteCallsClient);
-                for (int i = 0; i < classData.SyncableFields.Length; i++)
-                    RefMagic.RefFieldValue<SyncableField>(this, classData.SyncableFields[i].Offset).RegisterRPC(ref syncablesRegistrator);
-                var rpcRegistrator = new RPCRegistrator(syncablesRegistrator.RpcId);
+                rpcCahce = new List<RpcFieldInfo>();
+                var rpcRegistrator = new RPCRegistrator(rpcCahce);
                 RegisterRPC(ref rpcRegistrator);
                 //Logger.Log($"RegisterRPCs for class: {classData.ClassId}");
-                classData.IsRpcBound = true;
             }
             //setup id for later sync calls
             for (int i = 0; i < classData.SyncableFields.Length; i++)
             {
-                var syncFieldInfo = classData.SyncableFields[i];
+                ref var syncFieldInfo = ref classData.SyncableFields[i];
                 var syncField = RefMagic.RefFieldValue<SyncableField>(this, syncFieldInfo.Offset);
                 syncField.ParentEntity = this;
                 if (syncFieldInfo.Flags.HasFlagFast(SyncFlags.OnlyForOwner))
@@ -158,7 +157,19 @@ namespace LiteEntitySystem.Internal
                     syncField.Flags = ExecuteFlags.SendToOther;
                 else
                     syncField.Flags = ExecuteFlags.SendToAll;
+                if (classData.RemoteCallsClient != null)
+                {
+                    syncField.RPCOffset = syncFieldInfo.RPCOffset;
+                }
+                else
+                {
+                    syncField.RPCOffset = (ushort)rpcCahce.Count;
+                    syncFieldInfo.RPCOffset = syncField.RPCOffset;
+                    var syncablesRegistrator = new SyncableRPCRegistrator(syncFieldInfo.Offset, rpcCahce);
+                    syncField.RegisterRPC(ref syncablesRegistrator);
+                }
             }
+            classData.RemoteCallsClient ??= rpcCahce.ToArray();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
