@@ -145,6 +145,12 @@ namespace LiteEntitySystem.Internal
                 foreach (var field in baseType.GetFields(bindingFlags))
                 {
                     var ft = field.FieldType;
+                    if(IsRemoteCallType(ft) || field.IsStatic)
+                    {
+                        if (!field.IsStatic)
+                            throw new Exception($"RemoteCalls should be static! (Class: {entType} Field: {field.Name})");
+                        continue;
+                    }
                     
                     var syncVarFieldAttribute = field.GetCustomAttribute<SyncVarFlags>();
                     var syncVarClassAttribute = baseType.GetCustomAttribute<SyncVarFlags>();
@@ -153,13 +159,8 @@ namespace LiteEntitySystem.Internal
                                  ?? SyncFlags.None;
                     int offset = Utils.GetFieldOffset(field);
                     
-                    if(IsRemoteCallType(ft))
-                    {
-                        if (!field.IsStatic)
-                            throw new Exception($"RemoteCalls should be static! (Class: {entType} Field: {field.Name})");
-                    }
                     //syncvars
-                    else if (ft.IsValueType && ft.IsGenericType && !ft.IsArray)
+                    if (ft.IsValueType && ft.IsGenericType && !ft.IsArray)
                     {
                         FieldType internalFieldType;
                         var genericType = ft.GetGenericTypeDefinition();
@@ -218,7 +219,10 @@ namespace LiteEntitySystem.Internal
                                         throw new Exception($"RemoteCalls should be static! (Class: {entType} Field: {field.Name})");
                                     continue;
                                 }
-                                if (!syncableFieldType.IsValueType || !syncableFieldType.IsGenericType || syncableFieldType.GetGenericTypeDefinition() != typeof(SyncVar<>)) 
+                                if (!syncableFieldType.IsValueType || 
+                                    !syncableFieldType.IsGenericType || 
+                                    syncableFieldType.GetGenericTypeDefinition() != typeof(SyncVar<>) ||
+                                    syncableField.IsStatic) 
                                     continue;
 
                                 syncableFieldType = syncableFieldType.GetGenericArguments()[0];
