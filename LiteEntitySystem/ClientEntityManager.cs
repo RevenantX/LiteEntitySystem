@@ -122,6 +122,8 @@ namespace LiteEntitySystem
                 Entity = entity;
                 PrevDataPos = prevDataPos;
             }
+
+            public void Execute(ServerStateData state) => OnSync(Entity, new ReadOnlySpan<byte>(state.Data, PrevDataPos, state.Size-PrevDataPos));
         }
         private SyncCallInfo[] _syncCalls;
         private int _syncCallsCount;
@@ -753,10 +755,7 @@ namespace LiteEntitySystem
 
             //Make OnSyncCalls
             for (int i = 0; i < _syncCallsCount; i++)
-            {
-                ref var syncCall = ref _syncCalls[i];
-                syncCall.OnSync(syncCall.Entity, new ReadOnlySpan<byte>(_stateA.Data, syncCall.PrevDataPos, _stateA.Size-syncCall.PrevDataPos));
-            }
+                _syncCalls[i].Execute(_stateA);
             _syncCallsCount = 0;
             
             //execute entity rpcs
