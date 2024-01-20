@@ -1,15 +1,8 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 
 namespace LiteEntitySystem.Internal
 {
-    internal struct StatePreloadData
-    {
-        public ushort EntityId;
-        public int EntityFieldsOffset;
-        public int DataOffset;
-    }
-
     internal struct RemoteCallsCache
     {
         public readonly RPCHeader Header;
@@ -57,74 +50,58 @@ namespace LiteEntitySystem.Internal
         public ushort Tick;
         public ushort ProcessedTick;
         public ushort LastReceivedTick;
-        public StatePreloadData[] PreloadDataArray = new StatePreloadData[32];
-        public int PreloadDataCount;
-        public int TotalPartsCount;
-
+        public int InterpolatedCachesCount;
+        public InterpolatedCache[] InterpolatedCaches = new InterpolatedCache[32];
+        
+        private int _totalPartsCount;
         private int _syncableRemoteCallsCount;
-        private RemoteCallsCache[] _syncableRemoteCallCaches = new RemoteCallsCache[32];
         private int _remoteCallsCount;
+        private RemoteCallsCache[] _syncableRemoteCallCaches = new RemoteCallsCache[32];
         private RemoteCallsCache[] _remoteCallsCaches = new RemoteCallsCache[32];
-        private readonly bool[] _receivedParts = new bool[EntityManager.MaxParts];
         private int _receivedPartsCount;
         private byte _maxReceivedPart;
         private ushort _partMtu;
-        
-        public int InterpolatedCachesCount;
-        public InterpolatedCache[] InterpolatedCaches = new InterpolatedCache[32];
+        private readonly BitArray _receivedParts = new (EntityManager.MaxParts);
 
         public unsafe void Preload(InternalEntity[] entityDict)
         {
-            int bytesRead = 0;
-            //preload some data
-            while (bytesRead < Size)
+            for (int bytesRead = 0; bytesRead < Size;)
             {
                 int initialReaderPosition = bytesRead;
-                
-                Utils.ResizeIfFull(ref PreloadDataArray, PreloadDataCount);
-                ref var preloadData = ref PreloadDataArray[PreloadDataCount++];
-                ushort fullSyncAndTotalSize = BitConverter.ToUInt16(Data, bytesRead);
-
+                ushort fullSyncAndTotalSize = BitConverter.ToUInt16(Data, initialReaderPosition);
                 bool fullSync = (fullSyncAndTotalSize & 1) == 1;
                 int totalSize = fullSyncAndTotalSize >> 1;
-                preloadData.EntityId = BitConverter.ToUInt16(Data, bytesRead + sizeof(ushort));
                 bytesRead += totalSize;
+                if(fullSync)
+                    continue;
+                ushort entityId = BitConverter.ToUInt16(Data, initialReaderPosition + sizeof(ushort));
                 
-                if (preloadData.EntityId > EntityManager.MaxSyncedEntityCount)
+                if (entityId > EntityManager.MaxSyncedEntityCount)
                 {
                     //Should remove at all
-                    Logger.LogError($"[CEM] Invalid entity id: {preloadData.EntityId}");
+                    Logger.LogError($"[CEM] Invalid entity id: {entityId}");
                     return;
-                }
-                
-                if (fullSync)
-                {
-                    preloadData.EntityFieldsOffset = -1;
-                    preloadData.DataOffset = initialReaderPosition + 4;
-                    continue;
                 }
       
                 //it should be here at preload
-                var entity = entityDict[preloadData.EntityId];
+                var entity = entityDict[entityId];
                 if (entity == null)
                 {
                     //Removed entity
                     //Logger.LogError($"Preload entity: {preloadData.EntityId} == null");
-                    PreloadDataCount--;
                     continue;
                 }
 
                 ref var classData = ref entity.GetClassData();
-                preloadData.EntityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
-                preloadData.DataOffset = preloadData.EntityFieldsOffset + classData.FieldsFlagsSize;
-                int stateReaderOffset = preloadData.DataOffset;
+                int entityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
+                int stateReaderOffset = entityFieldsOffset + classData.FieldsFlagsSize;
 
                 //preload interpolation info
                 if (entity.IsRemoteControlled && classData.InterpolatedCount > 0)
                     Utils.ResizeIfFull(ref InterpolatedCaches, InterpolatedCachesCount + classData.InterpolatedCount);
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
-                    if (!Utils.IsBitSet(Data, preloadData.EntityFieldsOffset, i))
+                    if (!Utils.IsBitSet(Data, entityFieldsOffset, i))
                         continue;
                     ref var field = ref classData.Fields[i];
                     if (entity.IsRemoteControlled && field.Flags.HasFlagFast(SyncFlags.Interpolated))
@@ -239,12 +216,11 @@ namespace LiteEntitySystem.Internal
         public void Reset(ushort tick)
         {
             Tick = tick;
-            Array.Clear(_receivedParts, 0, _maxReceivedPart+1);
+            _receivedParts.SetAll(false);
             InterpolatedCachesCount = 0;
-            PreloadDataCount = 0;
             _maxReceivedPart = 0;
             _receivedPartsCount = 0;
-            TotalPartsCount = 0;
+            _totalPartsCount = 0;
             _remoteCallsCount = 0;
             _syncableRemoteCallsCount = 0;
             Size = 0;
@@ -262,7 +238,7 @@ namespace LiteEntitySystem.Internal
             {
                 partSize -= sizeof(LastPartData);
                 var lastPartData = *(LastPartData*)(rawData + partSize);
-                TotalPartsCount = partHeader.Part + 1;
+                _totalPartsCount = partHeader.Part + 1;
                 _partMtu = (ushort)(lastPartData.Mtu - sizeof(DiffPartHeader));
                 LastReceivedTick = lastPartData.LastReceivedTick;
                 ProcessedTick = lastPartData.LastProcessedTick;
@@ -271,16 +247,16 @@ namespace LiteEntitySystem.Internal
             partSize -= sizeof(DiffPartHeader);
             if(_partMtu == 0)
                 _partMtu = (ushort)partSize;
-            Utils.ResizeIfFull(ref Data, TotalPartsCount > 1 
-                ? _partMtu * TotalPartsCount 
+            Utils.ResizeIfFull(ref Data, _totalPartsCount > 1 
+                ? _partMtu * _totalPartsCount 
                 : _partMtu * partHeader.Part + partSize);
             fixed(byte* stateData = Data)
                 RefMagic.CopyBlock(stateData + _partMtu * partHeader.Part, rawData + sizeof(DiffPartHeader), (uint)partSize);
             _receivedParts[partHeader.Part] = true;
             Size += partSize;
             _receivedPartsCount++;
-            _maxReceivedPart = Math.Max(_maxReceivedPart, partHeader.Part);
-            return _receivedPartsCount == TotalPartsCount;
+            _maxReceivedPart = partHeader.Part > _maxReceivedPart ? partHeader.Part : _maxReceivedPart;
+            return _receivedPartsCount == _totalPartsCount;
         }
     }
 }

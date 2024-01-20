@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using K4os.Compression.LZ4;
 using LiteEntitySystem.Internal;
 using LiteEntitySystem.Transport;
@@ -283,24 +284,8 @@ namespace LiteEntitySystem
                             Logger.LogError("Error on decompress");
                             return DeserializeResult.Error;
                         }
-
-                        int bytesRead = 0;
-                        while (bytesRead < _stateA.Size)
-                        {
-                            ushort entityId = *(ushort*)(stateData + bytesRead);
-                            //Logger.Log($"[CEM] ReadBaseline Entity: {entityId} pos: {bytesRead}");
-                            bytesRead += sizeof(ushort);
-
-                            if (entityId == InvalidEntityId || entityId >= MaxSyncedEntityCount)
-                            {
-                                Logger.LogError($"Bad data (id > {MaxSyncedEntityCount} or Id == 0) Id: {entityId}");
-                                return DeserializeResult.Error;
-                            }
-
-                            ReadEntityState(stateData, ref bytesRead, entityId, true, true);
-                            if (bytesRead == -1)
-                                return DeserializeResult.Error;
-                        }
+                        if (ReadEntityState(stateData, true) == false)
+                            return DeserializeResult.Error;
                     }
 
                     ServerTick = _stateA.Tick;
@@ -424,17 +409,9 @@ namespace LiteEntitySystem
             _stateB = null;
             
             //Logger.Log($"GotoState: IST: {ServerTick}, TST:{_stateA.Tick}");
-
-            fixed (byte* readerData = _stateA.Data)
-            {
-                for (int i = 0; i < _stateA.PreloadDataCount; i++)
-                {
-                    ref var preloadData = ref _stateA.PreloadDataArray[i];
-                    ReadEntityState(readerData, ref preloadData.DataOffset, preloadData.EntityId, preloadData.EntityFieldsOffset == -1, false);
-                    if (preloadData.DataOffset == -1)
-                        return;
-                }
-            }
+            fixed (byte* stateData = _stateA.Data)
+                if (ReadEntityState(stateData, false) == false)
+                    return;
             ConstructAndSync(false, minimalTick);
             
             _timer -= _lerpTime;
@@ -789,104 +766,125 @@ namespace LiteEntitySystem
                 lagCompensatedEntity.WriteHistory(ServerTick);
         }
 
-        private unsafe void ReadEntityState(byte* rawData, ref int readerPosition, ushort entityInstanceId, bool fullSync, bool fistSync)
+        private unsafe bool ReadEntityState(byte* rawData, bool fistSync)
         {
-            var entity = EntitiesDict[entityInstanceId];
-            
-            //full sync
-            if (fullSync)
+            for (int readerPosition = 0; readerPosition < _stateA.Size;)
             {
-                byte version = rawData[readerPosition];
-                ushort classId = *(ushort*)(rawData + readerPosition + 1);
-                readerPosition += 3;
-
-                //remove old entity
-                if (entity != null && entity.Version != version)
+                bool writeInterpolationData;
+                bool fullSync = true;
+                int endPos = 0;
+                if (!fistSync) //diff data
                 {
-                    //this can be only on logics (not on singletons)
-                    Logger.Log($"[CEM] Replace entity by new: {version}");
-                    entity.DestroyInternal();
-                    entity = null;
+                    ushort fullSyncAndTotalSize = *(ushort*)(rawData + readerPosition);
+                    fullSync = (fullSyncAndTotalSize & 1) == 1;
+                    endPos = readerPosition + (fullSyncAndTotalSize >> 1);
+                    readerPosition += sizeof(ushort);
                 }
-                if(entity == null)
+                ushort entityId = *(ushort*)(rawData + readerPosition);
+                readerPosition += sizeof(ushort);
+                if (entityId == InvalidEntityId || entityId >= MaxSyncedEntityCount)
                 {
-                    //create new
-                    entity = AddEntity(new EntityParams(classId, entityInstanceId, version, this));
-                    ref var cd = ref ClassDataDict[entity.ClassId];
-                    if (cd.PredictedSize > 0)
-                    {
-                        Utils.ResizeOrCreate(ref _predictedEntitiesData[entity.Id], cd.PredictedSize);
-                        _predictedEntityFilter.Add(entity);
-                    }
-                    if(cd.InterpolatedFieldsSize > 0)
-                        Utils.ResizeOrCreate(ref _interpolatedInitialData[entity.Id], cd.InterpolatedFieldsSize);
-
-                    Utils.ResizeIfFull(ref _entitiesToConstruct, _entitiesToConstructCount);
-                    _entitiesToConstruct[_entitiesToConstructCount++] = entity;
-                    //Logger.Log($"[CEM] Add entity: {entity.GetType()}");
+                    Logger.LogError($"Bad data (id > {MaxSyncedEntityCount} or Id == 0) Id: {entityId}");
+                    return false;
                 }
-                else if(!fistSync)
+                var entity = EntitiesDict[entityId];
+                ref var classData = ref Unsafe.AsRef<EntityClassData>(null);
+                if (fullSync)
                 {
-                    //skip full sync data if we already have correct entity
-                    return;
-                }
-            }
-            else if (entity == null)
-            {
-                Logger.LogError($"EntityNull? : {entityInstanceId}");
-                readerPosition = -1;
-                return;
-            }
-            
-            ref var classData = ref entity.GetClassData();
-            ref byte[] interpolatedInitialData = ref _interpolatedInitialData[entity.Id];
-            int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
-            bool writeInterpolationData = entity.IsRemoteControlled || fullSync;
-            Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
-            
-            fixed (byte* interpDataPtr = interpolatedInitialData, predictedData = _predictedEntitiesData[entity.Id])
-            {
-                for (int i = 0; i < classData.FieldsCount; i++)
-                {
-                    if (!fullSync && !Utils.IsBitSet(rawData + fieldsFlagsOffset, i))
-                        continue;
-                    
-                    ref var field = ref classData.Fields[i];
-                    byte* readDataPtr = rawData + readerPosition;
-                    
-                    if(field.IsPredicted)
-                        RefMagic.CopyBlock(predictedData + field.PredictedOffset, readDataPtr, field.Size);
-                    
-                    if (field.FieldType == FieldType.SyncableSyncVar)
+                    writeInterpolationData = true;
+                    //Logger.Log($"[CEM] ReadBaseline Entity: {entityId} pos: {bytesRead}");
+                    byte version = rawData[readerPosition];
+                    //remove old entity
+                    if (entity != null)
                     {
-                        var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, field.Offset);
-                        field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, readDataPtr);
-                    }
-                    else
-                    {
-                        if (field.Flags.HasFlagFast(SyncFlags.Interpolated) && writeInterpolationData)
+                        if (entity.Version != version)
                         {
-                            //this is interpolated save for future
-                            RefMagic.CopyBlock(interpDataPtr + field.FixedOffset, readDataPtr, field.Size);
+                            //this can be only on logics (not on singletons)
+                            Logger.Log($"[CEM] Replace entity by new: {version}");
+                            entity.DestroyInternal();
+                            entity = null;
                         }
-
-                        if (field.OnSync != null)
+                        else if (!fistSync)
                         {
-                            if (field.TypeProcessor.SetFromAndSync(entity, field.Offset, readDataPtr))
-                                _syncCalls[_syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition);
+                            //skip full sync data if we already have correct entity
+                            readerPosition = endPos;
+                            continue;
+                        }
+                    } 
+                    if (entity == null) //create new
+                    {
+                        ushort classId = *(ushort*)(rawData + readerPosition + 1);
+                        entity = AddEntity(new EntityParams(classId, entityId, version, this));
+                        classData = ref entity.GetClassData();
+                        if (classData.PredictedSize > 0)
+                        {
+                            Utils.ResizeOrCreate(ref _predictedEntitiesData[entity.Id], classData.PredictedSize);
+                            _predictedEntityFilter.Add(entity);
+                        }
+                        if (classData.InterpolatedFieldsSize > 0)
+                        {
+                            Utils.ResizeOrCreate(ref _interpolatedInitialData[entity.Id], classData.InterpolatedFieldsSize);
+                        }
+                        Utils.ResizeIfFull(ref _entitiesToConstruct, _entitiesToConstructCount);
+                        _entitiesToConstruct[_entitiesToConstructCount++] = entity;
+                    }
+                    readerPosition += 3;
+                }
+                else if(entity != null) //diff sync
+                {
+                    classData = ref entity.GetClassData();
+                    writeInterpolationData = entity.IsRemoteControlled;
+                    readerPosition += classData.FieldsFlagsSize;
+                }
+                else //entity null -> and diff sync -> skip
+                {
+                    readerPosition = endPos;
+                    continue;
+                }
+                Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
+                int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
+                fixed (byte* interpDataPtr = _interpolatedInitialData[entity.Id], predictedData = _predictedEntitiesData[entity.Id])
+                    for (int i = 0; i < classData.FieldsCount; i++)
+                    {
+                        if (!fullSync && !Utils.IsBitSet(rawData + fieldsFlagsOffset, i))
+                            continue;
+                        ref var field = ref classData.Fields[i];
+                        byte* readDataPtr = rawData + readerPosition;
+                        if (field.IsPredicted)
+                            RefMagic.CopyBlock(predictedData + field.PredictedOffset, readDataPtr, field.Size);
+                        if (field.FieldType == FieldType.SyncableSyncVar)
+                        {
+                            var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, field.Offset);
+                            field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, readDataPtr);
                         }
                         else
                         {
-                            field.TypeProcessor.SetFrom(entity, field.Offset, readDataPtr);
+                            if (field.Flags.HasFlagFast(SyncFlags.Interpolated) && writeInterpolationData)
+                            {
+                                //this is interpolated save for future
+                                RefMagic.CopyBlock(interpDataPtr + field.FixedOffset, readDataPtr, field.Size);
+                            }
+                            if (field.OnSync != null)
+                            {
+                                if (field.TypeProcessor.SetFromAndSync(entity, field.Offset, readDataPtr))
+                                    _syncCalls[_syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition);
+                            }
+                            else
+                            {
+                                field.TypeProcessor.SetFrom(entity, field.Offset, readDataPtr);
+                            }
                         }
+                        //Logger.Log($"E {entity.Id} Field updated: {field.Name}");
+                        readerPosition += field.IntSize;
                     }
-                    //Logger.Log($"E {entity.Id} Field updated: {field.Name}");
-                    readerPosition += field.IntSize;
+                if (fullSync)
+                {
+                    _stateA.ReadRPCs(rawData, ref readerPosition, new EntitySharedReference(entity.Id, entity.Version), classData);
+                    continue;
                 }
+                readerPosition = endPos;
             }
-
-            if (fullSync)
-                _stateA.ReadRPCs(rawData, ref readerPosition, new EntitySharedReference(entity.Id, entity.Version), classData);
+            return true;
         }
     }
 }
