@@ -72,11 +72,8 @@ namespace LiteEntitySystem.Internal
                 bool fullSync = (fullSyncAndTotalSize & 1) == 1;
                 int totalSize = fullSyncAndTotalSize >> 1;
                 bytesRead += totalSize;
-                if(fullSync)
-                    continue;
                 ushort entityId = BitConverter.ToUInt16(Data, initialReaderPosition + sizeof(ushort));
-                
-                if (entityId > EntityManager.MaxSyncedEntityCount)
+                if (entityId == EntityManager.InvalidEntityId || entityId >= EntityManager.MaxSyncedEntityCount)
                 {
                     //Should remove at all
                     Logger.LogError($"[CEM] Invalid entity id: {entityId}");
@@ -94,14 +91,16 @@ namespace LiteEntitySystem.Internal
 
                 ref var classData = ref entity.GetClassData();
                 int entityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
-                int stateReaderOffset = entityFieldsOffset + classData.FieldsFlagsSize;
+                int stateReaderOffset = fullSync 
+                    ? initialReaderPosition + StateSerializer.HeaderSize + sizeof(ushort) 
+                    : entityFieldsOffset + classData.FieldsFlagsSize;
 
                 //preload interpolation info
                 if (entity.IsRemoteControlled && classData.InterpolatedCount > 0)
                     Utils.ResizeIfFull(ref InterpolatedCaches, InterpolatedCachesCount + classData.InterpolatedCount);
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
-                    if (!Utils.IsBitSet(Data, entityFieldsOffset, i))
+                    if (!fullSync && !Utils.IsBitSet(Data, entityFieldsOffset, i))
                         continue;
                     ref var field = ref classData.Fields[i];
                     if (entity.IsRemoteControlled && field.Flags.HasFlagFast(SyncFlags.Interpolated))

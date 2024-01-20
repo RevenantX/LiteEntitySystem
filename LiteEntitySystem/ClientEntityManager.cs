@@ -790,25 +790,15 @@ namespace LiteEntitySystem
                 ref var classData = ref Unsafe.AsRef<EntityClassData>(null);
                 if (fullSync)
                 {
-                    writeInterpolationData = true;
                     //Logger.Log($"[CEM] ReadBaseline Entity: {entityId} pos: {bytesRead}");
                     byte version = rawData[readerPosition];
                     //remove old entity
-                    if (entity != null)
+                    if (entity != null && entity.Version != version)
                     {
-                        if (entity.Version != version)
-                        {
-                            //this can be only on logics (not on singletons)
-                            Logger.Log($"[CEM] Replace entity by new: {version}");
-                            entity.DestroyInternal();
-                            entity = null;
-                        }
-                        else if (!fistSync)
-                        {
-                            //skip full sync data if we already have correct entity
-                            readerPosition = endPos;
-                            continue;
-                        }
+                        //this can be only on logics (not on singletons)
+                        Logger.Log($"[CEM] Replace entity by new: {version}");
+                        entity.DestroyInternal();
+                        entity = null;
                     } 
                     if (entity == null) //create new
                     {
@@ -826,6 +816,12 @@ namespace LiteEntitySystem
                         }
                         Utils.ResizeIfFull(ref _entitiesToConstruct, _entitiesToConstructCount);
                         _entitiesToConstruct[_entitiesToConstructCount++] = entity;
+                        writeInterpolationData = true;
+                    }
+                    else //update "old"
+                    {
+                        classData = ref entity.GetClassData();
+                        writeInterpolationData = entity.IsRemoteControlled;
                     }
                     readerPosition += 3;
                 }

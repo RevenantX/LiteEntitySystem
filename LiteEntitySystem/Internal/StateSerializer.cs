@@ -23,7 +23,7 @@ namespace LiteEntitySystem.Internal
             OwnerChange
         }
         
-        private const int HeaderSize = 5;
+        public const int HeaderSize = 5;
         private const int TicksToDestroy = 32;
         public const int DiffHeaderSize = 4;
         public const int MaxStateSize = 32767; //half of ushort
