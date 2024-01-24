@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
 using LiteEntitySystem.Extensions;
 using LiteEntitySystem.Internal;
 
@@ -70,6 +72,11 @@ namespace LiteEntitySystem
         public const int MaxEntityCount = MaxSyncedEntityCount * 2;
         
         public const byte ServerPlayerId = 0;
+        
+        /// <summary>
+        /// Entity class data hash size in bytes
+        /// </summary>
+        public const int EntityClassDataHashSize = 32;
 
         /// <summary>
         /// Invalid entity id
@@ -166,6 +173,7 @@ namespace LiteEntitySystem
         internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount+1];
         internal readonly EntityClassData[] ClassDataDict;
 
+        protected readonly byte[] _fieldsHash;
         private readonly long _deltaTimeTicks;
         private readonly long _slowdownTicks;
         private long _accumulator;
@@ -225,18 +233,34 @@ namespace LiteEntitySystem
             //preregister some types
             _registeredTypeIds.Add(typeof(ControllerLogic), filterCount++);
             
-            foreach (var kv in typesMap.RegisteredTypes)
+            foreach (var (entType, typeInfo) in typesMap.RegisteredTypes)
             {
-                var entType = kv.Key;
-
-                ClassDataDict[kv.Value.ClassId] = new EntityClassData(
+                var classData = new EntityClassData(
                     entType.IsSubclassOf(typeof(SingletonEntityLogic)) ? singletonCount++ : filterCount++, 
                     entType, 
-                    kv.Value);
-                _registeredTypeIds.Add(entType, ClassDataDict[kv.Value.ClassId].FilterId);
+                    typeInfo);
+                _registeredTypeIds.Add(entType, classData.FilterId);
+                ClassDataDict[typeInfo.ClassId] = classData;
                 //Logger.Log($"Register: {entType.Name} ClassId: {classId}");
             }
-
+            
+            //calculate all classes types and rpc total hash
+            var sha256 = SHA256.Create();
+            for (int i = 0; i < ClassDataDict.Length; i++)
+            {
+                ref var classData = ref ClassDataDict[i];
+                if (classData.IsLocalOnly || classData.Fields == null)
+                    continue;
+                for (int j = 0; j < classData.Fields.Length; j++)
+                {
+                    byte[] textBytes = Encoding.ASCII.GetBytes(classData.Fields[j].TypeProcessor.ValueType.Name);
+                    sha256.TransformBlock(textBytes, 0, textBytes.Length, null, 0);
+                }
+                sha256.TransformBlock(classData.RPCHash, 0, classData.RPCHash.Length, null, 0);
+            }
+            sha256.TransformFinalBlock(new byte[]{ 255 }, 0, 1);
+            _fieldsHash = sha256.Hash;
+            
             foreach (var registeredType in typesMap.RegisteredTypes.Values)
             {
                 //map base ids

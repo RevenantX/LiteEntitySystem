@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace LiteEntitySystem.Internal
 {
@@ -58,6 +60,7 @@ namespace LiteEntitySystem.Internal
         public readonly bool IsUpdateable;
         public readonly bool IsLocalOnly;
         public readonly EntityConstructor<InternalEntity> EntityConstructor;
+        public readonly byte[] RPCHash;
         public RpcFieldInfo[] RemoteCallsClient;
         
         private readonly bool _isCreated;
@@ -128,6 +131,7 @@ namespace LiteEntitySystem.Internal
             var fields = new List<EntityFieldInfo>();
             var syncableFields = new List<SyncableFieldInfo>();
             var lagCompensatedFields = new List<EntityFieldInfo>();
+            var rpcSha256 = SHA256.Create();
 
             //add here to baseTypes to add fields
             baseTypes.Insert(0, typeof(InternalEntity));
@@ -145,12 +149,16 @@ namespace LiteEntitySystem.Internal
                 foreach (var field in baseType.GetFields(bindingFlags))
                 {
                     var ft = field.FieldType;
-                    if(IsRemoteCallType(ft) || field.IsStatic)
+                    if(IsRemoteCallType(ft))
                     {
                         if (!field.IsStatic)
                             throw new Exception($"RemoteCalls should be static! (Class: {entType} Field: {field.Name})");
+                        byte[] rpcSignature = Encoding.ASCII.GetBytes(ft.Name + (ft.IsGenericType ? ft.GetGenericArguments()[0].Name : string.Empty));
+                        rpcSha256.TransformBlock(rpcSignature, 0, rpcSignature.Length, null, 0);
                         continue;
                     }
+                    if(field.IsStatic)
+                        continue;
                     
                     var syncVarFieldAttribute = field.GetCustomAttribute<SyncVarFlags>();
                     var syncVarClassAttribute = baseType.GetCustomAttribute<SyncVarFlags>();
@@ -217,6 +225,8 @@ namespace LiteEntitySystem.Internal
                                 {
                                     if (!syncableField.IsStatic)
                                         throw new Exception($"RemoteCalls should be static! (Class: {entType} Field: {field.Name})");
+                                    byte[] rpcSignature = Encoding.ASCII.GetBytes(ft.Name + (ft.IsGenericType ? ft.GetGenericArguments()[0].Name : string.Empty));
+                                    rpcSha256.TransformBlock(rpcSignature, 0, rpcSignature.Length, null, 0);
                                     continue;
                                 }
                                 if (!syncableFieldType.IsValueType || 
@@ -245,6 +255,8 @@ namespace LiteEntitySystem.Internal
                     }
                 }
             }
+            rpcSha256.TransformFinalBlock(new byte[]{ 255 }, 0, 1);
+            RPCHash = rpcSha256.Hash;
             
             //sort by placing interpolated first
             fields.Sort((a, b) =>
