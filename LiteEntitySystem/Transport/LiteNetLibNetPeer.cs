@@ -38,7 +38,7 @@ namespace LiteEntitySystem.Transport
 
         public override string ToString()
         {
-            return NetPeer.EndPoint.ToString();
+            return NetPeer.ToString();
         }
     }
 

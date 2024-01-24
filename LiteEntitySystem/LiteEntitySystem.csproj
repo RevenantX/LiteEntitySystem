@@ -19,7 +19,7 @@
 
     <ItemGroup>
       <PackageReference Include="K4os.Compression.LZ4" Version="1.3.6" />
-      <PackageReference Include="LiteNetLib" Version="1.1.0" />
+      <PackageReference Include="LiteNetLib" Version="1.2.0" />
     </ItemGroup>
 
     <ItemGroup>
