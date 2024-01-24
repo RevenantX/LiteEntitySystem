@@ -27,7 +27,6 @@
             string name,
             ValueTypeProcessor valueTypeProcessor,
             int offset,
-            FieldType fieldType,
             SyncFlags flags)
         {
             Name = name;
@@ -36,7 +35,7 @@
             Offset = offset;
             Size = (uint)TypeProcessor.Size;
             IntSize = TypeProcessor.Size;
-            FieldType = fieldType;
+            FieldType = FieldType.SyncVar;
             FixedOffset = 0;
             PredictedOffset = 0;
             Flags = flags;

@@ -110,16 +110,6 @@ namespace LiteEntitySystem
                 framesPerSecond,
                 sendRate);
         }
-        
-        /// <summary>
-        /// Compares EntityClassData hashes. Can be used to detect that client has different version
-        /// </summary>
-        /// <param name="hash">hash to check</param>
-        /// <returns>true if hash is equal</returns>
-        public bool ValidateEntityClassDataHash(ReadOnlySpan<byte> hash)
-        {
-            return hash.SequenceEqual(new ReadOnlySpan<byte>(_fieldsHash));
-        }
 
         /// <summary>
         /// Create and add new player

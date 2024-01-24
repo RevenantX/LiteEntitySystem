@@ -79,11 +79,6 @@ namespace LiteEntitySystem
         /// </summary>
         public AbstractNetPeer NetPeer => _netPeer;
         
-        /// <summary>
-        /// Can be used to detect that client differs using ServerEntityManager.ValidateEntityClassDataHash
-        /// </summary>
-        public ReadOnlySpan<byte> EntityClassDataHash => _fieldsHash;
-        
         private const int InputBufferSize = 128;
 
         struct InputCommand
