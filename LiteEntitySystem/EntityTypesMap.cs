@@ -23,6 +23,7 @@ namespace LiteEntitySystem
         internal ushort MaxId;
         internal readonly Dictionary<Type, RegisteredTypeInfo> RegisteredTypes = new();
         private bool _isFinished;
+        private ulong _resultHash = 14695981039346656037UL; //FNV1a offset
         private const BindingFlags FieldsFlags = BindingFlags.Instance |
                                                  BindingFlags.Public |
                                                  BindingFlags.NonPublic |
@@ -35,8 +36,6 @@ namespace LiteEntitySystem
         public ulong EvaluateEntityClassDataHash()
         {
             //FNV1a 64 bit hash
-            ulong hash = 14695981039346656037UL; //offset
-            
             if (!_isFinished)
             {
                 foreach (var (entType, _) in RegisteredTypes.OrderBy(kv => kv.Value.ClassId))
@@ -59,7 +58,7 @@ namespace LiteEntitySystem
                 }
                 _isFinished = true;
             }
-            return hash;
+            return _resultHash;
             
             void TryHashField(FieldInfo fi)
             {
@@ -70,8 +69,8 @@ namespace LiteEntitySystem
                     string ftName = ft.Name + (ft.IsGenericType ? ft.GetGenericArguments()[0].Name : string.Empty);
                     for (int i = 0; i < ftName.Length; i++)
                     {
-                        hash ^= ftName[i];
-                        hash *= 1099511628211UL; //prime
+                        _resultHash ^= ftName[i];
+                        _resultHash *= 1099511628211UL; //prime
                     }
                 }
             }
