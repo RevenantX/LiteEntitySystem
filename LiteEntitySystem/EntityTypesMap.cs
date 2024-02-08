@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
@@ -24,7 +22,6 @@ namespace LiteEntitySystem
     {
         internal ushort MaxId;
         internal readonly Dictionary<Type, RegisteredTypeInfo> RegisteredTypes = new();
-        private readonly SHA256 _sha256 = SHA256.Create();
         private bool _isFinished;
         private const BindingFlags FieldsFlags = BindingFlags.Instance |
                                                  BindingFlags.Public |
@@ -35,8 +32,11 @@ namespace LiteEntitySystem
         /// Can be used to detect that server/client has difference
         /// </summary>
         /// <returns>hash</returns>
-        public byte[] EvaluateEntityClassDataHash()
+        public ulong EvaluateEntityClassDataHash()
         {
+            //FNV1a 64 bit hash
+            ulong hash = 14695981039346656037UL; //offset
+            
             if (!_isFinished)
             {
                 foreach (var (entType, _) in RegisteredTypes.OrderBy(kv => kv.Value.ClassId))
@@ -57,11 +57,9 @@ namespace LiteEntitySystem
                         }
                     }
                 }
-                _sha256.TransformFinalBlock(new byte[]{ 255 }, 0, 1);
                 _isFinished = true;
             }
-            
-            return _sha256.Hash;
+            return hash;
             
             void TryHashField(FieldInfo fi)
             {
@@ -69,8 +67,12 @@ namespace LiteEntitySystem
                 if ((fi.IsStatic && EntityClassData.IsRemoteCallType(ft)) || 
                     (ft.IsGenericType && !ft.IsArray && ft.GetGenericTypeDefinition() == typeof(SyncVar<>)))
                 {
-                    byte[] ftName = Encoding.ASCII.GetBytes(ft.Name + (ft.IsGenericType ? ft.GetGenericArguments()[0].Name : string.Empty));
-                    _sha256.TransformBlock(ftName, 0, ftName.Length, null, 0);
+                    string ftName = ft.Name + (ft.IsGenericType ? ft.GetGenericArguments()[0].Name : string.Empty);
+                    for (int i = 0; i < ftName.Length; i++)
+                    {
+                        hash ^= ftName[i];
+                        hash *= 1099511628211UL; //prime
+                    }
                 }
             }
         }

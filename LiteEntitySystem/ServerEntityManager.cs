@@ -196,15 +196,12 @@ namespace LiteEntitySystem
         /// <param name="initMethod">Method that will be called after entity construction</param>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Created entity or null in case of limit</returns>
-        public T AddController<T>(NetPlayer owner, Action<T> initMethod = null) where T : ControllerLogic
-        {
-            var result = Add<T>(ent =>
+        public T AddController<T>(NetPlayer owner, Action<T> initMethod = null) where T : ControllerLogic =>
+            Add<T>(ent =>
             {
                 ent.InternalOwnerId = owner.Id;
                 initMethod?.Invoke(ent);
             });
-            return result;
-        }
         
         /// <summary>
         /// Add new player controller entity and start controlling entityToControl
@@ -214,16 +211,13 @@ namespace LiteEntitySystem
         /// <param name="initMethod">Method that will be called after entity construction</param>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Created entity or null in case of limit</returns>
-        public T AddController<T>(NetPlayer owner, PawnLogic entityToControl, Action<T> initMethod = null) where T : ControllerLogic
-        {
-            var result = Add<T>(ent =>
+        public T AddController<T>(NetPlayer owner, PawnLogic entityToControl, Action<T> initMethod = null) where T : ControllerLogic =>
+            Add<T>(ent =>
             {
                 ent.InternalOwnerId = owner.Id;
                 ent.StartControl(entityToControl);
                 initMethod?.Invoke(ent);
             });
-            return result;
-        }
         
         /// <summary>
         /// Add new AI controller entity
