@@ -176,7 +176,7 @@ namespace LiteEntitySystem
             _calls.Add(new RpcFieldInfo(_syncableOffset, MethodCallGenerator.GenerateNoParams<TSyncField>(methodToCall.Method)));
             if (remoteCallHandle.CachedAction != null)
                 return;
-            remoteCallHandle = new RemoteCall((Action<SyncableField>)(s => (s.ParentEntity.EntityManager as ServerEntityManager)?.AddRemoteCall(s.ParentEntity.Id, (ushort)(rpcId+s.RPCOffset), s.Flags)));
+            remoteCallHandle = new RemoteCall((Action<SyncableField>)(s => s.ServerEntityManager?.AddRemoteCall(s.ParentEntityInternal.Id, (ushort)(rpcId + s.RPCOffset), s.Flags)));
         }
 
         public void CreateClientAction<T, TSyncField>(TSyncField self, Action<T> methodToCall, ref RemoteCall<T> remoteCallHandle) where T : unmanaged where TSyncField : SyncableField
@@ -186,7 +186,7 @@ namespace LiteEntitySystem
             _calls.Add(new RpcFieldInfo(_syncableOffset, MethodCallGenerator.Generate<TSyncField, T>(methodToCall.Method)));
             if (remoteCallHandle.CachedAction != null)
                 return;
-            remoteCallHandle = new RemoteCall<T>((Action<SyncableField, T>)((s, value) => (s.ParentEntity.EntityManager as ServerEntityManager)?.AddRemoteCall(s.ParentEntity.Id, value, (ushort)(rpcId+s.RPCOffset), s.Flags)));
+            remoteCallHandle = new RemoteCall<T>((Action<SyncableField, T>)((s, value) => s.ServerEntityManager?.AddRemoteCall(s.ParentEntityInternal.Id, value, (ushort)(rpcId + s.RPCOffset), s.Flags)));
         }
         
         public void CreateClientAction<T, TSyncField>(TSyncField self, SpanAction<T> methodToCall, ref RemoteCallSpan<T> remoteCallHandle) where T : unmanaged where TSyncField : SyncableField
@@ -196,7 +196,7 @@ namespace LiteEntitySystem
             _calls.Add(new RpcFieldInfo(_syncableOffset, MethodCallGenerator.GenerateSpan<TSyncField, T>(methodToCall.Method)));
             if (remoteCallHandle.CachedAction != null)
                 return;
-            remoteCallHandle = new RemoteCallSpan<T>((SpanAction<SyncableField, T>)((s, value) => (s.ParentEntity.EntityManager as ServerEntityManager)?.AddRemoteCall(s.ParentEntity.Id, value, (ushort)(rpcId+s.RPCOffset), s.Flags)));
+            remoteCallHandle = new RemoteCallSpan<T>((SpanAction<SyncableField, T>)((s, value) => s.ServerEntityManager?.AddRemoteCall(s.ParentEntityInternal.Id, value, (ushort)(rpcId + s.RPCOffset), s.Flags)));
         }
     }
 

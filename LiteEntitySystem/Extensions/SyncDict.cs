@@ -20,7 +20,9 @@ namespace LiteEntitySystem.Extensions
         
         public int Count => _data.Count;
 
-        private readonly Dictionary<TKey, TValue> _data = new ();
+        private Dictionary<TKey, TValue> _serverData;
+        private Dictionary<TKey, TValue> _tempData;
+        private Dictionary<TKey, TValue> _data = new ();
 
         private static RemoteCall<KeyValue> _addAction;
         private static RemoteCall _clearAction;
@@ -29,7 +31,6 @@ namespace LiteEntitySystem.Extensions
 
         public Dictionary<TKey, TValue>.KeyCollection Keys => _data.Keys;
         public Dictionary<TKey, TValue>.ValueCollection Values => _data.Values;
-        private static KeyValue[] KvCache = new KeyValue[8];
 
         protected internal override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
@@ -39,18 +40,40 @@ namespace LiteEntitySystem.Extensions
             r.CreateClientAction(this, InitAction, ref _initAction);
         }
 
-        protected internal override void OnSyncRequested()
+        protected internal override void Setup()
+        {
+            if (EntityManager.IsClient)
+                _serverData = new Dictionary<TKey, TValue>();
+        }
+
+        protected internal override void OnRollback()
+        {
+            _data.Clear();
+            foreach (var kv in _serverData)
+                _data.Add(kv.Key, kv.Value);
+        }
+
+        protected internal override void BeforeReadRPC()
+        {
+            _tempData = _data;
+            _data = _serverData;
+        }
+
+        protected internal override void AfterReadRPC()
+        {
+            _data = _tempData;
+            _data.Clear();
+            foreach (var kv in _serverData)
+                _data.Add(kv.Key, kv.Value);
+        }
+
+        protected internal override unsafe void OnSyncRequested()
         {
             int cacheCount = 0;
-            if (_data.Count > KvCache.Length)
-            {
-                KvCache = new KeyValue[_data.Count];
-            }
+            Span<KeyValue> kvCache = stackalloc KeyValue[_data.Count];
             foreach (var kv in _data)
-            {
-                KvCache[cacheCount++] = new KeyValue(kv.Key, kv.Value);
-            }
-            ExecuteRPC(_initAction, new ReadOnlySpan<KeyValue>(KvCache, 0, cacheCount));
+                kvCache[cacheCount++] = new KeyValue(kv.Key, kv.Value);
+            ExecuteRPC(_initAction, kvCache);
         }
 
         private void InitAction(ReadOnlySpan<KeyValue> data)

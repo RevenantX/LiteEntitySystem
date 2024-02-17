@@ -63,6 +63,11 @@ namespace LiteEntitySystem
         /// Last received player tick by server
         /// </summary>
         public ushort LastReceivedTick => _stateA?.LastReceivedTick ?? 0;
+        
+        /// <summary>
+        /// Inputs count in server input buffer
+        /// </summary>
+        public byte ServerInputBuffer => _stateB?.BufferedInputsCount ?? _stateA?.BufferedInputsCount ?? 0;
 
         /// <summary>
         /// Send rate of server
@@ -462,6 +467,8 @@ namespace LiteEntitySystem
                         }
                     }
                 }
+                for (int i = 0; i < classData.SyncableFields.Length; i++)
+                    RefMagic.RefFieldValue<SyncableField>(entity, classData.SyncableFields[i].Offset).OnRollback();
             }
 
             //reapply input
@@ -531,7 +538,8 @@ namespace LiteEntitySystem
             if (_stateB != null)
             {
                 ServerTick = Utils.LerpSequence(_stateA.Tick, _stateB.Tick, (float)(_timer/_lerpTime));
-                _stateB.ExecuteRpcs(this, _stateA.Tick, false);
+                _stateB.ExecuteRpcs(this, _stateA.Tick, false, true);
+                _stateB.ExecuteRpcs(this, _stateA.Tick, false, false);
             }
             
             //remove overflow
@@ -753,7 +761,7 @@ namespace LiteEntitySystem
             ServerTick = _stateA.Tick;
             
             //execute syncable fields first
-            _stateA.ExecuteSyncFieldRpcs(this, minimalTick, firstSync);
+            _stateA.ExecuteRpcs(this, minimalTick, firstSync, true);
 
             //Call construct methods
             for (int i = 0; i < _entitiesToConstructCount; i++)
@@ -766,7 +774,7 @@ namespace LiteEntitySystem
             _syncCallsCount = 0;
             
             //execute entity rpcs
-            _stateA.ExecuteRpcs(this, minimalTick, firstSync);
+            _stateA.ExecuteRpcs(this, minimalTick, firstSync, false);
             
             foreach (var lagCompensatedEntity in LagCompensatedEntities)
                 lagCompensatedEntity.WriteHistory(ServerTick);
@@ -812,10 +820,11 @@ namespace LiteEntitySystem
                         ushort classId = *(ushort*)(rawData + readerPosition + 1);
                         entity = AddEntity(new EntityParams(classId, entityId, version, this));
                         classData = ref entity.GetClassData();
-                        if (classData.PredictedSize > 0)
+                        if (classData.PredictedSize > 0 || classData.SyncableFields.Length > 0)
                         {
                             Utils.ResizeOrCreate(ref _predictedEntitiesData[entity.Id], classData.PredictedSize);
                             _predictedEntityFilter.Add(entity);
+                            //Logger.Log($"Add predicted: {entity.GetType()}");
                         }
                         if (classData.InterpolatedFieldsSize > 0)
                         {

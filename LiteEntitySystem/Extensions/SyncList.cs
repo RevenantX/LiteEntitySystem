@@ -1,22 +1,62 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem.Extensions
 {
     public class SyncList<T> : SyncableField, ICollection<T>, IReadOnlyList<T> where T : unmanaged
     {
+        struct SetValueData
+        {
+            public int Index;
+            public T Data;
+        }
+        
         public int Count => _count;
         public bool IsReadOnly => false;
 
+        private T[] _serverData;
         private T[] _data;
+        private T[] _temp;
+        private int _serverCount;
         private int _count;
 
         private static RemoteCall<T> _addAction;
         private static RemoteCall _clearAction;
         private static RemoteCall<int> _removeAtAction;
         private static RemoteCallSpan<T> _initAction;
+        private static RemoteCall<SetValueData> _setAction;
+
+        protected internal override void Setup()
+        {
+            if (IsClient)
+                _serverData = new T[_data.Length];
+        }
+
+        protected internal override void BeforeReadRPC()
+        {
+            _temp = _data;
+            _data = _serverData;
+            _count = _serverCount;
+        }
+
+        protected internal override unsafe void AfterReadRPC()
+        {
+            _serverCount = _count;
+            _serverData = _data;
+            _data = _temp;
+            fixed (void* serverData = _serverData, data = _data)
+                Unsafe.CopyBlock(data, serverData, (uint)(_count * sizeof(T)));
+        }
+
+        protected internal override unsafe void OnRollback()
+        {
+            _count = _serverCount;
+            fixed (void* serverData = _serverData, data = _data)
+                Unsafe.CopyBlock(data, serverData, (uint)(_count * sizeof(T)));
+        }
 
         protected internal override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
@@ -24,6 +64,7 @@ namespace LiteEntitySystem.Extensions
             r.CreateClientAction(this, Clear, ref _clearAction);
             r.CreateClientAction(this, RemoveAt, ref _removeAtAction);
             r.CreateClientAction(this, Init, ref _initAction);
+            r.CreateClientAction(this, Set, ref _setAction);
         }
 
         protected internal override void OnSyncRequested()
@@ -34,10 +75,17 @@ namespace LiteEntitySystem.Extensions
         private void Init(ReadOnlySpan<T> data)
         {
             Utils.ResizeIfFull(ref _data, data.Length);
+            Utils.ResizeIfFull(ref _serverData, data.Length);
             data.CopyTo(_data);
+            data.CopyTo(_serverData);
             _count = data.Length;
         }
 
+        private void Set(SetValueData svd)
+        {
+            _data[svd.Index] = svd.Data;
+        }
+        
         public SyncList()
         {
             _data = new T[8];
@@ -115,9 +163,16 @@ namespace LiteEntitySystem.Extensions
             _count--;
             ExecuteRPC(_removeAtAction, index);
         }
-
-        public ref T this[int index] => ref _data[index];
-        T IReadOnlyList<T>.this[int index] => _data[index];
+        
+        public T this[int index]
+        {
+            get => _data[index];
+            set
+            {
+                _data[index] = value;
+                ExecuteRPC(_setAction, new SetValueData { Index = index, Data = value });
+            }
+        }
 
         public IEnumerator<T> GetEnumerator()
         {

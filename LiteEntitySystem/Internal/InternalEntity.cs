@@ -150,7 +150,8 @@ namespace LiteEntitySystem.Internal
             {
                 ref var syncFieldInfo = ref classData.SyncableFields[i];
                 var syncField = RefMagic.RefFieldValue<SyncableField>(this, syncFieldInfo.Offset);
-                syncField.ParentEntity = this;
+                syncField.ParentEntityInternal = this;
+                syncField.Setup();
                 if (syncFieldInfo.Flags.HasFlagFast(SyncFlags.OnlyForOwner))
                     syncField.Flags = ExecuteFlags.SendToOwner;
                 else if (syncFieldInfo.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
