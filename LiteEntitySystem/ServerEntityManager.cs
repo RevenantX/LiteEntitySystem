@@ -517,7 +517,8 @@ namespace LiteEntitySystem
                 {
                     LastProcessedTick = player.LastProcessedTick,
                     LastReceivedTick = player.LastReceivedTick,
-                    Mtu = maxPartSize
+                    Mtu = maxPartSize,
+                    BufferedInputsCount = (byte)player.AvailableInput.Count
                 };
                 writePosition += sizeof(LastPartData);
                 player.Peer.SendUnreliable(new ReadOnlySpan<byte>(_packetBuffer, 0, writePosition));

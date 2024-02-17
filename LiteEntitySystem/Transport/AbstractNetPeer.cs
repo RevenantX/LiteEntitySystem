@@ -10,6 +10,5 @@ namespace LiteEntitySystem.Transport
         public abstract int GetMaxUnreliablePacketSize();
         
         internal NetPlayer AssignedPlayer;
-        public abstract int RoundTripTimeMs { get; }
     }
 }

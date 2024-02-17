@@ -19,6 +19,7 @@ namespace LiteEntitySystem.Internal
         public ushort Mtu;
         public ushort LastProcessedTick;
         public ushort LastReceivedTick;
+        public byte BufferedInputsCount;
     }
     
     [StructLayout(LayoutKind.Sequential)]

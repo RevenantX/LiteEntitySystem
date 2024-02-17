@@ -50,6 +50,7 @@ namespace LiteEntitySystem.Internal
         public ushort Tick;
         public ushort ProcessedTick;
         public ushort LastReceivedTick;
+        public byte BufferedInputsCount;
         public int InterpolatedCachesCount;
         public InterpolatedCache[] InterpolatedCaches = new InterpolatedCache[32];
         
@@ -241,6 +242,7 @@ namespace LiteEntitySystem.Internal
                 _partMtu = (ushort)(lastPartData.Mtu - sizeof(DiffPartHeader));
                 LastReceivedTick = lastPartData.LastReceivedTick;
                 ProcessedTick = lastPartData.LastProcessedTick;
+                BufferedInputsCount = lastPartData.BufferedInputsCount;
                 //Logger.Log($"TPC: {partHeader.Part} {_partMtu}, LastReceivedTick: {LastReceivedTick}, LastProcessedTick: {ProcessedTick}");
             }
             partSize -= sizeof(DiffPartHeader);

@@ -78,6 +78,13 @@ namespace LiteEntitySystem
         /// Client network peer
         /// </summary>
         public AbstractNetPeer NetPeer => _netPeer;
+
+        /// <summary>
+        /// Network jitter in milliseconds
+        /// </summary>
+        public float NetworkJitter { get; private set; }
+
+        public float NetworkJitterFrames => _adaptiveMiddlePoint;
         
         private const int InputBufferSize = 128;
 
@@ -317,7 +324,7 @@ namespace LiteEntitySystem
                     _jitterSamples[_jitterSampleIdx] = _jitterTimer.ElapsedMilliseconds / 1000f;
                     _jitterSampleIdx = (_jitterSampleIdx + 1) % _jitterSamples.Length;
                     //reset timer
-                    _jitterTimer.Reset();
+                    _jitterTimer.Restart();
 
                     if (!_receivedStates.TryGetValue(diffHeader.Tick, out var serverState))
                     {
@@ -372,25 +379,24 @@ namespace LiteEntitySystem
                     _adaptiveMiddlePoint = 3f;
                 return false;
             }
-
-            float jitterSum = 0f;
+            
             bool adaptiveIncreased = false;
-            for (int i = 0; i < _jitterSamples.Length - 1; i++)
+            int jitterValuesCount = _jitterSamples.Length - 1;
+            NetworkJitter = 0;
+            for (int i = 0; i < jitterValuesCount; i++)
             {
-                float jitter = Math.Abs(_jitterSamples[i] - _jitterSamples[i + 1]) * FramesPerSecond;
-                jitterSum += jitter;
+                float jitter = Math.Abs(_jitterSamples[i] - _jitterSamples[i + 1]);
+                if (jitter > NetworkJitter)
+                    NetworkJitter = jitter;
+                jitter *= FramesPerSecond;
                 if (jitter > _adaptiveMiddlePoint)
                 {
                     _adaptiveMiddlePoint = jitter;
                     adaptiveIncreased = true;
                 }
             }
-
             if (!adaptiveIncreased)
-            {
-                jitterSum /= _jitterSamples.Length;
-                _adaptiveMiddlePoint = Utils.Lerp(_adaptiveMiddlePoint, Math.Max(1f, jitterSum), 0.05f);
-            }
+                _adaptiveMiddlePoint = Utils.Lerp(_adaptiveMiddlePoint, Math.Max(1f, NetworkJitter*FramesPerSecond), 0.05f);
             
             _stateB = _readyStates.ExtractMin();
             _stateB.Preload(EntitiesDict);
@@ -402,6 +408,14 @@ namespace LiteEntitySystem
             //remove processed inputs
             while (_inputCommands.Count > 0 && Utils.SequenceDiff(_stateB.ProcessedTick, _inputCommands.Peek().Tick) >= 0)
                 _inputPool.Enqueue(_inputCommands.Dequeue().Data);
+            
+            //tune game speed
+            if (_stateB.BufferedInputsCount > 4)
+                SpeedMultiplier = -1; //slowdown
+            else if (_stateB.BufferedInputsCount < 2 )
+                SpeedMultiplier = 1;  //speedup
+            else
+                SpeedMultiplier = 0;  //zero
 
             return true;
         }
@@ -592,16 +606,6 @@ namespace LiteEntitySystem
             //logic update
             ushort prevTick = _tick;
             
-            float rtt = _netPeer.RoundTripTimeMs;
-            float totalInputTime = _inputCommands.Count * DeltaTimeF * 1000f;
-            if (totalInputTime > rtt + DeltaTimeF * 5000f)
-            {
-                SlowDownEnabled = true;
-            }
-            else if (totalInputTime < rtt + DeltaTimeF * 3000f)
-            {
-                SlowDownEnabled = false;
-            }
             base.Update();
 
             if (PreloadNextState())

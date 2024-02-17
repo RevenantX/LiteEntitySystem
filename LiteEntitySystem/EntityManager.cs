@@ -136,6 +136,8 @@ namespace LiteEntitySystem
         /// </summary>
         public byte PlayerId => InternalPlayerId;
 
+        public int GameSpeedMultiplier => SpeedMultiplier;
+
         public readonly byte HeaderByte;
         
         public bool InRollBackState => UpdateMode == UpdateMode.PredictionRollback;
@@ -173,10 +175,10 @@ namespace LiteEntitySystem
         private ushort _localIdCounter = MaxSyncedEntityCount;
         private bool _lagCompensationEnabled;
         private float _lerpFactor;
-        protected bool SlowDownEnabled;
 
         internal byte InternalPlayerId;
         protected readonly InputProcessor InputProcessor;
+        protected int SpeedMultiplier;
         
         public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged
         {
@@ -598,7 +600,7 @@ namespace LiteEntitySystem
             VisualDeltaTime = ticksDelta * _stopwatchFrequency;
             _accumulator += ticksDelta;
             _lastTime = elapsedTicks;
-            long maxTicks = _deltaTimeTicks + (SlowDownEnabled ? _slowdownTicks : 0);
+            long maxTicks = _deltaTimeTicks - SpeedMultiplier * _slowdownTicks;
 
             int updates = 0;
             while (_accumulator >= maxTicks)
