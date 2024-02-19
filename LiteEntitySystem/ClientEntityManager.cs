@@ -538,7 +538,8 @@ namespace LiteEntitySystem
             if (_stateB != null)
             {
                 ServerTick = Utils.LerpSequence(_stateA.Tick, _stateB.Tick, (float)(_timer/_lerpTime));
-                _stateB.ExecuteRpcs(this, _stateA.Tick, false, true);
+                //Disable. Need to check
+                //_stateB.ExecuteRpcs(this, _stateA.Tick, false, true);
                 _stateB.ExecuteRpcs(this, _stateA.Tick, false, false);
             }
             

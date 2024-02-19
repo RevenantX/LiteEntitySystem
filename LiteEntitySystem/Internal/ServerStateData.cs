@@ -149,7 +149,7 @@ namespace LiteEntitySystem.Internal
                     continue;
                 if (!firstSync)
                 {
-                    if (Utils.SequenceDiff(rpc.Header.Tick, entityManager.ServerTick) > 0)
+                    if (!syncables && Utils.SequenceDiff(rpc.Header.Tick, entityManager.ServerTick) > 0)
                     {
                         //Logger.Log($"Skip rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick} > ServerTick: {entityManager.ServerTick}. Id: {rpc.Header.Id}.");
                         continue;
