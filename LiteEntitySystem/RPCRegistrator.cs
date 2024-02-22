@@ -60,7 +60,7 @@ namespace LiteEntitySystem
         }
         
         /// <summary>
-        /// Bind notification of SyncVar changes to action
+        /// Bind notification of SyncVar changes to action (OnSync will be called after RPCs and OnConstructs)
         /// </summary>
         /// <param name="self">Target entity for binding</param>
         /// <param name="syncVar">Variable to bind</param>
@@ -69,6 +69,21 @@ namespace LiteEntitySystem
         {
             CheckTarget(self, onChangedAction.Target);
             self.GetClassData().Fields[syncVar.FieldId].OnSync = MethodCallGenerator.Generate<TEntity, T>(onChangedAction.Method);
+        }
+        
+        /// <summary>
+        /// Bind notification of SyncVar changes to action
+        /// </summary>
+        /// <param name="self">Target entity for binding</param>
+        /// <param name="syncVar">Variable to bind</param>
+        /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
+        /// <param name="executionOrder">order of execution</param>
+        public void BindOnChange<T, TEntity>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction, OnSyncExecutionOrder executionOrder) where T : unmanaged where TEntity : InternalEntity
+        {
+            CheckTarget(self, onChangedAction.Target);
+            ref var field = ref self.GetClassData().Fields[syncVar.FieldId];
+            field.OnSyncExecutionOrder = executionOrder;
+            field.OnSync = MethodCallGenerator.Generate<TEntity, T>(onChangedAction.Method);
         }
         
         /// <summary>

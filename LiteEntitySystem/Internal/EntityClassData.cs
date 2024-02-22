@@ -38,6 +38,8 @@ namespace LiteEntitySystem.Internal
     
     internal struct EntityClassData
     {
+        public static readonly EntityClassData Empty = new EntityClassData();
+        
         public readonly ushort ClassId;
         public readonly ushort FilterId;
         public readonly bool IsSingleton;

@@ -56,7 +56,7 @@ namespace LiteEntitySystem.Internal
             ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
             if (!Compare(ref a, ref *(T*)data))
             {
-                T temp = a;
+                var temp = a;
                 a = *(T*)data;
                 *(T*)data = temp;
                 return true;

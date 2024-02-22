@@ -29,14 +29,9 @@ namespace LiteEntitySystem.Extensions
         private static RemoteCallSpan<T> _initAction;
         private static RemoteCall<SetValueData> _setAction;
 
-        protected internal override void Setup()
-        {
-            if (IsClient)
-                _serverData = new T[_data.Length];
-        }
-
         protected internal override void BeforeReadRPC()
         {
+            _serverData ??= new T[_count];
             _temp = _data;
             _data = _serverData;
             _count = _serverCount;
@@ -75,9 +70,7 @@ namespace LiteEntitySystem.Extensions
         private void Init(ReadOnlySpan<T> data)
         {
             Utils.ResizeIfFull(ref _data, data.Length);
-            Utils.ResizeIfFull(ref _serverData, data.Length);
             data.CopyTo(_data);
-            data.CopyTo(_serverData);
             _count = data.Length;
         }
 

@@ -47,6 +47,15 @@ namespace LiteEntitySystem
         }
         
         /// <summary>
+        /// Called when entity created and synced
+        /// <param name="onConstructed">callback</param>
+        /// </summary>
+        public void UnsubscribeToConstructed(Action<T> onConstructed)
+        {
+            OnConstructed -= onConstructed;
+        }
+        
+        /// <summary>
         /// Entities count of type <typeparamref name="T"/>
         /// </summary>
         public int Count => _entities.Count;

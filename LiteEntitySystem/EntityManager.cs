@@ -500,33 +500,34 @@ namespace LiteEntitySystem
         {
             ref var classData = ref ClassDataDict[e.ClassId];
             
-            e.OnConstructed();
-
             if (classData.IsSingleton)
             {
                 _singletonEntities[classData.FilterId] = (SingletonEntityLogic)e;
                 foreach (int baseId in classData.BaseIds)
                     _singletonEntities[baseId] = (SingletonEntityLogic)e;
             }
-            else
+
+            e.OnConstructed();
+
+            if (!classData.IsSingleton)
             {
                 _entityFilters[classData.FilterId]?.Add(e);
                 foreach (int baseId in classData.BaseIds)
                     _entityFilters[baseId]?.Add(e);
             }
             
+
             if (IsEntityAlive(classData, e))
-            {
                 AliveEntities.Add(e);
-            }
-            if(!e.IsLocal && e is EntityLogic entityLogic && entityLogic.HasLagCompensation)
-                LagCompensatedEntities.Add(entityLogic);
+            if (IsEntityLagCompensated(e))
+                LagCompensatedEntities.Add(e);
         }
 
+        private static bool IsEntityLagCompensated(InternalEntity e)
+            => !e.IsLocal && e is EntityLogic { HasLagCompensation: true };
+
         private bool IsEntityAlive(EntityClassData classData, InternalEntity entity)
-        {
-            return classData.IsUpdateable && (IsServer || entity.IsLocal || (IsClient && classData.UpdateOnClient));
-        }
+            => classData.IsUpdateable && (IsServer || entity.IsLocal || (IsClient && classData.UpdateOnClient));
 
         internal virtual void RemoveEntity(InternalEntity e)
         {
@@ -546,11 +547,9 @@ namespace LiteEntitySystem
             }
 
             if (IsEntityAlive(classData, e))
-            {
                 AliveEntities.Remove(e);
-                if(!e.IsLocal && e is EntityLogic entityLogic && entityLogic.HasLagCompensation)
-                    LagCompensatedEntities.Remove(entityLogic);
-            }
+            if(IsEntityLagCompensated(e))
+                LagCompensatedEntities.Remove(e);
             if (classData.IsLocalOnly)
                 _localIdQueue.Enqueue(e.Id);
             EntitiesDict[e.Id] = null;

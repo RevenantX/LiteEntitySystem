@@ -40,12 +40,6 @@ namespace LiteEntitySystem.Extensions
             r.CreateClientAction(this, InitAction, ref _initAction);
         }
 
-        protected internal override void Setup()
-        {
-            if (EntityManager.IsClient)
-                _serverData = new Dictionary<TKey, TValue>();
-        }
-
         protected internal override void OnRollback()
         {
             _data.Clear();
@@ -55,6 +49,7 @@ namespace LiteEntitySystem.Extensions
 
         protected internal override void BeforeReadRPC()
         {
+            _serverData ??= new Dictionary<TKey, TValue>();
             _tempData = _data;
             _data = _serverData;
         }
@@ -80,9 +75,7 @@ namespace LiteEntitySystem.Extensions
         {
             _data.Clear();
             foreach (var kv in data)
-            {
                 _data.Add(kv.Key, kv.Value);
-            }
         }
 
         private void AddAction(KeyValue kv)

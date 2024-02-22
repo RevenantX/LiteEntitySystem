@@ -6,6 +6,12 @@
         SyncableSyncVar
     }
 
+    public enum OnSyncExecutionOrder
+    {
+        BeforeConstruct,
+        AfterConstruct
+    }
+
     internal struct EntityFieldInfo
     {
         public readonly string Name; //used for debug
@@ -19,6 +25,7 @@
         public readonly bool IsPredicted;
 
         public MethodCallDelegate OnSync;
+        public OnSyncExecutionOrder OnSyncExecutionOrder;
         public int FixedOffset;
         public int PredictedOffset;
 
@@ -40,6 +47,7 @@
             PredictedOffset = 0;
             Flags = flags;
             OnSync = null;
+            OnSyncExecutionOrder = OnSyncExecutionOrder.AfterConstruct;
             IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
                           (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
                            !Flags.HasFlagFast(SyncFlags.NeverRollBack));
@@ -64,6 +72,7 @@
             PredictedOffset = 0;
             Flags = flags;
             OnSync = null;
+            OnSyncExecutionOrder = OnSyncExecutionOrder.AfterConstruct;
             IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
                           (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
                            !Flags.HasFlagFast(SyncFlags.NeverRollBack));

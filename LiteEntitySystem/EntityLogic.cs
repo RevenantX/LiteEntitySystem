@@ -299,7 +299,7 @@ namespace LiteEntitySystem
 
         protected EntityLogic(EntityParams entityParams) : base(entityParams)
         {
-            ref var classData = ref GetClassData();
+            ref readonly var classData = ref GetClassData();
             _lagCompensatedSize = classData.LagCompensatedSize;
             if (_lagCompensatedSize > 0)
             {
