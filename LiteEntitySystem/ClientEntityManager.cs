@@ -127,18 +127,18 @@ namespace LiteEntitySystem
 
         private readonly struct SyncCallInfo
         {
-            private readonly MethodCallDelegate OnSync;
-            private readonly InternalEntity Entity;
-            private readonly int PrevDataPos;
+            private readonly MethodCallDelegate _onSync;
+            private readonly InternalEntity _entity;
+            private readonly int _prevDataPos;
 
             public SyncCallInfo(MethodCallDelegate onSync, InternalEntity entity, int prevDataPos)
             {
-                OnSync = onSync;
-                Entity = entity;
-                PrevDataPos = prevDataPos;
+                _onSync = onSync;
+                _entity = entity;
+                _prevDataPos = prevDataPos;
             }
 
-            public void Execute(ServerStateData state) => OnSync(Entity, new ReadOnlySpan<byte>(state.Data, PrevDataPos, state.Size-PrevDataPos));
+            public void Execute(ServerStateData state) => _onSync(_entity, new ReadOnlySpan<byte>(state.Data, _prevDataPos, state.Size-_prevDataPos));
         }
         private SyncCallInfo[] _syncCalls;
         private int _syncCallsCount;
