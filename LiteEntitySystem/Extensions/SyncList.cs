@@ -31,7 +31,7 @@ namespace LiteEntitySystem.Extensions
 
         protected internal override void BeforeReadRPC()
         {
-            _serverData ??= new T[_count];
+            _serverData ??= new T[_data.Length];
             _temp = _data;
             _data = _serverData;
             _count = _serverCount;
