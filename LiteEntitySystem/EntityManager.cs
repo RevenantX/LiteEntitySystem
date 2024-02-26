@@ -160,7 +160,7 @@ namespace LiteEntitySystem
 
         private readonly double _stopwatchFrequency;
         private readonly Stopwatch _stopwatch = new();
-        private readonly Queue<ushort> _localIdQueue = new();
+        private readonly IdGeneratorUShort _localIdQueue = new(MaxSyncedEntityCount);
         private readonly SingletonEntityLogic[] _singletonEntities;
         private readonly EntityFilter[] _entityFilters;
         private readonly Dictionary<Type, ushort> _registeredTypeIds = new();
@@ -172,7 +172,6 @@ namespace LiteEntitySystem
         private readonly long _slowdownTicks;
         private long _accumulator;
         private long _lastTime;
-        private ushort _localIdCounter = MaxSyncedEntityCount;
         private bool _lagCompensationEnabled;
         private float _lerpFactor;
 
@@ -274,8 +273,7 @@ namespace LiteEntitySystem
             _accumulator = 0;
             _lastTime = 0;
             InternalPlayerId = 0;
-            _localIdCounter = MaxSyncedEntityCount;
-            _localIdQueue.Clear();
+            _localIdQueue.Reset();
             _stopwatch.Restart();
             AliveEntities.Clear();
 
@@ -444,7 +442,7 @@ namespace LiteEntitySystem
         /// <returns>Created entity or null if entities limit is reached (65535 - <see cref="MaxSyncedEntityCount"/>)</returns>
         public T AddLocalEntity<T>(Action<T> initMethod = null) where T : InternalEntity
         {
-            if (_localIdCounter == 0)
+            if (_localIdQueue.AvailableIds == 0)
             {
                 Logger.LogError("Max local entities count reached");
                 return null;
@@ -452,7 +450,7 @@ namespace LiteEntitySystem
             
             var entityParams = new EntityParams(
                 EntityClassInfo<T>.ClassId,
-                _localIdQueue.Count > 0 ? _localIdQueue.Dequeue() : _localIdCounter++, 
+                (ushort)(_localIdQueue.GetNewId() + MaxSyncedEntityCount), 
                 0,
                 this);
             var entity = (T)AddEntity(entityParams);
@@ -551,7 +549,7 @@ namespace LiteEntitySystem
             if(IsEntityLagCompensated(e))
                 LagCompensatedEntities.Remove(e);
             if (classData.IsLocalOnly)
-                _localIdQueue.Enqueue(e.Id);
+                _localIdQueue.ReuseId((ushort)(e.Id-MaxSyncedEntityCount));
             EntitiesDict[e.Id] = null;
             EntitiesCount--;
             //Logger.Log($"{Mode} - RemoveEntity: {e.Id}");

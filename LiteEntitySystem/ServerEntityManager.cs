@@ -37,8 +37,8 @@ namespace LiteEntitySystem
     {
         public const int MaxStoredInputs = 30;
         
-        private readonly Queue<ushort> _entityIdQueue = new(MaxSyncedEntityCount);
-        private readonly Queue<byte> _playerIdQueue = new(MaxPlayers);
+        private readonly IdGeneratorUShort _entityIdQueue = new(MaxSyncedEntityCount);
+        private readonly IdGeneratorByte _playerIdQueue = new(MaxPlayers);
         private readonly Queue<RemoteCallPacket> _rpcPool = new();
         private readonly Queue<byte[]> _inputPool = new();
         private readonly Queue<byte[]> _pendingClientRequests = new();
@@ -81,9 +81,9 @@ namespace LiteEntitySystem
         {
             InternalPlayerId = ServerPlayerId;
             for (int i = 1; i <= byte.MaxValue; i++)
-                _playerIdQueue.Enqueue((byte)i);
+                _playerIdQueue.ReuseId((byte)i);
             for (ushort i = FirstEntityId; i < MaxSyncedEntityCount; i++)
-                _entityIdQueue.Enqueue(i);
+                _entityIdQueue.ReuseId(i);
 
             _packetBuffer[0] = packetHeader;
             SendRate = sendRate;
@@ -120,7 +120,7 @@ namespace LiteEntitySystem
         {
             if (_netPlayersCount == MaxPlayers)
                 return null;
-            var player = new NetPlayer(peer, _playerIdQueue.Dequeue()) { State = NetPlayerState.RequestBaseline };
+            var player = new NetPlayer(peer, _playerIdQueue.GetNewId()) { State = NetPlayerState.RequestBaseline };
             _netPlayersDict[player.Id] = player;
             player.ArrayIndex = _netPlayersCount;
             _netPlayersArray[_netPlayersCount++] = player;
@@ -151,7 +151,7 @@ namespace LiteEntitySystem
             
             _netPlayersDict[player.Id] = null;
             _netPlayersCount--;
-            _playerIdQueue.Enqueue(player.Id);
+            _playerIdQueue.ReuseId(player.Id);
             
             if (player.ArrayIndex != _netPlayersCount)
             {
@@ -476,7 +476,7 @@ namespace LiteEntitySystem
                         ref writePosition);
                     if (diffResult == DiffResult.DoneAndDestroy)
                     {
-                        _entityIdQueue.Enqueue(eId);
+                        _entityIdQueue.ReuseId(eId);
                     }
                     else if (diffResult == DiffResult.Done)
                     {
@@ -544,12 +544,12 @@ namespace LiteEntitySystem
             }
             else
             {
-                if (_entityIdQueue.Count == 0)
+                if (_entityIdQueue.AvailableIds == 0)
                 {
                     Logger.Log($"Cannot add entity. Max entity count reached: {MaxSyncedEntityCount}");
                     return null;
                 }
-                ushort entityId = _entityIdQueue.Dequeue();
+                ushort entityId = _entityIdQueue.GetNewId();
                 ref var stateSerializer = ref _stateSerializers[entityId];
 
                 entity = (T)AddEntity(new EntityParams(
@@ -626,7 +626,7 @@ namespace LiteEntitySystem
                 _stateSerializers[e.Id].Destroy(_tick, _minimalTick, PlayersCount == 0);
                 //destroy instantly when no players to free ids
                 if (PlayersCount == 0)
-                    _entityIdQueue.Enqueue(e.Id);
+                    _entityIdQueue.ReuseId(e.Id);
             }
         }
         
