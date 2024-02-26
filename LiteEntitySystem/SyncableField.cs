@@ -10,7 +10,7 @@ namespace LiteEntitySystem
         internal ExecuteFlags Flags;
         internal ushort RPCOffset;
         
-        internal ServerEntityManager ServerEntityManager => ParentEntityInternal.EntityManager as ServerEntityManager;
+        internal ServerEntityManager ServerEntityManager => ParentEntityInternal?.EntityManager as ServerEntityManager;
 
         protected internal virtual void OnSyncRequested()
         {
