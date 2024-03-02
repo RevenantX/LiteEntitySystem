@@ -14,7 +14,7 @@ namespace LiteEntitySystem
 
         public static readonly EntitySharedReference Empty;
 
-        internal EntitySharedReference(ushort id, byte version)
+        public EntitySharedReference(ushort id, byte version)
         {
             Id = id;
             Version = version;
