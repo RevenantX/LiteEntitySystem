@@ -17,10 +17,9 @@ namespace LiteEntitySystem
             _queue.Enqueue(id);
         }
 
-        public IdGeneratorByte() : this(byte.MaxValue) {}
-
-        public IdGeneratorByte(byte maxValue)
+        public IdGeneratorByte(byte initialValue, byte maxValue)
         {
+            _counter = initialValue;
             _maxValue = maxValue;
         }
         
@@ -52,10 +51,9 @@ namespace LiteEntitySystem
             _queue.Enqueue(id);
         }
 
-        public IdGeneratorUShort() : this(ushort.MaxValue) {}
-
-        public IdGeneratorUShort(ushort maxValue)
+        public IdGeneratorUShort(ushort initialValue, ushort maxValue)
         {
+            _counter = initialValue;
             _maxValue = maxValue;
         }
         

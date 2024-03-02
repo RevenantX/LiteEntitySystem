@@ -37,8 +37,8 @@ namespace LiteEntitySystem
     {
         public const int MaxStoredInputs = 30;
         
-        private readonly IdGeneratorUShort _entityIdQueue = new(MaxSyncedEntityCount-1);
-        private readonly IdGeneratorByte _playerIdQueue = new(MaxPlayers-1);
+        private readonly IdGeneratorUShort _entityIdQueue = new(1, MaxSyncedEntityCount);
+        private readonly IdGeneratorByte _playerIdQueue = new(1, MaxPlayers);
         private readonly Queue<RemoteCallPacket> _rpcPool = new();
         private readonly Queue<byte[]> _inputPool = new();
         private readonly Queue<byte[]> _pendingClientRequests = new();
@@ -115,7 +115,7 @@ namespace LiteEntitySystem
         {
             if (_netPlayersCount == MaxPlayers)
                 return null;
-            var player = new NetPlayer(peer, (byte)(_playerIdQueue.GetNewId()+1)) { State = NetPlayerState.RequestBaseline };
+            var player = new NetPlayer(peer, _playerIdQueue.GetNewId()) { State = NetPlayerState.RequestBaseline };
             _netPlayersDict[player.Id] = player;
             player.ArrayIndex = _netPlayersCount;
             _netPlayersArray[_netPlayersCount++] = player;
@@ -544,7 +544,7 @@ namespace LiteEntitySystem
                     Logger.Log($"Cannot add entity. Max entity count reached: {MaxSyncedEntityCount}");
                     return null;
                 }
-                ushort entityId = (ushort)(_entityIdQueue.GetNewId()+1);
+                ushort entityId = _entityIdQueue.GetNewId();
                 ref var stateSerializer = ref _stateSerializers[entityId];
 
                 entity = (T)AddEntity(new EntityParams(

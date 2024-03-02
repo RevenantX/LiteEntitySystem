@@ -160,7 +160,7 @@ namespace LiteEntitySystem
 
         private readonly double _stopwatchFrequency;
         private readonly Stopwatch _stopwatch = new();
-        private readonly IdGeneratorUShort _localIdQueue = new(MaxSyncedEntityCount);
+        private readonly IdGeneratorUShort _localIdQueue = new(MaxSyncedEntityCount, MaxEntityCount);
         private readonly SingletonEntityLogic[] _singletonEntities;
         private readonly EntityFilter[] _entityFilters;
         private readonly Dictionary<Type, ushort> _registeredTypeIds = new();
@@ -450,7 +450,7 @@ namespace LiteEntitySystem
             
             var entityParams = new EntityParams(
                 EntityClassInfo<T>.ClassId,
-                (ushort)(_localIdQueue.GetNewId() + MaxSyncedEntityCount), 
+                _localIdQueue.GetNewId(), 
                 0,
                 this);
             var entity = (T)AddEntity(entityParams);
@@ -549,7 +549,7 @@ namespace LiteEntitySystem
             if(IsEntityLagCompensated(e))
                 LagCompensatedEntities.Remove(e);
             if (classData.IsLocalOnly)
-                _localIdQueue.ReuseId((ushort)(e.Id-MaxSyncedEntityCount));
+                _localIdQueue.ReuseId(e.Id);
             EntitiesDict[e.Id] = null;
             EntitiesCount--;
             //Logger.Log($"{Mode} - RemoveEntity: {e.Id}");
