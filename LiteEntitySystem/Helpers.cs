@@ -72,6 +72,48 @@ namespace LiteEntitySystem
             }
             return false;
         }
+        
+        public static unsafe T AsEnum<T>(this short x) where T : unmanaged, Enum
+        {
+            var e = default(T);
+            *(short*)&e = x;
+            return e;
+        }
+        
+        public static unsafe T AsEnum<T>(this ushort x) where T : unmanaged, Enum
+        {
+            var e = default(T);
+            *(ushort*)&e = x;
+            return e;
+        }
+
+        public static unsafe T AsEnum<T>(this int x) where T : unmanaged, Enum
+        {
+            var e = default(T);
+            *(int*)&e = x;
+            return e;
+        }
+        
+        public static unsafe T AsEnum<T>(this uint x) where T : unmanaged, Enum
+        {
+            var e = default(T);
+            *(uint*)&e = x;
+            return e;
+        }
+
+        public static unsafe T AsEnum<T>(this long x) where T : unmanaged, Enum
+        {
+            var e = default(T);
+            *(long*)&e = x;
+            return e;
+        }
+        
+        public static unsafe T AsEnum<T>(this ulong x) where T : unmanaged, Enum
+        {
+            var e = default(T);
+            *(ulong*)&e = x;
+            return e;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe long GetEnumValue<T>(this SyncVar<T> e) where T : unmanaged, Enum

@@ -133,14 +133,13 @@ namespace LiteEntitySystem.Extensions
             }
         }
 
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
-        {
-            return _data.GetEnumerator();
-        }
+        public Dictionary<TKey, TValue>.Enumerator GetEnumerator() =>
+            _data.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() =>
+            GetEnumerator();
+
+        IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator() =>
+            GetEnumerator();
     }
 }
