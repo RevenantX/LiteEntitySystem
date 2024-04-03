@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using K4os.Compression.LZ4;
 using LiteEntitySystem.Internal;
 using LiteEntitySystem.Transport;
+using LiteEntitySystem.Collections;
 using LiteNetLib;
 
 namespace LiteEntitySystem

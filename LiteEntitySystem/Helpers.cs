@@ -61,6 +61,19 @@ namespace LiteEntitySystem
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe int GetEnumValueInt<T>(this T e) where T : unmanaged, Enum
+        {
+            switch (sizeof(T))
+            {
+                case 1: return *(byte*)&e;
+                case 2: return *(short*)&e;
+                case 4: return *(int*)&e;
+                case 8: throw new Exception("Trying to get int value from long enum");
+            }
+            return -1;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool HasFlagFast<T>(this SyncVar<T> e, T flag) where T : unmanaged, Enum
         {
             switch (sizeof(T))

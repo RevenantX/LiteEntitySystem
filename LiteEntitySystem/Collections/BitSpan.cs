@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LiteEntitySystem.Internal
+namespace LiteEntitySystem.Collections
 {
     public readonly ref struct BitSpan
     {

@@ -1,4 +1,4 @@
-﻿using LiteEntitySystem.Internal;
+﻿using LiteEntitySystem.Collections;
 using LiteEntitySystem.Transport;
 
 namespace LiteEntitySystem
@@ -16,7 +16,6 @@ namespace LiteEntitySystem
         internal ushort SimulatedServerTick;
         internal float LerpTime;
         internal NetPlayerState State;
-        internal int ArrayIndex;
         internal readonly SequenceBinaryHeap<InputBuffer> AvailableInput = new (ServerEntityManager.MaxStoredInputs);
 
         internal NetPlayer(AbstractNetPeer peer, byte id)

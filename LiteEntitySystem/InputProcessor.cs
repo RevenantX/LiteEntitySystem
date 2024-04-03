@@ -1,4 +1,5 @@
 using System;
+using LiteEntitySystem.Collections;
 using LiteEntitySystem.Internal;
 using LiteNetLib.Utils;
 

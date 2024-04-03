@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using K4os.Compression.LZ4;
+using LiteEntitySystem.Collections;
 using LiteNetLib;
 using LiteEntitySystem.Internal;
 using LiteEntitySystem.Transport;
@@ -43,18 +44,16 @@ namespace LiteEntitySystem
         private readonly Queue<byte[]> _inputPool = new();
         private readonly Queue<byte[]> _pendingClientRequests = new();
         private byte[] _packetBuffer = new byte[(MaxParts+1) * NetConstants.MaxPacketSize + StateSerializer.MaxStateSize];
-        private readonly NetPlayer[] _netPlayersArray = new NetPlayer[MaxPlayers];
-        private readonly NetPlayer[] _netPlayersDict = new NetPlayer[MaxPlayers+1];
+        private readonly SparseMap<NetPlayer> _netPlayers = new (MaxPlayers+1);
         private readonly StateSerializer[] _stateSerializers = new StateSerializer[MaxSyncedEntityCount];
         private readonly byte[] _inputDecodeBuffer = new byte[NetConstants.MaxUnreliableDataSize];
         private readonly NetDataReader _requestsReader = new();
         private byte[] _compressionBuffer = new byte[4096];
-        private int _netPlayersCount;
 
         /// <summary>
         /// Network players count
         /// </summary>
-        public int PlayersCount => _netPlayersCount;
+        public int PlayersCount => _netPlayers.Count;
         
         /// <summary>
         /// Rate at which server will make and send packets
@@ -113,12 +112,10 @@ namespace LiteEntitySystem
         /// <returns>Newly created player, null if players count is maximum</returns>
         public NetPlayer AddPlayer(AbstractNetPeer peer)
         {
-            if (_netPlayersCount == MaxPlayers)
+            if (_netPlayers.Count == MaxPlayers)
                 return null;
             var player = new NetPlayer(peer, _playerIdQueue.GetNewId()) { State = NetPlayerState.RequestBaseline };
-            _netPlayersDict[player.Id] = player;
-            player.ArrayIndex = _netPlayersCount;
-            _netPlayersArray[_netPlayersCount++] = player;
+            _netPlayers.Set(player.Id, player);
             peer.AssignedPlayer = player;
             return player;
         }
@@ -139,22 +136,14 @@ namespace LiteEntitySystem
         /// <returns>true if player removed successfully, false if player not found</returns>
         public bool RemovePlayer(NetPlayer player)
         {
-            if (player == null || _netPlayersDict[player.Id] == null)
+            if (player == null || !_netPlayers.Contains(player.Id))
                 return false;
 
             GetPlayerController(player)?.DestroyWithControlledEntity();
-            
-            _netPlayersDict[player.Id] = null;
-            _netPlayersCount--;
+
+            bool result = _netPlayers.Remove(player.Id);
             _playerIdQueue.ReuseId(player.Id);
-            
-            if (player.ArrayIndex != _netPlayersCount)
-            {
-                _netPlayersArray[player.ArrayIndex] = _netPlayersArray[_netPlayersCount];
-                _netPlayersArray[player.ArrayIndex].ArrayIndex = player.ArrayIndex;
-            }
-            _netPlayersArray[_netPlayersCount] = null;
-            return true;
+            return result;
         }
 
         /// <summary>
@@ -174,7 +163,7 @@ namespace LiteEntitySystem
         /// <returns>Instance if found, null if not</returns>
         public ControllerLogic GetPlayerController(NetPlayer player)
         {
-            if (player == null || _netPlayersDict[player.Id] == null)
+            if (player == null || !_netPlayers.Contains(player.Id))
                 return null;
             foreach (var controller in GetControllers<ControllerLogic>())
             {
@@ -382,7 +371,7 @@ namespace LiteEntitySystem
             base.Update();
             
             //send only if tick changed
-            if (_netPlayersCount == 0 || prevTick == _tick || _tick % (int) SendRate != 0)
+            if (_netPlayers.Count == 0 || prevTick == _tick || _tick % (int) SendRate != 0)
                 return;
 
             //calculate minimalTick and potential baseline size
@@ -390,9 +379,10 @@ namespace LiteEntitySystem
             _minimalTick = executedTick;
             
             int maxBaseline = 0;
-            for (int pidx = 0; pidx < _netPlayersCount; pidx++)
+            int playersCount = _netPlayers.Count;
+            for (int pidx = 0; pidx < playersCount; pidx++)
             {
-                var player = _netPlayersArray[pidx];
+                var player = _netPlayers.GetByIndex(pidx);
                 if (player.State != NetPlayerState.RequestBaseline)
                     _minimalTick = Utils.SequenceDiff(player.StateATick, _minimalTick) < 0 ? player.StateATick : _minimalTick;
                 else if (maxBaseline == 0)
@@ -411,9 +401,9 @@ namespace LiteEntitySystem
             //make packets
             fixed (byte* packetBuffer = _packetBuffer, compressionBuffer = _compressionBuffer)
             // ReSharper disable once BadChildStatementIndent
-            for (int pidx = 0; pidx < _netPlayersCount; pidx++)
+            for (int pidx = 0; pidx < playersCount; pidx++)
             {
-                var player = _netPlayersArray[pidx];
+                var player = _netPlayers.GetByIndex(pidx);
                 if (player.State == NetPlayerState.RequestBaseline)
                 {
                     int originalLength = 0;
@@ -520,7 +510,7 @@ namespace LiteEntitySystem
             }
 
             //trigger only when there is data
-            _netPlayersArray[0].Peer.TriggerSend();
+            _netPlayers.GetByIndex(0).Peer.TriggerSend();
         }
         
         private T Add<T>(Action<T> initMethod) where T : InternalEntity
@@ -561,10 +551,7 @@ namespace LiteEntitySystem
             return entity;
         }
         
-        public NetPlayer GetPlayer(byte ownerId)
-        {
-            return _netPlayersDict[ownerId];
-        }
+        public NetPlayer GetPlayer(byte ownerId) => _netPlayers.TryGetValue(ownerId, out var p) ? p : null;
 
         protected override void OnLogicTick()
         {
@@ -575,9 +562,9 @@ namespace LiteEntitySystem
                 InputProcessor.ReadClientRequest(this, _requestsReader);
             }
             
-            for (int pidx = 0; pidx < _netPlayersCount; pidx++)
+            for (int pidx = 0; pidx < _netPlayers.Count; pidx++)
             {
-                var player = _netPlayersArray[pidx];
+                var player = _netPlayers.GetByIndex(pidx);
                 if (player.State == NetPlayerState.RequestBaseline) 
                     continue;
                 if (player.AvailableInput.Count == 0)

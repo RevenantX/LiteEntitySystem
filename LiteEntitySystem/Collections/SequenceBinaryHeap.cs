@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using LiteEntitySystem.Internal;
 
-namespace LiteEntitySystem.Internal
+namespace LiteEntitySystem.Collections
 {
-    internal class SequenceBinaryHeap<T>
+    public class SequenceBinaryHeap<T>
     {
         private struct SequenceHeapNode
         {
