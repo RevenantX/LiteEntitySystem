@@ -56,10 +56,8 @@ namespace LiteEntitySystem
         /// Called when entity created and synced
         /// <param name="onConstructed">callback</param>
         /// </summary>
-        public void UnsubscribeToConstructed(Action<T> onConstructed)
-        {
+        public void UnsubscribeToConstructed(Action<T> onConstructed) =>
             OnConstructed -= onConstructed;
-        }
         
         /// <summary>
         /// Entities count of type <typeparamref name="T"/>
@@ -93,10 +91,8 @@ namespace LiteEntitySystem
             return resultArr;
         }
 
-        public bool Contains(T entity)
-        {
-            return _entities.Contains(entity);
-        }
+        public bool Contains(T entity) =>
+            _entities.Contains(entity);
 
         internal override void Clear()
         {
@@ -123,11 +119,8 @@ namespace LiteEntitySystem
             return false;
         }
 
-        private static void ResetEnumerator<TEnumerator>(ref TEnumerator enumerator)
-            where TEnumerator : struct, IEnumerator<T>
-        {
+        private static void ResetEnumerator<TEnumerator>(ref TEnumerator enumerator) where TEnumerator : struct, IEnumerator<T> =>
             enumerator.Reset();
-        }
 
         public SortedSet<T>.Enumerator GetEnumerator()
         {
@@ -136,15 +129,11 @@ namespace LiteEntitySystem
             return _enumerator;
         }
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() =>
+            GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() =>
+            GetEnumerator();
     }
 
     public class EntityList<T> : EntityFilter<T> where T : InternalEntity
@@ -161,9 +150,7 @@ namespace LiteEntitySystem
             Refresh();
         }
 
-        public new void Clear()
-        {
+        public new void Clear() =>
             base.Clear();
-        }
     }
 }
