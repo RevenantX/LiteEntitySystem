@@ -14,6 +14,12 @@ namespace LiteEntitySystem
 
     public class EntityFilter<T> : EntityFilter, IEnumerable<T> where T : InternalEntity
     {
+        private enum EntityFilterOp
+        {
+            Add,
+            Remove
+        }
+
         private readonly SortedSet<T> _entities = new();
         private SortedSet<T>.Enumerator _enumerator;
 
@@ -60,33 +66,30 @@ namespace LiteEntitySystem
         /// </summary>
         public int Count => _entities.Count;
 
-        private T[] _entitiesToAdd;
-        private T[] _entitiesToRemove;
-        private int _entitiesToAddCount;
-        private int _entitiesToRemoveCount;
+        private (T entity, EntityFilterOp operation)[] _entityOperations;
+        private int _entityOperationsCount;
 
         internal override void Add(InternalEntity entity)
         {
-            Utils.ResizeOrCreate(ref _entitiesToAdd, _entitiesToAddCount+1);
-            _entitiesToAdd[_entitiesToAddCount++] = (T)entity;
+            Utils.ResizeOrCreate(ref _entityOperations, _entityOperationsCount + 1);
+            _entityOperations[_entityOperationsCount++] = ((T)entity, EntityFilterOp.Add);
             OnConstructed?.Invoke((T)entity);
         }
 
         internal override void Remove(InternalEntity entity)
         {
-            Utils.ResizeOrCreate(ref _entitiesToRemove, _entitiesToRemoveCount + 1);
-            _entitiesToRemove[_entitiesToRemoveCount++] = (T)entity;
+            Utils.ResizeOrCreate(ref _entityOperations, _entityOperationsCount + 1);
+            _entityOperations[_entityOperationsCount++] = ((T)entity, EntityFilterOp.Remove);
             OnDestroyed?.Invoke((T)entity);
         }
-        
+
         public T[] ToArray()
         {
-            var resultArr = new T[_entities.Count + _entitiesToAddCount - _entitiesToRemoveCount];
+            Refresh();
+            var resultArr = new T[_entities.Count];
             int idx = 0;
             foreach (var entity in this)
-            {
                 resultArr[idx++] = entity;
-            }
             return resultArr;
         }
 
@@ -97,45 +100,39 @@ namespace LiteEntitySystem
 
         internal override void Clear()
         {
-            _entitiesToAddCount = 0;
-            _entitiesToRemoveCount = 0;
+            _entityOperationsCount = 0;
             _entities.Clear();
             _enumerator = _entities.GetEnumerator();
         }
 
-        internal void Refresh()
+        internal bool Refresh()
         {
-            if (_entitiesToAddCount > 0 || _entitiesToRemoveCount > 0)
+            if (_entityOperationsCount > 0)
             {
-                for (int i = 0; i < _entitiesToAddCount; i++)
-                {
-                    _entities.Add(_entitiesToAdd[i]);
-                }
-                for (int i = 0; i < _entitiesToRemoveCount; i++)
-                {
-                    _entities.Remove(_entitiesToRemove[i]);
-                }
-                _entitiesToAddCount = 0;
-                _entitiesToRemoveCount = 0;
+                for (int i = 0; i < _entityOperationsCount; i++)
+                    if (_entityOperations[i].operation == EntityFilterOp.Add)
+                        _entities.Add(_entityOperations[i].entity);
+                    else
+                        _entities.Remove(_entityOperations[i].entity);
+
+                _entityOperationsCount = 0;
                 _enumerator = _entities.GetEnumerator();
+                return true;
             }
+
+            return false;
         }
-        
-        private static void ResetEnumerator<TEnumerator>(ref TEnumerator enumerator) where TEnumerator : struct, IEnumerator<T>
+
+        private static void ResetEnumerator<TEnumerator>(ref TEnumerator enumerator)
+            where TEnumerator : struct, IEnumerator<T>
         {
             enumerator.Reset();
         }
 
         public SortedSet<T>.Enumerator GetEnumerator()
         {
-            if (_entitiesToAddCount > 0 || _entitiesToRemoveCount > 0)
-            {
-                Refresh();
-            }
-            else
-            {
+            if (Refresh() == false)
                 ResetEnumerator(ref _enumerator);
-            }
             return _enumerator;
         }
 

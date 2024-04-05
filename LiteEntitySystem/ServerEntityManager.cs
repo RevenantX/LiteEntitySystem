@@ -125,10 +125,9 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="player">player to remove</param>
         /// <returns>true if player removed successfully, false if player not found</returns>
-        public bool RemovePlayer(AbstractNetPeer player)
-        {
-            return RemovePlayer(player.AssignedPlayer);
-        }
+        public bool RemovePlayer(AbstractNetPeer player) =>
+            RemovePlayer(player.AssignedPlayer);
+        
         /// <summary>
         /// Remove player and it's owned entities
         /// </summary>
@@ -152,9 +151,7 @@ namespace LiteEntitySystem
         /// <param name="player">player</param>
         /// <returns>Instance if found, null if not</returns>
         public ControllerLogic GetPlayerController(AbstractNetPeer player)
-        {
-            return GetPlayerController(player.AssignedPlayer);
-        }
+            => GetPlayerController(player.AssignedPlayer);
         
         /// <summary>
         /// Returns controller owned by the player
@@ -209,10 +206,8 @@ namespace LiteEntitySystem
         /// <param name="initMethod">Method that will be called after entity construction</param>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Created entity or null in case of limit</returns>
-        public T AddAIController<T>(Action<T> initMethod = null) where T : AiControllerLogic
-        {
-            return Add(initMethod);
-        }
+        public T AddAIController<T>(Action<T> initMethod = null) where T : AiControllerLogic => 
+            Add(initMethod);
 
         public void RemoveAIController<T>(T controller) where T : AiControllerLogic
         {
@@ -226,10 +221,8 @@ namespace LiteEntitySystem
         /// <param name="initMethod">Method that will be called after entity construction</param>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Created entity or null in case of limit</returns>
-        public T AddSignleton<T>(Action<T> initMethod = null) where T : SingletonEntityLogic
-        {
-            return Add(initMethod);
-        }
+        public T AddSignleton<T>(Action<T> initMethod = null) where T : SingletonEntityLogic => 
+            Add(initMethod);
 
         /// <summary>
         /// Add new entity
@@ -237,10 +230,8 @@ namespace LiteEntitySystem
         /// <param name="initMethod">Method that will be called after entity construction</param>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Created entity or null in case of limit</returns>
-        public T AddEntity<T>(Action<T> initMethod = null) where T : EntityLogic
-        {
-            return Add(initMethod);
-        }
+        public T AddEntity<T>(Action<T> initMethod = null) where T : EntityLogic => 
+            Add(initMethod);
         
         /// <summary>
         /// Add new entity and set parent entity
@@ -551,7 +542,8 @@ namespace LiteEntitySystem
             return entity;
         }
         
-        public NetPlayer GetPlayer(byte ownerId) => _netPlayers.TryGetValue(ownerId, out var p) ? p : null;
+        public NetPlayer GetPlayer(byte ownerId) =>
+            _netPlayers.TryGetValue(ownerId, out var p) ? p : null;
 
         protected override void OnLogicTick()
         {
@@ -612,10 +604,8 @@ namespace LiteEntitySystem
             }
         }
         
-        internal void PoolRpc(RemoteCallPacket rpcNode)
-        {
+        internal void PoolRpc(RemoteCallPacket rpcNode) =>
             _rpcPool.Enqueue(rpcNode);
-        }
         
         internal void AddRemoteCall(ushort entityId, ushort rpcId, ExecuteFlags flags)
         {
