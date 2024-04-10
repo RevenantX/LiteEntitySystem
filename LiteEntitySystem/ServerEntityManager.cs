@@ -119,6 +119,14 @@ namespace LiteEntitySystem
             peer.AssignedPlayer = player;
             return player;
         }
+        
+        /// <summary>
+        /// Get player by owner id
+        /// </summary>
+        /// <param name="ownerId">id of player owner (Entity.OwnerId)</param>
+        /// <returns></returns>
+        public NetPlayer GetPlayer(byte ownerId) =>
+            _netPlayers.TryGetValue(ownerId, out var p) ? p : null;
 
         /// <summary>
         /// Remove player using NetPeer.Tag (is you assigned it or used <see cref="AddPlayer"/> with assignToTag)
@@ -150,8 +158,8 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="player">player</param>
         /// <returns>Instance if found, null if not</returns>
-        public ControllerLogic GetPlayerController(AbstractNetPeer player)
-            => GetPlayerController(player.AssignedPlayer);
+        public ControllerLogic GetPlayerController(AbstractNetPeer player) =>
+            GetPlayerController(player.AssignedPlayer);
         
         /// <summary>
         /// Returns controller owned by the player
@@ -541,9 +549,6 @@ namespace LiteEntitySystem
             //Debug.Log($"[SEM] Entity create. clsId: {classData.ClassId}, id: {entityId}, v: {version}");
             return entity;
         }
-        
-        public NetPlayer GetPlayer(byte ownerId) =>
-            _netPlayers.TryGetValue(ownerId, out var p) ? p : null;
 
         protected override void OnLogicTick()
         {

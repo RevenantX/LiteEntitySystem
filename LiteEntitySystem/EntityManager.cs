@@ -179,20 +179,14 @@ namespace LiteEntitySystem
         protected readonly InputProcessor InputProcessor;
         protected int SpeedMultiplier;
         
-        public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged
-        {
+        public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged =>
             ValueProcessors.RegisteredProcessors[typeof(T)] = new UserTypeProcessor<T>(interpolationDelegate);
-        }
         
-        public static void RegisterFieldType<T>() where T : unmanaged
-        {
+        public static void RegisterFieldType<T>() where T : unmanaged =>
             ValueProcessors.RegisteredProcessors[typeof(T)] = new UserTypeProcessor<T>(null);
-        }
 
-        private static void RegisterBasicFieldType<T>(ValueTypeProcessor<T> proc) where T : unmanaged
-        {
+        private static void RegisterBasicFieldType<T>(ValueTypeProcessor<T> proc) where T : unmanaged =>
             ValueProcessors.RegisteredProcessors.Add(typeof(T), proc);
-        }
 
         static EntityManager()
         {
@@ -300,12 +294,10 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="id">Id of entity</param>
         /// <returns>Entity if it exists, null if id == InvalidEntityId or entity is another type or version</returns>
-        public T GetEntityById<T>(EntitySharedReference id) where T : InternalEntity
-        {
-            return id.Id != InvalidEntityId
+        public T GetEntityById<T>(EntitySharedReference id) where T : InternalEntity =>
+             id.Id != InvalidEntityId
                 ? EntitiesDict[id.Id] is T entity && entity.Version == id.Version ? entity : null
                 : null;
-        }
         
         /// <summary>
         /// Try get entity by id
@@ -314,13 +306,10 @@ namespace LiteEntitySystem
         /// <param name="id">Id of entity</param>
         /// <param name="entity">out entity if exists otherwise null</param>
         /// <returns>true if it exists, false if id == InvalidEntityId or entity is another type or version</returns>
-        public bool TryGetEntityById<T>(EntitySharedReference id, out T entity) where T : InternalEntity
-        {
-            entity = id.Id != InvalidEntityId
+        public bool TryGetEntityById<T>(EntitySharedReference id, out T entity) where T : InternalEntity =>
+            (entity = id.Id != InvalidEntityId
                 ? EntitiesDict[id.Id] is T castedEnt && castedEnt.Version == id.Version ? castedEnt : null
-                : null;
-            return entity != null;
-        }
+                : null) != null;
         
         private EntityFilter<T> GetEntitiesInternal<T>() where T : InternalEntity
         {
@@ -357,60 +346,38 @@ namespace LiteEntitySystem
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Entity filter that can be used in foreach</returns>
-        public EntityFilter<T> GetEntities<T>() where T : EntityLogic
-        {
-            return GetEntitiesInternal<T>();
-        }
+        public EntityFilter<T> GetEntities<T>() where T : EntityLogic => GetEntitiesInternal<T>();
         
         /// <summary>
         /// Get all controller entities with type
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Entity filter that can be used in foreach</returns>
-        public EntityFilter<T> GetControllers<T>() where T : ControllerLogic
-        {
-            return GetEntitiesInternal<T>();
-        }
+        public EntityFilter<T> GetControllers<T>() where T : ControllerLogic => GetEntitiesInternal<T>();
 
         /// <summary>
         /// Get existing singleton entity
         /// </summary>
         /// <typeparam name="T">Singleton entity type</typeparam>
         /// <returns>Singleton entity, can throw exceptions on invalid type</returns>
-        public T GetSingleton<T>() where T : SingletonEntityLogic
-        {
-            return (T)_singletonEntities[_registeredTypeIds[typeof(T)]];
-        }
-        
-        /// <summary>
-        /// Get existing singleton entity
-        /// </summary>
-        /// <typeparam name="T">Singleton entity type</typeparam>
-        /// <param name="singleton">Singleton entity, can throw exceptions on invalid type</param>
-        public void GetSingleton<T>(out T singleton) where T : SingletonEntityLogic
-        {
-            singleton = (T)_singletonEntities[_registeredTypeIds[typeof(T)]];
-        }
+        public T GetSingleton<T>() where T : SingletonEntityLogic =>
+            (T)_singletonEntities[_registeredTypeIds[typeof(T)]];
 
         /// <summary>
         /// Get singleton entity
         /// </summary>
         /// <typeparam name="T">Singleton entity type</typeparam>
         /// <returns>Singleton entity or null if it didn't exists</returns>
-        public T GetSingletonSafe<T>() where T : SingletonEntityLogic
-        {
-            return _registeredTypeIds.TryGetValue(typeof(T), out ushort registeredId) ? _singletonEntities[registeredId] as T : null;
-        }
+        public T GetSingletonSafe<T>() where T : SingletonEntityLogic =>
+            _registeredTypeIds.TryGetValue(typeof(T), out ushort registeredId) ? _singletonEntities[registeredId] as T : null;
 
         /// <summary>
         /// Is singleton exists and has correct type
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public bool HasSingleton<T>() where T : SingletonEntityLogic
-        {
-            return _singletonEntities[_registeredTypeIds[typeof(T)]] is T;
-        }
+        public bool HasSingleton<T>() where T : SingletonEntityLogic =>
+            _singletonEntities[_registeredTypeIds[typeof(T)]] is T;
 
         /// <summary>
         /// Try get singleton entity
