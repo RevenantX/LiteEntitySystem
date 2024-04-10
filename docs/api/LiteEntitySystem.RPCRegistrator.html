@@ -87,7 +87,7 @@
 
   <a id="LiteEntitySystem_RPCRegistrator_BindOnChange_" data-uid="LiteEntitySystem.RPCRegistrator.BindOnChange*"></a>
   <h4 id="LiteEntitySystem_RPCRegistrator_BindOnChange__2___1_LiteEntitySystem_SyncVar___0___System_Action___0__" data-uid="LiteEntitySystem.RPCRegistrator.BindOnChange``2(``1,LiteEntitySystem.SyncVar{``0}@,System.Action{``0})">BindOnChange&lt;T, TEntity&gt;(TEntity, ref SyncVar&lt;T&gt;, Action&lt;T&gt;)</h4>
-  <div class="markdown level1 summary"><p>Bind notification of SyncVar changes to action</p>
+  <div class="markdown level1 summary"><p>Bind notification of SyncVar changes to action (OnSync will be called after RPCs and OnConstructs)</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -120,6 +120,72 @@
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
         <td><span class="parametername">onChangedAction</span></td>
         <td><p>Action that will be called when variable changes by sync</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TEntity</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_RPCRegistrator_BindOnChange_" data-uid="LiteEntitySystem.RPCRegistrator.BindOnChange*"></a>
+  <h4 id="LiteEntitySystem_RPCRegistrator_BindOnChange__2___1_LiteEntitySystem_SyncVar___0___System_Action___0__LiteEntitySystem_Internal_OnSyncExecutionOrder_" data-uid="LiteEntitySystem.RPCRegistrator.BindOnChange``2(``1,LiteEntitySystem.SyncVar{``0}@,System.Action{``0},LiteEntitySystem.Internal.OnSyncExecutionOrder)">BindOnChange&lt;T, TEntity&gt;(TEntity, ref SyncVar&lt;T&gt;, Action&lt;T&gt;, OnSyncExecutionOrder)</h4>
+  <div class="markdown level1 summary"><p>Bind notification of SyncVar changes to action</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void BindOnChange&lt;T, TEntity&gt;(TEntity self, ref SyncVar&lt;T&gt; syncVar, Action&lt;T&gt; onChangedAction, OnSyncExecutionOrder executionOrder) where T : unmanaged where TEntity : InternalEntity</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TEntity</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>Target entity for binding</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.SyncVar-1.html">SyncVar</a>&lt;T&gt;</td>
+        <td><span class="parametername">syncVar</span></td>
+        <td><p>Variable to bind</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
+        <td><span class="parametername">onChangedAction</span></td>
+        <td><p>Action that will be called when variable changes by sync</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.Internal.OnSyncExecutionOrder.html">OnSyncExecutionOrder</a></td>
+        <td><span class="parametername">executionOrder</span></td>
+        <td><p>order of execution</p>
 </td>
       </tr>
     </tbody>

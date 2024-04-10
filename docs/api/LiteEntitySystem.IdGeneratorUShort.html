@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Struct EntityParams
+      <title>Class IdGeneratorUShort
  </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Struct EntityParams
+      <meta name="title" content="Class IdGeneratorUShort
  ">
     
       <link rel="shortcut icon" href="../favicon.ico">
@@ -67,32 +67,99 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.EntityParams">
+            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.IdGeneratorUShort">
 
 
 
-  <h1 id="LiteEntitySystem_EntityParams" data-uid="LiteEntitySystem.EntityParams" class="text-break">Struct EntityParams
+  <h1 id="LiteEntitySystem_IdGeneratorUShort" data-uid="LiteEntitySystem.IdGeneratorUShort" class="text-break">Class IdGeneratorUShort
 </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+    <div class="level1"><span class="xref">IdGeneratorUShort</span></div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
-  <h5 id="LiteEntitySystem_EntityParams_syntax">Syntax</h5>
+  <h5 id="LiteEntitySystem_IdGeneratorUShort_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly ref struct EntityParams</code></pre>
+    <pre><code class="lang-csharp hljs">public class IdGeneratorUShort</code></pre>
   </div>
-  <h3 id="fields">Fields
+  <h3 id="constructors">Constructors
 </h3>
 
 
-  <h4 id="LiteEntitySystem_EntityParams_ClassId" data-uid="LiteEntitySystem.EntityParams.ClassId">ClassId</h4>
+  <a id="LiteEntitySystem_IdGeneratorUShort__ctor_" data-uid="LiteEntitySystem.IdGeneratorUShort.#ctor*"></a>
+  <h4 id="LiteEntitySystem_IdGeneratorUShort__ctor_System_UInt16_System_UInt16_" data-uid="LiteEntitySystem.IdGeneratorUShort.#ctor(System.UInt16,System.UInt16)">IdGeneratorUShort(ushort, ushort)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly ushort ClassId</code></pre>
+    <pre><code class="lang-csharp hljs">public IdGeneratorUShort(ushort initialValue, ushort maxValue)</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
+        <td><span class="parametername">initialValue</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
+        <td><span class="parametername">maxValue</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+</h3>
+
+
+  <a id="LiteEntitySystem_IdGeneratorUShort_AvailableIds_" data-uid="LiteEntitySystem.IdGeneratorUShort.AvailableIds*"></a>
+  <h4 id="LiteEntitySystem_IdGeneratorUShort_AvailableIds" data-uid="LiteEntitySystem.IdGeneratorUShort.AvailableIds">AvailableIds</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int AvailableIds { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
+
+
+  <a id="LiteEntitySystem_IdGeneratorUShort_GetNewId_" data-uid="LiteEntitySystem.IdGeneratorUShort.GetNewId*"></a>
+  <h4 id="LiteEntitySystem_IdGeneratorUShort_GetNewId" data-uid="LiteEntitySystem.IdGeneratorUShort.GetNewId">GetNewId()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort GetNewId()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-condensed">
     <thead>
       <tr>
@@ -109,72 +176,37 @@
   </table>
 
 
-  <h4 id="LiteEntitySystem_EntityParams_EntityManager" data-uid="LiteEntitySystem.EntityParams.EntityManager">EntityManager</h4>
+  <a id="LiteEntitySystem_IdGeneratorUShort_Reset_" data-uid="LiteEntitySystem.IdGeneratorUShort.Reset*"></a>
+  <h4 id="LiteEntitySystem_IdGeneratorUShort_Reset" data-uid="LiteEntitySystem.IdGeneratorUShort.Reset">Reset()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly EntityManager EntityManager</code></pre>
+    <pre><code class="lang-csharp hljs">public void Reset()</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityManager.html">EntityManager</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 
 
-  <h4 id="LiteEntitySystem_EntityParams_Id" data-uid="LiteEntitySystem.EntityParams.Id">Id</h4>
+  <a id="LiteEntitySystem_IdGeneratorUShort_ReuseId_" data-uid="LiteEntitySystem.IdGeneratorUShort.ReuseId*"></a>
+  <h4 id="LiteEntitySystem_IdGeneratorUShort_ReuseId_System_UInt16_" data-uid="LiteEntitySystem.IdGeneratorUShort.ReuseId(System.UInt16)">ReuseId(ushort)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly ushort Id</code></pre>
+    <pre><code class="lang-csharp hljs">public void ReuseId(ushort id)</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
+        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <h4 id="LiteEntitySystem_EntityParams_Version" data-uid="LiteEntitySystem.EntityParams.Version">Version</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly byte Version</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
+        <td><span class="parametername">id</span></td>
         <td></td>
       </tr>
     </tbody>

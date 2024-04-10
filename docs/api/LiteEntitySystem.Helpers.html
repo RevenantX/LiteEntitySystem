@@ -90,6 +90,63 @@
 </h3>
 
 
+  <a id="LiteEntitySystem_Helpers_GetEnumValueInt_" data-uid="LiteEntitySystem.Helpers.GetEnumValueInt*"></a>
+  <h4 id="LiteEntitySystem_Helpers_GetEnumValueInt__1___0_" data-uid="LiteEntitySystem.Helpers.GetEnumValueInt``1(``0)">GetEnumValueInt&lt;T&gt;(T)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int GetEnumValueInt&lt;T&gt;(this T e) where T : unmanaged, Enum</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">e</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
   <a id="LiteEntitySystem_Helpers_GetEnumValue_" data-uid="LiteEntitySystem.Helpers.GetEnumValue*"></a>
   <h4 id="LiteEntitySystem_Helpers_GetEnumValue__1_LiteEntitySystem_SyncVar___0__" data-uid="LiteEntitySystem.Helpers.GetEnumValue``1(LiteEntitySystem.SyncVar{``0})">GetEnumValue&lt;T&gt;(SyncVar&lt;T&gt;)</h4>
   <div class="markdown level1 summary"></div>
@@ -307,6 +364,63 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_Helpers_ReadStruct_" data-uid="LiteEntitySystem.Helpers.ReadStruct*"></a>
+  <h4 id="LiteEntitySystem_Helpers_ReadStruct__1_System_ReadOnlySpan_System_Byte__" data-uid="LiteEntitySystem.Helpers.ReadStruct``1(System.ReadOnlySpan{System.Byte})">ReadStruct&lt;T&gt;(ReadOnlySpan&lt;byte&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static T ReadStruct&lt;T&gt;(this ReadOnlySpan&lt;byte&gt; data) where T : unmanaged</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
+        <td><span class="parametername">data</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
         <td></td>
       </tr>
     </tbody>

@@ -95,8 +95,80 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public abstract class SyncableField</code></pre>
   </div>
+  <h3 id="properties">Properties
+</h3>
+
+
+  <a id="LiteEntitySystem_SyncableField_IsClient_" data-uid="LiteEntitySystem.SyncableField.IsClient*"></a>
+  <h4 id="LiteEntitySystem_SyncableField_IsClient" data-uid="LiteEntitySystem.SyncableField.IsClient">IsClient</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected bool IsClient { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_SyncableField_IsServer_" data-uid="LiteEntitySystem.SyncableField.IsServer*"></a>
+  <h4 id="LiteEntitySystem_SyncableField_IsServer" data-uid="LiteEntitySystem.SyncableField.IsServer">IsServer</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected bool IsServer { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
 </h3>
+
+
+  <a id="LiteEntitySystem_SyncableField_AfterReadRPC_" data-uid="LiteEntitySystem.SyncableField.AfterReadRPC*"></a>
+  <h4 id="LiteEntitySystem_SyncableField_AfterReadRPC" data-uid="LiteEntitySystem.SyncableField.AfterReadRPC">AfterReadRPC()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void AfterReadRPC()</code></pre>
+  </div>
+
+
+  <a id="LiteEntitySystem_SyncableField_BeforeReadRPC_" data-uid="LiteEntitySystem.SyncableField.BeforeReadRPC*"></a>
+  <h4 id="LiteEntitySystem_SyncableField_BeforeReadRPC" data-uid="LiteEntitySystem.SyncableField.BeforeReadRPC">BeforeReadRPC()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void BeforeReadRPC()</code></pre>
+  </div>
 
 
   <a id="LiteEntitySystem_SyncableField_ExecuteRPC_" data-uid="LiteEntitySystem.SyncableField.ExecuteRPC*"></a>
@@ -220,6 +292,16 @@
   </table>
 
 
+  <a id="LiteEntitySystem_SyncableField_OnRollback_" data-uid="LiteEntitySystem.SyncableField.OnRollback*"></a>
+  <h4 id="LiteEntitySystem_SyncableField_OnRollback" data-uid="LiteEntitySystem.SyncableField.OnRollback">OnRollback()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void OnRollback()</code></pre>
+  </div>
+
+
   <a id="LiteEntitySystem_SyncableField_OnSyncRequested_" data-uid="LiteEntitySystem.SyncableField.OnSyncRequested*"></a>
   <h4 id="LiteEntitySystem_SyncableField_OnSyncRequested" data-uid="LiteEntitySystem.SyncableField.OnSyncRequested">OnSyncRequested()</h4>
   <div class="markdown level1 summary"></div>
@@ -231,12 +313,12 @@
 
 
   <a id="LiteEntitySystem_SyncableField_RegisterRPC_" data-uid="LiteEntitySystem.SyncableField.RegisterRPC*"></a>
-  <h4 id="LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__" data-uid="LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)">RegisterRPC(in SyncableRPCRegistrator)</h4>
+  <h4 id="LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__" data-uid="LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)">RegisterRPC(ref SyncableRPCRegistrator)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected virtual void RegisterRPC(in SyncableRPCRegistrator r)</code></pre>
+    <pre><code class="lang-csharp hljs">protected virtual void RegisterRPC(ref SyncableRPCRegistrator r)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">

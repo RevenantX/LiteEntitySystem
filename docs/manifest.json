@@ -1,5 +1,5 @@
 {
-  "source_base_path": "E:/Projects/LiteEntitySystem/docfx_project",
+  "source_base_path": "e:/Projects/LiteEntitySystem/docfx_project",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -48,6 +48,66 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.ClientEntityManager.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Collections.BitReadOnlySpan.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Collections.BitReadOnlySpan.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Collections.BitSpan.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Collections.BitSpan.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Collections.SparseMap-1.SparseEntry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Collections.SparseMap-1.SparseEntry.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Collections.SparseMap-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Collections.SparseMap-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Collections.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Collections.html"
         }
       },
       "version": ""
@@ -474,6 +534,26 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.IdGeneratorByte.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.IdGeneratorByte.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.IdGeneratorUShort.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.IdGeneratorUShort.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.InputProcessor-1.yml",
       "output": {
         ".html": {
@@ -588,6 +668,16 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.Internal.InternalSyncType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Internal.OnSyncExecutionOrder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Internal.OnSyncExecutionOrder.html"
         }
       },
       "version": ""

@@ -297,6 +297,32 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.ClientEntityManager.NetPeer
   nameWithType: ClientEntityManager.NetPeer
+- uid: LiteEntitySystem.ClientEntityManager.NetworkJitter
+  name: NetworkJitter
+  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_NetworkJitter
+  commentId: P:LiteEntitySystem.ClientEntityManager.NetworkJitter
+  fullName: LiteEntitySystem.ClientEntityManager.NetworkJitter
+  nameWithType: ClientEntityManager.NetworkJitter
+- uid: LiteEntitySystem.ClientEntityManager.NetworkJitter*
+  name: NetworkJitter
+  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_NetworkJitter_
+  commentId: Overload:LiteEntitySystem.ClientEntityManager.NetworkJitter
+  isSpec: "True"
+  fullName: LiteEntitySystem.ClientEntityManager.NetworkJitter
+  nameWithType: ClientEntityManager.NetworkJitter
+- uid: LiteEntitySystem.ClientEntityManager.NetworkJitterFrames
+  name: NetworkJitterFrames
+  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_NetworkJitterFrames
+  commentId: P:LiteEntitySystem.ClientEntityManager.NetworkJitterFrames
+  fullName: LiteEntitySystem.ClientEntityManager.NetworkJitterFrames
+  nameWithType: ClientEntityManager.NetworkJitterFrames
+- uid: LiteEntitySystem.ClientEntityManager.NetworkJitterFrames*
+  name: NetworkJitterFrames
+  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_NetworkJitterFrames_
+  commentId: Overload:LiteEntitySystem.ClientEntityManager.NetworkJitterFrames
+  isSpec: "True"
+  fullName: LiteEntitySystem.ClientEntityManager.NetworkJitterFrames
+  nameWithType: ClientEntityManager.NetworkJitterFrames
 - uid: LiteEntitySystem.ClientEntityManager.OnLogicTick
   name: OnLogicTick()
   href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_OnLogicTick
@@ -349,6 +375,19 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.ClientEntityManager.RollBackTick
   nameWithType: ClientEntityManager.RollBackTick
+- uid: LiteEntitySystem.ClientEntityManager.ServerInputBuffer
+  name: ServerInputBuffer
+  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_ServerInputBuffer
+  commentId: P:LiteEntitySystem.ClientEntityManager.ServerInputBuffer
+  fullName: LiteEntitySystem.ClientEntityManager.ServerInputBuffer
+  nameWithType: ClientEntityManager.ServerInputBuffer
+- uid: LiteEntitySystem.ClientEntityManager.ServerInputBuffer*
+  name: ServerInputBuffer
+  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_ServerInputBuffer_
+  commentId: Overload:LiteEntitySystem.ClientEntityManager.ServerInputBuffer
+  isSpec: "True"
+  fullName: LiteEntitySystem.ClientEntityManager.ServerInputBuffer
+  nameWithType: ClientEntityManager.ServerInputBuffer
 - uid: LiteEntitySystem.ClientEntityManager.ServerSendRate
   name: ServerSendRate
   href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_ServerSendRate
@@ -401,6 +440,591 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.ClientEntityManager.Update
   nameWithType: ClientEntityManager.Update
+- uid: LiteEntitySystem.Collections
+  name: LiteEntitySystem.Collections
+  href: api/LiteEntitySystem.Collections.html
+  commentId: N:LiteEntitySystem.Collections
+  fullName: LiteEntitySystem.Collections
+  nameWithType: LiteEntitySystem.Collections
+- uid: LiteEntitySystem.Collections.BitReadOnlySpan
+  name: BitReadOnlySpan
+  href: api/LiteEntitySystem.Collections.BitReadOnlySpan.html
+  commentId: T:LiteEntitySystem.Collections.BitReadOnlySpan
+  fullName: LiteEntitySystem.Collections.BitReadOnlySpan
+  nameWithType: BitReadOnlySpan
+- uid: LiteEntitySystem.Collections.BitReadOnlySpan.#ctor(System.Byte*,System.Int32)
+  name: BitReadOnlySpan(byte*, int)
+  href: api/LiteEntitySystem.Collections.BitReadOnlySpan.html#LiteEntitySystem_Collections_BitReadOnlySpan__ctor_System_Byte__System_Int32_
+  commentId: M:LiteEntitySystem.Collections.BitReadOnlySpan.#ctor(System.Byte*,System.Int32)
+  name.vb: New(Byte*, Integer)
+  fullName: LiteEntitySystem.Collections.BitReadOnlySpan.BitReadOnlySpan(byte*, int)
+  fullName.vb: LiteEntitySystem.Collections.BitReadOnlySpan.New(Byte*, Integer)
+  nameWithType: BitReadOnlySpan.BitReadOnlySpan(byte*, int)
+  nameWithType.vb: BitReadOnlySpan.New(Byte*, Integer)
+- uid: LiteEntitySystem.Collections.BitReadOnlySpan.#ctor(System.Byte[],System.Int32,System.Int32)
+  name: BitReadOnlySpan(byte[], int, int)
+  href: api/LiteEntitySystem.Collections.BitReadOnlySpan.html#LiteEntitySystem_Collections_BitReadOnlySpan__ctor_System_Byte___System_Int32_System_Int32_
+  commentId: M:LiteEntitySystem.Collections.BitReadOnlySpan.#ctor(System.Byte[],System.Int32,System.Int32)
+  name.vb: New(Byte(), Integer, Integer)
+  fullName: LiteEntitySystem.Collections.BitReadOnlySpan.BitReadOnlySpan(byte[], int, int)
+  fullName.vb: LiteEntitySystem.Collections.BitReadOnlySpan.New(Byte(), Integer, Integer)
+  nameWithType: BitReadOnlySpan.BitReadOnlySpan(byte[], int, int)
+  nameWithType.vb: BitReadOnlySpan.New(Byte(), Integer, Integer)
+- uid: LiteEntitySystem.Collections.BitReadOnlySpan.#ctor(System.ReadOnlySpan{System.Byte},System.Int32)
+  name: BitReadOnlySpan(ReadOnlySpan<byte>, int)
+  href: api/LiteEntitySystem.Collections.BitReadOnlySpan.html#LiteEntitySystem_Collections_BitReadOnlySpan__ctor_System_ReadOnlySpan_System_Byte__System_Int32_
+  commentId: M:LiteEntitySystem.Collections.BitReadOnlySpan.#ctor(System.ReadOnlySpan{System.Byte},System.Int32)
+  name.vb: New(ReadOnlySpan(Of Byte), Integer)
+  fullName: LiteEntitySystem.Collections.BitReadOnlySpan.BitReadOnlySpan(System.ReadOnlySpan<byte>, int)
+  fullName.vb: LiteEntitySystem.Collections.BitReadOnlySpan.New(System.ReadOnlySpan(Of Byte), Integer)
+  nameWithType: BitReadOnlySpan.BitReadOnlySpan(ReadOnlySpan<byte>, int)
+  nameWithType.vb: BitReadOnlySpan.New(ReadOnlySpan(Of Byte), Integer)
+- uid: LiteEntitySystem.Collections.BitReadOnlySpan.#ctor(System.Span{System.Byte})
+  name: BitReadOnlySpan(Span<byte>)
+  href: api/LiteEntitySystem.Collections.BitReadOnlySpan.html#LiteEntitySystem_Collections_BitReadOnlySpan__ctor_System_Span_System_Byte__
+  commentId: M:LiteEntitySystem.Collections.BitReadOnlySpan.#ctor(System.Span{System.Byte})
+  name.vb: New(Span(Of Byte))
+  fullName: LiteEntitySystem.Collections.BitReadOnlySpan.BitReadOnlySpan(System.Span<byte>)
+  fullName.vb: LiteEntitySystem.Collections.BitReadOnlySpan.New(System.Span(Of Byte))
+  nameWithType: BitReadOnlySpan.BitReadOnlySpan(Span<byte>)
+  nameWithType.vb: BitReadOnlySpan.New(Span(Of Byte))
+- uid: LiteEntitySystem.Collections.BitReadOnlySpan.#ctor(System.Span{System.Byte},System.Int32)
+  name: BitReadOnlySpan(Span<byte>, int)
+  href: api/LiteEntitySystem.Collections.BitReadOnlySpan.html#LiteEntitySystem_Collections_BitReadOnlySpan__ctor_System_Span_System_Byte__System_Int32_
+  commentId: M:LiteEntitySystem.Collections.BitReadOnlySpan.#ctor(System.Span{System.Byte},System.Int32)
+  name.vb: New(Span(Of Byte), Integer)
+  fullName: LiteEntitySystem.Collections.BitReadOnlySpan.BitReadOnlySpan(System.Span<byte>, int)
+  fullName.vb: LiteEntitySystem.Collections.BitReadOnlySpan.New(System.Span(Of Byte), Integer)
+  nameWithType: BitReadOnlySpan.BitReadOnlySpan(Span<byte>, int)
+  nameWithType.vb: BitReadOnlySpan.New(Span(Of Byte), Integer)
+- uid: LiteEntitySystem.Collections.BitReadOnlySpan.#ctor*
+  name: BitReadOnlySpan
+  href: api/LiteEntitySystem.Collections.BitReadOnlySpan.html#LiteEntitySystem_Collections_BitReadOnlySpan__ctor_
+  commentId: Overload:LiteEntitySystem.Collections.BitReadOnlySpan.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: LiteEntitySystem.Collections.BitReadOnlySpan.BitReadOnlySpan
+  fullName.vb: LiteEntitySystem.Collections.BitReadOnlySpan.New
+  nameWithType: BitReadOnlySpan.BitReadOnlySpan
+  nameWithType.vb: BitReadOnlySpan.New
+- uid: LiteEntitySystem.Collections.BitReadOnlySpan.BitCount
+  name: BitCount
+  href: api/LiteEntitySystem.Collections.BitReadOnlySpan.html#LiteEntitySystem_Collections_BitReadOnlySpan_BitCount
+  commentId: F:LiteEntitySystem.Collections.BitReadOnlySpan.BitCount
+  fullName: LiteEntitySystem.Collections.BitReadOnlySpan.BitCount
+  nameWithType: BitReadOnlySpan.BitCount
+- uid: LiteEntitySystem.Collections.BitReadOnlySpan.ByteCount
+  name: ByteCount
+  href: api/LiteEntitySystem.Collections.BitReadOnlySpan.html#LiteEntitySystem_Collections_BitReadOnlySpan_ByteCount
+  commentId: F:LiteEntitySystem.Collections.BitReadOnlySpan.ByteCount
+  fullName: LiteEntitySystem.Collections.BitReadOnlySpan.ByteCount
+  nameWithType: BitReadOnlySpan.ByteCount
+- uid: LiteEntitySystem.Collections.BitReadOnlySpan.Item(System.Int32)
+  name: this[int]
+  href: api/LiteEntitySystem.Collections.BitReadOnlySpan.html#LiteEntitySystem_Collections_BitReadOnlySpan_Item_System_Int32_
+  commentId: P:LiteEntitySystem.Collections.BitReadOnlySpan.Item(System.Int32)
+  name.vb: this[](Integer)
+  fullName: LiteEntitySystem.Collections.BitReadOnlySpan.this[int]
+  fullName.vb: LiteEntitySystem.Collections.BitReadOnlySpan.this[](Integer)
+  nameWithType: BitReadOnlySpan.this[int]
+  nameWithType.vb: BitReadOnlySpan.this[](Integer)
+- uid: LiteEntitySystem.Collections.BitReadOnlySpan.Item*
+  name: this
+  href: api/LiteEntitySystem.Collections.BitReadOnlySpan.html#LiteEntitySystem_Collections_BitReadOnlySpan_Item_
+  commentId: Overload:LiteEntitySystem.Collections.BitReadOnlySpan.Item
+  isSpec: "True"
+  name.vb: this[]
+  fullName: LiteEntitySystem.Collections.BitReadOnlySpan.this
+  fullName.vb: LiteEntitySystem.Collections.BitReadOnlySpan.this[]
+  nameWithType: BitReadOnlySpan.this
+  nameWithType.vb: BitReadOnlySpan.this[]
+- uid: LiteEntitySystem.Collections.BitReadOnlySpan.ToString
+  name: ToString()
+  href: api/LiteEntitySystem.Collections.BitReadOnlySpan.html#LiteEntitySystem_Collections_BitReadOnlySpan_ToString
+  commentId: M:LiteEntitySystem.Collections.BitReadOnlySpan.ToString
+  fullName: LiteEntitySystem.Collections.BitReadOnlySpan.ToString()
+  nameWithType: BitReadOnlySpan.ToString()
+- uid: LiteEntitySystem.Collections.BitReadOnlySpan.ToString*
+  name: ToString
+  href: api/LiteEntitySystem.Collections.BitReadOnlySpan.html#LiteEntitySystem_Collections_BitReadOnlySpan_ToString_
+  commentId: Overload:LiteEntitySystem.Collections.BitReadOnlySpan.ToString
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.BitReadOnlySpan.ToString
+  nameWithType: BitReadOnlySpan.ToString
+- uid: LiteEntitySystem.Collections.BitSpan
+  name: BitSpan
+  href: api/LiteEntitySystem.Collections.BitSpan.html
+  commentId: T:LiteEntitySystem.Collections.BitSpan
+  fullName: LiteEntitySystem.Collections.BitSpan
+  nameWithType: BitSpan
+- uid: LiteEntitySystem.Collections.BitSpan.#ctor(System.Byte*,System.Int32)
+  name: BitSpan(byte*, int)
+  href: api/LiteEntitySystem.Collections.BitSpan.html#LiteEntitySystem_Collections_BitSpan__ctor_System_Byte__System_Int32_
+  commentId: M:LiteEntitySystem.Collections.BitSpan.#ctor(System.Byte*,System.Int32)
+  name.vb: New(Byte*, Integer)
+  fullName: LiteEntitySystem.Collections.BitSpan.BitSpan(byte*, int)
+  fullName.vb: LiteEntitySystem.Collections.BitSpan.New(Byte*, Integer)
+  nameWithType: BitSpan.BitSpan(byte*, int)
+  nameWithType.vb: BitSpan.New(Byte*, Integer)
+- uid: LiteEntitySystem.Collections.BitSpan.#ctor(System.Byte[],System.Int32,System.Int32)
+  name: BitSpan(byte[], int, int)
+  href: api/LiteEntitySystem.Collections.BitSpan.html#LiteEntitySystem_Collections_BitSpan__ctor_System_Byte___System_Int32_System_Int32_
+  commentId: M:LiteEntitySystem.Collections.BitSpan.#ctor(System.Byte[],System.Int32,System.Int32)
+  name.vb: New(Byte(), Integer, Integer)
+  fullName: LiteEntitySystem.Collections.BitSpan.BitSpan(byte[], int, int)
+  fullName.vb: LiteEntitySystem.Collections.BitSpan.New(Byte(), Integer, Integer)
+  nameWithType: BitSpan.BitSpan(byte[], int, int)
+  nameWithType.vb: BitSpan.New(Byte(), Integer, Integer)
+- uid: LiteEntitySystem.Collections.BitSpan.#ctor(System.Span{System.Byte})
+  name: BitSpan(Span<byte>)
+  href: api/LiteEntitySystem.Collections.BitSpan.html#LiteEntitySystem_Collections_BitSpan__ctor_System_Span_System_Byte__
+  commentId: M:LiteEntitySystem.Collections.BitSpan.#ctor(System.Span{System.Byte})
+  name.vb: New(Span(Of Byte))
+  fullName: LiteEntitySystem.Collections.BitSpan.BitSpan(System.Span<byte>)
+  fullName.vb: LiteEntitySystem.Collections.BitSpan.New(System.Span(Of Byte))
+  nameWithType: BitSpan.BitSpan(Span<byte>)
+  nameWithType.vb: BitSpan.New(Span(Of Byte))
+- uid: LiteEntitySystem.Collections.BitSpan.#ctor(System.Span{System.Byte},System.Int32)
+  name: BitSpan(Span<byte>, int)
+  href: api/LiteEntitySystem.Collections.BitSpan.html#LiteEntitySystem_Collections_BitSpan__ctor_System_Span_System_Byte__System_Int32_
+  commentId: M:LiteEntitySystem.Collections.BitSpan.#ctor(System.Span{System.Byte},System.Int32)
+  name.vb: New(Span(Of Byte), Integer)
+  fullName: LiteEntitySystem.Collections.BitSpan.BitSpan(System.Span<byte>, int)
+  fullName.vb: LiteEntitySystem.Collections.BitSpan.New(System.Span(Of Byte), Integer)
+  nameWithType: BitSpan.BitSpan(Span<byte>, int)
+  nameWithType.vb: BitSpan.New(Span(Of Byte), Integer)
+- uid: LiteEntitySystem.Collections.BitSpan.#ctor*
+  name: BitSpan
+  href: api/LiteEntitySystem.Collections.BitSpan.html#LiteEntitySystem_Collections_BitSpan__ctor_
+  commentId: Overload:LiteEntitySystem.Collections.BitSpan.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: LiteEntitySystem.Collections.BitSpan.BitSpan
+  fullName.vb: LiteEntitySystem.Collections.BitSpan.New
+  nameWithType: BitSpan.BitSpan
+  nameWithType.vb: BitSpan.New
+- uid: LiteEntitySystem.Collections.BitSpan.BitCount
+  name: BitCount
+  href: api/LiteEntitySystem.Collections.BitSpan.html#LiteEntitySystem_Collections_BitSpan_BitCount
+  commentId: F:LiteEntitySystem.Collections.BitSpan.BitCount
+  fullName: LiteEntitySystem.Collections.BitSpan.BitCount
+  nameWithType: BitSpan.BitCount
+- uid: LiteEntitySystem.Collections.BitSpan.ByteCount
+  name: ByteCount
+  href: api/LiteEntitySystem.Collections.BitSpan.html#LiteEntitySystem_Collections_BitSpan_ByteCount
+  commentId: F:LiteEntitySystem.Collections.BitSpan.ByteCount
+  fullName: LiteEntitySystem.Collections.BitSpan.ByteCount
+  nameWithType: BitSpan.ByteCount
+- uid: LiteEntitySystem.Collections.BitSpan.Clear
+  name: Clear()
+  href: api/LiteEntitySystem.Collections.BitSpan.html#LiteEntitySystem_Collections_BitSpan_Clear
+  commentId: M:LiteEntitySystem.Collections.BitSpan.Clear
+  fullName: LiteEntitySystem.Collections.BitSpan.Clear()
+  nameWithType: BitSpan.Clear()
+- uid: LiteEntitySystem.Collections.BitSpan.Clear*
+  name: Clear
+  href: api/LiteEntitySystem.Collections.BitSpan.html#LiteEntitySystem_Collections_BitSpan_Clear_
+  commentId: Overload:LiteEntitySystem.Collections.BitSpan.Clear
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.BitSpan.Clear
+  nameWithType: BitSpan.Clear
+- uid: LiteEntitySystem.Collections.BitSpan.Item(System.Int32)
+  name: this[int]
+  href: api/LiteEntitySystem.Collections.BitSpan.html#LiteEntitySystem_Collections_BitSpan_Item_System_Int32_
+  commentId: P:LiteEntitySystem.Collections.BitSpan.Item(System.Int32)
+  name.vb: this[](Integer)
+  fullName: LiteEntitySystem.Collections.BitSpan.this[int]
+  fullName.vb: LiteEntitySystem.Collections.BitSpan.this[](Integer)
+  nameWithType: BitSpan.this[int]
+  nameWithType.vb: BitSpan.this[](Integer)
+- uid: LiteEntitySystem.Collections.BitSpan.Item*
+  name: this
+  href: api/LiteEntitySystem.Collections.BitSpan.html#LiteEntitySystem_Collections_BitSpan_Item_
+  commentId: Overload:LiteEntitySystem.Collections.BitSpan.Item
+  isSpec: "True"
+  name.vb: this[]
+  fullName: LiteEntitySystem.Collections.BitSpan.this
+  fullName.vb: LiteEntitySystem.Collections.BitSpan.this[]
+  nameWithType: BitSpan.this
+  nameWithType.vb: BitSpan.this[]
+- uid: LiteEntitySystem.Collections.BitSpan.ToString
+  name: ToString()
+  href: api/LiteEntitySystem.Collections.BitSpan.html#LiteEntitySystem_Collections_BitSpan_ToString
+  commentId: M:LiteEntitySystem.Collections.BitSpan.ToString
+  fullName: LiteEntitySystem.Collections.BitSpan.ToString()
+  nameWithType: BitSpan.ToString()
+- uid: LiteEntitySystem.Collections.BitSpan.ToString*
+  name: ToString
+  href: api/LiteEntitySystem.Collections.BitSpan.html#LiteEntitySystem_Collections_BitSpan_ToString_
+  commentId: Overload:LiteEntitySystem.Collections.BitSpan.ToString
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.BitSpan.ToString
+  nameWithType: BitSpan.ToString
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  name: SequenceBinaryHeap<T>
+  href: api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.html
+  commentId: T:LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  name.vb: SequenceBinaryHeap(Of T)
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T)
+  nameWithType: SequenceBinaryHeap<T>
+  nameWithType.vb: SequenceBinaryHeap(Of T)
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.#ctor(System.Int32)
+  name: SequenceBinaryHeap(int)
+  href: api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1__ctor_System_Int32_
+  commentId: M:LiteEntitySystem.Collections.SequenceBinaryHeap`1.#ctor(System.Int32)
+  name.vb: New(Integer)
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.SequenceBinaryHeap(int)
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).New(Integer)
+  nameWithType: SequenceBinaryHeap<T>.SequenceBinaryHeap(int)
+  nameWithType.vb: SequenceBinaryHeap(Of T).New(Integer)
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.#ctor*
+  name: SequenceBinaryHeap
+  href: api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1__ctor_
+  commentId: Overload:LiteEntitySystem.Collections.SequenceBinaryHeap`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.SequenceBinaryHeap
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).New
+  nameWithType: SequenceBinaryHeap<T>.SequenceBinaryHeap
+  nameWithType.vb: SequenceBinaryHeap(Of T).New
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add(`0,System.UInt16)
+  name: Add(T, ushort)
+  href: api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_Add__0_System_UInt16_
+  commentId: M:LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add(`0,System.UInt16)
+  name.vb: Add(T, UShort)
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.Add(T, ushort)
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).Add(T, UShort)
+  nameWithType: SequenceBinaryHeap<T>.Add(T, ushort)
+  nameWithType.vb: SequenceBinaryHeap(Of T).Add(T, UShort)
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add*
+  name: Add
+  href: api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_Add_
+  commentId: Overload:LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.Add
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).Add
+  nameWithType: SequenceBinaryHeap<T>.Add
+  nameWithType.vb: SequenceBinaryHeap(Of T).Add
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Count
+  name: Count
+  href: api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_Count
+  commentId: P:LiteEntitySystem.Collections.SequenceBinaryHeap`1.Count
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.Count
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).Count
+  nameWithType: SequenceBinaryHeap<T>.Count
+  nameWithType.vb: SequenceBinaryHeap(Of T).Count
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Count*
+  name: Count
+  href: api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_Count_
+  commentId: Overload:LiteEntitySystem.Collections.SequenceBinaryHeap`1.Count
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.Count
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).Count
+  nameWithType: SequenceBinaryHeap<T>.Count
+  nameWithType.vb: SequenceBinaryHeap(Of T).Count
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMin
+  name: ExtractMin()
+  href: api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_ExtractMin
+  commentId: M:LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMin
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.ExtractMin()
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).ExtractMin()
+  nameWithType: SequenceBinaryHeap<T>.ExtractMin()
+  nameWithType.vb: SequenceBinaryHeap(Of T).ExtractMin()
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMin*
+  name: ExtractMin
+  href: api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_ExtractMin_
+  commentId: Overload:LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMin
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.ExtractMin
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).ExtractMin
+  nameWithType: SequenceBinaryHeap<T>.ExtractMin
+  nameWithType.vb: SequenceBinaryHeap(Of T).ExtractMin
+- uid: LiteEntitySystem.Collections.SparseMap`1
+  name: SparseMap<T>
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html
+  commentId: T:LiteEntitySystem.Collections.SparseMap`1
+  name.vb: SparseMap(Of T)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T)
+  nameWithType: SparseMap<T>
+  nameWithType.vb: SparseMap(Of T)
+- uid: LiteEntitySystem.Collections.SparseMap`1.#ctor
+  name: SparseMap()
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1__ctor
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.#ctor
+  name.vb: New()
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.SparseMap()
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).New()
+  nameWithType: SparseMap<T>.SparseMap()
+  nameWithType.vb: SparseMap(Of T).New()
+- uid: LiteEntitySystem.Collections.SparseMap`1.#ctor(System.Int32)
+  name: SparseMap(int)
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1__ctor_System_Int32_
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.#ctor(System.Int32)
+  name.vb: New(Integer)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.SparseMap(int)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).New(Integer)
+  nameWithType: SparseMap<T>.SparseMap(int)
+  nameWithType.vb: SparseMap(Of T).New(Integer)
+- uid: LiteEntitySystem.Collections.SparseMap`1.#ctor*
+  name: SparseMap
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1__ctor_
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.SparseMap
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).New
+  nameWithType: SparseMap<T>.SparseMap
+  nameWithType.vb: SparseMap(Of T).New
+- uid: LiteEntitySystem.Collections.SparseMap`1.Clear
+  name: Clear()
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Clear
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.Clear
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Clear()
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Clear()
+  nameWithType: SparseMap<T>.Clear()
+  nameWithType.vb: SparseMap(Of T).Clear()
+- uid: LiteEntitySystem.Collections.SparseMap`1.Clear*
+  name: Clear
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Clear_
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.Clear
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Clear
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Clear
+  nameWithType: SparseMap<T>.Clear
+  nameWithType.vb: SparseMap(Of T).Clear
+- uid: LiteEntitySystem.Collections.SparseMap`1.Contains(System.Int32)
+  name: Contains(int)
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Contains_System_Int32_
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.Contains(System.Int32)
+  name.vb: Contains(Integer)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Contains(int)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Contains(Integer)
+  nameWithType: SparseMap<T>.Contains(int)
+  nameWithType.vb: SparseMap(Of T).Contains(Integer)
+- uid: LiteEntitySystem.Collections.SparseMap`1.Contains*
+  name: Contains
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Contains_
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.Contains
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Contains
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Contains
+  nameWithType: SparseMap<T>.Contains
+  nameWithType.vb: SparseMap(Of T).Contains
+- uid: LiteEntitySystem.Collections.SparseMap`1.CopyTo(LiteEntitySystem.Collections.SparseMap{`0})
+  name: CopyTo(SparseMap<T>)
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_CopyTo_LiteEntitySystem_Collections_SparseMap__0__
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.CopyTo(LiteEntitySystem.Collections.SparseMap{`0})
+  name.vb: CopyTo(SparseMap(Of T))
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.CopyTo(LiteEntitySystem.Collections.SparseMap<T>)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).CopyTo(LiteEntitySystem.Collections.SparseMap(Of T))
+  nameWithType: SparseMap<T>.CopyTo(SparseMap<T>)
+  nameWithType.vb: SparseMap(Of T).CopyTo(SparseMap(Of T))
+- uid: LiteEntitySystem.Collections.SparseMap`1.CopyTo*
+  name: CopyTo
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_CopyTo_
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.CopyTo
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.CopyTo
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).CopyTo
+  nameWithType: SparseMap<T>.CopyTo
+  nameWithType.vb: SparseMap(Of T).CopyTo
+- uid: LiteEntitySystem.Collections.SparseMap`1.Count
+  name: Count
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Count
+  commentId: P:LiteEntitySystem.Collections.SparseMap`1.Count
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Count
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Count
+  nameWithType: SparseMap<T>.Count
+  nameWithType.vb: SparseMap(Of T).Count
+- uid: LiteEntitySystem.Collections.SparseMap`1.Count*
+  name: Count
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Count_
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.Count
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Count
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Count
+  nameWithType: SparseMap<T>.Count
+  nameWithType.vb: SparseMap(Of T).Count
+- uid: LiteEntitySystem.Collections.SparseMap`1.FindIndex(System.Int32)
+  name: FindIndex(int)
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_FindIndex_System_Int32_
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.FindIndex(System.Int32)
+  name.vb: FindIndex(Integer)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.FindIndex(int)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).FindIndex(Integer)
+  nameWithType: SparseMap<T>.FindIndex(int)
+  nameWithType.vb: SparseMap(Of T).FindIndex(Integer)
+- uid: LiteEntitySystem.Collections.SparseMap`1.FindIndex*
+  name: FindIndex
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_FindIndex_
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.FindIndex
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.FindIndex
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).FindIndex
+  nameWithType: SparseMap<T>.FindIndex
+  nameWithType.vb: SparseMap(Of T).FindIndex
+- uid: LiteEntitySystem.Collections.SparseMap`1.GetById(System.Int32)
+  name: GetById(int)
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_GetById_System_Int32_
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.GetById(System.Int32)
+  name.vb: GetById(Integer)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.GetById(int)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).GetById(Integer)
+  nameWithType: SparseMap<T>.GetById(int)
+  nameWithType.vb: SparseMap(Of T).GetById(Integer)
+- uid: LiteEntitySystem.Collections.SparseMap`1.GetById*
+  name: GetById
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_GetById_
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.GetById
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.GetById
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).GetById
+  nameWithType: SparseMap<T>.GetById
+  nameWithType.vb: SparseMap(Of T).GetById
+- uid: LiteEntitySystem.Collections.SparseMap`1.GetByIndex(System.Int32)
+  name: GetByIndex(int)
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_GetByIndex_System_Int32_
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.GetByIndex(System.Int32)
+  name.vb: GetByIndex(Integer)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.GetByIndex(int)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).GetByIndex(Integer)
+  nameWithType: SparseMap<T>.GetByIndex(int)
+  nameWithType.vb: SparseMap(Of T).GetByIndex(Integer)
+- uid: LiteEntitySystem.Collections.SparseMap`1.GetByIndex*
+  name: GetByIndex
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_GetByIndex_
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.GetByIndex
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.GetByIndex
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).GetByIndex
+  nameWithType: SparseMap<T>.GetByIndex
+  nameWithType.vb: SparseMap(Of T).GetByIndex
+- uid: LiteEntitySystem.Collections.SparseMap`1.GetSparseEntryByIndex(System.Int32)
+  name: GetSparseEntryByIndex(int)
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_GetSparseEntryByIndex_System_Int32_
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.GetSparseEntryByIndex(System.Int32)
+  name.vb: GetSparseEntryByIndex(Integer)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.GetSparseEntryByIndex(int)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).GetSparseEntryByIndex(Integer)
+  nameWithType: SparseMap<T>.GetSparseEntryByIndex(int)
+  nameWithType.vb: SparseMap(Of T).GetSparseEntryByIndex(Integer)
+- uid: LiteEntitySystem.Collections.SparseMap`1.GetSparseEntryByIndex*
+  name: GetSparseEntryByIndex
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_GetSparseEntryByIndex_
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.GetSparseEntryByIndex
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.GetSparseEntryByIndex
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).GetSparseEntryByIndex
+  nameWithType: SparseMap<T>.GetSparseEntryByIndex
+  nameWithType.vb: SparseMap(Of T).GetSparseEntryByIndex
+- uid: LiteEntitySystem.Collections.SparseMap`1.Remove(System.Int32)
+  name: Remove(int)
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Remove_System_Int32_
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.Remove(System.Int32)
+  name.vb: Remove(Integer)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Remove(int)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Remove(Integer)
+  nameWithType: SparseMap<T>.Remove(int)
+  nameWithType.vb: SparseMap(Of T).Remove(Integer)
+- uid: LiteEntitySystem.Collections.SparseMap`1.Remove(System.Int32,`0@)
+  name: Remove(int, out T)
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Remove_System_Int32__0__
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.Remove(System.Int32,`0@)
+  name.vb: Remove(Integer, T)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Remove(int, out T)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Remove(Integer, T)
+  nameWithType: SparseMap<T>.Remove(int, out T)
+  nameWithType.vb: SparseMap(Of T).Remove(Integer, T)
+- uid: LiteEntitySystem.Collections.SparseMap`1.Remove*
+  name: Remove
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Remove_
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.Remove
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Remove
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Remove
+  nameWithType: SparseMap<T>.Remove
+  nameWithType.vb: SparseMap(Of T).Remove
+- uid: LiteEntitySystem.Collections.SparseMap`1.Set(System.Int32,`0)
+  name: Set(int, T)
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Set_System_Int32__0_
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.Set(System.Int32,`0)
+  name.vb: Set(Integer, T)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Set(int, T)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Set(Integer, T)
+  nameWithType: SparseMap<T>.Set(int, T)
+  nameWithType.vb: SparseMap(Of T).Set(Integer, T)
+- uid: LiteEntitySystem.Collections.SparseMap`1.Set*
+  name: Set
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Set_
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.Set
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Set
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Set
+  nameWithType: SparseMap<T>.Set
+  nameWithType.vb: SparseMap(Of T).Set
+- uid: LiteEntitySystem.Collections.SparseMap`1.SparseEntry
+  name: SparseMap<T>.SparseEntry
+  href: api/LiteEntitySystem.Collections.SparseMap-1.SparseEntry.html
+  commentId: T:LiteEntitySystem.Collections.SparseMap`1.SparseEntry
+  name.vb: SparseMap(Of T).SparseEntry
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.SparseEntry
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).SparseEntry
+  nameWithType: SparseMap<T>.SparseEntry
+  nameWithType.vb: SparseMap(Of T).SparseEntry
+- uid: LiteEntitySystem.Collections.SparseMap`1.SparseEntry.Id
+  name: Id
+  href: api/LiteEntitySystem.Collections.SparseMap-1.SparseEntry.html#LiteEntitySystem_Collections_SparseMap_1_SparseEntry_Id
+  commentId: F:LiteEntitySystem.Collections.SparseMap`1.SparseEntry.Id
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.SparseEntry.Id
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).SparseEntry.Id
+  nameWithType: SparseMap<T>.SparseEntry.Id
+  nameWithType.vb: SparseMap(Of T).SparseEntry.Id
+- uid: LiteEntitySystem.Collections.SparseMap`1.SparseEntry.Value
+  name: Value
+  href: api/LiteEntitySystem.Collections.SparseMap-1.SparseEntry.html#LiteEntitySystem_Collections_SparseMap_1_SparseEntry_Value
+  commentId: F:LiteEntitySystem.Collections.SparseMap`1.SparseEntry.Value
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.SparseEntry.Value
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).SparseEntry.Value
+  nameWithType: SparseMap<T>.SparseEntry.Value
+  nameWithType.vb: SparseMap(Of T).SparseEntry.Value
+- uid: LiteEntitySystem.Collections.SparseMap`1.TryGetSparseEntry(System.Int32,LiteEntitySystem.Collections.SparseMap{`0}.SparseEntry@)
+  name: TryGetSparseEntry(int, out SparseEntry)
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_TryGetSparseEntry_System_Int32_LiteEntitySystem_Collections_SparseMap__0__SparseEntry__
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.TryGetSparseEntry(System.Int32,LiteEntitySystem.Collections.SparseMap{`0}.SparseEntry@)
+  name.vb: TryGetSparseEntry(Integer, SparseEntry)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.TryGetSparseEntry(int, out LiteEntitySystem.Collections.SparseMap<T>.SparseEntry)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).TryGetSparseEntry(Integer, LiteEntitySystem.Collections.SparseMap(Of T).SparseEntry)
+  nameWithType: SparseMap<T>.TryGetSparseEntry(int, out SparseMap<T>.SparseEntry)
+  nameWithType.vb: SparseMap(Of T).TryGetSparseEntry(Integer, SparseMap(Of T).SparseEntry)
+- uid: LiteEntitySystem.Collections.SparseMap`1.TryGetSparseEntry*
+  name: TryGetSparseEntry
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_TryGetSparseEntry_
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.TryGetSparseEntry
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.TryGetSparseEntry
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).TryGetSparseEntry
+  nameWithType: SparseMap<T>.TryGetSparseEntry
+  nameWithType.vb: SparseMap(Of T).TryGetSparseEntry
+- uid: LiteEntitySystem.Collections.SparseMap`1.TryGetValue(System.Int32,`0@)
+  name: TryGetValue(int, out T)
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_TryGetValue_System_Int32__0__
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.TryGetValue(System.Int32,`0@)
+  name.vb: TryGetValue(Integer, T)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.TryGetValue(int, out T)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).TryGetValue(Integer, T)
+  nameWithType: SparseMap<T>.TryGetValue(int, out T)
+  nameWithType.vb: SparseMap(Of T).TryGetValue(Integer, T)
+- uid: LiteEntitySystem.Collections.SparseMap`1.TryGetValue*
+  name: TryGetValue
+  href: api/LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_TryGetValue_
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.TryGetValue
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.TryGetValue
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).TryGetValue
+  nameWithType: SparseMap<T>.TryGetValue
+  nameWithType.vb: SparseMap(Of T).TryGetValue
 - uid: LiteEntitySystem.ControllerLogic
   name: ControllerLogic
   href: api/LiteEntitySystem.ControllerLogic.html
@@ -809,6 +1433,24 @@ references:
   fullName.vb: LiteEntitySystem.EntityFilter(Of T).ToArray
   nameWithType: EntityFilter<T>.ToArray
   nameWithType.vb: EntityFilter(Of T).ToArray
+- uid: LiteEntitySystem.EntityFilter`1.UnsubscribeToConstructed(System.Action{`0})
+  name: UnsubscribeToConstructed(Action<T>)
+  href: api/LiteEntitySystem.EntityFilter-1.html#LiteEntitySystem_EntityFilter_1_UnsubscribeToConstructed_System_Action__0__
+  commentId: M:LiteEntitySystem.EntityFilter`1.UnsubscribeToConstructed(System.Action{`0})
+  name.vb: UnsubscribeToConstructed(Action(Of T))
+  fullName: LiteEntitySystem.EntityFilter<T>.UnsubscribeToConstructed(System.Action<T>)
+  fullName.vb: LiteEntitySystem.EntityFilter(Of T).UnsubscribeToConstructed(System.Action(Of T))
+  nameWithType: EntityFilter<T>.UnsubscribeToConstructed(Action<T>)
+  nameWithType.vb: EntityFilter(Of T).UnsubscribeToConstructed(Action(Of T))
+- uid: LiteEntitySystem.EntityFilter`1.UnsubscribeToConstructed*
+  name: UnsubscribeToConstructed
+  href: api/LiteEntitySystem.EntityFilter-1.html#LiteEntitySystem_EntityFilter_1_UnsubscribeToConstructed_
+  commentId: Overload:LiteEntitySystem.EntityFilter`1.UnsubscribeToConstructed
+  isSpec: "True"
+  fullName: LiteEntitySystem.EntityFilter<T>.UnsubscribeToConstructed
+  fullName.vb: LiteEntitySystem.EntityFilter(Of T).UnsubscribeToConstructed
+  nameWithType: EntityFilter<T>.UnsubscribeToConstructed
+  nameWithType.vb: EntityFilter(Of T).UnsubscribeToConstructed
 - uid: LiteEntitySystem.EntityList`1
   name: EntityList<T>
   href: api/LiteEntitySystem.EntityList-1.html
@@ -1174,13 +1816,13 @@ references:
   fullName: LiteEntitySystem.EntityLogic.ParentId
   nameWithType: EntityLogic.ParentId
 - uid: LiteEntitySystem.EntityLogic.RegisterRPC(LiteEntitySystem.RPCRegistrator@)
-  name: RegisterRPC(in RPCRegistrator)
+  name: RegisterRPC(ref RPCRegistrator)
   href: api/LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_RegisterRPC_LiteEntitySystem_RPCRegistrator__
   commentId: M:LiteEntitySystem.EntityLogic.RegisterRPC(LiteEntitySystem.RPCRegistrator@)
   name.vb: RegisterRPC(RPCRegistrator)
-  fullName: LiteEntitySystem.EntityLogic.RegisterRPC(in LiteEntitySystem.RPCRegistrator)
+  fullName: LiteEntitySystem.EntityLogic.RegisterRPC(ref LiteEntitySystem.RPCRegistrator)
   fullName.vb: LiteEntitySystem.EntityLogic.RegisterRPC(LiteEntitySystem.RPCRegistrator)
-  nameWithType: EntityLogic.RegisterRPC(in RPCRegistrator)
+  nameWithType: EntityLogic.RegisterRPC(ref RPCRegistrator)
   nameWithType.vb: EntityLogic.RegisterRPC(RPCRegistrator)
 - uid: LiteEntitySystem.EntityLogic.RegisterRPC*
   name: RegisterRPC
@@ -1351,6 +1993,19 @@ references:
   commentId: F:LiteEntitySystem.EntityManager.FramesPerSecond
   fullName: LiteEntitySystem.EntityManager.FramesPerSecond
   nameWithType: EntityManager.FramesPerSecond
+- uid: LiteEntitySystem.EntityManager.GameSpeedMultiplier
+  name: GameSpeedMultiplier
+  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GameSpeedMultiplier
+  commentId: P:LiteEntitySystem.EntityManager.GameSpeedMultiplier
+  fullName: LiteEntitySystem.EntityManager.GameSpeedMultiplier
+  nameWithType: EntityManager.GameSpeedMultiplier
+- uid: LiteEntitySystem.EntityManager.GameSpeedMultiplier*
+  name: GameSpeedMultiplier
+  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GameSpeedMultiplier_
+  commentId: Overload:LiteEntitySystem.EntityManager.GameSpeedMultiplier
+  isSpec: "True"
+  fullName: LiteEntitySystem.EntityManager.GameSpeedMultiplier
+  nameWithType: EntityManager.GameSpeedMultiplier
 - uid: LiteEntitySystem.EntityManager.GetControllers*
   name: GetControllers
   href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetControllers_
@@ -1431,15 +2086,6 @@ references:
   fullName.vb: LiteEntitySystem.EntityManager.GetSingleton(Of T)()
   nameWithType: EntityManager.GetSingleton<T>()
   nameWithType.vb: EntityManager.GetSingleton(Of T)()
-- uid: LiteEntitySystem.EntityManager.GetSingleton``1(``0@)
-  name: GetSingleton<T>(out T)
-  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetSingleton__1___0__
-  commentId: M:LiteEntitySystem.EntityManager.GetSingleton``1(``0@)
-  name.vb: GetSingleton(Of T)(T)
-  fullName: LiteEntitySystem.EntityManager.GetSingleton<T>(out T)
-  fullName.vb: LiteEntitySystem.EntityManager.GetSingleton(Of T)(T)
-  nameWithType: EntityManager.GetSingleton<T>(out T)
-  nameWithType.vb: EntityManager.GetSingleton(Of T)(T)
 - uid: LiteEntitySystem.EntityManager.HasSingleton*
   name: HasSingleton
   href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_HasSingleton_
@@ -1649,12 +2295,12 @@ references:
   commentId: F:LiteEntitySystem.EntityManager.ServerPlayerId
   fullName: LiteEntitySystem.EntityManager.ServerPlayerId
   nameWithType: EntityManager.ServerPlayerId
-- uid: LiteEntitySystem.EntityManager.SlowDownEnabled
-  name: SlowDownEnabled
-  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_SlowDownEnabled
-  commentId: F:LiteEntitySystem.EntityManager.SlowDownEnabled
-  fullName: LiteEntitySystem.EntityManager.SlowDownEnabled
-  nameWithType: EntityManager.SlowDownEnabled
+- uid: LiteEntitySystem.EntityManager.SpeedMultiplier
+  name: SpeedMultiplier
+  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_SpeedMultiplier
+  commentId: F:LiteEntitySystem.EntityManager.SpeedMultiplier
+  fullName: LiteEntitySystem.EntityManager.SpeedMultiplier
+  nameWithType: EntityManager.SpeedMultiplier
 - uid: LiteEntitySystem.EntityManager.Tick
   name: Tick
   href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Tick
@@ -1790,6 +2436,15 @@ references:
   fullName.vb: LiteEntitySystem.EntitySharedReference.New(LiteEntitySystem.EntityLogic)
   nameWithType: EntitySharedReference.EntitySharedReference(EntityLogic)
   nameWithType.vb: EntitySharedReference.New(EntityLogic)
+- uid: LiteEntitySystem.EntitySharedReference.#ctor(System.UInt16,System.Byte)
+  name: EntitySharedReference(ushort, byte)
+  href: api/LiteEntitySystem.EntitySharedReference.html#LiteEntitySystem_EntitySharedReference__ctor_System_UInt16_System_Byte_
+  commentId: M:LiteEntitySystem.EntitySharedReference.#ctor(System.UInt16,System.Byte)
+  name.vb: New(UShort, Byte)
+  fullName: LiteEntitySystem.EntitySharedReference.EntitySharedReference(ushort, byte)
+  fullName.vb: LiteEntitySystem.EntitySharedReference.New(UShort, Byte)
+  nameWithType: EntitySharedReference.EntitySharedReference(ushort, byte)
+  nameWithType.vb: EntitySharedReference.New(UShort, Byte)
 - uid: LiteEntitySystem.EntitySharedReference.#ctor*
   name: EntitySharedReference
   href: api/LiteEntitySystem.EntitySharedReference.html#LiteEntitySystem_EntitySharedReference__ctor_
@@ -1962,6 +2617,19 @@ references:
   commentId: T:LiteEntitySystem.EntityTypesMap
   fullName: LiteEntitySystem.EntityTypesMap
   nameWithType: EntityTypesMap
+- uid: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
+  name: EvaluateEntityClassDataHash()
+  href: api/LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_EvaluateEntityClassDataHash
+  commentId: M:LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
+  fullName: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash()
+  nameWithType: EntityTypesMap.EvaluateEntityClassDataHash()
+- uid: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash*
+  name: EvaluateEntityClassDataHash
+  href: api/LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_EvaluateEntityClassDataHash_
+  commentId: Overload:LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
+  isSpec: "True"
+  fullName: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
+  nameWithType: EntityTypesMap.EvaluateEntityClassDataHash
 - uid: LiteEntitySystem.EntityTypesMap`1
   name: EntityTypesMap<T>
   href: api/LiteEntitySystem.EntityTypesMap-1.html
@@ -2501,13 +3169,13 @@ references:
   nameWithType: SyncArray<T>.OnSyncRequested
   nameWithType.vb: SyncArray(Of T).OnSyncRequested
 - uid: LiteEntitySystem.Extensions.SyncArray`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
-  name: RegisterRPC(in SyncableRPCRegistrator)
+  name: RegisterRPC(ref SyncableRPCRegistrator)
   href: api/LiteEntitySystem.Extensions.SyncArray-1.html#LiteEntitySystem_Extensions_SyncArray_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
   commentId: M:LiteEntitySystem.Extensions.SyncArray`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   name.vb: RegisterRPC(SyncableRPCRegistrator)
-  fullName: LiteEntitySystem.Extensions.SyncArray<T>.RegisterRPC(in LiteEntitySystem.SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.Extensions.SyncArray<T>.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
   fullName.vb: LiteEntitySystem.Extensions.SyncArray(Of T).RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
-  nameWithType: SyncArray<T>.RegisterRPC(in SyncableRPCRegistrator)
+  nameWithType: SyncArray<T>.RegisterRPC(ref SyncableRPCRegistrator)
   nameWithType.vb: SyncArray(Of T).RegisterRPC(SyncableRPCRegistrator)
 - uid: LiteEntitySystem.Extensions.SyncArray`1.RegisterRPC*
   name: RegisterRPC
@@ -2579,6 +3247,40 @@ references:
   fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).Add
   nameWithType: SyncDict<TKey, TValue>.Add
   nameWithType.vb: SyncDict(Of TKey, TValue).Add
+- uid: LiteEntitySystem.Extensions.SyncDict`2.AfterReadRPC
+  name: AfterReadRPC()
+  href: api/LiteEntitySystem.Extensions.SyncDict-2.html#LiteEntitySystem_Extensions_SyncDict_2_AfterReadRPC
+  commentId: M:LiteEntitySystem.Extensions.SyncDict`2.AfterReadRPC
+  fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.AfterReadRPC()
+  fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).AfterReadRPC()
+  nameWithType: SyncDict<TKey, TValue>.AfterReadRPC()
+  nameWithType.vb: SyncDict(Of TKey, TValue).AfterReadRPC()
+- uid: LiteEntitySystem.Extensions.SyncDict`2.AfterReadRPC*
+  name: AfterReadRPC
+  href: api/LiteEntitySystem.Extensions.SyncDict-2.html#LiteEntitySystem_Extensions_SyncDict_2_AfterReadRPC_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncDict`2.AfterReadRPC
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.AfterReadRPC
+  fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).AfterReadRPC
+  nameWithType: SyncDict<TKey, TValue>.AfterReadRPC
+  nameWithType.vb: SyncDict(Of TKey, TValue).AfterReadRPC
+- uid: LiteEntitySystem.Extensions.SyncDict`2.BeforeReadRPC
+  name: BeforeReadRPC()
+  href: api/LiteEntitySystem.Extensions.SyncDict-2.html#LiteEntitySystem_Extensions_SyncDict_2_BeforeReadRPC
+  commentId: M:LiteEntitySystem.Extensions.SyncDict`2.BeforeReadRPC
+  fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.BeforeReadRPC()
+  fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).BeforeReadRPC()
+  nameWithType: SyncDict<TKey, TValue>.BeforeReadRPC()
+  nameWithType.vb: SyncDict(Of TKey, TValue).BeforeReadRPC()
+- uid: LiteEntitySystem.Extensions.SyncDict`2.BeforeReadRPC*
+  name: BeforeReadRPC
+  href: api/LiteEntitySystem.Extensions.SyncDict-2.html#LiteEntitySystem_Extensions_SyncDict_2_BeforeReadRPC_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncDict`2.BeforeReadRPC
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.BeforeReadRPC
+  fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).BeforeReadRPC
+  nameWithType: SyncDict<TKey, TValue>.BeforeReadRPC
+  nameWithType.vb: SyncDict(Of TKey, TValue).BeforeReadRPC
 - uid: LiteEntitySystem.Extensions.SyncDict`2.Clear
   name: Clear()
   href: api/LiteEntitySystem.Extensions.SyncDict-2.html#LiteEntitySystem_Extensions_SyncDict_2_Clear
@@ -2854,6 +3556,23 @@ references:
   fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).Keys
   nameWithType: SyncDict<TKey, TValue>.Keys
   nameWithType.vb: SyncDict(Of TKey, TValue).Keys
+- uid: LiteEntitySystem.Extensions.SyncDict`2.OnRollback
+  name: OnRollback()
+  href: api/LiteEntitySystem.Extensions.SyncDict-2.html#LiteEntitySystem_Extensions_SyncDict_2_OnRollback
+  commentId: M:LiteEntitySystem.Extensions.SyncDict`2.OnRollback
+  fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.OnRollback()
+  fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).OnRollback()
+  nameWithType: SyncDict<TKey, TValue>.OnRollback()
+  nameWithType.vb: SyncDict(Of TKey, TValue).OnRollback()
+- uid: LiteEntitySystem.Extensions.SyncDict`2.OnRollback*
+  name: OnRollback
+  href: api/LiteEntitySystem.Extensions.SyncDict-2.html#LiteEntitySystem_Extensions_SyncDict_2_OnRollback_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncDict`2.OnRollback
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.OnRollback
+  fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).OnRollback
+  nameWithType: SyncDict<TKey, TValue>.OnRollback
+  nameWithType.vb: SyncDict(Of TKey, TValue).OnRollback
 - uid: LiteEntitySystem.Extensions.SyncDict`2.OnSyncRequested
   name: OnSyncRequested()
   href: api/LiteEntitySystem.Extensions.SyncDict-2.html#LiteEntitySystem_Extensions_SyncDict_2_OnSyncRequested
@@ -2872,13 +3591,13 @@ references:
   nameWithType: SyncDict<TKey, TValue>.OnSyncRequested
   nameWithType.vb: SyncDict(Of TKey, TValue).OnSyncRequested
 - uid: LiteEntitySystem.Extensions.SyncDict`2.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
-  name: RegisterRPC(in SyncableRPCRegistrator)
+  name: RegisterRPC(ref SyncableRPCRegistrator)
   href: api/LiteEntitySystem.Extensions.SyncDict-2.html#LiteEntitySystem_Extensions_SyncDict_2_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
   commentId: M:LiteEntitySystem.Extensions.SyncDict`2.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   name.vb: RegisterRPC(SyncableRPCRegistrator)
-  fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.RegisterRPC(in LiteEntitySystem.SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
   fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
-  nameWithType: SyncDict<TKey, TValue>.RegisterRPC(in SyncableRPCRegistrator)
+  nameWithType: SyncDict<TKey, TValue>.RegisterRPC(ref SyncableRPCRegistrator)
   nameWithType.vb: SyncDict(Of TKey, TValue).RegisterRPC(SyncableRPCRegistrator)
 - uid: LiteEntitySystem.Extensions.SyncDict`2.RegisterRPC*
   name: RegisterRPC
@@ -3168,13 +3887,13 @@ references:
   nameWithType: SyncFixedArray<T>.OnSyncRequested
   nameWithType.vb: SyncFixedArray(Of T).OnSyncRequested
 - uid: LiteEntitySystem.Extensions.SyncFixedArray`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
-  name: RegisterRPC(in SyncableRPCRegistrator)
+  name: RegisterRPC(ref SyncableRPCRegistrator)
   href: api/LiteEntitySystem.Extensions.SyncFixedArray-1.html#LiteEntitySystem_Extensions_SyncFixedArray_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
   commentId: M:LiteEntitySystem.Extensions.SyncFixedArray`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   name.vb: RegisterRPC(SyncableRPCRegistrator)
-  fullName: LiteEntitySystem.Extensions.SyncFixedArray<T>.RegisterRPC(in LiteEntitySystem.SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.Extensions.SyncFixedArray<T>.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
   fullName.vb: LiteEntitySystem.Extensions.SyncFixedArray(Of T).RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
-  nameWithType: SyncFixedArray<T>.RegisterRPC(in SyncableRPCRegistrator)
+  nameWithType: SyncFixedArray<T>.RegisterRPC(ref SyncableRPCRegistrator)
   nameWithType.vb: SyncFixedArray(Of T).RegisterRPC(SyncableRPCRegistrator)
 - uid: LiteEntitySystem.Extensions.SyncFixedArray`1.RegisterRPC*
   name: RegisterRPC
@@ -3264,6 +3983,40 @@ references:
   fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).Add
   nameWithType: SyncList<T>.Add
   nameWithType.vb: SyncList(Of T).Add
+- uid: LiteEntitySystem.Extensions.SyncList`1.AfterReadRPC
+  name: AfterReadRPC()
+  href: api/LiteEntitySystem.Extensions.SyncList-1.html#LiteEntitySystem_Extensions_SyncList_1_AfterReadRPC
+  commentId: M:LiteEntitySystem.Extensions.SyncList`1.AfterReadRPC
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.AfterReadRPC()
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).AfterReadRPC()
+  nameWithType: SyncList<T>.AfterReadRPC()
+  nameWithType.vb: SyncList(Of T).AfterReadRPC()
+- uid: LiteEntitySystem.Extensions.SyncList`1.AfterReadRPC*
+  name: AfterReadRPC
+  href: api/LiteEntitySystem.Extensions.SyncList-1.html#LiteEntitySystem_Extensions_SyncList_1_AfterReadRPC_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncList`1.AfterReadRPC
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.AfterReadRPC
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).AfterReadRPC
+  nameWithType: SyncList<T>.AfterReadRPC
+  nameWithType.vb: SyncList(Of T).AfterReadRPC
+- uid: LiteEntitySystem.Extensions.SyncList`1.BeforeReadRPC
+  name: BeforeReadRPC()
+  href: api/LiteEntitySystem.Extensions.SyncList-1.html#LiteEntitySystem_Extensions_SyncList_1_BeforeReadRPC
+  commentId: M:LiteEntitySystem.Extensions.SyncList`1.BeforeReadRPC
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.BeforeReadRPC()
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).BeforeReadRPC()
+  nameWithType: SyncList<T>.BeforeReadRPC()
+  nameWithType.vb: SyncList(Of T).BeforeReadRPC()
+- uid: LiteEntitySystem.Extensions.SyncList`1.BeforeReadRPC*
+  name: BeforeReadRPC
+  href: api/LiteEntitySystem.Extensions.SyncList-1.html#LiteEntitySystem_Extensions_SyncList_1_BeforeReadRPC_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncList`1.BeforeReadRPC
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.BeforeReadRPC
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).BeforeReadRPC
+  nameWithType: SyncList<T>.BeforeReadRPC
+  nameWithType.vb: SyncList(Of T).BeforeReadRPC
 - uid: LiteEntitySystem.Extensions.SyncList`1.Clear
   name: Clear()
   href: api/LiteEntitySystem.Extensions.SyncList-1.html#LiteEntitySystem_Extensions_SyncList_1_Clear
@@ -3557,6 +4310,23 @@ references:
   fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).this[]
   nameWithType: SyncList<T>.this
   nameWithType.vb: SyncList(Of T).this[]
+- uid: LiteEntitySystem.Extensions.SyncList`1.OnRollback
+  name: OnRollback()
+  href: api/LiteEntitySystem.Extensions.SyncList-1.html#LiteEntitySystem_Extensions_SyncList_1_OnRollback
+  commentId: M:LiteEntitySystem.Extensions.SyncList`1.OnRollback
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.OnRollback()
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).OnRollback()
+  nameWithType: SyncList<T>.OnRollback()
+  nameWithType.vb: SyncList(Of T).OnRollback()
+- uid: LiteEntitySystem.Extensions.SyncList`1.OnRollback*
+  name: OnRollback
+  href: api/LiteEntitySystem.Extensions.SyncList-1.html#LiteEntitySystem_Extensions_SyncList_1_OnRollback_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncList`1.OnRollback
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.OnRollback
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).OnRollback
+  nameWithType: SyncList<T>.OnRollback
+  nameWithType.vb: SyncList(Of T).OnRollback
 - uid: LiteEntitySystem.Extensions.SyncList`1.OnSyncRequested
   name: OnSyncRequested()
   href: api/LiteEntitySystem.Extensions.SyncList-1.html#LiteEntitySystem_Extensions_SyncList_1_OnSyncRequested
@@ -3575,13 +4345,13 @@ references:
   nameWithType: SyncList<T>.OnSyncRequested
   nameWithType.vb: SyncList(Of T).OnSyncRequested
 - uid: LiteEntitySystem.Extensions.SyncList`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
-  name: RegisterRPC(in SyncableRPCRegistrator)
+  name: RegisterRPC(ref SyncableRPCRegistrator)
   href: api/LiteEntitySystem.Extensions.SyncList-1.html#LiteEntitySystem_Extensions_SyncList_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
   commentId: M:LiteEntitySystem.Extensions.SyncList`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   name.vb: RegisterRPC(SyncableRPCRegistrator)
-  fullName: LiteEntitySystem.Extensions.SyncList<T>.RegisterRPC(in LiteEntitySystem.SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
   fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
-  nameWithType: SyncList<T>.RegisterRPC(in SyncableRPCRegistrator)
+  nameWithType: SyncList<T>.RegisterRPC(ref SyncableRPCRegistrator)
   nameWithType.vb: SyncList(Of T).RegisterRPC(SyncableRPCRegistrator)
 - uid: LiteEntitySystem.Extensions.SyncList`1.RegisterRPC*
   name: RegisterRPC
@@ -3844,13 +4614,13 @@ references:
   nameWithType: SyncNetSerializable<T>.OnSyncRequested
   nameWithType.vb: SyncNetSerializable(Of T).OnSyncRequested
 - uid: LiteEntitySystem.Extensions.SyncNetSerializable`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
-  name: RegisterRPC(in SyncableRPCRegistrator)
+  name: RegisterRPC(ref SyncableRPCRegistrator)
   href: api/LiteEntitySystem.Extensions.SyncNetSerializable-1.html#LiteEntitySystem_Extensions_SyncNetSerializable_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
   commentId: M:LiteEntitySystem.Extensions.SyncNetSerializable`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   name.vb: RegisterRPC(SyncableRPCRegistrator)
-  fullName: LiteEntitySystem.Extensions.SyncNetSerializable<T>.RegisterRPC(in LiteEntitySystem.SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.Extensions.SyncNetSerializable<T>.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
   fullName.vb: LiteEntitySystem.Extensions.SyncNetSerializable(Of T).RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
-  nameWithType: SyncNetSerializable<T>.RegisterRPC(in SyncableRPCRegistrator)
+  nameWithType: SyncNetSerializable<T>.RegisterRPC(ref SyncableRPCRegistrator)
   nameWithType.vb: SyncNetSerializable(Of T).RegisterRPC(SyncableRPCRegistrator)
 - uid: LiteEntitySystem.Extensions.SyncNetSerializable`1.RegisterRPC*
   name: RegisterRPC
@@ -4150,13 +4920,13 @@ references:
   nameWithType: SyncSquare<T>.OnSyncRequested
   nameWithType.vb: SyncSquare(Of T).OnSyncRequested
 - uid: LiteEntitySystem.Extensions.SyncSquare`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
-  name: RegisterRPC(in SyncableRPCRegistrator)
+  name: RegisterRPC(ref SyncableRPCRegistrator)
   href: api/LiteEntitySystem.Extensions.SyncSquare-1.html#LiteEntitySystem_Extensions_SyncSquare_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
   commentId: M:LiteEntitySystem.Extensions.SyncSquare`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   name.vb: RegisterRPC(SyncableRPCRegistrator)
-  fullName: LiteEntitySystem.Extensions.SyncSquare<T>.RegisterRPC(in LiteEntitySystem.SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.Extensions.SyncSquare<T>.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
   fullName.vb: LiteEntitySystem.Extensions.SyncSquare(Of T).RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
-  nameWithType: SyncSquare<T>.RegisterRPC(in SyncableRPCRegistrator)
+  nameWithType: SyncSquare<T>.RegisterRPC(ref SyncableRPCRegistrator)
   nameWithType.vb: SyncSquare(Of T).RegisterRPC(SyncableRPCRegistrator)
 - uid: LiteEntitySystem.Extensions.SyncSquare`1.RegisterRPC*
   name: RegisterRPC
@@ -4644,13 +5414,13 @@ references:
   fullName: LiteEntitySystem.Extensions.SyncString.OnSyncRequested
   nameWithType: SyncString.OnSyncRequested
 - uid: LiteEntitySystem.Extensions.SyncString.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
-  name: RegisterRPC(in SyncableRPCRegistrator)
+  name: RegisterRPC(ref SyncableRPCRegistrator)
   href: api/LiteEntitySystem.Extensions.SyncString.html#LiteEntitySystem_Extensions_SyncString_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
   commentId: M:LiteEntitySystem.Extensions.SyncString.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   name.vb: RegisterRPC(SyncableRPCRegistrator)
-  fullName: LiteEntitySystem.Extensions.SyncString.RegisterRPC(in LiteEntitySystem.SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.Extensions.SyncString.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
   fullName.vb: LiteEntitySystem.Extensions.SyncString.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
-  nameWithType: SyncString.RegisterRPC(in SyncableRPCRegistrator)
+  nameWithType: SyncString.RegisterRPC(ref SyncableRPCRegistrator)
   nameWithType.vb: SyncString.RegisterRPC(SyncableRPCRegistrator)
 - uid: LiteEntitySystem.Extensions.SyncString.RegisterRPC*
   name: RegisterRPC
@@ -5258,6 +6028,22 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.Helpers.GetEnumValue
   nameWithType: Helpers.GetEnumValue
+- uid: LiteEntitySystem.Helpers.GetEnumValueInt*
+  name: GetEnumValueInt
+  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_GetEnumValueInt_
+  commentId: Overload:LiteEntitySystem.Helpers.GetEnumValueInt
+  isSpec: "True"
+  fullName: LiteEntitySystem.Helpers.GetEnumValueInt
+  nameWithType: Helpers.GetEnumValueInt
+- uid: LiteEntitySystem.Helpers.GetEnumValueInt``1(``0)
+  name: GetEnumValueInt<T>(T)
+  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_GetEnumValueInt__1___0_
+  commentId: M:LiteEntitySystem.Helpers.GetEnumValueInt``1(``0)
+  name.vb: GetEnumValueInt(Of T)(T)
+  fullName: LiteEntitySystem.Helpers.GetEnumValueInt<T>(T)
+  fullName.vb: LiteEntitySystem.Helpers.GetEnumValueInt(Of T)(T)
+  nameWithType: Helpers.GetEnumValueInt<T>(T)
+  nameWithType.vb: Helpers.GetEnumValueInt(Of T)(T)
 - uid: LiteEntitySystem.Helpers.GetEnumValue``1(LiteEntitySystem.SyncVar{``0})
   name: GetEnumValue<T>(SyncVar<T>)
   href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_GetEnumValue__1_LiteEntitySystem_SyncVar___0__
@@ -5308,6 +6094,15 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.Helpers.ReadStruct
   nameWithType: Helpers.ReadStruct
+- uid: LiteEntitySystem.Helpers.ReadStruct``1(System.ReadOnlySpan{System.Byte})
+  name: ReadStruct<T>(ReadOnlySpan<byte>)
+  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_ReadStruct__1_System_ReadOnlySpan_System_Byte__
+  commentId: M:LiteEntitySystem.Helpers.ReadStruct``1(System.ReadOnlySpan{System.Byte})
+  name.vb: ReadStruct(Of T)(ReadOnlySpan(Of Byte))
+  fullName: LiteEntitySystem.Helpers.ReadStruct<T>(System.ReadOnlySpan<byte>)
+  fullName.vb: LiteEntitySystem.Helpers.ReadStruct(Of T)(System.ReadOnlySpan(Of Byte))
+  nameWithType: Helpers.ReadStruct<T>(ReadOnlySpan<byte>)
+  nameWithType.vb: Helpers.ReadStruct(Of T)(ReadOnlySpan(Of Byte))
 - uid: LiteEntitySystem.Helpers.ReadStruct``1(System.ReadOnlySpan{System.Byte},``0@)
   name: ReadStruct<T>(ReadOnlySpan<byte>, out T)
   href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_ReadStruct__1_System_ReadOnlySpan_System_Byte____0__
@@ -5629,13 +6424,13 @@ references:
   nameWithType: HumanControllerLogic<TInput>.RegisterClientCustomType<T>(Action<NetDataWriter, T>, Func<NetDataReader, T>)
   nameWithType.vb: HumanControllerLogic(Of TInput).RegisterClientCustomType(Of T)(Action(Of NetDataWriter, T), Func(Of NetDataReader, T))
 - uid: LiteEntitySystem.HumanControllerLogic`1.RegisterRPC(LiteEntitySystem.RPCRegistrator@)
-  name: RegisterRPC(in RPCRegistrator)
+  name: RegisterRPC(ref RPCRegistrator)
   href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_RegisterRPC_LiteEntitySystem_RPCRegistrator__
   commentId: M:LiteEntitySystem.HumanControllerLogic`1.RegisterRPC(LiteEntitySystem.RPCRegistrator@)
   name.vb: RegisterRPC(RPCRegistrator)
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.RegisterRPC(in LiteEntitySystem.RPCRegistrator)
+  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.RegisterRPC(ref LiteEntitySystem.RPCRegistrator)
   fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).RegisterRPC(LiteEntitySystem.RPCRegistrator)
-  nameWithType: HumanControllerLogic<TInput>.RegisterRPC(in RPCRegistrator)
+  nameWithType: HumanControllerLogic<TInput>.RegisterRPC(ref RPCRegistrator)
   nameWithType.vb: HumanControllerLogic(Of TInput).RegisterRPC(RPCRegistrator)
 - uid: LiteEntitySystem.HumanControllerLogic`1.RegisterRPC*
   name: RegisterRPC
@@ -5861,6 +6656,166 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.ILogger.LogWarning
   nameWithType: ILogger.LogWarning
+- uid: LiteEntitySystem.IdGeneratorByte
+  name: IdGeneratorByte
+  href: api/LiteEntitySystem.IdGeneratorByte.html
+  commentId: T:LiteEntitySystem.IdGeneratorByte
+  fullName: LiteEntitySystem.IdGeneratorByte
+  nameWithType: IdGeneratorByte
+- uid: LiteEntitySystem.IdGeneratorByte.#ctor(System.Byte,System.Byte)
+  name: IdGeneratorByte(byte, byte)
+  href: api/LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte__ctor_System_Byte_System_Byte_
+  commentId: M:LiteEntitySystem.IdGeneratorByte.#ctor(System.Byte,System.Byte)
+  name.vb: New(Byte, Byte)
+  fullName: LiteEntitySystem.IdGeneratorByte.IdGeneratorByte(byte, byte)
+  fullName.vb: LiteEntitySystem.IdGeneratorByte.New(Byte, Byte)
+  nameWithType: IdGeneratorByte.IdGeneratorByte(byte, byte)
+  nameWithType.vb: IdGeneratorByte.New(Byte, Byte)
+- uid: LiteEntitySystem.IdGeneratorByte.#ctor*
+  name: IdGeneratorByte
+  href: api/LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte__ctor_
+  commentId: Overload:LiteEntitySystem.IdGeneratorByte.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: LiteEntitySystem.IdGeneratorByte.IdGeneratorByte
+  fullName.vb: LiteEntitySystem.IdGeneratorByte.New
+  nameWithType: IdGeneratorByte.IdGeneratorByte
+  nameWithType.vb: IdGeneratorByte.New
+- uid: LiteEntitySystem.IdGeneratorByte.AvailableIds
+  name: AvailableIds
+  href: api/LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte_AvailableIds
+  commentId: P:LiteEntitySystem.IdGeneratorByte.AvailableIds
+  fullName: LiteEntitySystem.IdGeneratorByte.AvailableIds
+  nameWithType: IdGeneratorByte.AvailableIds
+- uid: LiteEntitySystem.IdGeneratorByte.AvailableIds*
+  name: AvailableIds
+  href: api/LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte_AvailableIds_
+  commentId: Overload:LiteEntitySystem.IdGeneratorByte.AvailableIds
+  isSpec: "True"
+  fullName: LiteEntitySystem.IdGeneratorByte.AvailableIds
+  nameWithType: IdGeneratorByte.AvailableIds
+- uid: LiteEntitySystem.IdGeneratorByte.GetNewId
+  name: GetNewId()
+  href: api/LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte_GetNewId
+  commentId: M:LiteEntitySystem.IdGeneratorByte.GetNewId
+  fullName: LiteEntitySystem.IdGeneratorByte.GetNewId()
+  nameWithType: IdGeneratorByte.GetNewId()
+- uid: LiteEntitySystem.IdGeneratorByte.GetNewId*
+  name: GetNewId
+  href: api/LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte_GetNewId_
+  commentId: Overload:LiteEntitySystem.IdGeneratorByte.GetNewId
+  isSpec: "True"
+  fullName: LiteEntitySystem.IdGeneratorByte.GetNewId
+  nameWithType: IdGeneratorByte.GetNewId
+- uid: LiteEntitySystem.IdGeneratorByte.Reset
+  name: Reset()
+  href: api/LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte_Reset
+  commentId: M:LiteEntitySystem.IdGeneratorByte.Reset
+  fullName: LiteEntitySystem.IdGeneratorByte.Reset()
+  nameWithType: IdGeneratorByte.Reset()
+- uid: LiteEntitySystem.IdGeneratorByte.Reset*
+  name: Reset
+  href: api/LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte_Reset_
+  commentId: Overload:LiteEntitySystem.IdGeneratorByte.Reset
+  isSpec: "True"
+  fullName: LiteEntitySystem.IdGeneratorByte.Reset
+  nameWithType: IdGeneratorByte.Reset
+- uid: LiteEntitySystem.IdGeneratorByte.ReuseId(System.Byte)
+  name: ReuseId(byte)
+  href: api/LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte_ReuseId_System_Byte_
+  commentId: M:LiteEntitySystem.IdGeneratorByte.ReuseId(System.Byte)
+  name.vb: ReuseId(Byte)
+  fullName: LiteEntitySystem.IdGeneratorByte.ReuseId(byte)
+  fullName.vb: LiteEntitySystem.IdGeneratorByte.ReuseId(Byte)
+  nameWithType: IdGeneratorByte.ReuseId(byte)
+  nameWithType.vb: IdGeneratorByte.ReuseId(Byte)
+- uid: LiteEntitySystem.IdGeneratorByte.ReuseId*
+  name: ReuseId
+  href: api/LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte_ReuseId_
+  commentId: Overload:LiteEntitySystem.IdGeneratorByte.ReuseId
+  isSpec: "True"
+  fullName: LiteEntitySystem.IdGeneratorByte.ReuseId
+  nameWithType: IdGeneratorByte.ReuseId
+- uid: LiteEntitySystem.IdGeneratorUShort
+  name: IdGeneratorUShort
+  href: api/LiteEntitySystem.IdGeneratorUShort.html
+  commentId: T:LiteEntitySystem.IdGeneratorUShort
+  fullName: LiteEntitySystem.IdGeneratorUShort
+  nameWithType: IdGeneratorUShort
+- uid: LiteEntitySystem.IdGeneratorUShort.#ctor(System.UInt16,System.UInt16)
+  name: IdGeneratorUShort(ushort, ushort)
+  href: api/LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort__ctor_System_UInt16_System_UInt16_
+  commentId: M:LiteEntitySystem.IdGeneratorUShort.#ctor(System.UInt16,System.UInt16)
+  name.vb: New(UShort, UShort)
+  fullName: LiteEntitySystem.IdGeneratorUShort.IdGeneratorUShort(ushort, ushort)
+  fullName.vb: LiteEntitySystem.IdGeneratorUShort.New(UShort, UShort)
+  nameWithType: IdGeneratorUShort.IdGeneratorUShort(ushort, ushort)
+  nameWithType.vb: IdGeneratorUShort.New(UShort, UShort)
+- uid: LiteEntitySystem.IdGeneratorUShort.#ctor*
+  name: IdGeneratorUShort
+  href: api/LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort__ctor_
+  commentId: Overload:LiteEntitySystem.IdGeneratorUShort.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: LiteEntitySystem.IdGeneratorUShort.IdGeneratorUShort
+  fullName.vb: LiteEntitySystem.IdGeneratorUShort.New
+  nameWithType: IdGeneratorUShort.IdGeneratorUShort
+  nameWithType.vb: IdGeneratorUShort.New
+- uid: LiteEntitySystem.IdGeneratorUShort.AvailableIds
+  name: AvailableIds
+  href: api/LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort_AvailableIds
+  commentId: P:LiteEntitySystem.IdGeneratorUShort.AvailableIds
+  fullName: LiteEntitySystem.IdGeneratorUShort.AvailableIds
+  nameWithType: IdGeneratorUShort.AvailableIds
+- uid: LiteEntitySystem.IdGeneratorUShort.AvailableIds*
+  name: AvailableIds
+  href: api/LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort_AvailableIds_
+  commentId: Overload:LiteEntitySystem.IdGeneratorUShort.AvailableIds
+  isSpec: "True"
+  fullName: LiteEntitySystem.IdGeneratorUShort.AvailableIds
+  nameWithType: IdGeneratorUShort.AvailableIds
+- uid: LiteEntitySystem.IdGeneratorUShort.GetNewId
+  name: GetNewId()
+  href: api/LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort_GetNewId
+  commentId: M:LiteEntitySystem.IdGeneratorUShort.GetNewId
+  fullName: LiteEntitySystem.IdGeneratorUShort.GetNewId()
+  nameWithType: IdGeneratorUShort.GetNewId()
+- uid: LiteEntitySystem.IdGeneratorUShort.GetNewId*
+  name: GetNewId
+  href: api/LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort_GetNewId_
+  commentId: Overload:LiteEntitySystem.IdGeneratorUShort.GetNewId
+  isSpec: "True"
+  fullName: LiteEntitySystem.IdGeneratorUShort.GetNewId
+  nameWithType: IdGeneratorUShort.GetNewId
+- uid: LiteEntitySystem.IdGeneratorUShort.Reset
+  name: Reset()
+  href: api/LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort_Reset
+  commentId: M:LiteEntitySystem.IdGeneratorUShort.Reset
+  fullName: LiteEntitySystem.IdGeneratorUShort.Reset()
+  nameWithType: IdGeneratorUShort.Reset()
+- uid: LiteEntitySystem.IdGeneratorUShort.Reset*
+  name: Reset
+  href: api/LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort_Reset_
+  commentId: Overload:LiteEntitySystem.IdGeneratorUShort.Reset
+  isSpec: "True"
+  fullName: LiteEntitySystem.IdGeneratorUShort.Reset
+  nameWithType: IdGeneratorUShort.Reset
+- uid: LiteEntitySystem.IdGeneratorUShort.ReuseId(System.UInt16)
+  name: ReuseId(ushort)
+  href: api/LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort_ReuseId_System_UInt16_
+  commentId: M:LiteEntitySystem.IdGeneratorUShort.ReuseId(System.UInt16)
+  name.vb: ReuseId(UShort)
+  fullName: LiteEntitySystem.IdGeneratorUShort.ReuseId(ushort)
+  fullName.vb: LiteEntitySystem.IdGeneratorUShort.ReuseId(UShort)
+  nameWithType: IdGeneratorUShort.ReuseId(ushort)
+  nameWithType.vb: IdGeneratorUShort.ReuseId(UShort)
+- uid: LiteEntitySystem.IdGeneratorUShort.ReuseId*
+  name: ReuseId
+  href: api/LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort_ReuseId_
+  commentId: Overload:LiteEntitySystem.IdGeneratorUShort.ReuseId
+  isSpec: "True"
+  fullName: LiteEntitySystem.IdGeneratorUShort.ReuseId
+  nameWithType: IdGeneratorUShort.ReuseId
 - uid: LiteEntitySystem.InputProcessor
   name: InputProcessor
   href: api/LiteEntitySystem.InputProcessor.html
@@ -7207,13 +8162,13 @@ references:
   fullName: LiteEntitySystem.Internal.InternalEntity.OnDestroy
   nameWithType: InternalEntity.OnDestroy
 - uid: LiteEntitySystem.Internal.InternalEntity.RegisterRPC(LiteEntitySystem.RPCRegistrator@)
-  name: RegisterRPC(in RPCRegistrator)
+  name: RegisterRPC(ref RPCRegistrator)
   href: api/LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_RegisterRPC_LiteEntitySystem_RPCRegistrator__
   commentId: M:LiteEntitySystem.Internal.InternalEntity.RegisterRPC(LiteEntitySystem.RPCRegistrator@)
   name.vb: RegisterRPC(RPCRegistrator)
-  fullName: LiteEntitySystem.Internal.InternalEntity.RegisterRPC(in LiteEntitySystem.RPCRegistrator)
+  fullName: LiteEntitySystem.Internal.InternalEntity.RegisterRPC(ref LiteEntitySystem.RPCRegistrator)
   fullName.vb: LiteEntitySystem.Internal.InternalEntity.RegisterRPC(LiteEntitySystem.RPCRegistrator)
-  nameWithType: InternalEntity.RegisterRPC(in RPCRegistrator)
+  nameWithType: InternalEntity.RegisterRPC(ref RPCRegistrator)
   nameWithType.vb: InternalEntity.RegisterRPC(RPCRegistrator)
 - uid: LiteEntitySystem.Internal.InternalEntity.RegisterRPC*
   name: RegisterRPC
@@ -7306,6 +8261,24 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.Internal.InternalSyncType.GetFieldManipulator
   nameWithType: InternalSyncType.GetFieldManipulator
+- uid: LiteEntitySystem.Internal.OnSyncExecutionOrder
+  name: OnSyncExecutionOrder
+  href: api/LiteEntitySystem.Internal.OnSyncExecutionOrder.html
+  commentId: T:LiteEntitySystem.Internal.OnSyncExecutionOrder
+  fullName: LiteEntitySystem.Internal.OnSyncExecutionOrder
+  nameWithType: OnSyncExecutionOrder
+- uid: LiteEntitySystem.Internal.OnSyncExecutionOrder.AfterConstruct
+  name: AfterConstruct
+  href: api/LiteEntitySystem.Internal.OnSyncExecutionOrder.html#LiteEntitySystem_Internal_OnSyncExecutionOrder_AfterConstruct
+  commentId: F:LiteEntitySystem.Internal.OnSyncExecutionOrder.AfterConstruct
+  fullName: LiteEntitySystem.Internal.OnSyncExecutionOrder.AfterConstruct
+  nameWithType: OnSyncExecutionOrder.AfterConstruct
+- uid: LiteEntitySystem.Internal.OnSyncExecutionOrder.BeforeConstruct
+  name: BeforeConstruct
+  href: api/LiteEntitySystem.Internal.OnSyncExecutionOrder.html#LiteEntitySystem_Internal_OnSyncExecutionOrder_BeforeConstruct
+  commentId: F:LiteEntitySystem.Internal.OnSyncExecutionOrder.BeforeConstruct
+  fullName: LiteEntitySystem.Internal.OnSyncExecutionOrder.BeforeConstruct
+  nameWithType: OnSyncExecutionOrder.BeforeConstruct
 - uid: LiteEntitySystem.Internal.RpcData
   name: RpcData
   href: api/LiteEntitySystem.Internal.RpcData.html
@@ -7894,6 +8867,15 @@ references:
   fullName.vb: LiteEntitySystem.RPCRegistrator.BindOnChange(Of T, TEntity)(TEntity, LiteEntitySystem.SyncVar(Of T), System.Action(Of T))
   nameWithType: RPCRegistrator.BindOnChange<T, TEntity>(TEntity, ref SyncVar<T>, Action<T>)
   nameWithType.vb: RPCRegistrator.BindOnChange(Of T, TEntity)(TEntity, SyncVar(Of T), Action(Of T))
+- uid: LiteEntitySystem.RPCRegistrator.BindOnChange``2(``1,LiteEntitySystem.SyncVar{``0}@,System.Action{``0},LiteEntitySystem.Internal.OnSyncExecutionOrder)
+  name: BindOnChange<T, TEntity>(TEntity, ref SyncVar<T>, Action<T>, OnSyncExecutionOrder)
+  href: api/LiteEntitySystem.RPCRegistrator.html#LiteEntitySystem_RPCRegistrator_BindOnChange__2___1_LiteEntitySystem_SyncVar___0___System_Action___0__LiteEntitySystem_Internal_OnSyncExecutionOrder_
+  commentId: M:LiteEntitySystem.RPCRegistrator.BindOnChange``2(``1,LiteEntitySystem.SyncVar{``0}@,System.Action{``0},LiteEntitySystem.Internal.OnSyncExecutionOrder)
+  name.vb: BindOnChange(Of T, TEntity)(TEntity, SyncVar(Of T), Action(Of T), OnSyncExecutionOrder)
+  fullName: LiteEntitySystem.RPCRegistrator.BindOnChange<T, TEntity>(TEntity, ref LiteEntitySystem.SyncVar<T>, System.Action<T>, LiteEntitySystem.Internal.OnSyncExecutionOrder)
+  fullName.vb: LiteEntitySystem.RPCRegistrator.BindOnChange(Of T, TEntity)(TEntity, LiteEntitySystem.SyncVar(Of T), System.Action(Of T), LiteEntitySystem.Internal.OnSyncExecutionOrder)
+  nameWithType: RPCRegistrator.BindOnChange<T, TEntity>(TEntity, ref SyncVar<T>, Action<T>, OnSyncExecutionOrder)
+  nameWithType.vb: RPCRegistrator.BindOnChange(Of T, TEntity)(TEntity, SyncVar(Of T), Action(Of T), OnSyncExecutionOrder)
 - uid: LiteEntitySystem.RPCRegistrator.CreateRPCAction*
   name: CreateRPCAction
   href: api/LiteEntitySystem.RPCRegistrator.html#LiteEntitySystem_RPCRegistrator_CreateRPCAction_
@@ -8761,6 +9743,32 @@ references:
   commentId: T:LiteEntitySystem.SyncableField
   fullName: LiteEntitySystem.SyncableField
   nameWithType: SyncableField
+- uid: LiteEntitySystem.SyncableField.AfterReadRPC
+  name: AfterReadRPC()
+  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+  commentId: M:LiteEntitySystem.SyncableField.AfterReadRPC
+  fullName: LiteEntitySystem.SyncableField.AfterReadRPC()
+  nameWithType: SyncableField.AfterReadRPC()
+- uid: LiteEntitySystem.SyncableField.AfterReadRPC*
+  name: AfterReadRPC
+  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC_
+  commentId: Overload:LiteEntitySystem.SyncableField.AfterReadRPC
+  isSpec: "True"
+  fullName: LiteEntitySystem.SyncableField.AfterReadRPC
+  nameWithType: SyncableField.AfterReadRPC
+- uid: LiteEntitySystem.SyncableField.BeforeReadRPC
+  name: BeforeReadRPC()
+  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+  commentId: M:LiteEntitySystem.SyncableField.BeforeReadRPC
+  fullName: LiteEntitySystem.SyncableField.BeforeReadRPC()
+  nameWithType: SyncableField.BeforeReadRPC()
+- uid: LiteEntitySystem.SyncableField.BeforeReadRPC*
+  name: BeforeReadRPC
+  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC_
+  commentId: Overload:LiteEntitySystem.SyncableField.BeforeReadRPC
+  isSpec: "True"
+  fullName: LiteEntitySystem.SyncableField.BeforeReadRPC
+  nameWithType: SyncableField.BeforeReadRPC
 - uid: LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
   name: ExecuteRPC(in RemoteCall)
   href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__
@@ -8795,6 +9803,45 @@ references:
   fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(Of T)(LiteEntitySystem.RemoteCall(Of T), T)
   nameWithType: SyncableField.ExecuteRPC<T>(in RemoteCall<T>, T)
   nameWithType.vb: SyncableField.ExecuteRPC(Of T)(RemoteCall(Of T), T)
+- uid: LiteEntitySystem.SyncableField.IsClient
+  name: IsClient
+  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsClient
+  commentId: P:LiteEntitySystem.SyncableField.IsClient
+  fullName: LiteEntitySystem.SyncableField.IsClient
+  nameWithType: SyncableField.IsClient
+- uid: LiteEntitySystem.SyncableField.IsClient*
+  name: IsClient
+  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsClient_
+  commentId: Overload:LiteEntitySystem.SyncableField.IsClient
+  isSpec: "True"
+  fullName: LiteEntitySystem.SyncableField.IsClient
+  nameWithType: SyncableField.IsClient
+- uid: LiteEntitySystem.SyncableField.IsServer
+  name: IsServer
+  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsServer
+  commentId: P:LiteEntitySystem.SyncableField.IsServer
+  fullName: LiteEntitySystem.SyncableField.IsServer
+  nameWithType: SyncableField.IsServer
+- uid: LiteEntitySystem.SyncableField.IsServer*
+  name: IsServer
+  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsServer_
+  commentId: Overload:LiteEntitySystem.SyncableField.IsServer
+  isSpec: "True"
+  fullName: LiteEntitySystem.SyncableField.IsServer
+  nameWithType: SyncableField.IsServer
+- uid: LiteEntitySystem.SyncableField.OnRollback
+  name: OnRollback()
+  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+  commentId: M:LiteEntitySystem.SyncableField.OnRollback
+  fullName: LiteEntitySystem.SyncableField.OnRollback()
+  nameWithType: SyncableField.OnRollback()
+- uid: LiteEntitySystem.SyncableField.OnRollback*
+  name: OnRollback
+  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback_
+  commentId: Overload:LiteEntitySystem.SyncableField.OnRollback
+  isSpec: "True"
+  fullName: LiteEntitySystem.SyncableField.OnRollback
+  nameWithType: SyncableField.OnRollback
 - uid: LiteEntitySystem.SyncableField.OnSyncRequested
   name: OnSyncRequested()
   href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnSyncRequested
@@ -8809,13 +9856,13 @@ references:
   fullName: LiteEntitySystem.SyncableField.OnSyncRequested
   nameWithType: SyncableField.OnSyncRequested
 - uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
-  name: RegisterRPC(in SyncableRPCRegistrator)
+  name: RegisterRPC(ref SyncableRPCRegistrator)
   href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
   commentId: M:LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   name.vb: RegisterRPC(SyncableRPCRegistrator)
-  fullName: LiteEntitySystem.SyncableField.RegisterRPC(in LiteEntitySystem.SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.SyncableField.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
   fullName.vb: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
-  nameWithType: SyncableField.RegisterRPC(in SyncableRPCRegistrator)
+  nameWithType: SyncableField.RegisterRPC(ref SyncableRPCRegistrator)
   nameWithType.vb: SyncableField.RegisterRPC(SyncableRPCRegistrator)
 - uid: LiteEntitySystem.SyncableField.RegisterRPC*
   name: RegisterRPC
@@ -8889,19 +9936,6 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.Transport.AbstractNetPeer.GetMaxUnreliablePacketSize
   nameWithType: AbstractNetPeer.GetMaxUnreliablePacketSize
-- uid: LiteEntitySystem.Transport.AbstractNetPeer.RoundTripTimeMs
-  name: RoundTripTimeMs
-  href: api/LiteEntitySystem.Transport.AbstractNetPeer.html#LiteEntitySystem_Transport_AbstractNetPeer_RoundTripTimeMs
-  commentId: P:LiteEntitySystem.Transport.AbstractNetPeer.RoundTripTimeMs
-  fullName: LiteEntitySystem.Transport.AbstractNetPeer.RoundTripTimeMs
-  nameWithType: AbstractNetPeer.RoundTripTimeMs
-- uid: LiteEntitySystem.Transport.AbstractNetPeer.RoundTripTimeMs*
-  name: RoundTripTimeMs
-  href: api/LiteEntitySystem.Transport.AbstractNetPeer.html#LiteEntitySystem_Transport_AbstractNetPeer_RoundTripTimeMs_
-  commentId: Overload:LiteEntitySystem.Transport.AbstractNetPeer.RoundTripTimeMs
-  isSpec: "True"
-  fullName: LiteEntitySystem.Transport.AbstractNetPeer.RoundTripTimeMs
-  nameWithType: AbstractNetPeer.RoundTripTimeMs
 - uid: LiteEntitySystem.Transport.AbstractNetPeer.SendReliableOrdered(System.ReadOnlySpan{System.Byte})
   name: SendReliableOrdered(ReadOnlySpan<byte>)
   href: api/LiteEntitySystem.Transport.AbstractNetPeer.html#LiteEntitySystem_Transport_AbstractNetPeer_SendReliableOrdered_System_ReadOnlySpan_System_Byte__
@@ -9023,19 +10057,6 @@ references:
   commentId: F:LiteEntitySystem.Transport.LiteNetLibNetPeer.NetPeer
   fullName: LiteEntitySystem.Transport.LiteNetLibNetPeer.NetPeer
   nameWithType: LiteNetLibNetPeer.NetPeer
-- uid: LiteEntitySystem.Transport.LiteNetLibNetPeer.RoundTripTimeMs
-  name: RoundTripTimeMs
-  href: api/LiteEntitySystem.Transport.LiteNetLibNetPeer.html#LiteEntitySystem_Transport_LiteNetLibNetPeer_RoundTripTimeMs
-  commentId: P:LiteEntitySystem.Transport.LiteNetLibNetPeer.RoundTripTimeMs
-  fullName: LiteEntitySystem.Transport.LiteNetLibNetPeer.RoundTripTimeMs
-  nameWithType: LiteNetLibNetPeer.RoundTripTimeMs
-- uid: LiteEntitySystem.Transport.LiteNetLibNetPeer.RoundTripTimeMs*
-  name: RoundTripTimeMs
-  href: api/LiteEntitySystem.Transport.LiteNetLibNetPeer.html#LiteEntitySystem_Transport_LiteNetLibNetPeer_RoundTripTimeMs_
-  commentId: Overload:LiteEntitySystem.Transport.LiteNetLibNetPeer.RoundTripTimeMs
-  isSpec: "True"
-  fullName: LiteEntitySystem.Transport.LiteNetLibNetPeer.RoundTripTimeMs
-  nameWithType: LiteNetLibNetPeer.RoundTripTimeMs
 - uid: LiteEntitySystem.Transport.LiteNetLibNetPeer.SendReliableOrdered(System.ReadOnlySpan{System.Byte})
   name: SendReliableOrdered(ReadOnlySpan<byte>)
   href: api/LiteEntitySystem.Transport.LiteNetLibNetPeer.html#LiteEntitySystem_Transport_LiteNetLibNetPeer_SendReliableOrdered_System_ReadOnlySpan_System_Byte__

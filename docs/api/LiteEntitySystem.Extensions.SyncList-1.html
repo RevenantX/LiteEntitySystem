@@ -92,6 +92,12 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsServer">SyncableField.IsServer</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsClient">SyncableField.IsClient</a>
+    </div>
+    <div>
       <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__">SyncableField.ExecuteRPC(in RemoteCall)</a>
     </div>
     <div>
@@ -221,11 +227,12 @@
 
   <a id="LiteEntitySystem_Extensions_SyncList_1_Item_" data-uid="LiteEntitySystem.Extensions.SyncList`1.Item*"></a>
   <h4 id="LiteEntitySystem_Extensions_SyncList_1_Item_System_Int32_" data-uid="LiteEntitySystem.Extensions.SyncList`1.Item(System.Int32)">this[int]</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the element at the specified index in the read-only list.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ref T this[int index] { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public T this[int index] { get; set; }</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -240,7 +247,8 @@
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
         <td><span class="parametername">index</span></td>
-        <td></td>
+        <td><p>The zero-based index of the element to get.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -255,7 +263,8 @@
     <tbody>
       <tr>
         <td><span class="xref">T</span></td>
-        <td></td>
+        <td><p>The element at the specified index in the read-only list.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -306,6 +315,30 @@
       </tr>
     </tbody>
   </table>
+
+
+  <a id="LiteEntitySystem_Extensions_SyncList_1_AfterReadRPC_" data-uid="LiteEntitySystem.Extensions.SyncList`1.AfterReadRPC*"></a>
+  <h4 id="LiteEntitySystem_Extensions_SyncList_1_AfterReadRPC" data-uid="LiteEntitySystem.Extensions.SyncList`1.AfterReadRPC">AfterReadRPC()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void AfterReadRPC()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC">SyncableField.AfterReadRPC()</a></div>
+
+
+  <a id="LiteEntitySystem_Extensions_SyncList_1_BeforeReadRPC_" data-uid="LiteEntitySystem.Extensions.SyncList`1.BeforeReadRPC*"></a>
+  <h4 id="LiteEntitySystem_Extensions_SyncList_1_BeforeReadRPC" data-uid="LiteEntitySystem.Extensions.SyncList`1.BeforeReadRPC">BeforeReadRPC()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void BeforeReadRPC()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC">SyncableField.BeforeReadRPC()</a></div>
 
 
   <a id="LiteEntitySystem_Extensions_SyncList_1_Clear_" data-uid="LiteEntitySystem.Extensions.SyncList`1.Clear*"></a>
@@ -510,6 +543,18 @@
   </table>
 
 
+  <a id="LiteEntitySystem_Extensions_SyncList_1_OnRollback_" data-uid="LiteEntitySystem.Extensions.SyncList`1.OnRollback*"></a>
+  <h4 id="LiteEntitySystem_Extensions_SyncList_1_OnRollback" data-uid="LiteEntitySystem.Extensions.SyncList`1.OnRollback">OnRollback()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void OnRollback()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback">SyncableField.OnRollback()</a></div>
+
+
   <a id="LiteEntitySystem_Extensions_SyncList_1_OnSyncRequested_" data-uid="LiteEntitySystem.Extensions.SyncList`1.OnSyncRequested*"></a>
   <h4 id="LiteEntitySystem_Extensions_SyncList_1_OnSyncRequested" data-uid="LiteEntitySystem.Extensions.SyncList`1.OnSyncRequested">OnSyncRequested()</h4>
   <div class="markdown level1 summary"></div>
@@ -523,12 +568,12 @@
 
 
   <a id="LiteEntitySystem_Extensions_SyncList_1_RegisterRPC_" data-uid="LiteEntitySystem.Extensions.SyncList`1.RegisterRPC*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncList_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__" data-uid="LiteEntitySystem.Extensions.SyncList`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)">RegisterRPC(in SyncableRPCRegistrator)</h4>
+  <h4 id="LiteEntitySystem_Extensions_SyncList_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__" data-uid="LiteEntitySystem.Extensions.SyncList`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)">RegisterRPC(ref SyncableRPCRegistrator)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected override void RegisterRPC(in SyncableRPCRegistrator r)</code></pre>
+    <pre><code class="lang-csharp hljs">protected override void RegisterRPC(ref SyncableRPCRegistrator r)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -548,7 +593,7 @@
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__">SyncableField.RegisterRPC(in SyncableRPCRegistrator)</a></div>
+  <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__">SyncableField.RegisterRPC(ref SyncableRPCRegistrator)</a></div>
 
 
   <a id="LiteEntitySystem_Extensions_SyncList_1_Remove_" data-uid="LiteEntitySystem.Extensions.SyncList`1.Remove*"></a>

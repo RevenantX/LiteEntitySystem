@@ -133,6 +133,9 @@
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_PlayerId">EntityManager.PlayerId</a>
     </div>
     <div>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GameSpeedMultiplier">EntityManager.GameSpeedMultiplier</a>
+    </div>
+    <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_HeaderByte">EntityManager.HeaderByte</a>
     </div>
     <div>
@@ -170,9 +173,6 @@
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetSingleton__1">EntityManager.GetSingleton&lt;T&gt;()</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetSingleton__1___0__">EntityManager.GetSingleton&lt;T&gt;(out T)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetSingletonSafe__1">EntityManager.GetSingletonSafe&lt;T&gt;()</a>
@@ -416,7 +416,8 @@
 
   <a id="LiteEntitySystem_ClientEntityManager_NetPeer_" data-uid="LiteEntitySystem.ClientEntityManager.NetPeer*"></a>
   <h4 id="LiteEntitySystem_ClientEntityManager_NetPeer" data-uid="LiteEntitySystem.ClientEntityManager.NetPeer">NetPeer</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Client network peer</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
@@ -433,6 +434,57 @@
     <tbody>
       <tr>
         <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_ClientEntityManager_NetworkJitter_" data-uid="LiteEntitySystem.ClientEntityManager.NetworkJitter*"></a>
+  <h4 id="LiteEntitySystem_ClientEntityManager_NetworkJitter" data-uid="LiteEntitySystem.ClientEntityManager.NetworkJitter">NetworkJitter</h4>
+  <div class="markdown level1 summary"><p>Network jitter in milliseconds</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float NetworkJitter { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_ClientEntityManager_NetworkJitterFrames_" data-uid="LiteEntitySystem.ClientEntityManager.NetworkJitterFrames*"></a>
+  <h4 id="LiteEntitySystem_ClientEntityManager_NetworkJitterFrames" data-uid="LiteEntitySystem.ClientEntityManager.NetworkJitterFrames">NetworkJitterFrames</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float NetworkJitterFrames { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -511,6 +563,32 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_ClientEntityManager_ServerInputBuffer_" data-uid="LiteEntitySystem.ClientEntityManager.ServerInputBuffer*"></a>
+  <h4 id="LiteEntitySystem_ClientEntityManager_ServerInputBuffer" data-uid="LiteEntitySystem.ClientEntityManager.ServerInputBuffer">ServerInputBuffer</h4>
+  <div class="markdown level1 summary"><p>Inputs count in server input buffer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte ServerInputBuffer { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
         <td></td>
       </tr>
     </tbody>
