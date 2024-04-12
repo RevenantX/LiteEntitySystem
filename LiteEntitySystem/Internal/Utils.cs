@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -56,6 +57,37 @@ namespace LiteEntitySystem.Internal
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static T CreateDelegateHelper<T>(this MethodInfo method) where T : Delegate => (T)method.CreateDelegate(typeof(T));
+        
+        public static Stack<Type> GetBaseTypes(Type ofType, Type until, bool includeSelf)
+        {
+            var resultTypes = new Stack<Type>();
+            if(!includeSelf)
+                ofType = ofType.BaseType;
+            while (ofType != until && ofType != null)
+            {
+                resultTypes.Push(ofType);
+                ofType = ofType.BaseType;
+            }
+            return resultTypes;
+        }
+
+        //field flags that used in LES
+        internal static FieldInfo[] GetProcessedFields(Type t) =>
+            t.GetFields(BindingFlags.Instance |
+                        BindingFlags.Public |
+                        BindingFlags.NonPublic |
+                        BindingFlags.DeclaredOnly |
+                        BindingFlags.Static);
+
+        internal static bool IsRemoteCallType(Type ft)
+        {
+            if (ft == typeof(RemoteCall))
+                return true;
+            if (!ft.IsGenericType)
+                return false;
+            var genericTypeDef = ft.GetGenericTypeDefinition();
+            return genericTypeDef == typeof(RemoteCall<>) || genericTypeDef == typeof(RemoteCallSpan<>);
+        }
         
         private class TestOffset
         {

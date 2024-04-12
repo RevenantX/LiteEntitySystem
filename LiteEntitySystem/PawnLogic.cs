@@ -34,9 +34,7 @@
         internal override void DestroyInternal()
         {
             if (EntityManager.IsServer)
-            {
-                Controller?.OnControlledDestroy();
-            }
+                Controller?.StopControl();
             base.DestroyInternal();
         }
 

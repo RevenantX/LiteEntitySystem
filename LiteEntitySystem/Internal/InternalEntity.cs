@@ -57,6 +57,13 @@ namespace LiteEntitySystem.Internal
         public ServerEntityManager ServerManager => (ServerEntityManager)EntityManager;
 
         internal abstract bool IsControlledBy(byte playerId);
+        
+        /// <summary>
+        /// Owner player id
+        /// ServerPlayerId - 0
+        /// Singletons always controlled by server
+        /// </summary>
+        public virtual byte OwnerId => EntityManager.ServerPlayerId;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal ref EntityClassData GetClassData()

@@ -119,7 +119,7 @@ namespace LiteEntitySystem
             peer.AssignedPlayer = player;
             return player;
         }
-        
+
         /// <summary>
         /// Get player by owner id
         /// </summary>
@@ -539,9 +539,9 @@ namespace LiteEntitySystem
                 entity = (T)AddEntity(new EntityParams(
                     classData.ClassId, 
                     entityId,
-                    stateSerializer.IncrementVersion(_tick),
+                    (byte)(stateSerializer.Version + 1),
                     this));
-                stateSerializer.Init(ref classData, entity);
+                stateSerializer.Init(ref classData, entity, _tick);
                 
                 initMethod?.Invoke(entity);
                 ConstructEntity(entity);
@@ -549,7 +549,7 @@ namespace LiteEntitySystem
             //Debug.Log($"[SEM] Entity create. clsId: {classData.ClassId}, id: {entityId}, v: {version}");
             return entity;
         }
-
+        
         protected override void OnLogicTick()
         {
             //read pending client requests

@@ -1,3 +1,5 @@
+using System;
+
 namespace LiteEntitySystem.Internal
 {
     internal enum DiffResult
@@ -24,12 +26,16 @@ namespace LiteEntitySystem.Internal
         }
         
         public const int HeaderSize = 5;
-        private const int TicksToDestroy = 32;
         public const int DiffHeaderSize = 4;
         public const int MaxStateSize = 32767; //half of ushort
-
-        private byte _version;
-        private EntityClassData _classData;
+ 
+        private int _fixedFieldsSize;
+        private EntityFieldInfo[] _fields;
+        private int _fieldsCount;
+        private SyncableFieldInfo[] _syncableFields;
+        private int _syncableFieldsCount;
+        private int _fieldsFlagsSize;
+        
         private InternalEntity _entity;
         private byte[] _latestEntityData;
         private ushort[] _fieldChangeTicks;
@@ -40,22 +46,21 @@ namespace LiteEntitySystem.Internal
         private RemoteCallPacket _rpcTail;
         private RemoteCallPacket _syncRpcHead;
         private RemoteCallPacket _syncRpcTail;
-        private ushort _ticksOnDestroy;
-        private byte _controllerOwner;
-        private byte _owner;
+        private byte _ownerId;
+        private bool _isController;
         private uint _fullDataSize;
         private int _syncFrame;
         private RPCMode _rpcMode;
 
+        public byte Version => _entity?.Version ?? 0;
+
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
             //Logger.Log($"AddRpc for tick: {rpc.Header.Tick}, St: {_entity.ServerManager.Tick}, Id: {rpc.Header.Id}");
-            
             switch (_rpcMode)
             {
                 case RPCMode.OwnerChange:
                 case RPCMode.Normal:
-                {
                     if (_rpcHead == null)
                         _rpcHead = rpc;
                     else
@@ -64,25 +69,15 @@ namespace LiteEntitySystem.Internal
                     if (_rpcMode == RPCMode.OwnerChange)
                         rpc.Flags |= ExecuteFlags.SendToOwner;
                     break;
-                }
 
                 case RPCMode.Sync:
-                {
                     if (_syncRpcHead == null)
                         _syncRpcHead = rpc;
                     else
                         _syncRpcTail.Next = rpc;
                     _syncRpcTail = rpc;
                     break;
-                }
             }
-        }
-
-        public byte IncrementVersion(ushort tick)
-        {
-            _lastWriteTick = (ushort)(tick - 1);
-            _versionChangedTick = tick;
-            return _version++;
         }
 
         private void CleanPendingRpcs(ref RemoteCallPacket head, ref RemoteCallPacket tail)
@@ -97,27 +92,40 @@ namespace LiteEntitySystem.Internal
             tail = null;
         }
 
-        public unsafe void Init(ref EntityClassData classData, InternalEntity e)
+        public unsafe void Init(ref EntityClassData classData, InternalEntity e, ushort tick)
         {
             if (_state != SerializerState.Freed)
-            {
                 Logger.LogError($"State serializer isn't freed: {_state}");
-            }
-            _classData = classData;
+            
+            _lastWriteTick = (ushort)(tick - 1);
+            _versionChangedTick = tick;
+            _fields = classData.Fields;
+            _fieldsCount = classData.FieldsCount;
+            _syncableFields = classData.SyncableFields;
+            _syncableFieldsCount = classData.SyncableFields.Length;
+            _fixedFieldsSize = classData.FixedFieldsSize;
+            _fieldsFlagsSize = classData.FieldsFlagsSize;
             _entity = e;
             _state = SerializerState.Active;
             _syncFrame = -1;
-            _owner = 0;
-            _controllerOwner = 0;
+            _ownerId = EntityManager.ServerPlayerId;
             _rpcMode = RPCMode.Normal;
+            _isController = e is ControllerLogic;
+            _fullDataSize = (uint)(HeaderSize + _fixedFieldsSize);
             
             //wipe previous rpcs
             CleanPendingRpcs(ref _rpcHead, ref _rpcTail);
             CleanPendingRpcs(ref _syncRpcHead, ref _syncRpcTail);
-
-            _fullDataSize = (uint)(HeaderSize + _classData.FixedFieldsSize);
-            Utils.ResizeOrCreate(ref _latestEntityData, (int)_fullDataSize);
-            Utils.ResizeOrCreate(ref _fieldChangeTicks, classData.FieldsCount);
+            
+            //resize or clean prev data
+            if (_latestEntityData == null || _latestEntityData.Length < _fullDataSize)
+                _latestEntityData = new byte[_fullDataSize];
+            else
+                Array.Clear(_latestEntityData, HeaderSize, _fixedFieldsSize);
+            
+            if (_fieldChangeTicks == null || _fieldChangeTicks.Length < _fieldsCount)
+                _fieldChangeTicks = new ushort[_fieldsCount];
+            Array.Fill(_fieldChangeTicks, tick, 0, _fieldsCount);
 
             fixed (byte* data = _latestEntityData)
             {
@@ -133,20 +141,10 @@ namespace LiteEntitySystem.Internal
             if (serverTick == _lastWriteTick) 
                 return;
 
-            byte controllerOwner = _entity is ControllerLogic controller
-                ? controller.InternalOwnerId
-                : EntityManager.ServerPlayerId;
-            
-            //TODO: correct sync on owner change
-            if (_controllerOwner != controllerOwner)
+            bool ownerChanged = _entity.OwnerId != _ownerId;
+            if (ownerChanged)
             {
-                _controllerOwner = controllerOwner;
-                _owner = controllerOwner;
-                MakeOnSync(serverTick);
-            }
-            else if (_entity is EntityLogic entityLogic && _owner != entityLogic.InternalOwnerId.Value)
-            {
-                _owner = entityLogic.InternalOwnerId;
+                _ownerId = _entity.OwnerId;
                 MakeOnSync(serverTick);
             }
             
@@ -156,9 +154,9 @@ namespace LiteEntitySystem.Internal
             _lastWriteTick = serverTick;
             fixed (byte* latestEntityData = _latestEntityData)
             {
-                for (int i = 0; i < _classData.FieldsCount; i++)
+                for (int i = 0; i < _fieldsCount; i++)
                 {
-                    ref var field = ref _classData.Fields[i];
+                    ref var field = ref _fields[i];
                     byte* latestDataPtr = latestEntityData + HeaderSize + field.FixedOffset;
                     object obj;
                     int offset;
@@ -175,7 +173,7 @@ namespace LiteEntitySystem.Internal
                         offset = field.Offset;
                     }
                     
-                    if (field.TypeProcessor.CompareAndWrite(obj, offset, latestDataPtr))
+                    if (field.TypeProcessor.CompareAndWrite(obj, offset, latestDataPtr) || ownerChanged)
                         _fieldChangeTicks[i] = serverTick;
                     else if (Utils.SequenceDiff(minimalTick, _fieldChangeTicks[i]) > 0)
                         _fieldChangeTicks[i] = minimalTick;
@@ -192,9 +190,8 @@ namespace LiteEntitySystem.Internal
                 _state = SerializerState.Freed;
                 return;
             }
-            Write((ushort)(serverTick+1), minimalTick);
+            Write(serverTick, minimalTick);
             _state = SerializerState.Destroyed;
-            _ticksOnDestroy = serverTick;
         }
 
         public unsafe int GetMaximumSize(ushort forTick)
@@ -226,8 +223,8 @@ namespace LiteEntitySystem.Internal
             _syncFrame = tick;
             CleanPendingRpcs(ref _syncRpcHead, ref _syncRpcTail);
             _rpcMode = RPCMode.Sync;
-            for (int i = 0; i < _classData.SyncableFields.Length; i++)
-                RefMagic.RefFieldValue<SyncableField>(_entity, _classData.SyncableFields[i].Offset)
+            for (int i = 0; i < _syncableFieldsCount; i++)
+                RefMagic.RefFieldValue<SyncableField>(_entity, _syncableFields[i].Offset)
                     .OnSyncRequested();
             _rpcMode = RPCMode.Normal;
         }
@@ -271,7 +268,7 @@ namespace LiteEntitySystem.Internal
                 return;
             
             Write(serverTick, minimalTick);
-            if (_controllerOwner != EntityManager.ServerPlayerId && playerId != _controllerOwner)
+            if (_isController && playerId != _ownerId)
                 return;
             //don't write total size in full sync and fields
             WriteInitialState(_entity.IsControlledBy(playerId), serverTick, resultData, ref position);
@@ -280,18 +277,21 @@ namespace LiteEntitySystem.Internal
 
         public unsafe DiffResult MakeDiff(byte playerId, ushort serverTick, ushort minimalTick, ushort playerTick, byte* resultData, ref int position)
         {
-            if (_state == SerializerState.Freed)
+            if (_isController && playerId != _ownerId)
                 return DiffResult.Skip;
-            
-            if (_state == SerializerState.Destroyed && Utils.SequenceDiff(serverTick, _ticksOnDestroy) >= TicksToDestroy)
+            switch (_state)
             {
-                _state = SerializerState.Freed;
-                return DiffResult.DoneAndDestroy;
+                case SerializerState.Freed:
+                    return DiffResult.Skip;
+                
+                case SerializerState.Destroyed when Utils.SequenceDiff(_lastWriteTick, minimalTick) < 0:
+                    _state = SerializerState.Freed;
+                    return DiffResult.DoneAndDestroy;
+                
+                case SerializerState.Active:
+                    Write(serverTick, minimalTick);
+                    break;
             }
-            
-            Write(serverTick, minimalTick);
-            if (_controllerOwner != EntityManager.ServerPlayerId && playerId != _controllerOwner)
-                return DiffResult.Skip;
 
             //make diff
             int startPos = position;
@@ -316,11 +316,11 @@ namespace LiteEntitySystem.Internal
                 //put entity id at 2
                 *(ushort*)(resultData + position) = *(ushort*)lastEntityData;
                 *fieldFlagAndSize = 0;
-                position += sizeof(ushort) + _classData.FieldsFlagsSize;
+                position += sizeof(ushort) + _fieldsFlagsSize;
                 int positionBeforeDeltaCompression = position;
 
                 //write fields
-                for (int i = 0; i < _classData.FieldsCount; i++)
+                for (int i = 0; i < _fieldsCount; i++)
                 {
                     if (i % 8 == 0)
                     {
@@ -328,7 +328,7 @@ namespace LiteEntitySystem.Internal
                         *fields = 0;
                     }
 
-                    ref var field = ref _classData.Fields[i];
+                    ref var field = ref _fields[i];
                     if (((field.Flags & SyncFlags.OnlyForOwner) != 0 && !isOwned) || 
                         ((field.Flags & SyncFlags.OnlyForOtherPlayers) != 0 && isOwned))
                     {

@@ -24,10 +24,6 @@ namespace LiteEntitySystem
         internal readonly Dictionary<Type, RegisteredTypeInfo> RegisteredTypes = new();
         private bool _isFinished;
         private ulong _resultHash = 14695981039346656037UL; //FNV1a offset
-        private const BindingFlags FieldsFlags = BindingFlags.Instance |
-                                                 BindingFlags.Public |
-                                                 BindingFlags.NonPublic |
-                                                 BindingFlags.Static;
         
         /// <summary>
         /// Can be used to detect that server/client has difference
@@ -38,32 +34,36 @@ namespace LiteEntitySystem
             //FNV1a 64 bit hash
             if (!_isFinished)
             {
-                foreach (var (entType, _) in RegisteredTypes.OrderBy(kv => kv.Value.ClassId))
+                //don't hash localonly types
+                foreach (var (entType, _) in RegisteredTypes
+                    .OrderBy(kv => kv.Value.ClassId)
+                    .Where(kv => kv.Key.GetCustomAttribute<LocalOnly>(true) == null))
                 {
-                    //don't hash localonly types
-                    if (entType.GetCustomAttribute<LocalOnly>() != null)
-                        continue;
-                    foreach (var field in entType.GetFields(FieldsFlags))
+                    var allTypesStack = Utils.GetBaseTypes(entType, typeof(InternalEntity), true);
+                    while(allTypesStack.Count > 0)
                     {
-                        if (field.FieldType.IsSubclassOf(typeof(SyncableField)))
+                        foreach (var field in Utils.GetProcessedFields(allTypesStack.Pop()))
                         {
-                            foreach (var syncableField in field.FieldType.GetFields(FieldsFlags))
-                                TryHashField(syncableField);
-                        }
-                        else
-                        {
-                            TryHashField(field);
+                            if (field.FieldType.IsSubclassOf(typeof(SyncableField)))
+                            {
+                                foreach (var syncableField in Utils.GetProcessedFields(field.FieldType))
+                                    TryHashField(syncableField);
+                            }
+                            else
+                            {
+                                TryHashField(field);
+                            }
                         }
                     }
                 }
                 _isFinished = true;
             }
             return _resultHash;
-            
+
             void TryHashField(FieldInfo fi)
             {
                 var ft = fi.FieldType;
-                if ((fi.IsStatic && EntityClassData.IsRemoteCallType(ft)) || 
+                if ((fi.IsStatic && Utils.IsRemoteCallType(ft)) || 
                     (ft.IsGenericType && !ft.IsArray && ft.GetGenericTypeDefinition() == typeof(SyncVar<>)))
                 {
                     string ftName = ft.Name + (ft.IsGenericType ? ft.GetGenericArguments()[0].Name : string.Empty);

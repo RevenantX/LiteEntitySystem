@@ -69,30 +69,6 @@ namespace LiteEntitySystem.Internal
         private static readonly Type SingletonEntityType = typeof(SingletonEntityLogic);
         private static readonly Type SyncableFieldType = typeof(SyncableField);
 
-        private static List<Type> GetBaseTypes(Type ofType, Type until, bool includeSelf)
-        {
-            var baseTypes = new List<Type>();
-            var baseType = ofType.BaseType;
-            while (baseType != until)
-            {
-                baseTypes.Insert(0, baseType);
-                baseType = baseType!.BaseType;
-            }
-            if(includeSelf)
-                baseTypes.Add(ofType);
-            return baseTypes;
-        }
-
-        public static bool IsRemoteCallType(Type ft)
-        {
-            if (ft == typeof(RemoteCall))
-                return true;
-            if (!ft.IsGenericType)
-                return false;
-            var genericTypeDef = ft.GetGenericTypeDefinition();
-            return genericTypeDef == typeof(RemoteCall<>) || genericTypeDef == typeof(RemoteCallSpan<>);
-        }
-
         public EntityClassData(ushort filterId, Type entType, RegisteredTypeInfo typeInfo)
         {
             HasRemoteRollbackFields = false;
@@ -122,32 +98,23 @@ namespace LiteEntitySystem.Internal
             EntityConstructor = typeInfo.Constructor;
             IsSingleton = entType.IsSubclassOf(SingletonEntityType);
             FilterId = filterId;
-
-            var baseTypes = GetBaseTypes(entType, InternalEntityType, false);
-            _baseTypes = baseTypes.ToArray();
-            BaseIds = new ushort[baseTypes.Count];
+            
+            _baseTypes = Utils.GetBaseTypes(entType, InternalEntityType, false).ToArray();
+            BaseIds = new ushort[_baseTypes.Length];
             
             var fields = new List<EntityFieldInfo>();
             var syncableFields = new List<SyncableFieldInfo>();
             var lagCompensatedFields = new List<EntityFieldInfo>();
-
-            //add here to baseTypes to add fields
-            baseTypes.Insert(0, typeof(InternalEntity));
-            baseTypes.Add(entType);
-
-            const BindingFlags bindingFlags = BindingFlags.Instance |
-                                              BindingFlags.Public |
-                                              BindingFlags.NonPublic |
-                                              BindingFlags.DeclaredOnly |
-                                              BindingFlags.Static;
             
-            foreach (var baseType in baseTypes)
+            var allTypesStack = Utils.GetBaseTypes(entType, typeof(object), true);
+            while(allTypesStack.Count > 0)
             {
+                var baseType = allTypesStack.Pop();
                 //cache fields
-                foreach (var field in baseType.GetFields(bindingFlags))
+                foreach (var field in Utils.GetProcessedFields(baseType))
                 {
                     var ft = field.FieldType;
-                    if(IsRemoteCallType(ft) && !field.IsStatic)
+                    if(Utils.IsRemoteCallType(ft) && !field.IsStatic)
                         throw new Exception($"RemoteCalls should be static! (Class: {entType} Field: {field.Name})");
                     
                     if(field.IsStatic)
@@ -199,13 +166,15 @@ namespace LiteEntitySystem.Internal
                             throw new Exception($"Syncable fields should be readonly! (Class: {entType} Field: {field.Name})");
                         
                         syncableFields.Add(new SyncableFieldInfo(offset, syncFlags));
-                        foreach (var syncableType in GetBaseTypes(ft, SyncableFieldType, true))
+                        var syncableFieldTypesWithBase = Utils.GetBaseTypes(ft, SyncableFieldType, true);
+                        while(syncableFieldTypesWithBase.Count > 0)
                         {
+                            var syncableType = syncableFieldTypesWithBase.Pop();
                             //syncable fields
-                            foreach (var syncableField in syncableType.GetFields(bindingFlags))
+                            foreach (var syncableField in Utils.GetProcessedFields(syncableType))
                             {
                                 var syncableFieldType = syncableField.FieldType;
-                                if(IsRemoteCallType(syncableFieldType) && !syncableField.IsStatic)
+                                if(Utils.IsRemoteCallType(syncableFieldType) && !syncableField.IsStatic)
                                     throw new Exception($"RemoteCalls should be static! (Class: {syncableType} Field: {syncableField.Name})");
                                 
                                 if (!syncableFieldType.IsValueType || 
