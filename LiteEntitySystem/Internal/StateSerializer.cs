@@ -52,7 +52,7 @@ namespace LiteEntitySystem.Internal
         private int _syncFrame;
         private RPCMode _rpcMode;
 
-        public byte Version => _entity?.Version ?? 0;
+        public byte NextVersion => (byte)(_entity?.Version + 1 ?? 0);
 
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
@@ -271,7 +271,7 @@ namespace LiteEntitySystem.Internal
             if (_isController && playerId != _ownerId)
                 return;
             //don't write total size in full sync and fields
-            WriteInitialState(_entity.IsControlledBy(playerId), serverTick, resultData, ref position);
+            WriteInitialState(_entity.OwnerId == playerId, serverTick, resultData, ref position);
             //Logger.Log($"[SEM] SendBaseline for entity: {_entity.Id}, pos: {position}, posAfterData: {position + _fullDataSize}");
         }
 
@@ -295,7 +295,7 @@ namespace LiteEntitySystem.Internal
 
             //make diff
             int startPos = position;
-            bool isOwned = _entity.IsControlledBy(playerId);
+            bool isOwned = _entity.OwnerId == playerId;
             
             //at 0 ushort
             ushort* fieldFlagAndSize = (ushort*)(resultData + startPos);

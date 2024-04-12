@@ -13,7 +13,7 @@ namespace LiteEntitySystem
         [SyncVarFlags(SyncFlags.NeverRollBack)]
         private SyncVar<EntitySharedReference> _controlledEntity;
 
-        public override byte OwnerId => InternalOwnerId;
+        public override byte OwnerId => InternalOwnerId.Value;
         
         /// <summary>
         /// Is controller - AI controller
@@ -22,9 +22,6 @@ namespace LiteEntitySystem
 
         public T GetControlledEntity<T>() where T : PawnLogic =>
             EntityManager.GetEntityById<T>(_controlledEntity);
-
-        internal override bool IsControlledBy(byte playerId) =>
-            InternalOwnerId.Value == playerId;
 
         public virtual void BeforeControlledUpdate()
         {

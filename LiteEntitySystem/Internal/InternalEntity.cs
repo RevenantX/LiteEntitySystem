@@ -21,7 +21,10 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         public readonly EntityManager EntityManager;
         
-        internal readonly byte Version;
+        /// <summary>
+        /// Entity version (for id reuse)
+        /// </summary>
+        public readonly byte Version;
         
         [SyncVarFlags(SyncFlags.NeverRollBack)]
         private SyncVar<bool> _isDestroyed;
@@ -34,17 +37,17 @@ namespace LiteEntitySystem.Internal
         /// <summary>
         /// Is entity local controlled
         /// </summary>
-        public bool IsLocalControlled => IsControlledBy(EntityManager.InternalPlayerId);
+        public bool IsLocalControlled => OwnerId == EntityManager.InternalPlayerId;
 
         /// <summary>
         /// Is entity remote controlled
         /// </summary>
-        public bool IsRemoteControlled => IsControlledBy(EntityManager.InternalPlayerId) == false;
+        public bool IsRemoteControlled => OwnerId != EntityManager.InternalPlayerId;
         
         /// <summary>
         /// Is entity is controlled by server
         /// </summary>
-        public bool IsServerControlled => IsControlledBy(EntityManager.ServerPlayerId);
+        public bool IsServerControlled => OwnerId == EntityManager.ServerPlayerId;
         
         /// <summary>
         /// ClientEntityManager that available only on client. Will throw exception if called on server
@@ -55,8 +58,6 @@ namespace LiteEntitySystem.Internal
         /// ServerEntityManager that available only on server. Will throw exception if called on client
         /// </summary>
         public ServerEntityManager ServerManager => (ServerEntityManager)EntityManager;
-
-        internal abstract bool IsControlledBy(byte playerId);
         
         /// <summary>
         /// Owner player id

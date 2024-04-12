@@ -7,11 +7,6 @@ namespace LiteEntitySystem
     /// </summary>
     public abstract class SingletonEntityLogic : InternalEntity
     {
-        internal override bool IsControlledBy(byte playerId)
-        {
-            return false;
-        }
-
         protected SingletonEntityLogic(EntityParams entityParams) : base(entityParams) { }
     }
 }

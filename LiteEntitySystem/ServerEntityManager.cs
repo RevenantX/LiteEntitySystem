@@ -539,10 +539,9 @@ namespace LiteEntitySystem
                 entity = (T)AddEntity(new EntityParams(
                     classData.ClassId, 
                     entityId,
-                    (byte)(stateSerializer.Version + 1),
+                    stateSerializer.NextVersion,
                     this));
                 stateSerializer.Init(ref classData, entity, _tick);
-                
                 initMethod?.Invoke(entity);
                 ConstructEntity(entity);
             }

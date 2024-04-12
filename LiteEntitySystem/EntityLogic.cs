@@ -43,7 +43,7 @@ namespace LiteEntitySystem
         /// </summary>
         public readonly HashSet<EntityLogic> Childs = new HashSet<EntityLogic>();
         
-        public override byte OwnerId => InternalOwnerId;
+        public override byte OwnerId => InternalOwnerId.Value;
 
         public EntitySharedReference ParentId => _parentId;
         
@@ -77,7 +77,7 @@ namespace LiteEntitySystem
         //on client it works only in rollback
         internal unsafe void EnableLagCompensation(NetPlayer player)
         {
-            if (_lagCompensationEnabled || IsControlledBy(player.Id))
+            if (_lagCompensationEnabled || InternalOwnerId.Value == player.Id)
                 return;
             ushort tick = EntityManager.IsClient ? ClientManager.ServerTick : EntityManager.Tick;
             byte maxHistory = (byte)EntityManager.MaxHistorySize;
@@ -237,11 +237,6 @@ namespace LiteEntitySystem
         protected virtual void OnLagCompensationEnd()
         {
             
-        }
-
-        internal override bool IsControlledBy(byte playerId)
-        {
-            return playerId == InternalOwnerId.Value;
         }
 
         internal override void DestroyInternal()
