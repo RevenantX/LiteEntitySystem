@@ -277,8 +277,6 @@ namespace LiteEntitySystem.Internal
 
         public unsafe DiffResult MakeDiff(byte playerId, ushort serverTick, ushort minimalTick, ushort playerTick, byte* resultData, ref int position)
         {
-            if (_isController && playerId != _ownerId)
-                return DiffResult.Skip;
             switch (_state)
             {
                 case SerializerState.Freed:
@@ -295,7 +293,9 @@ namespace LiteEntitySystem.Internal
 
             //make diff
             int startPos = position;
-            bool isOwned = _entity.OwnerId == playerId;
+            bool isOwned = _ownerId == playerId;
+            if (_isController && !isOwned)
+                return DiffResult.Skip;
             
             //at 0 ushort
             ushort* fieldFlagAndSize = (ushort*)(resultData + startPos);
