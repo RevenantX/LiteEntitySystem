@@ -113,6 +113,18 @@ namespace LiteEntitySystem.Internal
             EntityManager.RemoveEntity(this);
         }
 
+        internal void SafeUpdate()
+        {
+            try
+            {
+                Update();
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Exception in entity({Id}) update:\n{e}");
+            }   
+        }
+
         /// <summary>
         /// Fixed update. Called if entity has attribute <see cref="UpdateableEntity"/>
         /// </summary>

@@ -60,6 +60,11 @@ namespace LiteEntitySystem
         /// </summary>
         public readonly ServerSendRate SendRate;
 
+        /// <summary>
+        /// Add try catch to entity updates
+        /// </summary>
+        public bool SafeEntityUpdate = false;
+
         private ushort _minimalTick;
 
         /// <summary>
@@ -589,8 +594,13 @@ namespace LiteEntitySystem
                 }
             }
 
-            foreach (var aliveEntity in AliveEntities)
-                aliveEntity.Update();
+            if (SafeEntityUpdate)
+                foreach (var aliveEntity in AliveEntities)
+                    aliveEntity.SafeUpdate();
+            else
+                foreach (var aliveEntity in AliveEntities)
+                    aliveEntity.Update();
+       
 
             foreach (var lagCompensatedEntity in LagCompensatedEntities)
                 lagCompensatedEntity.WriteHistory(_tick);
