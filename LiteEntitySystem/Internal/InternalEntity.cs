@@ -227,7 +227,7 @@ namespace LiteEntitySystem.Internal
             Version = entityParams.Version;
         }
 
-        int IComparable<InternalEntity>.CompareTo(InternalEntity other)
+        public int CompareTo(InternalEntity other)
         {
             //local first because mostly this is unity physics or something similar
             return (Id >= EntityManager.MaxSyncedEntityCount ? Id - ushort.MaxValue : Id) -

@@ -41,7 +41,8 @@ namespace LiteEntitySystem
         /// <summary>
         /// Child entities (can be used for transforms or as components)
         /// </summary>
-        public readonly HashSet<EntityLogic> Childs = new HashSet<EntityLogic>();
+        public HashSet<EntityLogic> Childs => _childsSet ??= new HashSet<EntityLogic>();
+        private HashSet<EntityLogic> _childsSet;
         
         public override byte OwnerId => InternalOwnerId.Value;
 

@@ -14,13 +14,18 @@ namespace LiteEntitySystem
 
     public class EntityFilter<T> : EntityFilter, IEnumerable<T> where T : InternalEntity
     {
+        private class EntityFastComparer : IComparer<T>
+        {
+            public int Compare(T x, T y) => x.CompareTo(y);
+        }
+        
         private enum EntityFilterOp
         {
             Add,
             Remove
         }
 
-        private readonly SortedSet<T> _entities = new();
+        private readonly SortedSet<T> _entities = new(new EntityFastComparer());
         private SortedSet<T>.Enumerator _enumerator;
 
         public EntityFilter()
@@ -43,12 +48,8 @@ namespace LiteEntitySystem
         public void SubscribeToConstructed(Action<T> onConstructed, bool callOnExisting)
         {
             if (callOnExisting)
-            {
-                foreach (T entity in this)
-                {
+                foreach (var entity in this)
                     onConstructed(entity);
-                }
-            }
             OnConstructed += onConstructed;
         }
         

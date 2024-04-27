@@ -152,7 +152,7 @@ namespace LiteEntitySystem
         public const int MaxPlayers = byte.MaxValue-1;
 
         protected int MaxSyncedEntityId = -1; //current maximum id
-        protected int MaxLocalEntityId = -1;
+        private int _maxLocalEntityId = -1;
         protected ushort _tick;
         
         protected readonly EntityFilter<InternalEntity> AliveEntities = new();
@@ -332,7 +332,9 @@ namespace LiteEntitySystem
                 if(EntitiesDict[i] is T castedEnt)
                     typedFilter.Add(castedEnt);
             }
-            for (int i = MaxSyncedEntityCount; i <= MaxLocalEntityId; i++)
+            while (_maxLocalEntityId > MaxSyncedEntityCount && EntitiesDict[_maxLocalEntityId] == null)
+                _maxLocalEntityId--;
+            for (int i = MaxSyncedEntityCount; i <= _maxLocalEntityId; i++)
             {
                 if(EntitiesDict[i] is T castedEnt)
                     typedFilter.Add(castedEnt);
@@ -454,7 +456,7 @@ namespace LiteEntitySystem
             if(entityParams.Id < MaxSyncedEntityCount)
                 MaxSyncedEntityId = MaxSyncedEntityId < entityParams.Id ? entityParams.Id : MaxSyncedEntityId;
             else
-                MaxLocalEntityId = MaxLocalEntityId < entityParams.Id ? entityParams.Id : MaxLocalEntityId;
+                _maxLocalEntityId = _maxLocalEntityId < entityParams.Id ? entityParams.Id : _maxLocalEntityId;
             
             EntitiesDict[entity.Id] = entity;
             EntitiesCount++;

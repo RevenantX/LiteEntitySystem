@@ -377,6 +377,9 @@ namespace LiteEntitySystem
             //send only if tick changed
             if (_netPlayers.Count == 0 || prevTick == _tick || _tick % (int) SendRate != 0)
                 return;
+            
+            while (MaxSyncedEntityId > 0 && _stateSerializers[MaxSyncedEntityId].State == SerializerState.Freed)
+                MaxSyncedEntityId--;
 
             //calculate minimalTick and potential baseline size
             ushort executedTick = (ushort)(_tick - 1);

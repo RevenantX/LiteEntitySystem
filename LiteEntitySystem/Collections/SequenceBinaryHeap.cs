@@ -77,21 +77,12 @@ namespace LiteEntitySystem.Collections
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int Parent(int position)
-        {
-            return (position - 1) / 2;
-        }
-        
+        private static int Parent(int position) => (position - 1) / 2;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int LeftChild(int position)
-        {
-            return 2 * position + 1;
-        }
-        
+        private static int LeftChild(int position) => 2 * position + 1;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int RightChild(int position)
-        {
-            return 2 * position + 2;
-        }
+        private static int RightChild(int position) => 2 * position + 2;
     }
 }

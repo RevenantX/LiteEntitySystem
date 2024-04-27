@@ -54,6 +54,8 @@ namespace LiteEntitySystem.Internal
 
         public byte NextVersion => (byte)(_entity?.Version + 1 ?? 0);
 
+        public SerializerState State => _state;
+
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
             //Logger.Log($"AddRpc for tick: {rpc.Header.Tick}, St: {_entity.ServerManager.Tick}, Id: {rpc.Header.Id}");
