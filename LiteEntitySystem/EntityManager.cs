@@ -276,8 +276,13 @@ namespace LiteEntitySystem
                 _singletonEntities[i]?.DestroyInternal();
                 _singletonEntities[i] = null;
             }
-
-            for (int i = FirstEntityId; i < EntitiesDict.Length; i++)
+            
+            for (int i = FirstEntityId; i <= MaxSyncedEntityId; i++)
+            {
+                EntitiesDict[i]?.DestroyInternal();
+                EntitiesDict[i] = null;
+            }
+            for (int i = MaxSyncedEntityCount; i <= _maxLocalEntityId; i++)
             {
                 EntitiesDict[i]?.DestroyInternal();
                 EntitiesDict[i] = null;
