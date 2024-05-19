@@ -6,7 +6,13 @@ using LiteEntitySystem.Internal;
 namespace LiteEntitySystem
 {
     public abstract class EntityFilter
-    {
+    { 
+        protected class EntityFastComparer : IComparer<InternalEntity>
+        {
+            public int Compare(InternalEntity x, InternalEntity y) => x.CompareTo(y);
+        }
+        protected static readonly EntityFastComparer Comparer = new();
+        
         internal abstract void Add(InternalEntity entity);
         internal abstract void Remove(InternalEntity entity);
         internal abstract void Clear();
@@ -14,18 +20,13 @@ namespace LiteEntitySystem
 
     public class EntityFilter<T> : EntityFilter, IEnumerable<T> where T : InternalEntity
     {
-        private class EntityFastComparer : IComparer<T>
-        {
-            public int Compare(T x, T y) => x.CompareTo(y);
-        }
-        
         private enum EntityFilterOp
         {
             Add,
             Remove
         }
 
-        private readonly SortedSet<T> _entities = new(new EntityFastComparer());
+        private readonly SortedSet<T> _entities = new(Comparer);
         private SortedSet<T>.Enumerator _enumerator;
 
         public EntityFilter()
