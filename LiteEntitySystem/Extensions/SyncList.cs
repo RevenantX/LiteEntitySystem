@@ -22,7 +22,6 @@ namespace LiteEntitySystem.Extensions
         private T[] _temp;
         private int _serverCount;
         private int _count;
-        private int _tempCount;
 
         private static RemoteCall<T> _addAction;
         private static RemoteCall _clearAction;
@@ -34,7 +33,6 @@ namespace LiteEntitySystem.Extensions
         {
             _serverData ??= new T[_data.Length];
             _temp = _data;
-            _tempCount = _count;
             _data = _serverData;
             _count = _serverCount;
         }
@@ -44,7 +42,8 @@ namespace LiteEntitySystem.Extensions
             _serverCount = _count;
             _serverData = _data;
             _data = _temp;
-            _count = _tempCount;
+            if (_data.Length < _serverData.Length)
+                Array.Resize(ref _data, _serverData.Length);
             fixed (void* serverData = _serverData, data = _data)
                 Unsafe.CopyBlock(data, serverData, (uint)(_count * sizeof(T)));
         }
