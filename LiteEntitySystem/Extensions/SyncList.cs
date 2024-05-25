@@ -42,6 +42,8 @@ namespace LiteEntitySystem.Extensions
             _serverCount = _count;
             _serverData = _data;
             _data = _temp;
+            if (_data.Length < _serverData.Length)
+                Array.Resize(ref _data, _serverData.Length);
             fixed (void* serverData = _serverData, data = _data)
                 Unsafe.CopyBlock(data, serverData, (uint)(_count * sizeof(T)));
         }
