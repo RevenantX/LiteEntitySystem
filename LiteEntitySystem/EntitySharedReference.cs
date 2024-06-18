@@ -1,9 +1,10 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem
 {
     [StructLayout(LayoutKind.Sequential)]
-    public readonly struct EntitySharedReference
+    public readonly struct EntitySharedReference : IEquatable<EntitySharedReference>
     {
         public readonly ushort Id;
         public readonly byte Version;
@@ -79,5 +80,8 @@ namespace LiteEntitySystem
         {
             return $"Id: {Id}, Version: {Version}";
         }
+
+        public bool Equals(EntitySharedReference other) =>
+            other.Id == Id && other.Version == Version;
     }
 }
