@@ -25,7 +25,7 @@ namespace LiteEntitySystem.Internal
             OwnerChange
         }
         
-        public const int HeaderSize = 5;
+        public static readonly int HeaderSize = Helpers.SizeOfStruct<EntityDataHeader>();
         public const int DiffHeaderSize = 4;
         public const int MaxStateSize = 32767; //half of ushort
  
@@ -131,9 +131,7 @@ namespace LiteEntitySystem.Internal
 
             fixed (byte* data = _latestEntityData)
             {
-                *(ushort*)data = e.Id;
-                data[2] = e.Version;
-                *(ushort*)(data + 3) = e.ClassId;
+                *(EntityDataHeader*)data = e.DataHeader;
             }
         }
 

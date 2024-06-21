@@ -178,6 +178,7 @@ namespace LiteEntitySystem
         internal byte InternalPlayerId;
         protected readonly InputProcessor InputProcessor;
         protected int SpeedMultiplier;
+        protected int TotalTicksPassed;
         
         public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged =>
             ValueProcessors.RegisteredProcessors[typeof(T)] = new UserTypeProcessor<T>(interpolationDelegate);
@@ -262,6 +263,7 @@ namespace LiteEntitySystem
         {
             EntitiesCount = 0;
 
+            TotalTicksPassed = 0;
             _tick = 0;
             VisualDeltaTime = 0.0;
             _accumulator = 0;
@@ -426,6 +428,7 @@ namespace LiteEntitySystem
                 EntityClassInfo<T>.ClassId,
                 _localIdQueue.GetNewId(), 
                 0,
+                TotalTicksPassed,
                 this);
             var entity = (T)AddEntity(entityParams);
             if (IsClient && entity is EntityLogic logic)
@@ -585,6 +588,7 @@ namespace LiteEntitySystem
                 }
                 OnLogicTick();
                 _tick++;
+                TotalTicksPassed++;
 
                 _accumulator -= maxTicks;
                 updates++;

@@ -7,12 +7,6 @@ namespace LiteEntitySystem
 {
     public abstract class EntityFilter
     { 
-        protected class EntityFastComparer : IComparer<InternalEntity>
-        {
-            public int Compare(InternalEntity x, InternalEntity y) => x.CompareTo(y);
-        }
-        protected static readonly EntityFastComparer Comparer = new();
-        
         internal abstract void Add(InternalEntity entity);
         internal abstract void Remove(InternalEntity entity);
         internal abstract void Clear();
@@ -26,7 +20,7 @@ namespace LiteEntitySystem
             Remove
         }
 
-        private readonly SortedSet<T> _entities = new(Comparer);
+        private readonly SortedSet<T> _entities = new(EntityComparer.Instance);
         private SortedSet<T>.Enumerator _enumerator;
 
         public EntityFilter()

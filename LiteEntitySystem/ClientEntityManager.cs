@@ -771,6 +771,7 @@ namespace LiteEntitySystem
             _syncCallsBeforeConstructCount = 0;
 
             //Call construct methods
+            Array.Sort(_entitiesToConstruct, 0, _entitiesToConstructCount, EntityComparer.Instance);
             for (int i = 0; i < _entitiesToConstructCount; i++)
                 ConstructEntity(_entitiesToConstruct[i]);
             _entitiesToConstructCount = 0;
@@ -793,6 +794,10 @@ namespace LiteEntitySystem
             {
                 bool fullSync = true;
                 int endPos = 0;
+                InternalEntity entity;
+                ref readonly var classData = ref EntityClassData.Empty;
+                bool writeInterpolationData;
+                
                 if (!fistSync) //diff data
                 {
                     ushort fullSyncAndTotalSize = *(ushort*)(rawData + readerPosition);
@@ -800,32 +805,27 @@ namespace LiteEntitySystem
                     endPos = readerPosition + (fullSyncAndTotalSize >> 1);
                     readerPosition += sizeof(ushort);
                 }
-                ushort entityId = *(ushort*)(rawData + readerPosition);
-                readerPosition += sizeof(ushort);
-                if (entityId == InvalidEntityId || entityId >= MaxSyncedEntityCount)
-                {
-                    Logger.LogError($"Bad data (id > {MaxSyncedEntityCount} or Id == 0) Id: {entityId}");
-                    return false;
-                }
-                var entity = EntitiesDict[entityId];
-                ref readonly var classData = ref EntityClassData.Empty;
-                bool writeInterpolationData;
+                
                 if (fullSync)
                 {
+                    var entityDataHeader = *(EntityDataHeader*)(rawData + readerPosition);
+                    readerPosition += sizeof(EntityDataHeader);
+                    if (!IsEntityIdValid(entityDataHeader.Id))
+                        return false;
+                    entity = EntitiesDict[entityDataHeader.Id];
+                    
                     //Logger.Log($"[CEM] ReadBaseline Entity: {entityId} pos: {bytesRead}");
-                    byte version = rawData[readerPosition];
                     //remove old entity
-                    if (entity != null && entity.Version != version)
+                    if (entity != null && entity.Version != entityDataHeader.Version)
                     {
                         //this can be only on logics (not on singletons)
-                        Logger.Log($"[CEM] Replace entity by new: {version}");
+                        Logger.Log($"[CEM] Replace entity by new: {entityDataHeader.Version}");
                         entity.DestroyInternal();
                         entity = null;
                     } 
                     if (entity == null) //create new
                     {
-                        ushort classId = *(ushort*)(rawData + readerPosition + 1);
-                        entity = AddEntity(new EntityParams(classId, entityId, version, this));
+                        entity = AddEntity(new EntityParams(entityDataHeader, this));
                         classData = ref entity.GetClassData();
                         if (classData.PredictedSize > 0 || classData.SyncableFields.Length > 0)
                         {
@@ -846,18 +846,25 @@ namespace LiteEntitySystem
                         classData = ref entity.GetClassData();
                         writeInterpolationData = entity.IsRemoteControlled;
                     }
-                    readerPosition += 3;
                 }
-                else if(entity != null) //diff sync
+                else //diff sync
                 {
-                    classData = ref entity.GetClassData();
-                    writeInterpolationData = entity.IsRemoteControlled;
-                    readerPosition += classData.FieldsFlagsSize;
-                }
-                else //entity null -> and diff sync -> skip
-                {
-                    readerPosition = endPos;
-                    continue;
+                    ushort entityId = *(ushort*)(rawData + readerPosition);
+                    readerPosition += sizeof(ushort);
+                    if (!IsEntityIdValid(entityId))
+                        return false;
+                    entity = EntitiesDict[entityId];
+                    if(entity != null)
+                    {
+                        classData = ref entity.GetClassData();
+                        writeInterpolationData = entity.IsRemoteControlled;
+                        readerPosition += classData.FieldsFlagsSize;
+                    }
+                    else //entity null -> and diff sync -> skip
+                    {
+                        readerPosition = endPos;
+                        continue;
+                    }
                 }
                 
                 Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
@@ -911,6 +918,16 @@ namespace LiteEntitySystem
                 readerPosition = endPos;
             }
             return true;
+
+            bool IsEntityIdValid(ushort id)
+            {
+                if (id == InvalidEntityId || id >= MaxSyncedEntityCount)
+                {
+                    Logger.LogError($"Bad data (id > {MaxSyncedEntityCount} or Id == 0) Id: {id}");
+                    return false;
+                }
+                return true;
+            }
         }
     }
 }

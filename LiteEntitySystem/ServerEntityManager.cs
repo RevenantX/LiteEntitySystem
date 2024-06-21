@@ -548,6 +548,7 @@ namespace LiteEntitySystem
                     classData.ClassId, 
                     entityId,
                     stateSerializer.NextVersion,
+                    TotalTicksPassed,
                     this));
                 stateSerializer.Init(ref classData, entity, _tick);
                 initMethod?.Invoke(entity);
