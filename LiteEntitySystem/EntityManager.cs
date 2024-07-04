@@ -272,12 +272,6 @@ namespace LiteEntitySystem
             _localIdQueue.Reset();
             _stopwatch.Restart();
             AliveEntities.Clear();
-
-            for (int i = 0; i < _singletonEntities.Length; i++)
-            {
-                _singletonEntities[i]?.DestroyInternal();
-                _singletonEntities[i] = null;
-            }
             
             for (int i = FirstEntityId; i <= MaxSyncedEntityId; i++)
             {
@@ -288,6 +282,11 @@ namespace LiteEntitySystem
             {
                 EntitiesDict[i]?.DestroyInternal();
                 EntitiesDict[i] = null;
+            }
+            for (int i = 0; i < _singletonEntities.Length; i++)
+            {
+                _singletonEntities[i]?.DestroyInternal();
+                _singletonEntities[i] = null;
             }
 
             for (int i = 0; i < _entityFilters.Length; i++)
