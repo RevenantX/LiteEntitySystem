@@ -95,6 +95,8 @@ namespace LiteEntitySystem
             _entityOperationsCount = 0;
             _entities.Clear();
             _enumerator = _entities.GetEnumerator();
+            OnConstructed = null;
+            OnDestroyed = null;
         }
 
         internal bool Refresh()
