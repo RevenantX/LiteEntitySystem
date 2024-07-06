@@ -2,7 +2,7 @@
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncFixedArray<T> : SyncableField where T : unmanaged
+    public class SyncFixedArray<T> : SyncableField where T : unmanaged, IEquatable<T>
     {
         private struct SetCallData
         {
@@ -48,6 +48,8 @@ namespace LiteEntitySystem.Extensions
             get => _data[index];
             set
             {
+                if(_data[index].Equals(value))
+                   return;
                 _data[index] = value;
                 ExecuteRPC(_setRpcAction, new SetCallData { Value = value, Index = (ushort)index });
             }

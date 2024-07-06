@@ -24,7 +24,7 @@
         public readonly SyncFlags Flags;
         public readonly bool IsPredicted;
 
-        public MethodCallDelegate OnSync;
+        public OnSyncdCallDelegate OnSync;
         public OnSyncExecutionOrder OnSyncExecutionOrder;
         public int FixedOffset;
         public int PredictedOffset;

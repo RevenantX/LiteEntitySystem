@@ -630,18 +630,7 @@ namespace LiteEntitySystem
             if (PlayersCount == 0)
                 return;
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Init(_tick, 0, rpcId, flags, 0);
-            _stateSerializers[entityId].AddRpcPacket(rpc);
-        }
-        
-        internal unsafe void AddRemoteCall<T>(ushort entityId, T value, ushort rpcId, ExecuteFlags flags) where T : unmanaged
-        {
-            if (PlayersCount == 0)
-                return;
-            var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Init(_tick, (ushort)sizeof(T), rpcId, flags, 1);
-            fixed (byte* rawData = rpc.Data)
-                *(T*)rawData = value;
+            rpc.Init(_tick, 0, 0, rpcId, flags);
             _stateSerializers[entityId].AddRpcPacket(rpc);
         }
         
@@ -650,9 +639,45 @@ namespace LiteEntitySystem
             if (PlayersCount == 0)
                 return;
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Init(_tick, (ushort)sizeof(T), rpcId, flags, value.Length);
-            fixed(void* rawValue = value, rawData = rpc.Data)
-                RefMagic.CopyBlock(rawData, rawValue, (uint)rpc.TotalSize);
+            int dataSize = sizeof(T) * value.Length;
+            if (dataSize > ushort.MaxValue)
+            {
+                Logger.LogError($"DataSize on rpc: {rpcId}, entity: {entityId} is more than {ushort.MaxValue}");
+                return;
+            }
+            rpc.Init(_tick, (ushort)dataSize, 0, rpcId, flags);
+            if(value.Length > 0)
+                fixed(void* rawValue = value, rawData = rpc.Data)
+                    RefMagic.CopyBlock(rawData, rawValue, (uint)dataSize);
+            _stateSerializers[entityId].AddRpcPacket(rpc);
+        }
+        
+        internal unsafe void AddRemoteCall<T1, T2>(ushort entityId, ReadOnlySpan<T1> value1, ReadOnlySpan<T2> value2, ushort rpcId, ExecuteFlags flags) 
+            where T1 : unmanaged
+            where T2 : unmanaged
+        {
+            if (PlayersCount == 0)
+                return;
+            var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
+            int dataSize1 = sizeof(T1) * value1.Length;
+            if (dataSize1 > ushort.MaxValue)
+            {
+                Logger.LogError($"DataSize1 on rpc: {rpcId}, entity: {entityId} is more than {ushort.MaxValue}");
+                return;
+            }
+            int dataSize2 = sizeof(T2) * value2.Length;
+            if (dataSize2 > ushort.MaxValue)
+            {
+                Logger.LogError($"DataSize2 on rpc: {rpcId}, entity: {entityId} is more than {ushort.MaxValue}");
+                return;
+            }
+            rpc.Init(_tick, (ushort)dataSize1, (ushort)dataSize2, rpcId, flags);
+            fixed (void* rawValue1 = value1, rawValue2 = value2)
+            fixed (byte* rawData = rpc.Data)
+            {
+                RefMagic.CopyBlock(rawData, rawValue1, (uint)dataSize1);
+                RefMagic.CopyBlock(rawData+dataSize1, rawValue2, (uint)dataSize2);
+            }
             _stateSerializers[entityId].AddRpcPacket(rpc);
         }
     }

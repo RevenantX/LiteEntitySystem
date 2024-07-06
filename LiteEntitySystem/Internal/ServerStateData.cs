@@ -149,7 +149,9 @@ namespace LiteEntitySystem.Internal
                 var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, rpc.SyncableOffset);
                 if (syncSet.Add(syncableField))
                     syncableField.BeforeReadRPC();
-                rpc.Delegate(syncableField, new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.TypeSize * rpc.Header.Count));
+                rpc.Delegate(syncableField, 
+                    new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.ByteCount1), 
+                    new ReadOnlySpan<byte>(Data, rpc.Offset + rpc.Header.ByteCount1, rpc.Header.ByteCount2));
             }
             foreach (var syncableField in syncSet)
                 syncableField.AfterReadRPC();
@@ -188,7 +190,9 @@ namespace LiteEntitySystem.Internal
                 }
                 rpc.Executed = true;
                 entityManager.CurrentRPCTick = rpc.Header.Tick;
-                rpc.Delegate(entity, new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.TypeSize * rpc.Header.Count));
+                rpc.Delegate(entity, 
+                    new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.ByteCount1), 
+                    new ReadOnlySpan<byte>(Data, rpc.Offset + rpc.Header.ByteCount1, rpc.Header.ByteCount2));
             }
             entityManager.IsExecutingRPC = false;
         }
@@ -220,7 +224,7 @@ namespace LiteEntitySystem.Internal
                     _syncableRemoteCallsCount++;
                 }
      
-                position += header.TypeSize * header.Count;
+                position += header.ByteCount1 + header.ByteCount2;
             }
         }
 
