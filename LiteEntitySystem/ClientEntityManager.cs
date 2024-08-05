@@ -127,18 +127,19 @@ namespace LiteEntitySystem
 
         private readonly struct SyncCallInfo
         {
+            public readonly InternalEntity Entity;
+            
             private readonly OnSyncdCallDelegate _onSync;
-            private readonly InternalEntity _entity;
             private readonly int _prevDataPos;
 
             public SyncCallInfo(OnSyncdCallDelegate onSync, InternalEntity entity, int prevDataPos)
             {
                 _onSync = onSync;
-                _entity = entity;
+                Entity = entity;
                 _prevDataPos = prevDataPos;
             }
 
-            public void Execute(ServerStateData state) => _onSync(_entity, new ReadOnlySpan<byte>(state.Data, _prevDataPos, state.Size-_prevDataPos));
+            public void Execute(ServerStateData state) => _onSync(Entity, new ReadOnlySpan<byte>(state.Data, _prevDataPos, state.Size-_prevDataPos));
         }
         private SyncCallInfo[] _syncCalls;
         private int _syncCallsCount;
@@ -757,6 +758,22 @@ namespace LiteEntitySystem
             _spawnPredictedEntities.Enqueue((_tick, e));
         }
 
+        private void ExecuteSyncCalls(SyncCallInfo[] callInfos, ref int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                try
+                {
+                    callInfos[i].Execute(_stateA);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError($"OnChange error in user code. Entity: {callInfos[i].Entity}. Error: {e}");
+                }
+            }
+            count = 0;
+        }
+
         private void ConstructAndSync(bool firstSync, ushort minimalTick = 0)
         {
             //execute all previous rpcs
@@ -765,10 +782,8 @@ namespace LiteEntitySystem
             //execute syncable fields first
             _stateA.ExecuteSyncableRpcs(this, minimalTick, firstSync);
             
-            //Make OnSyncCalls before construct
-            for(int i = 0; i < _syncCallsBeforeConstructCount; i++)
-                _syncCallsBeforeConstruct[i].Execute(_stateA);
-            _syncCallsBeforeConstructCount = 0;
+            //Make OnChangeCalls before construct
+            ExecuteSyncCalls(_syncCallsBeforeConstruct, ref _syncCallsBeforeConstructCount);
 
             //Call construct methods
             Array.Sort(_entitiesToConstruct, 0, _entitiesToConstructCount, EntityComparer.Instance);
@@ -776,10 +791,8 @@ namespace LiteEntitySystem
                 ConstructEntity(_entitiesToConstruct[i]);
             _entitiesToConstructCount = 0;
             
-            //Make OnSyncCalls before construct
-            for(int i = 0; i < _syncCallsCount; i++)
-                _syncCalls[i].Execute(_stateA);
-            _syncCallsCount = 0;
+            //Make OnChangeCalls after construct
+            ExecuteSyncCalls(_syncCalls, ref _syncCallsCount);
             
             //execute entity rpcs
             _stateA.ExecuteRpcs(this, minimalTick, firstSync);
