@@ -250,14 +250,15 @@ namespace LiteEntitySystem
                 ClientManager.RemoveOwned(this);
             }
             var parent = EntityManager.GetEntityById<EntityLogic>(_parentId);
-            if (parent != null && !parent.IsDestroyed)
+            if (parent != null && !parent.IsDestroyed && parent._childsSet != null)
             {
-                parent.Childs.Remove(this);
+                parent._childsSet.Remove(this);
             }
-            foreach (var entityLogic in Childs)
-            {
-                entityLogic.Destroy();
-            }
+            if(_childsSet != null)
+                foreach (var entityLogic in _childsSet)
+                {
+                    entityLogic.Destroy();
+                }
         }
         
         private void OnOwnerChange(byte prevOwner)
@@ -270,17 +271,18 @@ namespace LiteEntitySystem
 
         private void OnParentChange(EntitySharedReference oldId)
         {
-            EntityManager.GetEntityById<EntityLogic>(oldId)?.Childs.Remove(this);
+            EntityManager.GetEntityById<EntityLogic>(oldId)?._childsSet?.Remove(this);
             EntityManager.GetEntityById<EntityLogic>(_parentId)?.Childs.Add(this);
         }
 
         internal static void SetOwner(EntityLogic entity, byte ownerId)
         {
             entity.InternalOwnerId = ownerId;
-            foreach (var child in entity.Childs)
-            {
-                SetOwner(child, ownerId);
-            }
+            if(entity._childsSet != null)
+                foreach (var child in entity._childsSet)
+                {
+                    SetOwner(child, ownerId);
+                }
         }
 
         protected override void RegisterRPC(ref RPCRegistrator r)
