@@ -473,6 +473,7 @@ namespace LiteEntitySystem
                 }
                 for (int i = 0; i < classData.SyncableFields.Length; i++)
                     RefMagic.RefFieldValue<SyncableField>(entity, classData.SyncableFields[i].Offset).OnRollback();
+                entity.OnRollback();
             }
 
             //reapply input

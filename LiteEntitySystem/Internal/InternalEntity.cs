@@ -161,6 +161,14 @@ namespace LiteEntitySystem.Internal
         }
 
         /// <summary>
+        /// Called at rollback begin after all values reset to first frame in rollback queue.
+        /// </summary>
+        protected internal virtual void OnRollback()
+        {
+            
+        }
+
+        /// <summary>
         /// Called only on <see cref="ClientEntityManager.Update"/> and if entity has attribute <see cref="UpdateableEntity"/>
         /// </summary>
         protected internal virtual void VisualUpdate()
