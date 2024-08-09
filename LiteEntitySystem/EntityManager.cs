@@ -195,17 +195,17 @@ namespace LiteEntitySystem
             if (IntPtr.Size == 4)
                 K4os.Compression.LZ4.LZ4Codec.Enforce32 = true;
 #endif
-            RegisterBasicFieldType(new ValueTypeProcessorByte());
-            RegisterBasicFieldType(new ValueTypeProcessorSByte());
-            RegisterBasicFieldType(new ValueTypeProcessorShort());
-            RegisterBasicFieldType(new ValueTypeProcessorUShort());
+            RegisterBasicFieldType(new BasicTypeProcessor<byte>());
+            RegisterBasicFieldType(new BasicTypeProcessor<sbyte>());
+            RegisterBasicFieldType(new BasicTypeProcessor<short>());
+            RegisterBasicFieldType(new BasicTypeProcessor<ushort>());
             RegisterBasicFieldType(new ValueTypeProcessorInt());
-            RegisterBasicFieldType(new ValueTypeProcessorUInt());
+            RegisterBasicFieldType(new BasicTypeProcessor<uint>());
             RegisterBasicFieldType(new ValueTypeProcessorLong());
-            RegisterBasicFieldType(new ValueTypeProcessorULong());
+            RegisterBasicFieldType(new BasicTypeProcessor<ulong>());
             RegisterBasicFieldType(new ValueTypeProcessorFloat());
             RegisterBasicFieldType(new ValueTypeProcessorDouble());
-            RegisterBasicFieldType(new ValueTypeProcessorBool());
+            RegisterBasicFieldType(new BasicTypeProcessor<bool>());
             RegisterBasicFieldType(new ValueTypeProcessorEntitySharedReference());
             RegisterFieldType<FloatAngle>(FloatAngle.Lerp);
         }

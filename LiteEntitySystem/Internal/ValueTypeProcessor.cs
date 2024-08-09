@@ -10,12 +10,10 @@ namespace LiteEntitySystem.Internal
     
     internal abstract unsafe class ValueTypeProcessor
     {
-        internal readonly Type ValueType;
         internal readonly int Size;
 
-        protected ValueTypeProcessor(Type valueType, int size)
+        protected ValueTypeProcessor(int size)
         {
-            ValueType = valueType;
             Size = size;
         }
         
@@ -29,13 +27,13 @@ namespace LiteEntitySystem.Internal
 
     internal abstract unsafe class ValueTypeProcessor<T> : ValueTypeProcessor where T : unmanaged
     {
-        protected ValueTypeProcessor() : base(typeof(T), sizeof(T))
+        protected ValueTypeProcessor() : base(sizeof(T))
         {
         }
 
         internal override void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
-            throw new Exception($"This type: {ValueType} can't be interpolated");
+            throw new Exception($"This type: {typeof(T)} can't be interpolated");
         }
         
         internal override void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
@@ -54,7 +52,7 @@ namespace LiteEntitySystem.Internal
         internal override bool SetFromAndSync(object obj, int offset, byte* data)
         {
             ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
-            if (!Compare(ref a, ref *(T*)data))
+            if (!Utils.FastEquals(a, *(T*)data))
             {
                 var temp = a;
                 a = *(T*)data;
@@ -72,39 +70,40 @@ namespace LiteEntitySystem.Internal
         internal override bool CompareAndWrite(object obj, int offset, byte* data)
         {
             ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
-            if (Compare(ref a, ref *(T*)data))
+            if (Utils.FastEquals(a, *(T*)data))
                 return false;
             *(T*)data = a;
             return true;
         }
-
-        protected abstract bool Compare(ref T a, ref T b);
-    }
-
-    internal class ValueTypeProcessorByte : ValueTypeProcessor<byte>
-    {
-        protected override bool Compare(ref byte a, ref byte b) => a == b;
     }
     
-    internal class ValueTypeProcessorSByte : ValueTypeProcessor<sbyte>
+    internal unsafe class BasicTypeProcessor<T> : ValueTypeProcessor<T> where T : unmanaged, IEquatable<T>
     {
-        protected override bool Compare(ref sbyte a, ref sbyte b) => a == b;
+        internal override bool SetFromAndSync(object obj, int offset, byte* data)
+        {
+            ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
+            if (!a.Equals(*(T*)data))
+            {
+                var temp = a;
+                a = *(T*)data;
+                *(T*)data = temp;
+                return true;
+            }
+            return false;
+        }
+
+        internal override bool CompareAndWrite(object obj, int offset, byte* data)
+        {
+            ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
+            if (a.Equals(*(T*)data))
+                return false;
+            *(T*)data = a;
+            return true;
+        }
     }
 
-    internal class ValueTypeProcessorShort : ValueTypeProcessor<short>
+    internal class ValueTypeProcessorInt : BasicTypeProcessor<int>
     {
-        protected override bool Compare(ref short a, ref short b) => a == b;
-    }
-
-    internal class ValueTypeProcessorUShort : ValueTypeProcessor<ushort>
-    {
-        protected override bool Compare(ref ushort a, ref ushort b) => a == b;
-    }
-
-    internal class ValueTypeProcessorInt : ValueTypeProcessor<int>
-    {
-        protected override bool Compare(ref int a, ref int b) => a == b;
-        
         internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
             ref var a = ref RefMagic.RefFieldValue<int>(obj, offset);
@@ -117,15 +116,9 @@ namespace LiteEntitySystem.Internal
             a = Utils.Lerp(*(int*)historyA, *(int*)historyB, lerpTime);
         }
     }
-
-    internal class ValueTypeProcessorUInt : ValueTypeProcessor<uint>
+    
+    internal class ValueTypeProcessorLong : BasicTypeProcessor<long>
     {
-        protected override bool Compare(ref uint a, ref uint b) => a == b;
-    }
-
-    internal class ValueTypeProcessorLong : ValueTypeProcessor<long>
-    {
-        protected override bool Compare(ref long a, ref long b) => a == b;
         internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
             ref var a = ref RefMagic.RefFieldValue<long>(obj, offset);
@@ -138,15 +131,9 @@ namespace LiteEntitySystem.Internal
             a = Utils.Lerp(*(long*)historyA, *(long*)historyB, lerpTime);
         }
     }
-    
-    internal class ValueTypeProcessorULong : ValueTypeProcessor<ulong>
-    {
-        protected override bool Compare(ref ulong a, ref ulong b) => a == b;
-    }
 
-    internal class ValueTypeProcessorFloat : ValueTypeProcessor<float>
+    internal class ValueTypeProcessorFloat : BasicTypeProcessor<float>
     {
-        protected override bool Compare(ref float a, ref float b) => a == b;
         internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
             ref var a = ref RefMagic.RefFieldValue<float>(obj, offset);
@@ -160,9 +147,8 @@ namespace LiteEntitySystem.Internal
         }
     }
     
-    internal class ValueTypeProcessorDouble : ValueTypeProcessor<double>
+    internal class ValueTypeProcessorDouble : BasicTypeProcessor<double>
     {
-        protected override bool Compare(ref double a, ref double b) => a == b;
         internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
             ref var a = ref RefMagic.RefFieldValue<double>(obj, offset);
@@ -176,15 +162,8 @@ namespace LiteEntitySystem.Internal
         }
     }
     
-    internal class ValueTypeProcessorBool : ValueTypeProcessor<bool>
+    internal class ValueTypeProcessorEntitySharedReference : BasicTypeProcessor<EntitySharedReference>
     {
-        protected override bool Compare(ref bool a, ref bool b) => a == b;
-    }
-    
-    internal class ValueTypeProcessorEntitySharedReference : ValueTypeProcessor<EntitySharedReference>
-    {
-        protected override bool Compare(ref EntitySharedReference a, ref EntitySharedReference b) => a == b;
-        
         internal override unsafe bool CompareAndWrite(object obj, int offset, byte* data)
         {
             //skip local ids
@@ -206,12 +185,6 @@ namespace LiteEntitySystem.Internal
     internal unsafe class UserTypeProcessor<T> : ValueTypeProcessor<T> where T : unmanaged
     {
         private readonly InterpolatorDelegateWithReturn<T> _interpDelegate;
-
-        protected override bool Compare(ref T a, ref T b)
-        {
-            fixed (void* ptrA = &a, ptrB = &b)
-                return new ReadOnlySpan<byte>(ptrA, Size).SequenceEqual(new ReadOnlySpan<byte>(ptrB, Size));
-        }
 
         internal override void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
         {
