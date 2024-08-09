@@ -28,7 +28,7 @@ namespace LiteEntitySystem
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct SyncVar<T> where T : unmanaged
+    public struct SyncVar<T> : IEquatable<T>, IEquatable<SyncVar<T>> where T : unmanaged
     {
         public T Value;
         internal byte FieldId;
@@ -56,5 +56,9 @@ namespace LiteEntitySystem
         public static bool operator==(T a, SyncVar<T> b) => Utils.FastEquals(a, b.Value);
         
         public static bool operator!=(T a, SyncVar<T> b) => Utils.FastEquals(a, b.Value) == false;
+
+        public bool Equals(T v) => Utils.FastEquals(Value, v);
+        
+        public bool Equals(SyncVar<T> tv) => Utils.FastEquals(Value, tv.Value);
     }
 }
