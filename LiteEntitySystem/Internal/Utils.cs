@@ -9,15 +9,33 @@ namespace LiteEntitySystem.Internal
     public static class Utils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe bool FastEquals<T>(T a, T b) where T : unmanaged
+        public static unsafe bool FastEquals<T>(ref T a, ref T b) where T : unmanaged
         {
-            byte* x1=(byte*)&a, x2=(byte*)&b;
-            int l = sizeof(T);
-            for (int i=0; i < l/8; i++, x1+=8, x2+=8)
-                if (*(long*)x1 != *(long*)x2) return false;
-            if ((l & 4)!=0) { if (*(int*)x1!=*(int*)x2) return false; x1+=4; x2+=4; }
-            if ((l & 2)!=0) { if (*(short*)x1!=*(short*)x2) return false; x1+=2; x2+=2; }
-            return (l & 1) == 0 || *x1 == *x2;
+            fixed (T* ta = &a, tb = &b)
+            {
+                byte* x1=(byte*)ta, x2=(byte*)tb;
+                int l = sizeof(T);
+                for (int i=0; i < l/8; i++, x1+=8, x2+=8)
+                    if (*(long*)x1 != *(long*)x2) return false;
+                if ((l & 4)!=0) { if (*(int*)x1!=*(int*)x2) return false; x1+=4; x2+=4; }
+                if ((l & 2)!=0) { if (*(short*)x1!=*(short*)x2) return false; x1+=2; x2+=2; }
+                return (l & 1) == 0 || *x1 == *x2;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe bool FastEquals<T>(ref T a, byte *x2) where T : unmanaged
+        {
+            fixed (T* ta = &a)
+            {
+                byte* x1=(byte*)ta;
+                int l = sizeof(T);
+                for (int i=0; i < l/8; i++, x1+=8, x2+=8)
+                    if (*(long*)x1 != *(long*)x2) return false;
+                if ((l & 4)!=0) { if (*(int*)x1!=*(int*)x2) return false; x1+=4; x2+=4; }
+                if ((l & 2)!=0) { if (*(short*)x1!=*(short*)x2) return false; x1+=2; x2+=2; }
+                return (l & 1) == 0 || *x1 == *x2;
+            }
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

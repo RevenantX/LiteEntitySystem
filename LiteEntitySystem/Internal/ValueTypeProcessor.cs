@@ -52,7 +52,7 @@ namespace LiteEntitySystem.Internal
         internal override bool SetFromAndSync(object obj, int offset, byte* data)
         {
             ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
-            if (!Utils.FastEquals(a, *(T*)data))
+            if (!Utils.FastEquals(ref a, data))
             {
                 var temp = a;
                 a = *(T*)data;
@@ -70,7 +70,7 @@ namespace LiteEntitySystem.Internal
         internal override bool CompareAndWrite(object obj, int offset, byte* data)
         {
             ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
-            if (Utils.FastEquals(a, *(T*)data))
+            if (Utils.FastEquals(ref a, data))
                 return false;
             *(T*)data = a;
             return true;

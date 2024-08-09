@@ -47,18 +47,18 @@ namespace LiteEntitySystem
 
         public override int GetHashCode() => Value.GetHashCode();
 
-        public override bool Equals(object o) => o is SyncVar<T> sv && Utils.FastEquals(sv.Value, Value);
+        public override bool Equals(object o) => o is SyncVar<T> sv && Utils.FastEquals(ref sv.Value, ref Value);
         
-        public static bool operator ==(SyncVar<T> a, SyncVar<T> b) => Utils.FastEquals(a.Value, b.Value);
+        public static bool operator ==(SyncVar<T> a, SyncVar<T> b) => Utils.FastEquals(ref a.Value, ref b.Value);
 
-        public static bool operator !=(SyncVar<T> a, SyncVar<T> b) => Utils.FastEquals(a.Value, b.Value) == false;
+        public static bool operator !=(SyncVar<T> a, SyncVar<T> b) => Utils.FastEquals(ref a.Value, ref b.Value) == false;
         
-        public static bool operator==(T a, SyncVar<T> b) => Utils.FastEquals(a, b.Value);
+        public static bool operator==(T a, SyncVar<T> b) => Utils.FastEquals(ref a, ref b.Value);
         
-        public static bool operator!=(T a, SyncVar<T> b) => Utils.FastEquals(a, b.Value) == false;
+        public static bool operator!=(T a, SyncVar<T> b) => Utils.FastEquals(ref a, ref b.Value) == false;
 
-        public bool Equals(T v) => Utils.FastEquals(Value, v);
+        public bool Equals(T v) => Utils.FastEquals(ref Value, ref v);
         
-        public bool Equals(SyncVar<T> tv) => Utils.FastEquals(Value, tv.Value);
+        public bool Equals(SyncVar<T> tv) => Utils.FastEquals(ref Value, ref tv.Value);
     }
 }
