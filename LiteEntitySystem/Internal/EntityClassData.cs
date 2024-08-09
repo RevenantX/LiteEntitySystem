@@ -134,7 +134,7 @@ namespace LiteEntitySystem.Internal
                         if (ft.IsEnum)
                             ft = ft.GetEnumUnderlyingType();
 
-                        if (!ValueProcessors.RegisteredProcessors.TryGetValue(ft, out var valueTypeProcessor))
+                        if (!ValueTypeProcessor.Registered.TryGetValue(ft, out var valueTypeProcessor))
                         {
                             Logger.LogError($"Unregistered field type: {ft}");
                             continue;
@@ -187,7 +187,7 @@ namespace LiteEntitySystem.Internal
                                 if (syncableFieldType.IsEnum)
                                     syncableFieldType = syncableFieldType.GetEnumUnderlyingType();
 
-                                if (!ValueProcessors.RegisteredProcessors.TryGetValue(syncableFieldType, out var valueTypeProcessor))
+                                if (!ValueTypeProcessor.Registered.TryGetValue(syncableFieldType, out var valueTypeProcessor))
                                 {
                                     Logger.LogError($"Unregistered field type: {syncableFieldType}");
                                     continue;

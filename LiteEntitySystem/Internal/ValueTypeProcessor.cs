@@ -3,20 +3,14 @@ using System.Collections.Generic;
 
 namespace LiteEntitySystem.Internal
 {
-    internal static class ValueProcessors
-    {
-        public static readonly Dictionary<Type, ValueTypeProcessor> RegisteredProcessors = new ();
-    }
-    
     internal abstract unsafe class ValueTypeProcessor
     {
+        public static readonly Dictionary<Type, ValueTypeProcessor> Registered = new ();
+        
         internal readonly int Size;
 
-        protected ValueTypeProcessor(int size)
-        {
-            Size = size;
-        }
-        
+        protected ValueTypeProcessor(int size) => Size = size;
+
         internal abstract bool CompareAndWrite(object obj, int offset, byte* data);
         internal abstract void SetFrom(object obj, int offset, byte* data);
         internal abstract bool SetFromAndSync(object obj, int offset, byte* data);
@@ -27,14 +21,10 @@ namespace LiteEntitySystem.Internal
 
     internal abstract unsafe class ValueTypeProcessor<T> : ValueTypeProcessor where T : unmanaged
     {
-        protected ValueTypeProcessor() : base(sizeof(T))
-        {
-        }
+        protected ValueTypeProcessor() : base(sizeof(T)) { }
 
-        internal override void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
-        {
+        internal override void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer) =>
             throw new Exception($"This type: {typeof(T)} can't be interpolated");
-        }
         
         internal override void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
@@ -43,11 +33,8 @@ namespace LiteEntitySystem.Internal
             a = *(T*)historyA;
         }
         
-        internal override void SetFrom(object obj, int offset, byte* data)
-        {
-            ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
-            a = *(T*)data;
-        }
+        internal override void SetFrom(object obj, int offset, byte* data) =>
+            RefMagic.RefFieldValue<T>(obj, offset) = *(T*)data;
 
         internal override bool SetFromAndSync(object obj, int offset, byte* data)
         {
@@ -62,10 +49,8 @@ namespace LiteEntitySystem.Internal
             return false;
         }
 
-        internal override void WriteTo(object obj, int offset, byte* data)
-        {
+        internal override void WriteTo(object obj, int offset, byte* data) =>
             *(T*)data = RefMagic.RefFieldValue<T>(obj, offset);
-        }
         
         internal override bool CompareAndWrite(object obj, int offset, byte* data)
         {
@@ -104,11 +89,9 @@ namespace LiteEntitySystem.Internal
 
     internal class ValueTypeProcessorInt : BasicTypeProcessor<int>
     {
-        internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
-        {
-            ref var a = ref RefMagic.RefFieldValue<int>(obj, offset);
-            a = Utils.Lerp(*(int*)prev, *(int*)current, fTimer);
-        }
+        internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer) =>
+            RefMagic.RefFieldValue<int>(obj, offset) = Utils.Lerp(*(int*)prev, *(int*)current, fTimer);
+        
         internal override unsafe void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
             ref var a = ref RefMagic.RefFieldValue<int>(obj, offset);
@@ -119,11 +102,9 @@ namespace LiteEntitySystem.Internal
     
     internal class ValueTypeProcessorLong : BasicTypeProcessor<long>
     {
-        internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
-        {
-            ref var a = ref RefMagic.RefFieldValue<long>(obj, offset);
-            a = Utils.Lerp(*(long*)prev, *(long*)current, fTimer);
-        }
+        internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer) =>
+            RefMagic.RefFieldValue<long>(obj, offset) = Utils.Lerp(*(long*)prev, *(long*)current, fTimer);
+        
         internal override unsafe void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
             ref var a = ref RefMagic.RefFieldValue<long>(obj, offset);
@@ -134,11 +115,9 @@ namespace LiteEntitySystem.Internal
 
     internal class ValueTypeProcessorFloat : BasicTypeProcessor<float>
     {
-        internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
-        {
-            ref var a = ref RefMagic.RefFieldValue<float>(obj, offset);
-            a = Utils.Lerp(*(float*)prev, *(float*)current, fTimer);
-        }
+        internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer) =>
+            RefMagic.RefFieldValue<float>(obj, offset) = Utils.Lerp(*(float*)prev, *(float*)current, fTimer);
+        
         internal override unsafe void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
             ref var a = ref RefMagic.RefFieldValue<float>(obj, offset);
@@ -149,11 +128,9 @@ namespace LiteEntitySystem.Internal
     
     internal class ValueTypeProcessorDouble : BasicTypeProcessor<double>
     {
-        internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
-        {
-            ref var a = ref RefMagic.RefFieldValue<double>(obj, offset);
-            a = Utils.Lerp(*(double*)prev, *(double*)current, fTimer);
-        }
+        internal override unsafe void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer) =>
+            RefMagic.RefFieldValue<double>(obj, offset) = Utils.Lerp(*(double*)prev, *(double*)current, fTimer);
+        
         internal override unsafe void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
             ref var a = ref RefMagic.RefFieldValue<double>(obj, offset);
@@ -186,11 +163,8 @@ namespace LiteEntitySystem.Internal
     {
         private readonly InterpolatorDelegateWithReturn<T> _interpDelegate;
 
-        internal override void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer)
-        {
-            ref var a = ref RefMagic.RefFieldValue<T>(obj, offset);
-            a = _interpDelegate(*(T*)prev, *(T*)current, fTimer);
-        }
+        internal override void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer) =>
+            RefMagic.RefFieldValue<T>(obj, offset) = _interpDelegate(*(T*)prev, *(T*)current, fTimer);
         
         internal override void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
