@@ -102,12 +102,16 @@ namespace LiteEntitySystem.Internal
         }
 
         //field flags that used in LES
-        internal static FieldInfo[] GetProcessedFields(Type t) =>
-            t.GetFields(BindingFlags.Instance |
-                        BindingFlags.Public |
-                        BindingFlags.NonPublic |
-                        BindingFlags.DeclaredOnly |
-                        BindingFlags.Static);
+        internal static FieldInfo[] GetProcessedFields(Type t)
+        {
+            var fArr = t.GetFields(BindingFlags.Instance |
+                                   BindingFlags.Public |
+                                   BindingFlags.NonPublic |
+                                   BindingFlags.DeclaredOnly |
+                                   BindingFlags.Static);
+            Array.Sort(fArr, (f1, f2) => string.Compare(f1.Name, f2.Name, StringComparison.InvariantCulture));
+            return fArr;
+        }
 
         internal static bool IsRemoteCallType(Type ft)
         {

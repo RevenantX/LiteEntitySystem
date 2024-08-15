@@ -49,9 +49,9 @@ namespace LiteEntitySystem
 
         public override bool Equals(object o) => o is SyncVar<T> sv && Utils.FastEquals(ref sv.Value, ref Value);
         
-        public static bool operator ==(SyncVar<T> a, SyncVar<T> b) => Utils.FastEquals(ref a.Value, ref b.Value);
+        public static bool operator==(SyncVar<T> a, SyncVar<T> b) => Utils.FastEquals(ref a.Value, ref b.Value);
 
-        public static bool operator !=(SyncVar<T> a, SyncVar<T> b) => Utils.FastEquals(ref a.Value, ref b.Value) == false;
+        public static bool operator!=(SyncVar<T> a, SyncVar<T> b) => Utils.FastEquals(ref a.Value, ref b.Value) == false;
         
         public static bool operator==(T a, SyncVar<T> b) => Utils.FastEquals(ref a, ref b.Value);
         
