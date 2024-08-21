@@ -44,6 +44,6 @@ class Program
         sv = new SyncVar<int>();
     }
 }
-", Verify.Diagnostic().WithLocation(1, 7));
+", Verify.Diagnostic().WithSpan(11, 9, 11, 32));
     }
 }
