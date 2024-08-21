@@ -1,0 +1,5 @@
+root = true
+
+[*.cs]
+# Default severity for analyzer diagnostics with category 'Style' (escalated to build errors)
+dotnet_analyzer_diagnostic.category-Rules.severity = error
