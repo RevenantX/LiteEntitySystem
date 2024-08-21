@@ -120,11 +120,8 @@ namespace LiteEntitySystem.Internal
                     if(field.IsStatic)
                         continue;
                     
-                    var syncVarFieldAttribute = field.GetCustomAttribute<SyncVarFlags>();
-                    var syncVarClassAttribute = baseType.GetCustomAttribute<SyncVarFlags>();
-                    var syncFlags = syncVarFieldAttribute?.Flags
-                                 ?? syncVarClassAttribute?.Flags
-                                 ?? SyncFlags.None;
+                    var syncVarFlags = field.GetCustomAttribute<SyncVarFlags>() ?? baseType.GetCustomAttribute<SyncVarFlags>();
+                    var syncFlags = syncVarFlags?.Flags ?? SyncFlags.None;
                     int offset = Utils.GetFieldOffset(field);
                     
                     //syncvars
@@ -145,7 +142,7 @@ namespace LiteEntitySystem.Internal
                             InterpolatedFieldsSize += fieldSize;
                             InterpolatedCount++;
                         }
-                        var fieldInfo = new EntityFieldInfo($"{baseType.Name}-{field.Name}", valueTypeProcessor, offset, syncFlags);
+                        var fieldInfo = new EntityFieldInfo($"{baseType.Name}-{field.Name}", valueTypeProcessor, offset, syncVarFlags);
                         if (syncFlags.HasFlagFast(SyncFlags.LagCompensated))
                         {
                             lagCompensatedFields.Add(fieldInfo);
@@ -193,7 +190,7 @@ namespace LiteEntitySystem.Internal
                                     continue;
                                 }
                                 int syncvarOffset = Utils.GetFieldOffset(syncableField);
-                                var fieldInfo = new EntityFieldInfo($"{baseType.Name}-{field.Name}:{syncableField.Name}", valueTypeProcessor, offset, syncvarOffset, syncFlags);
+                                var fieldInfo = new EntityFieldInfo($"{baseType.Name}-{field.Name}:{syncableField.Name}", valueTypeProcessor, offset, syncvarOffset, syncVarFlags);
                                 fields.Add(fieldInfo);
                                 FixedFieldsSize += fieldInfo.IntSize;
                                 if (fieldInfo.IsPredicted)

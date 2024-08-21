@@ -48,8 +48,9 @@ namespace LiteEntitySystem
         private readonly StateSerializer[] _stateSerializers = new StateSerializer[MaxSyncedEntityCount];
         private readonly byte[] _inputDecodeBuffer = new byte[NetConstants.MaxUnreliableDataSize];
         private readonly NetDataReader _requestsReader = new();
+        private readonly AVLTree<ushort> _changedEntities = new();
         private byte[] _compressionBuffer = new byte[4096];
-
+        
         /// <summary>
         /// Network players count
         /// </summary>
@@ -108,6 +109,12 @@ namespace LiteEntitySystem
                 packetHeader,
                 framesPerSecond,
                 sendRate);
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+            _changedEntities.Clear();
         }
 
         /// <summary>
@@ -193,7 +200,7 @@ namespace LiteEntitySystem
         public T AddController<T>(NetPlayer owner, Action<T> initMethod = null) where T : ControllerLogic =>
             Add<T>(ent =>
             {
-                ent.InternalOwnerId = owner.Id;
+                ent.InternalOwnerId.Value = owner.Id;
                 initMethod?.Invoke(ent);
             });
         
@@ -208,7 +215,7 @@ namespace LiteEntitySystem
         public T AddController<T>(NetPlayer owner, PawnLogic entityToControl, Action<T> initMethod = null) where T : ControllerLogic =>
             Add<T>(ent =>
             {
-                ent.InternalOwnerId = owner.Id;
+                ent.InternalOwnerId.Value = owner.Id;
                 ent.StartControl(entityToControl);
                 initMethod?.Invoke(ent);
             });
@@ -415,7 +422,7 @@ namespace LiteEntitySystem
                 {
                     int originalLength = 0;
                     for (ushort i = FirstEntityId; i <= MaxSyncedEntityId; i++)
-                        _stateSerializers[i].MakeBaseline(player.Id, executedTick, _minimalTick, packetBuffer, ref originalLength);
+                        _stateSerializers[i].MakeBaseline(player.Id, executedTick, packetBuffer, ref originalLength);
                     
                     //set header
                     *(BaselineDataHeader*)compressionBuffer = new BaselineDataHeader
@@ -457,9 +464,21 @@ namespace LiteEntitySystem
                 int writePosition = sizeof(DiffPartHeader);
                 
                 ushort maxPartSize = (ushort)(player.Peer.GetMaxUnreliablePacketSize() - sizeof(LastPartData));
-                for (ushort eId = FirstEntityId; eId <= MaxSyncedEntityId; eId++)
+                foreach (var changedEntityId in _changedEntities)
                 {
-                    var diffResult = _stateSerializers[eId].MakeDiff(
+                    ref var stateSerializer = ref _stateSerializers[changedEntityId];
+                    
+                    //all players has actual state so remove from sync
+                    if (Utils.SequenceDiff(stateSerializer.LastChangedTick, _minimalTick) <= 0)
+                    {
+                        _changedEntities.Remove(changedEntityId);
+                        continue;
+                    }
+                    //skip known
+                    if (Utils.SequenceDiff(stateSerializer.LastChangedTick, player.StateATick) <= 0)
+                        continue;
+
+                    var diffResult = stateSerializer.MakeDiff(
                         player.Id,
                         executedTick,
                         _minimalTick,
@@ -468,7 +487,8 @@ namespace LiteEntitySystem
                         ref writePosition);
                     if (diffResult == DiffResult.DoneAndDestroy)
                     {
-                        _entityIdQueue.ReuseId(eId);
+                        _entityIdQueue.ReuseId(changedEntityId);
+                        _changedEntities.Remove(changedEntityId);
                     }
                     else if (diffResult == DiffResult.Done)
                     {
@@ -615,13 +635,19 @@ namespace LiteEntitySystem
             base.RemoveEntity(e);
             if (!e.IsLocal)
             {
-                _stateSerializers[e.Id].Destroy(_tick, _minimalTick, PlayersCount == 0);
+                _stateSerializers[e.Id].Destroy(_tick, PlayersCount == 0);
                 //destroy instantly when no players to free ids
                 if (PlayersCount == 0)
                     _entityIdQueue.ReuseId(e.Id);
             }
         }
         
+        internal void EntityChanged(ushort eId, ushort fieldId)
+        {
+            _changedEntities.Add(eId);
+            _stateSerializers[eId].MarkChanged(fieldId, _tick);
+        }
+
         internal void PoolRpc(RemoteCallPacket rpcNode) =>
             _rpcPool.Enqueue(rpcNode);
         

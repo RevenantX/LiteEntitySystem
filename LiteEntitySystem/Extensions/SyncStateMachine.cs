@@ -30,14 +30,14 @@ namespace LiteEntitySystem.Extensions
 
         public void SetInitialState(T state)
         {
-            _state = state;
+            _state.Value = state;
             _data[_state.GetEnumValue()].OnEnter?.Invoke();
         }
 
         public void ChangeState(T state)
         {
             _data[_state.GetEnumValue()].OnExit?.Invoke();
-            _state = state;
+            _state.Value = state;
             _data[_state.GetEnumValue()].OnEnter?.Invoke();
         }
 

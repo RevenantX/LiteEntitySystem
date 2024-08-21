@@ -204,11 +204,11 @@ namespace LiteEntitySystem
                 return;
             
             EntitySharedReference oldId = _parentId;
-            _parentId = id;
+            _parentId.Value = id;
             OnParentChange(oldId);
             
             var newParent = EntityManager.GetEntityById<EntityLogic>(_parentId)?.InternalOwnerId ?? EntityManager.ServerPlayerId;
-            if (InternalOwnerId.Value != newParent.Value)
+            if (InternalOwnerId.Value != newParent)
             {
                 SetOwner(this, newParent);
             }
@@ -277,21 +277,14 @@ namespace LiteEntitySystem
 
         internal static void SetOwner(EntityLogic entity, byte ownerId)
         {
-            entity.InternalOwnerId = ownerId;
+            entity.InternalOwnerId.Value = ownerId;
             if(entity._childsSet != null)
                 foreach (var child in entity._childsSet)
                 {
                     SetOwner(child, ownerId);
                 }
         }
-
-        protected override void RegisterRPC(ref RPCRegistrator r)
-        {
-            base.RegisterRPC(ref r);
-            r.BindOnChange(this, ref _parentId, OnParentChange);
-            r.BindOnChange(this, ref InternalOwnerId, OnOwnerChange);
-        }
-
+        
         protected EntityLogic(EntityParams entityParams) : base(entityParams)
         {
             ref readonly var classData = ref GetClassData();
@@ -302,6 +295,9 @@ namespace LiteEntitySystem
                 _lagCompensatedFields = classData.LagCompensatedFields;
                 _lagCompensatedCount = classData.LagCompensatedCount;
             }
+
+            _parentId.OnSync += OnParentChange;
+            InternalOwnerId.OnSync += OnOwnerChange;
         }
     }
 }

@@ -8,8 +8,8 @@
 
     public enum OnSyncExecutionOrder
     {
-        BeforeConstruct,
-        AfterConstruct
+        AfterConstruct,
+        BeforeConstruct
     }
 
     internal struct EntityFieldInfo
@@ -23,9 +23,8 @@
         public readonly FieldType FieldType;
         public readonly SyncFlags Flags;
         public readonly bool IsPredicted;
-
-        public OnSyncdCallDelegate OnSync;
-        public OnSyncExecutionOrder OnSyncExecutionOrder;
+        public readonly OnSyncExecutionOrder OnSyncExecutionOrder;
+        
         public int FixedOffset;
         public int PredictedOffset;
 
@@ -34,7 +33,7 @@
             string name,
             ValueTypeProcessor valueTypeProcessor,
             int offset,
-            SyncFlags flags)
+            SyncVarFlags flags)
         {
             Name = name;
             TypeProcessor = valueTypeProcessor;
@@ -45,9 +44,8 @@
             FieldType = FieldType.SyncVar;
             FixedOffset = 0;
             PredictedOffset = 0;
-            Flags = flags;
-            OnSync = null;
-            OnSyncExecutionOrder = OnSyncExecutionOrder.AfterConstruct;
+            Flags = flags?.Flags ?? SyncFlags.None;
+            OnSyncExecutionOrder = flags?.OnSyncExecutionOrder ?? OnSyncExecutionOrder.AfterConstruct;
             IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
                           (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
                            !Flags.HasFlagFast(SyncFlags.NeverRollBack));
@@ -59,7 +57,7 @@
             ValueTypeProcessor valueTypeProcessor,
             int offset,
             int syncableSyncVarOffset,
-            SyncFlags flags)
+            SyncVarFlags flags)
         {
             Name = name;
             TypeProcessor = valueTypeProcessor;
@@ -70,9 +68,8 @@
             FieldType = FieldType.SyncableSyncVar;
             FixedOffset = 0;
             PredictedOffset = 0;
-            Flags = flags;
-            OnSync = null;
-            OnSyncExecutionOrder = OnSyncExecutionOrder.AfterConstruct;
+            Flags = flags?.Flags ?? SyncFlags.None;
+            OnSyncExecutionOrder = flags?.OnSyncExecutionOrder ?? OnSyncExecutionOrder.AfterConstruct;
             IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
                           (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
                            !Flags.HasFlagFast(SyncFlags.NeverRollBack));

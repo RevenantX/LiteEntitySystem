@@ -76,12 +76,13 @@ namespace LiteEntitySystem
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool HasFlagFast<T>(this SyncVar<T> e, T flag) where T : unmanaged, Enum
         {
+            var v = e.Value;
             switch (sizeof(T))
             {
-                case 1: return (*(byte*)&e.Value  & *(byte*)&flag)  != 0;
-                case 2: return (*(short*)&e.Value & *(short*)&flag) != 0;
-                case 4: return (*(int*)&e.Value   & *(int*)&flag)   != 0;
-                case 8: return (*(long*)&e.Value  & *(long*)&flag)  != 0;
+                case 1: return (*(byte*)&v  & *(byte*)&flag)  != 0;
+                case 2: return (*(short*)&v & *(short*)&flag) != 0;
+                case 4: return (*(int*)&v   & *(int*)&flag)   != 0;
+                case 8: return (*(long*)&v  & *(long*)&flag)  != 0;
             }
             return false;
         }
@@ -89,12 +90,13 @@ namespace LiteEntitySystem
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe long GetEnumValue<T>(this SyncVar<T> e) where T : unmanaged, Enum
         {
+            var v = e.Value;
             switch (sizeof(T))
             {
-                case 1: return *(byte*)&e.Value;
-                case 2: return *(short*)&e.Value;
-                case 4: return *(int*)&e.Value;
-                case 8: return *(long*)&e.Value;
+                case 1: return *(byte*)&v;
+                case 2: return *(short*)&v;
+                case 4: return *(int*)&v;
+                case 8: return *(long*)&v;
             }
             return -1;
         }

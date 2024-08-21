@@ -15,7 +15,7 @@ namespace LiteEntitySystem.Extensions
 
         public SyncTimer(float maxTime) 
         {
-            _maxTime = maxTime;
+            _maxTime.Value = maxTime;
             Finish();
         }
 
@@ -35,18 +35,18 @@ namespace LiteEntitySystem.Extensions
 
         public void Reset()
         {
-            _time = 0f;
+            _time.Value = 0f;
         }
 
         public void Reset(float maxTime)
         {
-            _maxTime = maxTime;
-            _time = 0f;
+            _maxTime.Value = maxTime;
+            _time.Value = 0f;
         }
 
         public void Finish()
         {
-            _time = _maxTime;
+            _time.Value = _maxTime;
         }
 
         public float LerpByProgress(float a, float b)
@@ -71,7 +71,7 @@ namespace LiteEntitySystem.Extensions
         public bool Update(float delta)
         {
             if (_time < _maxTime)
-                _time += delta;
+                _time.Value += delta;
             return IsTimeElapsed;
         }
 
@@ -79,7 +79,7 @@ namespace LiteEntitySystem.Extensions
         {
             if (_time >= _maxTime)
             {
-                _time -= _maxTime;
+                _time.Value -= _maxTime;
                 return true;
             }
             return false;
@@ -89,7 +89,7 @@ namespace LiteEntitySystem.Extensions
         {
             if (Update(delta))
             {
-                _time -= _maxTime;
+                _time.Value -= _maxTime;
                 return true;
             }
             return false;

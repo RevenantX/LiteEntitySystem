@@ -162,7 +162,7 @@ namespace LiteEntitySystem
         private readonly Stopwatch _stopwatch = new();
         private readonly IdGeneratorUShort _localIdQueue = new(MaxSyncedEntityCount, MaxEntityCount);
         private readonly SingletonEntityLogic[] _singletonEntities;
-        private readonly EntityFilter[] _entityFilters;
+        private readonly IEntityFilter[] _entityFilters;
         private readonly Dictionary<Type, ushort> _registeredTypeIds = new();
 
         internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount+1];
@@ -195,17 +195,17 @@ namespace LiteEntitySystem
             if (IntPtr.Size == 4)
                 K4os.Compression.LZ4.LZ4Codec.Enforce32 = true;
 #endif
-            RegisterBasicFieldType(new BasicTypeProcessor<byte>());
-            RegisterBasicFieldType(new BasicTypeProcessor<sbyte>());
-            RegisterBasicFieldType(new BasicTypeProcessor<short>());
-            RegisterBasicFieldType(new BasicTypeProcessor<ushort>());
+            RegisterBasicFieldType(new ValueTypeProcessor<byte>());
+            RegisterBasicFieldType(new ValueTypeProcessor<sbyte>());
+            RegisterBasicFieldType(new ValueTypeProcessor<short>());
+            RegisterBasicFieldType(new ValueTypeProcessor<ushort>());
             RegisterBasicFieldType(new ValueTypeProcessorInt());
-            RegisterBasicFieldType(new BasicTypeProcessor<uint>());
+            RegisterBasicFieldType(new ValueTypeProcessor<uint>());
             RegisterBasicFieldType(new ValueTypeProcessorLong());
-            RegisterBasicFieldType(new BasicTypeProcessor<ulong>());
+            RegisterBasicFieldType(new ValueTypeProcessor<ulong>());
             RegisterBasicFieldType(new ValueTypeProcessorFloat());
             RegisterBasicFieldType(new ValueTypeProcessorDouble());
-            RegisterBasicFieldType(new BasicTypeProcessor<bool>());
+            RegisterBasicFieldType(new ValueTypeProcessor<bool>());
             RegisterBasicFieldType(new ValueTypeProcessorEntitySharedReference());
             RegisterFieldType<FloatAngle>(FloatAngle.Lerp);
         }
@@ -238,7 +238,7 @@ namespace LiteEntitySystem
                 ClassDataDict[registeredType.ClassId].PrepareBaseTypes(_registeredTypeIds, ref singletonCount, ref filterCount);
             }
 
-            _entityFilters = new EntityFilter[filterCount];
+            _entityFilters = new IEntityFilter[filterCount];
             _singletonEntities = new SingletonEntityLogic[singletonCount];
 
             InputProcessor = inputProcessor;
@@ -259,7 +259,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Remove all entities and reset all counters and timers
         /// </summary>
-        public void Reset()
+        public virtual void Reset()
         {
             EntitiesCount = 0;
 
@@ -327,7 +327,6 @@ namespace LiteEntitySystem
             if (entityFilter != null)
             {
                 typedFilter = (EntityFilter<T>)entityFilter;
-                typedFilter.Refresh();
                 return typedFilter;
             }
             
@@ -345,7 +344,6 @@ namespace LiteEntitySystem
                 if(EntitiesDict[i] is T castedEnt)
                     typedFilter.Add(castedEnt);
             }
-            typedFilter.Refresh();
             return typedFilter;
         }
 
@@ -432,7 +430,7 @@ namespace LiteEntitySystem
             var entity = (T)AddEntity(entityParams);
             if (IsClient && entity is EntityLogic logic)
             {
-                logic.InternalOwnerId = InternalPlayerId;
+                logic.InternalOwnerId.Value = InternalPlayerId;
             }
 
             initMethod?.Invoke(entity);
@@ -494,7 +492,7 @@ namespace LiteEntitySystem
             if (IsEntityAlive(classData, e))
                 AliveEntities.Add(e);
             if (IsEntityLagCompensated(e))
-                LagCompensatedEntities.Add(e);
+                LagCompensatedEntities.Add((EntityLogic)e);
         }
 
         private static bool IsEntityLagCompensated(InternalEntity e)
@@ -523,7 +521,7 @@ namespace LiteEntitySystem
             if (IsEntityAlive(classData, e))
                 AliveEntities.Remove(e);
             if(IsEntityLagCompensated(e))
-                LagCompensatedEntities.Remove(e);
+                LagCompensatedEntities.Remove((EntityLogic)e);
             if (classData.IsLocalOnly)
                 _localIdQueue.ReuseId(e.Id);
             EntitiesDict[e.Id] = null;

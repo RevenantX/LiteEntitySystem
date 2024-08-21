@@ -63,7 +63,6 @@ namespace LiteEntitySystem
     }
     
     internal delegate void MethodCallDelegate(object classPtr, ReadOnlySpan<byte> buffer1, ReadOnlySpan<byte> buffer2);
-    internal delegate void OnSyncdCallDelegate(object classPtr, ReadOnlySpan<byte> buffer);
 
     public readonly ref struct RPCRegistrator
     {
@@ -78,37 +77,6 @@ namespace LiteEntitySystem
         {
             if (ent != target)
                 throw new Exception("You can call this only on this class methods");
-        }
-        
-        /// <summary>
-        /// Bind notification of SyncVar changes to action (OnSync will be called after RPCs and OnConstructs)
-        /// </summary>
-        /// <param name="self">Target entity for binding</param>
-        /// <param name="syncVar">Variable to bind</param>
-        /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
-        public void BindOnChange<T, TEntity>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
-        {
-            BindOnChange(self, ref syncVar, onChangedAction, OnSyncExecutionOrder.AfterConstruct);
-        }
-        
-        /// <summary>
-        /// Bind notification of SyncVar changes to action
-        /// </summary>
-        /// <param name="self">Target entity for binding</param>
-        /// <param name="syncVar">Variable to bind</param>
-        /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
-        /// <param name="executionOrder">order of execution</param>
-        public unsafe void BindOnChange<T, TEntity>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction, OnSyncExecutionOrder executionOrder) where T : unmanaged where TEntity : InternalEntity
-        {
-            CheckTarget(self, onChangedAction.Target);
-            ref var field = ref self.GetClassData().Fields[syncVar.FieldId];
-            field.OnSyncExecutionOrder = executionOrder;
-            var methodToCall = onChangedAction.Method.CreateDelegateHelper<Action<TEntity, T>>();
-            field.OnSync = (classPtr, buffer) =>
-            {
-                fixed (byte* data = buffer)
-                    methodToCall((TEntity)classPtr, *(T*)data);
-            };
         }
         
         /// <summary>

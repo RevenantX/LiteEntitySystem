@@ -94,16 +94,13 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         public virtual byte OwnerId => EntityManager.ServerPlayerId;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal ref EntityClassData GetClassData()
-        {
-            return ref EntityManager.ClassDataDict[ClassId];
-        }
-
         /// <summary>
         /// Is locally created entity
         /// </summary>
         public bool IsLocal => Id >= EntityManager.MaxSyncedEntityCount;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal ref EntityClassData GetClassData() => ref EntityManager.ClassDataDict[ClassId];
 
         /// <summary>
         /// Destroy entity
@@ -119,7 +116,7 @@ namespace LiteEntitySystem.Internal
         {
             if (!prevValue && _isDestroyed)
             {
-                _isDestroyed = false;
+                _isDestroyed.Value = false;
                 DestroyInternal();
             }
         }
@@ -136,7 +133,7 @@ namespace LiteEntitySystem.Internal
         {
             if (_isDestroyed)
                 return;
-            _isDestroyed = true;
+            _isDestroyed.Value = true;
             OnDestroy();
             EntityManager.RemoveEntity(this);
         }
@@ -186,16 +183,29 @@ namespace LiteEntitySystem.Internal
         internal void RegisterRpcInternal()
         {
             ref var classData = ref GetClassData();
-            List<RpcFieldInfo> rpcCahce = null;
-            if(classData.RemoteCallsClient == null)
+            
+            //setup field ids for BindOnChange
+            if (EntityManager.IsServer && !IsLocal)
             {
-                //setup field ids for BindOnChange
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
                     ref var field = ref classData.Fields[i];
                     if (field.FieldType == FieldType.SyncVar)
-                        RefMagic.RefFieldValue<byte>(this, field.Offset + field.IntSize) = (byte)i;
+                    {
+                        field.TypeProcessor.InitSyncVar(this, field.Offset, this, (ushort)i);
+                    }
+                    else
+                    {
+                        var syncableField = RefMagic.RefFieldValue<SyncableField>(this, field.Offset);
+                        field.TypeProcessor.InitSyncVar(syncableField, field.SyncableSyncVarOffset, this, (ushort)i);
+                    }
                 }
+            }
+
+            
+            List<RpcFieldInfo> rpcCahce = null;
+            if(classData.RemoteCallsClient == null)
+            {
                 rpcCahce = new List<RpcFieldInfo>();
                 var rpcRegistrator = new RPCRegistrator(rpcCahce);
                 RegisterRPC(ref rpcRegistrator);
@@ -255,7 +265,7 @@ namespace LiteEntitySystem.Internal
         /// <param name="r"></param>
         protected virtual void RegisterRPC(ref RPCRegistrator r)
         {
-            r.BindOnChange(this, ref _isDestroyed, OnDestroyChange);
+
         }
 
         protected InternalEntity(EntityParams entityParams)
@@ -265,8 +275,10 @@ namespace LiteEntitySystem.Internal
             ClassId = entityParams.ClassId;
             Version = entityParams.Version;
             CreationTick = entityParams.CreationTime;
+            _isDestroyed.OnSync += OnDestroyChange;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int CompareTo(InternalEntity other)
         {
             int creationTimeDiff = CreationTick - other.CreationTick;
@@ -282,14 +294,9 @@ namespace LiteEntitySystem.Internal
                    (other.Id >= EntityManager.MaxSyncedEntityCount ? other.Id - ushort.MaxValue : other.Id);
         }
 
-        public override int GetHashCode()
-        {
-            return Id + Version * ushort.MaxValue;
-        }
+        public override int GetHashCode() => Id + Version * ushort.MaxValue;
 
-        public override string ToString()
-        {
-            return $"Entity. Id: {Id}, ClassId: {ClassId}, Version: {Version}";
-        }
+        public override string ToString() =>
+            $"Entity. Id: {Id}, ClassId: {ClassId}, Version: {Version}";
     }
 }
