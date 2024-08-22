@@ -46,11 +46,6 @@ namespace LiteEntitySystem
         internal ushort FieldId;
         internal InternalEntity Container;
         
-        /// <summary>
-        /// Previous value as argument. New value - inside SyncVar
-        /// </summary>
-        public event Action<T> OnSync;
-        
         public T Value
         {
             get => _value;
@@ -70,7 +65,7 @@ namespace LiteEntitySystem
         
         internal unsafe bool SetFromAndSync(byte* data)
         {
-            if (OnSync != null && !Utils.FastEquals(ref _value, data))
+            if (!Utils.FastEquals(ref _value, data))
             {
                 var temp = _value;
                 _value = *(T*)data;
@@ -80,9 +75,7 @@ namespace LiteEntitySystem
             _value = *(T*)data;
             return false;
         }
-
-        internal void CallOnSync(T prevValue) => OnSync?.Invoke(prevValue);
-
+        
         public static implicit operator T(SyncVar<T> sv) => sv._value;
 
         public override string ToString() => _value.ToString();

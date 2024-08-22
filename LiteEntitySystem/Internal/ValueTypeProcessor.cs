@@ -12,7 +12,6 @@ namespace LiteEntitySystem.Internal
         protected ValueTypeProcessor(int size) => Size = size;
 
         internal abstract void InitSyncVar(object obj, int offset, InternalEntity entity, ushort fieldId);
-        internal abstract void CallOnSync(object obj, int offset, byte* prevData);
         internal abstract void SetFrom(object obj, int offset, byte* data);
         internal abstract bool SetFromAndSync(object obj, int offset, byte* data);
         internal abstract void WriteTo(object obj, int offset, byte* data);
@@ -30,9 +29,6 @@ namespace LiteEntitySystem.Internal
 
         internal override void InitSyncVar(object obj, int offset, InternalEntity entity, ushort fieldId) =>
             RefMagic.RefFieldValue<SyncVar<T>>(obj, offset).Init(entity, fieldId);
-
-        internal override void CallOnSync(object obj, int offset, byte* prevData) =>
-            RefMagic.RefFieldValue<SyncVar<T>>(obj, offset).CallOnSync(*(T*)prevData);
 
         internal override void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {

@@ -285,6 +285,13 @@ namespace LiteEntitySystem
                 }
         }
         
+        protected override void RegisterRPC(ref RPCRegistrator r)
+        {
+            base.RegisterRPC(ref r);
+            r.BindOnChange(this, ref _parentId, OnParentChange);
+            r.BindOnChange(this, ref InternalOwnerId, OnOwnerChange);
+        }
+        
         protected EntityLogic(EntityParams entityParams) : base(entityParams)
         {
             ref readonly var classData = ref GetClassData();
@@ -295,9 +302,6 @@ namespace LiteEntitySystem
                 _lagCompensatedFields = classData.LagCompensatedFields;
                 _lagCompensatedCount = classData.LagCompensatedCount;
             }
-
-            _parentId.OnSync += OnParentChange;
-            InternalOwnerId.OnSync += OnOwnerChange;
         }
     }
 }

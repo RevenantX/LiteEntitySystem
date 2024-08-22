@@ -23,8 +23,9 @@
         public readonly FieldType FieldType;
         public readonly SyncFlags Flags;
         public readonly bool IsPredicted;
-        public readonly OnSyncExecutionOrder OnSyncExecutionOrder;
+        public OnSyncExecutionOrder OnSyncExecutionOrder;
         
+        public OnSyncCallDelegate OnSync;
         public int FixedOffset;
         public int PredictedOffset;
 
@@ -44,6 +45,7 @@
             FieldType = FieldType.SyncVar;
             FixedOffset = 0;
             PredictedOffset = 0;
+            OnSync = null;
             Flags = flags?.Flags ?? SyncFlags.None;
             OnSyncExecutionOrder = flags?.OnSyncExecutionOrder ?? OnSyncExecutionOrder.AfterConstruct;
             IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
@@ -68,6 +70,7 @@
             FieldType = FieldType.SyncableSyncVar;
             FixedOffset = 0;
             PredictedOffset = 0;
+            OnSync = null;
             Flags = flags?.Flags ?? SyncFlags.None;
             OnSyncExecutionOrder = flags?.OnSyncExecutionOrder ?? OnSyncExecutionOrder.AfterConstruct;
             IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||

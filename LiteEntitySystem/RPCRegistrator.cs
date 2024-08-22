@@ -9,6 +9,8 @@ namespace LiteEntitySystem
     public delegate void SpanAction<TCaller, T>(TCaller caller, ReadOnlySpan<T> data) where T : unmanaged;
     public delegate void SpanAction<TCaller, T1, T2>(TCaller caller, ReadOnlySpan<T1> data1, ReadOnlySpan<T2> data2) where T1 : unmanaged where T2 : unmanaged;
     public delegate void ValueSpanAction<TCaller, T1, T2>(TCaller caller, T1 data1, ReadOnlySpan<T2> data2) where T1 : unmanaged where T2 : unmanaged;
+    internal delegate void MethodCallDelegate(object classPtr, ReadOnlySpan<byte> buffer1, ReadOnlySpan<byte> buffer2);
+    internal delegate void OnSyncCallDelegate(object classPtr, ReadOnlySpan<byte> buffer);
     
     public struct RemoteCall
     {
@@ -61,8 +63,6 @@ namespace LiteEntitySystem
         internal static MethodCallDelegate CreateMCD<TClass>(SpanAction<TClass, T1, T2> methodToCall) =>
             (classPtr, buffer1, buffer2) => methodToCall((TClass)classPtr, MemoryMarshal.Cast<byte, T1>(buffer1), MemoryMarshal.Cast<byte, T2>(buffer2));
     }
-    
-    internal delegate void MethodCallDelegate(object classPtr, ReadOnlySpan<byte> buffer1, ReadOnlySpan<byte> buffer2);
 
     public readonly ref struct RPCRegistrator
     {
@@ -77,6 +77,39 @@ namespace LiteEntitySystem
         {
             if (ent != target)
                 throw new Exception("You can call this only on this class methods");
+        }
+        
+                /// <summary>
+        /// Bind notification of SyncVar changes to action (OnSync will be called after RPCs and OnConstructs)
+        /// </summary>
+        /// <param name="self">Target entity for binding</param>
+        /// <param name="syncVar">Variable to bind</param>
+        /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
+        public void BindOnChange<T, TEntity>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
+        {
+            BindOnChange(self, ref syncVar, onChangedAction, self.GetClassData().Fields[syncVar.FieldId].OnSyncExecutionOrder);
+        }
+        
+        /// <summary>
+        /// Bind notification of SyncVar changes to action
+        /// </summary>
+        /// <param name="self">Target entity for binding</param>
+        /// <param name="syncVar">Variable to bind</param>
+        /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
+        /// <param name="executionOrder">order of execution</param>
+        public unsafe void BindOnChange<T, TEntity>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction, OnSyncExecutionOrder executionOrder) where T : unmanaged where TEntity : InternalEntity
+        {
+            //if (self.EntityManager.IsServer)
+            //    return;
+            CheckTarget(self, onChangedAction.Target);
+            ref var field = ref self.GetClassData().Fields[syncVar.FieldId];
+            field.OnSyncExecutionOrder = executionOrder;
+            var methodToCall = onChangedAction.Method.CreateDelegateHelper<Action<TEntity, T>>();
+            field.OnSync = (classPtr, buffer) =>
+            {
+                fixed (byte* data = buffer)
+                    methodToCall((TEntity)classPtr, *(T*)data);
+            };
         }
         
         /// <summary>

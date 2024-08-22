@@ -184,25 +184,22 @@ namespace LiteEntitySystem.Internal
         {
             ref var classData = ref GetClassData();
             
-            //setup field ids for BindOnChange
-            if (EntityManager.IsServer && !IsLocal)
+            //setup field ids for BindOnChange and pass on server this for OnChangedEvent to StateSerializer
+            InternalEntity onChangeTarget = EntityManager.IsServer && !IsLocal ? this : null;
+            for (int i = 0; i < classData.FieldsCount; i++)
             {
-                for (int i = 0; i < classData.FieldsCount; i++)
+                ref var field = ref classData.Fields[i];
+                if (field.FieldType == FieldType.SyncVar)
                 {
-                    ref var field = ref classData.Fields[i];
-                    if (field.FieldType == FieldType.SyncVar)
-                    {
-                        field.TypeProcessor.InitSyncVar(this, field.Offset, this, (ushort)i);
-                    }
-                    else
-                    {
-                        var syncableField = RefMagic.RefFieldValue<SyncableField>(this, field.Offset);
-                        field.TypeProcessor.InitSyncVar(syncableField, field.SyncableSyncVarOffset, this, (ushort)i);
-                    }
+                    field.TypeProcessor.InitSyncVar(this, field.Offset, onChangeTarget, (ushort)i);
+                }
+                else
+                {
+                    var syncableField = RefMagic.RefFieldValue<SyncableField>(this, field.Offset);
+                    field.TypeProcessor.InitSyncVar(syncableField, field.SyncableSyncVarOffset, onChangeTarget, (ushort)i);
                 }
             }
-
-            
+          
             List<RpcFieldInfo> rpcCahce = null;
             if(classData.RemoteCallsClient == null)
             {
@@ -265,7 +262,7 @@ namespace LiteEntitySystem.Internal
         /// <param name="r"></param>
         protected virtual void RegisterRPC(ref RPCRegistrator r)
         {
-
+            r.BindOnChange(this, ref _isDestroyed, OnDestroyChange);
         }
 
         protected InternalEntity(EntityParams entityParams)
@@ -275,7 +272,6 @@ namespace LiteEntitySystem.Internal
             ClassId = entityParams.ClassId;
             Version = entityParams.Version;
             CreationTick = entityParams.CreationTime;
-            _isDestroyed.OnSync += OnDestroyChange;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

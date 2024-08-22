@@ -128,23 +128,18 @@ namespace LiteEntitySystem
         private readonly struct SyncCallInfo
         {
             public readonly InternalEntity Entity;
-            private readonly ValueTypeProcessor _typeProcessor;
-            private readonly int _offset;
+            
+            private readonly OnSyncCallDelegate _onSync;
             private readonly int _prevDataPos;
 
-            public SyncCallInfo(int offset, ValueTypeProcessor vtp, InternalEntity entity, int prevDataPos)
+            public SyncCallInfo(OnSyncCallDelegate onSync, InternalEntity entity, int prevDataPos)
             {
-                _typeProcessor = vtp;
-                _offset = offset;
+                _onSync = onSync;
                 Entity = entity;
                 _prevDataPos = prevDataPos;
             }
-            
-            public unsafe void Execute(ServerStateData state)
-            {
-                fixed(byte *prevData = state.Data)
-                    _typeProcessor.CallOnSync(Entity, _offset, prevData + _prevDataPos);
-            }
+
+            public void Execute(ServerStateData state) => _onSync(Entity, new ReadOnlySpan<byte>(state.Data, _prevDataPos, state.Size-_prevDataPos));
         }
         private SyncCallInfo[] _syncCalls;
         private int _syncCallsCount;
@@ -910,12 +905,19 @@ namespace LiteEntitySystem
                                 //this is interpolated save for future
                                 RefMagic.CopyBlock(interpDataPtr + field.FixedOffset, readDataPtr, field.Size);
                             }
-                            if (field.TypeProcessor.SetFromAndSync(entity, field.Offset, readDataPtr))
+                            if (field.OnSync != null)
                             {
-                                if (field.OnSyncExecutionOrder == OnSyncExecutionOrder.BeforeConstruct)
-                                    _syncCallsBeforeConstruct[_syncCallsBeforeConstructCount++] = new SyncCallInfo(field.Offset, field.TypeProcessor, entity, readerPosition);
-                                else
-                                    _syncCalls[_syncCallsCount++] = new SyncCallInfo(field.Offset, field.TypeProcessor, entity, readerPosition);
+                                if (field.TypeProcessor.SetFromAndSync(entity, field.Offset, readDataPtr))
+                                {
+                                    if (field.OnSyncExecutionOrder == OnSyncExecutionOrder.BeforeConstruct)
+                                        _syncCallsBeforeConstruct[_syncCallsBeforeConstructCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition);
+                                    else //call on sync immediately
+                                        _syncCalls[_syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition);
+                                }
+                            }
+                            else
+                            {
+                                field.TypeProcessor.SetFrom(entity, field.Offset, readDataPtr);
                             }
                         }
                         //Logger.Log($"E {entity.Id} Field updated: {field.Name}");
