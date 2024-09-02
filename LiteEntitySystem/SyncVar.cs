@@ -52,7 +52,7 @@ namespace LiteEntitySystem
             set
             {
                 if (Container != null && !Container.IsDestroyed && !Utils.FastEquals(ref value, ref _value))
-                    Container.ServerManager.EntityChanged(Container.Id, FieldId);
+                    Container.ServerManager.EntityChanged(Container, FieldId);
                 _value = value;
             }
         }

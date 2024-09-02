@@ -48,7 +48,10 @@ namespace LiteEntitySystem
         private readonly StateSerializer[] _stateSerializers = new StateSerializer[MaxSyncedEntityCount];
         private readonly byte[] _inputDecodeBuffer = new byte[NetConstants.MaxUnreliableDataSize];
         private readonly NetDataReader _requestsReader = new();
-        private readonly AVLTree<ushort> _changedEntities = new();
+        
+        //use entity filter for correct sort (id+version+creationTime)
+        private readonly EntityFilter<InternalEntity> _changedEntities = new();
+        
         private byte[] _compressionBuffer = new byte[4096];
         
         /// <summary>
@@ -229,12 +232,6 @@ namespace LiteEntitySystem
         public T AddAIController<T>(Action<T> initMethod = null) where T : AiControllerLogic => 
             Add(initMethod);
 
-        public void RemoveAIController<T>(T controller) where T : AiControllerLogic
-        {
-            controller.StopControl();
-            RemoveEntity(controller);
-        }
-
         /// <summary>
         /// Add new entity
         /// </summary>
@@ -260,12 +257,12 @@ namespace LiteEntitySystem
         /// <param name="initMethod">Method that will be called after entity construction</param>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Created entity or null in case of limit</returns>
-        public T AddEntity<T>(EntityLogic parent, Action<T> initMethod = null) where T : EntityLogic
-        {
-            var entity = Add(initMethod);
-            entity.SetParent(parent);
-            return entity;
-        }
+        public T AddEntity<T>(EntityLogic parent, Action<T> initMethod = null) where T : EntityLogic =>
+            Add<T>(e =>
+            {
+                e.SetParent(parent);
+                initMethod?.Invoke(e);
+            });
 
         /// <summary>
         /// Read data for player linked to AbstractNetPeer
@@ -464,14 +461,14 @@ namespace LiteEntitySystem
                 int writePosition = sizeof(DiffPartHeader);
                 
                 ushort maxPartSize = (ushort)(player.Peer.GetMaxUnreliablePacketSize() - sizeof(LastPartData));
-                foreach (var changedEntityId in _changedEntities)
+                foreach (var changedEntity in _changedEntities)
                 {
-                    ref var stateSerializer = ref _stateSerializers[changedEntityId];
+                    ref var stateSerializer = ref _stateSerializers[changedEntity.Id];
                     
                     //all players has actual state so remove from sync
                     if (Utils.SequenceDiff(stateSerializer.LastChangedTick, _minimalTick) <= 0)
                     {
-                        _changedEntities.Remove(changedEntityId);
+                        _changedEntities.Remove(changedEntity);
                         continue;
                     }
                     //skip known
@@ -487,8 +484,8 @@ namespace LiteEntitySystem
                         ref writePosition);
                     if (diffResult == DiffResult.DoneAndDestroy)
                     {
-                        _entityIdQueue.ReuseId(changedEntityId);
-                        _changedEntities.Remove(changedEntityId);
+                        _entityIdQueue.ReuseId(changedEntity.Id);
+                        _changedEntities.Remove(changedEntity);
                     }
                     else if (diffResult == DiffResult.Done)
                     {
@@ -543,9 +540,8 @@ namespace LiteEntitySystem
         private T Add<T>(Action<T> initMethod) where T : InternalEntity
         {
             if (EntityClassInfo<T>.ClassId == 0)
-            {
                 throw new Exception($"Unregistered entity type: {typeof(T)}");
-            }
+            
             //create entity data and filters
             ref var classData = ref ClassDataDict[EntityClassInfo<T>.ClassId];
             T entity;
@@ -642,10 +638,10 @@ namespace LiteEntitySystem
             }
         }
         
-        internal void EntityChanged(ushort eId, ushort fieldId)
+        internal void EntityChanged(InternalEntity entity, ushort fieldId)
         {
-            _changedEntities.Add(eId);
-            _stateSerializers[eId].MarkChanged(fieldId, _tick);
+            _changedEntities.Add(entity);
+            _stateSerializers[entity.Id].MarkChanged(fieldId, _tick);
         }
 
         internal void PoolRpc(RemoteCallPacket rpcNode) =>

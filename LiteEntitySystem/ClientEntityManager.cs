@@ -162,6 +162,21 @@ namespace LiteEntitySystem
         private NetPlayer _localPlayer;
 
         /// <summary>
+        /// Return client controller if exist
+        /// </summary>
+        /// <typeparam name="T">controller type</typeparam>
+        /// <returns>controller if exist otherwise null</returns>
+        public T GetPlayerController<T>() where T : ControllerLogic
+        {
+            if (_localPlayer == null)
+                return null;
+            foreach (var controller in GetControllers<T>())
+                if (controller.OwnerId == _localPlayer.Id)
+                    return controller;
+            return null;
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="typesMap">EntityTypesMap with registered entity types</param>
@@ -200,15 +215,12 @@ namespace LiteEntitySystem
             EntityTypesMap typesMap, 
             AbstractNetPeer netPeer, 
             byte headerByte, 
-            byte framesPerSecond) where TInput : unmanaged
-        {
-            return new ClientEntityManager(
-                typesMap, 
+            byte framesPerSecond) where TInput : unmanaged =>
+            new (typesMap, 
                 new InputProcessor<TInput>(),
                 netPeer,
                 headerByte,
                 framesPerSecond);
-        }
 
         internal override void RemoveEntity(InternalEntity e)
         {
@@ -753,10 +765,8 @@ namespace LiteEntitySystem
                 AliveEntities.Remove(entity);
         }
 
-        internal void AddPredictedInfo(EntityLogic e)
-        {
+        internal void AddPredictedInfo(EntityLogic e) =>
             _spawnPredictedEntities.Enqueue((_tick, e));
-        }
 
         private void ExecuteSyncCalls(SyncCallInfo[] callInfos, ref int count)
         {

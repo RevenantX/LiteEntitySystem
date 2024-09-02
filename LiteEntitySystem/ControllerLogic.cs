@@ -41,7 +41,13 @@ namespace LiteEntitySystem
             _controlledEntity.Value = target;
             GetControlledEntity<PawnLogic>().Controller = this;
         }
-        
+
+        protected override void OnDestroy()
+        {
+            StopControl();
+            base.OnDestroy();
+        }
+
         public void StopControl()
         {
             var controlledLogic = GetControlledEntity<PawnLogic>();

@@ -146,17 +146,13 @@ namespace LiteEntitySystem
         /// <summary>
         /// Disable lag compensation for player that owns this entity
         /// </summary>
-        public void DisableLagCompensationForOwner()
-        {
+        public void DisableLagCompensationForOwner() =>
             EntityManager.DisableLagCompensation();
-        }
         
-        public int GetFrameSeed()
-        {
-            return EntityManager.IsClient
+        public int GetFrameSeed() =>
+            EntityManager.IsClient
                 ? (EntityManager.InRollBackState ? ClientManager.RollBackTick : (ClientManager.IsExecutingRPC ? ClientManager.CurrentRPCTick : EntityManager.Tick)) 
                 : (InternalOwnerId.Value == EntityManager.ServerPlayerId ? EntityManager.Tick : ServerManager.GetPlayer(InternalOwnerId).LastProcessedTick);
-        }
         
         /// <summary>
         /// Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
@@ -209,9 +205,7 @@ namespace LiteEntitySystem
             
             var newParent = EntityManager.GetEntityById<EntityLogic>(_parentId)?.InternalOwnerId ?? EntityManager.ServerPlayerId;
             if (InternalOwnerId.Value != newParent)
-            {
                 SetOwner(this, newParent);
-            }
         }
         
         /// <summary>
