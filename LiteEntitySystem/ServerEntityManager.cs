@@ -179,6 +179,14 @@ namespace LiteEntitySystem
         /// <summary>
         /// Returns controller owned by the player
         /// </summary>
+        /// <param name="player">player</param>
+        /// <returns>Instance if found, null if not</returns>
+        public ControllerLogic GetPlayerController(byte playerId) =>
+            GetPlayerController(_netPlayers.TryGetValue(playerId, out var p) ? p : null);
+        
+        /// <summary>
+        /// Returns controller owned by the player
+        /// </summary>
         /// <param name="player">player to remove</param>
         /// <returns>Instance if found, null if not</returns>
         public ControllerLogic GetPlayerController(NetPlayer player)
