@@ -34,6 +34,7 @@ namespace LiteEntitySystem.Internal
         private EntityFieldInfo[] _fields;
         private int _fieldsCount;
         private int _fieldsFlagsSize;
+        private EntityFlags _flags;
         
         private InternalEntity _entity;
         private byte[] _latestEntityData;
@@ -44,7 +45,6 @@ namespace LiteEntitySystem.Internal
         private RemoteCallPacket _rpcTail;
         private RemoteCallPacket _syncRpcHead;
         private RemoteCallPacket _syncRpcTail;
-        private bool _isController;
         private uint _fullDataSize;
         private int _syncFrame;
         private RPCMode _rpcMode;
@@ -104,6 +104,7 @@ namespace LiteEntitySystem.Internal
             _fieldsCount = classData.FieldsCount;
             _fieldsFlagsSize = classData.FieldsFlagsSize;
             _fullDataSize = (uint)(HeaderSize + classData.FixedFieldsSize);
+            _flags = classData.Flags;
             
             //resize or clean prev data
             if (_latestEntityData == null || _latestEntityData.Length < _fullDataSize)
@@ -121,7 +122,6 @@ namespace LiteEntitySystem.Internal
             _state = SerializerState.Active;
             _syncFrame = -1;
             _rpcMode = RPCMode.Normal;
-            _isController = e is ControllerLogic;
             _versionChangedTick = tick;
             LastChangedTick = tick;
 
@@ -242,10 +242,13 @@ namespace LiteEntitySystem.Internal
         public unsafe void MakeBaseline(byte playerId, ushort serverTick, byte* resultData, ref int position)
         {
             //skip inactive and other controlled controllers
-            if (_state != SerializerState.Active || (_isController && playerId != _entity.InternalOwnerId.Value))
+            bool isOwned = _entity.InternalOwnerId.Value == playerId;
+            if (_state != SerializerState.Active || 
+                (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned) ||
+                (_flags.HasFlagFast(EntityFlags.OnlyForOthers) && isOwned))
                 return;
             //don't write total size in full sync and fields
-            WriteInitialState(_entity.InternalOwnerId.Value == playerId, serverTick, resultData, ref position);
+            WriteInitialState(isOwned, serverTick, resultData, ref position);
             //Logger.Log($"[SEM] SendBaseline for entity: {_entity.Id}, pos: {position}, posAfterData: {position + _fullDataSize}");
         }
 
@@ -267,11 +270,14 @@ namespace LiteEntitySystem.Internal
             }
 
             //make diff
-            int startPos = position;
             bool isOwned = _entity.InternalOwnerId.Value == playerId;
-            if (_isController && !isOwned)
+            if ((_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned) ||
+                (_flags.HasFlagFast(EntityFlags.OnlyForOthers) && isOwned))
+            {
                 return DiffResult.Skip;
-            
+            }
+
+            int startPos = position;
             //at 0 ushort
             ushort* fieldFlagAndSize = (ushort*)(resultData + startPos);
             position += sizeof(ushort);

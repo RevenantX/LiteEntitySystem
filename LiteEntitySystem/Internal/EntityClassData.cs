@@ -56,9 +56,7 @@ namespace LiteEntitySystem.Internal
         public readonly EntityFieldInfo[] LagCompensatedFields;
         public readonly int LagCompensatedSize;
         public readonly int LagCompensatedCount;
-        public readonly bool UpdateOnClient;
-        public readonly bool IsUpdateable;
-        public readonly bool IsLocalOnly;
+        public readonly EntityFlags Flags;
         public readonly EntityConstructor<InternalEntity> EntityConstructor;
         public RpcFieldInfo[] RemoteCallsClient;
         
@@ -81,20 +79,8 @@ namespace LiteEntitySystem.Internal
             RemoteCallsClient = null;
 
             ClassId = typeInfo.ClassId;
-
-            var updateAttribute = entType.GetCustomAttribute<UpdateableEntity>();
-            if (updateAttribute != null)
-            {
-                IsUpdateable = true;
-                UpdateOnClient = updateAttribute.UpdateOnClient;
-            }
-            else
-            {
-                IsUpdateable = false;
-                UpdateOnClient = false;
-            }
-
-            IsLocalOnly = entType.GetCustomAttribute<LocalOnly>() != null;
+            Flags = 0;
+            
             EntityConstructor = typeInfo.Constructor;
             IsSingleton = entType.IsSubclassOf(SingletonEntityType);
             FilterId = filterId;
@@ -110,6 +96,10 @@ namespace LiteEntitySystem.Internal
             while(allTypesStack.Count > 0)
             {
                 var baseType = allTypesStack.Pop();
+                
+                var setFlagsAttribute = baseType.GetCustomAttribute<SetEntityFlags>();
+                Flags |= setFlagsAttribute != null ? setFlagsAttribute.Flags : 0;
+                
                 //cache fields
                 foreach (var field in Utils.GetProcessedFields(baseType))
                 {

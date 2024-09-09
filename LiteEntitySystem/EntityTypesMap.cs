@@ -37,7 +37,11 @@ namespace LiteEntitySystem
                 //don't hash localonly types
                 foreach (var (entType, _) in RegisteredTypes
                     .OrderBy(kv => kv.Value.ClassId)
-                    .Where(kv => kv.Key.GetCustomAttribute<LocalOnly>(true) == null))
+                    .Where(kv =>
+                    {
+                        var attr = kv.Key.GetCustomAttribute<SetEntityFlags>(true);
+                        return attr == null || !attr.Flags.HasFlagFast(EntityFlags.LocalOnly);
+                    }))
                 {
                     var allTypesStack = Utils.GetBaseTypes(entType, typeof(InternalEntity), true);
                     while(allTypesStack.Count > 0)

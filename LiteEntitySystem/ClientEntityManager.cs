@@ -611,7 +611,7 @@ namespace LiteEntitySystem
                         }
                     }
                 }
-                else if(classData.UpdateOnClient)
+                else if(classData.Flags.HasFlagFast(EntityFlags.UpdateOnClient))
                 {
                     entity.Update();
                 }
@@ -755,13 +755,15 @@ namespace LiteEntitySystem
 
         internal void AddOwned(EntityLogic entity)
         {
-            if (entity.GetClassData().IsUpdateable && !entity.GetClassData().UpdateOnClient)
+            var flags = entity.GetClassData().Flags;
+            if (flags.HasFlagFast(EntityFlags.Updateable) && !flags.HasFlagFast(EntityFlags.UpdateOnClient))
                 AliveEntities.Add(entity);
         }
         
         internal void RemoveOwned(EntityLogic entity)
         {
-            if (entity.GetClassData().IsUpdateable && !entity.GetClassData().UpdateOnClient)
+            var flags = entity.GetClassData().Flags;
+            if (flags.HasFlagFast(EntityFlags.Updateable) && !flags.HasFlagFast(EntityFlags.UpdateOnClient))
                 AliveEntities.Remove(entity);
         }
 

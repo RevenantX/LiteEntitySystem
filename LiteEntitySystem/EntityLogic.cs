@@ -4,27 +4,26 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
-    /// <summary>
-    /// Entity has update method
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
-    public class UpdateableEntity : Attribute
+    [Flags]
+    public enum EntityFlags
     {
-        public readonly bool UpdateOnClient;
-
-        public UpdateableEntity() { }
+        UpdateOnClient = Updateable | (1 << 0), //Update entity on client even when entity isn't owned
+        Updateable = 1 << 1,                    //Entity has update method
+        LocalOnly = 1 << 2,                     //Entity is local only (only on server or client no difference)
+        OnlyForOwner = 1 << 3,                  //Sync entity only for owner player
+        OnlyForOthers = 1 << 4                  //Sync entity only for other players
+    }
+    
+    [AttributeUsage(AttributeTargets.Class)]
+    public class SetEntityFlags : Attribute
+    {
+        public readonly EntityFlags Flags;
         
-        public UpdateableEntity(bool updateOnClient)
+        public SetEntityFlags(EntityFlags flags)
         {
-            UpdateOnClient = updateOnClient;
+            Flags = flags;
         }
     }
-
-    /// <summary>
-    /// Entity is local only (only on server or client no difference)
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
-    public class LocalOnly : Attribute { }
 
     /// <summary>
     /// Base class for simple (not controlled by controller) entity

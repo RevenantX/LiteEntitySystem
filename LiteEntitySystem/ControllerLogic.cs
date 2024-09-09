@@ -5,6 +5,7 @@ namespace LiteEntitySystem
     /// <summary>
     /// Base class for Controller entities
     /// </summary>
+    [SetEntityFlags(EntityFlags.OnlyForOwner)]
     public abstract class ControllerLogic : InternalEntity
     {
         [SyncVarFlags(SyncFlags.NeverRollBack)]
@@ -58,7 +59,7 @@ namespace LiteEntitySystem
     /// <summary>
     /// Base class for AI Controller entities
     /// </summary>
-    [LocalOnly, UpdateableEntity]
+    [SetEntityFlags(EntityFlags.LocalOnly | EntityFlags.Updateable)]
     public abstract class AiControllerLogic : ControllerLogic
     {
         public override bool IsBot => true;
@@ -69,7 +70,7 @@ namespace LiteEntitySystem
     /// <summary>
     /// Base class for AI Controller entities with typed ControlledEntity field
     /// </summary>
-    [LocalOnly, UpdateableEntity]
+    [SetEntityFlags(EntityFlags.LocalOnly | EntityFlags.Updateable)]
     public abstract class AiControllerLogic<T> : AiControllerLogic where T : PawnLogic
     {
         public T ControlledEntity => GetControlledEntity<T>();

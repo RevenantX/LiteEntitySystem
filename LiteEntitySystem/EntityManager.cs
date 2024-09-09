@@ -499,7 +499,7 @@ namespace LiteEntitySystem
             => !e.IsLocal && e is EntityLogic { HasLagCompensation: true };
 
         private bool IsEntityAlive(EntityClassData classData, InternalEntity entity)
-            => classData.IsUpdateable && (IsServer || entity.IsLocal || (IsClient && classData.UpdateOnClient));
+            => classData.Flags.HasFlagFast(EntityFlags.Updateable) && (IsServer || entity.IsLocal || (IsClient && classData.Flags.HasFlagFast(EntityFlags.UpdateOnClient)));
 
         internal virtual void RemoveEntity(InternalEntity e)
         {
@@ -522,7 +522,7 @@ namespace LiteEntitySystem
                 AliveEntities.Remove(e);
             if(IsEntityLagCompensated(e))
                 LagCompensatedEntities.Remove((EntityLogic)e);
-            if (classData.IsLocalOnly)
+            if (classData.Flags.HasFlagFast(EntityFlags.LocalOnly))
                 _localIdQueue.ReuseId(e.Id);
             EntitiesDict[e.Id] = null;
             EntitiesCount--;

@@ -554,7 +554,7 @@ namespace LiteEntitySystem
             ref var classData = ref ClassDataDict[EntityClassInfo<T>.ClassId];
             T entity;
             
-            if (classData.IsLocalOnly)
+            if (classData.Flags.HasFlagFast(EntityFlags.LocalOnly))
             {
                 entity = AddLocalEntity(initMethod);
             }
