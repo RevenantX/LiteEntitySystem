@@ -10,8 +10,7 @@ namespace LiteEntitySystem
         UpdateOnClient = Updateable | (1 << 0), //Update entity on client even when entity isn't owned
         Updateable = 1 << 1,                    //Entity has update method
         LocalOnly = 1 << 2,                     //Entity is local only (only on server or client no difference)
-        OnlyForOwner = 1 << 3,                  //Sync entity only for owner player
-        OnlyForOthers = 1 << 4                  //Sync entity only for other players
+        OnlyForOwner = 1 << 3                   //Sync entity only for owner player
     }
     
     [AttributeUsage(AttributeTargets.Class)]

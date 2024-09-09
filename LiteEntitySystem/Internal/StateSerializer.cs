@@ -243,9 +243,7 @@ namespace LiteEntitySystem.Internal
         {
             //skip inactive and other controlled controllers
             bool isOwned = _entity.InternalOwnerId.Value == playerId;
-            if (_state != SerializerState.Active || 
-                (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned) ||
-                (_flags.HasFlagFast(EntityFlags.OnlyForOthers) && isOwned))
+            if (_state != SerializerState.Active || (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned))
                 return;
             //don't write total size in full sync and fields
             WriteInitialState(isOwned, serverTick, resultData, ref position);
@@ -271,8 +269,7 @@ namespace LiteEntitySystem.Internal
 
             //make diff
             bool isOwned = _entity.InternalOwnerId.Value == playerId;
-            if ((_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned) ||
-                (_flags.HasFlagFast(EntityFlags.OnlyForOthers) && isOwned))
+            if (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned)
             {
                 return DiffResult.Skip;
             }
