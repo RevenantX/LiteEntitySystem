@@ -3,7 +3,7 @@
     /// <summary>
     /// Base class for entites that can be controlled by Controller
     /// </summary>
-    [SetEntityFlags(EntityFlags.Updateable)]
+    [EntityFlags(EntityFlags.Updateable)]
     public abstract class PawnLogic : EntityLogic
     {
         [SyncVarFlags(SyncFlags.OnlyForOwner)]

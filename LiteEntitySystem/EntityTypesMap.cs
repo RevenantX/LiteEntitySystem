@@ -39,7 +39,7 @@ namespace LiteEntitySystem
                     .OrderBy(kv => kv.Value.ClassId)
                     .Where(kv =>
                     {
-                        var attr = kv.Key.GetCustomAttribute<SetEntityFlags>(true);
+                        var attr = kv.Key.GetCustomAttribute<EntityFlagsAttribute>(true);
                         return attr == null || !attr.Flags.HasFlagFast(EntityFlags.LocalOnly);
                     }))
                 {

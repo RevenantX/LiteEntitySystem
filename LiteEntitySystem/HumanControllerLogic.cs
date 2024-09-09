@@ -8,7 +8,7 @@ namespace LiteEntitySystem
     /// <summary>
     /// Base class for human Controller entities
     /// </summary>
-    [SetEntityFlags(EntityFlags.UpdateOnClient)]
+    [EntityFlags(EntityFlags.UpdateOnClient)]
     public abstract class HumanControllerLogic<TInput> : ControllerLogic where TInput : unmanaged
     {
         private struct ServerResponse

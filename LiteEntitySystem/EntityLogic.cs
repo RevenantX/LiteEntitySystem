@@ -14,16 +14,16 @@ namespace LiteEntitySystem
     }
     
     [AttributeUsage(AttributeTargets.Class)]
-    public class SetEntityFlags : Attribute
+    public class EntityFlagsAttribute : Attribute
     {
         public readonly EntityFlags Flags;
         
-        public SetEntityFlags(EntityFlags flags)
+        public EntityFlagsAttribute(EntityFlags flags)
         {
             Flags = flags;
         }
     }
-
+    
     /// <summary>
     /// Base class for simple (not controlled by controller) entity
     /// </summary>

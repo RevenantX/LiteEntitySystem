@@ -164,7 +164,7 @@ namespace LiteEntitySystem.Internal
         }
 
         /// <summary>
-        /// Fixed update. Called if entity has attribute <see cref="SetEntityFlags"/> and flag Updateable
+        /// Fixed update. Called if entity has attribute <see cref="EntityFlagsAttribute"/> and flag Updateable
         /// </summary>
         protected internal virtual void Update()
         {
@@ -179,7 +179,7 @@ namespace LiteEntitySystem.Internal
         }
 
         /// <summary>
-        /// Called only on <see cref="ClientEntityManager.Update"/> and if entity has attribute <see cref="SetEntityFlags"/> and flag Updateable
+        /// Called only on <see cref="ClientEntityManager.Update"/> and if entity has attribute <see cref="EntityFlagsAttribute"/> and flag Updateable
         /// </summary>
         protected internal virtual void VisualUpdate()
         {

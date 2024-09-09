@@ -97,7 +97,7 @@ namespace LiteEntitySystem.Internal
             {
                 var baseType = allTypesStack.Pop();
                 
-                var setFlagsAttribute = baseType.GetCustomAttribute<SetEntityFlags>();
+                var setFlagsAttribute = baseType.GetCustomAttribute<EntityFlagsAttribute>();
                 Flags |= setFlagsAttribute != null ? setFlagsAttribute.Flags : 0;
                 
                 //cache fields
