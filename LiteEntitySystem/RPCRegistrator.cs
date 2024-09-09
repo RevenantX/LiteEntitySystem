@@ -305,7 +305,7 @@ namespace LiteEntitySystem
             remoteCallHandle = new RemoteCall(s =>
             {
                 var sf = (SyncableField)s;
-                sf.ParentEntityInternal.ServerManager?.AddRemoteCall(sf.ParentEntityInternal.Id, (ushort)(rpcId + sf.RPCOffset), sf.Flags);
+                sf.ParentEntityInternal?.ServerManager?.AddRemoteCall(sf.ParentEntityInternal.Id, (ushort)(rpcId + sf.RPCOffset), sf.Flags);
             });
         }
 
@@ -318,7 +318,7 @@ namespace LiteEntitySystem
             remoteCallHandle = new RemoteCall<T>((s, value) =>
             {
                 var sf = (SyncableField)s;
-                sf.ParentEntityInternal.ServerManager?.AddRemoteCall(sf.ParentEntityInternal.Id, new ReadOnlySpan<T>(&value, 1), (ushort)(rpcId + sf.RPCOffset), sf.Flags);
+                sf.ParentEntityInternal?.ServerManager?.AddRemoteCall(sf.ParentEntityInternal.Id, new ReadOnlySpan<T>(&value, 1), (ushort)(rpcId + sf.RPCOffset), sf.Flags);
             });
         }
         
@@ -331,7 +331,7 @@ namespace LiteEntitySystem
             remoteCallHandle = new RemoteCallSpan<T>((s, value) =>
             {
                 var sf = (SyncableField)s;
-                sf.ParentEntityInternal.ServerManager?.AddRemoteCall(sf.ParentEntityInternal.Id, value, (ushort)(rpcId + sf.RPCOffset), sf.Flags);
+                sf.ParentEntityInternal?.ServerManager?.AddRemoteCall(sf.ParentEntityInternal.Id, value, (ushort)(rpcId + sf.RPCOffset), sf.Flags);
             });
         }
     }

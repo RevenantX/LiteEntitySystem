@@ -198,7 +198,7 @@ namespace LiteEntitySystem.Internal
             ref var classData = ref GetClassData();
             
             //setup field ids for BindOnChange and pass on server this for OnChangedEvent to StateSerializer
-            InternalEntity onChangeTarget = EntityManager.IsServer && !IsLocal ? this : null;
+            var onChangeTarget = EntityManager.IsServer && !IsLocal ? this : null;
             for (int i = 0; i < classData.FieldsCount; i++)
             {
                 ref var field = ref classData.Fields[i];

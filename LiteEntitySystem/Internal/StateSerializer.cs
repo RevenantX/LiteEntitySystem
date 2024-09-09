@@ -96,6 +96,10 @@ namespace LiteEntitySystem.Internal
 
         public void AllocateMemory(ref EntityClassData classData)
         {
+            if (_state != SerializerState.Freed)
+                Logger.LogError($"State serializer isn't freed: {_state}");
+
+            
             _fields = classData.Fields;
             _fieldsCount = classData.FieldsCount;
             _fieldsFlagsSize = classData.FieldsFlagsSize;
@@ -113,9 +117,6 @@ namespace LiteEntitySystem.Internal
 
         public unsafe void Init(InternalEntity e, ushort tick)
         {
-            if (_state != SerializerState.Freed)
-                Logger.LogError($"State serializer isn't freed: {_state}");
-            
             _entity = e;
             _state = SerializerState.Active;
             _syncFrame = -1;
