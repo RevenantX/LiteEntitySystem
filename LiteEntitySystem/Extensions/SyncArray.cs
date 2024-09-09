@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncArray<T> : SyncableField where T : unmanaged
+    public class SyncArray<T> : SyncableField, IEnumerable<T> where T : unmanaged
     {
         private struct SetCallData
         {
@@ -66,7 +69,13 @@ namespace LiteEntitySystem.Extensions
         {
             _data[setCallData.Index] = setCallData.Value;
         }
-        
+
+        public IEnumerator<T> GetEnumerator() =>
+            _data.AsEnumerable<T>().GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() =>
+            _data.GetEnumerator();
+
         public T this[int index]
         {
             get => _data[index];
@@ -76,5 +85,7 @@ namespace LiteEntitySystem.Extensions
                 ExecuteRPC(_setRpcAction, new SetCallData { Value = value, Index = (ushort)index });
             }
         }
+
+        public bool HasValue(T value, out int index) => (index = Array.IndexOf(_data, value)) >= 0;
     }
 }
