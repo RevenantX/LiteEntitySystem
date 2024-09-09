@@ -31,10 +31,6 @@ namespace LiteEntitySystem
     /// </summary>
     public abstract class EntityLogic : InternalEntity
     {
-        //It should be in such order because later it checks rollbacks
-        [SyncVarFlags(SyncFlags.NeverRollBack)]
-        internal SyncVar<byte> InternalOwnerId;
-        
         [SyncVarFlags(SyncFlags.NeverRollBack)]
         private SyncVar<EntitySharedReference> _parentId;
 
@@ -43,8 +39,6 @@ namespace LiteEntitySystem
         /// </summary>
         public HashSet<EntityLogic> Childs => _childsSet ??= new HashSet<EntityLogic>();
         private HashSet<EntityLogic> _childsSet;
-        
-        public override byte OwnerId => InternalOwnerId.Value;
 
         public EntitySharedReference ParentId => _parentId;
         
@@ -58,7 +52,7 @@ namespace LiteEntitySystem
         public bool HasLagCompensation => _lagCompensatedSize > 0;
 
         public EntitySharedReference SharedReference => new EntitySharedReference(this);
-
+        
         internal unsafe void WriteHistory(ushort tick)
         {
             byte maxHistory = (byte)EntityManager.MaxHistorySize;
@@ -272,11 +266,13 @@ namespace LiteEntitySystem
         internal static void SetOwner(EntityLogic entity, byte ownerId)
         {
             entity.InternalOwnerId.Value = ownerId;
-            if(entity._childsSet != null)
-                foreach (var child in entity._childsSet)
-                {
-                    SetOwner(child, ownerId);
-                }
+            entity.ServerManager.EntityOwnerChanged(entity);
+            if (entity._childsSet == null) 
+                return;
+            foreach (var child in entity._childsSet)
+            {
+                SetOwner(child, ownerId);
+            }
         }
         
         protected override void RegisterRPC(ref RPCRegistrator r)

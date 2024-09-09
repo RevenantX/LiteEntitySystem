@@ -18,7 +18,7 @@
                 if (value != null)
                 {
                     var parent = GetParent<EntityLogic>();
-                    ownerId = parent != null ? parent.OwnerId : value.OwnerId;
+                    ownerId = parent != null ? parent.InternalOwnerId : value.InternalOwnerId;
                 }
                 SetOwner(this, ownerId);
                 _controller.Value = new EntitySharedReference(value);

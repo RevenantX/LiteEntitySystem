@@ -187,7 +187,7 @@ namespace LiteEntitySystem
                 return null;
             foreach (var controller in GetControllers<ControllerLogic>())
             {
-                if (controller.OwnerId == player.Id)
+                if (controller.InternalOwnerId.Value == player.Id)
                     return controller;
             }
             return null;
@@ -569,6 +569,7 @@ namespace LiteEntitySystem
                 stateSerializer.Init(ref classData, entity, _tick);
                 initMethod?.Invoke(entity);
                 ConstructEntity(entity);
+                _changedEntities.Add(entity);
             }
             //Debug.Log($"[SEM] Entity create. clsId: {classData.ClassId}, id: {entityId}, v: {version}");
             return entity;
@@ -638,10 +639,16 @@ namespace LiteEntitySystem
             }
         }
         
-        internal void EntityChanged(InternalEntity entity, ushort fieldId)
+        internal void EntityFieldChanged(InternalEntity entity, ushort fieldId)
         {
             _changedEntities.Add(entity);
-            _stateSerializers[entity.Id].MarkChanged(fieldId, _tick);
+            _stateSerializers[entity.Id].MarkFieldChanged(fieldId, _tick);
+        }
+        
+        internal void EntityOwnerChanged(InternalEntity entity)
+        {
+            _changedEntities.Add(entity);
+            _stateSerializers[entity.Id].MarkOwnerChanged(_tick);
         }
 
         internal void PoolRpc(RemoteCallPacket rpcNode) =>

@@ -8,12 +8,7 @@ namespace LiteEntitySystem
     public abstract class ControllerLogic : InternalEntity
     {
         [SyncVarFlags(SyncFlags.NeverRollBack)]
-        internal SyncVar<byte> InternalOwnerId;
-        
-        [SyncVarFlags(SyncFlags.NeverRollBack)]
         private SyncVar<EntitySharedReference> _controlledEntity;
-
-        public override byte OwnerId => InternalOwnerId.Value;
         
         /// <summary>
         /// Is controller - AI controller

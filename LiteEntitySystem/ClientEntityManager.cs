@@ -171,7 +171,7 @@ namespace LiteEntitySystem
             if (_localPlayer == null)
                 return null;
             foreach (var controller in GetControllers<T>())
-                if (controller.OwnerId == _localPlayer.Id)
+                if (controller.InternalOwnerId.Value == _localPlayer.Id)
                     return controller;
             return null;
         }

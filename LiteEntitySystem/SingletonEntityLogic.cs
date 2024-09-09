@@ -7,6 +7,9 @@ namespace LiteEntitySystem
     /// </summary>
     public abstract class SingletonEntityLogic : InternalEntity
     {
-        protected SingletonEntityLogic(EntityParams entityParams) : base(entityParams) { }
+        protected SingletonEntityLogic(EntityParams entityParams) : base(entityParams)
+        {
+            InternalOwnerId.Value = EntityManager.ServerPlayerId;
+        }
     }
 }

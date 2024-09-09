@@ -21,6 +21,9 @@ namespace LiteEntitySystem.Internal
     
     public abstract class InternalEntity : InternalBaseClass, IComparable<InternalEntity>
     {
+        [SyncVarFlags(SyncFlags.NeverRollBack)]
+        internal SyncVar<byte> InternalOwnerId;
+        
         /// <summary>
         /// Entity class id
         /// </summary>
@@ -102,7 +105,7 @@ namespace LiteEntitySystem.Internal
         /// ServerPlayerId - 0
         /// Singletons always controlled by server
         /// </summary>
-        public virtual byte OwnerId => EntityManager.ServerPlayerId;
+        public byte OwnerId => InternalOwnerId;
 
         /// <summary>
         /// Is locally created entity
