@@ -4,8 +4,7 @@ namespace LiteEntitySystem.Internal
     {
         public ushort Id;
         public ushort Tick;
-        public ushort ByteCount1;
-        public ushort ByteCount2;
+        public ushort ByteCount;
     }
     
     internal sealed class RemoteCallPacket
@@ -14,16 +13,15 @@ namespace LiteEntitySystem.Internal
         public byte[] Data;
         public ExecuteFlags Flags;
         public RemoteCallPacket Next;
-        public int TotalSize => Header.ByteCount1 + Header.ByteCount2;
+        public int TotalSize => Header.ByteCount;
         
-        public void Init(ushort tick, ushort typeSize1, ushort typeSize2, ushort rpcId, ExecuteFlags flags)
+        public void Init(ushort tick, ushort typeSize, ushort rpcId, ExecuteFlags flags)
         {
             Header.Tick = tick;
             Header.Id = rpcId;
             Flags = flags;
-            Header.ByteCount1 = typeSize1;
-            Header.ByteCount2 = typeSize2;
-            Utils.ResizeOrCreate(ref Data, typeSize1+typeSize2);
+            Header.ByteCount = typeSize;
+            Utils.ResizeOrCreate(ref Data, typeSize);
         }
     }
 }

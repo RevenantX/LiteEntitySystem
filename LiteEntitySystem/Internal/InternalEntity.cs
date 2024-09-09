@@ -19,7 +19,7 @@ namespace LiteEntitySystem.Internal
         public static readonly EntityComparer Instance = new();
     }
     
-    public abstract class InternalEntity : IComparable<InternalEntity>
+    public abstract class InternalEntity : InternalBaseClass, IComparable<InternalEntity>
     {
         /// <summary>
         /// Entity class id
@@ -40,7 +40,17 @@ namespace LiteEntitySystem.Internal
         /// Entity manager
         /// </summary>
         public readonly EntityManager EntityManager;
+
+        /// <summary>
+        /// Is entity on server
+        /// </summary>
+        protected internal bool IsServer => EntityManager.IsServer;
         
+        /// <summary>
+        /// Is entity on server
+        /// </summary>
+        protected bool IsClient => EntityManager.IsClient;
+
         /// <summary>
         /// Entity version (for id reuse)
         /// </summary>
@@ -235,26 +245,7 @@ namespace LiteEntitySystem.Internal
             classData.RemoteCallsClient ??= rpcCahce.ToArray();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void ExecuteRPC(in RemoteCall rpc) => rpc.Call(this);
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void ExecuteRPC<T>(in RemoteCall<T> rpc, T value) where T : unmanaged => rpc.Call(this, value);
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void ExecuteRPC<T>(in RemoteCallSpan<T> rpc, ReadOnlySpan<T> value) where T : unmanaged => rpc.Call(this, value);
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void ExecuteRPC<T1, T2>(in RemoteCallValueSpan<T1, T2> rpc, T1 value1, ReadOnlySpan<T2> value2) 
-            where T1 : unmanaged 
-            where T2 : unmanaged => 
-            rpc.Call(this, value1, value2);
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void ExecuteRPC<T1, T2>(in RemoteCallSpan<T1, T2> rpc, ReadOnlySpan<T1> value1, ReadOnlySpan<T2> value2)      
-            where T1 : unmanaged 
-            where T2 : unmanaged => 
-            rpc.Call(this, value1, value2);
+
 
         /// <summary>
         /// Method for registering RPCs and OnChange notifications

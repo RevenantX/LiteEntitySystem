@@ -151,9 +151,7 @@ namespace LiteEntitySystem.Internal
                     syncableField.BeforeReadRPC();
                 try
                 {
-                    rpc.Delegate(syncableField,
-                        new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.ByteCount1),
-                        new ReadOnlySpan<byte>(Data, rpc.Offset + rpc.Header.ByteCount1, rpc.Header.ByteCount2));
+                    rpc.Delegate(syncableField, new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.ByteCount));
                 }
                 catch (Exception e)
                 {
@@ -199,9 +197,7 @@ namespace LiteEntitySystem.Internal
                 entityManager.CurrentRPCTick = rpc.Header.Tick;
                 try
                 {
-                    rpc.Delegate(entity,
-                        new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.ByteCount1),
-                        new ReadOnlySpan<byte>(Data, rpc.Offset + rpc.Header.ByteCount1, rpc.Header.ByteCount2));
+                    rpc.Delegate(entity, new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.ByteCount));
                 }
                 catch (Exception e)
                 {
@@ -238,7 +234,7 @@ namespace LiteEntitySystem.Internal
                     _syncableRemoteCallsCount++;
                 }
      
-                position += header.ByteCount1 + header.ByteCount2;
+                position += header.ByteCount;
             }
         }
 

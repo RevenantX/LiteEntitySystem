@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
 
 namespace LiteEntitySystem.Internal
 {
@@ -147,6 +149,8 @@ namespace LiteEntitySystem.Internal
             public int Offset;
         }
         */
+        
+        public static readonly ThreadLocal<UTF8Encoding> Encoding = new (() => new UTF8Encoding(false, true));
 
         private static readonly int MonoOffset = IntPtr.Size * 3;
         private static readonly int DotNetOffset = IntPtr.Size + 4;
