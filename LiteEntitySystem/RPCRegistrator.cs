@@ -255,9 +255,9 @@ namespace LiteEntitySystem
                 {
                     if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
                         methodToCall(te, v);
-                    Span<byte> targetArray = stackalloc byte[v.MaxSize];
-                    v.Serialize(new SpanWriter(targetArray));
-                    te.ServerManager.AddRemoteCall<byte>(te.Id, targetArray, rpcId, flags);
+                    var writer = new SpanWriter(stackalloc byte[v.MaxSize]);
+                    v.Serialize(writer);
+                    te.ServerManager.AddRemoteCall<byte>(te.Id, writer.RawData.Slice(0, writer.Position), rpcId, flags);
                 }
                 else if (flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction) && te.IsLocalControlled)
                     methodToCall(te, v);
@@ -294,6 +294,12 @@ namespace LiteEntitySystem
         {
             RPCRegistrator.CheckTarget(self, methodToCall.Target);
             CreateClientAction(methodToCall.Method.CreateDelegateHelper<SpanAction<TSyncField, T>>(), ref remoteCallHandle);
+        }
+        
+        public void CreateClientAction<TSyncField, T>(TSyncField self, Action<T> methodToCall, ref RemoteCallSerializable<T> remoteCallHandle) where T : struct, ISpanSerializable where TSyncField : SyncableField
+        {
+            RPCRegistrator.CheckTarget(self, methodToCall.Target);
+            CreateClientAction(methodToCall.Method.CreateDelegateHelper<Action<TSyncField, T>>(), ref remoteCallHandle);
         }
 
         public void CreateClientAction<TSyncField>(Action<TSyncField> methodToCall, ref RemoteCall remoteCallHandle) where TSyncField : SyncableField
@@ -335,6 +341,24 @@ namespace LiteEntitySystem
                 var sf = (SyncableField)s;
                 if(sf.IsServer)
                     sf.ParentEntityInternal?.ServerManager.AddRemoteCall(sf.ParentEntityInternal.Id, value, (ushort)(rpcId + sf.RPCOffset), sf.Flags);
+            });
+        }
+        
+        public unsafe void CreateClientAction<TSyncField, T>(Action<TSyncField, T> methodToCall, ref RemoteCallSerializable<T> remoteCallHandle) where T : struct, ISpanSerializable where TSyncField : SyncableField
+        {
+            ushort rpcId = _internalRpcCounter++;
+            _calls.Add(new RpcFieldInfo(_syncableOffset, RemoteCallSerializable<T>.CreateMCD(methodToCall)));
+            if (remoteCallHandle.CachedAction != null)
+                return;
+            remoteCallHandle = new RemoteCallSerializable<T>((s, value) =>
+            {
+                var sf = (SyncableField)s;
+                if (sf.IsServer)
+                {
+                    var writer = new SpanWriter(stackalloc byte[value.MaxSize]);
+                    value.Serialize(writer);
+                    sf.ParentEntityInternal?.ServerManager.AddRemoteCall<byte>(sf.ParentEntityInternal.Id, writer.RawData.Slice(0, writer.Position), (ushort)(rpcId + sf.RPCOffset), sf.Flags);
+                }
             });
         }
     }
