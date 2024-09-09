@@ -7,10 +7,30 @@ namespace LiteEntitySystem
     [Flags]
     public enum EntityFlags
     {
-        UpdateOnClient = Updateable | (1 << 0), //Update entity on client even when entity isn't owned
-        Updateable = 1 << 1,                    //Entity has update method
-        LocalOnly = 1 << 2,                     //Entity is local only (only on server or client no difference)
-        OnlyForOwner = 1 << 3                   //Sync entity only for owner player
+        /// <summary>
+        /// Update entity on client even when entity isn't owned
+        /// </summary>
+        UpdateOnClient = Updateable | (1 << 0), 
+        
+        /// <summary>
+        /// Update entity on server and on client if entity is owned 
+        /// </summary>
+        Updateable = 1 << 1,                    
+        
+        /// <summary>
+        /// Entity is local only without sync (only on server or client no difference)
+        /// </summary>
+        LocalOnly = 1 << 2,                     
+        
+        /// <summary>
+        /// Sync entity only for owner player
+        /// </summary>
+        OnlyForOwner = 1 << 3,    
+        
+        /// <summary>
+        /// Handle sync details before sending to player
+        /// </summary>
+        CustomSync = 1 << 4 
     }
     
     [AttributeUsage(AttributeTargets.Class)]
