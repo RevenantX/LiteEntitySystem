@@ -16,5 +16,10 @@ namespace LiteEntitySystem.Internal
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void ExecuteRPC<T>(in RemoteCallSerializable<T> rpc, T value) where T : struct, ISpanSerializable => rpc.Call(this, value);
+        
+        protected internal virtual void OnSyncRequested()
+        {
+            
+        }
     }
 }

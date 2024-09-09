@@ -199,6 +199,7 @@ namespace LiteEntitySystem.Internal
             _syncFrame = tick;
             CleanPendingRpcs(ref _syncRpcHead, out _syncRpcTail);
             _rpcMode = RPCMode.Sync;
+            _entity.OnSyncRequested();
             var syncableFields = _entity.GetClassData().SyncableFields;
             for (int i = 0; i < syncableFields.Length; i++)
                 RefMagic.RefFieldValue<SyncableField>(_entity, syncableFields[i].Offset)

@@ -18,11 +18,6 @@ namespace LiteEntitySystem
         /// </summary>
         protected internal bool IsServer => ParentEntityInternal != null && ParentEntityInternal.IsServer;
 
-        protected internal virtual void OnSyncRequested()
-        {
-            
-        }
-
         protected internal virtual void BeforeReadRPC()
         {
             
