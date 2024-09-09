@@ -206,7 +206,7 @@ namespace LiteEntitySystem
             RegisterBasicFieldType(new ValueTypeProcessorFloat());
             RegisterBasicFieldType(new ValueTypeProcessorDouble());
             RegisterBasicFieldType(new ValueTypeProcessor<bool>());
-            RegisterBasicFieldType(new ValueTypeProcessorEntitySharedReference());
+            RegisterBasicFieldType(new ValueTypeProcessor<EntitySharedReference>());
             RegisterFieldType<FloatAngle>(FloatAngle.Lerp);
         }
 

@@ -15,7 +15,6 @@ namespace LiteEntitySystem.Internal
         internal abstract void SetFrom(object obj, int offset, byte* data);
         internal abstract bool SetFromAndSync(object obj, int offset, byte* data);
         internal abstract void WriteTo(object obj, int offset, byte* data);
-        internal abstract void WriteToServer(object obj, int offset, byte* data);
         internal abstract void SetInterpolation(object obj, int offset, byte* prev, byte* current, float fTimer);
         internal abstract void LoadHistory(object obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime);
     }
@@ -44,9 +43,6 @@ namespace LiteEntitySystem.Internal
             RefMagic.RefFieldValue<SyncVar<T>>(obj, offset).SetFromAndSync(data);
 
         internal override void WriteTo(object obj, int offset, byte* data) =>
-            *(T*)data = RefMagic.RefFieldValue<T>(obj, offset);
-
-        internal override void WriteToServer(object obj, int offset, byte* data) =>
             *(T*)data = RefMagic.RefFieldValue<T>(obj, offset);
     }
 
@@ -99,18 +95,6 @@ namespace LiteEntitySystem.Internal
             ref var a = ref RefMagic.RefFieldValue<double>(obj, offset);
             *(double*)tempHistory = a;
             a = Utils.Lerp(*(double*)historyA, *(double*)historyB, lerpTime);
-        }
-    }
-    
-    internal class ValueTypeProcessorEntitySharedReference : ValueTypeProcessor<EntitySharedReference>
-    {
-        internal override unsafe void WriteToServer(object obj, int offset, byte* data)
-        {
-            //skip local ids
-            var sharedRef = RefMagic.RefFieldValue<EntitySharedReference>(obj, offset);
-            if (sharedRef.IsLocal)
-                sharedRef = null;
-            *(EntitySharedReference*)data = sharedRef;
         }
     }
 

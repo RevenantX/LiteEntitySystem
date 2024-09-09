@@ -179,7 +179,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Returns controller owned by the player
         /// </summary>
-        /// <param name="player">player</param>
+        /// <param name="playerId">player</param>
         /// <returns>Instance if found, null if not</returns>
         public ControllerLogic GetPlayerController(byte playerId) =>
             GetPlayerController(_netPlayers.TryGetValue(playerId, out var p) ? p : null);
@@ -568,13 +568,14 @@ namespace LiteEntitySystem
                 ushort entityId = _entityIdQueue.GetNewId();
                 ref var stateSerializer = ref _stateSerializers[entityId];
 
+                stateSerializer.AllocateMemory(ref classData);
                 entity = (T)AddEntity(new EntityParams(
                     classData.ClassId, 
                     entityId,
                     stateSerializer.NextVersion,
                     TotalTicksPassed,
                     this));
-                stateSerializer.Init(ref classData, entity, _tick);
+                stateSerializer.Init(entity, _tick);
                 initMethod?.Invoke(entity);
                 ConstructEntity(entity);
                 _changedEntities.Add(entity);
@@ -647,10 +648,10 @@ namespace LiteEntitySystem
             }
         }
         
-        internal void EntityFieldChanged(InternalEntity entity, ushort fieldId)
+        internal void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue) where T : unmanaged
         {
             _changedEntities.Add(entity);
-            _stateSerializers[entity.Id].MarkFieldChanged(fieldId, _tick);
+            _stateSerializers[entity.Id].MarkFieldChanged(fieldId, _tick, ref newValue);
         }
         
         internal void EntityOwnerChanged(InternalEntity entity)

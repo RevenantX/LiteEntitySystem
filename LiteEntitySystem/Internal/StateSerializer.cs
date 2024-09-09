@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
@@ -29,12 +30,9 @@ namespace LiteEntitySystem.Internal
         public static readonly int HeaderSize = Helpers.SizeOfStruct<EntityDataHeader>();
         public const int DiffHeaderSize = 4;
         public const int MaxStateSize = 32767; //half of ushort
- 
-        private int _fixedFieldsSize;
+        
         private EntityFieldInfo[] _fields;
         private int _fieldsCount;
-        private SyncableFieldInfo[] _syncableFields;
-        private int _syncableFieldsCount;
         private int _fieldsFlagsSize;
         
         private InternalEntity _entity;
@@ -96,23 +94,33 @@ namespace LiteEntitySystem.Internal
             tail = null;
         }
 
-        public unsafe void Init(ref EntityClassData classData, InternalEntity e, ushort tick)
+        public void AllocateMemory(ref EntityClassData classData)
+        {
+            _fields = classData.Fields;
+            _fieldsCount = classData.FieldsCount;
+            _fieldsFlagsSize = classData.FieldsFlagsSize;
+            _fullDataSize = (uint)(HeaderSize + classData.FixedFieldsSize);
+            
+            //resize or clean prev data
+            if (_latestEntityData == null || _latestEntityData.Length < _fullDataSize)
+                _latestEntityData = new byte[_fullDataSize];
+            else
+                Array.Clear(_latestEntityData, HeaderSize, classData.FixedFieldsSize);
+            
+            if (_fieldChangeTicks == null || _fieldChangeTicks.Length < _fieldsCount)
+                _fieldChangeTicks = new ushort[_fieldsCount];
+        }
+
+        public unsafe void Init(InternalEntity e, ushort tick)
         {
             if (_state != SerializerState.Freed)
                 Logger.LogError($"State serializer isn't freed: {_state}");
             
-            _fields = classData.Fields;
-            _fieldsCount = classData.FieldsCount;
-            _syncableFields = classData.SyncableFields;
-            _syncableFieldsCount = classData.SyncableFields.Length;
-            _fixedFieldsSize = classData.FixedFieldsSize;
-            _fieldsFlagsSize = classData.FieldsFlagsSize;
             _entity = e;
             _state = SerializerState.Active;
             _syncFrame = -1;
             _rpcMode = RPCMode.Normal;
             _isController = e is ControllerLogic;
-            _fullDataSize = (uint)(HeaderSize + _fixedFieldsSize);
             _versionChangedTick = tick;
             LastChangedTick = tick;
 
@@ -120,30 +128,8 @@ namespace LiteEntitySystem.Internal
             CleanPendingRpcs(ref _rpcHead, out _rpcTail);
             CleanPendingRpcs(ref _syncRpcHead, out _syncRpcTail);
             
-            //resize or clean prev data
-            if (_latestEntityData == null || _latestEntityData.Length < _fullDataSize)
-                _latestEntityData = new byte[_fullDataSize];
-            else
-                Array.Clear(_latestEntityData, HeaderSize, _fixedFieldsSize);
-            
-            if (_fieldChangeTicks == null || _fieldChangeTicks.Length < _fieldsCount)
-                _fieldChangeTicks = new ushort[_fieldsCount];
-            
             fixed (byte* data = _latestEntityData)
-            {
                 *(EntityDataHeader*)data = _entity.DataHeader;
-                byte* dataAfterHeader = data + HeaderSize;
-                for (int i = 0; i < _fieldsCount; i++) 
-                {
-                    ref var field = ref _fields[i];
-                    if (field.FieldType == FieldType.SyncableSyncVar)
-                        field.TypeProcessor.WriteToServer(RefMagic.RefFieldValue<SyncableField>(_entity, field.Offset),
-                            field.SyncableSyncVarOffset, dataAfterHeader + field.FixedOffset);
-                    else
-                        field.TypeProcessor.WriteToServer(_entity, field.Offset, dataAfterHeader + field.FixedOffset);
-                    _fieldChangeTicks[i] = tick;
-                }
-            }
         }
 
         public void MarkOwnerChanged(ushort tick)
@@ -154,20 +140,20 @@ namespace LiteEntitySystem.Internal
                 _fieldChangeTicks[i] = tick;
         }
         
-        public unsafe void MarkFieldChanged(ushort fieldId, ushort tick)
+        public unsafe void MarkFieldChanged<T>(ushort fieldId, ushort tick, ref T newValue) where T : unmanaged
         {
             LastChangedTick = tick;
             _fieldChangeTicks[fieldId] = tick;
-
-            fixed (byte* data = &_latestEntityData[HeaderSize])
+            fixed (byte* data = &_latestEntityData[HeaderSize + _fields[fieldId].FixedOffset])
             {
-                ref var field = ref _fields[fieldId];
-
-                if (field.FieldType == FieldType.SyncableSyncVar)
-                    field.TypeProcessor.WriteToServer(RefMagic.RefFieldValue<SyncableField>(_entity, field.Offset),
-                        field.SyncableSyncVarOffset, data + field.FixedOffset);
+                if (typeof(T) == typeof(EntitySharedReference))
+                {
+                    ref var sharedRef = ref Unsafe.As<T, EntitySharedReference>(ref newValue);
+                    //skip local ids
+                    *(EntitySharedReference*)data = sharedRef.IsLocal ? null : sharedRef;
+                }
                 else
-                    field.TypeProcessor.WriteToServer(_entity, field.Offset, data + field.FixedOffset);
+                    *(T*)data = newValue;
             }
         }
 
@@ -212,8 +198,9 @@ namespace LiteEntitySystem.Internal
             _syncFrame = tick;
             CleanPendingRpcs(ref _syncRpcHead, out _syncRpcTail);
             _rpcMode = RPCMode.Sync;
-            for (int i = 0; i < _syncableFieldsCount; i++)
-                RefMagic.RefFieldValue<SyncableField>(_entity, _syncableFields[i].Offset)
+            var syncableFields = _entity.GetClassData().SyncableFields;
+            for (int i = 0; i < syncableFields.Length; i++)
+                RefMagic.RefFieldValue<SyncableField>(_entity, syncableFields[i].Offset)
                     .OnSyncRequested();
             _rpcMode = RPCMode.Normal;
         }
