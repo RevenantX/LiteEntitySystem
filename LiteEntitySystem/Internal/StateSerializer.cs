@@ -133,7 +133,7 @@ namespace LiteEntitySystem.Internal
                 *(EntityDataHeader*)data = _entity.DataHeader;
         }
 
-        public void MarkOwnerChanged(ushort tick)
+        public void ForceFullSync(ushort tick)
         {
             LastChangedTick = tick;
             MakeOnSync(tick);
@@ -251,7 +251,7 @@ namespace LiteEntitySystem.Internal
             //Logger.Log($"[SEM] SendBaseline for entity: {_entity.Id}, pos: {position}, posAfterData: {position + _fullDataSize}");
         }
 
-        public unsafe DiffResult MakeDiff(byte playerId, ushort serverTick, ushort minimalTick, ushort playerTick, byte* resultData, ref int position)
+        public unsafe DiffResult MakeDiff(byte playerId, ushort serverTick, ushort minimalTick, ushort playerTick, byte* resultData, ref int position, HumanControllerLogic playerController)
         {
             switch (_state)
             {
@@ -280,7 +280,8 @@ namespace LiteEntitySystem.Internal
             ushort* fieldFlagAndSize = (ushort*)(resultData + startPos);
             position += sizeof(ushort);
             
-            if (Utils.SequenceDiff(_versionChangedTick, playerTick) > 0)
+            //send full state if needed for this player (or version changed)
+            if ((playerController != null && playerController.IsEntityNeedForceSync(_entity, playerTick)) || Utils.SequenceDiff(_versionChangedTick, playerTick) > 0)
             {
                 //write full header here (totalSize + eid)
                 //also all fields
@@ -289,6 +290,29 @@ namespace LiteEntitySystem.Internal
             } 
             else fixed (byte* lastEntityData = _latestEntityData) //make diff
             {
+                var rpcNode = _rpcHead;
+                
+                //skip diff sync if disabled
+                if (playerController != null && playerController.IsEntityDiffSyncDisabled(new EntitySharedReference(_entity.Id, _entity.Version)))
+                {
+                    //remove old rpcs
+                    while (rpcNode != null && Utils.SequenceDiff(rpcNode.Header.Tick, minimalTick) < 0)
+                    {
+                        if (rpcNode != _rpcHead)
+                            Logger.LogError("MinimalTickNode isn't first!");
+                        //remove old RPCs (they should be at first place)
+                        _entity.ServerManager.PoolRpc(rpcNode);
+                        if (_rpcTail == _rpcHead)
+                            _rpcTail = null;
+                        _rpcHead = rpcNode.Next;
+                        rpcNode.Next = null;
+                        rpcNode = _rpcHead;
+                    }
+                    
+                    position = startPos;
+                    return DiffResult.Skip;
+                }
+                
                 byte* entityDataAfterHeader = lastEntityData + HeaderSize;
                 // -1 for cycle
                 byte* fields = resultData + startPos + DiffHeaderSize - 1;
@@ -343,7 +367,6 @@ namespace LiteEntitySystem.Internal
                 position += sizeof(ushort);
 
                 //actual write rpcs
-                var rpcNode = _rpcHead;
                 while (rpcNode != null)
                 {
                     bool send = (isOwned && (rpcNode.Flags & ExecuteFlags.SendToOwner) != 0) ||

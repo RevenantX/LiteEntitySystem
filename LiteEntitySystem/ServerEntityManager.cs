@@ -173,7 +173,7 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="player">player</param>
         /// <returns>Instance if found, null if not</returns>
-        public ControllerLogic GetPlayerController(AbstractNetPeer player) =>
+        public HumanControllerLogic GetPlayerController(AbstractNetPeer player) =>
             GetPlayerController(player.AssignedPlayer);
         
         /// <summary>
@@ -181,7 +181,7 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="playerId">player</param>
         /// <returns>Instance if found, null if not</returns>
-        public ControllerLogic GetPlayerController(byte playerId) =>
+        public HumanControllerLogic GetPlayerController(byte playerId) =>
             GetPlayerController(_netPlayers.TryGetValue(playerId, out var p) ? p : null);
         
         /// <summary>
@@ -189,11 +189,11 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="player">player to remove</param>
         /// <returns>Instance if found, null if not</returns>
-        public ControllerLogic GetPlayerController(NetPlayer player)
+        public HumanControllerLogic GetPlayerController(NetPlayer player)
         {
             if (player == null || !_netPlayers.Contains(player.Id))
                 return null;
-            foreach (var controller in GetControllers<ControllerLogic>())
+            foreach (var controller in GetControllers<HumanControllerLogic>())
             {
                 if (controller.InternalOwnerId.Value == player.Id)
                     return controller;
@@ -460,6 +460,8 @@ namespace LiteEntitySystem
                     //waiting to load initial state
                     continue;
                 }
+
+                var playerController = GetPlayerController(player);
                 
                 //Partial diff sync
                 var header = (DiffPartHeader*)packetBuffer;
@@ -489,7 +491,8 @@ namespace LiteEntitySystem
                         _minimalTick,
                         player.CurrentServerTick,
                         packetBuffer,
-                        ref writePosition);
+                        ref writePosition,
+                        playerController);
                     if (diffResult == DiffResult.DoneAndDestroy)
                     {
                         _entityIdQueue.ReuseId(changedEntity.Id);
@@ -647,6 +650,12 @@ namespace LiteEntitySystem
                     _entityIdQueue.ReuseId(e.Id);
             }
         }
+
+        internal void EntityChanged(InternalEntity entity)
+        {
+            _changedEntities.Add(entity);
+            _stateSerializers[entity.Id].LastChangedTick = _tick;
+        }
         
         internal void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue) where T : unmanaged
         {
@@ -657,7 +666,7 @@ namespace LiteEntitySystem
         internal void EntityOwnerChanged(InternalEntity entity)
         {
             _changedEntities.Add(entity);
-            _stateSerializers[entity.Id].MarkOwnerChanged(_tick);
+            _stateSerializers[entity.Id].ForceFullSync(_tick);
         }
 
         internal void PoolRpc(RemoteCallPacket rpcNode) =>

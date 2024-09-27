@@ -1,15 +1,150 @@
 ﻿using System;
 using System.Collections.Generic;
+using LiteEntitySystem.Extensions;
 using LiteEntitySystem.Internal;
 using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
 {
+    public abstract class HumanControllerLogic : ControllerLogic
+    {
+        private struct EntitySyncInfo
+        {
+            public EntitySharedReference Entity;
+            public bool SyncEnabled;
+        }
+        
+        private static RemoteCall<EntitySyncInfo> OnEntitySyncChangedRPC;
+        
+        private readonly SyncHashSet<EntitySharedReference> _skippedEntities = new();
+        
+        //entities that should be resynced after diffSync (server only)
+        private readonly Dictionary<InternalEntity, ushort> _forceSyncEntities;
+        
+        /// <summary>
+        /// Change entity delta-diff synchronization for player that owns this controller
+        /// constructor and destruction will be synchronized anyways
+        /// works only on server
+        /// </summary>
+        /// <param name="entity">entity</param>
+        /// <param name="enable">true - enable sync (if was disabled), disable otherwise</param>
+        public void ChangeEntityDiffSync(EntityLogic entity, bool enable)
+        {
+            if (EntityManager.IsClient || entity == GetControlledEntity<PawnLogic>())
+                return;
+            if (!enable && !_skippedEntities.Contains(entity))
+            {
+                _skippedEntities.Add(entity);
+                ExecuteRPC(OnEntitySyncChangedRPC, new EntitySyncInfo { Entity = entity, SyncEnabled = false });
+            }
+            else if (enable && _skippedEntities.Remove(entity))
+            {
+                _forceSyncEntities.Add(entity, EntityManager.Tick);
+                ServerManager.EntityChanged(entity);
+                ExecuteRPC(OnEntitySyncChangedRPC, new EntitySyncInfo { Entity = entity, SyncEnabled = true });
+            }
+        }
+
+        protected internal override void OnConstructed()
+        {
+            base.OnConstructed();
+            
+            //call OnEntityDiffSyncChanged for already skipped entities
+            if(EntityManager.IsClient)
+                foreach (var skippedEntity in _skippedEntities)
+                    OnEntityDiffSyncChanged(EntityManager.GetEntityById<EntityLogic>(skippedEntity), false);
+        }
+
+        /// <summary>
+        /// Is entity delta-diff synchronization disabled. Works on client and server
+        /// </summary>
+        /// <param name="entity">entity to check</param>
+        /// <returns>true if entity sync is disabled</returns>
+        public bool IsEntityDiffSyncDisabled(EntitySharedReference entity) =>
+            _skippedEntities.Contains(entity) && !EntityManager.GetEntityById<EntityLogic>(entity).IsDestroyed;
+
+        /// <summary>
+        /// Enable diff sync for all entities that has disabled diff sync
+        /// </summary>
+        public void ResetEntitiesDiffSync()
+        {
+            if (EntityManager.IsClient)
+                return;
+            foreach (var entityRef in _skippedEntities)
+            {
+                var entity = EntityManager.GetEntityById<EntityLogic>(entityRef);
+                if(entity == null)
+                    continue;
+                _forceSyncEntities.Add(entity, EntityManager.Tick);
+                ServerManager.EntityChanged(entity);
+                ExecuteRPC(OnEntitySyncChangedRPC, new EntitySyncInfo { Entity = entity, SyncEnabled = false });
+            }
+            _skippedEntities.Clear();
+        }
+
+        //is entity need force sync
+        internal bool IsEntityNeedForceSync(InternalEntity entity, ushort playerTick)
+        {
+            if (!_forceSyncEntities.TryGetValue(entity, out var forceSyncTick))
+                return false;
+
+            if (Utils.SequenceDiff(playerTick, forceSyncTick) >= 0)
+            {
+                _forceSyncEntities.Remove(entity);
+                return false;
+            }
+
+            return !entity.IsDestroyed;
+        }
+
+        private void OnEntityDestroyed(EntityLogic entityLogic)
+        {
+            _forceSyncEntities.Remove(entityLogic);
+            _skippedEntities.Remove(entityLogic);
+        }
+        
+        protected HumanControllerLogic(EntityParams entityParams) : base(entityParams)
+        {
+            if (EntityManager.IsServer)
+            {
+                _forceSyncEntities = new Dictionary<InternalEntity, ushort>();
+                EntityManager.GetEntities<EntityLogic>().OnDestroyed += OnEntityDestroyed;
+            }
+        }
+        
+        protected override void OnDestroy()
+        {
+            if (EntityManager.IsServer)
+                EntityManager.GetEntities<EntityLogic>().OnDestroyed -= OnEntityDestroyed;
+            base.OnDestroy();
+        }
+
+        protected override void RegisterRPC(ref RPCRegistrator r)
+        {
+            base.RegisterRPC(ref r);
+            r.CreateRPCAction((HumanControllerLogic c, EntitySyncInfo s) =>
+            {
+                c.OnEntityDiffSyncChanged(c.EntityManager.GetEntityById<EntityLogic>(s.Entity), s.SyncEnabled);
+            }, ref OnEntitySyncChangedRPC, ExecuteFlags.SendToOwner);
+        }
+
+        /// <summary>
+        /// Called when entity diff sync changed (enabled or disabled)
+        /// useful for hiding disabled entities
+        /// </summary>
+        /// <param name="entity">entity</param>
+        /// <param name="enabled">sync enabled or disabled</param>
+        protected virtual void OnEntityDiffSyncChanged(EntityLogic entity, bool enabled)
+        {
+            
+        }
+    }
+    
     /// <summary>
     /// Base class for human Controller entities
     /// </summary>
     [EntityFlags(EntityFlags.UpdateOnClient)]
-    public abstract class HumanControllerLogic<TInput> : ControllerLogic where TInput : unmanaged
+    public abstract class HumanControllerLogic<TInput> : HumanControllerLogic where TInput : unmanaged
     {
         private struct ServerResponse
         {
@@ -43,6 +178,10 @@ namespace LiteEntitySystem
         private ushort _requestId;
         private readonly Queue<(ushort,Action<bool>)> _awaitingRequests;
 
+        /// <summary>
+        /// Get player that uses this controller
+        /// </summary>
+        /// <returns>assigned player</returns>
         public NetPlayer GetAssignedPlayer()
         {
             if (InternalOwnerId.Value == EntityManager.ServerPlayerId)
@@ -181,9 +320,7 @@ namespace LiteEntitySystem
         protected HumanControllerLogic(EntityParams entityParams) : base(entityParams)
         {
             if (EntityManager.IsClient)
-            {
                 _awaitingRequests = new Queue<(ushort, Action<bool>)>();
-            }
             _requestWriter.Put(EntityManager.HeaderByte);
             _requestWriter.Put(InternalPackets.ClientRequest);
             _requestWriter.Put(entityParams.Id);
