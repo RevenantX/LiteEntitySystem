@@ -179,6 +179,13 @@ namespace LiteEntitySystem
         protected readonly InputProcessor InputProcessor;
         protected int SpeedMultiplier;
         protected int TotalTicksPassed;
+
+        /// <summary>
+        /// Is entity manager running
+        /// IsRunning - true after first update
+        /// IsRunning - sets to false after Reset() call
+        /// </summary>
+        public bool IsRunning => _stopwatch.IsRunning;
         
         public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged =>
             ValueTypeProcessor.Registered[typeof(T)] = new UserTypeProcessor<T>(interpolationDelegate);
@@ -270,7 +277,8 @@ namespace LiteEntitySystem
             _lastTime = 0;
             InternalPlayerId = 0;
             _localIdQueue.Reset();
-            _stopwatch.Restart();
+            _stopwatch.Stop();
+            _stopwatch.Reset();
             AliveEntities.Clear();
             
             for (int i = FirstEntityId; i <= MaxSyncedEntityId; i++)
