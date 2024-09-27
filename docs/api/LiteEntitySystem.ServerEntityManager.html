@@ -5,12 +5,11 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Class ServerEntityManager
- </title>
+      <title>Class ServerEntityManager </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Class ServerEntityManager
- ">
+      <meta name="title" content="Class ServerEntityManager ">
     
+    <meta name="description" content="Server entity manager">
       <link rel="shortcut icon" href="../favicon.ico">
       <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
@@ -71,8 +70,7 @@
 
 
 
-  <h1 id="LiteEntitySystem_ServerEntityManager" data-uid="LiteEntitySystem.ServerEntityManager" class="text-break">Class ServerEntityManager
-</h1>
+  <h1 id="LiteEntitySystem_ServerEntityManager" data-uid="LiteEntitySystem.ServerEntityManager" class="text-break">Class ServerEntityManager</h1>
   <div class="markdown level0 summary"><p>Server entity manager</p>
 </div>
   <div class="markdown level0 conceptual"></div>
@@ -151,13 +149,13 @@
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxPlayers">EntityManager.MaxPlayers</a>
     </div>
     <div>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_IsRunning">EntityManager.IsRunning</a>
+    </div>
+    <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_RegisterFieldType__1_LiteEntitySystem_Internal_InterpolatorDelegateWithReturn___0__">EntityManager.RegisterFieldType&lt;T&gt;(InterpolatorDelegateWithReturn&lt;T&gt;)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_RegisterFieldType__1">EntityManager.RegisterFieldType&lt;T&gt;()</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Reset">EntityManager.Reset()</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetEntityById__1_LiteEntitySystem_EntitySharedReference_">EntityManager.GetEntityById&lt;T&gt;(EntitySharedReference)</a>
@@ -276,6 +274,31 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <h4 id="LiteEntitySystem_ServerEntityManager_SafeEntityUpdate" data-uid="LiteEntitySystem.ServerEntityManager.SafeEntityUpdate">SafeEntityUpdate</h4>
+  <div class="markdown level1 summary"><p>Add try catch to entity updates</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool SafeEntityUpdate</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -1001,7 +1024,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ControllerLogic GetPlayerController(NetPlayer player)</code></pre>
+    <pre><code class="lang-csharp hljs">public HumanControllerLogic GetPlayerController(NetPlayer player)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -1031,7 +1054,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.ControllerLogic.html">ControllerLogic</a></td>
+        <td><a class="xref" href="LiteEntitySystem.HumanControllerLogic.html">HumanControllerLogic</a></td>
         <td><p>Instance if found, null if not</p>
 </td>
       </tr>
@@ -1046,7 +1069,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ControllerLogic GetPlayerController(AbstractNetPeer player)</code></pre>
+    <pre><code class="lang-csharp hljs">public HumanControllerLogic GetPlayerController(AbstractNetPeer player)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -1076,7 +1099,52 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.ControllerLogic.html">ControllerLogic</a></td>
+        <td><a class="xref" href="LiteEntitySystem.HumanControllerLogic.html">HumanControllerLogic</a></td>
+        <td><p>Instance if found, null if not</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_ServerEntityManager_GetPlayerController_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayerController*"></a>
+  <h4 id="LiteEntitySystem_ServerEntityManager_GetPlayerController_System_Byte_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayerController(System.Byte)">GetPlayerController(byte)</h4>
+  <div class="markdown level1 summary"><p>Returns controller owned by the player</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public HumanControllerLogic GetPlayerController(byte playerId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
+        <td><span class="parametername">playerId</span></td>
+        <td><p>player</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.HumanControllerLogic.html">HumanControllerLogic</a></td>
         <td><p>Instance if found, null if not</p>
 </td>
       </tr>
@@ -1094,48 +1162,6 @@
   </div>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_OnLogicTick">EntityManager.OnLogicTick()</a></div>
-
-
-  <a id="LiteEntitySystem_ServerEntityManager_RemoveAIController_" data-uid="LiteEntitySystem.ServerEntityManager.RemoveAIController*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_RemoveAIController__1___0_" data-uid="LiteEntitySystem.ServerEntityManager.RemoveAIController``1(``0)">RemoveAIController&lt;T&gt;(T)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void RemoveAIController&lt;T&gt;(T controller) where T : AiControllerLogic</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><span class="parametername">controller</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 
 
   <a id="LiteEntitySystem_ServerEntityManager_RemovePlayer_" data-uid="LiteEntitySystem.ServerEntityManager.RemovePlayer*"></a>
@@ -1226,6 +1252,19 @@
       </tr>
     </tbody>
   </table>
+
+
+  <a id="LiteEntitySystem_ServerEntityManager_Reset_" data-uid="LiteEntitySystem.ServerEntityManager.Reset*"></a>
+  <h4 id="LiteEntitySystem_ServerEntityManager_Reset" data-uid="LiteEntitySystem.ServerEntityManager.Reset">Reset()</h4>
+  <div class="markdown level1 summary"><p>Remove all entities and reset all counters and timers</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Reset()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Reset">EntityManager.Reset()</a></div>
 
 
   <a id="LiteEntitySystem_ServerEntityManager_Update_" data-uid="LiteEntitySystem.ServerEntityManager.Update*"></a>

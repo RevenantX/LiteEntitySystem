@@ -5,11 +5,10 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Class SyncFixedArray&lt;T&gt;
- </title>
+      <title>Class SyncFixedArray&lt;T&gt; </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Class SyncFixedArray&lt;T&gt;
- ">
+      <meta name="title" content="Class SyncFixedArray&lt;T&gt; ">
+    
     
       <link rel="shortcut icon" href="../favicon.ico">
       <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
@@ -71,23 +70,23 @@
 
 
 
-  <h1 id="LiteEntitySystem_Extensions_SyncFixedArray_1" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1" class="text-break">Class SyncFixedArray&lt;T&gt;
-</h1>
+  <h1 id="LiteEntitySystem_Extensions_SyncFixedArray_1" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1" class="text-break">Class SyncFixedArray&lt;T&gt;</h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-    <div class="level1"><a class="xref" href="LiteEntitySystem.SyncableField.html">SyncableField</a></div>
-    <div class="level2"><span class="xref">SyncFixedArray&lt;T&gt;</span></div>
+    <div class="level1"><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
+    <div class="level2"><a class="xref" href="LiteEntitySystem.SyncableField.html">SyncableField</a></div>
+    <div class="level3"><span class="xref">SyncFixedArray&lt;T&gt;</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsServer">SyncableField.IsServer</a>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsClient">SyncableField.IsClient</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsClient">SyncableField.IsClient</a>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsServer">SyncableField.IsServer</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC">SyncableField.BeforeReadRPC()</a>
@@ -99,20 +98,23 @@
       <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback">SyncableField.OnRollback()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__">SyncableField.ExecuteRPC(in RemoteCall)</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_ExecuteRPC_LiteEntitySystem_RemoteCall__">InternalBaseClass.ExecuteRPC(in RemoteCall)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">SyncableField.ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt;, T)</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">InternalBaseClass.ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt;, T)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">SyncableField.ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">InternalBaseClass.ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_">InternalBaseClass.ExecuteRPC&lt;T&gt;(in RemoteCallSerializable&lt;T&gt;, T)</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a>.<a class="xref" href="LiteEntitySystem.Extensions.html">Extensions</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_Extensions_SyncFixedArray_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SyncFixedArray&lt;T&gt; : SyncableField where T : unmanaged</code></pre>
+    <pre><code class="lang-csharp hljs">public class SyncFixedArray&lt;T&gt; : SyncableField where T : unmanaged, IEquatable&lt;T&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -241,7 +243,7 @@
     <pre><code class="lang-csharp hljs">protected override void OnSyncRequested()</code></pre>
   </div>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnSyncRequested">SyncableField.OnSyncRequested()</a></div>
+  <div><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">InternalBaseClass.OnSyncRequested()</a></div>
 
 
   <a id="LiteEntitySystem_Extensions_SyncFixedArray_1_RegisterRPC_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.RegisterRPC*"></a>

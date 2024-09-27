@@ -1,5 +1,5 @@
 {
-  "source_base_path": "e:/Projects/LiteEntitySystem/docfx_project",
+  "source_base_path": "/home/revenantx/Projects/LiteEntitySystem/docfx_project",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -24,30 +24,30 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.BindOnChange.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.BindOnChange.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.BindRpc.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.BindRpc.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.ClientEntityManager.yml",
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.ClientEntityManager.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Collections.AVLTree-1.Enumerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Collections.AVLTree-1.Enumerator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Collections.AVLTree-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Collections.AVLTree-1.html"
         }
       },
       "version": ""
@@ -114,16 +114,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.ControllerLogic.InnerFieldManipulator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.ControllerLogic.InnerFieldManipulator.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.ControllerLogic.yml",
       "output": {
         ".html": {
@@ -154,10 +144,20 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.EntityFilter.yml",
+      "source_relative_path": "api/LiteEntitySystem.EntityFlags.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.EntityFilter.html"
+          "relative_path": "api/LiteEntitySystem.EntityFlags.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.EntityFlagsAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.EntityFlagsAttribute.html"
         }
       },
       "version": ""
@@ -168,16 +168,6 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.EntityList-1.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.EntityLogic.InnerFieldManipulator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.EntityLogic.InnerFieldManipulator.html"
         }
       },
       "version": ""
@@ -274,30 +264,10 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncArray-1.InnerFieldManipulator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncArray-1.InnerFieldManipulator.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.Extensions.SyncArray-1.yml",
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.Extensions.SyncArray-1.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncDict-2.InnerFieldManipulator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncDict-2.InnerFieldManipulator.html"
         }
       },
       "version": ""
@@ -314,26 +284,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.InnerFieldManipulator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.InnerFieldManipulator.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.SetCallData.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.SetCallData.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.Extensions.SyncFixedArray-1.yml",
       "output": {
         ".html": {
@@ -344,10 +294,10 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncList-1.InnerFieldManipulator.yml",
+      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncHashSet-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncList-1.InnerFieldManipulator.html"
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncHashSet-1.html"
         }
       },
       "version": ""
@@ -364,16 +314,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncNetSerializable-1.InnerFieldManipulator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncNetSerializable-1.InnerFieldManipulator.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.Extensions.SyncNetSerializable-1.yml",
       "output": {
         ".html": {
@@ -384,10 +324,10 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncSquare-1.InnerFieldManipulator.yml",
+      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncSpanSerializable-1.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncSquare-1.InnerFieldManipulator.html"
+          "relative_path": "api/LiteEntitySystem.Extensions.SyncSpanSerializable-1.html"
         }
       },
       "version": ""
@@ -404,16 +344,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncStateMachine-1.InnerFieldManipulator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncStateMachine-1.InnerFieldManipulator.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.Extensions.SyncStateMachine-1.yml",
       "output": {
         ".html": {
@@ -424,30 +354,10 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncString.InnerFieldManipulator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncString.InnerFieldManipulator.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.Extensions.SyncString.yml",
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.Extensions.SyncString.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Extensions.SyncTimer.InnerFieldManipulator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Extensions.SyncTimer.InnerFieldManipulator.html"
         }
       },
       "version": ""
@@ -474,30 +384,10 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.FloatAngle.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.FloatAngle.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.Helpers.yml",
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.Helpers.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.HumanControllerLogic-1.InnerFieldManipulator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.HumanControllerLogic-1.InnerFieldManipulator.html"
         }
       },
       "version": ""
@@ -524,10 +414,40 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.HumanControllerLogic.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.HumanControllerLogic.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.IEntityFilter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.IEntityFilter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.ILogger.yml",
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.ILogger.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.ISpanSerializable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.ISpanSerializable.html"
         }
       },
       "version": ""
@@ -574,80 +494,20 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.BitReadOnlySpan.yml",
+      "source_relative_path": "api/LiteEntitySystem.Internal.EntityComparer.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.BitReadOnlySpan.html"
+          "relative_path": "api/LiteEntitySystem.Internal.EntityComparer.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.BitSpan.yml",
+      "source_relative_path": "api/LiteEntitySystem.Internal.InternalBaseClass.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.BitSpan.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.CodeGenUtils.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.CodeGenUtils.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.EntityFieldInfo.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.EntityFieldInfo.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.FieldManipulator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.FieldManipulator.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.GeneratedClassDataHandler-1.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.GeneratedClassDataHandler-1.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.GeneratedClassMetadata.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.GeneratedClassMetadata.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.InternalEntity.InnerFieldManipulator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.InternalEntity.InnerFieldManipulator.html"
+          "relative_path": "api/LiteEntitySystem.Internal.InternalBaseClass.html"
         }
       },
       "version": ""
@@ -664,40 +524,10 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.InternalSyncType.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.InternalSyncType.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.Internal.OnSyncExecutionOrder.yml",
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.Internal.OnSyncExecutionOrder.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.RpcData.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.RpcData.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.SyncableAdditionalData.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.SyncableAdditionalData.html"
         }
       },
       "version": ""
@@ -714,40 +544,10 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.ValueTypeProcessor-1.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.ValueTypeProcessor-1.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.ValueTypeProcessor.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.ValueTypeProcessor.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.Internal.yml",
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.Internal.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.LocalOnly.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.LocalOnly.html"
         }
       },
       "version": ""
@@ -804,16 +604,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.PawnLogic.InnerFieldManipulator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.PawnLogic.InnerFieldManipulator.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.PawnLogic.yml",
       "output": {
         ".html": {
@@ -834,16 +624,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.RPCType.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.RPCType.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.RemoteCall-1.yml",
       "output": {
         ".html": {
@@ -858,6 +638,16 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.RemoteCall.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.RemoteCallSerializable-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.RemoteCallSerializable-1.html"
         }
       },
       "version": ""
@@ -904,6 +694,26 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.SpanReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.SpanReader.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.SpanWriter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.SpanWriter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.SyncFlags.yml",
       "output": {
         ".html": {
@@ -928,16 +738,6 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.SyncVarFlags.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.SyncVarWithNotify-1.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.SyncVarWithNotify-1.html"
         }
       },
       "version": ""
@@ -1014,30 +814,10 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.UpdateableEntity.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.UpdateableEntity.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.yml",
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteNetLib.Utils.NetDataEnumExtensions.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteNetLib.Utils.NetDataEnumExtensions.html"
         }
       },
       "version": ""

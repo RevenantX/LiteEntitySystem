@@ -5,12 +5,11 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Class ClientEntityManager
- </title>
+      <title>Class ClientEntityManager </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Class ClientEntityManager
- ">
+      <meta name="title" content="Class ClientEntityManager ">
     
+    <meta name="description" content="Client entity manager">
       <link rel="shortcut icon" href="../favicon.ico">
       <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
@@ -71,8 +70,7 @@
 
 
 
-  <h1 id="LiteEntitySystem_ClientEntityManager" data-uid="LiteEntitySystem.ClientEntityManager" class="text-break">Class ClientEntityManager
-</h1>
+  <h1 id="LiteEntitySystem_ClientEntityManager" data-uid="LiteEntitySystem.ClientEntityManager" class="text-break">Class ClientEntityManager</h1>
   <div class="markdown level0 summary"><p>Client entity manager</p>
 </div>
   <div class="markdown level0 conceptual"></div>
@@ -149,6 +147,9 @@
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxPlayers">EntityManager.MaxPlayers</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_IsRunning">EntityManager.IsRunning</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_RegisterFieldType__1_LiteEntitySystem_Internal_InterpolatorDelegateWithReturn___0__">EntityManager.RegisterFieldType&lt;T&gt;(InterpolatorDelegateWithReturn&lt;T&gt;)</a>
@@ -791,6 +792,49 @@
       <tr>
         <td><a class="xref" href="LiteEntitySystem.DeserializeResult.html">DeserializeResult</a></td>
         <td><p>Deserialization result</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_ClientEntityManager_GetPlayerController_" data-uid="LiteEntitySystem.ClientEntityManager.GetPlayerController*"></a>
+  <h4 id="LiteEntitySystem_ClientEntityManager_GetPlayerController__1" data-uid="LiteEntitySystem.ClientEntityManager.GetPlayerController``1">GetPlayerController&lt;T&gt;()</h4>
+  <div class="markdown level1 summary"><p>Return client controller if exist</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public T GetPlayerController&lt;T&gt;() where T : ControllerLogic</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><p>controller if exist otherwise null</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>controller type</p>
 </td>
       </tr>
     </tbody>

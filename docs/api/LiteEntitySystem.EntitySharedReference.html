@@ -5,11 +5,10 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Struct EntitySharedReference
- </title>
+      <title>Struct EntitySharedReference </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Struct EntitySharedReference
- ">
+      <meta name="title" content="Struct EntitySharedReference ">
+    
     
       <link rel="shortcut icon" href="../favicon.ico">
       <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
@@ -71,15 +70,18 @@
 
 
 
-  <h1 id="LiteEntitySystem_EntitySharedReference" data-uid="LiteEntitySystem.EntitySharedReference" class="text-break">Struct EntitySharedReference
-</h1>
+  <h1 id="LiteEntitySystem_EntitySharedReference" data-uid="LiteEntitySystem.EntitySharedReference" class="text-break">Struct EntitySharedReference</h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a>&gt;</div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_EntitySharedReference_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly struct EntitySharedReference</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly struct EntitySharedReference : IEquatable&lt;EntitySharedReference&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
 </h3>
@@ -298,6 +300,51 @@
 
 
   <a id="LiteEntitySystem_EntitySharedReference_Equals_" data-uid="LiteEntitySystem.EntitySharedReference.Equals*"></a>
+  <h4 id="LiteEntitySystem_EntitySharedReference_Equals_LiteEntitySystem_EntitySharedReference_" data-uid="LiteEntitySystem.EntitySharedReference.Equals(LiteEntitySystem.EntitySharedReference)">Equals(EntitySharedReference)</h4>
+  <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(EntitySharedReference other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>An object to compare with this object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the current object is equal to the <code class="paramref">other</code> parameter; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_EntitySharedReference_Equals_" data-uid="LiteEntitySystem.EntitySharedReference.Equals*"></a>
   <h4 id="LiteEntitySystem_EntitySharedReference_Equals_System_Object_" data-uid="LiteEntitySystem.EntitySharedReference.Equals(System.Object)">Equals(object)</h4>
   <div class="markdown level1 summary"><p>Indicates whether this instance and a specified object are equal.</p>
 </div>
@@ -341,7 +388,7 @@
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.ValueType.Equals(System.Object)</span></div>
+  <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetype.equals">ValueType.Equals(object)</a></div>
 
 
   <a id="LiteEntitySystem_EntitySharedReference_GetHashCode_" data-uid="LiteEntitySystem.EntitySharedReference.GetHashCode*"></a>
@@ -370,7 +417,7 @@
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.ValueType.GetHashCode()</span></div>
+  <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode">ValueType.GetHashCode()</a></div>
 
 
   <a id="LiteEntitySystem_EntitySharedReference_ToString_" data-uid="LiteEntitySystem.EntitySharedReference.ToString*"></a>
@@ -399,7 +446,7 @@
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.ValueType.ToString()</span></div>
+  <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetype.tostring">ValueType.ToString()</a></div>
   <h3 id="operators">Operators
 </h3>
 
@@ -538,6 +585,10 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable&lt;T&gt;</a>
+  </div>
 
 </article>
           </div>

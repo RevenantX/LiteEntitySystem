@@ -5,12 +5,11 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Class EntityManager
- </title>
+      <title>Class EntityManager </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Class EntityManager
- ">
+      <meta name="title" content="Class EntityManager ">
     
+    <meta name="description" content="Base class for client and server manager">
       <link rel="shortcut icon" href="../favicon.ico">
       <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
@@ -71,8 +70,7 @@
 
 
 
-  <h1 id="LiteEntitySystem_EntityManager" data-uid="LiteEntitySystem.EntityManager" class="text-break">Class EntityManager
-</h1>
+  <h1 id="LiteEntitySystem_EntityManager" data-uid="LiteEntitySystem.EntityManager" class="text-break">Class EntityManager</h1>
   <div class="markdown level0 summary"><p>Base class for client and server manager</p>
 </div>
   <div class="markdown level0 conceptual"></div>
@@ -461,30 +459,6 @@
   </table>
 
 
-  <h4 id="LiteEntitySystem_EntityManager_MaxLocalEntityId" data-uid="LiteEntitySystem.EntityManager.MaxLocalEntityId">MaxLocalEntityId</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected int MaxLocalEntityId</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
   <h4 id="LiteEntitySystem_EntityManager_MaxPlayers" data-uid="LiteEntitySystem.EntityManager.MaxPlayers">MaxPlayers</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
@@ -655,6 +629,30 @@
   </table>
 
 
+  <h4 id="LiteEntitySystem_EntityManager_TotalTicksPassed" data-uid="LiteEntitySystem.EntityManager.TotalTicksPassed">TotalTicksPassed</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected int TotalTicksPassed</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
   <h4 id="LiteEntitySystem_EntityManager__tick" data-uid="LiteEntitySystem.EntityManager._tick">_tick</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
@@ -764,6 +762,34 @@
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool InRollBackState { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_EntityManager_IsRunning_" data-uid="LiteEntitySystem.EntityManager.IsRunning*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_IsRunning" data-uid="LiteEntitySystem.EntityManager.IsRunning">IsRunning</h4>
+  <div class="markdown level1 summary"><p>Is entity manager running
+IsRunning - true after first update
+IsRunning - sets to false after Reset() call</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsRunning { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-condensed">
@@ -1436,7 +1462,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Reset()</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual void Reset()</code></pre>
   </div>
 
 

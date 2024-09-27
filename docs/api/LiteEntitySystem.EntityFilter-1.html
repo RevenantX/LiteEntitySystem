@@ -5,11 +5,10 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Class EntityFilter&lt;T&gt;
- </title>
+      <title>Class EntityFilter&lt;T&gt; </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Class EntityFilter&lt;T&gt;
- ">
+      <meta name="title" content="Class EntityFilter&lt;T&gt; ">
+    
     
       <link rel="shortcut icon" href="../favicon.ico">
       <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
@@ -71,14 +70,13 @@
 
 
 
-  <h1 id="LiteEntitySystem_EntityFilter_1" data-uid="LiteEntitySystem.EntityFilter`1" class="text-break">Class EntityFilter&lt;T&gt;
-</h1>
+  <h1 id="LiteEntitySystem_EntityFilter_1" data-uid="LiteEntitySystem.EntityFilter`1" class="text-break">Class EntityFilter&lt;T&gt;</h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-    <div class="level1"><a class="xref" href="LiteEntitySystem.EntityFilter.html">EntityFilter</a></div>
+    <div class="level1"><a class="xref" href="LiteEntitySystem.Collections.AVLTree-1.html">AVLTree</a>&lt;T&gt;</div>
     <div class="level2"><span class="xref">EntityFilter&lt;T&gt;</span></div>
       <div class="level3"><a class="xref" href="LiteEntitySystem.EntityList-1.html">EntityList&lt;T&gt;</a></div>
   </div>
@@ -86,12 +84,25 @@
     <h5>Implements</h5>
     <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;T&gt;</div>
     <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
+    <div><a class="xref" href="LiteEntitySystem.IEntityFilter.html">IEntityFilter</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_Count">AVLTree&lt;T&gt;.Count</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_Contains__0_">AVLTree&lt;T&gt;.Contains(T)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_GetEnumerator">AVLTree&lt;T&gt;.GetEnumerator()</a>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_EntityFilter_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class EntityFilter&lt;T&gt; : EntityFilter, IEnumerable&lt;T&gt;, IEnumerable where T : InternalEntity</code></pre>
+    <pre><code class="lang-csharp hljs">public class EntityFilter&lt;T&gt; : AVLTree&lt;T&gt;, IEnumerable&lt;T&gt;, IEnumerable, IEntityFilter where T : InternalEntity</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -108,122 +119,14 @@
       </tr>
     </tbody>
   </table>
-  <h3 id="constructors">Constructors
-</h3>
-
-
-  <a id="LiteEntitySystem_EntityFilter_1__ctor_" data-uid="LiteEntitySystem.EntityFilter`1.#ctor*"></a>
-  <h4 id="LiteEntitySystem_EntityFilter_1__ctor" data-uid="LiteEntitySystem.EntityFilter`1.#ctor">EntityFilter()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EntityFilter()</code></pre>
-  </div>
-  <h3 id="properties">Properties
-</h3>
-
-
-  <a id="LiteEntitySystem_EntityFilter_1_Count_" data-uid="LiteEntitySystem.EntityFilter`1.Count*"></a>
-  <h4 id="LiteEntitySystem_EntityFilter_1_Count" data-uid="LiteEntitySystem.EntityFilter`1.Count">Count</h4>
-  <div class="markdown level1 summary"><p>Entities count of type <code class="typeparamref">T</code></p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int Count { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="methods">Methods
 </h3>
-
-
-  <a id="LiteEntitySystem_EntityFilter_1_Contains_" data-uid="LiteEntitySystem.EntityFilter`1.Contains*"></a>
-  <h4 id="LiteEntitySystem_EntityFilter_1_Contains__0_" data-uid="LiteEntitySystem.EntityFilter`1.Contains(`0)">Contains(T)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Contains(T entity)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><span class="parametername">entity</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_EntityFilter_1_GetEnumerator_" data-uid="LiteEntitySystem.EntityFilter`1.GetEnumerator*"></a>
-  <h4 id="LiteEntitySystem_EntityFilter_1_GetEnumerator" data-uid="LiteEntitySystem.EntityFilter`1.GetEnumerator">GetEnumerator()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SortedSet&lt;T&gt;.Enumerator GetEnumerator()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.sortedset-1">SortedSet</a>&lt;T&gt;.<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.sortedset-1.enumerator">Enumerator</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 
 
   <a id="LiteEntitySystem_EntityFilter_1_SubscribeToConstructed_" data-uid="LiteEntitySystem.EntityFilter`1.SubscribeToConstructed*"></a>
   <h4 id="LiteEntitySystem_EntityFilter_1_SubscribeToConstructed_System_Action__0__System_Boolean_" data-uid="LiteEntitySystem.EntityFilter`1.SubscribeToConstructed(System.Action{`0},System.Boolean)">SubscribeToConstructed(Action&lt;T&gt;, bool)</h4>
   <div class="markdown level1 summary"><p>Called when entity created and synced</p>
-<param name="onConstructed">callback
-<param name="callOnExisting">call that callback on existing entities in this filter/list
+<param name="onConstructed">callback<param name="callOnExisting">call that callback on existing entities in this filter/list
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -248,31 +151,6 @@
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td><span class="parametername">callOnExisting</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_EntityFilter_1_ToArray_" data-uid="LiteEntitySystem.EntityFilter`1.ToArray*"></a>
-  <h4 id="LiteEntitySystem_EntityFilter_1_ToArray" data-uid="LiteEntitySystem.EntityFilter`1.ToArray">ToArray()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T[] ToArray()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>T[]</td>
         <td></td>
       </tr>
     </tbody>
@@ -339,6 +217,9 @@
   </div>
   <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a>
+  </div>
+  <div>
+      <a class="xref" href="LiteEntitySystem.IEntityFilter.html">IEntityFilter</a>
   </div>
 
 </article>

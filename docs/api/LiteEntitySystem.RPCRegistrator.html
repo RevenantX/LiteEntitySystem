@@ -5,11 +5,10 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Struct RPCRegistrator
- </title>
+      <title>Struct RPCRegistrator </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Struct RPCRegistrator
- ">
+      <meta name="title" content="Struct RPCRegistrator ">
+    
     
       <link rel="shortcut icon" href="../favicon.ico">
       <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
@@ -71,8 +70,7 @@
 
 
 
-  <h1 id="LiteEntitySystem_RPCRegistrator" data-uid="LiteEntitySystem.RPCRegistrator" class="text-break">Struct RPCRegistrator
-</h1>
+  <h1 id="LiteEntitySystem_RPCRegistrator" data-uid="LiteEntitySystem.RPCRegistrator" class="text-break">Struct RPCRegistrator</h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
@@ -212,6 +210,62 @@
 
 
   <a id="LiteEntitySystem_RPCRegistrator_CreateRPCAction_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction*"></a>
+  <h4 id="LiteEntitySystem_RPCRegistrator_CreateRPCAction__1_System_Action___0__LiteEntitySystem_RemoteCall__LiteEntitySystem_ExecuteFlags_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction``1(System.Action{``0},LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)">CreateRPCAction&lt;TEntity&gt;(Action&lt;TEntity&gt;, ref RemoteCall, ExecuteFlags)</h4>
+  <div class="markdown level1 summary"><p>Creates cached rpc action</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void CreateRPCAction&lt;TEntity&gt;(Action&lt;TEntity&gt; methodToCall, ref RemoteCall remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;TEntity&gt;</td>
+        <td><span class="parametername">methodToCall</span></td>
+        <td><p>RPC method to call</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.RemoteCall.html">RemoteCall</a></td>
+        <td><span class="parametername">remoteCallHandle</span></td>
+        <td><p>output handle that should be used to call rpc</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.ExecuteFlags.html">ExecuteFlags</a></td>
+        <td><span class="parametername">flags</span></td>
+        <td><p>RPC execution flags</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TEntity</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_RPCRegistrator_CreateRPCAction_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction*"></a>
   <h4 id="LiteEntitySystem_RPCRegistrator_CreateRPCAction__1___0_System_Action_LiteEntitySystem_RemoteCall__LiteEntitySystem_ExecuteFlags_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction``1(``0,System.Action,LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)">CreateRPCAction&lt;TEntity&gt;(TEntity, Action, ref RemoteCall, ExecuteFlags)</h4>
   <div class="markdown level1 summary"><p>Creates cached rpc action</p>
 </div>
@@ -274,6 +328,186 @@
 
 
   <a id="LiteEntitySystem_RPCRegistrator_CreateRPCAction_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction*"></a>
+  <h4 id="LiteEntitySystem_RPCRegistrator_CreateRPCAction__2_LiteEntitySystem_SpanAction___0___1__LiteEntitySystem_RemoteCallSpan___1___LiteEntitySystem_ExecuteFlags_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(LiteEntitySystem.SpanAction{``0,``1},LiteEntitySystem.RemoteCallSpan{``1}@,LiteEntitySystem.ExecuteFlags)">CreateRPCAction&lt;TEntity, T&gt;(SpanAction&lt;TEntity, T&gt;, ref RemoteCallSpan&lt;T&gt;, ExecuteFlags)</h4>
+  <div class="markdown level1 summary"><p>Creates cached rpc action with Span argument</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void CreateRPCAction&lt;TEntity, T&gt;(SpanAction&lt;TEntity, T&gt; methodToCall, ref RemoteCallSpan&lt;T&gt; remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity where T : unmanaged</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.SpanAction-2.html">SpanAction</a>&lt;TEntity, T&gt;</td>
+        <td><span class="parametername">methodToCall</span></td>
+        <td><p>RPC method to call</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.RemoteCallSpan-1.html">RemoteCallSpan</a>&lt;T&gt;</td>
+        <td><span class="parametername">remoteCallHandle</span></td>
+        <td><p>output handle that should be used to call rpc</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.ExecuteFlags.html">ExecuteFlags</a></td>
+        <td><span class="parametername">flags</span></td>
+        <td><p>RPC execution flags</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TEntity</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_RPCRegistrator_CreateRPCAction_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction*"></a>
+  <h4 id="LiteEntitySystem_RPCRegistrator_CreateRPCAction__2_System_Action___0___1__LiteEntitySystem_RemoteCallSerializable___1___LiteEntitySystem_ExecuteFlags_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCallSerializable{``1}@,LiteEntitySystem.ExecuteFlags)">CreateRPCAction&lt;TEntity, T&gt;(Action&lt;TEntity, T&gt;, ref RemoteCallSerializable&lt;T&gt;, ExecuteFlags)</h4>
+  <div class="markdown level1 summary"><p>Creates cached rpc action with ISpanSerializable argument</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void CreateRPCAction&lt;TEntity, T&gt;(Action&lt;TEntity, T&gt; methodToCall, ref RemoteCallSerializable&lt;T&gt; remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity where T : struct, ISpanSerializable</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-2">Action</a>&lt;TEntity, T&gt;</td>
+        <td><span class="parametername">methodToCall</span></td>
+        <td><p>RPC method to call</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.RemoteCallSerializable-1.html">RemoteCallSerializable</a>&lt;T&gt;</td>
+        <td><span class="parametername">remoteCallHandle</span></td>
+        <td><p>output handle that should be used to call rpc</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.ExecuteFlags.html">ExecuteFlags</a></td>
+        <td><span class="parametername">flags</span></td>
+        <td><p>RPC execution flags</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TEntity</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_RPCRegistrator_CreateRPCAction_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction*"></a>
+  <h4 id="LiteEntitySystem_RPCRegistrator_CreateRPCAction__2_System_Action___0___1__LiteEntitySystem_RemoteCall___1___LiteEntitySystem_ExecuteFlags_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCall{``1}@,LiteEntitySystem.ExecuteFlags)">CreateRPCAction&lt;TEntity, T&gt;(Action&lt;TEntity, T&gt;, ref RemoteCall&lt;T&gt;, ExecuteFlags)</h4>
+  <div class="markdown level1 summary"><p>Creates cached rpc action with valueType argument</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void CreateRPCAction&lt;TEntity, T&gt;(Action&lt;TEntity, T&gt; methodToCall, ref RemoteCall&lt;T&gt; remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity where T : unmanaged</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-2">Action</a>&lt;TEntity, T&gt;</td>
+        <td><span class="parametername">methodToCall</span></td>
+        <td><p>RPC method to call</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.RemoteCall-1.html">RemoteCall</a>&lt;T&gt;</td>
+        <td><span class="parametername">remoteCallHandle</span></td>
+        <td><p>output handle that should be used to call rpc</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.ExecuteFlags.html">ExecuteFlags</a></td>
+        <td><span class="parametername">flags</span></td>
+        <td><p>RPC execution flags</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TEntity</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_RPCRegistrator_CreateRPCAction_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction*"></a>
   <h4 id="LiteEntitySystem_RPCRegistrator_CreateRPCAction__2___0_LiteEntitySystem_SpanAction___1__LiteEntitySystem_RemoteCallSpan___1___LiteEntitySystem_ExecuteFlags_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(``0,LiteEntitySystem.SpanAction{``1},LiteEntitySystem.RemoteCallSpan{``1}@,LiteEntitySystem.ExecuteFlags)">CreateRPCAction&lt;TEntity, T&gt;(TEntity, SpanAction&lt;T&gt;, ref RemoteCallSpan&lt;T&gt;, ExecuteFlags)</h4>
   <div class="markdown level1 summary"><p>Creates cached rpc action with Span argument</p>
 </div>
@@ -306,6 +540,72 @@
       </tr>
       <tr>
         <td><a class="xref" href="LiteEntitySystem.RemoteCallSpan-1.html">RemoteCallSpan</a>&lt;T&gt;</td>
+        <td><span class="parametername">remoteCallHandle</span></td>
+        <td><p>output handle that should be used to call rpc</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.ExecuteFlags.html">ExecuteFlags</a></td>
+        <td><span class="parametername">flags</span></td>
+        <td><p>RPC execution flags</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TEntity</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_RPCRegistrator_CreateRPCAction_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction*"></a>
+  <h4 id="LiteEntitySystem_RPCRegistrator_CreateRPCAction__2___0_System_Action___1__LiteEntitySystem_RemoteCallSerializable___1___LiteEntitySystem_ExecuteFlags_" data-uid="LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCallSerializable{``1}@,LiteEntitySystem.ExecuteFlags)">CreateRPCAction&lt;TEntity, T&gt;(TEntity, Action&lt;T&gt;, ref RemoteCallSerializable&lt;T&gt;, ExecuteFlags)</h4>
+  <div class="markdown level1 summary"><p>Creates cached rpc action with ISpanSerializable argument</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void CreateRPCAction&lt;TEntity, T&gt;(TEntity self, Action&lt;T&gt; methodToCall, ref RemoteCallSerializable&lt;T&gt; remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity where T : struct, ISpanSerializable</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TEntity</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>Target entity with RPC</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
+        <td><span class="parametername">methodToCall</span></td>
+        <td><p>RPC method to call</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.RemoteCallSerializable-1.html">RemoteCallSerializable</a>&lt;T&gt;</td>
         <td><span class="parametername">remoteCallHandle</span></td>
         <td><p>output handle that should be used to call rpc</p>
 </td>
