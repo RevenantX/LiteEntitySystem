@@ -676,6 +676,11 @@ namespace LiteEntitySystem
         {
             if (PlayersCount == 0)
                 return;
+            if (EntitiesDict[entityId] == null)
+            {
+                Logger.LogError($"Executing RPC for null entity?: {entityId}");
+                return;
+            }
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             rpc.Init(_tick, 0, rpcId, flags);
             _stateSerializers[entityId].AddRpcPacket(rpc);
@@ -686,6 +691,11 @@ namespace LiteEntitySystem
         {
             if (PlayersCount == 0)
                 return;
+            if (EntitiesDict[entityId] == null)
+            {
+                Logger.LogError($"Executing RPC for null entity?: {entityId}");
+                return;
+            }
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             int dataSize = sizeof(T) * value.Length;
             if (dataSize > ushort.MaxValue)

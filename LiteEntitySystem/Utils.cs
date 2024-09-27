@@ -5,11 +5,112 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using LiteEntitySystem.Internal;
 
-namespace LiteEntitySystem.Internal
+namespace LiteEntitySystem
 {
     public static class Utils
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float MoveTowards(float current, float target, float maxDelta) =>
+            Math.Abs(target - current) <= maxDelta ? target : current + Math.Sign(target - current) * maxDelta;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe int WriteStruct<T>(this Span<byte> data, T value) where T : unmanaged
+        {
+            fixed (byte* rawData = data)
+                *(T*) rawData = value;
+            return sizeof(T);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe int ReadStruct<T>(this ReadOnlySpan<byte> data, out T value) where T : unmanaged
+        {
+            fixed (byte* rawData = data)
+                value = *(T*)rawData;
+            return sizeof(T);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe T ReadStruct<T>(this ReadOnlySpan<byte> data) where T : unmanaged
+        {
+            fixed (byte* rawData = data) 
+                return *(T*)rawData;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe int SizeOfStruct<T>() where T : unmanaged
+        {
+            return sizeof(T);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe bool HasFlagFast<T>(this T e, T flag) where T : unmanaged, Enum
+        {
+            switch (sizeof(T))
+            {
+                case 1: return (*(byte*)&e  & *(byte*)&flag)  != 0;
+                case 2: return (*(short*)&e & *(short*)&flag) != 0;
+                case 4: return (*(int*)&e   & *(int*)&flag)   != 0;
+                case 8: return (*(long*)&e  & *(long*)&flag)  != 0;
+            }
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe long GetEnumValue<T>(this T e) where T : unmanaged, Enum
+        {
+            switch (sizeof(T))
+            {
+                case 1: return *(byte*)&e;
+                case 2: return *(short*)&e;
+                case 4: return *(int*)&e;
+                case 8: return *(long*)&e;
+            }
+            return -1;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe int GetEnumValueInt<T>(this T e) where T : unmanaged, Enum
+        {
+            switch (sizeof(T))
+            {
+                case 1: return *(byte*)&e;
+                case 2: return *(short*)&e;
+                case 4: return *(int*)&e;
+                case 8: throw new Exception("Trying to get int value from long enum");
+            }
+            return -1;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe bool HasFlagFast<T>(this SyncVar<T> e, T flag) where T : unmanaged, Enum
+        {
+            var v = e.Value;
+            switch (sizeof(T))
+            {
+                case 1: return (*(byte*)&v  & *(byte*)&flag)  != 0;
+                case 2: return (*(short*)&v & *(short*)&flag) != 0;
+                case 4: return (*(int*)&v   & *(int*)&flag)   != 0;
+                case 8: return (*(long*)&v  & *(long*)&flag)  != 0;
+            }
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe long GetEnumValue<T>(this SyncVar<T> e) where T : unmanaged, Enum
+        {
+            var v = e.Value;
+            switch (sizeof(T))
+            {
+                case 1: return *(byte*)&v;
+                case 2: return *(short*)&v;
+                case 4: return *(int*)&v;
+                case 8: return *(long*)&v;
+            }
+            return -1;
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool FastEquals<T>(ref T a, ref T b) where T : unmanaged
         {
@@ -66,6 +167,9 @@ namespace LiteEntitySystem.Internal
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Lerp(float a, float b, float t) => a + (b - a) * t;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float InvLerp(float a, float b, float v) => Math.Clamp((v - a) / (b - a), 0f, 1f);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static long Lerp(long a, long b, float t) => (long)(a + (b - a) * t);
@@ -90,7 +194,7 @@ namespace LiteEntitySystem.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static T CreateDelegateHelper<T>(this MethodInfo method) where T : Delegate => (T)method.CreateDelegate(typeof(T));
         
-        public static Stack<Type> GetBaseTypes(Type ofType, Type until, bool includeSelf)
+        internal static Stack<Type> GetBaseTypes(Type ofType, Type until, bool includeSelf)
         {
             var resultTypes = new Stack<Type>();
             if(!includeSelf)
@@ -156,7 +260,7 @@ namespace LiteEntitySystem.Internal
         private static readonly int DotNetOffset = IntPtr.Size + 4;
         private static readonly bool IsMono;
 
-        public static int GetFieldOffset(FieldInfo fieldInfo)
+        internal static int GetFieldOffset(FieldInfo fieldInfo)
         {
             //build offsets in runtime metadata
             if(fieldInfo.DeclaringType != null)

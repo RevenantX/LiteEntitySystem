@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
@@ -27,7 +26,7 @@ namespace LiteEntitySystem.Internal
             OwnerChange
         }
         
-        public static readonly int HeaderSize = Helpers.SizeOfStruct<EntityDataHeader>();
+        public static readonly int HeaderSize = Utils.SizeOfStruct<EntityDataHeader>();
         public const int DiffHeaderSize = 4;
         public const int MaxStateSize = 32767; //half of ushort
         

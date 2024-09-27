@@ -11,7 +11,6 @@ namespace LiteEntitySystem
     { 
         internal void Add(InternalEntity entity);
         internal void Remove(InternalEntity entity);
-        internal void Clear();
     }
 
     //SortedSet like collection based on AVLTree
@@ -58,12 +57,12 @@ namespace LiteEntitySystem
 
         void IEntityFilter.Add(InternalEntity entity) => Add((T) entity);
         void IEntityFilter.Remove(InternalEntity entity) => Remove((T) entity);
-        void IEntityFilter.Clear() => Clear();
 
         internal override void Clear()
         {
             OnConstructed = null;
             OnDestroyed = null;
+            base.Clear();
         }
     }
 

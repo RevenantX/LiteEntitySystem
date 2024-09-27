@@ -136,8 +136,6 @@ namespace LiteEntitySystem
         /// </summary>
         public byte PlayerId => InternalPlayerId;
 
-        public int GameSpeedMultiplier => SpeedMultiplier;
-
         public readonly byte HeaderByte;
         
         public bool InRollBackState => UpdateMode == UpdateMode.PredictionRollback;
@@ -177,8 +175,10 @@ namespace LiteEntitySystem
 
         internal byte InternalPlayerId;
         protected readonly InputProcessor InputProcessor;
-        protected int SpeedMultiplier;
+        protected float SpeedMultiplier;
         protected int TotalTicksPassed;
+
+        protected const float TimeSpeedChangeCoef = 0.1f;
 
         /// <summary>
         /// Is entity manager running
@@ -258,7 +258,7 @@ namespace LiteEntitySystem
             DeltaTimeF = (float) DeltaTime;
             _stopwatchFrequency = 1.0 / Stopwatch.Frequency;
             _deltaTimeTicks = (long)(DeltaTime * Stopwatch.Frequency);
-            _slowdownTicks = (long)(DeltaTime * 0.01f * Stopwatch.Frequency);
+            _slowdownTicks = (long)(DeltaTime * TimeSpeedChangeCoef * Stopwatch.Frequency);
             if (_slowdownTicks < 100)
                 _slowdownTicks = 100;
         }
@@ -579,7 +579,7 @@ namespace LiteEntitySystem
             VisualDeltaTime = ticksDelta * _stopwatchFrequency;
             _accumulator += ticksDelta;
             _lastTime = elapsedTicks;
-            long maxTicks = _deltaTimeTicks - SpeedMultiplier * _slowdownTicks;
+            long maxTicks = (long)(_deltaTimeTicks + SpeedMultiplier * _slowdownTicks);
 
             int updates = 0;
             while (_accumulator >= maxTicks)
