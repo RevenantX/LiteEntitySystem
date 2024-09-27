@@ -25,12 +25,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Sync entity only for owner player
         /// </summary>
-        OnlyForOwner = 1 << 3,    
-        
-        /// <summary>
-        /// Handle sync details before sending to player
-        /// </summary>
-        CustomSync = 1 << 4 
+        OnlyForOwner = 1 << 3
     }
     
     [AttributeUsage(AttributeTargets.Class)]
