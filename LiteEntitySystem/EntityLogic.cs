@@ -193,6 +193,13 @@ namespace LiteEntitySystem
         {
             if (IsDestroyed)
                 return;
+
+            //temporary copy childs to array because childSet can be modified inside
+            var childsCopy = _childsSet?.ToArray();
+            if (childsCopy != null) //notify child entities about parent destruction
+                foreach (var entityLogic in childsCopy)
+                    entityLogic.OnBeforeParentDestroy();
+
             base.DestroyInternal();
             if (EntityManager.IsClient && IsLocalControlled && !IsLocal)
             {
@@ -203,11 +210,18 @@ namespace LiteEntitySystem
             {
                 parent._childsSet.Remove(this);
             }
-            if(_childsSet != null)
+
+            if (_childsSet != null)
                 foreach (var entityLogic in _childsSet)
-                {
                     entityLogic.Destroy();
-                }
+        }
+
+        /// <summary>
+        /// Called before parent destroy
+        /// </summary>
+        protected virtual void OnBeforeParentDestroy()
+        {
+            
         }
         
         private void OnOwnerChange(byte prevOwner)
