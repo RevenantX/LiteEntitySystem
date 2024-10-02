@@ -80,6 +80,11 @@ namespace LiteEntitySystem
         public int LerpBufferCount => _readyStates.Count;
 
         /// <summary>
+        /// Total states time in interpolation buffer
+        /// </summary>
+        public float LerpBufferTimeLength => _readyStates.Count * DeltaTimeF * (int)_serverSendRate;
+
+        /// <summary>
         /// Client network peer
         /// </summary>
         public AbstractNetPeer NetPeer => _netPeer;
@@ -93,7 +98,7 @@ namespace LiteEntitySystem
         /// Preferred input and incoming states buffer length in seconds lowest bound
         /// Buffer automatically increases to Jitter time + PreferredBufferTimeLowest
         /// </summary>
-        public float PreferredBufferTimeLowest = 0.050f; 
+        public float PreferredBufferTimeLowest = 0.010f; 
         
         /// <summary>
         /// Preferred input and incoming states buffer length in seconds lowest bound
@@ -102,6 +107,7 @@ namespace LiteEntitySystem
         public float PreferredBufferTimeHighest = 0.100f;
         
         private const int InputBufferSize = 128;
+        private const float TimeSpeedChangeFadeTime = 0.1f;
 
         struct InputCommand
         {
@@ -426,16 +432,22 @@ namespace LiteEntitySystem
 
             //tune buffer playing speed 
             _lerpTime = Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTimeF;
-            _lerpTime *= Utils.Lerp(1f+TimeSpeedChangeCoef, 1f-TimeSpeedChangeCoef, Utils.InvLerp(lowestBound, upperBound, _readyStates.Count * DeltaTimeF));
+            _lerpTime *= 1 - GetSpeedMultiplier(LerpBufferTimeLength)*TimeSpeedChangeCoef;
 
-            //tune game speed
-            SpeedMultiplier = Utils.Lerp(-1f, 1f, Utils.InvLerp(lowestBound, upperBound, _stateB.BufferedInputsCount * DeltaTimeF));
+            //tune game prediction and input generation speed
+            SpeedMultiplier = GetSpeedMultiplier(_stateB.BufferedInputsCount * DeltaTimeF);
             
             //remove processed inputs
             while (_inputCommands.Count > 0 && Utils.SequenceDiff(_stateB.ProcessedTick, _inputCommands.Peek().Tick) >= 0)
                 _inputPool.Enqueue(_inputCommands.Dequeue().Data);
             
             return true;
+
+            float GetSpeedMultiplier(float bufferTime)
+            {
+                return Utils.Lerp(-1f, 0f, Utils.InvLerp(lowestBound - TimeSpeedChangeFadeTime, lowestBound, bufferTime)) +
+                       Utils.Lerp(0f, 1f, Utils.InvLerp(upperBound, upperBound + TimeSpeedChangeFadeTime, bufferTime));
+            }
         }
 
         private unsafe void GoToNextState()
