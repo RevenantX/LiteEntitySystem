@@ -245,6 +245,11 @@ namespace LiteEntitySystem
 
         protected void SendRequest<T>(T request) where T : class, new()
         {
+            if (EntityManager.InRollBackState)
+            {
+                Logger.LogWarning("SendRequest is ignored in Rollback mode");
+                return;
+            }
             _requestWriter.SetPosition(5);
             _requestWriter.Put(_requestId);
             _packetProcessor.Write(_requestWriter, request);
@@ -254,6 +259,12 @@ namespace LiteEntitySystem
         
         protected void SendRequest<T>(T request, Action<bool> onResult) where T : class, new()
         {
+            if (EntityManager.InRollBackState)
+            {
+                Logger.LogWarning("SendRequest is ignored in Rollback mode");
+                onResult(false);
+                return;
+            }
             _requestWriter.SetPosition(5);
             _requestWriter.Put(_requestId);
             _packetProcessor.Write(_requestWriter, request);
@@ -264,6 +275,11 @@ namespace LiteEntitySystem
         
         protected void SendRequestStruct<T>(T request) where T : struct, INetSerializable
         {
+            if (EntityManager.InRollBackState)
+            {
+                Logger.LogWarning("SendRequest is ignored in Rollback mode");
+                return;
+            }
             _requestWriter.SetPosition(5);
             _requestWriter.Put(_requestId);
             _packetProcessor.WriteNetSerializable(_requestWriter, ref request);
@@ -273,6 +289,12 @@ namespace LiteEntitySystem
         
         protected void SendRequestStruct<T>(T request, Action<bool> onResult) where T : struct, INetSerializable
         {
+            if (EntityManager.InRollBackState)
+            {
+                Logger.LogWarning("SendRequest is ignored in Rollback mode");
+                onResult(false);
+                return;
+            }
             _requestWriter.SetPosition(5);
             _requestWriter.Put(_requestId);
             _packetProcessor.WriteNetSerializable(_requestWriter, ref request);
