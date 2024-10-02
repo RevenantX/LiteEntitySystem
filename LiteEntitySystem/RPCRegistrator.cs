@@ -77,7 +77,7 @@ namespace LiteEntitySystem
         /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
         public void BindOnChange<T, TEntity>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
         {
-            BindOnChange(self, ref syncVar, onChangedAction, self.GetClassData().Fields[syncVar.FieldId].OnSyncExecutionOrder);
+            BindOnChange(self, ref syncVar, onChangedAction, self.ClassData.Fields[syncVar.FieldId].OnSyncExecutionOrder);
         }
         
         /// <summary>
@@ -92,7 +92,7 @@ namespace LiteEntitySystem
             //if (self.EntityManager.IsServer)
             //    return;
             CheckTarget(self, onChangedAction.Target);
-            ref var field = ref self.GetClassData().Fields[syncVar.FieldId];
+            ref var field = ref self.ClassData.Fields[syncVar.FieldId];
             field.OnSyncExecutionOrder = executionOrder;
             var methodToCall = onChangedAction.Method.CreateDelegateHelper<Action<TEntity, T>>();
             field.OnSync = (classPtr, buffer) =>

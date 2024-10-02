@@ -24,6 +24,8 @@ namespace LiteEntitySystem.Internal
         [SyncVarFlags(SyncFlags.NeverRollBack)]
         internal SyncVar<byte> InternalOwnerId;
         
+        internal byte[] IOBuffer;
+        
         /// <summary>
         /// Entity class id
         /// </summary>
@@ -112,8 +114,8 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         public bool IsLocal => Id >= EntityManager.MaxSyncedEntityCount;
         
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal ref EntityClassData GetClassData() => ref EntityManager.ClassDataDict[ClassId];
+        internal ref EntityClassData ClassData => ref EntityManager.ClassDataDict[ClassId];
+
 
         /// <summary>
         /// Destroy entity
@@ -149,6 +151,7 @@ namespace LiteEntitySystem.Internal
             _isDestroyed.Value = true;
             OnDestroy();
             EntityManager.RemoveEntity(this);
+            ClassData.ReleaseDataCache(this);
         }
 
         internal void SafeUpdate()
@@ -195,7 +198,7 @@ namespace LiteEntitySystem.Internal
 
         internal void RegisterRpcInternal()
         {
-            ref var classData = ref GetClassData();
+            ref var classData = ref ClassData;
             
             //setup field ids for BindOnChange and pass on server this for OnChangedEvent to StateSerializer
             var onChangeTarget = EntityManager.IsServer && !IsLocal ? this : null;
@@ -266,6 +269,7 @@ namespace LiteEntitySystem.Internal
             ClassId = entityParams.ClassId;
             Version = entityParams.Version;
             CreationTick = entityParams.CreationTime;
+            ClassData.AllocateDataCache(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

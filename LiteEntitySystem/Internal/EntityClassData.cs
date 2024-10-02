@@ -58,17 +58,103 @@ namespace LiteEntitySystem.Internal
         public readonly int LagCompensatedCount;
         public readonly EntityFlags Flags;
         public readonly EntityConstructor<InternalEntity> EntityConstructor;
+        
         public RpcFieldInfo[] RemoteCallsClient;
         
         private readonly bool _isCreated;
         private readonly Type[] _baseTypes;
+        private readonly Queue<byte[]> _dataCache;
         
         private static readonly Type InternalEntityType = typeof(InternalEntity);
         private static readonly Type SingletonEntityType = typeof(SingletonEntityLogic);
         private static readonly Type SyncableFieldType = typeof(SyncableField);
 
+        private int _dataCacheSize;
+        private int _historySize;
+        private int _maxHistoryCount;
+        private int _historyStart;
+
+        public Span<byte> ClientInterpolatedPrevData(InternalEntity e) => new (e.IOBuffer, 0, InterpolatedFieldsSize);
+        public Span<byte> ClientInterpolatedNextData(InternalEntity e) => new (e.IOBuffer, InterpolatedFieldsSize, InterpolatedFieldsSize);
+        public Span<byte> ClientPredictedData(InternalEntity e) => new (e.IOBuffer, InterpolatedFieldsSize*2, PredictedSize);
+        
+        public unsafe void WriteHistory(EntityLogic e, ushort tick)
+        {
+            int historyOffset = ((tick % _maxHistoryCount)+1)*LagCompensatedSize;
+            fixed (byte* history = &e.IOBuffer[_historyStart])
+            {
+                for (int i = 0; i < LagCompensatedCount; i++)
+                {
+                    ref var field = ref LagCompensatedFields[i];
+                    field.TypeProcessor.WriteTo(e, field.Offset, history + historyOffset);
+                    historyOffset += field.IntSize;
+                }
+            }
+        }
+
+        public unsafe void LoadHistroy(NetPlayer player, EntityLogic e)
+        {
+            int historyAOffset = ((player.StateATick % _maxHistoryCount)+1)*LagCompensatedSize;
+            int historyBOffset = ((player.StateBTick % _maxHistoryCount)+1)*LagCompensatedSize;
+            int historyCurrent = 0;
+            fixed (byte* history = &e.IOBuffer[_historyStart])
+            {
+                for (int i = 0; i < LagCompensatedCount; i++)
+                {
+                    ref var field = ref LagCompensatedFields[i];
+                    field.TypeProcessor.LoadHistory(
+                        e, 
+                        field.Offset,
+                        history + historyCurrent,
+                        history + historyAOffset,
+                        history + historyBOffset,
+                        player.LerpTime);
+                    historyAOffset += field.IntSize;
+                    historyBOffset += field.IntSize;
+                    historyCurrent += field.IntSize;
+                }
+            }
+        }
+
+        public unsafe void UndoHistory(EntityLogic e)
+        {
+            int historyOffset = 0;
+            fixed (byte* history = &e.IOBuffer[_historyStart])
+            {
+                for (int i = 0; i < LagCompensatedCount; i++)
+                {
+                    ref var field = ref LagCompensatedFields[i];
+                    field.TypeProcessor.SetFrom(e, field.Offset, history + historyOffset);
+                    historyOffset += field.IntSize;
+                }
+            }
+        }
+        
+        public void AllocateDataCache(InternalEntity entity)
+        {
+            if (_maxHistoryCount == 0)
+            {
+                _maxHistoryCount = (byte)entity.EntityManager.MaxHistorySize;
+                _historySize = (_maxHistoryCount + 1) * LagCompensatedSize;
+                _dataCacheSize = entity.IsServer ? _historySize : (InterpolatedFieldsSize * 2 + PredictedSize + _historySize);
+                _historyStart = entity.IsServer ? 0 : (InterpolatedFieldsSize * 2 + PredictedSize);
+            }
+            entity.IOBuffer = _dataCache.Count > 0 ? _dataCache.Dequeue() : new byte[_dataCacheSize];
+        }
+
+        public void ReleaseDataCache(InternalEntity entity)
+        {
+            if (entity.IOBuffer != null && entity.IOBuffer.Length == _dataCacheSize)
+            {
+                _dataCache.Enqueue(entity.IOBuffer);
+                Array.Clear(entity.IOBuffer, 0, _dataCacheSize);
+                entity.IOBuffer = null;
+            }
+        }
+
         public EntityClassData(ushort filterId, Type entType, RegisteredTypeInfo typeInfo)
         {
+            _dataCache = new Queue<byte[]>();
             HasRemoteRollbackFields = false;
             PredictedSize = 0;
             FixedFieldsSize = 0;
@@ -76,6 +162,12 @@ namespace LiteEntitySystem.Internal
             LagCompensatedCount = 0;
             InterpolatedCount = 0;
             InterpolatedFieldsSize = 0;
+            
+            _dataCacheSize = 0;
+            _maxHistoryCount = 0;
+            _historySize = 0;
+            _historyStart = 0;
+            
             RemoteCallsClient = null;
 
             ClassId = typeInfo.ClassId;
@@ -222,7 +314,6 @@ namespace LiteEntitySystem.Internal
                     field.PredictedOffset = -1;
                 }
             }
-
             _isCreated = true;
         }
 
