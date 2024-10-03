@@ -172,6 +172,14 @@ namespace LiteEntitySystem.Internal
         protected internal virtual void Update()
         {
         }
+        
+        /// <summary>
+        /// Called at rollback begin before all values reset to first frame in rollback queue.
+        /// </summary>
+        protected internal virtual void OnBeforeRollback()
+        {
+            
+        }
 
         /// <summary>
         /// Called at rollback begin after all values reset to first frame in rollback queue.

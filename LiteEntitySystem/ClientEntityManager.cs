@@ -457,6 +457,7 @@ namespace LiteEntitySystem
                 ref readonly var classData = ref entity.ClassData;
                 if(entity.IsRemoteControlled && !classData.HasRemoteRollbackFields)
                     continue;
+                entity.OnBeforeRollback();
 
                 fixed (byte* predictedData = classData.ClientPredictedData(entity))
                 {
