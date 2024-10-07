@@ -73,7 +73,6 @@ namespace LiteEntitySystem.Internal
                     else
                         _syncRpcTail.Next = rpc;
                     _syncRpcTail = rpc;
-                    rpc.Header.Tick = _entity.ServerManager.ExecutedTick;
                     break;
             }
         }

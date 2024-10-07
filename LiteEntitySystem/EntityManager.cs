@@ -151,7 +151,6 @@ namespace LiteEntitySystem
 
         protected int MaxSyncedEntityId = -1; //current maximum id
         private int _maxLocalEntityId = -1;
-        internal ushort ExecutedTick;
         protected ushort _tick;
         
         protected readonly EntityFilter<InternalEntity> AliveEntities = new();
@@ -270,7 +269,6 @@ namespace LiteEntitySystem
         public virtual void Reset()
         {
             EntitiesCount = 0;
-            ExecutedTick = 0;
 
             TotalTicksPassed = 0;
             _tick = 0;
@@ -594,7 +592,6 @@ namespace LiteEntitySystem
                     return;
                 }
                 OnLogicTick();
-                ExecutedTick = _tick;
                 _tick++;
                 TotalTicksPassed++;
 
