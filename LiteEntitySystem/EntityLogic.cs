@@ -127,7 +127,7 @@ namespace LiteEntitySystem
 
                 var predictedEntity = ServerManager.AddEntity(initMethod);
                 var player = ServerManager.GetPlayer(InternalOwnerId);
-                ushort playerServerTick = player.SimulatedServerTick;
+                ushort playerServerTick = Utils.LerpSequence(player.StateATick, player.StateBTick, player.LerpTime);
                 while (playerServerTick != ServerManager.Tick)
                 {
                     predictedEntity.Update();

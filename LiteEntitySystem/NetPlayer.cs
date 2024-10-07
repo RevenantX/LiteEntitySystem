@@ -13,8 +13,9 @@ namespace LiteEntitySystem
         internal ushort CurrentServerTick;
         internal ushort StateATick;
         internal ushort StateBTick;
-        internal ushort SimulatedServerTick;
         internal float LerpTime;
+        
+        //server only
         internal NetPlayerState State;
         internal readonly SequenceBinaryHeap<InputBuffer> AvailableInput = new (ServerEntityManager.MaxStoredInputs);
 

@@ -394,8 +394,7 @@ namespace LiteEntitySystem
                 MaxSyncedEntityId--;
 
             //calculate minimalTick and potential baseline size
-            ushort executedTick = (ushort)(_tick - 1);
-            _minimalTick = executedTick;
+            _minimalTick = ExecutedTick;
             
             int maxBaseline = 0;
             int playersCount = _netPlayers.Count;
@@ -408,7 +407,7 @@ namespace LiteEntitySystem
                 {
                     maxBaseline = sizeof(BaselineDataHeader);
                     for (ushort i = FirstEntityId; i <= MaxSyncedEntityId; i++)
-                        maxBaseline += _stateSerializers[i].GetMaximumSize(executedTick);
+                        maxBaseline += _stateSerializers[i].GetMaximumSize(ExecutedTick);
                     if (_packetBuffer.Length < maxBaseline)
                         _packetBuffer = new byte[maxBaseline];
                     int maxCompressedSize = LZ4Codec.MaximumOutputSize(_packetBuffer.Length) + sizeof(BaselineDataHeader);
@@ -427,7 +426,7 @@ namespace LiteEntitySystem
                 {
                     int originalLength = 0;
                     for (ushort i = FirstEntityId; i <= MaxSyncedEntityId; i++)
-                        _stateSerializers[i].MakeBaseline(player.Id, executedTick, packetBuffer, ref originalLength);
+                        _stateSerializers[i].MakeBaseline(player.Id, ExecutedTick, packetBuffer, ref originalLength);
                     
                     //set header
                     *(BaselineDataHeader*)compressionBuffer = new BaselineDataHeader
@@ -435,7 +434,7 @@ namespace LiteEntitySystem
                         UserHeader = HeaderByte,
                         PacketType = InternalPackets.BaselineSync,
                         OriginalLength = originalLength,
-                        Tick = executedTick,
+                        Tick = ExecutedTick,
                         PlayerId = player.Id,
                         SendRate = (byte)SendRate
                     };
@@ -449,10 +448,10 @@ namespace LiteEntitySystem
                         LZ4Level.L00_FAST);
                     
                     player.Peer.SendReliableOrdered(new ReadOnlySpan<byte>(_compressionBuffer, 0, sizeof(BaselineDataHeader) + encodedLength));
-                    player.StateATick = executedTick;
-                    player.CurrentServerTick = executedTick;
+                    player.StateATick = ExecutedTick;
+                    player.CurrentServerTick = ExecutedTick;
                     player.State = NetPlayerState.WaitingForFirstInput;
-                    Logger.Log($"[SEM] SendWorld to player {player.Id}. orig: {originalLength}, bytes, compressed: {encodedLength}, ExecutedTick: {executedTick}");
+                    Logger.Log($"[SEM] SendWorld to player {player.Id}. orig: {originalLength}, bytes, compressed: {encodedLength}, ExecutedTick: {ExecutedTick}");
                     continue;
                 }
                 if (player.State != NetPlayerState.Active)
@@ -467,7 +466,7 @@ namespace LiteEntitySystem
                 var header = (DiffPartHeader*)packetBuffer;
                 header->UserHeader = HeaderByte;
                 header->Part = 0;
-                header->Tick = executedTick;
+                header->Tick = ExecutedTick;
                 int writePosition = sizeof(DiffPartHeader);
                 
                 ushort maxPartSize = (ushort)(player.Peer.GetMaxUnreliablePacketSize() - sizeof(LastPartData));
@@ -487,7 +486,7 @@ namespace LiteEntitySystem
 
                     var diffResult = stateSerializer.MakeDiff(
                         player.Id,
-                        executedTick,
+                        ExecutedTick,
                         _minimalTick,
                         player.CurrentServerTick,
                         packetBuffer,
@@ -505,7 +504,7 @@ namespace LiteEntitySystem
                         {
                             if (header->Part == MaxParts-1)
                             {
-                                Logger.Log($"P:{pidx} Request baseline {executedTick}");
+                                Logger.Log($"P:{pidx} Request baseline {ExecutedTick}");
                                 player.State = NetPlayerState.RequestBaseline;
                                 break;
                             }
@@ -614,7 +613,6 @@ namespace LiteEntitySystem
                 player.StateBTick = inputData.StateB;
                 player.LerpTime = inputData.LerpMsec;
                 //Logger.Log($"[SEM] CT: {player.LastProcessedTick}, stateA: {player.StateATick}, stateB: {player.StateBTick}");
-                player.SimulatedServerTick = Utils.LerpSequence(inputData.StateA, inputData.StateB, inputData.LerpMsec);
                 if (player.State == NetPlayerState.WaitingForFirstInputProcess)
                     player.State = NetPlayerState.Active;
 

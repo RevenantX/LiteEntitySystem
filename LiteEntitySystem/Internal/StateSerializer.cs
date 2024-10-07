@@ -22,8 +22,7 @@ namespace LiteEntitySystem.Internal
         private enum RPCMode
         {
             Normal,
-            Sync,
-            OwnerChange
+            Sync
         }
         
         public static readonly int HeaderSize = Utils.SizeOfStruct<EntityDataHeader>();
@@ -60,15 +59,12 @@ namespace LiteEntitySystem.Internal
             //Logger.Log($"AddRpc for tick: {rpc.Header.Tick}, St: {_entity.ServerManager.Tick}, Id: {rpc.Header.Id}");
             switch (_rpcMode)
             {
-                case RPCMode.OwnerChange:
                 case RPCMode.Normal:
                     if (_rpcHead == null)
                         _rpcHead = rpc;
                     else
                         _rpcTail.Next = rpc;
                     _rpcTail = rpc;
-                    if (_rpcMode == RPCMode.OwnerChange)
-                        rpc.Flags |= ExecuteFlags.SendToOwner;
                     break;
 
                 case RPCMode.Sync:
@@ -77,6 +73,7 @@ namespace LiteEntitySystem.Internal
                     else
                         _syncRpcTail.Next = rpc;
                     _syncRpcTail = rpc;
+                    rpc.Header.Tick = _entity.ServerManager.ExecutedTick;
                     break;
             }
         }
@@ -206,9 +203,14 @@ namespace LiteEntitySystem.Internal
             _rpcMode = RPCMode.Normal;
         }
 
-        //initial state with compression
-        private unsafe void WriteInitialState(bool isOwned, ushort serverTick, byte* resultData, ref int position)
+        public unsafe void MakeBaseline(byte playerId, ushort serverTick, byte* resultData, ref int position)
         {
+            //skip inactive and other controlled controllers
+            bool isOwned = _entity.InternalOwnerId.Value == playerId;
+            if (_state != SerializerState.Active || (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned))
+                return;
+            //don't write total size in full sync and fields
+
             MakeOnSync(serverTick);
             fixed (byte* lastEntityData = _latestEntityData)
                 RefMagic.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
@@ -223,91 +225,96 @@ namespace LiteEntitySystem.Internal
             var rpcNode = _syncRpcHead;
             while (rpcNode != null)
             {
-                if ((isOwned && (rpcNode.Flags & ExecuteFlags.SendToOwner) != 0) ||
-                    (!isOwned && (rpcNode.Flags & ExecuteFlags.SendToOther) != 0))
+                if (rpcNode.ShouldSend(isOwned))
                 {
-                    //put new
-                    *(RPCHeader*)(resultData + position) = rpcNode.Header;
-                    position += sizeof(RPCHeader);
-                    fixed (byte* rpcData = rpcNode.Data)
-                        RefMagic.CopyBlock(resultData + position, rpcData, (uint)rpcNode.TotalSize);
-                    position += rpcNode.TotalSize;
+                    rpcNode.WriteTo(resultData, ref position);
                     (*rpcCount)++;
                     //Logger.Log($"[Sever] T: {_entity.ServerManager.Tick}, SendRPC Tick: {rpcNode.Header.Tick}, Id: {rpcNode.Header.Id}, EntityId: {_entity.Id}, TypeSize: {rpcNode.Header.TypeSize}, Count: {rpcNode.Header.Count}");
                 }
                 rpcNode = rpcNode.Next;
             }
-        }
-
-        public unsafe void MakeBaseline(byte playerId, ushort serverTick, byte* resultData, ref int position)
-        {
-            //skip inactive and other controlled controllers
-            bool isOwned = _entity.InternalOwnerId.Value == playerId;
-            if (_state != SerializerState.Active || (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned))
-                return;
-            //don't write total size in full sync and fields
-            WriteInitialState(isOwned, serverTick, resultData, ref position);
+            
+            while (rpcNode != null)
+            {
+                if (rpcNode.ShouldSend(isOwned) && rpcNode.Header.Tick == serverTick)
+                {
+                    rpcNode.WriteTo(resultData, ref position);
+                    (*rpcCount)++;
+                    //Logger.Log($"[Sever] T: {_entity.ServerManager.Tick}, SendRPC Tick: {rpcNode.Header.Tick}, Id: {rpcNode.Header.Id}, EntityId: {_entity.Id}, TypeSize: {rpcNode.Header.TypeSize}, Count: {rpcNode.Header.Count}");
+                }
+                rpcNode = rpcNode.Next;
+            }
+            
             //Logger.Log($"[SEM] SendBaseline for entity: {_entity.Id}, pos: {position}, posAfterData: {position + _fullDataSize}");
         }
 
         public unsafe DiffResult MakeDiff(byte playerId, ushort serverTick, ushort minimalTick, ushort playerTick, byte* resultData, ref int position, HumanControllerLogic playerController)
         {
-            switch (_state)
+            if (_state == SerializerState.Freed)
             {
-                case SerializerState.Freed:
-                    return DiffResult.Skip;
-                
-                case SerializerState.Destroyed when Utils.SequenceDiff(LastChangedTick, minimalTick) < 0:
-                    _state = SerializerState.Freed;
-                    return DiffResult.DoneAndDestroy;
-                
-                case SerializerState.Active:
-                    if (Utils.SequenceDiff(_versionChangedTick, minimalTick) < 0)
-                        _versionChangedTick = minimalTick;
-                    break;
+                Logger.LogWarning("MakeDiff on freed?");
+                return DiffResult.Skip;
             }
 
-            //make diff
+            if (_state == SerializerState.Destroyed && Utils.SequenceDiff(LastChangedTick, minimalTick) < 0)
+            {
+                _state = SerializerState.Freed;
+                return DiffResult.DoneAndDestroy;
+            }
+
+            //refresh minimal tick to prevent errors on tick wrap-arounds
+            if (Utils.SequenceDiff(_versionChangedTick, minimalTick) < 0)
+                _versionChangedTick = minimalTick;
+            
+            //remove old rpcs
+            var rpcNode = _rpcHead;
+            while (rpcNode != null && Utils.SequenceDiff(rpcNode.Header.Tick, minimalTick) < 0)
+            {
+                if (rpcNode != _rpcHead)
+                    Logger.LogError("MinimalTickNode isn't first!");
+                //remove old RPCs (they should be at first place)
+                _entity.ServerManager.PoolRpc(rpcNode);
+                if (_rpcTail == _rpcHead)
+                    _rpcTail = null;
+                _rpcHead = rpcNode.Next;
+                rpcNode.Next = null;
+                rpcNode = _rpcHead;
+            }
+            
+            //skip sync for non owners
             bool isOwned = _entity.InternalOwnerId.Value == playerId;
             if (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned)
             {
                 return DiffResult.Skip;
             }
-
+            
+            //make diff
             int startPos = position;
             //at 0 ushort
             ushort* fieldFlagAndSize = (ushort*)(resultData + startPos);
             position += sizeof(ushort);
+
+            bool sendSyncRpc = false;
+            bool hasChanges;
             
             //send full state if needed for this player (or version changed)
             if ((playerController != null && playerController.IsEntityNeedForceSync(_entity, playerTick)) || Utils.SequenceDiff(_versionChangedTick, playerTick) > 0)
             {
                 //write full header here (totalSize + eid)
                 //also all fields
+                sendSyncRpc = true;
+                hasChanges = true;
                 *fieldFlagAndSize = 1;
-                WriteInitialState(isOwned, serverTick, resultData, ref position);
+                MakeOnSync(serverTick);
+                fixed (byte* lastEntityData = _latestEntityData)
+                    RefMagic.CopyBlock(resultData + position, lastEntityData, _fullDataSize);
+                position += (int)_fullDataSize;
             } 
             else fixed (byte* lastEntityData = _latestEntityData) //make diff
             {
-                var rpcNode = _rpcHead;
-                
                 //skip diff sync if disabled
                 if (playerController != null && playerController.IsEntityDiffSyncDisabled(new EntitySharedReference(_entity.Id, _entity.Version)))
                 {
-                    //remove old rpcs
-                    while (rpcNode != null && Utils.SequenceDiff(rpcNode.Header.Tick, minimalTick) < 0)
-                    {
-                        if (rpcNode != _rpcHead)
-                            Logger.LogError("MinimalTickNode isn't first!");
-                        //remove old RPCs (they should be at first place)
-                        _entity.ServerManager.PoolRpc(rpcNode);
-                        if (_rpcTail == _rpcHead)
-                            _rpcTail = null;
-                        _rpcHead = rpcNode.Next;
-                        rpcNode.Next = null;
-                        rpcNode = _rpcHead;
-                    }
-                    
                     position = startPos;
                     return DiffResult.Skip;
                 }
@@ -359,50 +366,45 @@ namespace LiteEntitySystem.Internal
                     //Logger.Log($"WF {_entity.GetType()} f: {_classData.Fields[i].Name}");
                 }
 
-                bool hasChanges = position > positionBeforeDeltaCompression;
-                //add RPCs count
-                ushort* rpcCount = (ushort*)(resultData + position);
-                *rpcCount = 0;
-                position += sizeof(ushort);
+                hasChanges = position > positionBeforeDeltaCompression;
+            }
+            
+            //add RPCs count
+            ushort* rpcCount = (ushort*)(resultData + position);
+            *rpcCount = 0;
+            position += sizeof(ushort);
 
-                //actual write rpcs
+            //actual write rpcs
+            while (rpcNode != null)
+            {
+                if (rpcNode.ShouldSend(isOwned) && Utils.SequenceDiff(playerTick, rpcNode.Header.Tick) < 0)
+                {
+                    rpcNode.WriteTo(resultData, ref position);
+                    (*rpcCount)++;
+                    //Logger.Log($"[Sever] T: {_entity.ServerManager.Tick}, SendRPC Tick: {rpcNode.Header.Tick}, Id: {rpcNode.Header.Id}, EntityId: {_entity.Id}, TypeSize: {rpcNode.Header.TypeSize}, Count: {rpcNode.Header.Count}");
+                }
+                rpcNode = rpcNode.Next;
+            }
+            
+            if (*rpcCount == 0 && !hasChanges)
+            {
+                position = startPos;
+                return DiffResult.Skip;
+            }
+
+            if (sendSyncRpc)
+            {
+                //actual write sync RPCs
+                rpcNode = _syncRpcHead;
                 while (rpcNode != null)
                 {
-                    bool send = (isOwned && (rpcNode.Flags & ExecuteFlags.SendToOwner) != 0) ||
-                                (!isOwned && (rpcNode.Flags & ExecuteFlags.SendToOther) != 0);
-                    if (send && Utils.SequenceDiff(playerTick, rpcNode.Header.Tick) < 0)
+                    if (rpcNode.ShouldSend(isOwned))
                     {
-                        //put new
-                        *(RPCHeader*)(resultData + position) = rpcNode.Header;
-                        position += sizeof(RPCHeader);
-                        fixed (byte* rpcData = rpcNode.Data)
-                            RefMagic.CopyBlock(resultData + position, rpcData, (uint)rpcNode.TotalSize);
-                        position += rpcNode.TotalSize;
+                        rpcNode.WriteTo(resultData, ref position);
                         (*rpcCount)++;
                         //Logger.Log($"[Sever] T: {_entity.ServerManager.Tick}, SendRPC Tick: {rpcNode.Header.Tick}, Id: {rpcNode.Header.Id}, EntityId: {_entity.Id}, TypeSize: {rpcNode.Header.TypeSize}, Count: {rpcNode.Header.Count}");
                     }
-                    else if (Utils.SequenceDiff(rpcNode.Header.Tick, minimalTick) < 0)
-                    {
-                        if (rpcNode != _rpcHead)
-                        {
-                            Logger.LogError("MinimalTickNode isn't first!");
-                        }
-                        //remove old RPCs (they should be at first place)
-                        _entity.ServerManager.PoolRpc(rpcNode);
-                        if (_rpcTail == _rpcHead)
-                            _rpcTail = null;
-                        _rpcHead = rpcNode.Next;
-                        rpcNode.Next = null;
-                        rpcNode = _rpcHead;
-                        continue;
-                    }
                     rpcNode = rpcNode.Next;
-                }
-                
-                if (*rpcCount == 0 && !hasChanges)
-                {
-                    position = startPos;
-                    return DiffResult.Skip;
                 }
             }
 

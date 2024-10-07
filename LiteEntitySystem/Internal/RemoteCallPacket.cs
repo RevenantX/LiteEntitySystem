@@ -14,6 +14,21 @@ namespace LiteEntitySystem.Internal
         public ExecuteFlags Flags;
         public RemoteCallPacket Next;
         public int TotalSize => Header.ByteCount;
+
+        public bool ShouldSend(bool isOwned)
+        {
+            return (isOwned && (Flags & ExecuteFlags.SendToOwner) != 0) ||
+                   (!isOwned && (Flags & ExecuteFlags.SendToOther) != 0);
+        }
+
+        public unsafe void WriteTo(byte* resultData, ref int position)
+        {
+            *(RPCHeader*)(resultData + position) = Header;
+            position += sizeof(RPCHeader);
+            fixed (byte* rpcData = Data)
+                RefMagic.CopyBlock(resultData + position, rpcData, (uint)TotalSize);
+            position += TotalSize;
+        }
         
         public void Init(ushort tick, ushort typeSize, ushort rpcId, ExecuteFlags flags)
         {
