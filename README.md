@@ -9,6 +9,11 @@ Pure C# HighLevel API for multiplayer games using .NET Standard 2.1
 
 [Documentation](https://revenantx.github.io/LiteEntitySystem/api/LiteEntitySystem.html)
 
+## Installation notices
+
+Please use Roslyn Analyzer (inside AnalyzerBinary) to prevent errors when assigning SyncVars.
+Only SyncVar.Value can be changed (never do x = new SyncVar())
+
 ## Features
 
 * .NET Standard 2.1 and pure C# (but with some IL magic)
