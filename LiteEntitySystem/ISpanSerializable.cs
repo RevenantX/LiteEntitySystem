@@ -3,7 +3,7 @@ namespace LiteEntitySystem
     public interface ISpanSerializable
     {
         int MaxSize { get; }
-        void Serialize(SpanWriter writer);
-        void Deserialize(SpanReader reader);
+        void Serialize(ref SpanWriter writer);
+        void Deserialize(ref SpanReader reader);
     }
 }

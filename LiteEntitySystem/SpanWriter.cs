@@ -137,7 +137,7 @@ namespace LiteEntitySystem
         public void PutArray(bool[] value) => PutArray(value, 1);
         public void Put(string value) => Put(value, 0);
         public void Put(bool value) => Put((byte)(value ? 1 : 0));
-        public void Put<T>(T obj) where T : ISpanSerializable => obj.Serialize(this);
+        public void Put<T>(T obj) where T : ISpanSerializable => obj.Serialize(ref this);
         
         public void PutArray(string[] value)
         {
@@ -160,7 +160,7 @@ namespace LiteEntitySystem
             ushort strArrayLength = (ushort)(value?.Length ?? 0);
             Put(strArrayLength);
             for (int i = 0; i < strArrayLength; i++)
-                value[i].Serialize(this);
+                value[i].Serialize(ref this);
         }
 
         public void PutLargeString(string value)
@@ -180,6 +180,22 @@ namespace LiteEntitySystem
             Utils.Encoding.Value.GetBytes(value, RawData.Slice(Position, size));
             Position += size;
         }
+
+        /// <summary>
+        /// Return maximum short string size (up to 65535 bytes)
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static int GetMaxStringSize(string str) => 
+            sizeof(ushort) + Utils.Encoding.Value.GetByteCount(str);
+        
+        /// <summary>
+        /// Return maximum large string size
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static int GetMaxLargeStringSize(string str) => 
+            sizeof(int) + Utils.Encoding.Value.GetByteCount(str);
 
         /// <summary>
         /// Note that "maxLength" only limits the number of characters in a string, not its size in bytes.

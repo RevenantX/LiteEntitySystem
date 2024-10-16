@@ -37,7 +37,7 @@ namespace LiteEntitySystem.Extensions
         protected internal override unsafe void OnSyncRequested()
         {
             var spanWriter = new SpanWriter(stackalloc byte[_value.MaxSize]);
-            _value.Serialize(spanWriter);
+            _value.Serialize(ref spanWriter);
             if (spanWriter.Position > ushort.MaxValue)
             {
                 Logger.LogError("Too much sync data!");
@@ -61,7 +61,8 @@ namespace LiteEntitySystem.Extensions
                 CompressionBuffer = new byte[origSize];
             LZ4Codec.Decode(data[2..], new Span<byte>(CompressionBuffer));
             _value ??= _constructor();
-            _value.Deserialize(new SpanReader(new ReadOnlySpan<byte>(CompressionBuffer, 0, origSize)));
+            var spanReader = new SpanReader(new ReadOnlySpan<byte>(CompressionBuffer, 0, origSize));
+            _value.Deserialize(ref spanReader);
         }
 
         public static implicit operator T(SyncSpanSerializable<T> field)

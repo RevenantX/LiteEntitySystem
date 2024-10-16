@@ -19,13 +19,13 @@ namespace LiteEntitySystem
         public void Get<T>(out T result) where T : struct, ISpanSerializable
         {
             result = default;
-            result.Deserialize(this);
+            result.Deserialize(ref this);
         }
 
         public void Get<T>(out T result, Func<T> constructor) where T : class, ISpanSerializable
         {
             result = constructor();
-            result.Deserialize(this);
+            result.Deserialize(ref this);
         }
         
         public void Get(out byte result) => result = GetByte();
@@ -65,7 +65,7 @@ namespace LiteEntitySystem
             for (int i = 0; i < length; i++)
             {
                 var item = new T();
-                item.Deserialize(this);
+                item.Deserialize(ref this);
                 result[i] = item;
             }
             return result;
@@ -226,14 +226,14 @@ namespace LiteEntitySystem
         public T Get<T>() where T : struct, ISpanSerializable
         {
             var obj = default(T);
-            obj.Deserialize(this);
+            obj.Deserialize(ref this);
             return obj;
         }
 
         public T Get<T>(Func<T> constructor) where T : class, ISpanSerializable
         {
             var obj = constructor();
-            obj.Deserialize(this);
+            obj.Deserialize(ref this);
             return obj;
         }
         

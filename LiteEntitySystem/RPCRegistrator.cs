@@ -49,7 +49,8 @@ namespace LiteEntitySystem
             (classPtr, buffer) =>
             {
                 var t = default(T);
-                t.Deserialize(new SpanReader(buffer));
+                var spanReader = new SpanReader(buffer);
+                t.Deserialize(ref spanReader);
                 methodToCall((TClass)classPtr, t);
             };
     }
@@ -256,7 +257,7 @@ namespace LiteEntitySystem
                     if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
                         methodToCall(te, v);
                     var writer = new SpanWriter(stackalloc byte[v.MaxSize]);
-                    v.Serialize(writer);
+                    v.Serialize(ref writer);
                     te.ServerManager.AddRemoteCall<byte>(te.Id, writer.RawData.Slice(0, writer.Position), rpcId, flags);
                 }
                 else if (flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction) && te.IsLocalControlled)
@@ -356,7 +357,7 @@ namespace LiteEntitySystem
                 if (sf.IsServer)
                 {
                     var writer = new SpanWriter(stackalloc byte[value.MaxSize]);
-                    value.Serialize(writer);
+                    value.Serialize(ref writer);
                     sf.ParentEntityInternal?.ServerManager.AddRemoteCall<byte>(sf.ParentEntityInternal.Id, writer.RawData.Slice(0, writer.Position), (ushort)(rpcId + sf.RPCOffset), sf.Flags);
                 }
             });
