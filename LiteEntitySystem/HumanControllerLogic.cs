@@ -176,7 +176,7 @@ namespace LiteEntitySystem
         private readonly NetDataWriter _requestWriter = new();
         private static RemoteCall<ServerResponse> _serverResponseRpc;
         private ushort _requestId;
-        private readonly Queue<(ushort,Action<bool>)> _awaitingRequests;
+        private readonly Dictionary<ushort,Action<bool>> _awaitingRequests;
 
         /// <summary>
         /// Get player that uses this controller
@@ -201,23 +201,8 @@ namespace LiteEntitySystem
         private void OnServerResponse(ServerResponse response)
         {
             //Logger.Log($"OnServerResponse Id: {response.RequestId} - {response.Success}");
-            while (_awaitingRequests.Count > 0)
-            {
-                var awaitingRequest = _awaitingRequests.Dequeue();
-                int diff = Utils.SequenceDiff(response.RequestId, awaitingRequest.Item1);
-                if (diff == 0)
-                {
-                    awaitingRequest.Item2(response.Success);
-                }
-                else if (diff < 0)
-                {
-                    awaitingRequest.Item2(false);
-                }
-                else
-                {
-                    Logger.LogError("Should be impossible");
-                }
-            }
+            if (_awaitingRequests.Remove(response.RequestId, out var action))
+                action(response.Success);
         }
 
         internal void ReadClientRequest(NetDataReader dataReader)
@@ -268,7 +253,7 @@ namespace LiteEntitySystem
             _requestWriter.SetPosition(5);
             _requestWriter.Put(_requestId);
             _packetProcessor.Write(_requestWriter, request);
-            _awaitingRequests.Enqueue((_requestId, onResult));
+            _awaitingRequests[_requestId] = onResult;
             _requestId++;
             ClientManager.NetPeer.SendReliableOrdered(new ReadOnlySpan<byte>(_requestWriter.Data, 0, _requestWriter.Length));
         }
@@ -298,7 +283,7 @@ namespace LiteEntitySystem
             _requestWriter.SetPosition(5);
             _requestWriter.Put(_requestId);
             _packetProcessor.WriteNetSerializable(_requestWriter, ref request);
-            _awaitingRequests.Enqueue((_requestId, onResult));
+            _awaitingRequests[_requestId] = onResult;
             _requestId++;
             ClientManager.NetPeer.SendReliableOrdered(new ReadOnlySpan<byte>(_requestWriter.Data, 0, _requestWriter.Length));
         }
@@ -342,7 +327,7 @@ namespace LiteEntitySystem
         protected HumanControllerLogic(EntityParams entityParams) : base(entityParams)
         {
             if (EntityManager.IsClient)
-                _awaitingRequests = new Queue<(ushort, Action<bool>)>();
+                _awaitingRequests = new Dictionary<ushort, Action<bool>>();
             _requestWriter.Put(EntityManager.HeaderByte);
             _requestWriter.Put(InternalPackets.ClientRequest);
             _requestWriter.Put(entityParams.Id);
