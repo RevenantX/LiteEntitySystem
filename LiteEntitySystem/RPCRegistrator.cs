@@ -176,7 +176,7 @@ namespace LiteEntitySystem
                 {
                     if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
                         methodToCall(te);
-                    te.ServerManager.AddRemoteCall(te.Id, rpcId, flags);
+                    te.ServerManager.AddRemoteCall(te, rpcId, flags);
                 }
                 else if (flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction) && te.IsLocalControlled)
                     methodToCall(te);
@@ -202,7 +202,7 @@ namespace LiteEntitySystem
                 {
                     if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
                         methodToCall(te, v);
-                    te.ServerManager.AddRemoteCall(te.Id, new ReadOnlySpan<T>(&v, 1), rpcId, flags);
+                    te.ServerManager.AddRemoteCall(te, new ReadOnlySpan<T>(&v, 1), rpcId, flags);
                 }
                 else if (flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction) && te.IsLocalControlled)
                     methodToCall(te, v);
@@ -228,7 +228,7 @@ namespace LiteEntitySystem
                 {
                     if (flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
                         methodToCall(te, v);
-                    te.ServerManager.AddRemoteCall(te.Id, v, rpcId, flags);
+                    te.ServerManager.AddRemoteCall(te, v, rpcId, flags);
                 }
                 else if (flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction) && te.IsLocalControlled)
                     methodToCall(te, v);
@@ -258,7 +258,7 @@ namespace LiteEntitySystem
                         methodToCall(te, v);
                     var writer = new SpanWriter(stackalloc byte[v.MaxSize]);
                     v.Serialize(ref writer);
-                    te.ServerManager.AddRemoteCall<byte>(te.Id, writer.RawData.Slice(0, writer.Position), rpcId, flags);
+                    te.ServerManager.AddRemoteCall<byte>(te, writer.RawData.Slice(0, writer.Position), rpcId, flags);
                 }
                 else if (flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction) && te.IsLocalControlled)
                     methodToCall(te, v);
@@ -313,7 +313,7 @@ namespace LiteEntitySystem
             {
                 var sf = (SyncableField)s;
                 if(sf.IsServer)
-                    sf.ParentEntityInternal?.ServerManager.AddRemoteCall(sf.ParentEntityInternal.Id, (ushort)(rpcId + sf.RPCOffset), sf.Flags);
+                    sf.ParentEntityInternal?.ServerManager.AddRemoteCall(sf.ParentEntityInternal, (ushort)(rpcId + sf.RPCOffset), sf.Flags);
             });
         }
 
@@ -327,7 +327,7 @@ namespace LiteEntitySystem
             {
                 var sf = (SyncableField)s;
                 if(sf.IsServer)
-                    sf.ParentEntityInternal?.ServerManager.AddRemoteCall(sf.ParentEntityInternal.Id, new ReadOnlySpan<T>(&value, 1), (ushort)(rpcId + sf.RPCOffset), sf.Flags);
+                    sf.ParentEntityInternal?.ServerManager.AddRemoteCall(sf.ParentEntityInternal, new ReadOnlySpan<T>(&value, 1), (ushort)(rpcId + sf.RPCOffset), sf.Flags);
             });
         }
         
@@ -341,7 +341,7 @@ namespace LiteEntitySystem
             {
                 var sf = (SyncableField)s;
                 if(sf.IsServer)
-                    sf.ParentEntityInternal?.ServerManager.AddRemoteCall(sf.ParentEntityInternal.Id, value, (ushort)(rpcId + sf.RPCOffset), sf.Flags);
+                    sf.ParentEntityInternal?.ServerManager.AddRemoteCall(sf.ParentEntityInternal, value, (ushort)(rpcId + sf.RPCOffset), sf.Flags);
             });
         }
         
@@ -358,7 +358,7 @@ namespace LiteEntitySystem
                 {
                     var writer = new SpanWriter(stackalloc byte[value.MaxSize]);
                     value.Serialize(ref writer);
-                    sf.ParentEntityInternal?.ServerManager.AddRemoteCall<byte>(sf.ParentEntityInternal.Id, writer.RawData.Slice(0, writer.Position), (ushort)(rpcId + sf.RPCOffset), sf.Flags);
+                    sf.ParentEntityInternal?.ServerManager.AddRemoteCall<byte>(sf.ParentEntityInternal, writer.RawData.Slice(0, writer.Position), (ushort)(rpcId + sf.RPCOffset), sf.Flags);
                 }
             });
         }

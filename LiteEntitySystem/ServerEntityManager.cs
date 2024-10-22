@@ -665,43 +665,33 @@ namespace LiteEntitySystem
         internal void PoolRpc(RemoteCallPacket rpcNode) =>
             _rpcPool.Enqueue(rpcNode);
         
-        internal void AddRemoteCall(ushort entityId, ushort rpcId, ExecuteFlags flags)
+        internal void AddRemoteCall(InternalEntity entity, ushort rpcId, ExecuteFlags flags)
         {
             if (PlayersCount == 0)
                 return;
-            if (EntitiesDict[entityId] == null)
-            {
-                Logger.LogError($"Executing RPC for null entity?: {entityId}");
-                return;
-            }
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             rpc.Init(_tick, 0, rpcId, flags);
-            _stateSerializers[entityId].AddRpcPacket(rpc);
-            _changedEntities.Add(EntitiesDict[entityId]);
+            _stateSerializers[entity.Id].AddRpcPacket(rpc);
+            _changedEntities.Add(entity);
         }
         
-        internal unsafe void AddRemoteCall<T>(ushort entityId, ReadOnlySpan<T> value, ushort rpcId, ExecuteFlags flags) where T : unmanaged
+        internal unsafe void AddRemoteCall<T>(InternalEntity entity, ReadOnlySpan<T> value, ushort rpcId, ExecuteFlags flags) where T : unmanaged
         {
             if (PlayersCount == 0)
                 return;
-            if (EntitiesDict[entityId] == null)
-            {
-                Logger.LogError($"Executing RPC for null entity?: {entityId}");
-                return;
-            }
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             int dataSize = sizeof(T) * value.Length;
             if (dataSize > ushort.MaxValue)
             {
-                Logger.LogError($"DataSize on rpc: {rpcId}, entity: {entityId} is more than {ushort.MaxValue}");
+                Logger.LogError($"DataSize on rpc: {rpcId}, entity: {entity} is more than {ushort.MaxValue}");
                 return;
             }
             rpc.Init(_tick, (ushort)dataSize, rpcId, flags);
             if(value.Length > 0)
                 fixed(void* rawValue = value, rawData = rpc.Data)
                     RefMagic.CopyBlock(rawData, rawValue, (uint)dataSize);
-            _stateSerializers[entityId].AddRpcPacket(rpc);
-            _changedEntities.Add(EntitiesDict[entityId]);
+            _stateSerializers[entity.Id].AddRpcPacket(rpc);
+            _changedEntities.Add(entity);
         }
     }
 }
