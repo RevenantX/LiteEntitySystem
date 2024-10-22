@@ -39,7 +39,7 @@ namespace LiteEntitySystem
             }
             else if (enable && _skippedEntities.Remove(entity))
             {
-                _forceSyncEntities.Add(entity, EntityManager.Tick);
+                _forceSyncEntities[entity] = EntityManager.Tick;
                 ServerManager.EntityChanged(entity);
                 ExecuteRPC(OnEntitySyncChangedRPC, new EntitySyncInfo { Entity = entity, SyncEnabled = true });
             }

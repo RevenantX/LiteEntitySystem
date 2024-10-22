@@ -108,6 +108,7 @@ namespace LiteEntitySystem
         
         private const int InputBufferSize = 128;
         private const float TimeSpeedChangeFadeTime = 0.1f;
+        private const float MaxJitter = 0.2f;
 
         struct InputCommand
         {
@@ -413,6 +414,9 @@ namespace LiteEntitySystem
             _stateB.Preload(EntitiesDict);
             //Logger.Log($"Preload A: {_stateA.Tick}, B: {_stateB.Tick}");
 
+            //limit jitter for pause scenarios
+            if (NetworkJitter > MaxJitter)
+                NetworkJitter = MaxJitter;
             float lowestBound = NetworkJitter + PreferredBufferTimeLowest;
             float upperBound = NetworkJitter + PreferredBufferTimeHighest;
 
