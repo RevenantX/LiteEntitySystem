@@ -46,6 +46,8 @@ namespace LiteEntitySystem
         internal ushort FieldId;
         internal InternalEntity Container;
         
+        internal void SetDirect(T value) => _value = value;
+        
         public T Value
         {
             get => _value;
