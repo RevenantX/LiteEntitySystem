@@ -1,21 +1,20 @@
 using System;
 using System.Runtime.InteropServices;
-using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
-    public ref struct SpanReader
+    public struct SpanReader
     {
         public readonly ReadOnlySpan<byte> RawData;
         public int Position;
         public int AvailableBytes => RawData.Length - Position;
-        
+
         public SpanReader(ReadOnlySpan<byte> rawData)
         {
             RawData = rawData;
             Position = 0;
         }
-        
+
         public void Get<T>(out T result) where T : struct, ISpanSerializable
         {
             result = default;
@@ -27,25 +26,41 @@ namespace LiteEntitySystem
             result = constructor();
             result.Deserialize(ref this);
         }
-        
+
         public void Get(out byte result) => result = GetByte();
+
         public void Get(out sbyte result) => result = (sbyte)GetByte();
+
         public void Get(out bool result) => result = GetBool();
+
         public void Get(out char result) => result = GetChar();
+
         public void Get(out ushort result) => result = GetUShort();
+
         public void Get(out short result) => result = GetShort();
+
         public void Get(out ulong result) => result = GetULong();
+
         public void Get(out long result) => result = GetLong();
+
         public void Get(out uint result) => result = GetUInt();
+
         public void Get(out int result) => result = GetInt();
+
         public void Get(out double result) => result = GetDouble();
+
         public void Get(out float result) => result = GetFloat();
+
         public void Get(out string result) => result = GetString();
+
         public void Get(out string result, int maxLength) => result = GetString(maxLength);
+
         public void Get(out Guid result) => result = GetGuid();
+
         public byte GetByte() => RawData[Position++];
+
         public sbyte GetSByte() => (sbyte)RawData[Position++];
-        
+
         public T[] GetArray<T>(ushort size) where T : unmanaged
         {
             ushort length = BitConverter.ToUInt16(RawData.Slice(Position));
@@ -70,7 +85,7 @@ namespace LiteEntitySystem
             }
             return result;
         }
-        
+
         public T[] GetArray<T>(Func<T> constructor) where T : class, ISpanSerializable
         {
             ushort length = BitConverter.ToUInt16(RawData.Slice(Position));
@@ -80,17 +95,25 @@ namespace LiteEntitySystem
                 Get(out result[i], constructor);
             return result;
         }
-        
+
         public bool[] GetBoolArray() => GetArray<bool>(1);
+
         public ushort[] GetUShortArray() => GetArray<ushort>(2);
+
         public short[] GetShortArray() => GetArray<short>(2);
+
         public int[] GetIntArray() => GetArray<int>(4);
+
         public uint[] GetUIntArray() => GetArray<uint>(4);
+
         public float[] GetFloatArray() => GetArray<float>(4);
+
         public double[] GetDoubleArray() => GetArray<double>(8);
+
         public long[] GetLongArray() => GetArray<long>(8);
+
         public ulong[] GetULongArray() => GetArray<ulong>(8);
-        
+
         public string[] GetStringArray()
         {
             ushort length = GetUShort();
@@ -118,6 +141,7 @@ namespace LiteEntitySystem
         }
 
         public bool GetBool() => GetByte() == 1;
+
         public char GetChar() => (char)GetUShort();
 
         public ushort GetUShort()
@@ -185,7 +209,7 @@ namespace LiteEntitySystem
             ushort size = GetUShort();
             if (size == 0)
                 return string.Empty;
-            
+
             int actualSize = size - 1;
             string result = maxLength > 0 && Utils.Encoding.Value.GetCharCount(RawData.Slice(Position, actualSize)) > maxLength ?
                 string.Empty :
@@ -199,7 +223,7 @@ namespace LiteEntitySystem
             ushort size = GetUShort();
             if (size == 0)
                 return string.Empty;
-            
+
             int actualSize = size - 1;
             string result = Utils.Encoding.Value.GetString(RawData.Slice(Position, actualSize));
             Position += actualSize;
@@ -215,7 +239,7 @@ namespace LiteEntitySystem
             Position += size;
             return result;
         }
-        
+
         public Guid GetGuid()
         {
             var result = new Guid(RawData.Slice(Position, 16));
@@ -236,7 +260,7 @@ namespace LiteEntitySystem
             obj.Deserialize(ref this);
             return obj;
         }
-        
+
         public ReadOnlySpan<byte> GetRemainingBytesSpan() => RawData.Slice(Position);
 
         public byte[] GetRemainingBytes()
@@ -260,18 +284,31 @@ namespace LiteEntitySystem
         }
 
         public sbyte[] GetSBytesWithLength() => GetArray<sbyte>(1);
+
         public byte[] GetBytesWithLength() => GetArray<byte>(1);
+
         public byte PeekByte() => RawData[Position];
+
         public sbyte PeekSByte() => (sbyte)RawData[Position];
+
         public bool PeekBool() => RawData[Position] == 1;
+
         public char PeekChar() => (char)PeekUShort();
+
         public ushort PeekUShort() => BitConverter.ToUInt16(RawData.Slice(Position));
+
         public short PeekShort() => BitConverter.ToInt16(RawData.Slice(Position));
+
         public long PeekLong() => BitConverter.ToInt64(RawData.Slice(Position));
+
         public ulong PeekULong() => BitConverter.ToUInt64(RawData.Slice(Position));
+
         public int PeekInt() => BitConverter.ToInt32(RawData.Slice(Position));
+
         public uint PeekUInt() => BitConverter.ToUInt32(RawData.Slice(Position));
+
         public float PeekFloat() => BitConverter.ToSingle(RawData.Slice(Position));
+
         public double PeekDouble() => BitConverter.ToDouble(RawData.Slice(Position));
 
         /// <summary>
@@ -282,7 +319,7 @@ namespace LiteEntitySystem
             ushort size = PeekUShort();
             if (size == 0)
                 return string.Empty;
-            
+
             int actualSize = size - 1;
             return maxLength > 0 && Utils.Encoding.Value.GetCharCount(RawData.Slice(Position + 2, actualSize)) > maxLength ?
                 string.Empty :
@@ -448,7 +485,8 @@ namespace LiteEntitySystem
 
         public bool TryGetStringArray(out string[] result)
         {
-            if (!TryGetUShort(out ushort strArrayLength)) {
+            if (!TryGetUShort(out ushort strArrayLength))
+            {
                 result = null;
                 return false;
             }

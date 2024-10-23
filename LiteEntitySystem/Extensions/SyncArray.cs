@@ -12,13 +12,13 @@ namespace LiteEntitySystem.Extensions
             public T Value;
             public ushort Index;
         }
-        
+
         private T[] _data;
         private static RemoteCall<SetCallData> _setRpcAction;
         private static RemoteCall<int> _resizeRpcAction;
         private static RemoteCallSpan<T> _initArrayAction;
         private static RemoteCall _clearAction;
-        
+
         public int Length => _data.Length;
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace LiteEntitySystem.Extensions
 
         public void Resize(int newSize)
         {
-            if(_data.Length != newSize)
+            if (_data.Length != newSize)
                 Array.Resize(ref _data, newSize);
             ExecuteRPC(_resizeRpcAction, newSize);
         }
@@ -64,7 +64,7 @@ namespace LiteEntitySystem.Extensions
                 _data = new T[inData.Length];
             inData.CopyTo(_data);
         }
-        
+
         private void SetValueRPC(SetCallData setCallData)
         {
             _data[setCallData.Index] = setCallData.Value;

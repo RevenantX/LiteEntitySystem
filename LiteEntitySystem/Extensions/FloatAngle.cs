@@ -14,7 +14,7 @@ namespace LiteEntitySystem.Extensions
 
         public float Radians => Degrees * Deg2Rad;
         public float Degrees;
-        
+
         public FloatAngle Normalized
         {
             get
@@ -37,12 +37,12 @@ namespace LiteEntitySystem.Extensions
         {
             return (float)Math.Cos(Radians);
         }
-        
+
         public FloatAngle(float value)
         {
             Degrees = value;
         }
-        
+
         public void Normalize()
         {
             while (Degrees >= 180f)
@@ -60,7 +60,7 @@ namespace LiteEntitySystem.Extensions
         {
             return new FloatAngle(degrees);
         }
-        
+
         public static implicit operator float(FloatAngle value)
         {
             return value.Degrees;

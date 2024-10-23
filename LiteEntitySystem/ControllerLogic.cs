@@ -10,7 +10,7 @@ namespace LiteEntitySystem
     {
         [SyncVarFlags(SyncFlags.NeverRollBack)]
         private SyncVar<EntitySharedReference> _controlledEntity;
-        
+
         /// <summary>
         /// Is controller - AI controller
         /// </summary>
@@ -21,7 +21,6 @@ namespace LiteEntitySystem
 
         public virtual void BeforeControlledUpdate()
         {
-            
         }
 
         public void DestroyWithControlledEntity()
@@ -52,8 +51,10 @@ namespace LiteEntitySystem
             controlledLogic.Controller = null;
             _controlledEntity.Value = null;
         }
-        
-        protected ControllerLogic(EntityParams entityParams) : base(entityParams) { }
+
+        protected ControllerLogic(EntityParams entityParams) : base(entityParams)
+        {
+        }
     }
 
     /// <summary>
@@ -63,8 +64,10 @@ namespace LiteEntitySystem
     public abstract class AiControllerLogic : ControllerLogic
     {
         public override bool IsBot => true;
-        
-        protected AiControllerLogic(EntityParams entityParams) : base(entityParams) { }
+
+        protected AiControllerLogic(EntityParams entityParams) : base(entityParams)
+        {
+        }
     }
 
     /// <summary>
@@ -74,7 +77,9 @@ namespace LiteEntitySystem
     public abstract class AiControllerLogic<T> : AiControllerLogic where T : PawnLogic
     {
         public T ControlledEntity => GetControlledEntity<T>();
-        
-        protected AiControllerLogic(EntityParams entityParams) : base(entityParams) { }
+
+        protected AiControllerLogic(EntityParams entityParams) : base(entityParams)
+        {
+        }
     }
 }

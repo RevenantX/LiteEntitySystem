@@ -1,28 +1,37 @@
+using LiteEntitySystem.Internal;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
     public delegate void SpanAction<T>(ReadOnlySpan<T> data);
+
     public delegate void SpanAction<TCaller, T>(TCaller caller, ReadOnlySpan<T> data);
+
     internal delegate void MethodCallDelegate(object classPtr, ReadOnlySpan<byte> buffer);
+
     internal delegate void OnSyncCallDelegate(object classPtr, ReadOnlySpan<byte> buffer);
-    
+
     public readonly struct RemoteCall
     {
         internal readonly Action<InternalBaseClass> CachedAction;
+
         internal RemoteCall(Action<InternalBaseClass> action) => CachedAction = action;
+
         internal void Call(InternalBaseClass self) => CachedAction?.Invoke(self);
+
         internal static MethodCallDelegate CreateMCD<TClass>(Action<TClass> methodToCall) => (classPtr, _) => methodToCall((TClass)classPtr);
     }
-    
+
     public readonly struct RemoteCall<T> where T : unmanaged
     {
         internal readonly Action<InternalBaseClass, T> CachedAction;
+
         internal RemoteCall(Action<InternalBaseClass, T> action) => CachedAction = action;
+
         internal void Call(InternalBaseClass self, T data) => CachedAction?.Invoke(self, data);
+
         internal static unsafe MethodCallDelegate CreateMCD<TClass>(Action<TClass, T> methodToCall) =>
             (classPtr, buffer) =>
             {
@@ -30,21 +39,27 @@ namespace LiteEntitySystem
                     methodToCall((TClass)classPtr, *(T*)data);
             };
     }
-    
+
     public readonly struct RemoteCallSpan<T> where T : unmanaged
     {
         internal readonly SpanAction<InternalBaseClass, T> CachedAction;
+
         internal RemoteCallSpan(SpanAction<InternalBaseClass, T> action) => CachedAction = action;
+
         internal void Call(InternalBaseClass self, ReadOnlySpan<T> data) => CachedAction?.Invoke(self, data);
+
         internal static MethodCallDelegate CreateMCD<TClass>(SpanAction<TClass, T> methodToCall) =>
             (classPtr, buffer) => methodToCall((TClass)classPtr, MemoryMarshal.Cast<byte, T>(buffer));
     }
-    
+
     public readonly struct RemoteCallSerializable<T> where T : struct, ISpanSerializable
     {
         internal readonly Action<InternalBaseClass, T> CachedAction;
+
         internal RemoteCallSerializable(Action<InternalBaseClass, T> action) => CachedAction = action;
+
         internal void Call(InternalBaseClass self, T data) => CachedAction?.Invoke(self, data);
+
         internal static MethodCallDelegate CreateMCD<TClass>(Action<TClass, T> methodToCall) =>
             (classPtr, buffer) =>
             {
@@ -55,7 +70,7 @@ namespace LiteEntitySystem
             };
     }
 
-    public readonly ref struct RPCRegistrator
+    public readonly struct RPCRegistrator
     {
         private readonly List<RpcFieldInfo> _calls;
 
@@ -69,8 +84,8 @@ namespace LiteEntitySystem
             if (ent != target)
                 throw new Exception("You can call this only on this class methods");
         }
-        
-                /// <summary>
+
+        /// <summary>
         /// Bind notification of SyncVar changes to action (OnSync will be called after RPCs and OnConstructs)
         /// </summary>
         /// <param name="self">Target entity for binding</param>
@@ -80,7 +95,7 @@ namespace LiteEntitySystem
         {
             BindOnChange(self, ref syncVar, onChangedAction, self.ClassData.Fields[syncVar.FieldId].OnSyncExecutionOrder);
         }
-        
+
         /// <summary>
         /// Bind notification of SyncVar changes to action
         /// </summary>
@@ -102,7 +117,7 @@ namespace LiteEntitySystem
                     methodToCall((TEntity)classPtr, *(T*)data);
             };
         }
-        
+
         /// <summary>
         /// Creates cached rpc action
         /// </summary>
@@ -141,7 +156,7 @@ namespace LiteEntitySystem
             CheckTarget(self, methodToCall.Target);
             CreateRPCAction(methodToCall.Method.CreateDelegateHelper<SpanAction<TEntity, T>>(), ref remoteCallHandle, flags);
         }
-        
+
         /// <summary>
         /// Creates cached rpc action with ISpanSerializable argument
         /// </summary>
@@ -149,14 +164,14 @@ namespace LiteEntitySystem
         /// <param name="methodToCall">RPC method to call</param>
         /// <param name="remoteCallHandle">output handle that should be used to call rpc</param>
         /// <param name="flags">RPC execution flags</param>
-        public void CreateRPCAction<TEntity, T>(TEntity self, Action<T> methodToCall, ref RemoteCallSerializable<T> remoteCallHandle, ExecuteFlags flags) 
-            where T : struct, ISpanSerializable 
+        public void CreateRPCAction<TEntity, T>(TEntity self, Action<T> methodToCall, ref RemoteCallSerializable<T> remoteCallHandle, ExecuteFlags flags)
+            where T : struct, ISpanSerializable
             where TEntity : InternalEntity
         {
             CheckTarget(self, methodToCall.Target);
             CreateRPCAction(methodToCall.Method.CreateDelegateHelper<Action<TEntity, T>>(), ref remoteCallHandle, flags);
         }
-        
+
         /// <summary>
         /// Creates cached rpc action
         /// </summary>
@@ -182,7 +197,7 @@ namespace LiteEntitySystem
                     methodToCall(te);
             });
         }
-        
+
         /// <summary>
         /// Creates cached rpc action with valueType argument
         /// </summary>
@@ -195,7 +210,7 @@ namespace LiteEntitySystem
             _calls.Add(new RpcFieldInfo(RemoteCall<T>.CreateMCD(methodToCall)));
             if (remoteCallHandle.CachedAction != null)
                 return;
-            remoteCallHandle = new RemoteCall<T>((e,v) =>
+            remoteCallHandle = new RemoteCall<T>((e, v) =>
             {
                 var te = (TEntity)e;
                 if (te.IsServer)
@@ -221,7 +236,7 @@ namespace LiteEntitySystem
             _calls.Add(new RpcFieldInfo(RemoteCallSpan<T>.CreateMCD(methodToCall)));
             if (remoteCallHandle.CachedAction != null)
                 return;
-            remoteCallHandle = new RemoteCallSpan<T>((e,v) =>
+            remoteCallHandle = new RemoteCallSpan<T>((e, v) =>
             {
                 var te = (TEntity)e;
                 if (te.IsServer)
@@ -234,14 +249,14 @@ namespace LiteEntitySystem
                     methodToCall(te, v);
             });
         }
-        
+
         /// <summary>
         /// Creates cached rpc action with ISpanSerializable argument
         /// </summary>
         /// <param name="methodToCall">RPC method to call</param>
         /// <param name="remoteCallHandle">output handle that should be used to call rpc</param>
         /// <param name="flags">RPC execution flags</param>
-        public unsafe void CreateRPCAction<TEntity, T>(Action<TEntity, T> methodToCall, ref RemoteCallSerializable<T> remoteCallHandle, ExecuteFlags flags) 
+        public unsafe void CreateRPCAction<TEntity, T>(Action<TEntity, T> methodToCall, ref RemoteCallSerializable<T> remoteCallHandle, ExecuteFlags flags)
             where T : struct, ISpanSerializable
             where TEntity : InternalEntity
         {
@@ -249,7 +264,7 @@ namespace LiteEntitySystem
             _calls.Add(new RpcFieldInfo(RemoteCallSerializable<T>.CreateMCD(methodToCall)));
             if (remoteCallHandle.CachedAction != null)
                 return;
-            remoteCallHandle = new RemoteCallSerializable<T>((e,v) =>
+            remoteCallHandle = new RemoteCallSerializable<T>((e, v) =>
             {
                 var te = (TEntity)e;
                 if (te.IsServer)
@@ -266,7 +281,7 @@ namespace LiteEntitySystem
         }
     }
 
-    public ref struct SyncableRPCRegistrator
+    public struct SyncableRPCRegistrator
     {
         private readonly List<RpcFieldInfo> _calls;
         private readonly int _syncableOffset;
@@ -278,7 +293,7 @@ namespace LiteEntitySystem
             _internalRpcCounter = 0;
             _syncableOffset = syncableOffset;
         }
-        
+
         public void CreateClientAction<TSyncField>(TSyncField self, Action methodToCall, ref RemoteCall remoteCallHandle) where TSyncField : SyncableField
         {
             RPCRegistrator.CheckTarget(self, methodToCall.Target);
@@ -290,13 +305,13 @@ namespace LiteEntitySystem
             RPCRegistrator.CheckTarget(self, methodToCall.Target);
             CreateClientAction(methodToCall.Method.CreateDelegateHelper<Action<TSyncField, T>>(), ref remoteCallHandle);
         }
-        
+
         public void CreateClientAction<TSyncField, T>(TSyncField self, SpanAction<T> methodToCall, ref RemoteCallSpan<T> remoteCallHandle) where T : unmanaged where TSyncField : SyncableField
         {
             RPCRegistrator.CheckTarget(self, methodToCall.Target);
             CreateClientAction(methodToCall.Method.CreateDelegateHelper<SpanAction<TSyncField, T>>(), ref remoteCallHandle);
         }
-        
+
         public void CreateClientAction<TSyncField, T>(TSyncField self, Action<T> methodToCall, ref RemoteCallSerializable<T> remoteCallHandle) where T : struct, ISpanSerializable where TSyncField : SyncableField
         {
             RPCRegistrator.CheckTarget(self, methodToCall.Target);
@@ -312,7 +327,7 @@ namespace LiteEntitySystem
             remoteCallHandle = new RemoteCall(s =>
             {
                 var sf = (SyncableField)s;
-                if(sf.IsServer)
+                if (sf.IsServer)
                     sf.ParentEntityInternal?.ServerManager.AddRemoteCall(sf.ParentEntityInternal, (ushort)(rpcId + sf.RPCOffset), sf.Flags);
             });
         }
@@ -326,11 +341,11 @@ namespace LiteEntitySystem
             remoteCallHandle = new RemoteCall<T>((s, value) =>
             {
                 var sf = (SyncableField)s;
-                if(sf.IsServer)
+                if (sf.IsServer)
                     sf.ParentEntityInternal?.ServerManager.AddRemoteCall(sf.ParentEntityInternal, new ReadOnlySpan<T>(&value, 1), (ushort)(rpcId + sf.RPCOffset), sf.Flags);
             });
         }
-        
+
         public void CreateClientAction<TSyncField, T>(SpanAction<TSyncField, T> methodToCall, ref RemoteCallSpan<T> remoteCallHandle) where T : unmanaged where TSyncField : SyncableField
         {
             ushort rpcId = _internalRpcCounter++;
@@ -340,11 +355,11 @@ namespace LiteEntitySystem
             remoteCallHandle = new RemoteCallSpan<T>((s, value) =>
             {
                 var sf = (SyncableField)s;
-                if(sf.IsServer)
+                if (sf.IsServer)
                     sf.ParentEntityInternal?.ServerManager.AddRemoteCall(sf.ParentEntityInternal, value, (ushort)(rpcId + sf.RPCOffset), sf.Flags);
             });
         }
-        
+
         public unsafe void CreateClientAction<TSyncField, T>(Action<TSyncField, T> methodToCall, ref RemoteCallSerializable<T> remoteCallHandle) where T : struct, ISpanSerializable where TSyncField : SyncableField
         {
             ushort rpcId = _internalRpcCounter++;

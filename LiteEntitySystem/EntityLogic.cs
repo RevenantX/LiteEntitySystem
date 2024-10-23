@@ -1,7 +1,7 @@
+using LiteEntitySystem.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
@@ -11,35 +11,35 @@ namespace LiteEntitySystem
         /// <summary>
         /// Update entity on client even when entity isn't owned
         /// </summary>
-        UpdateOnClient = Updateable | (1 << 0), 
-        
+        UpdateOnClient = Updateable | (1 << 0),
+
         /// <summary>
-        /// Update entity on server and on client if entity is owned 
+        /// Update entity on server and on client if entity is owned
         /// </summary>
-        Updateable = 1 << 1,                    
-        
+        Updateable = 1 << 1,
+
         /// <summary>
         /// Entity is local only without sync (only on server or client no difference)
         /// </summary>
-        LocalOnly = 1 << 2,                     
-        
+        LocalOnly = 1 << 2,
+
         /// <summary>
         /// Sync entity only for owner player
         /// </summary>
         OnlyForOwner = 1 << 3
     }
-    
+
     [AttributeUsage(AttributeTargets.Class)]
     public class EntityFlagsAttribute : Attribute
     {
         public readonly EntityFlags Flags;
-        
+
         public EntityFlagsAttribute(EntityFlags flags)
         {
             Flags = flags;
         }
     }
-    
+
     /// <summary>
     /// Base class for simple (not controlled by controller) entity
     /// </summary>
@@ -52,16 +52,17 @@ namespace LiteEntitySystem
         /// Child entities (can be used for transforms or as components)
         /// </summary>
         public HashSet<EntityLogic> Childs => _childsSet ??= new HashSet<EntityLogic>();
+
         private HashSet<EntityLogic> _childsSet;
-        
+
         public EntitySharedReference ParentId => _parentId;
-        
+
         private bool _lagCompensationEnabled;
-        
+
         public EntitySharedReference SharedReference => new EntitySharedReference(this);
-        
+
         internal void WriteHistory(ushort tick) => ClassData.WriteHistory(this, tick);
-        
+
         //on client it works only in rollback
         internal void EnableLagCompensation(NetPlayer player)
         {
@@ -104,12 +105,12 @@ namespace LiteEntitySystem
         /// </summary>
         public void DisableLagCompensationForOwner() =>
             EntityManager.DisableLagCompensation();
-        
+
         public int GetFrameSeed() =>
             EntityManager.IsClient
-                ? (EntityManager.InRollBackState ? ClientManager.RollBackTick : (ClientManager.IsExecutingRPC ? ClientManager.CurrentRPCTick : EntityManager.Tick)) 
+                ? (EntityManager.InRollBackState ? ClientManager.RollBackTick : (ClientManager.IsExecutingRPC ? ClientManager.CurrentRPCTick : EntityManager.Tick))
                 : (InternalOwnerId.Value == EntityManager.ServerPlayerId ? EntityManager.Tick : ServerManager.GetPlayer(InternalOwnerId).LastProcessedTick);
-        
+
         /// <summary>
         /// Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
         /// </summary>
@@ -136,7 +137,7 @@ namespace LiteEntitySystem
 
                 return predictedEntity;
             }
-            
+
             var entity = EntityManager.AddLocalEntity(initMethod);
             ClientManager.AddPredictedInfo(entity);
             return entity;
@@ -150,20 +151,20 @@ namespace LiteEntitySystem
         {
             if (EntityManager.IsClient)
                 return;
-            
+
             var id = new EntitySharedReference(parentEntity);
             if (id == _parentId.Value)
                 return;
-            
+
             EntitySharedReference oldId = _parentId;
             _parentId.Value = id;
             OnParentChange(oldId);
-            
+
             var newParent = EntityManager.GetEntityById<EntityLogic>(_parentId)?.InternalOwnerId ?? EntityManager.ServerPlayerId;
             if (InternalOwnerId.Value != newParent)
                 SetOwner(this, newParent);
         }
-        
+
         /// <summary>
         /// Get parent entity
         /// </summary>
@@ -173,21 +174,19 @@ namespace LiteEntitySystem
         {
             return EntityManager.GetEntityById<T>(_parentId);
         }
-        
+
         /// <summary>
         /// Called when lag compensation was started for this entity
         /// </summary>
         protected virtual void OnLagCompensationStart()
         {
-            
         }
-        
+
         /// <summary>
         /// Called when lag compensation ended for this entity
         /// </summary>
         protected virtual void OnLagCompensationEnd()
         {
-            
         }
 
         internal override void DestroyInternal()
@@ -222,14 +221,13 @@ namespace LiteEntitySystem
         /// </summary>
         protected virtual void OnBeforeParentDestroy()
         {
-            
         }
-        
+
         private void OnOwnerChange(byte prevOwner)
         {
-            if(IsLocalControlled && !IsLocal)
+            if (IsLocalControlled && !IsLocal)
                 ClientManager.AddOwned(this);
-            else if(prevOwner == EntityManager.InternalPlayerId && !IsLocal)
+            else if (prevOwner == EntityManager.InternalPlayerId && !IsLocal)
                 ClientManager.RemoveOwned(this);
         }
 
@@ -243,24 +241,23 @@ namespace LiteEntitySystem
         {
             entity.InternalOwnerId.Value = ownerId;
             entity.ServerManager.EntityOwnerChanged(entity);
-            if (entity._childsSet == null) 
+            if (entity._childsSet == null)
                 return;
             foreach (var child in entity._childsSet)
             {
                 SetOwner(child, ownerId);
             }
         }
-        
+
         protected override void RegisterRPC(ref RPCRegistrator r)
         {
             base.RegisterRPC(ref r);
             r.BindOnChange(this, ref _parentId, OnParentChange);
             r.BindOnChange(this, ref InternalOwnerId, OnOwnerChange);
         }
-        
+
         protected EntityLogic(EntityParams entityParams) : base(entityParams)
         {
-
         }
     }
 }

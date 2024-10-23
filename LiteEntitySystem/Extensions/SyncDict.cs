@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncDict<TKey,TValue> : SyncableField, IEnumerable<KeyValuePair<TKey,TValue>> where TKey : unmanaged where TValue : unmanaged
+    public class SyncDict<TKey, TValue> : SyncableField, IEnumerable<KeyValuePair<TKey, TValue>> where TKey : unmanaged where TValue : unmanaged
     {
         private struct KeyValue
         {
@@ -17,12 +17,12 @@ namespace LiteEntitySystem.Extensions
                 Value = value;
             }
         }
-        
+
         public int Count => _data.Count;
 
         private Dictionary<TKey, TValue> _serverData;
         private Dictionary<TKey, TValue> _tempData;
-        private Dictionary<TKey, TValue> _data = new ();
+        private Dictionary<TKey, TValue> _data = new();
 
         private static RemoteCall<KeyValue> _addAction;
         private static RemoteCall _clearAction;
@@ -86,9 +86,9 @@ namespace LiteEntitySystem.Extensions
         public void Add(TKey key, TValue value)
         {
             _data.Add(key, value);
-            ExecuteRPC(_addAction, new KeyValue(key,value));
+            ExecuteRPC(_addAction, new KeyValue(key, value));
         }
-        
+
         public void Clear()
         {
             _data.Clear();
@@ -104,7 +104,7 @@ namespace LiteEntitySystem.Extensions
         {
             return _data.ContainsKey(key);
         }
-        
+
         public bool ContainsValue(TValue value)
         {
             return _data.ContainsValue(value);
@@ -117,7 +117,7 @@ namespace LiteEntitySystem.Extensions
 
         public bool Remove(TKey key)
         {
-            if (!_data.Remove(key)) 
+            if (!_data.Remove(key))
                 return false;
             ExecuteRPC(_removeAction, key);
             return true;

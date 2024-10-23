@@ -6,7 +6,7 @@ namespace LiteEntitySystem.Internal
         public ushort Tick;
         public ushort ByteCount;
     }
-    
+
     internal sealed class RemoteCallPacket
     {
         public RPCHeader Header;
@@ -29,7 +29,7 @@ namespace LiteEntitySystem.Internal
                 RefMagic.CopyBlock(resultData + position, rpcData, (uint)TotalSize);
             position += TotalSize;
         }
-        
+
         public void Init(ushort tick, ushort typeSize, ushort rpcId, ExecuteFlags flags)
         {
             Header.Tick = tick;

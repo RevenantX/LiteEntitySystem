@@ -53,7 +53,7 @@ namespace LiteEntitySystem
         {
             return obj1.Id == obj2.Id && obj1.Version == obj2.Version;
         }
-        
+
         public static bool operator !=(EntitySharedReference obj1, EntitySharedReference obj2)
         {
             return obj1.Id != obj2.Id || obj1.Version != obj2.Version;

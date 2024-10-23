@@ -1,15 +1,13 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using LiteEntitySystem.Collections;
 using LiteEntitySystem.Internal;
+using System;
 
 namespace LiteEntitySystem
 {
     public interface IEntityFilter
-    { 
+    {
         internal void Add(InternalEntity entity);
+
         internal void Remove(InternalEntity entity);
     }
 
@@ -17,7 +15,7 @@ namespace LiteEntitySystem
     public class EntityFilter<T> : AVLTree<T>, IEntityFilter where T : InternalEntity
     {
         private event Action<T> OnConstructed;
-        
+
         /// <summary>
         /// Called when entity is removed/destroyed
         /// </summary>
@@ -35,7 +33,7 @@ namespace LiteEntitySystem
                     onConstructed(entity);
             OnConstructed += onConstructed;
         }
-        
+
         /// <summary>
         /// Called when entity created and synced
         /// <param name="onConstructed">callback</param>
@@ -48,15 +46,16 @@ namespace LiteEntitySystem
             OnConstructed?.Invoke(entity);
             base.Add(entity);
         }
-        
+
         internal override bool Remove(T entity)
         {
             OnDestroyed?.Invoke(entity);
             return base.Remove(entity);
         }
 
-        void IEntityFilter.Add(InternalEntity entity) => Add((T) entity);
-        void IEntityFilter.Remove(InternalEntity entity) => Remove((T) entity);
+        void IEntityFilter.Add(InternalEntity entity) => Add((T)entity);
+
+        void IEntityFilter.Remove(InternalEntity entity) => Remove((T)entity);
 
         internal override void Clear()
         {
@@ -69,7 +68,9 @@ namespace LiteEntitySystem
     public class EntityList<T> : EntityFilter<T> where T : InternalEntity
     {
         public new void Add(T entity) => base.Add(entity);
+
         public new void Remove(T entity) => base.Remove(entity);
+
         public new void Clear() => base.Clear();
     }
 }

@@ -1,7 +1,7 @@
-﻿using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
+using System.Collections.Immutable;
 
 namespace LiteEntitySystemAnalyzer
 {
@@ -17,7 +17,7 @@ namespace LiteEntitySystemAnalyzer
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
-        
+
         public override void Initialize(AnalysisContext context)
         {
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -27,7 +27,7 @@ namespace LiteEntitySystemAnalyzer
 
         private static LocalizableString GetResource(string name) =>
             new LocalizableResourceString(name, Resources.ResourceManager, typeof(Resources));
-        
+
         private static bool CheckTypes(ITypeSymbol sym1, ITypeSymbol sym2) =>
             SymbolEqualityComparer.IncludeNullability.Equals(sym1, sym2);
 
@@ -35,7 +35,7 @@ namespace LiteEntitySystemAnalyzer
         {
             var assignmentOperation = (IAssignmentOperation)context.Operation;
             var syncVarSym = context.Compilation.GetTypeByMetadataName("LiteEntitySystem.SyncVar`1");
-            
+
             if (assignmentOperation.Target is IFieldReferenceOperation field && CheckTypes(field.Type?.OriginalDefinition, syncVarSym))
             {
                 context.ReportDiagnostic(Diagnostic.Create(Rule, context.Operation.Syntax.GetLocation()));

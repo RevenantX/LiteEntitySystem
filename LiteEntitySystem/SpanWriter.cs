@@ -1,11 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
-using System.Text;
-using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
-    public ref struct SpanWriter
+    public struct SpanWriter
     {
         public readonly Span<byte> RawData;
         public int Position;
@@ -106,39 +104,52 @@ namespace LiteEntitySystem
             MemoryMarshal.AsBytes(new ReadOnlySpan<sbyte>(data, offset, length)).CopyTo(RawData.Slice(Position + 2, length));
             Position += 2 + length;
         }
-        
+
         public void PutBytesWithLength(byte[] data, int offset, ushort length)
         {
             Put(length);
             new ReadOnlySpan<byte>(data, offset, length).CopyTo(RawData.Slice(Position + 2, length));
             Position += 2 + length;
         }
-        
+
         public void PutArray<T>(T[] arr, int sz) where T : unmanaged
         {
-            ushort length = arr == null ? (ushort) 0 : (ushort)arr.Length;
+            ushort length = arr == null ? (ushort)0 : (ushort)arr.Length;
             sz *= length;
             Put(length);
-            if(arr != null)
-                MemoryMarshal.AsBytes(new ReadOnlySpan<T>(arr)).CopyTo(RawData.Slice(Position+2,sz));
+            if (arr != null)
+                MemoryMarshal.AsBytes(new ReadOnlySpan<T>(arr)).CopyTo(RawData.Slice(Position + 2, sz));
             Position += sz + 2;
         }
-        
+
         public void PutBytesWithLength(byte[] data) => PutArray(data, 1);
+
         public void PutSBytesWithLength(sbyte[] data) => PutArray(data, 1);
+
         public void PutArray(float[] value) => PutArray(value, 4);
+
         public void PutArray(double[] value) => PutArray(value, 8);
+
         public void PutArray(long[] value) => PutArray(value, 8);
+
         public void PutArray(ulong[] value) => PutArray(value, 8);
+
         public void PutArray(int[] value) => PutArray(value, 4);
+
         public void PutArray(uint[] value) => PutArray(value, 4);
+
         public void PutArray(ushort[] value) => PutArray(value, 2);
+
         public void PutArray(short[] value) => PutArray(value, 2);
+
         public void PutArray(bool[] value) => PutArray(value, 1);
+
         public void Put(string value) => Put(value, 0);
+
         public void Put(bool value) => Put((byte)(value ? 1 : 0));
+
         public void Put<T>(T obj) where T : ISpanSerializable => obj.Serialize(ref this);
-        
+
         public void PutArray(string[] value)
         {
             ushort strArrayLength = value == null ? (ushort)0 : (ushort)value.Length;
@@ -186,15 +197,15 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static int GetMaxStringSize(string str) => 
+        public static int GetMaxStringSize(string str) =>
             sizeof(ushort) + Utils.Encoding.Value.GetByteCount(str);
-        
+
         /// <summary>
         /// Return maximum large string size
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static int GetMaxLargeStringSize(string str) => 
+        public static int GetMaxLargeStringSize(string str) =>
             sizeof(int) + Utils.Encoding.Value.GetByteCount(str);
 
         /// <summary>
@@ -207,7 +218,7 @@ namespace LiteEntitySystem
                 Put((ushort)0);
                 return;
             }
-            
+
             int size = Utils.Encoding.Value.GetBytes(value, RawData.Slice(Position + sizeof(ushort)));
             if (size == 0)
             {

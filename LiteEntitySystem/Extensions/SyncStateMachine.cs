@@ -8,7 +8,7 @@ namespace LiteEntitySystem.Extensions
         public Action<float> OnUpdate;
         public Action OnExit;
     }
-    
+
     public class SyncStateMachine<T> : SyncableField where T : unmanaged, Enum
     {
         private SyncVar<T> _state;
@@ -21,7 +21,7 @@ namespace LiteEntitySystem.Extensions
         {
             _data = new StateCalls[Enum.GetValues(typeof(T)).Length];
         }
-        
+
         public SyncStateMachine<T> Add(T stateName, StateCalls stateCalls)
         {
             _data[stateName.GetEnumValue()] = stateCalls;

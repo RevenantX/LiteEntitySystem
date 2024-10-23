@@ -17,7 +17,7 @@ namespace LiteEntitySystem.Internal
             RPCOffset = ushort.MaxValue;
         }
     }
-    
+
     internal readonly struct RpcFieldInfo
     {
         public readonly int SyncableOffset;
@@ -28,18 +28,18 @@ namespace LiteEntitySystem.Internal
             SyncableOffset = -1;
             Method = method;
         }
-        
+
         public RpcFieldInfo(int syncableOffset, MethodCallDelegate method)
         {
             SyncableOffset = syncableOffset;
             Method = method;
         }
     }
-    
+
     internal struct EntityClassData
     {
         public static readonly EntityClassData Empty = new EntityClassData();
-        
+
         public readonly ushort ClassId;
         public readonly ushort FilterId;
         public readonly bool IsSingleton;
@@ -58,13 +58,13 @@ namespace LiteEntitySystem.Internal
         public readonly int LagCompensatedCount;
         public readonly EntityFlags Flags;
         public readonly EntityConstructor<InternalEntity> EntityConstructor;
-        
+
         public RpcFieldInfo[] RemoteCallsClient;
-        
+
         private readonly bool _isCreated;
         private readonly Type[] _baseTypes;
         private readonly Queue<byte[]> _dataCache;
-        
+
         private static readonly Type InternalEntityType = typeof(InternalEntity);
         private static readonly Type SingletonEntityType = typeof(SingletonEntityLogic);
         private static readonly Type SyncableFieldType = typeof(SyncableField);
@@ -74,13 +74,15 @@ namespace LiteEntitySystem.Internal
         private int _maxHistoryCount;
         private int _historyStart;
 
-        public Span<byte> ClientInterpolatedPrevData(InternalEntity e) => new (e.IOBuffer, 0, InterpolatedFieldsSize);
-        public Span<byte> ClientInterpolatedNextData(InternalEntity e) => new (e.IOBuffer, InterpolatedFieldsSize, InterpolatedFieldsSize);
-        public Span<byte> ClientPredictedData(InternalEntity e) => new (e.IOBuffer, InterpolatedFieldsSize*2, PredictedSize);
-        
+        public Span<byte> ClientInterpolatedPrevData(InternalEntity e) => new(e.IOBuffer, 0, InterpolatedFieldsSize);
+
+        public Span<byte> ClientInterpolatedNextData(InternalEntity e) => new(e.IOBuffer, InterpolatedFieldsSize, InterpolatedFieldsSize);
+
+        public Span<byte> ClientPredictedData(InternalEntity e) => new(e.IOBuffer, InterpolatedFieldsSize * 2, PredictedSize);
+
         public unsafe void WriteHistory(EntityLogic e, ushort tick)
         {
-            int historyOffset = ((tick % _maxHistoryCount)+1)*LagCompensatedSize;
+            int historyOffset = ((tick % _maxHistoryCount) + 1) * LagCompensatedSize;
             fixed (byte* history = &e.IOBuffer[_historyStart])
             {
                 for (int i = 0; i < LagCompensatedCount; i++)
@@ -94,8 +96,8 @@ namespace LiteEntitySystem.Internal
 
         public unsafe void LoadHistroy(NetPlayer player, EntityLogic e)
         {
-            int historyAOffset = ((player.StateATick % _maxHistoryCount)+1)*LagCompensatedSize;
-            int historyBOffset = ((player.StateBTick % _maxHistoryCount)+1)*LagCompensatedSize;
+            int historyAOffset = ((player.StateATick % _maxHistoryCount) + 1) * LagCompensatedSize;
+            int historyBOffset = ((player.StateBTick % _maxHistoryCount) + 1) * LagCompensatedSize;
             int historyCurrent = 0;
             fixed (byte* history = &e.IOBuffer[_historyStart])
             {
@@ -103,7 +105,7 @@ namespace LiteEntitySystem.Internal
                 {
                     ref var field = ref LagCompensatedFields[i];
                     field.TypeProcessor.LoadHistory(
-                        e, 
+                        e,
                         field.Offset,
                         history + historyCurrent,
                         history + historyAOffset,
@@ -129,7 +131,7 @@ namespace LiteEntitySystem.Internal
                 }
             }
         }
-        
+
         public void AllocateDataCache(InternalEntity entity)
         {
             if (_maxHistoryCount == 0)
@@ -162,50 +164,50 @@ namespace LiteEntitySystem.Internal
             LagCompensatedCount = 0;
             InterpolatedCount = 0;
             InterpolatedFieldsSize = 0;
-            
+
             _dataCacheSize = 0;
             _maxHistoryCount = 0;
             _historySize = 0;
             _historyStart = 0;
-            
+
             RemoteCallsClient = null;
 
             ClassId = typeInfo.ClassId;
             Flags = 0;
-            
+
             EntityConstructor = typeInfo.Constructor;
             IsSingleton = entType.IsSubclassOf(SingletonEntityType);
             FilterId = filterId;
-            
+
             _baseTypes = Utils.GetBaseTypes(entType, InternalEntityType, false).ToArray();
             BaseIds = new ushort[_baseTypes.Length];
-            
+
             var fields = new List<EntityFieldInfo>();
             var syncableFields = new List<SyncableFieldInfo>();
             var lagCompensatedFields = new List<EntityFieldInfo>();
-            
+
             var allTypesStack = Utils.GetBaseTypes(entType, typeof(object), true);
-            while(allTypesStack.Count > 0)
+            while (allTypesStack.Count > 0)
             {
                 var baseType = allTypesStack.Pop();
-                
+
                 var setFlagsAttribute = baseType.GetCustomAttribute<EntityFlagsAttribute>();
                 Flags |= setFlagsAttribute != null ? setFlagsAttribute.Flags : 0;
-                
+
                 //cache fields
                 foreach (var field in Utils.GetProcessedFields(baseType))
                 {
                     var ft = field.FieldType;
-                    if(Utils.IsRemoteCallType(ft) && !field.IsStatic)
+                    if (Utils.IsRemoteCallType(ft) && !field.IsStatic)
                         throw new Exception($"RemoteCalls should be static! (Class: {entType} Field: {field.Name})");
-                    
-                    if(field.IsStatic)
+
+                    if (field.IsStatic)
                         continue;
-                    
+
                     var syncVarFlags = field.GetCustomAttribute<SyncVarFlags>() ?? baseType.GetCustomAttribute<SyncVarFlags>();
                     var syncFlags = syncVarFlags?.Flags ?? SyncFlags.None;
                     int offset = Utils.GetFieldOffset(field);
-                    
+
                     //syncvars
                     if (ft.IsGenericType && !ft.IsArray && ft.GetGenericTypeDefinition() == typeof(SyncVar<>))
                     {
@@ -243,23 +245,23 @@ namespace LiteEntitySystem.Internal
                     {
                         if (!field.IsInitOnly)
                             throw new Exception($"Syncable fields should be readonly! (Class: {entType} Field: {field.Name})");
-                        
+
                         syncableFields.Add(new SyncableFieldInfo(offset, syncFlags));
                         var syncableFieldTypesWithBase = Utils.GetBaseTypes(ft, SyncableFieldType, true);
-                        while(syncableFieldTypesWithBase.Count > 0)
+                        while (syncableFieldTypesWithBase.Count > 0)
                         {
                             var syncableType = syncableFieldTypesWithBase.Pop();
                             //syncable fields
                             foreach (var syncableField in Utils.GetProcessedFields(syncableType))
                             {
                                 var syncableFieldType = syncableField.FieldType;
-                                if(Utils.IsRemoteCallType(syncableFieldType) && !syncableField.IsStatic)
+                                if (Utils.IsRemoteCallType(syncableFieldType) && !syncableField.IsStatic)
                                     throw new Exception($"RemoteCalls should be static! (Class: {syncableType} Field: {syncableField.Name})");
-                                
-                                if (!syncableFieldType.IsValueType || 
-                                    !syncableFieldType.IsGenericType || 
+
+                                if (!syncableFieldType.IsValueType ||
+                                    !syncableFieldType.IsGenericType ||
                                     syncableFieldType.GetGenericTypeDefinition() != typeof(SyncVar<>) ||
-                                    syncableField.IsStatic) 
+                                    syncableField.IsStatic)
                                     continue;
 
                                 syncableFieldType = syncableFieldType.GetGenericArguments()[0];
@@ -282,7 +284,7 @@ namespace LiteEntitySystem.Internal
                     }
                 }
             }
-            
+
             //sort by placing interpolated first
             fields.Sort((a, b) =>
             {
@@ -293,7 +295,7 @@ namespace LiteEntitySystem.Internal
             Fields = fields.ToArray();
             SyncableFields = syncableFields.ToArray();
             FieldsCount = Fields.Length;
-            FieldsFlagsSize = (FieldsCount-1) / 8 + 1;
+            FieldsFlagsSize = (FieldsCount - 1) / 8 + 1;
             LagCompensatedFields = lagCompensatedFields.ToArray();
             LagCompensatedCount = LagCompensatedFields.Length;
 

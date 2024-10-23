@@ -1,18 +1,18 @@
+using LiteEntitySystem.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem.Extensions
 {
     public class SyncList<T> : SyncableField, ICollection<T>, IReadOnlyList<T> where T : unmanaged
     {
-        struct SetValueData
+        private struct SetValueData
         {
             public int Index;
             public T Data;
         }
-        
+
         public int Count => _count;
         public bool IsReadOnly => false;
 
@@ -79,7 +79,7 @@ namespace LiteEntitySystem.Extensions
         {
             _data[svd.Index] = svd.Data;
         }
-        
+
         public SyncList()
         {
             _data = new T[8];
@@ -96,7 +96,7 @@ namespace LiteEntitySystem.Extensions
             Buffer.BlockCopy(_data, 0, arr, 0, _count);
             return arr;
         }
-        
+
         public void Add(T item)
         {
             if (_data.Length == _count)
@@ -105,7 +105,7 @@ namespace LiteEntitySystem.Extensions
             _count++;
             ExecuteRPC(_addAction, item);
         }
-        
+
         public void Clear()
         {
             _count = 0;
@@ -126,7 +126,7 @@ namespace LiteEntitySystem.Extensions
         {
             Array.Copy(_data, 0, array, arrayIndex, _count);
         }
-        
+
         public bool Remove(T item)
         {
             for (int i = 0; i < _count; i++)
@@ -157,7 +157,7 @@ namespace LiteEntitySystem.Extensions
             _count--;
             ExecuteRPC(_removeAtAction, index);
         }
-        
+
         public T this[int index]
         {
             get => _data[index];

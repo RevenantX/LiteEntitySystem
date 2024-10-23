@@ -1,6 +1,6 @@
-﻿using System;
-using K4os.Compression.LZ4;
+﻿using K4os.Compression.LZ4;
 using LiteNetLib.Utils;
+using System;
 
 namespace LiteEntitySystem.Extensions
 {
@@ -9,7 +9,7 @@ namespace LiteEntitySystem.Extensions
         private static readonly NetDataWriter WriterCache = new();
         private static readonly NetDataReader ReaderCache = new();
         private static byte[] CompressionBuffer;
-        
+
         private T _value;
 
         public T Value
@@ -46,7 +46,7 @@ namespace LiteEntitySystem.Extensions
                 return;
             }
             int bufSize = LZ4Codec.MaximumOutputSize(WriterCache.Length) + 2;
-            if(CompressionBuffer == null || CompressionBuffer.Length < bufSize)
+            if (CompressionBuffer == null || CompressionBuffer.Length < bufSize)
                 CompressionBuffer = new byte[bufSize];
             FastBitConverter.GetBytes(CompressionBuffer, 0, (ushort)WriterCache.Length);
             int encodedLength = LZ4Codec.Encode(
@@ -55,9 +55,9 @@ namespace LiteEntitySystem.Extensions
                 WriterCache.Length,
                 CompressionBuffer,
                 2,
-                CompressionBuffer.Length-2,
+                CompressionBuffer.Length - 2,
                 LZ4Level.L00_FAST);
-            ExecuteRPC(_initAction, new ReadOnlySpan<byte>(CompressionBuffer, 0, encodedLength+2));
+            ExecuteRPC(_initAction, new ReadOnlySpan<byte>(CompressionBuffer, 0, encodedLength + 2));
         }
 
         private void Init(ReadOnlySpan<byte> data)

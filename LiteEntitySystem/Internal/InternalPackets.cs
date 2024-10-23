@@ -21,7 +21,7 @@ namespace LiteEntitySystem.Internal
         public ushort LastReceivedTick;
         public byte BufferedInputsCount;
     }
-    
+
     [StructLayout(LayoutKind.Sequential)]
     internal struct DiffPartHeader
     {
@@ -30,7 +30,7 @@ namespace LiteEntitySystem.Internal
         public byte Part;
         public ushort Tick;
     }
-    
+
     internal struct InputPacketHeader
     {
         public ushort StateA;

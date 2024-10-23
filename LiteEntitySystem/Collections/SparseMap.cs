@@ -9,7 +9,7 @@ namespace LiteEntitySystem.Collections
             public int Id;
             public T Value;
         }
-        
+
         private int[] _sparse;
         private SparseEntry[] _dense;
         private int _count;
@@ -18,7 +18,6 @@ namespace LiteEntitySystem.Collections
 
         public SparseMap() : this(8)
         {
-            
         }
 
         public SparseMap(int capacity)
@@ -48,14 +47,14 @@ namespace LiteEntitySystem.Collections
                 return ref _dense[index].Value;
             throw new ArgumentOutOfRangeException($"Id: {id} not found in map");
         }
-        
+
         public ref readonly SparseEntry GetSparseEntryByIndex(int index)
         {
             if (index >= _count)
                 throw new IndexOutOfRangeException();
             return ref _dense[index];
         }
-        
+
         public bool TryGetSparseEntry(int id, out SparseEntry result)
         {
             result = default;
@@ -105,8 +104,8 @@ namespace LiteEntitySystem.Collections
             if (_count == _dense.Length)
                 Array.Resize(ref _dense, _count * 2);
             if (id >= _sparse.Length)
-                Array.Resize(ref _sparse, Math.Max(_sparse.Length*2, id+1));   
-            
+                Array.Resize(ref _sparse, Math.Max(_sparse.Length * 2, id + 1));
+
             int i = _sparse[id];
             if (i < _count && _dense[i].Id == id)
             {
@@ -117,7 +116,7 @@ namespace LiteEntitySystem.Collections
             _sparse[id] = _count;
             _count++;
         }
- 
+
         public bool Remove(int id)
         {
             if (id >= _sparse.Length)

@@ -10,7 +10,7 @@ namespace LiteEntitySystem.Extensions
 
         private HashSet<T> _serverData;
         private HashSet<T> _tempData;
-        private HashSet<T> _data = new ();
+        private HashSet<T> _data = new();
 
         private static RemoteCall<T> _addAction;
         private static RemoteCall _clearAction;
@@ -63,14 +63,14 @@ namespace LiteEntitySystem.Extensions
                 _data.Add(x);
         }
 
-        private void AddAction(T x) =>  _data.Add(x);
+        private void AddAction(T x) => _data.Add(x);
 
         public void Add(T x)
         {
             _data.Add(x);
             ExecuteRPC(_addAction, x);
         }
-        
+
         public void Clear()
         {
             _data.Clear();
@@ -83,7 +83,7 @@ namespace LiteEntitySystem.Extensions
 
         public bool Remove(T key)
         {
-            if (!_data.Remove(key)) 
+            if (!_data.Remove(key))
                 return false;
             ExecuteRPC(_removeAction, key);
             return true;

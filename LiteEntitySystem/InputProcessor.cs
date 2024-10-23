@@ -1,20 +1,22 @@
-using System;
 using LiteEntitySystem.Collections;
 using LiteEntitySystem.Internal;
 using LiteNetLib.Utils;
+using System;
 
 namespace LiteEntitySystem
 {
     public abstract class InputProcessor
     {
         private const int FieldsDivision = 2;
-        
+
         public abstract void ReadInput(EntityManager manager, byte ownerId, ReadOnlySpan<byte> inputsData);
+
         public abstract void GenerateAndWriteInput(EntityManager manager, byte ownerId, byte[] data, int offset);
+
         public abstract void ReadClientRequest(EntityManager manager, NetDataReader reader);
-      
+
         private readonly byte[] _firstFullInput;
-        
+
         public readonly int InputSize;
         public readonly int InputSizeWithHeader;
         public readonly int DeltaBits;
@@ -43,14 +45,14 @@ namespace LiteEntitySystem
                 {
                     deltaFlags[i / FieldsDivision] = true;
                     result[resultSize] = currentInput[i];
-                    if(i < InputSize - 1)
+                    if (i < InputSize - 1)
                         result[resultSize + 1] = currentInput[i + 1];
                     resultSize += FieldsDivision;
                 }
             }
             return resultSize;
         }
-        
+
         public void DeltaDecodeInit(ReadOnlySpan<byte> fullInput)
         {
             fullInput.CopyTo(_firstFullInput);
@@ -66,14 +68,14 @@ namespace LiteEntitySystem
                 {
                     _firstFullInput[i] = result[i] = currentDeltaInput[fieldOffset];
                     if (i < InputSize - 1)
-                        _firstFullInput[i+1] = result[i+1] = currentDeltaInput[fieldOffset+1];
+                        _firstFullInput[i + 1] = result[i + 1] = currentDeltaInput[fieldOffset + 1];
                     fieldOffset += FieldsDivision;
                 }
                 else
                 {
                     result[i] = _firstFullInput[i];
-                    if(i < InputSize - 1)
-                        result[i+1] = _firstFullInput[i+1];
+                    if (i < InputSize - 1)
+                        result[i + 1] = _firstFullInput[i + 1];
                 }
             }
             return fieldOffset;
@@ -84,7 +86,6 @@ namespace LiteEntitySystem
     {
         public InputProcessor() : base(sizeof(TInput))
         {
-            
         }
 
         public override void ReadInput(EntityManager manager, byte ownerId, ReadOnlySpan<byte> inputsData)
@@ -93,7 +94,7 @@ namespace LiteEntitySystem
             {
                 foreach (var controller in manager.GetControllers<HumanControllerLogic<TInput>>())
                 {
-                    if(controller.InternalOwnerId.Value != ownerId)
+                    if (controller.InternalOwnerId.Value != ownerId)
                         continue;
                     controller.ReadInput(*(TInput*)rawData);
                     return;
@@ -107,7 +108,7 @@ namespace LiteEntitySystem
             {
                 foreach (var controller in manager.GetControllers<HumanControllerLogic<TInput>>())
                 {
-                    if(controller.InternalOwnerId.Value != ownerId)
+                    if (controller.InternalOwnerId.Value != ownerId)
                         continue;
                     controller.GenerateInput(out var input);
                     *(TInput*)(rawData + offset) = input;

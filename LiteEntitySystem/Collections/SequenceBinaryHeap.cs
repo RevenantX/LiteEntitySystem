@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem.Collections
 {
@@ -11,19 +10,19 @@ namespace LiteEntitySystem.Collections
             public T Data;
             public ushort Sequence;
         }
-        
+
         private readonly SequenceHeapNode[] _data;
         private int _count;
-        
+
         public int Count => _count;
-        
-        public SequenceBinaryHeap(int capacity) 
+
+        public SequenceBinaryHeap(int capacity)
         {
             _data = new SequenceHeapNode[capacity];
             _count = 0;
         }
-        
-        public void Add(T item, ushort sequence) 
+
+        public void Add(T item, ushort sequence)
         {
             if (_count == _data.Length)
                 throw new Exception("Heap capacity exceeded");
@@ -33,7 +32,7 @@ namespace LiteEntitySystem.Collections
             _data[position] = new SequenceHeapNode { Data = item, Sequence = sequence };
             MoveUp(position);
         }
-        
+
         public T ExtractMin()
         {
             var minNode = _data[0];
@@ -42,7 +41,7 @@ namespace LiteEntitySystem.Collections
             MoveDown(0);
             return minNode.Data;
         }
-        
+
         private void MoveUp(int position)
         {
             while (position > 0 && Utils.SequenceDiff(_data[Parent(position)].Sequence, _data[position].Sequence) > 0)

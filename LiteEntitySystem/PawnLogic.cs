@@ -38,6 +38,8 @@
             base.DestroyInternal();
         }
 
-        protected PawnLogic(EntityParams entityParams) : base(entityParams) { }
+        protected PawnLogic(EntityParams entityParams) : base(entityParams)
+        {
+        }
     }
 }

@@ -55,7 +55,7 @@ namespace LiteEntitySystem.Internal
         public byte BufferedInputsCount;
         public int InterpolatedCachesCount;
         public InterpolatedCache[] InterpolatedCaches = new InterpolatedCache[32];
-        
+
         private int _totalPartsCount;
         private int _syncableRemoteCallsCount;
         private int _remoteCallsCount;
@@ -64,9 +64,9 @@ namespace LiteEntitySystem.Internal
         private int _receivedPartsCount;
         private byte _maxReceivedPart;
         private ushort _partMtu;
-        private readonly BitArray _receivedParts = new (EntityManager.MaxParts);
-        
-        private static readonly ThreadLocal<HashSet<SyncableField>> SyncablesSet = new(()=>new HashSet<SyncableField>());
+        private readonly BitArray _receivedParts = new(EntityManager.MaxParts);
+
+        private static readonly ThreadLocal<HashSet<SyncableField>> SyncablesSet = new(() => new HashSet<SyncableField>());
 
         public unsafe void Preload(InternalEntity[] entityDict)
         {
@@ -84,7 +84,7 @@ namespace LiteEntitySystem.Internal
                     Logger.LogError($"[CEM] Invalid entity id: {entityId}");
                     return;
                 }
-      
+
                 //it should be here at preload
                 var entity = entityDict[entityId];
                 if (entity == null)
@@ -96,8 +96,8 @@ namespace LiteEntitySystem.Internal
 
                 ref readonly var classData = ref entity.ClassData;
                 int entityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
-                int stateReaderOffset = fullSync 
-                    ? initialReaderPosition + StateSerializer.HeaderSize + sizeof(ushort) 
+                int stateReaderOffset = fullSync
+                    ? initialReaderPosition + StateSerializer.HeaderSize + sizeof(ushort)
                     : entityFieldsOffset + classData.FieldsFlagsSize;
 
                 //preload interpolation info
@@ -114,14 +114,14 @@ namespace LiteEntitySystem.Internal
                 }
 
                 //preload rpcs
-                fixed(byte* rawData = Data)
+                fixed (byte* rawData = Data)
                     ReadRPCs(rawData, ref stateReaderOffset, new EntitySharedReference(entity.Id, entity.Version), classData);
 
                 if (stateReaderOffset != initialReaderPosition + totalSize)
                     Logger.LogError($"Missread! {stateReaderOffset} > {initialReaderPosition + totalSize}");
             }
         }
-        
+
         public void ExecuteSyncableRpcs(ClientEntityManager entityManager, ushort minimalTick, bool firstSync)
         {
             entityManager.IsExecutingRPC = true;
@@ -162,7 +162,7 @@ namespace LiteEntitySystem.Internal
                 syncableField.AfterReadRPC();
             entityManager.IsExecutingRPC = false;
         }
-        
+
         public void ExecuteRpcs(ClientEntityManager entityManager, ushort minimalTick, bool firstSync)
         {
             entityManager.IsExecutingRPC = true;
@@ -233,7 +233,7 @@ namespace LiteEntitySystem.Internal
                     _syncableRemoteCallsCaches[_syncableRemoteCallsCount] = rpcCache;
                     _syncableRemoteCallsCount++;
                 }
-     
+
                 position += header.ByteCount;
             }
         }
@@ -271,12 +271,12 @@ namespace LiteEntitySystem.Internal
                 //Logger.Log($"TPC: {partHeader.Part} {_partMtu}, LastReceivedTick: {LastReceivedTick}, LastProcessedTick: {ProcessedTick}");
             }
             partSize -= sizeof(DiffPartHeader);
-            if(_partMtu == 0)
+            if (_partMtu == 0)
                 _partMtu = (ushort)partSize;
-            Utils.ResizeIfFull(ref Data, _totalPartsCount > 1 
-                ? _partMtu * _totalPartsCount 
+            Utils.ResizeIfFull(ref Data, _totalPartsCount > 1
+                ? _partMtu * _totalPartsCount
                 : _partMtu * partHeader.Part + partSize);
-            fixed(byte* stateData = Data)
+            fixed (byte* stateData = Data)
                 RefMagic.CopyBlock(stateData + _partMtu * partHeader.Part, rawData + sizeof(DiffPartHeader), (uint)partSize);
             _receivedParts[partHeader.Part] = true;
             Size += partSize;

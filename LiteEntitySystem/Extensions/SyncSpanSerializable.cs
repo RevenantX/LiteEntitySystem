@@ -1,13 +1,13 @@
-using System;
 using K4os.Compression.LZ4;
 using LiteNetLib.Utils;
+using System;
 
 namespace LiteEntitySystem.Extensions
 {
     public class SyncSpanSerializable<T> : SyncableField where T : ISpanSerializable
     {
         private static byte[] CompressionBuffer;
-        
+
         private T _value;
 
         public T Value
@@ -44,14 +44,14 @@ namespace LiteEntitySystem.Extensions
                 return;
             }
             int bufSize = LZ4Codec.MaximumOutputSize(spanWriter.Position) + 2;
-            if(CompressionBuffer == null || CompressionBuffer.Length < bufSize)
+            if (CompressionBuffer == null || CompressionBuffer.Length < bufSize)
                 CompressionBuffer = new byte[bufSize];
             FastBitConverter.GetBytes(CompressionBuffer, 0, (ushort)spanWriter.Position);
             int encodedLength = LZ4Codec.Encode(
                 spanWriter.RawData.Slice(0, spanWriter.Position),
-                new Span<byte>(CompressionBuffer, 2, CompressionBuffer.Length-2),
+                new Span<byte>(CompressionBuffer, 2, CompressionBuffer.Length - 2),
                 LZ4Level.L00_FAST);
-            ExecuteRPC(_initAction, new ReadOnlySpan<byte>(CompressionBuffer, 0, encodedLength+2));
+            ExecuteRPC(_initAction, new ReadOnlySpan<byte>(CompressionBuffer, 0, encodedLength + 2));
         }
 
         private void Init(ReadOnlySpan<byte> data)

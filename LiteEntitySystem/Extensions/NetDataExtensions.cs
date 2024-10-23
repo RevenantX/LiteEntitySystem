@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+
 #if UNITY_2021_2_OR_NEWER
 using UnityEngine;
 #endif
@@ -19,7 +20,7 @@ namespace LiteNetLib.Utils
                 case 8: writer.Put(*(long*)&e); break;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Get<T>(this NetDataReader reader, out T result) where T : unmanaged, Enum
         {
@@ -33,7 +34,7 @@ namespace LiteNetLib.Utils
             }
             result = e;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe T Get<T>(this NetDataReader reader) where T : unmanaged, Enum
         {
@@ -53,7 +54,7 @@ namespace LiteNetLib.Utils
         {
             return new ReadOnlySpan<byte>(reader.RawData, reader.Position, reader.AvailableBytes);
         }
-        
+
 #if UNITY_2021_2_OR_NEWER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Put(this NetDataWriter writer, Vector3 v)
@@ -86,14 +87,14 @@ namespace LiteNetLib.Utils
             result.y = reader.GetFloat();
             result.z = reader.GetFloat();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Get(this NetDataReader reader, out Vector2 result)
         {
             result.x = reader.GetFloat();
             result.y = reader.GetFloat();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Get(this NetDataReader reader, out Quaternion result)
         {
@@ -102,7 +103,7 @@ namespace LiteNetLib.Utils
             result.z = reader.GetFloat();
             result.w = reader.GetFloat();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 GetVector3(this NetDataReader reader)
         {

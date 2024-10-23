@@ -1,8 +1,8 @@
+using LiteEntitySystem.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
@@ -17,14 +17,14 @@ namespace LiteEntitySystem
             Constructor = constructor;
         }
     }
-    
+
     public abstract class EntityTypesMap
     {
         internal ushort MaxId;
         internal readonly Dictionary<Type, RegisteredTypeInfo> RegisteredTypes = new();
         private bool _isFinished;
         private ulong _resultHash = 14695981039346656037UL; //FNV1a offset
-        
+
         /// <summary>
         /// Can be used to detect that server/client has difference
         /// </summary>
@@ -44,7 +44,7 @@ namespace LiteEntitySystem
                     }))
                 {
                     var allTypesStack = Utils.GetBaseTypes(entType, typeof(InternalEntity), true);
-                    while(allTypesStack.Count > 0)
+                    while (allTypesStack.Count > 0)
                     {
                         foreach (var field in Utils.GetProcessedFields(allTypesStack.Pop()))
                         {
@@ -67,7 +67,7 @@ namespace LiteEntitySystem
             void TryHashField(FieldInfo fi)
             {
                 var ft = fi.FieldType;
-                if ((fi.IsStatic && Utils.IsRemoteCallType(ft)) || 
+                if ((fi.IsStatic && Utils.IsRemoteCallType(ft)) ||
                     (ft.IsGenericType && !ft.IsArray && ft.GetGenericTypeDefinition() == typeof(SyncVar<>)))
                 {
                     string ftName = ft.Name + (ft.IsGenericType ? ft.GetGenericArguments()[0].Name : string.Empty);
@@ -95,7 +95,7 @@ namespace LiteEntitySystem
         /// <typeparam name="TEntity">Type of entity</typeparam>
         public EntityTypesMap<T> Register<TEntity>(T id, EntityConstructor<TEntity> constructor) where TEntity : InternalEntity
         {
-            ushort classId = (ushort)(id.GetEnumValue()+1);
+            ushort classId = (ushort)(id.GetEnumValue() + 1);
             EntityClassInfo<TEntity>.ClassId = classId;
             RegisteredTypes.Add(typeof(TEntity), new RegisteredTypeInfo(classId, constructor));
             MaxId = Math.Max(MaxId, classId);

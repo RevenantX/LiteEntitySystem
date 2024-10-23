@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using LiteEntitySystem.Extensions;
+﻿using LiteEntitySystem.Extensions;
 using LiteEntitySystem.Internal;
 using LiteNetLib.Utils;
+using System;
+using System.Collections.Generic;
 
 namespace LiteEntitySystem
 {
@@ -13,14 +13,14 @@ namespace LiteEntitySystem
             public EntitySharedReference Entity;
             public bool SyncEnabled;
         }
-        
+
         private static RemoteCall<EntitySyncInfo> OnEntitySyncChangedRPC;
-        
+
         private readonly SyncHashSet<EntitySharedReference> _skippedEntities = new();
-        
+
         //entities that should be resynced after diffSync (server only)
         private readonly Dictionary<InternalEntity, ushort> _forceSyncEntities;
-        
+
         /// <summary>
         /// Change entity delta-diff synchronization for player that owns this controller
         /// constructor and destruction will be synchronized anyways
@@ -48,9 +48,9 @@ namespace LiteEntitySystem
         protected internal override void OnConstructed()
         {
             base.OnConstructed();
-            
+
             //call OnEntityDiffSyncChanged for already skipped entities
-            if(EntityManager.IsClient)
+            if (EntityManager.IsClient)
                 foreach (var skippedEntity in _skippedEntities)
                     OnEntityDiffSyncChanged(EntityManager.GetEntityById<EntityLogic>(skippedEntity), false);
         }
@@ -73,7 +73,7 @@ namespace LiteEntitySystem
             foreach (var entityRef in _skippedEntities)
             {
                 var entity = EntityManager.GetEntityById<EntityLogic>(entityRef);
-                if(entity == null)
+                if (entity == null)
                     continue;
                 _forceSyncEntities.Add(entity, EntityManager.Tick);
                 ServerManager.EntityChanged(entity);
@@ -102,7 +102,7 @@ namespace LiteEntitySystem
             _forceSyncEntities.Remove(entityLogic);
             _skippedEntities.Remove(entityLogic);
         }
-        
+
         protected HumanControllerLogic(EntityParams entityParams) : base(entityParams)
         {
             if (EntityManager.IsServer)
@@ -111,7 +111,7 @@ namespace LiteEntitySystem
                 EntityManager.GetEntities<EntityLogic>().OnDestroyed += OnEntityDestroyed;
             }
         }
-        
+
         protected override void OnDestroy()
         {
             if (EntityManager.IsServer)
@@ -136,10 +136,9 @@ namespace LiteEntitySystem
         /// <param name="enabled">sync enabled or disabled</param>
         protected virtual void OnEntityDiffSyncChanged(EntityLogic entity, bool enabled)
         {
-            
         }
     }
-    
+
     /// <summary>
     /// Base class for human Controller entities
     /// </summary>
@@ -157,26 +156,26 @@ namespace LiteEntitySystem
                 Success = success;
             }
         }
-        
+
         /// <summary>
         /// Called on client and server to read generated from <see cref="GenerateInput"/> input
         /// </summary>
         /// <param name="input">user defined input structure</param>
         protected internal abstract void ReadInput(in TInput input);
-        
+
         /// <summary>
         /// Called on client to generate input
         /// </summary>
         protected internal abstract void GenerateInput(out TInput input);
 
         public override bool IsBot => false;
-        
+
         public const int StringSizeLimit = 1024;
         private readonly NetPacketProcessor _packetProcessor = new(StringSizeLimit);
         private readonly NetDataWriter _requestWriter = new();
         private static RemoteCall<ServerResponse> _serverResponseRpc;
         private ushort _requestId;
-        private readonly Dictionary<ushort,Action<bool>> _awaitingRequests;
+        private readonly Dictionary<ushort, Action<bool>> _awaitingRequests;
 
         /// <summary>
         /// Get player that uses this controller
@@ -217,7 +216,7 @@ namespace LiteEntitySystem
                 Logger.LogError($"Received invalid data as request: {e}");
             }
         }
-        
+
         protected void RegisterClientCustomType<T>() where T : struct, INetSerializable
         {
             _packetProcessor.RegisterNestedType<T>();
@@ -241,7 +240,7 @@ namespace LiteEntitySystem
             _requestId++;
             ClientManager.NetPeer.SendReliableOrdered(new ReadOnlySpan<byte>(_requestWriter.Data, 0, _requestWriter.Length));
         }
-        
+
         protected void SendRequest<T>(T request, Action<bool> onResult) where T : class, new()
         {
             if (EntityManager.InRollBackState)
@@ -257,7 +256,7 @@ namespace LiteEntitySystem
             _requestId++;
             ClientManager.NetPeer.SendReliableOrdered(new ReadOnlySpan<byte>(_requestWriter.Data, 0, _requestWriter.Length));
         }
-        
+
         protected void SendRequestStruct<T>(T request) where T : struct, INetSerializable
         {
             if (EntityManager.InRollBackState)
@@ -271,7 +270,7 @@ namespace LiteEntitySystem
             _requestId++;
             ClientManager.NetPeer.SendReliableOrdered(new ReadOnlySpan<byte>(_requestWriter.Data, 0, _requestWriter.Length));
         }
-        
+
         protected void SendRequestStruct<T>(T request, Action<bool> onResult) where T : struct, INetSerializable
         {
             if (EntityManager.InRollBackState)
@@ -287,7 +286,7 @@ namespace LiteEntitySystem
             _requestId++;
             ClientManager.NetPeer.SendReliableOrdered(new ReadOnlySpan<byte>(_requestWriter.Data, 0, _requestWriter.Length));
         }
-        
+
         protected void SubscribeToClientRequestStruct<T>(Action<T> onRequestReceived) where T : struct, INetSerializable
         {
             _packetProcessor.SubscribeNetSerializable<T, ushort>((data, requestId) =>
@@ -296,7 +295,7 @@ namespace LiteEntitySystem
                 ExecuteRPC(_serverResponseRpc, new ServerResponse(requestId, true));
             });
         }
-        
+
         protected void SubscribeToClientRequestStruct<T>(Func<T, bool> onRequestReceived) where T : struct, INetSerializable
         {
             _packetProcessor.SubscribeNetSerializable<T, ushort>((data, requestId) =>
@@ -305,7 +304,7 @@ namespace LiteEntitySystem
                 ExecuteRPC(_serverResponseRpc, new ServerResponse(requestId, success));
             });
         }
-        
+
         protected void SubscribeToClientRequest<T>(Action<T> onRequestReceived) where T : class, new()
         {
             _packetProcessor.SubscribeReusable<T, ushort>((data, requestId) =>
@@ -314,7 +313,7 @@ namespace LiteEntitySystem
                 ExecuteRPC(_serverResponseRpc, new ServerResponse(requestId, true));
             });
         }
-        
+
         protected void SubscribeToClientRequest<T>(Func<T, bool> onRequestReceived) where T : class, new()
         {
             _packetProcessor.SubscribeReusable<T, ushort>((data, requestId) =>
@@ -342,6 +341,8 @@ namespace LiteEntitySystem
     {
         public T ControlledEntity => GetControlledEntity<T>();
 
-        protected HumanControllerLogic(EntityParams entityParams) : base(entityParams) { }
+        protected HumanControllerLogic(EntityParams entityParams) : base(entityParams)
+        {
+        }
     }
 }

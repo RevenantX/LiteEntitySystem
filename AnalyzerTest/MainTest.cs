@@ -1,11 +1,11 @@
-using System.Reflection;
 using LiteEntitySystem.Internal;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Testing;
-using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerVerifier<
+using System.Reflection;
+using Test = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerTest<
     LiteEntitySystemAnalyzer.LiteEntitySystemAnalyzer,
     Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
-using Test = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerTest<
+using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerVerifier<
     LiteEntitySystemAnalyzer.LiteEntitySystemAnalyzer,
     Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
 
@@ -27,7 +27,7 @@ public class MainTest
         };
         await t.RunAsync();
     }
-    
+
     [TestMethod]
     public async Task LocalIntCouldBeConstant_Diagnostic()
     {
@@ -40,7 +40,7 @@ class Program
     public static SyncVar<int> sv;
 
     static void Main()
-    {   
+    {
         sv = new SyncVar<int>();
     }
 }

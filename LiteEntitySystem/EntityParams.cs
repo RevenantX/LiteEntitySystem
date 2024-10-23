@@ -2,7 +2,7 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
-    public readonly ref struct EntityParams
+    public readonly struct EntityParams
     {
         public readonly ushort ClassId;
         public readonly ushort Id;
@@ -18,7 +18,7 @@ namespace LiteEntitySystem
             CreationTime = dataHeader.CreationTick;
             EntityManager = entityManager;
         }
-        
+
         internal EntityParams(
             ushort classId,
             ushort id,

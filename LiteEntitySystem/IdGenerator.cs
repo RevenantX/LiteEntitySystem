@@ -17,7 +17,7 @@ namespace LiteEntitySystem
                 throw new Exception("IdGenerator overflow");
             return _counter++;
         }
-        
+
         public int AvailableIds => _maxValue - _counter + _queue.Count;
 
         public void ReuseId(byte id)
@@ -30,14 +30,14 @@ namespace LiteEntitySystem
             _counter = initialValue;
             _maxValue = maxValue;
         }
-        
+
         public void Reset()
         {
             _queue.Clear();
             _counter = 0;
         }
     }
-    
+
     public class IdGeneratorUShort
     {
         private readonly ushort _maxValue;
@@ -52,7 +52,7 @@ namespace LiteEntitySystem
                 throw new Exception("IdGenerator overflow");
             return _counter++;
         }
-        
+
         public int AvailableIds => _maxValue - _counter + _queue.Count;
 
         public void ReuseId(ushort id)
@@ -65,7 +65,7 @@ namespace LiteEntitySystem
             _counter = initialValue;
             _maxValue = maxValue;
         }
-        
+
         public void Reset()
         {
             _queue.Clear();

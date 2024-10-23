@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem.Extensions
 {
@@ -41,7 +40,7 @@ namespace LiteEntitySystem.Extensions
         {
             return s.Value;
         }
-        
+
         private void SetNewString(ReadOnlySpan<byte> data)
         {
             _string = Encoding.GetString(data);

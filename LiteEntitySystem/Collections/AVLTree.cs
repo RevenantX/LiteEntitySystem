@@ -13,7 +13,7 @@ namespace LiteEntitySystem.Collections
             private readonly TreeNode[] _nodes;
             private int _index;
             private readonly int _count;
-            
+
             public Enumerator(AVLTree<T> tree)
             {
                 tree._enumeratorsCount++;
@@ -22,10 +22,14 @@ namespace LiteEntitySystem.Collections
                 _index = -1;
                 _count = tree._nodesCount;
             }
-            
-            public void Dispose() { _tree._enumeratorsCount--; }
+
+            public void Dispose()
+            { _tree._enumeratorsCount--; }
+
             public bool MoveNext() => ++_index != _count;
+
             public void Reset() => _index = -1;
+
             public T Current => _nodes[_nodes[_index].SortedNextId].Data;
             object IEnumerator.Current => Current;
         }
@@ -66,7 +70,7 @@ namespace LiteEntitySystem.Collections
         /// Elements count
         /// </summary>
         public int Count => _nodesCount;
-        
+
         private int _enumeratorsCount;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -187,7 +191,6 @@ namespace LiteEntitySystem.Collections
                 nodes = _nodes;
             }
 
-
             //get new node id
             nodeIdx = _idStackCount > 0 ? nodes[--_idStackCount].IdStack : _idCounter++;
             nodes[nodeIdx].SetData(ref data);
@@ -211,21 +214,23 @@ namespace LiteEntitySystem.Collections
                             ? RightRotate(nodes, newNodeIdx)
                             : LeftRightRotate(nodes, newNodeIdx);
                         break;
+
                     case < -1:
                         nodeIdx = data.CompareTo(rightChild.Data!) > 0
                             ? LeftRotate(nodes, newNodeIdx)
                             : RightLeftRotate(nodes, newNodeIdx);
                         break;
+
                     default:
-                    {
-                        int height = (leftChild.Height > rightChild.Height ? leftChild.Height : rightChild.Height) + 1;
-                        if (height == node.Height)
-                            return;
-                        nodeIdx = newNodeIdx;
-                        //update new height
-                        node.Height = height;
-                        break;
-                    }
+                        {
+                            int height = (leftChild.Height > rightChild.Height ? leftChild.Height : rightChild.Height) + 1;
+                            if (height == node.Height)
+                                return;
+                            nodeIdx = newNodeIdx;
+                            //update new height
+                            node.Height = height;
+                            break;
+                        }
                 }
             }
 
@@ -346,6 +351,7 @@ namespace LiteEntitySystem.Collections
         }
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
+
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

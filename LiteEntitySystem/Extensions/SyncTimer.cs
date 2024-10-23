@@ -1,6 +1,4 @@
-﻿using LiteEntitySystem.Internal;
-
-namespace LiteEntitySystem.Extensions
+﻿namespace LiteEntitySystem.Extensions
 {
     public class SyncTimer : SyncableField
     {
@@ -9,26 +7,25 @@ namespace LiteEntitySystem.Extensions
         public bool IsTimeElapsed => _time >= _maxTime;
         public float CountdownTime => _maxTime - _time;
         public bool HasStarted => ElapsedTime > 0;
-        
+
         private SyncVar<float> _time;
         private SyncVar<float> _maxTime;
 
-        public SyncTimer(float maxTime) 
+        public SyncTimer(float maxTime)
         {
             _maxTime.Value = maxTime;
             Finish();
         }
 
-        public SyncTimer() 
+        public SyncTimer()
         {
-            
         }
 
         public float Progress
         {
             get
             {
-                float p = _time/_maxTime;
+                float p = _time / _maxTime;
                 return p > 1f ? 1f : p;
             }
         }

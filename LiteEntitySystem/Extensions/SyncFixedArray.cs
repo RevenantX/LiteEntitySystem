@@ -9,7 +9,7 @@ namespace LiteEntitySystem.Extensions
             public T Value;
             public ushort Index;
         }
-        
+
         private readonly T[] _data;
         private static RemoteCall<SetCallData> _setRpcAction;
         private static RemoteCallSpan<T> _initArrayAction;
@@ -37,19 +37,19 @@ namespace LiteEntitySystem.Extensions
         {
             data.CopyTo(_data);
         }
-        
+
         private void SetValueRPC(SetCallData setCallData)
         {
             _data[setCallData.Index] = setCallData.Value;
         }
-        
+
         public T this[int index]
         {
             get => _data[index];
             set
             {
-                if(_data[index].Equals(value))
-                   return;
+                if (_data[index].Equals(value))
+                    return;
                 _data[index] = value;
                 ExecuteRPC(_setRpcAction, new SetCallData { Value = value, Index = (ushort)index });
             }

@@ -11,26 +11,26 @@ namespace LiteEntitySystem.Internal
         public byte Version;
         public int CreationTick;
     }
-    
+
     public class EntityComparer : IComparer<InternalEntity>
     {
         public int Compare(InternalEntity x, InternalEntity y) => x.CompareTo(y);
 
         public static readonly EntityComparer Instance = new();
     }
-    
+
     public abstract class InternalEntity : InternalBaseClass, IComparable<InternalEntity>
     {
         [SyncVarFlags(SyncFlags.NeverRollBack)]
         internal SyncVar<byte> InternalOwnerId;
-        
+
         internal byte[] IOBuffer;
-        
+
         /// <summary>
         /// Entity class id
         /// </summary>
         public readonly ushort ClassId;
-        
+
         /// <summary>
         /// Entity instance id
         /// </summary>
@@ -40,7 +40,7 @@ namespace LiteEntitySystem.Internal
         /// Entity creation tick number that can be more than ushort
         /// </summary>
         internal readonly int CreationTick;
-        
+
         /// <summary>
         /// Entity manager
         /// </summary>
@@ -50,7 +50,7 @@ namespace LiteEntitySystem.Internal
         /// Is entity on server
         /// </summary>
         protected internal bool IsServer => EntityManager.IsServer;
-        
+
         /// <summary>
         /// Is entity on server
         /// </summary>
@@ -68,10 +68,10 @@ namespace LiteEntitySystem.Internal
             CreationTick = CreationTick,
             Version = Version
         };
-        
+
         [SyncVarFlags(SyncFlags.NeverRollBack)]
         private SyncVar<bool> _isDestroyed;
-        
+
         /// <summary>
         /// Is entity is destroyed
         /// </summary>
@@ -86,22 +86,22 @@ namespace LiteEntitySystem.Internal
         /// Is entity remote controlled
         /// </summary>
         public bool IsRemoteControlled => OwnerId != EntityManager.InternalPlayerId;
-        
+
         /// <summary>
         /// Is entity is controlled by server
         /// </summary>
         public bool IsServerControlled => OwnerId == EntityManager.ServerPlayerId;
-        
+
         /// <summary>
         /// ClientEntityManager that available only on client. Will throw exception if called on server
         /// </summary>
         public ClientEntityManager ClientManager => (ClientEntityManager)EntityManager;
-        
+
         /// <summary>
         /// ServerEntityManager that available only on server. Will throw exception if called on client
         /// </summary>
         public ServerEntityManager ServerManager => (ServerEntityManager)EntityManager;
-        
+
         /// <summary>
         /// Owner player id
         /// ServerPlayerId - 0
@@ -113,9 +113,8 @@ namespace LiteEntitySystem.Internal
         /// Is locally created entity
         /// </summary>
         public bool IsLocal => Id >= EntityManager.MaxSyncedEntityCount;
-        
-        internal ref EntityClassData ClassData => ref EntityManager.ClassDataDict[ClassId];
 
+        internal ref EntityClassData ClassData => ref EntityManager.ClassDataDict[ClassId];
 
         /// <summary>
         /// Destroy entity
@@ -126,7 +125,7 @@ namespace LiteEntitySystem.Internal
                 return;
             DestroyInternal();
         }
-        
+
         private void OnDestroyChange(bool prevValue)
         {
             if (!prevValue && _isDestroyed)
@@ -141,7 +140,6 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         protected virtual void OnDestroy()
         {
-
         }
 
         internal virtual void DestroyInternal()
@@ -163,7 +161,7 @@ namespace LiteEntitySystem.Internal
             catch (Exception e)
             {
                 Logger.LogError($"Exception in entity({Id}) update:\n{e}");
-            }   
+            }
         }
 
         /// <summary>
@@ -172,13 +170,12 @@ namespace LiteEntitySystem.Internal
         protected internal virtual void Update()
         {
         }
-        
+
         /// <summary>
         /// Called at rollback begin before all values reset to first frame in rollback queue.
         /// </summary>
         protected internal virtual void OnBeforeRollback()
         {
-            
         }
 
         /// <summary>
@@ -186,7 +183,6 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         protected internal virtual void OnRollback()
         {
-            
         }
 
         /// <summary>
@@ -194,7 +190,6 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         protected internal virtual void VisualUpdate()
         {
-            
         }
 
         /// <summary>
@@ -207,7 +202,7 @@ namespace LiteEntitySystem.Internal
         internal void RegisterRpcInternal()
         {
             ref var classData = ref ClassData;
-            
+
             //setup field ids for BindOnChange and pass on server this for OnChangedEvent to StateSerializer
             var onChangeTarget = EntityManager.IsServer && !IsLocal ? this : null;
             for (int i = 0; i < classData.FieldsCount; i++)
@@ -223,9 +218,9 @@ namespace LiteEntitySystem.Internal
                     field.TypeProcessor.InitSyncVar(syncableField, field.SyncableSyncVarOffset, onChangeTarget, (ushort)i);
                 }
             }
-          
+
             List<RpcFieldInfo> rpcCahce = null;
-            if(classData.RemoteCallsClient == null)
+            if (classData.RemoteCallsClient == null)
             {
                 rpcCahce = new List<RpcFieldInfo>();
                 var rpcRegistrator = new RPCRegistrator(rpcCahce);
@@ -259,8 +254,6 @@ namespace LiteEntitySystem.Internal
             classData.RemoteCallsClient ??= rpcCahce.ToArray();
         }
 
-
-
         /// <summary>
         /// Method for registering RPCs and OnChange notifications
         /// </summary>
@@ -290,7 +283,7 @@ namespace LiteEntitySystem.Internal
             int versionDiff = Version - other.Version;
             if (versionDiff != 0)
                 return versionDiff;
-            
+
             //local first because mostly this is unity physics or something similar
             return (Id >= EntityManager.MaxSyncedEntityCount ? Id - ushort.MaxValue : Id) -
                    (other.Id >= EntityManager.MaxSyncedEntityCount ? other.Id - ushort.MaxValue : other.Id);
