@@ -388,34 +388,26 @@ namespace LiteEntitySystem
             
             //create entity data and filters
             ref var classData = ref ClassDataDict[EntityClassInfo<T>.ClassId];
-            T entity;
-            
-            if (classData.Flags.HasFlagFast(EntityFlags.LocalOnly))
+            if (_entityIdQueue.AvailableIds == 0)
             {
-                entity = AddLocalEntity(initMethod);
+                Logger.Log($"Cannot add entity. Max entity count reached: {MaxSyncedEntityCount}");
+                return null;
             }
-            else
-            {
-                if (_entityIdQueue.AvailableIds == 0)
-                {
-                    Logger.Log($"Cannot add entity. Max entity count reached: {MaxSyncedEntityCount}");
-                    return null;
-                }
-                ushort entityId = _entityIdQueue.GetNewId();
-                ref var stateSerializer = ref _stateSerializers[entityId];
+            ushort entityId = _entityIdQueue.GetNewId();
+            ref var stateSerializer = ref _stateSerializers[entityId];
 
-                stateSerializer.AllocateMemory(ref classData);
-                entity = (T)AddEntity(new EntityParams(
-                    classData.ClassId, 
-                    entityId,
-                    stateSerializer.NextVersion,
-                    TotalTicksPassed,
-                    this));
-                stateSerializer.Init(entity, _tick);
-                initMethod?.Invoke(entity);
-                ConstructEntity(entity);
-                _changedEntities.Add(entity);
-            }
+            stateSerializer.AllocateMemory(ref classData);
+            var entity = (T)AddEntity(new EntityParams(
+                classData.ClassId, 
+                entityId,
+                stateSerializer.NextVersion,
+                TotalTicksPassed,
+                this));
+            stateSerializer.Init(entity, _tick);
+            initMethod?.Invoke(entity);
+            ConstructEntity(entity);
+            _changedEntities.Add(entity);
+            
             //Debug.Log($"[SEM] Entity create. clsId: {classData.ClassId}, id: {entityId}, v: {version}");
             return entity;
         }

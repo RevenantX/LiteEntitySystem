@@ -19,14 +19,9 @@ namespace LiteEntitySystem
         Updateable = 1 << 1,                    
         
         /// <summary>
-        /// Entity is local only without sync (only on server or client no difference)
-        /// </summary>
-        LocalOnly = 1 << 2,                     
-        
-        /// <summary>
         /// Sync entity only for owner player
         /// </summary>
-        OnlyForOwner = 1 << 3
+        OnlyForOwner = 1 << 2
     }
     
     [AttributeUsage(AttributeTargets.Class)]
@@ -137,7 +132,7 @@ namespace LiteEntitySystem
                 return predictedEntity;
             }
             
-            var entity = EntityManager.AddLocalEntity(initMethod);
+            var entity = ClientManager.AddLocalEntity(initMethod);
             ClientManager.AddPredictedInfo(entity);
             return entity;
         }

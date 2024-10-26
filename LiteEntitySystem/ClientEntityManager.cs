@@ -138,6 +138,8 @@ namespace LiteEntitySystem
         private float _lerpTime;
         private double _timer;
         private bool _isSyncReceived;
+        
+        private readonly IdGeneratorUShort _localIdQueue = new(MaxSyncedEntityCount, MaxEntityCount);
 
         private readonly struct SyncCallInfo
         {
@@ -216,7 +218,13 @@ namespace LiteEntitySystem
                 _statesPool.Enqueue(new ServerStateData());
             }
         }
-        
+
+        public override void Reset()
+        {
+            base.Reset();
+            _localIdQueue.Reset();
+        }
+
         /// <summary>
         /// Simplified constructor
         /// </summary>
@@ -240,6 +248,38 @@ namespace LiteEntitySystem
         {
             base.RemoveEntity(e);
             _predictedEntityFilter.Remove(e);
+            
+            if (e.IsLocal)
+                _localIdQueue.ReuseId(e.Id);
+        }
+        
+        /// <summary>
+        /// Add local entity that will be not synchronized
+        /// </summary>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <returns>Created entity or null if entities limit is reached (65535 - <see cref="MaxSyncedEntityCount"/>)</returns>
+        internal T AddLocalEntity<T>(Action<T> initMethod = null) where T : InternalEntity
+        {
+            if (_localIdQueue.AvailableIds == 0)
+            {
+                Logger.LogError("Max local entities count reached");
+                return null;
+            }
+            
+            var entity = (T)AddEntity(new EntityParams(
+                EntityClassInfo<T>.ClassId,
+                _localIdQueue.GetNewId(), 
+                0,
+                TotalTicksPassed,
+                this));
+            if (IsClient && entity is EntityLogic logic)
+            {
+                logic.InternalOwnerId.Value = InternalPlayerId;
+            }
+
+            initMethod?.Invoke(entity);
+            ConstructEntity(entity);
+            return entity;
         }
 
         private unsafe void OnAliveConstructed(InternalEntity entity)
@@ -433,11 +473,9 @@ namespace LiteEntitySystem
             
             return true;
 
-            float GetSpeedMultiplier(float bufferTime)
-            {
-                return Utils.Lerp(-1f, 0f, Utils.InvLerp(lowestBound - TimeSpeedChangeFadeTime, lowestBound, bufferTime)) +
-                       Utils.Lerp(0f, 1f, Utils.InvLerp(upperBound, upperBound + TimeSpeedChangeFadeTime, bufferTime));
-            }
+            float GetSpeedMultiplier(float bufferTime) =>
+                Utils.Lerp(-1f, 0f, Utils.InvLerp(lowestBound - TimeSpeedChangeFadeTime, lowestBound, bufferTime)) +
+                Utils.Lerp(0f, 1f, Utils.InvLerp(upperBound, upperBound + TimeSpeedChangeFadeTime, bufferTime));
         }
 
         private unsafe void GoToNextState()

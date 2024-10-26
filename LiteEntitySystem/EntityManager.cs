@@ -158,7 +158,7 @@ namespace LiteEntitySystem
 
         private readonly double _stopwatchFrequency;
         private readonly Stopwatch _stopwatch = new();
-        private readonly IdGeneratorUShort _localIdQueue = new(MaxSyncedEntityCount, MaxEntityCount);
+
         private readonly SingletonEntityLogic[] _singletonEntities;
         private readonly IEntityFilter[] _entityFilters;
         private readonly Dictionary<Type, ushort> _registeredTypeIds = new();
@@ -186,6 +186,9 @@ namespace LiteEntitySystem
         /// IsRunning - sets to false after Reset() call
         /// </summary>
         public bool IsRunning => _stopwatch.IsRunning;
+
+        public event Action OnBeforeUpdate;
+        public event Action OnAfterUpdate; 
         
         public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged =>
             ValueTypeProcessor.Registered[typeof(T)] = new UserTypeProcessor<T>(interpolationDelegate);
@@ -276,7 +279,6 @@ namespace LiteEntitySystem
             _accumulator = 0;
             _lastTime = 0;
             InternalPlayerId = 0;
-            _localIdQueue.Reset();
             _stopwatch.Stop();
             _stopwatch.Reset();
             AliveEntities.Clear();
@@ -415,36 +417,6 @@ namespace LiteEntitySystem
             singleton = null;
             return false;
         }
-        
-        /// <summary>
-        /// Add local entity that will be not synchronized
-        /// </summary>
-        /// <typeparam name="T">Entity type</typeparam>
-        /// <returns>Created entity or null if entities limit is reached (65535 - <see cref="MaxSyncedEntityCount"/>)</returns>
-        public T AddLocalEntity<T>(Action<T> initMethod = null) where T : InternalEntity
-        {
-            if (_localIdQueue.AvailableIds == 0)
-            {
-                Logger.LogError("Max local entities count reached");
-                return null;
-            }
-            
-            var entityParams = new EntityParams(
-                EntityClassInfo<T>.ClassId,
-                _localIdQueue.GetNewId(), 
-                0,
-                TotalTicksPassed,
-                this);
-            var entity = (T)AddEntity(entityParams);
-            if (IsClient && entity is EntityLogic logic)
-            {
-                logic.InternalOwnerId.Value = InternalPlayerId;
-            }
-
-            initMethod?.Invoke(entity);
-            ConstructEntity(entity);
-            return entity;
-        }
 
         protected InternalEntity AddEntity(EntityParams entityParams)
         {
@@ -530,8 +502,7 @@ namespace LiteEntitySystem
                 AliveEntities.Remove(e);
             if(IsEntityLagCompensated(e))
                 LagCompensatedEntities.Remove((EntityLogic)e);
-            if (classData.Flags.HasFlagFast(EntityFlags.LocalOnly))
-                _localIdQueue.ReuseId(e.Id);
+
             EntitiesDict[e.Id] = null;
             EntitiesCount--;
             //Logger.Log($"{Mode} - RemoveEntity: {e.Id}");
@@ -591,12 +562,14 @@ namespace LiteEntitySystem
                     _accumulator = 0;
                     return;
                 }
+                OnBeforeUpdate?.Invoke();
                 OnLogicTick();
                 _tick++;
                 TotalTicksPassed++;
 
                 _accumulator -= maxTicks;
                 updates++;
+                OnAfterUpdate?.Invoke();
             }
             _lerpFactor = (float)_accumulator / maxTicks;
         }
