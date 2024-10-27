@@ -143,7 +143,6 @@ namespace LiteEntitySystem
         public bool InNormalState => UpdateMode == UpdateMode.Normal;
         
         protected const int MaxSavedStateDiff = 30;
-        protected const ushort FirstEntityId = 1;
         internal const int MaxParts = 256;
         private const int MaxTicksPerUpdate = 5;
 
@@ -187,12 +186,19 @@ namespace LiteEntitySystem
         /// </summary>
         public bool IsRunning => _stopwatch.IsRunning;
 
+        /// <summary>
+        /// Register custom field type with interpolation
+        /// </summary>
+        /// <param name="interpolationDelegate">interpolation function</param>
         public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged =>
             ValueTypeProcessor.Registered[typeof(T)] = new UserTypeProcessor<T>(interpolationDelegate);
         
+        /// <summary>
+        /// Register custom field type
+        /// </summary>
         public static void RegisterFieldType<T>() where T : unmanaged =>
             ValueTypeProcessor.Registered[typeof(T)] = new UserTypeProcessor<T>(null);
-
+        
         private static void RegisterBasicFieldType<T>(ValueTypeProcessor<T> proc) where T : unmanaged =>
             ValueTypeProcessor.Registered.Add(typeof(T), proc);
 
@@ -454,7 +460,6 @@ namespace LiteEntitySystem
         protected void ConstructEntity(InternalEntity e)
         {
             ref var classData = ref ClassDataDict[e.ClassId];
-            
             if (classData.IsSingleton)
             {
                 _singletonEntities[classData.FilterId] = (SingletonEntityLogic)e;
@@ -514,7 +519,8 @@ namespace LiteEntitySystem
             if(IsEntityLagCompensated(e))
                 LagCompensatedEntities.Remove((EntityLogic)e);
 
-            EntitiesDict[e.Id] = null;
+            if(e.Id < EntitiesDict.Length)
+                EntitiesDict[e.Id] = null;
             EntitiesCount--;
             classData.ReleaseDataCache(e);
             //Logger.Log($"{Mode} - RemoveEntity: {e.Id}");

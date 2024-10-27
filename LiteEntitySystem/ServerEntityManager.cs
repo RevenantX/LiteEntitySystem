@@ -50,7 +50,7 @@ namespace LiteEntitySystem
         private readonly NetDataReader _requestsReader = new();
         
         //use entity filter for correct sort (id+version+creationTime)
-        private readonly EntityFilter<InternalEntity> _changedEntities = new();
+        private readonly AVLTree<InternalEntity> _changedEntities = new();
         
         private byte[] _compressionBuffer = new byte[4096];
         
