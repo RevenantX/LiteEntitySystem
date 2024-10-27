@@ -36,6 +36,7 @@ namespace LiteEntitySystem
             {
                 //don't hash localonly types
                 foreach (var (entType, _) in RegisteredTypes
+                    .Where(kv => !kv.Key.IsSubclassOf(typeof(AiControllerLogic)))
                     .OrderBy(kv => kv.Value.ClassId))
                 {
                     var allTypesStack = Utils.GetBaseTypes(entType, typeof(InternalEntity), true);
