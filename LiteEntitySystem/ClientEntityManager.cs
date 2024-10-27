@@ -283,10 +283,7 @@ namespace LiteEntitySystem
             
             return entity;
         }
-
-        internal void QueueForRemove(InternalEntity entity) =>
-            Utils.AddToArrayDynamic(ref _entitiesToRemove, ref _entitiesToRemoveCount, entity);
-
+        
         private unsafe void OnAliveConstructed(InternalEntity entity)
         {
             ref var classData = ref ClassDataDict[entity.ClassId];
@@ -946,7 +943,8 @@ namespace LiteEntitySystem
                 
                 Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
                 Utils.ResizeOrCreate(ref _syncCallsBeforeConstruct, _syncCallsBeforeConstructCount + classData.FieldsCount);
-                
+
+                bool isDestroyed = entity.IsDestroyed;
                 int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
                 fixed (byte* interpDataPtr = classData.ClientInterpolatedNextData(entity), predictedData = classData.ClientPredictedData(entity))
                     for (int i = 0; i < classData.FieldsCount; i++)
@@ -987,6 +985,11 @@ namespace LiteEntitySystem
                         //Logger.Log($"E {entity.Id} Field updated: {field.Name}");
                         readerPosition += field.IntSize;
                     }
+
+                //if is destroyed changed add to pending list
+                if (!isDestroyed && entity.IsDestroyed)
+                    Utils.AddToArrayDynamic(ref _entitiesToRemove, ref _entitiesToRemoveCount, entity);
+                
                 if (fullSync)
                 {
                     _stateA.ReadRPCs(rawData, ref readerPosition, new EntitySharedReference(entity.Id, entity.Version), classData);

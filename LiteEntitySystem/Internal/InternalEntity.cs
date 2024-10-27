@@ -150,8 +150,6 @@ namespace LiteEntitySystem.Internal
                 return;
             _isDestroyed.Value = true;
             OnDestroy();
-            if (IsClient)
-                ClientManager.QueueForRemove(this);
         }
 
         internal void SafeUpdate()
