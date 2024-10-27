@@ -33,6 +33,8 @@ namespace LiteEntitySystem
 
         public void StartControl(PawnLogic target)
         {
+            if (IsClient)
+                return;
             StopControl();
             _controlledEntity.Value = target;
             GetControlledEntity<PawnLogic>().Controller = this;
@@ -46,6 +48,8 @@ namespace LiteEntitySystem
 
         public void StopControl()
         {
+            if (IsClient)
+                return;
             var controlledLogic = GetControlledEntity<PawnLogic>();
             if (controlledLogic == null)
                 return;
