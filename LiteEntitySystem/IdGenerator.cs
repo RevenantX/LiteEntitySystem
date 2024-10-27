@@ -18,12 +18,11 @@ namespace LiteEntitySystem
             return _counter++;
         }
         
-        public int AvailableIds => _maxValue - _counter + _queue.Count;
+        public int AvailableIds => 
+            _maxValue - _counter + _queue.Count;
 
-        public void ReuseId(byte id)
-        {
+        public void ReuseId(byte id) =>
             _queue.Enqueue(id);
-        }
 
         public IdGeneratorByte(byte initialValue, byte maxValue)
         {
@@ -53,12 +52,11 @@ namespace LiteEntitySystem
             return _counter++;
         }
         
-        public int AvailableIds => _maxValue - _counter + _queue.Count;
+        public int AvailableIds => 
+            _maxValue - _counter + _queue.Count;
 
-        public void ReuseId(ushort id)
-        {
+        public void ReuseId(ushort id) =>
             _queue.Enqueue(id);
-        }
 
         public IdGeneratorUShort(ushort initialValue, ushort maxValue)
         {

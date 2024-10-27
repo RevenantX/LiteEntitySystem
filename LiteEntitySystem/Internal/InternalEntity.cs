@@ -150,8 +150,8 @@ namespace LiteEntitySystem.Internal
                 return;
             _isDestroyed.Value = true;
             OnDestroy();
-            EntityManager.RemoveEntity(this);
-            ClassData.ReleaseDataCache(this);
+            if (IsClient)
+                ClientManager.QueueForRemove(this);
         }
 
         internal void SafeUpdate()
@@ -296,7 +296,8 @@ namespace LiteEntitySystem.Internal
                    (other.Id >= EntityManager.MaxSyncedEntityCount ? other.Id - ushort.MaxValue : other.Id);
         }
 
-        public override int GetHashCode() => Id + Version * ushort.MaxValue;
+        public override int GetHashCode() =>
+            Id + Version * ushort.MaxValue;
 
         public override string ToString() =>
             $"Entity. Id: {Id}, ClassId: {ClassId}, Version: {Version}";

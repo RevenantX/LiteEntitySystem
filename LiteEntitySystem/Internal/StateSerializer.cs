@@ -3,20 +3,6 @@ using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
-    internal enum DiffResult
-    {
-        Skip,
-        DoneAndDestroy,
-        Done
-    }
-
-    internal enum SerializerState
-    {
-        Freed,
-        Active,
-        Destroyed
-    }
-
     internal struct StateSerializer
     {
         private enum RPCMode
@@ -38,7 +24,6 @@ namespace LiteEntitySystem.Internal
         private byte[] _latestEntityData;
         private ushort[] _fieldChangeTicks;
         private ushort _versionChangedTick;
-        private SerializerState _state;
         private RemoteCallPacket _rpcHead;
         private RemoteCallPacket _rpcTail;
         private RemoteCallPacket _syncRpcHead;
@@ -48,9 +33,9 @@ namespace LiteEntitySystem.Internal
         private RPCMode _rpcMode;
         public byte NextVersion => (byte)(_entity?.Version + 1 ?? 0);
 
-        public SerializerState State => _state;
-
         public ushort LastChangedTick;
+
+        public InternalEntity Entity => _entity;
 
         public void AddRpcPacket(RemoteCallPacket rpc)
         {
@@ -91,9 +76,11 @@ namespace LiteEntitySystem.Internal
 
         public void AllocateMemory(ref EntityClassData classData)
         {
-            if (_state != SerializerState.Freed)
-                Logger.LogError($"State serializer isn't freed: {_state}");
-
+            if (_entity != null)
+            {
+                Logger.LogError($"State serializer isn't freed: {_entity}");
+                return;
+            }
             
             _fields = classData.Fields;
             _fieldsCount = classData.FieldsCount;
@@ -114,7 +101,6 @@ namespace LiteEntitySystem.Internal
         public unsafe void Init(InternalEntity e, ushort tick)
         {
             _entity = e;
-            _state = SerializerState.Active;
             _syncFrame = -1;
             _rpcMode = RPCMode.Normal;
             _versionChangedTick = tick;
@@ -153,21 +139,9 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        public void Destroy(ushort serverTick, bool instantly)
-        {
-            if (_state != SerializerState.Active)
-                return;
-            if (instantly || serverTick == _versionChangedTick)
-            {
-                _state = SerializerState.Freed;
-                return;
-            }
-            _state = SerializerState.Destroyed;
-        }
-
         public unsafe int GetMaximumSize(ushort forTick)
         {
-            if (_state != SerializerState.Active)
+            if (_entity == null)
                 return 0;
             MakeOnSync(forTick);
             int totalSize = (int)_fullDataSize + sizeof(ushort);
@@ -206,7 +180,7 @@ namespace LiteEntitySystem.Internal
         {
             //skip inactive and other controlled controllers
             bool isOwned = _entity.InternalOwnerId.Value == playerId;
-            if (_state != SerializerState.Active || (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned))
+            if (_entity == null || _entity.IsDestroyed || (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned))
                 return;
             //don't write total size in full sync and fields
 
@@ -247,18 +221,23 @@ namespace LiteEntitySystem.Internal
             //Logger.Log($"[SEM] SendBaseline for entity: {_entity.Id}, pos: {position}, posAfterData: {position + _fullDataSize}");
         }
 
-        public unsafe DiffResult MakeDiff(byte playerId, ushort serverTick, ushort minimalTick, ushort playerTick, byte* resultData, ref int position, HumanControllerLogic playerController)
+        public void Free()
         {
-            if (_state == SerializerState.Freed)
+            _entity = null;
+        }
+
+        public unsafe bool MakeDiff(byte playerId, ushort serverTick, ushort minimalTick, ushort playerTick, byte* resultData, ref int position, HumanControllerLogic playerController)
+        {
+            if (_entity == null)
             {
                 Logger.LogWarning("MakeDiff on freed?");
-                return DiffResult.Skip;
+                return false;
             }
 
-            if (_state == SerializerState.Destroyed && Utils.SequenceDiff(LastChangedTick, minimalTick) < 0)
+            if (_entity.IsDestroyed && Utils.SequenceDiff(LastChangedTick, minimalTick) < 0)
             {
-                _state = SerializerState.Freed;
-                return DiffResult.DoneAndDestroy;
+                Logger.LogError($"Should be removed before: {_entity}");
+                return false;
             }
 
             //refresh minimal tick to prevent errors on tick wrap-arounds
@@ -283,9 +262,7 @@ namespace LiteEntitySystem.Internal
             //skip sync for non owners
             bool isOwned = _entity.InternalOwnerId.Value == playerId;
             if (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned)
-            {
-                return DiffResult.Skip;
-            }
+                return false;
             
             //make diff
             int startPos = position;
@@ -315,7 +292,7 @@ namespace LiteEntitySystem.Internal
                 if (playerController != null && playerController.IsEntityDiffSyncDisabled(new EntitySharedReference(_entity.Id, _entity.Version)))
                 {
                     position = startPos;
-                    return DiffResult.Skip;
+                    return false;
                 }
                 
                 byte* entityDataAfterHeader = lastEntityData + HeaderSize;
@@ -388,7 +365,7 @@ namespace LiteEntitySystem.Internal
             if (*rpcCount == 0 && !hasChanges)
             {
                 position = startPos;
-                return DiffResult.Skip;
+                return false;
             }
 
             if (sendSyncRpc)
@@ -414,10 +391,10 @@ namespace LiteEntitySystem.Internal
             {
                 position = startPos;
                 Logger.LogError($"Entity {_entity.Id}, Class: {_entity.ClassId} state size is more than: {MaxStateSize}");
-                return DiffResult.Skip;
+                return false;
             }
             *fieldFlagAndSize |= (ushort)(resultSize << 1);
-            return DiffResult.Done;
+            return true;
         }
     }
 }

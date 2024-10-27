@@ -481,10 +481,9 @@ namespace LiteEntitySystem
         private bool IsEntityAlive(EntityClassData classData, InternalEntity entity)
             => classData.Flags.HasFlagFast(EntityFlags.Updateable) && (IsServer || entity.IsLocal || (IsClient && classData.Flags.HasFlagFast(EntityFlags.UpdateOnClient)));
 
-        internal virtual void RemoveEntity(InternalEntity e)
+        protected virtual void RemoveEntity(InternalEntity e)
         {
             ref var classData = ref ClassDataDict[e.ClassId];
-            
             if (classData.IsSingleton)
             {
                 _singletonEntities[classData.FilterId] = null;
@@ -505,6 +504,7 @@ namespace LiteEntitySystem
 
             EntitiesDict[e.Id] = null;
             EntitiesCount--;
+            classData.ReleaseDataCache(e);
             //Logger.Log($"{Mode} - RemoveEntity: {e.Id}");
         }
         

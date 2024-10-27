@@ -116,9 +116,7 @@ namespace LiteEntitySystem
             if (EntityManager.IsServer)
             {
                 if (InternalOwnerId.Value == EntityManager.ServerPlayerId)
-                {
                     return ServerManager.AddEntity(initMethod);
-                }
 
                 var predictedEntity = ServerManager.AddEntity(initMethod);
                 var player = ServerManager.GetPlayer(InternalOwnerId);
@@ -131,10 +129,8 @@ namespace LiteEntitySystem
 
                 return predictedEntity;
             }
-            
-            var entity = ClientManager.AddLocalEntity(initMethod);
-            ClientManager.AddPredictedInfo(entity);
-            return entity;
+
+            return ClientManager.AddLocalEntity(initMethod);
         }
 
         /// <summary>
@@ -164,10 +160,8 @@ namespace LiteEntitySystem
         /// </summary>
         /// <typeparam name="T">Type of entity</typeparam>
         /// <returns>parent entity</returns>
-        public T GetParent<T>() where T : EntityLogic
-        {
-            return EntityManager.GetEntityById<T>(_parentId);
-        }
+        public T GetParent<T>() where T : EntityLogic =>
+            EntityManager.GetEntityById<T>(_parentId);
         
         /// <summary>
         /// Called when lag compensation was started for this entity

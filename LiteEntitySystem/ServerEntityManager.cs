@@ -129,6 +129,9 @@ namespace LiteEntitySystem
         {
             if (_netPlayers.Count == MaxPlayers)
                 return null;
+            if (_netPlayers.Count == 0)
+                _changedEntities.Clear();
+            
             var player = new NetPlayer(peer, _playerIdQueue.GetNewId()) { State = NetPlayerState.RequestBaseline };
             _netPlayers.Set(player.Id, player);
             peer.AssignedPlayer = player;
@@ -464,17 +467,16 @@ namespace LiteEntitySystem
             //==================================================================
             //Sending part
             //==================================================================
-            if (_netPlayers.Count == 0 || _tick % (int) SendRate != 0)
+            int playersCount = _netPlayers.Count;
+            if (playersCount == 0 || _tick % (int) SendRate != 0)
                 return;
             
-            while (MaxSyncedEntityId > 0 && _stateSerializers[MaxSyncedEntityId].State == SerializerState.Freed)
+            while (MaxSyncedEntityId > 0 && _stateSerializers[MaxSyncedEntityId].Entity == null)
                 MaxSyncedEntityId--;
 
             //calculate minimalTick and potential baseline size
             _minimalTick = _tick;
-            
             int maxBaseline = 0;
-            int playersCount = _netPlayers.Count;
             for (int pidx = 0; pidx < playersCount; pidx++)
             {
                 var player = _netPlayers.GetByIndex(pidx);
@@ -555,26 +557,22 @@ namespace LiteEntitySystem
                     if (Utils.SequenceDiff(stateSerializer.LastChangedTick, _minimalTick) <= 0)
                     {
                         _changedEntities.Remove(changedEntity);
+                        if (changedEntity.IsDestroyed)
+                            RemoveEntity(changedEntity);
                         continue;
                     }
                     //skip known
                     if (Utils.SequenceDiff(stateSerializer.LastChangedTick, player.StateATick) <= 0)
                         continue;
-
-                    var diffResult = stateSerializer.MakeDiff(
+                    
+                    if (stateSerializer.MakeDiff(
                         player.Id,
                         _tick,
                         _minimalTick,
                         player.CurrentServerTick,
                         packetBuffer,
                         ref writePosition,
-                        playerController);
-                    if (diffResult == DiffResult.DoneAndDestroy)
-                    {
-                        _entityIdQueue.ReuseId(changedEntity.Id);
-                        _changedEntities.Remove(changedEntity);
-                    }
-                    else if (diffResult == DiffResult.Done)
+                        playerController))
                     {
                         int overflow = writePosition - maxPartSize;
                         while (overflow > 0)
@@ -624,16 +622,12 @@ namespace LiteEntitySystem
             _netPlayers.GetByIndex(0).Peer.TriggerSend();
         }
 
-        internal override void RemoveEntity(InternalEntity e)
+        protected override void RemoveEntity(InternalEntity e)
         {
             base.RemoveEntity(e);
-            if (!e.IsLocal)
-            {
-                _stateSerializers[e.Id].Destroy(_tick, PlayersCount == 0);
-                //destroy instantly when no players to free ids
-                if (PlayersCount == 0)
-                    _entityIdQueue.ReuseId(e.Id);
-            }
+            _entityIdQueue.ReuseId(e.Id);
+            _stateSerializers[e.Id].Free();
+            //Logger.Log($"[SRV] RemoveEntity: {e.Id}");
         }
 
         internal void EntityChanged(InternalEntity entity)
