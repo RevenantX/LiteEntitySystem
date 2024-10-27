@@ -361,14 +361,6 @@ namespace LiteEntitySystem
         /// <typeparam name="T">Singleton entity type</typeparam>
         /// <returns>Singleton entity, can throw exceptions on invalid type</returns>
         public T GetSingleton<T>() where T : SingletonEntityLogic =>
-            (T)_singletonEntities[_registeredTypeIds[typeof(T)]];
-
-        /// <summary>
-        /// Get singleton entity
-        /// </summary>
-        /// <typeparam name="T">Singleton entity type</typeparam>
-        /// <returns>Singleton entity or null if it didn't exists</returns>
-        public T GetSingletonSafe<T>() where T : SingletonEntityLogic =>
             _registeredTypeIds.TryGetValue(typeof(T), out ushort registeredId) ? _singletonEntities[registeredId] as T : null;
 
         /// <summary>
