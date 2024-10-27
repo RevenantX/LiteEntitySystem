@@ -167,8 +167,7 @@ namespace LiteEntitySystem
         private SyncCallInfo[] _syncCallsBeforeConstruct;
         private int _syncCallsBeforeConstructCount;
         
-        private InternalEntity[] _entitiesToConstruct = new InternalEntity[64];
-        private int _entitiesToConstructCount;
+        private AVLTree<InternalEntity> _entitiesToConstruct = new();
         private ushort _lastReceivedInputTick;
         private float _logicLerpMsec;
         private ushort _lastReadyTick;
@@ -215,9 +214,7 @@ namespace LiteEntitySystem
             _netPeer = netPeer;
             _sendBuffer[0] = headerByte;
             _sendBuffer[1] = InternalPackets.ClientInput;
-
-            AliveEntities.SubscribeToConstructed(OnAliveConstructed, false);
-
+            
             for (int i = 0; i < MaxSavedStateDiff; i++)
                 _statesPool.Enqueue(new ServerStateData());
         }
@@ -268,13 +265,16 @@ namespace LiteEntitySystem
                 Logger.LogError("Max local entities count reached");
                 return null;
             }
-            
+
+            var ioBuffer = ClassDataDict[EntityClassInfo<T>.ClassId].AllocateDataCache(this);
             var entity = (T)AddEntity(new EntityParams(
-                EntityClassInfo<T>.ClassId,
-                _localIdQueue.GetNewId(), 
-                0,
-                TotalTicksPassed,
-                this));
+                new EntityDataHeader(
+                    _localIdQueue.GetNewId(), 
+                    EntityClassInfo<T>.ClassId, 
+                    0, 
+                    0),
+                this,
+                ioBuffer));
             
             entity.InternalOwnerId.Value = InternalPlayerId;
             initMethod?.Invoke(entity);
@@ -283,11 +283,13 @@ namespace LiteEntitySystem
             
             return entity;
         }
-        
-        private unsafe void OnAliveConstructed(InternalEntity entity)
+
+        internal void QueueForRemove(InternalEntity entity) =>
+            Utils.AddToArrayDynamic(ref _entitiesToRemove, ref _entitiesToRemoveCount, entity);
+
+        protected override unsafe void OnAliveEntityAdded(InternalEntity entity)
         {
             ref var classData = ref ClassDataDict[entity.ClassId];
-
             fixed (byte* interpDataPtr = classData.ClientInterpolatedNextData(entity),
                    prevDataPtr = classData.ClientInterpolatedPrevData(entity))
             {
@@ -313,7 +315,7 @@ namespace LiteEntitySystem
                 {
                     if (inData.Length < sizeof(BaselineDataHeader))
                         return DeserializeResult.Error;
-                    _entitiesToConstructCount = 0;
+                    _entitiesToConstruct.Clear();
                     _syncCallsCount = 0;
                     _syncCallsBeforeConstructCount = 0;
                     //read header and decode
@@ -498,7 +500,7 @@ namespace LiteEntitySystem
             //reset owned entities
             foreach (var entity in _predictedEntities)
             {
-                ref readonly var classData = ref entity.ClassData;
+                ref var classData = ref ClassDataDict[entity.ClassId];
                 if(entity.IsRemoteControlled && !classData.HasRemoteRollbackFields)
                     continue;
                 entity.OnBeforeRollback();
@@ -564,7 +566,7 @@ namespace LiteEntitySystem
                 if(entity.IsDestroyed || entity.IsLocal || !entity.IsLocalControlled)
                     continue;
                 
-                ref readonly var classData = ref entity.ClassData;
+                ref var classData = ref ClassDataDict[entity.ClassId];
                 for(int i = 0; i < classData.InterpolatedCount; i++)
                 {
                     fixed (byte* currentDataPtr = classData.ClientInterpolatedNextData(entity))
@@ -715,7 +717,7 @@ namespace LiteEntitySystem
                 if (!entity.IsLocalControlled && !entity.IsLocal)
                     continue;
                 
-                ref readonly var classData = ref entity.ClassData;
+                ref var classData = ref ClassDataDict[entity.ClassId];
                 fixed (byte* currentDataPtr = classData.ClientInterpolatedNextData(entity), prevDataPtr = classData.ClientInterpolatedPrevData(entity))
                 {
                     for(int i = 0; i < classData.InterpolatedCount; i++)
@@ -849,10 +851,9 @@ namespace LiteEntitySystem
             ExecuteSyncCalls(_syncCallsBeforeConstruct, ref _syncCallsBeforeConstructCount);
 
             //Call construct methods
-            Array.Sort(_entitiesToConstruct, 0, _entitiesToConstructCount, EntityComparer.Instance);
-            for (int i = 0; i < _entitiesToConstructCount; i++)
-                ConstructEntity(_entitiesToConstruct[i]);
-            _entitiesToConstructCount = 0;
+            foreach(var entity in _entitiesToConstruct)
+                ConstructEntity(entity);
+            _entitiesToConstruct.Clear();
             
             //Make OnChangeCalls after construct
             ExecuteSyncCalls(_syncCalls, ref _syncCallsCount);
@@ -861,18 +862,19 @@ namespace LiteEntitySystem
             _stateA.ExecuteRpcs(this, minimalTick, firstSync);
             
             foreach (var lagCompensatedEntity in LagCompensatedEntities)
-                lagCompensatedEntity.WriteHistory(ServerTick);
+                ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
         }
         
         private unsafe bool ReadEntityState(byte* rawData, bool fistSync)
         {
+            var emptyClassData = new EntityClassData();
             _changedEntities.Clear();
             for (int readerPosition = 0; readerPosition < _stateA.Size;)
             {
                 bool fullSync = true;
                 int endPos = 0;
                 InternalEntity entity;
-                ref readonly var classData = ref EntityClassData.Empty;
+                ref var classData = ref emptyClassData;
                 bool writeInterpolationData;
                 
                 if (!fistSync) //diff data
@@ -902,15 +904,15 @@ namespace LiteEntitySystem
                     } 
                     if (entity == null) //create new
                     {
-                        entity = AddEntity(new EntityParams(entityDataHeader, this));
-                        classData = ref entity.ClassData;
+                        classData = ref ClassDataDict[entityDataHeader.ClassId];
+                        entity = AddEntity(new EntityParams(entityDataHeader, this, classData.AllocateDataCache(this)));
+                     
                         if (classData.PredictedSize > 0 || classData.SyncableFields.Length > 0)
                         {
                             _predictedEntities.Add(entity);
                             //Logger.Log($"Add predicted: {entity.GetType()}");
                         }
-                        Utils.ResizeIfFull(ref _entitiesToConstruct, _entitiesToConstructCount);
-                        _entitiesToConstruct[_entitiesToConstructCount++] = entity;
+                        _entitiesToConstruct.Add(entity);
                         writeInterpolationData = true;
                     }
                     else //update "old"
@@ -943,8 +945,7 @@ namespace LiteEntitySystem
                 
                 Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
                 Utils.ResizeOrCreate(ref _syncCallsBeforeConstruct, _syncCallsBeforeConstructCount + classData.FieldsCount);
-
-                bool isDestroyed = entity.IsDestroyed;
+                
                 int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
                 fixed (byte* interpDataPtr = classData.ClientInterpolatedNextData(entity), predictedData = classData.ClientPredictedData(entity))
                     for (int i = 0; i < classData.FieldsCount; i++)
@@ -985,11 +986,6 @@ namespace LiteEntitySystem
                         //Logger.Log($"E {entity.Id} Field updated: {field.Name}");
                         readerPosition += field.IntSize;
                     }
-
-                //if is destroyed changed add to pending list
-                if (!isDestroyed && entity.IsDestroyed)
-                    Utils.AddToArrayDynamic(ref _entitiesToRemove, ref _entitiesToRemoveCount, entity);
-                
                 if (fullSync)
                 {
                     _stateA.ReadRPCs(rawData, ref readerPosition, new EntitySharedReference(entity.Id, entity.Version), classData);

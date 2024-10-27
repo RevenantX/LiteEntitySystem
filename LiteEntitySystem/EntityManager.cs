@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using LiteEntitySystem.Collections;
 using LiteEntitySystem.Extensions;
 using LiteEntitySystem.Internal;
 
@@ -148,13 +149,12 @@ namespace LiteEntitySystem
 
         public double VisualDeltaTime { get; private set; }
         public const int MaxPlayers = byte.MaxValue-1;
-
-        protected int MaxSyncedEntityId = -1; //current maximum id
-        private int _maxLocalEntityId = -1;
+        
         protected ushort _tick;
         
-        protected readonly EntityFilter<InternalEntity> AliveEntities = new();
-        protected readonly EntityFilter<EntityLogic> LagCompensatedEntities = new();
+        protected readonly AVLTree<InternalEntity> AliveEntities = new();
+        protected readonly AVLTree<EntityLogic> LagCompensatedEntities = new();
+        protected readonly AVLTree<InternalEntity> AllEntities = new();
 
         private readonly double _stopwatchFrequency;
         private readonly Stopwatch _stopwatch = new();
@@ -177,7 +177,6 @@ namespace LiteEntitySystem
         internal byte InternalPlayerId;
         protected readonly InputProcessor InputProcessor;
         protected float SpeedMultiplier;
-        protected int TotalTicksPassed;
 
         protected const float TimeSpeedChangeCoef = 0.1f;
 
@@ -274,8 +273,7 @@ namespace LiteEntitySystem
             
             _localSingletons.Clear();
             EntitiesCount = 0;
-
-            TotalTicksPassed = 0;
+            
             _tick = 0;
             VisualDeltaTime = 0.0;
             _accumulator = 0;
@@ -285,26 +283,12 @@ namespace LiteEntitySystem
             _stopwatch.Reset();
             AliveEntities.Clear();
             
-            for (int i = FirstEntityId; i <= MaxSyncedEntityId; i++)
-            {
-                EntitiesDict[i]?.DestroyInternal();
-                EntitiesDict[i] = null;
-            }
-            for (int i = MaxSyncedEntityCount; i <= _maxLocalEntityId; i++)
-            {
-                EntitiesDict[i]?.DestroyInternal();
-                EntitiesDict[i] = null;
-            }
-            for (int i = 0; i < _singletonEntities.Length; i++)
-            {
-                _singletonEntities[i]?.DestroyInternal();
-                _singletonEntities[i] = null;
-            }
+            foreach (var entity in AllEntities)
+                entity.DestroyInternal();
+            AllEntities.Clear();
 
             for (int i = 0; i < _entityFilters.Length; i++)
-            {
                 _entityFilters[i] = null;
-            }
         }
 
         /// <summary>
@@ -341,19 +325,11 @@ namespace LiteEntitySystem
                 typedFilter = (EntityFilter<T>)entityFilter;
                 return typedFilter;
             }
-            
             typedFilter = new EntityFilter<T>();
             entityFilter = typedFilter;
-            for (int i = FirstEntityId; i <= MaxSyncedEntityId; i++)
+            foreach (var entity in AllEntities)
             {
-                if(EntitiesDict[i] is T castedEnt)
-                    typedFilter.Add(castedEnt);
-            }
-            while (_maxLocalEntityId > MaxSyncedEntityCount && EntitiesDict[_maxLocalEntityId] == null)
-                _maxLocalEntityId--;
-            for (int i = MaxSyncedEntityCount; i <= _maxLocalEntityId; i++)
-            {
-                if(EntitiesDict[i] is T castedEnt)
+                if(entity is T castedEnt)
                     typedFilter.Add(castedEnt);
             }
             return typedFilter;
@@ -450,30 +426,27 @@ namespace LiteEntitySystem
 
         protected InternalEntity AddEntity(EntityParams entityParams)
         {
-            if (entityParams.Id == InvalidEntityId || entityParams.Id >= EntitiesDict.Length)
+            var entityHeader = entityParams.Header;
+            if (entityHeader.Id == InvalidEntityId || entityHeader.Id >= EntitiesDict.Length)
             {
-                throw new ArgumentException($"Invalid entity id: {entityParams.Id}");
+                throw new ArgumentException($"Invalid entity id: {entityHeader.Id}");
             }
 
-            if (entityParams.ClassId >= ClassDataDict.Length)
+            if (entityHeader.ClassId >= ClassDataDict.Length)
             {
-                throw new Exception($"Unregistered entity class: {entityParams.ClassId}");
+                throw new Exception($"Unregistered entity class: {entityHeader.ClassId}");
             }
             
-            var classData = ClassDataDict[entityParams.ClassId];
+            var classData = ClassDataDict[entityHeader.ClassId];
             if (classData.EntityConstructor == null)
             {
-                throw new Exception($"Unregistered entity class: {entityParams.ClassId}");
+                throw new Exception($"Unregistered entity class: {entityHeader.ClassId}");
             }
             var entity = classData.EntityConstructor(entityParams);
             entity.RegisterRpcInternal();
-
-            if(entityParams.Id < MaxSyncedEntityCount)
-                MaxSyncedEntityId = MaxSyncedEntityId < entityParams.Id ? entityParams.Id : MaxSyncedEntityId;
-            else
-                _maxLocalEntityId = _maxLocalEntityId < entityParams.Id ? entityParams.Id : _maxLocalEntityId;
             
-            EntitiesDict[entity.Id] = entity;
+            if(entity.Id < EntitiesDict.Length)
+                EntitiesDict[entity.Id] = entity;
             EntitiesCount++;
             return entity;
         }
@@ -498,18 +471,26 @@ namespace LiteEntitySystem
                     _entityFilters[baseId]?.Add(e);
             }
             
-
-            if (IsEntityAlive(classData, e))
+            AllEntities.Add(e);
+            if (IsEntityAlive(classData.Flags, e))
+            {
                 AliveEntities.Add(e);
+                OnAliveEntityAdded(e);
+            }
             if (IsEntityLagCompensated(e))
                 LagCompensatedEntities.Add((EntityLogic)e);
+        }
+        
+        protected virtual void OnAliveEntityAdded(InternalEntity e)
+        {
+            
         }
 
         private static bool IsEntityLagCompensated(InternalEntity e)
             => !e.IsLocal && e is EntityLogic && e.ClassData.LagCompensatedCount > 0;
 
-        private bool IsEntityAlive(EntityClassData classData, InternalEntity entity)
-            => classData.Flags.HasFlagFast(EntityFlags.Updateable) && (IsServer || entity.IsLocal || (IsClient && classData.Flags.HasFlagFast(EntityFlags.UpdateOnClient)));
+        private bool IsEntityAlive(EntityFlags flags, InternalEntity entity)
+            => flags.HasFlagFast(EntityFlags.Updateable) && (IsServer || entity.IsLocal || (IsClient && flags.HasFlagFast(EntityFlags.UpdateOnClient)));
 
         protected virtual void RemoveEntity(InternalEntity e)
         {
@@ -527,7 +508,8 @@ namespace LiteEntitySystem
                     _entityFilters[baseId]?.Remove(e);
             }
 
-            if (IsEntityAlive(classData, e))
+            AllEntities.Remove(e);
+            if (IsEntityAlive(classData.Flags, e))
                 AliveEntities.Remove(e);
             if(IsEntityLagCompensated(e))
                 LagCompensatedEntities.Remove((EntityLogic)e);
@@ -603,7 +585,6 @@ namespace LiteEntitySystem
                         updSingleton.Update(DeltaTimeF);
                 OnLogicTick();
                 _tick++;
-                TotalTicksPassed++;
 
                 _accumulator -= maxTicks;
                 updates++;

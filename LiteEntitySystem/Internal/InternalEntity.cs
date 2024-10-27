@@ -4,19 +4,20 @@ using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
-    internal struct EntityDataHeader
+    public readonly struct EntityDataHeader
     {
-        public ushort Id;
-        public ushort ClassId;
-        public byte Version;
-        public int CreationTick;
-    }
-    
-    public class EntityComparer : IComparer<InternalEntity>
-    {
-        public int Compare(InternalEntity x, InternalEntity y) => x.CompareTo(y);
-
-        public static readonly EntityComparer Instance = new();
+        public readonly ushort Id;
+        public readonly ushort ClassId;
+        public readonly byte Version;
+        public readonly int UpdateOrder;
+        
+        public EntityDataHeader(ushort id, ushort classId, byte version, int updateOrder)
+        {
+            Id = id;
+            ClassId = classId;
+            Version = version;
+            UpdateOrder = updateOrder;
+        }
     }
     
     public abstract class InternalEntity : InternalBaseClass, IComparable<InternalEntity>
@@ -25,6 +26,8 @@ namespace LiteEntitySystem.Internal
         internal SyncVar<byte> InternalOwnerId;
         
         internal byte[] IOBuffer;
+
+        internal readonly int UpdateOrderNum;
         
         /// <summary>
         /// Entity class id
@@ -36,10 +39,6 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         public readonly ushort Id;
 
-        /// <summary>
-        /// Entity creation tick number that can be more than ushort
-        /// </summary>
-        internal readonly int CreationTick;
         
         /// <summary>
         /// Entity manager
@@ -54,7 +53,7 @@ namespace LiteEntitySystem.Internal
         /// <summary>
         /// Is entity on server
         /// </summary>
-        protected bool IsClient => EntityManager.IsClient;
+        protected internal bool IsClient => EntityManager.IsClient;
 
         /// <summary>
         /// Entity version (for id reuse)
@@ -62,12 +61,12 @@ namespace LiteEntitySystem.Internal
         public readonly byte Version;
 
         internal EntityDataHeader DataHeader => new EntityDataHeader
-        {
-            Id = Id,
-            ClassId = ClassId,
-            CreationTick = CreationTick,
-            Version = Version
-        };
+        (
+            Id,
+            ClassId,
+            Version,
+            UpdateOrderNum
+        );
         
         [SyncVarFlags(SyncFlags.NeverRollBack)]
         private SyncVar<bool> _isDestroyed;
@@ -116,7 +115,6 @@ namespace LiteEntitySystem.Internal
         
         internal ref EntityClassData ClassData => ref EntityManager.ClassDataDict[ClassId];
 
-
         /// <summary>
         /// Destroy entity
         /// </summary>
@@ -150,6 +148,8 @@ namespace LiteEntitySystem.Internal
                 return;
             _isDestroyed.Value = true;
             OnDestroy();
+            if (IsClient)
+                ClientManager.QueueForRemove(this);
         }
 
         internal void SafeUpdate()
@@ -271,31 +271,17 @@ namespace LiteEntitySystem.Internal
         protected InternalEntity(EntityParams entityParams)
         {
             EntityManager = entityParams.EntityManager;
-            Id = entityParams.Id;
-            ClassId = entityParams.ClassId;
-            Version = entityParams.Version;
-            CreationTick = entityParams.CreationTime;
-            ClassData.AllocateDataCache(this);
+            Id = entityParams.Header.Id;
+            ClassId = entityParams.Header.ClassId;
+            Version = entityParams.Header.Version;
+            UpdateOrderNum = entityParams.Header.UpdateOrder;
+            IOBuffer = entityParams.IOBuffer;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int CompareTo(InternalEntity other)
-        {
-            int creationTimeDiff = CreationTick - other.CreationTick;
-            if (creationTimeDiff != 0)
-                return creationTimeDiff;
+        public int CompareTo(InternalEntity other) => UpdateOrderNum != other.UpdateOrderNum ? UpdateOrderNum - other.UpdateOrderNum : Id - other.Id;
 
-            int versionDiff = Version - other.Version;
-            if (versionDiff != 0)
-                return versionDiff;
-            
-            //local first because mostly this is unity physics or something similar
-            return (Id >= EntityManager.MaxSyncedEntityCount ? Id - ushort.MaxValue : Id) -
-                   (other.Id >= EntityManager.MaxSyncedEntityCount ? other.Id - ushort.MaxValue : other.Id);
-        }
-
-        public override int GetHashCode() =>
-            Id + Version * ushort.MaxValue;
+        public override int GetHashCode() => UpdateOrderNum;
 
         public override string ToString() =>
             $"Entity. Id: {Id}, ClassId: {ClassId}, Version: {Version}";

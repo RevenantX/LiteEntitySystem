@@ -330,8 +330,8 @@ namespace LiteEntitySystem
                 _awaitingRequests = new Dictionary<ushort, Action<bool>>();
             _requestWriter.Put(EntityManager.HeaderByte);
             _requestWriter.Put(InternalPackets.ClientRequest);
-            _requestWriter.Put(entityParams.Id);
-            _requestWriter.Put(entityParams.Version);
+            _requestWriter.Put(entityParams.Header.Id);
+            _requestWriter.Put(entityParams.Header.Version);
         }
     }
 

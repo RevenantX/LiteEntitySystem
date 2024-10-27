@@ -70,6 +70,8 @@ namespace LiteEntitySystem
         public bool SafeEntityUpdate = false;
 
         private ushort _minimalTick;
+        
+        private int _nextOrderNum;
 
         /// <summary>
         /// Constructor
@@ -117,6 +119,7 @@ namespace LiteEntitySystem
         public override void Reset()
         {
             base.Reset();
+            _nextOrderNum = 0;
             _changedEntities.Clear();
         }
 
@@ -399,13 +402,16 @@ namespace LiteEntitySystem
             ushort entityId = _entityIdQueue.GetNewId();
             ref var stateSerializer = ref _stateSerializers[entityId];
 
-            stateSerializer.AllocateMemory(ref classData);
+            var ioBuffer = classData.AllocateDataCache(this);
+            stateSerializer.AllocateMemory(ref classData, ioBuffer);
             var entity = (T)AddEntity(new EntityParams(
-                classData.ClassId, 
-                entityId,
-                stateSerializer.NextVersion,
-                TotalTicksPassed,
-                this));
+                new EntityDataHeader(
+                    entityId,
+                    classData.ClassId, 
+                    stateSerializer.NextVersion,
+                    ++_nextOrderNum),
+                this,
+                ioBuffer));
             stateSerializer.Init(entity, _tick);
             initMethod?.Invoke(entity);
             ConstructEntity(entity);
@@ -468,7 +474,7 @@ namespace LiteEntitySystem
             }
             
             foreach (var lagCompensatedEntity in LagCompensatedEntities)
-                lagCompensatedEntity.WriteHistory(_tick);
+                ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, _tick);
             
             //==================================================================
             //Sending part
@@ -476,9 +482,6 @@ namespace LiteEntitySystem
             int playersCount = _netPlayers.Count;
             if (playersCount == 0 || _tick % (int) SendRate != 0)
                 return;
-            
-            while (MaxSyncedEntityId > 0 && _stateSerializers[MaxSyncedEntityId].Entity == null)
-                MaxSyncedEntityId--;
 
             //calculate minimalTick and potential baseline size
             _minimalTick = _tick;
@@ -491,8 +494,8 @@ namespace LiteEntitySystem
                 else if (maxBaseline == 0)
                 {
                     maxBaseline = sizeof(BaselineDataHeader);
-                    for (ushort i = FirstEntityId; i <= MaxSyncedEntityId; i++)
-                        maxBaseline += _stateSerializers[i].GetMaximumSize(_tick);
+                    foreach (var e in AllEntities)
+                        maxBaseline += _stateSerializers[e.Id].GetMaximumSize(_tick);
                     if (_packetBuffer.Length < maxBaseline)
                         _packetBuffer = new byte[maxBaseline];
                     int maxCompressedSize = LZ4Codec.MaximumOutputSize(_packetBuffer.Length) + sizeof(BaselineDataHeader);
@@ -510,8 +513,8 @@ namespace LiteEntitySystem
                 if (player.State == NetPlayerState.RequestBaseline)
                 {
                     int originalLength = 0;
-                    for (ushort i = FirstEntityId; i <= MaxSyncedEntityId; i++)
-                        _stateSerializers[i].MakeBaseline(player.Id, _tick, packetBuffer, ref originalLength);
+                    foreach (var e in AllEntities)
+                        _stateSerializers[e.Id].MakeBaseline(player.Id, _tick, packetBuffer, ref originalLength);
                     
                     //set header
                     *(BaselineDataHeader*)compressionBuffer = new BaselineDataHeader
@@ -630,6 +633,14 @@ namespace LiteEntitySystem
 
         protected override void RemoveEntity(InternalEntity e)
         {
+            if (e.UpdateOrderNum == _nextOrderNum)
+            {
+                //this was highest
+                _nextOrderNum = AllEntities.TryGetMax(out var highestEntity)
+                    ? highestEntity.UpdateOrderNum
+                    : 0;
+                //Logger.Log($"Removed highest order entity: {e.UpdateOrderNum}, new highest: {_nextOrderNum}");
+            }
             base.RemoveEntity(e);
             _entityIdQueue.ReuseId(e.Id);
             _stateSerializers[e.Id].Free();

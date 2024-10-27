@@ -246,6 +246,42 @@ namespace LiteEntitySystem.Collections
 
             return false;
         }
+        
+        public bool TryGetMin(out T element)
+        {
+            int nodeIdx = _root;
+            var nodes = _nodes;
+            while (nodeIdx != EmptyNode)
+            {
+                int minId = nodes[nodeIdx].LeftId;
+                if (minId == EmptyNode)
+                {
+                    element = nodes[nodeIdx].Data;
+                    return true;
+                }
+                nodeIdx = minId;
+            }
+            element = default;
+            return false;
+        }
+
+        public bool TryGetMax(out T element)
+        {
+            int nodeIdx = _root;
+            var nodes = _nodes;
+            while (nodeIdx != EmptyNode)
+            {
+                int maxId = nodes[nodeIdx].RightId;
+                if (maxId == EmptyNode)
+                {
+                    element = nodes[nodeIdx].Data;
+                    return true;
+                }
+                nodeIdx = maxId;
+            }
+            element = default;
+            return false;
+        }
 
         internal virtual bool Remove(T data)
         {

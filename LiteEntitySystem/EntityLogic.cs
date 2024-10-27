@@ -55,8 +55,6 @@ namespace LiteEntitySystem
         
         public EntitySharedReference SharedReference => new EntitySharedReference(this);
         
-        internal void WriteHistory(ushort tick) => ClassData.WriteHistory(this, tick);
-        
         //on client it works only in rollback
         internal void EnableLagCompensation(NetPlayer player)
         {

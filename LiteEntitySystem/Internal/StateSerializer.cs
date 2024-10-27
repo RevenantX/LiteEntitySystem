@@ -74,7 +74,7 @@ namespace LiteEntitySystem.Internal
             tail = null;
         }
 
-        public void AllocateMemory(ref EntityClassData classData)
+        public void AllocateMemory(ref EntityClassData classData, byte[] ioBuffer)
         {
             if (_entity != null)
             {
@@ -87,12 +87,7 @@ namespace LiteEntitySystem.Internal
             _fieldsFlagsSize = classData.FieldsFlagsSize;
             _fullDataSize = (uint)(HeaderSize + classData.FixedFieldsSize);
             _flags = classData.Flags;
-            
-            //resize or clean prev data
-            if (_latestEntityData == null || _latestEntityData.Length < _fullDataSize)
-                _latestEntityData = new byte[_fullDataSize];
-            else
-                Array.Clear(_latestEntityData, HeaderSize, classData.FixedFieldsSize);
+            _latestEntityData = ioBuffer;
             
             if (_fieldChangeTicks == null || _fieldChangeTicks.Length < _fieldsCount)
                 _fieldChangeTicks = new ushort[_fieldsCount];
@@ -127,16 +122,7 @@ namespace LiteEntitySystem.Internal
             LastChangedTick = tick;
             _fieldChangeTicks[fieldId] = tick;
             fixed (byte* data = &_latestEntityData[HeaderSize + _fields[fieldId].FixedOffset])
-            {
-                if (typeof(T) == typeof(EntitySharedReference))
-                {
-                    ref var sharedRef = ref Unsafe.As<T, EntitySharedReference>(ref newValue);
-                    //skip local ids
-                    *(EntitySharedReference*)data = sharedRef.IsLocal ? null : sharedRef;
-                }
-                else
-                    *(T*)data = newValue;
-            }
+                *(T*)data = newValue;
         }
 
         public unsafe int GetMaximumSize(ushort forTick)
@@ -224,6 +210,7 @@ namespace LiteEntitySystem.Internal
         public void Free()
         {
             _entity = null;
+            _latestEntityData = null;
         }
 
         public unsafe bool MakeDiff(byte playerId, ushort serverTick, ushort minimalTick, ushort playerTick, byte* resultData, ref int position, HumanControllerLogic playerController)

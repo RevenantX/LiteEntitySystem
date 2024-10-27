@@ -94,7 +94,7 @@ namespace LiteEntitySystem.Internal
                     continue;
                 }
 
-                ref readonly var classData = ref entity.ClassData;
+                ref var classData = ref entity.ClassData;
                 int entityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
                 int stateReaderOffset = fullSync 
                     ? initialReaderPosition + StateSerializer.HeaderSize + sizeof(ushort) 

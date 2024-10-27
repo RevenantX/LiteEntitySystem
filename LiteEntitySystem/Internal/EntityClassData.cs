@@ -38,11 +38,10 @@ namespace LiteEntitySystem.Internal
     
     internal struct EntityClassData
     {
-        public static readonly EntityClassData Empty = new EntityClassData();
-        
         public readonly ushort ClassId;
         public readonly ushort FilterId;
         public readonly bool IsSingleton;
+        public readonly bool IsEntityLogic;
         public readonly ushort[] BaseIds;
         public readonly int FieldsCount;
         public readonly int FieldsFlagsSize;
@@ -68,6 +67,7 @@ namespace LiteEntitySystem.Internal
         private static readonly Type InternalEntityType = typeof(InternalEntity);
         private static readonly Type SingletonEntityType = typeof(SingletonEntityLogic);
         private static readonly Type SyncableFieldType = typeof(SyncableField);
+        private static readonly Type EntityLogicType = typeof(EntityLogic);
 
         private int _dataCacheSize;
         private int _historySize;
@@ -130,16 +130,31 @@ namespace LiteEntitySystem.Internal
             }
         }
         
-        public void AllocateDataCache(InternalEntity entity)
+        public byte[] AllocateDataCache(EntityManager entityManager)
         {
             if (_maxHistoryCount == 0)
             {
-                _maxHistoryCount = (byte)entity.EntityManager.MaxHistorySize;
-                _historySize = (_maxHistoryCount + 1) * LagCompensatedSize;
-                _dataCacheSize = entity.IsServer ? _historySize : (InterpolatedFieldsSize * 2 + PredictedSize + _historySize);
-                _historyStart = entity.IsServer ? 0 : (InterpolatedFieldsSize * 2 + PredictedSize);
+                _maxHistoryCount = (byte)entityManager.MaxHistorySize;
+                _historySize = IsEntityLogic ? (_maxHistoryCount + 1) * LagCompensatedSize : 0;
+
+                if (entityManager.IsServer)
+                {
+                    _dataCacheSize = _historySize + StateSerializer.HeaderSize + FixedFieldsSize;
+                    _historyStart = StateSerializer.HeaderSize + FixedFieldsSize;
+                }
+                else
+                {
+                    _dataCacheSize = InterpolatedFieldsSize * 2 + PredictedSize + _historySize;
+                    _historyStart = InterpolatedFieldsSize * 2 + PredictedSize;
+                }
             }
-            entity.IOBuffer = _dataCache.Count > 0 ? _dataCache.Dequeue() : new byte[_dataCacheSize];
+            if (_dataCache.Count > 0)
+            {
+                byte[] data = _dataCache.Dequeue();
+                Array.Clear(data, 0, data.Length);
+                return data;
+            }
+            return new byte[_dataCacheSize];
         }
 
         public void ReleaseDataCache(InternalEntity entity)
@@ -175,6 +190,7 @@ namespace LiteEntitySystem.Internal
             
             EntityConstructor = typeInfo.Constructor;
             IsSingleton = entType.IsSubclassOf(SingletonEntityType);
+            IsEntityLogic = entType.IsSubclassOf(EntityLogicType);
             FilterId = filterId;
             
             _baseTypes = Utils.GetBaseTypes(entType, InternalEntityType, false).ToArray();
