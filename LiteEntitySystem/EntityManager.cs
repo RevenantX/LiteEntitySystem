@@ -411,6 +411,21 @@ namespace LiteEntitySystem
             _localSingletons.TryGetValue(typeof(T), out var singleton) && singleton is T typedSingleton ? typedSingleton : default;
 
         /// <summary>
+        /// TryGet local (not synchronized) singleton.
+        /// </summary>
+        public bool TryGetLocalSingleton<T>(out T result) where T : ILocalSingleton
+        {
+            if (_localSingletons.TryGetValue(typeof(T), out var singleton) && singleton is T typedSingleton)
+            {
+                result = typedSingleton;
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
+        /// <summary>
         /// Try get singleton entity
         /// </summary>
         /// <param name="singleton">result singleton entity</param>
@@ -565,7 +580,8 @@ namespace LiteEntitySystem
             VisualDeltaTime = ticksDelta * _stopwatchFrequency;
             
             foreach (var localSingleton in _localSingletons)
-                localSingleton.Value.VisualUpdate((float)VisualDeltaTime);
+                if(localSingleton.Value is ILocalSingletonWithUpdate updSingleton)
+                    updSingleton.VisualUpdate((float)VisualDeltaTime);
             
             _accumulator += ticksDelta;
             _lastTime = elapsedTicks;
@@ -583,7 +599,8 @@ namespace LiteEntitySystem
                 }
 
                 foreach (var localSingleton in _localSingletons)
-                    localSingleton.Value.Update(DeltaTimeF);
+                    if(localSingleton.Value is ILocalSingletonWithUpdate updSingleton)
+                        updSingleton.Update(DeltaTimeF);
                 OnLogicTick();
                 _tick++;
                 TotalTicksPassed++;
