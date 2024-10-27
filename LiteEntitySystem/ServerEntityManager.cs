@@ -455,11 +455,17 @@ namespace LiteEntitySystem
             }
 
             if (SafeEntityUpdate)
+            {
                 foreach (var aliveEntity in AliveEntities)
-                    aliveEntity.SafeUpdate();
+                    if (!aliveEntity.IsDestroyed)
+                        aliveEntity.SafeUpdate();
+            }
             else
+            {
                 foreach (var aliveEntity in AliveEntities)
-                    aliveEntity.Update();
+                    if (!aliveEntity.IsDestroyed)
+                        aliveEntity.Update();
+            }
             
             foreach (var lagCompensatedEntity in LagCompensatedEntities)
                 lagCompensatedEntity.WriteHistory(_tick);

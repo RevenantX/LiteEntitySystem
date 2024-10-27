@@ -554,7 +554,7 @@ namespace LiteEntitySystem
                 
                 foreach (var entity in AliveEntities)
                 {
-                    if(entity.IsLocal || !entity.IsLocalControlled)
+                    if(entity.IsDestroyed || entity.IsLocal || !entity.IsLocalControlled)
                         continue;
                     entity.Update();
                 }
@@ -564,7 +564,7 @@ namespace LiteEntitySystem
             //update local interpolated position
             foreach (var entity in AliveEntities)
             {
-                if(entity.IsLocal || !entity.IsLocalControlled)
+                if(entity.IsDestroyed || entity.IsLocal || !entity.IsLocalControlled)
                     continue;
                 
                 ref readonly var classData = ref entity.ClassData;
@@ -630,6 +630,8 @@ namespace LiteEntitySystem
             //local only and UpdateOnClient
             foreach (var entity in AliveEntities)
             {
+                if(entity.IsDestroyed)
+                    continue;
                 ref var classData = ref ClassDataDict[entity.ClassId];
                 if (entity.IsLocal || entity.IsLocalControlled)
                 {
@@ -711,6 +713,8 @@ namespace LiteEntitySystem
             float localLerpT = LerpFactor;
             foreach (var entity in AliveEntities)
             {
+                if(entity.IsDestroyed)
+                    continue;
                 if (!entity.IsLocalControlled && !entity.IsLocal)
                     continue;
                 
@@ -797,6 +801,8 @@ namespace LiteEntitySystem
             //local only and UpdateOnClient
             foreach (var entity in AliveEntities)
             {
+                if(entity.IsDestroyed)
+                    continue;
                 entity.VisualUpdate();
             }
         }
