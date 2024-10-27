@@ -162,6 +162,7 @@ namespace LiteEntitySystem
         private readonly SingletonEntityLogic[] _singletonEntities;
         private readonly IEntityFilter[] _entityFilters;
         private readonly Dictionary<Type, ushort> _registeredTypeIds = new();
+        private readonly Dictionary<Type, ILocalSingleton> _localSingletons = new();
 
         internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount+1];
         internal readonly EntityClassData[] ClassDataDict;
@@ -187,9 +188,6 @@ namespace LiteEntitySystem
         /// </summary>
         public bool IsRunning => _stopwatch.IsRunning;
 
-        public event Action OnBeforeUpdate;
-        public event Action OnAfterUpdate; 
-        
         public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged =>
             ValueTypeProcessor.Registered[typeof(T)] = new UserTypeProcessor<T>(interpolationDelegate);
         
@@ -271,6 +269,10 @@ namespace LiteEntitySystem
         /// </summary>
         public virtual void Reset()
         {
+            foreach (var localSingleton in _localSingletons)
+                localSingleton.Value?.Destroy();
+            
+            _localSingletons.Clear();
             EntitiesCount = 0;
 
             TotalTicksPassed = 0;
@@ -394,6 +396,19 @@ namespace LiteEntitySystem
         /// <returns></returns>
         public bool HasSingleton<T>() where T : SingletonEntityLogic =>
             _singletonEntities[_registeredTypeIds[typeof(T)]] is T;
+
+        /// <summary>
+        /// Add local (not synchronized) singleton.
+        /// </summary>
+        /// <param name="singleton">Signleton to add</param>
+        public void AddLocalSingleton<T>(T singleton) where T : ILocalSingleton =>
+            _localSingletons[typeof(T)] = singleton;
+        
+        /// <summary>
+        /// Get local (not synchronized) singleton.
+        /// </summary>
+        public T GetLocalSingleton<T>() where T : ILocalSingleton =>
+            _localSingletons.TryGetValue(typeof(T), out var singleton) && singleton is T typedSingleton ? typedSingleton : default;
 
         /// <summary>
         /// Try get singleton entity
@@ -548,6 +563,10 @@ namespace LiteEntitySystem
             long elapsedTicks = _stopwatch.ElapsedTicks;
             long ticksDelta = elapsedTicks - _lastTime;
             VisualDeltaTime = ticksDelta * _stopwatchFrequency;
+            
+            foreach (var localSingleton in _localSingletons)
+                localSingleton.Value.VisualUpdate((float)VisualDeltaTime);
+            
             _accumulator += ticksDelta;
             _lastTime = elapsedTicks;
             long maxTicks = (long)(_deltaTimeTicks + SpeedMultiplier * _slowdownTicks);
@@ -562,14 +581,15 @@ namespace LiteEntitySystem
                     _accumulator = 0;
                     return;
                 }
-                OnBeforeUpdate?.Invoke();
+
+                foreach (var localSingleton in _localSingletons)
+                    localSingleton.Value.Update(DeltaTimeF);
                 OnLogicTick();
                 _tick++;
                 TotalTicksPassed++;
 
                 _accumulator -= maxTicks;
                 updates++;
-                OnAfterUpdate?.Invoke();
             }
             _lerpFactor = (float)_accumulator / maxTicks;
         }
