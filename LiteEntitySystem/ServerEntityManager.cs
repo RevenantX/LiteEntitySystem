@@ -430,7 +430,8 @@ namespace LiteEntitySystem
                 InputProcessor.ReadClientRequest(this, _requestsReader);
             }
             
-            for (int pidx = 0; pidx < _netPlayers.Count; pidx++)
+            int playersCount = _netPlayers.Count;
+            for (int pidx = 0; pidx < playersCount; pidx++)
             {
                 var player = _netPlayers.GetByIndex(pidx);
                 if (player.State == NetPlayerState.RequestBaseline) 
@@ -479,7 +480,6 @@ namespace LiteEntitySystem
             //==================================================================
             //Sending part
             //==================================================================
-            int playersCount = _netPlayers.Count;
             if (playersCount == 0 || _tick % (int) SendRate != 0)
                 return;
 
@@ -558,16 +558,33 @@ namespace LiteEntitySystem
                 int writePosition = sizeof(DiffPartHeader);
                 
                 ushort maxPartSize = (ushort)(player.Peer.GetMaxUnreliablePacketSize() - sizeof(LastPartData));
-                foreach (var changedEntity in _changedEntities)
+                foreach (var entity in _changedEntities)
                 {
-                    ref var stateSerializer = ref _stateSerializers[changedEntity.Id];
+                    ref var stateSerializer = ref _stateSerializers[entity.Id];
                     
                     //all players has actual state so remove from sync
                     if (Utils.SequenceDiff(stateSerializer.LastChangedTick, _minimalTick) <= 0)
                     {
-                        _changedEntities.Remove(changedEntity);
-                        if (changedEntity.IsDestroyed)
-                            RemoveEntity(changedEntity);
+                        //remove from changed list
+                        _changedEntities.Remove(entity);
+                        
+                        //if entity destroyed - free it
+                        if (entity.IsDestroyed)
+                        {
+                            if (entity.UpdateOrderNum == _nextOrderNum)
+                            {
+                                //this was highest
+                                _nextOrderNum = AllEntities.TryGetMax(out var highestEntity)
+                                    ? highestEntity.UpdateOrderNum
+                                    : 0;
+                                //Logger.Log($"Removed highest order entity: {e.UpdateOrderNum}, new highest: {_nextOrderNum}");
+                            }
+                            _entityIdQueue.ReuseId(entity.Id);
+                            stateSerializer.Free();
+                            //Logger.Log($"[SRV] RemoveEntity: {e.Id}");
+                            
+                            RemoveEntity(entity);
+                        }
                         continue;
                     }
                     //skip known
@@ -629,22 +646,6 @@ namespace LiteEntitySystem
 
             //trigger only when there is data
             _netPlayers.GetByIndex(0).Peer.TriggerSend();
-        }
-
-        protected override void RemoveEntity(InternalEntity e)
-        {
-            if (e.UpdateOrderNum == _nextOrderNum)
-            {
-                //this was highest
-                _nextOrderNum = AllEntities.TryGetMax(out var highestEntity)
-                    ? highestEntity.UpdateOrderNum
-                    : 0;
-                //Logger.Log($"Removed highest order entity: {e.UpdateOrderNum}, new highest: {_nextOrderNum}");
-            }
-            base.RemoveEntity(e);
-            _entityIdQueue.ReuseId(e.Id);
-            _stateSerializers[e.Id].Free();
-            //Logger.Log($"[SRV] RemoveEntity: {e.Id}");
         }
 
         internal void EntityChanged(InternalEntity entity)

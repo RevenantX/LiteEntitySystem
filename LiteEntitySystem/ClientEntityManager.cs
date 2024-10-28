@@ -124,7 +124,9 @@ namespace LiteEntitySystem
             }
         }
 
+        //predicted entities that should use rollback
         private readonly AVLTree<InternalEntity> _predictedEntities = new();
+        
         private readonly AbstractNetPeer _netPeer;
         private readonly Queue<ServerStateData> _statesPool = new(MaxSavedStateDiff);
         private readonly Dictionary<ushort, ServerStateData> _receivedStates = new();
@@ -244,14 +246,6 @@ namespace LiteEntitySystem
                 netPeer,
                 headerByte,
                 framesPerSecond);
-
-        protected override void RemoveEntity(InternalEntity e)
-        {
-            base.RemoveEntity(e);
-            _predictedEntities.Remove(e);
-            if (e.IsLocal)
-                _localIdQueue.ReuseId(e.Id);
-        }
         
         /// <summary>
         /// Add local entity that will be not synchronized
@@ -578,9 +572,11 @@ namespace LiteEntitySystem
             {
                 if (Utils.SequenceDiff(_stateA.ProcessedTick, info.tick) >= 0)
                 {
-                    Logger.Log("Delete predicted");
+                    //Logger.Log("Delete predicted");
                     _spawnPredictedEntities.Dequeue();
                     info.entity.DestroyInternal();
+                    RemoveEntity(info.entity);
+                    _localIdQueue.ReuseId(info.entity.Id);
                 }
                 else
                 {
@@ -999,10 +995,15 @@ namespace LiteEntitySystem
             for(int i = 0; i < _entitiesToRemoveCount; i++)
             {
                 //skip changed
-                if (_changedEntities.Contains(_entitiesToRemove[i]))
+                var entityToRemove = _entitiesToRemove[i];
+                if (_changedEntities.Contains(entityToRemove))
                     continue;
+
+                _predictedEntities.Remove(entityToRemove);
+                
                 //Logger.Log($"[CLI] RemovingEntity: {_entitiesToRemove[i].Id}");
-                RemoveEntity(_entitiesToRemove[i]);
+                RemoveEntity(entityToRemove);
+                
                 _entitiesToRemoveCount--;
                 _entitiesToRemove[i] = _entitiesToRemove[_entitiesToRemoveCount];
                 _entitiesToRemove[_entitiesToRemoveCount] = null;

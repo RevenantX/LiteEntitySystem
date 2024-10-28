@@ -489,7 +489,7 @@ namespace LiteEntitySystem
         private bool IsEntityAlive(EntityFlags flags, InternalEntity entity)
             => flags.HasFlagFast(EntityFlags.Updateable) && (IsServer || entity.IsLocal || (IsClient && flags.HasFlagFast(EntityFlags.UpdateOnClient)));
 
-        protected virtual void RemoveEntity(InternalEntity e)
+        protected void RemoveEntity(InternalEntity e)
         {
             ref var classData = ref ClassDataDict[e.ClassId];
             if (classData.IsSingleton)
