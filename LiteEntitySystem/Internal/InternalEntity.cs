@@ -147,6 +147,7 @@ namespace LiteEntitySystem.Internal
             if (_isDestroyed)
                 return;
             _isDestroyed.Value = true;
+            EntityManager.RemoveEntityFromFilters(this);
             OnDestroy();
         }
 

@@ -464,14 +464,12 @@ namespace LiteEntitySystem
             if (SafeEntityUpdate)
             {
                 foreach (var aliveEntity in AliveEntities)
-                    if (!aliveEntity.IsDestroyed)
-                        aliveEntity.SafeUpdate();
+                    aliveEntity.SafeUpdate();
             }
             else
             {
                 foreach (var aliveEntity in AliveEntities)
-                    if (!aliveEntity.IsDestroyed)
-                        aliveEntity.Update();
+                    aliveEntity.Update();
             }
             
             foreach (var lagCompensatedEntity in LagCompensatedEntities)
