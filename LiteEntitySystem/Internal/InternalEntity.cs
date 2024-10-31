@@ -79,17 +79,17 @@ namespace LiteEntitySystem.Internal
         /// <summary>
         /// Is entity local controlled
         /// </summary>
-        public bool IsLocalControlled => OwnerId == EntityManager.InternalPlayerId;
+        public bool IsLocalControlled => InternalOwnerId.Value == EntityManager.InternalPlayerId;
 
         /// <summary>
         /// Is entity remote controlled
         /// </summary>
-        public bool IsRemoteControlled => OwnerId != EntityManager.InternalPlayerId;
+        public bool IsRemoteControlled => InternalOwnerId.Value != EntityManager.InternalPlayerId;
         
         /// <summary>
         /// Is entity is controlled by server
         /// </summary>
-        public bool IsServerControlled => OwnerId == EntityManager.ServerPlayerId;
+        public bool IsServerControlled => InternalOwnerId.Value == EntityManager.ServerPlayerId;
         
         /// <summary>
         /// ClientEntityManager that available only on client. Will throw exception if called on server
@@ -106,7 +106,7 @@ namespace LiteEntitySystem.Internal
         /// ServerPlayerId - 0
         /// Singletons always controlled by server
         /// </summary>
-        public byte OwnerId => InternalOwnerId;
+        public byte OwnerId => InternalOwnerId.Value;
 
         /// <summary>
         /// Is locally created entity

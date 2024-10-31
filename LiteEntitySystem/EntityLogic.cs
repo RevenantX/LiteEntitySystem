@@ -112,23 +112,20 @@ namespace LiteEntitySystem
         public T AddPredictedEntity<T>(Action<T> initMethod = null) where T : EntityLogic
         {
             if (EntityManager.IsServer)
+                return ServerManager.AddEntity(this, initMethod);
+
+            if (IsRemoteControlled)
             {
-                if (InternalOwnerId.Value == EntityManager.ServerPlayerId)
-                    return ServerManager.AddEntity(initMethod);
-
-                var predictedEntity = ServerManager.AddEntity(initMethod);
-                var player = ServerManager.GetPlayer(InternalOwnerId);
-                ushort playerServerTick = Utils.LerpSequence(player.StateATick, player.StateBTick, player.LerpTime);
-                while (playerServerTick != ServerManager.Tick)
-                {
-                    predictedEntity.Update();
-                    playerServerTick++;
-                }
-
-                return predictedEntity;
+                Logger.LogError("AddPredictedEntity called on RemoteControlled");
+                return null;
             }
 
-            return ClientManager.AddLocalEntity(initMethod);
+            var entity = ClientManager.AddLocalEntity(initMethod);
+            entity._parentId.Value = new EntitySharedReference(this);
+            entity.InternalOwnerId.Value = InternalOwnerId.Value;
+            entity.OnParentChange(EntitySharedReference.Empty);
+            entity.OnOwnerChange(EntityManager.InternalPlayerId);
+            return entity;
         }
 
         /// <summary>
@@ -214,10 +211,12 @@ namespace LiteEntitySystem
         
         private void OnOwnerChange(byte prevOwner)
         {
-            if(IsLocalControlled && !IsLocal)
-                ClientManager.AddOwned(this);
-            else if(prevOwner == EntityManager.InternalPlayerId && !IsLocal)
+            if (IsLocal)
+                return;
+            if(prevOwner == EntityManager.InternalPlayerId)
                 ClientManager.RemoveOwned(this);
+            if(InternalOwnerId.Value == EntityManager.InternalPlayerId)
+                ClientManager.AddOwned(this);
         }
 
         private void OnParentChange(EntitySharedReference oldId)

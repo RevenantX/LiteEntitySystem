@@ -363,6 +363,7 @@ namespace LiteEntitySystem
                     _isSyncReceived = true;
                     _jitterTimer.Reset();
                     ConstructAndSync(true);
+                    _entitiesToConstruct.Clear();
                     Logger.Log($"[CEM] Got baseline sync. Assigned player id: {header.PlayerId}, Original: {decodedBytes}, Tick: {header.Tick}, SendRate: {_serverSendRate}");
                 }
                 else
@@ -522,6 +523,7 @@ namespace LiteEntitySystem
 
             //reapply input
             UpdateMode = UpdateMode.PredictionRollback;
+            int cmdNum = 0;
             foreach (var inputCommand in _inputCommands)
             {
                 //reapply input data
@@ -545,11 +547,29 @@ namespace LiteEntitySystem
                 {
                     if(entity.IsLocal || !entity.IsLocalControlled)
                         continue;
+                    
+                    //if new entity set previous interp data from data that was before latest rollback update
+                    if (cmdNum == _inputCommands.Count - 1 && _entitiesToConstruct.Contains(entity))
+                    {
+                        ref var classData = ref ClassDataDict[entity.ClassId];
+                        fixed (byte* prevDataPtr = classData.ClientInterpolatedPrevData(entity))
+                        {
+                            for (int i = 0; i < classData.InterpolatedCount; i++)
+                            {
+                                ref var field = ref classData.Fields[i];
+                                field.TypeProcessor.WriteTo(entity, field.Offset, prevDataPtr + field.FixedOffset);
+                            }
+                        }
+                    }
+                    
                     entity.Update();
                 }
+                cmdNum++;
             }
             UpdateMode = UpdateMode.Normal;
-            
+                        
+            _entitiesToConstruct.Clear();
+                        
             //update local interpolated position
             foreach (var entity in AliveEntities)
             {
@@ -839,7 +859,6 @@ namespace LiteEntitySystem
             //Call construct methods
             foreach(var entity in _entitiesToConstruct)
                 ConstructEntity(entity);
-            _entitiesToConstruct.Clear();
             
             //Make OnChangeCalls after construct
             ExecuteSyncCalls(_syncCalls, ref _syncCallsCount);
