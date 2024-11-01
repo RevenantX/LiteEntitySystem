@@ -39,8 +39,7 @@ namespace LiteEntitySystem
             }
             else if (enable && _skippedEntities.Remove(entity))
             {
-                _forceSyncEntities[entity] = EntityManager.Tick;
-                ServerManager.ForceEntitySync(entity);
+                ForceSyncEntity(entity);
                 ExecuteRPC(OnEntitySyncChangedRPC, new EntitySyncInfo { Entity = entity, SyncEnabled = true });
             }
         }
@@ -75,8 +74,7 @@ namespace LiteEntitySystem
                 var entity = EntityManager.GetEntityById<EntityLogic>(entityRef);
                 if(entity == null)
                     continue;
-                _forceSyncEntities.Add(entity, EntityManager.Tick);
-                ServerManager.ForceEntitySync(entity);
+                ForceSyncEntity(entity);
                 ExecuteRPC(OnEntitySyncChangedRPC, new EntitySyncInfo { Entity = entity, SyncEnabled = false });
             }
             _skippedEntities.Clear();
@@ -85,7 +83,7 @@ namespace LiteEntitySystem
         //add to force sync list and trigger force entity sync in state serializer
         internal void ForceSyncEntity(InternalEntity entity)
         {
-            _forceSyncEntities.Add(entity, EntityManager.Tick);
+            _forceSyncEntities[entity] = EntityManager.Tick;
             ServerManager.ForceEntitySync(entity);
         }
 
