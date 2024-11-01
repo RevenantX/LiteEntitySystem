@@ -645,12 +645,6 @@ namespace LiteEntitySystem
             //trigger only when there is data
             _netPlayers.GetByIndex(0).Peer.TriggerSend();
         }
-
-        internal void EntityChanged(InternalEntity entity)
-        {
-            _changedEntities.Add(entity);
-            _stateSerializers[entity.Id].LastChangedTick = _tick;
-        }
         
         internal void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue) where T : unmanaged
         {
@@ -658,7 +652,7 @@ namespace LiteEntitySystem
             _stateSerializers[entity.Id].MarkFieldChanged(fieldId, _tick, ref newValue);
         }
         
-        internal void EntityOwnerChanged(InternalEntity entity)
+        internal void ForceEntitySync(InternalEntity entity)
         {
             _changedEntities.Add(entity);
             _stateSerializers[entity.Id].ForceFullSync(_tick);

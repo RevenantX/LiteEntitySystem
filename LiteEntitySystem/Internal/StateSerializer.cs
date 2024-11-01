@@ -112,7 +112,6 @@ namespace LiteEntitySystem.Internal
         public void ForceFullSync(ushort tick)
         {
             LastChangedTick = tick;
-            MakeOnSync(tick);
             for (int i = 0; i < _fieldsCount; i++)
                 _fieldChangeTicks[i] = tick;
         }
