@@ -292,9 +292,8 @@ namespace LiteEntitySystem
             foreach (var entity in AllEntities)
                 entity.DestroyInternal();
             AllEntities.Clear();
-
-            for (int i = 0; i < _entityFilters.Length; i++)
-                _entityFilters[i] = null;
+            Array.Clear(EntitiesDict, 0, EntitiesDict.Length);
+            Array.Clear(_entityFilters, 0, _entityFilters.Length);
         }
 
         /// <summary>
