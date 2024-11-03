@@ -290,7 +290,7 @@ namespace LiteEntitySystem
             AliveEntities.Clear();
             
             foreach (var entity in AllEntities)
-                entity.DestroyInternal();
+                entity.Destroy();
             AllEntities.Clear();
             Array.Clear(EntitiesDict, 0, EntitiesDict.Length);
             Array.Clear(_entityFilters, 0, _entityFilters.Length);
@@ -488,7 +488,7 @@ namespace LiteEntitySystem
         private bool IsEntityAlive(EntityFlags flags, InternalEntity entity)
             => flags.HasFlagFast(EntityFlags.Updateable) && (IsServer || entity.IsLocal || (IsClient && flags.HasFlagFast(EntityFlags.UpdateOnClient)));
 
-        internal void RemoveEntityFromFilters(InternalEntity e)
+        internal virtual void OnEntityDestroyed(InternalEntity e)
         {
             ref var classData = ref ClassDataDict[e.ClassId];
             if (classData.IsSingleton)
@@ -511,6 +511,8 @@ namespace LiteEntitySystem
         
         protected void RemoveEntity(InternalEntity e)
         {
+            if(!e.IsDestroyed)
+                Logger.LogError($"Remove not destroyed entity!: {e}");
             AllEntities.Remove(e);
             if(e.Id < EntitiesDict.Length)
                 EntitiesDict[e.Id] = null;

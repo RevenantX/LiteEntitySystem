@@ -594,15 +594,21 @@ namespace LiteEntitySystem
                 {
                     //Logger.Log("Delete predicted");
                     _spawnPredictedEntities.Dequeue();
-                    info.entity.DestroyInternal();
+                    info.entity.Destroy();
                     RemoveEntity(info.entity);
-                    _localIdQueue.ReuseId(info.entity.Id);
                 }
                 else
                 {
                     break;
                 }
             }
+        }
+
+        internal override void OnEntityDestroyed(InternalEntity e)
+        {
+            if (e.IsLocal)
+                _localIdQueue.ReuseId(e.Id);
+            base.OnEntityDestroyed(e);
         }
 
         protected override unsafe void OnLogicTick()
@@ -904,7 +910,8 @@ namespace LiteEntitySystem
                     {
                         //this can be only on logics (not on singletons)
                         Logger.Log($"[CEM] Replace entity by new: {entityDataHeader.Version}");
-                        entity.DestroyInternal();
+                        entity.Destroy();
+                        RemoveEntity(entity);
                         entity = null;
                     } 
                     if (entity == null) //create new

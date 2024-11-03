@@ -174,9 +174,9 @@ namespace LiteEntitySystem
             
         }
 
-        internal override void DestroyInternal()
+        public sealed override void Destroy()
         {
-            if (IsDestroyed)
+            if ((EntityManager.IsClient && !IsLocal) || IsDestroyed)
                 return;
 
             //temporary copy childs to array because childSet can be modified inside
@@ -185,7 +185,7 @@ namespace LiteEntitySystem
                 foreach (var entityLogic in childsCopy)
                     entityLogic.OnBeforeParentDestroy();
 
-            base.DestroyInternal();
+            base.Destroy();
             if (EntityManager.IsClient && IsLocalControlled && !IsLocal)
             {
                 ClientManager.RemoveOwned(this);
