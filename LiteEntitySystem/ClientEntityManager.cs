@@ -251,7 +251,7 @@ namespace LiteEntitySystem
         /// Add local entity that will be not synchronized
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
-        /// <returns>Created entity or null if entities limit is reached (65535 - <see cref="MaxSyncedEntityCount"/>)</returns>
+        /// <returns>Created entity or null if entities limit is reached (<see cref="MaxEntityCount"/>)</returns>
         internal T AddLocalEntity<T>(Action<T> initMethod = null) where T : EntityLogic
         {
             if (_localIdQueue.AvailableIds == 0)
@@ -273,10 +273,11 @@ namespace LiteEntitySystem
             entity.InternalOwnerId.Value = InternalPlayerId;
             initMethod?.Invoke(entity);
             ConstructEntity(entity);
-            AddPredictedInfo(entity);
+            _spawnPredictedEntities.Enqueue((_tick, entity));
             
             return entity;
         }
+        
         protected override unsafe void OnAliveEntityAdded(InternalEntity entity)
         {
             ref var classData = ref ClassDataDict[entity.ClassId];
@@ -834,9 +835,6 @@ namespace LiteEntitySystem
             if (flags.HasFlagFast(EntityFlags.Updateable) && !flags.HasFlagFast(EntityFlags.UpdateOnClient))
                 AliveEntities.Remove(entity);
         }
-
-        internal void AddPredictedInfo(EntityLogic e) =>
-            _spawnPredictedEntities.Enqueue((_tick, e));
 
         private void ExecuteSyncCalls(SyncCallInfo[] callInfos, ref int count)
         {
