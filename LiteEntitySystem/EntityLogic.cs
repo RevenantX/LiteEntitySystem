@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LiteEntitySystem.Extensions;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
@@ -46,9 +47,8 @@ namespace LiteEntitySystem
         /// <summary>
         /// Child entities (can be used for transforms or as components)
         /// </summary>
-        public HashSet<EntityLogic> Childs => _childsSet ??= new HashSet<EntityLogic>();
-        private HashSet<EntityLogic> _childsSet;
-        
+        public readonly SyncHashSet<EntitySharedReference> Childs = new();
+
         public EntitySharedReference ParentId => _parentId;
         
         private bool _lagCompensationEnabled;
@@ -174,31 +174,30 @@ namespace LiteEntitySystem
             
         }
 
-        public sealed override void Destroy()
+        internal override void DestroyInternal()
         {
-            if ((EntityManager.IsClient && !IsLocal) || IsDestroyed)
+            if (IsDestroyed)
                 return;
 
             //temporary copy childs to array because childSet can be modified inside
-            var childsCopy = _childsSet?.ToArray();
+            var childsCopy = Childs.ToArray();
             if (childsCopy != null) //notify child entities about parent destruction
-                foreach (var entityLogic in childsCopy)
-                    entityLogic.OnBeforeParentDestroy();
+                foreach (var entityLogicRef in childsCopy)
+                    EntityManager.GetEntityById<EntityLogic>(entityLogicRef).OnBeforeParentDestroy();
 
-            base.Destroy();
+            base.DestroyInternal();
             if (EntityManager.IsClient && IsLocalControlled && !IsLocal)
             {
                 ClientManager.RemoveOwned(this);
             }
             var parent = EntityManager.GetEntityById<EntityLogic>(_parentId);
-            if (parent != null && !parent.IsDestroyed && parent._childsSet != null)
+            if (parent != null && !parent.IsDestroyed)
             {
-                parent._childsSet.Remove(this);
+                parent.Childs.Remove(this);
             }
-
-            if (_childsSet != null)
-                foreach (var entityLogic in _childsSet)
-                    entityLogic.Destroy();
+            
+            foreach (var entityLogicRef in Childs)
+                EntityManager.GetEntityById<EntityLogic>(entityLogicRef).Destroy();
         }
 
         /// <summary>
@@ -221,7 +220,7 @@ namespace LiteEntitySystem
 
         private void OnParentChange(EntitySharedReference oldId)
         {
-            EntityManager.GetEntityById<EntityLogic>(oldId)?._childsSet?.Remove(this);
+            EntityManager.GetEntityById<EntityLogic>(oldId)?.Childs.Remove(this);
             EntityManager.GetEntityById<EntityLogic>(_parentId)?.Childs.Add(this);
         }
 
@@ -230,11 +229,9 @@ namespace LiteEntitySystem
             entity.InternalOwnerId.Value = ownerId;
             if (ownerId != EntityManager.ServerPlayerId)
                 entity.ServerManager.GetPlayerController(ownerId)?.ForceSyncEntity(entity);
-            if (entity._childsSet == null) 
-                return;
-            foreach (var child in entity._childsSet)
+            foreach (var child in entity.Childs)
             {
-                SetOwner(child, ownerId);
+                SetOwner(entity.EntityManager.GetEntityById<EntityLogic>(child), ownerId);
             }
         }
         

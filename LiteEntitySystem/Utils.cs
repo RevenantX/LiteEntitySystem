@@ -49,10 +49,10 @@ namespace LiteEntitySystem
         {
             switch (sizeof(T))
             {
-                case 1: return (*(byte*)&e  & *(byte*)&flag)  != 0;
-                case 2: return (*(short*)&e & *(short*)&flag) != 0;
-                case 4: return (*(int*)&e   & *(int*)&flag)   != 0;
-                case 8: return (*(long*)&e  & *(long*)&flag)  != 0;
+                case 1: return (*(byte*)&e  & *(byte*)&flag)  == *(byte*)&flag;
+                case 2: return (*(short*)&e & *(short*)&flag) == *(short*)&flag;
+                case 4: return (*(int*)&e   & *(int*)&flag)   == *(int*)&flag;
+                case 8: return (*(long*)&e  & *(long*)&flag)  == *(long*)&flag;
             }
             return false;
         }
@@ -89,10 +89,10 @@ namespace LiteEntitySystem
             var v = e.Value;
             switch (sizeof(T))
             {
-                case 1: return (*(byte*)&v  & *(byte*)&flag)  != 0;
-                case 2: return (*(short*)&v & *(short*)&flag) != 0;
-                case 4: return (*(int*)&v   & *(int*)&flag)   != 0;
-                case 8: return (*(long*)&v  & *(long*)&flag)  != 0;
+                case 1: return (*(byte*)&v  & *(byte*)&flag)  == *(byte*)&flag;
+                case 2: return (*(short*)&v & *(short*)&flag) == *(short*)&flag;
+                case 4: return (*(int*)&v   & *(int*)&flag)   == *(int*)&flag;
+                case 8: return (*(long*)&v  & *(long*)&flag)  == *(long*)&flag;
             }
             return false;
         }

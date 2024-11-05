@@ -118,21 +118,19 @@ namespace LiteEntitySystem.Internal
         /// <summary>
         /// Destroy entity
         /// </summary>
-        public virtual void Destroy()
+        public void Destroy()
         {
             if ((EntityManager.IsClient && !IsLocal) || _isDestroyed)
                 return;
-            _isDestroyed.Value = true;
-            OnDestroy();
-            EntityManager.OnEntityDestroyed(this);
+            DestroyInternal();
         }
         
         private void OnDestroyChange(bool prevValue)
         {
             if (!prevValue && _isDestroyed)
             {
-                OnDestroy();
-                EntityManager.OnEntityDestroyed(this);
+                _isDestroyed.Value = false;
+                DestroyInternal();
             }
         }
 
@@ -142,6 +140,15 @@ namespace LiteEntitySystem.Internal
         protected virtual void OnDestroy()
         {
 
+        }
+
+        internal virtual void DestroyInternal()
+        {
+            if (_isDestroyed)
+                return;
+            _isDestroyed.Value = true;
+            EntityManager.OnEntityDestroyed(this);
+            OnDestroy();
         }
 
         internal void SafeUpdate()

@@ -63,6 +63,21 @@ namespace LiteEntitySystem.Extensions
                 _data.Add(x);
         }
 
+        /// <summary>
+        /// To array
+        /// </summary>
+        /// <returns>hashset copied array. Returns null if HashSet is empty</returns>
+        public T[] ToArray()
+        {
+            if (_data.Count == 0)
+                return null;
+            var arr = new T[_data.Count];
+            int idx = 0;
+            foreach (var x in _data)
+                arr[idx++] = x;
+            return arr;
+        }
+
         private void AddAction(T x) =>  _data.Add(x);
 
         public void Add(T x)

@@ -594,7 +594,7 @@ namespace LiteEntitySystem
                 {
                     //Logger.Log("Delete predicted");
                     _spawnPredictedEntities.Dequeue();
-                    info.entity.Destroy();
+                    info.entity.DestroyInternal();
                     RemoveEntity(info.entity);
                 }
                 else
@@ -914,7 +914,7 @@ namespace LiteEntitySystem
                     {
                         //this can be only on logics (not on singletons)
                         Logger.Log($"[CEM] Replace entity by new: {entityDataHeader.Version}");
-                        entity.Destroy();
+                        entity.DestroyInternal();
                         RemoveEntity(entity);
                         entity = null;
                     } 

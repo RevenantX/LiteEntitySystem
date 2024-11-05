@@ -11,7 +11,5 @@ namespace LiteEntitySystem
         {
             InternalOwnerId.Value = EntityManager.ServerPlayerId;
         }
-
-        public sealed override void Destroy() => base.Destroy();
     }
 }

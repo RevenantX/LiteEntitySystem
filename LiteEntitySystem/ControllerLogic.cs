@@ -40,12 +40,10 @@ namespace LiteEntitySystem
             GetControlledEntity<PawnLogic>().Controller = this;
         }
 
-        public sealed override void Destroy()
+        internal override void DestroyInternal()
         {
-            if (IsClient || IsDestroyed)
-                return;
             StopControl();
-            base.Destroy();
+            Destroy();
         }
 
         public void StopControl()
