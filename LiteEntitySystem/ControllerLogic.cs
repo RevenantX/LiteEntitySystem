@@ -43,7 +43,7 @@ namespace LiteEntitySystem
         internal override void DestroyInternal()
         {
             StopControl();
-            Destroy();
+            base.DestroyInternal();
         }
 
         public void StopControl()
