@@ -161,7 +161,7 @@ namespace LiteEntitySystem
         
         /// <summary>
         /// Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
-        /// In rollback state call is ignored
+        /// Should be called also in rollback mode if you use EntityLogic.Childs
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="targetReference">SyncVar of class that will be set to predicted entity and synchronized once confirmation will be received</param>
@@ -169,10 +169,17 @@ namespace LiteEntitySystem
         /// <returns>Created predicted local entity</returns>
         public void AddPredictedEntity<T>(ref SyncVar<EntitySharedReference> targetReference, Action<T> initMethod = null) where T : EntityLogic
         {
-            if (EntityManager.InRollBackState)
-                return;
-            
             T entity;
+            if (EntityManager.InRollBackState)
+            {
+                if (EntityManager.TryGetEntityById(targetReference.Value, out entity) && entity.IsLocal)
+                {
+                    //add to childs on rollback
+                    Childs.Add(entity);
+                }
+                return;
+            }
+            
             if (EntityManager.IsServer)
             {
                 entity = ServerManager.AddEntity(this, initMethod);
