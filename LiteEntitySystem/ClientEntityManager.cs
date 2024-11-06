@@ -277,6 +277,18 @@ namespace LiteEntitySystem
             
             return entity;
         }
+
+        internal EntityLogic FindEntityByPredictedId(ushort tick, ushort parentId, ushort predictedId)
+        {
+            foreach (var predictedEntity in _spawnPredictedEntities)
+            {
+                if (predictedEntity.tick == tick && 
+                    predictedEntity.entity.ParentId.Id == parentId &&
+                    predictedEntity.entity.PredictedId == predictedId)
+                    return predictedEntity.entity;
+            }
+            return null;
+        }
         
         protected override unsafe void OnAliveEntityAdded(InternalEntity entity)
         {

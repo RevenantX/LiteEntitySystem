@@ -54,6 +54,13 @@ namespace LiteEntitySystem
         private bool _lagCompensationEnabled;
         
         public EntitySharedReference SharedReference => new EntitySharedReference(this);
+
+        [SyncVarFlags(SyncFlags.OnlyForOwner)]
+        private SyncVar<ushort> _localPredictedIdCounter;
+        [SyncVarFlags(SyncFlags.OnlyForOwner)]
+        private SyncVar<ushort> _predictedId;
+        
+        internal ulong PredictedId => _predictedId.Value;
         
         //on client it works only in rollback
         internal void EnableLagCompensation(NetPlayer player)
@@ -105,27 +112,86 @@ namespace LiteEntitySystem
         
         /// <summary>
         /// Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
+        /// Should be called also in rollback mode
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="initMethod">Method that will be called after entity constructed</param>
         /// <returns>Created predicted local entity</returns>
         public T AddPredictedEntity<T>(Action<T> initMethod = null) where T : EntityLogic
         {
+            T entity;
             if (EntityManager.IsServer)
-                return ServerManager.AddEntity(this, initMethod);
+            {
+                entity = ServerManager.AddEntity(this, initMethod);
+                entity._predictedId.Value = _localPredictedIdCounter.Value++;
+                return entity;
+            }
 
             if (IsRemoteControlled)
             {
                 Logger.LogError("AddPredictedEntity called on RemoteControlled");
                 return null;
             }
+            
+            if (EntityManager.InRollBackState)
+            {
+                //local counter here should be reset
+                ushort potentialId = _localPredictedIdCounter.Value++;
+                entity = ClientManager.FindEntityByPredictedId(ClientManager.RollBackTick, Id, potentialId) as T;
+                if (entity == null)
+                {
+                    Logger.LogWarning("Misspredicted entity add?");
+                }
+                else
+                {
+                    //add to childs on rollback
+                    Childs.Add(entity);
+                }
+                return entity;
+            }
 
-            var entity = ClientManager.AddLocalEntity(initMethod);
+            entity = ClientManager.AddLocalEntity(initMethod);
+            entity._predictedId.Value = _localPredictedIdCounter.Value++;
             entity._parentId.Value = new EntitySharedReference(this);
             entity.InternalOwnerId.Value = InternalOwnerId.Value;
             entity.OnParentChange(EntitySharedReference.Empty);
             entity.OnOwnerChange(EntityManager.InternalPlayerId);
             return entity;
+        }
+        
+        /// <summary>
+        /// Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
+        /// In rollback state call is ignored
+        /// </summary>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <param name="targetReference">SyncVar of class that will be set to predicted entity and synchronized once confirmation will be received</param>
+        /// <param name="initMethod">Method that will be called after entity constructed</param>
+        /// <returns>Created predicted local entity</returns>
+        public void AddPredictedEntity<T>(ref SyncVar<EntitySharedReference> targetReference, Action<T> initMethod = null) where T : EntityLogic
+        {
+            if (EntityManager.InRollBackState)
+                return;
+            
+            T entity;
+            if (EntityManager.IsServer)
+            {
+                entity = ServerManager.AddEntity(this, initMethod);
+                targetReference.Value = entity;
+                return;
+            }
+
+            if (IsRemoteControlled)
+            {
+                Logger.LogError("AddPredictedEntity called on RemoteControlled");
+                return;
+            }
+
+            entity = ClientManager.AddLocalEntity(initMethod);
+            entity._parentId.Value = new EntitySharedReference(this);
+            entity.InternalOwnerId.Value = InternalOwnerId.Value;
+            entity.OnParentChange(EntitySharedReference.Empty);
+            entity.OnOwnerChange(EntityManager.InternalPlayerId);
+            targetReference.Value = entity;
         }
 
         /// <summary>
