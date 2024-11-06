@@ -290,7 +290,7 @@ namespace LiteEntitySystem
             AliveEntities.Clear();
             
             foreach (var entity in AllEntities)
-                entity.Destroy();
+                entity.DestroyInternal();
             AllEntities.Clear();
             Array.Clear(EntitiesDict, 0, EntitiesDict.Length);
             Array.Clear(_entityFilters, 0, _entityFilters.Length);

@@ -256,7 +256,7 @@ namespace LiteEntitySystem
             var childsCopy = Childs.ToArray();
             if (childsCopy != null) //notify child entities about parent destruction
                 foreach (var entityLogicRef in childsCopy)
-                    EntityManager.GetEntityById<EntityLogic>(entityLogicRef).OnBeforeParentDestroy();
+                    EntityManager.GetEntityById<EntityLogic>(entityLogicRef)?.OnBeforeParentDestroy();
 
             base.DestroyInternal();
             if (EntityManager.IsClient && IsLocalControlled && !IsLocal)
