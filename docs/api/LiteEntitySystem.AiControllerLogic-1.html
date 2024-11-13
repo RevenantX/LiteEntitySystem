@@ -105,9 +105,6 @@
       <a class="xref" href="LiteEntitySystem.ControllerLogic.html#LiteEntitySystem_ControllerLogic_StartControl_LiteEntitySystem_PawnLogic_">ControllerLogic.StartControl(PawnLogic)</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.ControllerLogic.html#LiteEntitySystem_ControllerLogic_OnDestroy">ControllerLogic.OnDestroy()</a>
-    </div>
-    <div>
       <a class="xref" href="LiteEntitySystem.ControllerLogic.html#LiteEntitySystem_ControllerLogic_StopControl">ControllerLogic.StopControl()</a>
     </div>
     <div>
@@ -156,7 +153,13 @@
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Destroy">InternalEntity.Destroy()</a>
     </div>
     <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnDestroy">InternalEntity.OnDestroy()</a>
+    </div>
+    <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Update">InternalEntity.Update()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnBeforeRollback">InternalEntity.OnBeforeRollback()</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnRollback">InternalEntity.OnRollback()</a>
@@ -199,7 +202,7 @@
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_AiControllerLogic_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[EntityFlags(EntityFlags.Updateable|EntityFlags.LocalOnly)]
+    <pre><code class="lang-csharp hljs">[EntityFlags(EntityFlags.Updateable)]
 public abstract class AiControllerLogic&lt;T&gt; : AiControllerLogic, IComparable&lt;InternalEntity&gt; where T : PawnLogic</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>

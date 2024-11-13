@@ -3,6 +3,13 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>9</LangVersion>
+        <Authors>Ruslan Pyrch</Authors>
+        <Copyright>Ruslan Pyrch</Copyright>
+        <PackageProjectUrl>https://github.com/RevenantX/LiteEntitySystem</PackageProjectUrl>
+        <PackageLicenseUrl>https://licenses.nuget.org/Apache-2.0</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/RevenantX/LiteEntitySystem</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -26,6 +33,17 @@
       <Reference Include="RefMagic">
         <HintPath>ILPart\RefMagic.dll</HintPath>
       </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\LiteEntitySystemAnalyzer\bin\$(Configuration)\netstandard2.0\LiteEntitySystemAnalyzer.dll">
+        <Pack>true</Pack>
+        <PackagePath>analyzers\dotnet\cs\</PackagePath>
+      </Content>
+      <Content Include="ILPart\RefMagic.dll">
+        <Pack>true</Pack>
+        <PackagePath>lib\$(TargetFramework)</PackagePath>
+      </Content>
     </ItemGroup>
 
 </Project>

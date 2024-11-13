@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Enum ExecuteFlags </title>
+      <title>Interface ILocalSingleton </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Enum ExecuteFlags ">
+      <meta name="title" content="Interface ILocalSingleton ">
     
     
       <link rel="shortcut icon" href="../favicon.ico">
@@ -66,73 +66,32 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.ExecuteFlags">
+            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.ILocalSingleton">
 
 
 
-
-  <h1 id="LiteEntitySystem_ExecuteFlags" data-uid="LiteEntitySystem.ExecuteFlags" class="text-break">Enum ExecuteFlags</h1>
+  <h1 id="LiteEntitySystem_ILocalSingleton" data-uid="LiteEntitySystem.ILocalSingleton" class="text-break">Interface ILocalSingleton</h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
-  <h5 id="LiteEntitySystem_ExecuteFlags_syntax">Syntax</h5>
+  <h5 id="LiteEntitySystem_ILocalSingleton_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Flags]
-public enum ExecuteFlags : byte</code></pre>
+    <pre><code class="lang-csharp hljs">public interface ILocalSingleton</code></pre>
   </div>
-  <h3 id="fields">Fields
+  <h3 id="methods">Methods
 </h3>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    <thead>
-    </thead></thead><tbody>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_All">All</td>
-        <td><p>All flags, send to owner, to others, execute on prediction and on server</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_ExecuteOnPrediction">ExecuteOnPrediction</td>
-        <td><p>Execute RPC on client for owner of entity on prediction</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_ExecuteOnServer">ExecuteOnServer</td>
-        <td><p>Execute RPC directly on server</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_SendToAll">SendToAll</td>
-        <td><p>Execute RPC for all players</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_SendToOther">SendToOther</td>
-        <td><p>Execute RPC for non owners</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_SendToOwner">SendToOwner</td>
-        <td><p>Execute RPC for owner of entity</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="extensionmethods">Extension Methods</h3>
-  <div>
-      <a class="xref" href="LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_">Utils.GetEnumValueInt&lt;ExecuteFlags&gt;(ExecuteFlags)</a>
+
+
+  <a id="LiteEntitySystem_ILocalSingleton_Destroy_" data-uid="LiteEntitySystem.ILocalSingleton.Destroy*"></a>
+  <h4 id="LiteEntitySystem_ILocalSingleton_Destroy" data-uid="LiteEntitySystem.ILocalSingleton.Destroy">Destroy()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Destroy()</code></pre>
   </div>
-  <div>
-      <a class="xref" href="LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_">Utils.GetEnumValue&lt;ExecuteFlags&gt;(ExecuteFlags)</a>
-  </div>
-  <div>
-      <a class="xref" href="LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_">Utils.HasFlagFast&lt;ExecuteFlags&gt;(ExecuteFlags, ExecuteFlags)</a>
-  </div>
+
 </article>
           </div>
 

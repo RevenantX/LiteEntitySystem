@@ -434,6 +434,26 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.ILocalSingleton.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.ILocalSingleton.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.ILocalSingletonWithUpdate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.ILocalSingletonWithUpdate.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.ILogger.yml",
       "output": {
         ".html": {
@@ -498,6 +518,16 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.Internal.EntityComparer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Internal.EntityDataHeader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Internal.EntityDataHeader.html"
         }
       },
       "version": ""
@@ -808,6 +838,16 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.UpdateMode.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Utils.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Utils.html"
         }
       },
       "version": ""

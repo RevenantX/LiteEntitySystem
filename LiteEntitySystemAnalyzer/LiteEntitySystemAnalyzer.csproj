@@ -3,6 +3,13 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <PackageId>LiteEntitySystem.Analyzer</PackageId>
+        <Authors>Ruslan Pyrch</Authors>
+        <Copyright>Ruslan Pyrch</Copyright>
+        <PackageProjectUrl>https://github.com/RevenantX/LiteEntitySystem</PackageProjectUrl>
+        <PackageLicenseUrl>https://licenses.nuget.org/Apache-2.0</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/RevenantX/LiteEntitySystem</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 
     <ItemGroup>
