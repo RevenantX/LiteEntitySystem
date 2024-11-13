@@ -10,6 +10,9 @@
         <RepositoryUrl>https://github.com/RevenantX/LiteEntitySystem</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>LiteEntitySystem</Title>
+        <Description>Pure C# HighLevel API for multiplayer games using .NET Standard 2.1</Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -36,14 +39,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\LiteEntitySystemAnalyzer\bin\$(Configuration)\netstandard2.0\LiteEntitySystemAnalyzer.dll">
-        <Pack>true</Pack>
-        <PackagePath>analyzers\dotnet\cs\</PackagePath>
-      </Content>
-      <Content Include="ILPart\RefMagic.dll">
-        <Pack>true</Pack>
-        <PackagePath>lib\$(TargetFramework)</PackagePath>
-      </Content>
+      <Content Include="..\LiteEntitySystemAnalyzer\bin\$(Configuration)\netstandard2.0\LiteEntitySystemAnalyzer.dll" Pack="true" PackagePath="analyzers\dotnet\cs\"/>
+      <Content Include="ILPart\RefMagic.dll" Pack="true" PackagePath="lib\$(TargetFramework)"/>
+      <None Include="..\README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
-
 </Project>
