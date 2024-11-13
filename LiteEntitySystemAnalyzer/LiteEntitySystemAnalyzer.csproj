@@ -7,7 +7,7 @@
         <Authors>Ruslan Pyrch</Authors>
         <Copyright>Ruslan Pyrch</Copyright>
         <PackageProjectUrl>https://github.com/RevenantX/LiteEntitySystem</PackageProjectUrl>
-        <PackageLicenseUrl>https://licenses.nuget.org/Apache-2.0</PackageLicenseUrl>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/RevenantX/LiteEntitySystem</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
     </PropertyGroup>

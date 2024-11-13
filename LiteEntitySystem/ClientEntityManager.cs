@@ -251,7 +251,7 @@ namespace LiteEntitySystem
         /// Add local entity that will be not synchronized
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
-        /// <returns>Created entity or null if entities limit is reached (<see cref="MaxEntityCount"/>)</returns>
+        /// <returns>Created entity or null if entities limit is reached (<see cref="EntityManager.MaxEntityCount"/>)</returns>
         internal T AddLocalEntity<T>(Action<T> initMethod = null) where T : EntityLogic
         {
             if (_localIdQueue.AvailableIds == 0)
