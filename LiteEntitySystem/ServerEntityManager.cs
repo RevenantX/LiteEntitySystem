@@ -252,7 +252,7 @@ namespace LiteEntitySystem
         /// <param name="initMethod">Method that will be called after entity construction</param>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Created entity or null in case of limit</returns>
-        public T AddSignleton<T>(Action<T> initMethod = null) where T : SingletonEntityLogic => 
+        public T AddSingleton<T>(Action<T> initMethod = null) where T : SingletonEntityLogic => 
             Add(initMethod);
 
         /// <summary>
