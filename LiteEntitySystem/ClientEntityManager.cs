@@ -98,13 +98,13 @@ namespace LiteEntitySystem
         /// Preferred input and incoming states buffer length in seconds lowest bound
         /// Buffer automatically increases to Jitter time + PreferredBufferTimeLowest
         /// </summary>
-        public float PreferredBufferTimeLowest = 0.010f; 
+        public float PreferredBufferTimeLowest = 0.01f; 
         
         /// <summary>
         /// Preferred input and incoming states buffer length in seconds lowest bound
         /// Buffer automatically decreases to Jitter time + PreferredBufferTimeHighest
         /// </summary>
-        public float PreferredBufferTimeHighest = 0.100f;
+        public float PreferredBufferTimeHighest = 0.05f;
 
         public int PendingToRemoveEntites => _entitiesToRemoveCount;
         
