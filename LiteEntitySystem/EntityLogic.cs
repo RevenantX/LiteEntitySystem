@@ -253,10 +253,13 @@ namespace LiteEntitySystem
                 return;
 
             //temporary copy childs to array because childSet can be modified inside
-            var childsCopy = Childs.ToArray();
-            if (childsCopy != null) //notify child entities about parent destruction
-                foreach (var entityLogicRef in childsCopy)
-                    EntityManager.GetEntityById<EntityLogic>(entityLogicRef)?.OnBeforeParentDestroy();
+            if (Childs.Count > 0)
+            {
+                var childsCopy = Childs.ToArray();
+                if (childsCopy != null) //notify child entities about parent destruction
+                    foreach (var entityLogicRef in childsCopy)
+                        EntityManager.GetEntityById<EntityLogic>(entityLogicRef)?.OnBeforeParentDestroy();
+            }
 
             base.DestroyInternal();
             if (EntityManager.IsClient && IsLocalControlled && !IsLocal)
@@ -270,7 +273,7 @@ namespace LiteEntitySystem
             }
             
             foreach (var entityLogicRef in Childs)
-                EntityManager.GetEntityById<EntityLogic>(entityLogicRef).Destroy();
+                EntityManager.GetEntityById<EntityLogic>(entityLogicRef)?.Destroy();
         }
 
         /// <summary>
