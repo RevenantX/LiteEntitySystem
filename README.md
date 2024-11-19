@@ -9,7 +9,13 @@ Pure C# HighLevel API for multiplayer games using .NET Standard 2.1
 
 [Documentation](https://revenantx.github.io/LiteEntitySystem/api/LiteEntitySystem.html)
 
-## Installation notices
+## Build
+
+### [NuGet](https://www.nuget.org/packages/LiteEntitySystem/) [![NuGet](https://img.shields.io/nuget/v/LiteEntitySystem?color=blue)](https://www.nuget.org/packages/LiteEntitySystem/) [![NuGet](https://img.shields.io/nuget/vpre/LiteEntitySystem)](https://www.nuget.org/packages/LiteEntitySystem/#versions-body-tab) [![NuGet](https://img.shields.io/nuget/dt/LiteEntitySystem)](https://www.nuget.org/packages/LiteEntitySystem/) 
+
+### [Releases](https://github.com/RevenantX/LiteEntitySystem/releases) [![GitHub (pre-)release](https://img.shields.io/github/release/RevenantX/LiteEntitySystem/all.svg)](https://github.com/RevenantX/LiteEntitySystem/releases)
+
+## Manual installation notices
 
 Please use Roslyn Analyzer (inside AnalyzerBinary) to prevent errors when assigning SyncVars.
 Only SyncVar.Value can be changed (never do x = new SyncVar())
