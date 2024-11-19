@@ -431,7 +431,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T AddController&lt;T&gt;(NetPlayer owner, PawnLogic entityToControl, Action&lt;T&gt; initMethod = null) where T : ControllerLogic</code></pre>
+    <pre><code class="lang-csharp hljs">public T AddController&lt;T&gt;(NetPlayer owner, PawnLogic entityToControl, Action&lt;T&gt; initMethod = null) where T : HumanControllerLogic</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -504,7 +504,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T AddController&lt;T&gt;(NetPlayer owner, Action&lt;T&gt; initMethod = null) where T : ControllerLogic</code></pre>
+    <pre><code class="lang-csharp hljs">public T AddController&lt;T&gt;(NetPlayer owner, Action&lt;T&gt; initMethod = null) where T : HumanControllerLogic</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -737,14 +737,14 @@
   </table>
 
 
-  <a id="LiteEntitySystem_ServerEntityManager_AddSignleton_" data-uid="LiteEntitySystem.ServerEntityManager.AddSignleton*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_AddSignleton__1_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddSignleton``1(System.Action{``0})">AddSignleton&lt;T&gt;(Action&lt;T&gt;)</h4>
+  <a id="LiteEntitySystem_ServerEntityManager_AddSingleton_" data-uid="LiteEntitySystem.ServerEntityManager.AddSingleton*"></a>
+  <h4 id="LiteEntitySystem_ServerEntityManager_AddSingleton__1_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddSingleton``1(System.Action{``0})">AddSingleton&lt;T&gt;(Action&lt;T&gt;)</h4>
   <div class="markdown level1 summary"><p>Add new entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T AddSignleton&lt;T&gt;(Action&lt;T&gt; initMethod = null) where T : SingletonEntityLogic</code></pre>
+    <pre><code class="lang-csharp hljs">public T AddSingleton&lt;T&gt;(Action&lt;T&gt; initMethod = null) where T : SingletonEntityLogic</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">

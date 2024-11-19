@@ -182,6 +182,11 @@ namespace LiteEntitySystem
         private static RemoteCall<ServerResponse> _serverResponseRpc;
         private ushort _requestId;
         private readonly Dictionary<ushort,Action<bool>> _awaitingRequests;
+        
+        /// <summary>
+        /// Input that created by ReadInput before all entity updates
+        /// </summary>
+        public TInput CurrentInput { get; internal set; }
 
         /// <summary>
         /// Get player that uses this controller

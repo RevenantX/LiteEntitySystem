@@ -5004,6 +5004,23 @@ references:
   fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).New
   nameWithType: HumanControllerLogic<TInput>.HumanControllerLogic
   nameWithType.vb: HumanControllerLogic(Of TInput).New
+- uid: LiteEntitySystem.HumanControllerLogic`1.CurrentInput
+  name: CurrentInput
+  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_CurrentInput
+  commentId: P:LiteEntitySystem.HumanControllerLogic`1.CurrentInput
+  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.CurrentInput
+  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).CurrentInput
+  nameWithType: HumanControllerLogic<TInput>.CurrentInput
+  nameWithType.vb: HumanControllerLogic(Of TInput).CurrentInput
+- uid: LiteEntitySystem.HumanControllerLogic`1.CurrentInput*
+  name: CurrentInput
+  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_CurrentInput_
+  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.CurrentInput
+  isSpec: "True"
+  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.CurrentInput
+  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).CurrentInput
+  nameWithType: HumanControllerLogic<TInput>.CurrentInput
+  nameWithType.vb: HumanControllerLogic(Of TInput).CurrentInput
 - uid: LiteEntitySystem.HumanControllerLogic`1.GenerateInput(`0@)
   name: GenerateInput(out TInput)
   href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GenerateInput__0__
@@ -6926,22 +6943,22 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.ServerEntityManager.AddPlayer
   nameWithType: ServerEntityManager.AddPlayer
-- uid: LiteEntitySystem.ServerEntityManager.AddSignleton*
-  name: AddSignleton
-  href: api/LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager_AddSignleton_
-  commentId: Overload:LiteEntitySystem.ServerEntityManager.AddSignleton
+- uid: LiteEntitySystem.ServerEntityManager.AddSingleton*
+  name: AddSingleton
+  href: api/LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager_AddSingleton_
+  commentId: Overload:LiteEntitySystem.ServerEntityManager.AddSingleton
   isSpec: "True"
-  fullName: LiteEntitySystem.ServerEntityManager.AddSignleton
-  nameWithType: ServerEntityManager.AddSignleton
-- uid: LiteEntitySystem.ServerEntityManager.AddSignleton``1(System.Action{``0})
-  name: AddSignleton<T>(Action<T>)
-  href: api/LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager_AddSignleton__1_System_Action___0__
-  commentId: M:LiteEntitySystem.ServerEntityManager.AddSignleton``1(System.Action{``0})
-  name.vb: AddSignleton(Of T)(Action(Of T))
-  fullName: LiteEntitySystem.ServerEntityManager.AddSignleton<T>(System.Action<T>)
-  fullName.vb: LiteEntitySystem.ServerEntityManager.AddSignleton(Of T)(System.Action(Of T))
-  nameWithType: ServerEntityManager.AddSignleton<T>(Action<T>)
-  nameWithType.vb: ServerEntityManager.AddSignleton(Of T)(Action(Of T))
+  fullName: LiteEntitySystem.ServerEntityManager.AddSingleton
+  nameWithType: ServerEntityManager.AddSingleton
+- uid: LiteEntitySystem.ServerEntityManager.AddSingleton``1(System.Action{``0})
+  name: AddSingleton<T>(Action<T>)
+  href: api/LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager_AddSingleton__1_System_Action___0__
+  commentId: M:LiteEntitySystem.ServerEntityManager.AddSingleton``1(System.Action{``0})
+  name.vb: AddSingleton(Of T)(Action(Of T))
+  fullName: LiteEntitySystem.ServerEntityManager.AddSingleton<T>(System.Action<T>)
+  fullName.vb: LiteEntitySystem.ServerEntityManager.AddSingleton(Of T)(System.Action(Of T))
+  nameWithType: ServerEntityManager.AddSingleton<T>(Action<T>)
+  nameWithType.vb: ServerEntityManager.AddSingleton(Of T)(Action(Of T))
 - uid: LiteEntitySystem.ServerEntityManager.Create*
   name: Create
   href: api/LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager_Create_

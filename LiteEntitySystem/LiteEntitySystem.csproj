@@ -13,6 +13,7 @@
         <Title>LiteEntitySystem</Title>
         <Description>Pure C# HighLevel API for multiplayer games using .NET Standard 2.1</Description>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Version>1.0.1</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

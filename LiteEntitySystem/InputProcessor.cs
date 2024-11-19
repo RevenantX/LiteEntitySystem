@@ -95,6 +95,7 @@ namespace LiteEntitySystem
                 {
                     if(controller.InternalOwnerId.Value != ownerId)
                         continue;
+                    controller.CurrentInput = *(TInput*)rawData;
                     controller.ReadInput(*(TInput*)rawData);
                     return;
                 }
@@ -114,7 +115,7 @@ namespace LiteEntitySystem
                     return;
                 }
                 //if no controller just put zeroes for simplicity
-                *(TInput*)(rawData + offset) = default(TInput);
+                *(TInput*)(rawData + offset) = default;
             }
         }
 
