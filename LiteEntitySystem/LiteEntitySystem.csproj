@@ -14,6 +14,10 @@
         <Description>Pure C# HighLevel API for multiplayer games using .NET Standard 2.1</Description>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <Version>1.0.1</Version>
+        <PackageReleaseNotes>Fix possible error in Destroy logic
+Store controller actual (on ReadInput) input as variable (HumanControllerLogic.CurrentInput). update docs. Check for HumanControllerLogic instead of ControllerLogic in AddController
+Reduce client lerp buffer default size (from 100ms to 50ms) this can be adjusted in  ClientEntityManager.PreferredBufferTimeHighest
+Fix method name type in `AddSingleton`</PackageReleaseNotes>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
