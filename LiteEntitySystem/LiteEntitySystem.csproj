@@ -33,8 +33,8 @@ Fix method name type in `AddSingleton`</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="K4os.Compression.LZ4" Version="1.3.6" />
-      <PackageReference Include="LiteNetLib" Version="1.2.0" />
+      <PackageReference Include="K4os.Compression.LZ4" Version="1.3.8" />
+      <PackageReference Include="LiteNetLib" Version="1.3.0" />
     </ItemGroup>
 
     <ItemGroup>

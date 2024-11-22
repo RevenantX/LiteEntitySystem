@@ -47,12 +47,6 @@ namespace LiteNetLib.Utils
             }
             return e;
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<byte> AsReadOnlySpan(this NetDataReader reader)
-        {
-            return new ReadOnlySpan<byte>(reader.RawData, reader.Position, reader.AvailableBytes);
-        }
         
 #if UNITY_2021_2_OR_NEWER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
