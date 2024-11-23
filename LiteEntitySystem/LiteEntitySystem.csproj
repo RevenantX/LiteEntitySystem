@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>9</LangVersion>
         <Authors>Ruslan Pyrch</Authors>
         <Copyright>Ruslan Pyrch</Copyright>
@@ -18,6 +17,7 @@
 Store controller actual (on ReadInput) input as variable (HumanControllerLogic.CurrentInput). update docs. Check for HumanControllerLogic instead of ControllerLogic in AddController
 Reduce client lerp buffer default size (from 100ms to 50ms) this can be adjusted in  ClientEntityManager.PreferredBufferTimeHighest
 Fix method name type in `AddSingleton`</PackageReleaseNotes>
+        <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -34,7 +34,7 @@ Fix method name type in `AddSingleton`</PackageReleaseNotes>
 
     <ItemGroup>
       <PackageReference Include="K4os.Compression.LZ4" Version="1.3.8" />
-      <PackageReference Include="LiteNetLib" Version="1.3.0" />
+      <PackageReference Include="LiteNetLib" Version="1.3.1" />
     </ItemGroup>
 
     <ItemGroup>
