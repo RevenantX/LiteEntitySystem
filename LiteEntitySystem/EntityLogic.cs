@@ -154,7 +154,7 @@ namespace LiteEntitySystem
             entity._predictedId.Value = _localPredictedIdCounter.Value++;
             entity._parentId.Value = new EntitySharedReference(this);
             entity.InternalOwnerId.Value = InternalOwnerId.Value;
-            entity.OnParentChange(EntitySharedReference.Empty);
+            Childs.Add(this);
             entity.OnOwnerChange(EntityManager.InternalPlayerId);
             return entity;
         }
@@ -196,7 +196,7 @@ namespace LiteEntitySystem
             entity = ClientManager.AddLocalEntity(initMethod);
             entity._parentId.Value = new EntitySharedReference(this);
             entity.InternalOwnerId.Value = InternalOwnerId.Value;
-            entity.OnParentChange(EntitySharedReference.Empty);
+            Childs.Add(this);
             entity.OnOwnerChange(EntityManager.InternalPlayerId);
             targetReference.Value = entity;
         }
@@ -214,9 +214,9 @@ namespace LiteEntitySystem
             if (id == _parentId.Value)
                 return;
             
-            EntitySharedReference oldId = _parentId;
+            EntityManager.GetEntityById<EntityLogic>(_parentId)?.Childs.Remove(this);
+            EntityManager.GetEntityById<EntityLogic>(id)?.Childs.Add(this);
             _parentId.Value = id;
-            OnParentChange(oldId);
             
             var newParent = EntityManager.GetEntityById<EntityLogic>(_parentId)?.InternalOwnerId ?? EntityManager.ServerPlayerId;
             if (InternalOwnerId.Value != newParent)
@@ -314,7 +314,6 @@ namespace LiteEntitySystem
         protected override void RegisterRPC(ref RPCRegistrator r)
         {
             base.RegisterRPC(ref r);
-            r.BindOnChange(this, ref _parentId, OnParentChange);
             r.BindOnChange(this, ref InternalOwnerId, OnOwnerChange);
         }
         
