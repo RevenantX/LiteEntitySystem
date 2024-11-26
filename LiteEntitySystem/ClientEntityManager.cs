@@ -95,6 +95,11 @@ namespace LiteEntitySystem
         public float NetworkJitter { get; private set; }
 
         /// <summary>
+        /// Average jitter
+        /// </summary>
+        public float AverageJitter => _jitterMiddle;
+
+        /// <summary>
         /// Preferred input and incoming states buffer length in seconds lowest bound
         /// Buffer automatically increases to Jitter time + PreferredBufferTimeLowest
         /// </summary>
@@ -178,6 +183,7 @@ namespace LiteEntitySystem
         private readonly float[] _jitterSamples = new float[10];
         private int _jitterSampleIdx;
         private readonly Stopwatch _jitterTimer = new();
+        private float _jitterPrevTime;
         private float _jitterMiddle;
         
         //local player
@@ -392,7 +398,9 @@ namespace LiteEntitySystem
                     }
 
                     //sample jitter
-                    _jitterSamples[_jitterSampleIdx] = _jitterTimer.ElapsedMilliseconds / 1000f;
+                    float currentJitterTimer = _jitterTimer.ElapsedMilliseconds / 1000f;
+                    _jitterSamples[_jitterSampleIdx] = Math.Abs(currentJitterTimer - _jitterPrevTime);
+                    _jitterPrevTime = currentJitterTimer;
                     _jitterSampleIdx = (_jitterSampleIdx + 1) % _jitterSamples.Length;
                     //reset timer
                     _jitterTimer.Restart();
@@ -449,9 +457,9 @@ namespace LiteEntitySystem
             
             //get max and middle jitter
             _jitterMiddle = 0f;
-            for (int i = 0; i < _jitterSamples.Length - 1; i++)
+            for (int i = 0; i < _jitterSamples.Length; i++)
             {
-                float jitter = Math.Abs(_jitterSamples[i] - _jitterSamples[i + 1]);
+                float jitter = _jitterSamples[i];
                 if (jitter > NetworkJitter)
                     NetworkJitter = jitter;
                 _jitterMiddle += jitter;
