@@ -54,7 +54,7 @@ namespace LiteEntitySystem
             set
             {
                 if (Container != null && !Container.IsDestroyed && !Utils.FastEquals(ref value, ref _value))
-                    Container.ServerManager.EntityFieldChanged(Container, FieldId, ref value);
+                    Container.EntityManager.EntityFieldChanged(Container, FieldId, ref value);
                 _value = value;
             }
         }
@@ -63,8 +63,7 @@ namespace LiteEntitySystem
         {
             Container = container;
             FieldId = fieldId;
-            if(Container != null)
-                Container.ServerManager.EntityFieldChanged(Container, FieldId, ref _value);
+            Container?.EntityManager.EntityFieldChanged(Container, FieldId, ref _value);
         }
         
         internal unsafe bool SetFromAndSync(byte* data)

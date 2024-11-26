@@ -203,7 +203,7 @@ namespace LiteEntitySystem.Internal
 
         internal void RegisterRpcInternal()
         {
-            ref var classData = ref ClassData;
+            ref var classData = ref EntityManager.ClassDataDict[ClassId];
             
             //setup field ids for BindOnChange and pass on server this for OnChangedEvent to StateSerializer
             var onChangeTarget = EntityManager.IsServer && !IsLocal ? this : null;

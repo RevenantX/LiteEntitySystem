@@ -174,7 +174,7 @@ namespace LiteEntitySystem
         private SyncCallInfo[] _syncCallsBeforeConstruct;
         private int _syncCallsBeforeConstructCount;
         
-        private AVLTree<InternalEntity> _entitiesToConstruct = new();
+        private readonly AVLTree<InternalEntity> _entitiesToConstruct = new();
         private ushort _lastReceivedInputTick;
         private float _logicLerpMsec;
         private ushort _lastReadyTick;
@@ -296,7 +296,12 @@ namespace LiteEntitySystem
             }
             return null;
         }
-        
+
+        internal override void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue)
+        {
+            //currently nothing
+        }
+
         protected override unsafe void OnAliveEntityAdded(InternalEntity entity)
         {
             ref var classData = ref ClassDataDict[entity.ClassId];
