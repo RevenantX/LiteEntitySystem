@@ -180,11 +180,12 @@ namespace LiteEntitySystem
         private ushort _lastReadyTick;
 
         //time manipulation
-        private readonly float[] _jitterSamples = new float[10];
+        private readonly float[] _jitterSamples = new float[50];
         private int _jitterSampleIdx;
         private readonly Stopwatch _jitterTimer = new();
         private float _jitterPrevTime;
         private float _jitterMiddle;
+        private float _jitterSum;
         
         //local player
         private NetPlayer _localPlayer;
@@ -399,7 +400,11 @@ namespace LiteEntitySystem
 
                     //sample jitter
                     float currentJitterTimer = _jitterTimer.ElapsedMilliseconds / 1000f;
-                    _jitterSamples[_jitterSampleIdx] = Math.Abs(currentJitterTimer - _jitterPrevTime);
+                    ref float jitterSample = ref _jitterSamples[_jitterSampleIdx];
+                    
+                    _jitterSum -= jitterSample;
+                    jitterSample = Math.Abs(currentJitterTimer - _jitterPrevTime);
+                    _jitterSum += jitterSample;
                     _jitterPrevTime = currentJitterTimer;
                     _jitterSampleIdx = (_jitterSampleIdx + 1) % _jitterSamples.Length;
                     //reset timer
@@ -456,15 +461,9 @@ namespace LiteEntitySystem
                 return false;
             
             //get max and middle jitter
-            _jitterMiddle = 0f;
-            for (int i = 0; i < _jitterSamples.Length; i++)
-            {
-                float jitter = _jitterSamples[i];
-                if (jitter > NetworkJitter)
-                    NetworkJitter = jitter;
-                _jitterMiddle += jitter;
-            }
-            _jitterMiddle /= _jitterSamples.Length;
+            _jitterMiddle = _jitterSum / _jitterSamples.Length;
+            if (_jitterMiddle > NetworkJitter)
+                NetworkJitter = _jitterMiddle;
             
             _stateB = _readyStates.ExtractMin();
             _stateB.Preload(EntitiesDict);
