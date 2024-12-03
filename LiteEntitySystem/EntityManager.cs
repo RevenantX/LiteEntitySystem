@@ -155,7 +155,7 @@ namespace LiteEntitySystem
         protected readonly AVLTree<EntityLogic> LagCompensatedEntities = new();
         protected readonly AVLTree<InternalEntity> AllEntities = new();
 
-        private readonly double _stopwatchFrequency;
+        private static readonly double InvStopwatchFrequency = 1.0 / Stopwatch.Frequency;
         private readonly Stopwatch _stopwatch = new();
 
         private readonly SingletonEntityLogic[] _singletonEntities;
@@ -262,7 +262,6 @@ namespace LiteEntitySystem
             FramesPerSecond = framesPerSecond;
             DeltaTime = 1.0 / framesPerSecond;
             DeltaTimeF = (float) DeltaTime;
-            _stopwatchFrequency = 1.0 / Stopwatch.Frequency;
             _deltaTimeTicks = (long)(DeltaTime * Stopwatch.Frequency);
             _slowdownTicks = (long)(DeltaTime * TimeSpeedChangeCoef * Stopwatch.Frequency);
             if (_slowdownTicks < 100)
@@ -563,7 +562,7 @@ namespace LiteEntitySystem
 
             long elapsedTicks = _stopwatch.ElapsedTicks;
             long ticksDelta = elapsedTicks - _lastTime;
-            VisualDeltaTime = ticksDelta * _stopwatchFrequency;
+            VisualDeltaTime = ticksDelta * InvStopwatchFrequency;
             
             foreach (var localSingleton in _localSingletons)
                 if(localSingleton.Value is ILocalSingletonWithUpdate updSingleton)
