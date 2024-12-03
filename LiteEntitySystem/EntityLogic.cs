@@ -294,12 +294,6 @@ namespace LiteEntitySystem
                 ClientManager.AddOwned(this);
         }
 
-        private void OnParentChange(EntitySharedReference oldId)
-        {
-            EntityManager.GetEntityById<EntityLogic>(oldId)?.Childs.Remove(this);
-            EntityManager.GetEntityById<EntityLogic>(_parentId)?.Childs.Add(this);
-        }
-
         internal static void SetOwner(EntityLogic entity, byte ownerId)
         {
             entity.InternalOwnerId.Value = ownerId;

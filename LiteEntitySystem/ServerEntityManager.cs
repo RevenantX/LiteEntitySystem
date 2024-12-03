@@ -132,6 +132,11 @@ namespace LiteEntitySystem
         {
             if (_netPlayers.Count == MaxPlayers)
                 return null;
+            if (peer.AssignedPlayer != null)
+            {
+                Logger.LogWarning("Peer already has an assigned player");
+                return peer.AssignedPlayer;
+            }
             if (_netPlayers.Count == 0)
                 _changedEntities.Clear();
             
