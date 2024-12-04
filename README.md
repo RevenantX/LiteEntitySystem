@@ -46,3 +46,6 @@ Only SyncVar.Value can be changed (never do x = new SyncVar())
 
 * LiteNetLib 1.x: https://github.com/RevenantX/LiteNetLib
 * LZ4: https://github.com/MiloszKrajewski/K4os.Compression.LZ4
+
+## Support developer
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/revx)
