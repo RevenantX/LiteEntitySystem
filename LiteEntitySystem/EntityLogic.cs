@@ -154,7 +154,7 @@ namespace LiteEntitySystem
             entity._predictedId.Value = _localPredictedIdCounter.Value++;
             entity._parentId.Value = new EntitySharedReference(this);
             entity.InternalOwnerId.Value = InternalOwnerId.Value;
-            Childs.Add(this);
+            Childs.Add(entity);
             entity.OnOwnerChange(EntityManager.InternalPlayerId);
             return entity;
         }
@@ -196,7 +196,7 @@ namespace LiteEntitySystem
             entity = ClientManager.AddLocalEntity(initMethod);
             entity._parentId.Value = new EntitySharedReference(this);
             entity.InternalOwnerId.Value = InternalOwnerId.Value;
-            Childs.Add(this);
+            Childs.Add(entity);
             entity.OnOwnerChange(EntityManager.InternalPlayerId);
             targetReference.Value = entity;
         }
