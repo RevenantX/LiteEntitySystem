@@ -105,7 +105,11 @@ namespace LiteEntitySystem
         private void OnEntityDestroyed(EntityLogic entityLogic)
         {
             _forceSyncEntities.Remove(entityLogic);
-            _skippedEntities.Remove(entityLogic);
+            if (_skippedEntities.Remove(entityLogic))
+            {
+                ServerManager.ForceEntitySync(entityLogic);
+                _skippedEntities.Remove(entityLogic);
+            }
         }
         
         protected HumanControllerLogic(EntityParams entityParams) : base(entityParams)
