@@ -108,7 +108,6 @@ namespace LiteEntitySystem
             if (_skippedEntities.Remove(entityLogic))
             {
                 ServerManager.ForceEntitySync(entityLogic);
-                _skippedEntities.Remove(entityLogic);
             }
         }
         
