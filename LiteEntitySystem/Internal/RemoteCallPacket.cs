@@ -15,11 +15,9 @@ namespace LiteEntitySystem.Internal
         public RemoteCallPacket Next;
         public int TotalSize => Header.ByteCount;
 
-        public bool ShouldSend(bool isOwned)
-        {
-            return (isOwned && (Flags & ExecuteFlags.SendToOwner) != 0) ||
-                   (!isOwned && (Flags & ExecuteFlags.SendToOther) != 0);
-        }
+        public bool ShouldSend(bool isOwned) =>
+            (isOwned && (Flags & ExecuteFlags.SendToOwner) != 0) || 
+            (!isOwned && (Flags & ExecuteFlags.SendToOther) != 0);
 
         public unsafe void WriteTo(byte* resultData, ref int position)
         {

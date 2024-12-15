@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
@@ -153,11 +152,18 @@ namespace LiteEntitySystem.Internal
             _syncFrame = tick;
             CleanPendingRpcs(ref _syncRpcHead, out _syncRpcTail);
             _rpcMode = RPCMode.Sync;
-            _entity.OnSyncRequested();
-            var syncableFields = _entity.ClassData.SyncableFields;
-            for (int i = 0; i < syncableFields.Length; i++)
-                RefMagic.RefFieldValue<SyncableField>(_entity, syncableFields[i].Offset)
-                    .OnSyncRequested();
+            try
+            {
+                _entity.OnSyncRequested();
+                var syncableFields = _entity.ClassData.SyncableFields;
+                for (int i = 0; i < syncableFields.Length; i++)
+                    RefMagic.RefFieldValue<SyncableField>(_entity, syncableFields[i].Offset)
+                        .OnSyncRequested();
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Exception in OnSyncRequested: {e}");
+            }
             _rpcMode = RPCMode.Normal;
         }
 
