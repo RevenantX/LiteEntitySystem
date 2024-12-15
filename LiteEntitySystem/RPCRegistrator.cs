@@ -246,11 +246,11 @@ namespace LiteEntitySystem
         }
     }
 
-    public ref struct SyncableRPCRegistrator
+    public readonly ref struct SyncableRPCRegistrator
     {
         private readonly List<RpcFieldInfo> _calls;
         private readonly int _syncableOffset;
-        private ushort _initialCallsSize;
+        private readonly ushort _initialCallsSize;
 
         internal SyncableRPCRegistrator(int syncableOffset, List<RpcFieldInfo> remoteCallsList)
         {
