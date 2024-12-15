@@ -53,7 +53,7 @@ namespace LiteEntitySystem
             get => _value;
             set
             {
-                if (Container != null && !Container.IsDestroyed && !Utils.FastEquals(ref value, ref _value))
+                if (Container != null && !Utils.FastEquals(ref value, ref _value))
                     Container.EntityManager.EntityFieldChanged(Container, FieldId, ref value);
                 _value = value;
             }

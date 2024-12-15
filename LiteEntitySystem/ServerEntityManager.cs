@@ -653,6 +653,11 @@ namespace LiteEntitySystem
         
         internal override void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue)
         {
+            if (entity.IsDestroyed && _stateSerializers[entity.Id].Entity != entity)
+            {
+                //old freed entity
+                return;
+            }
             _changedEntities.Add(entity);
             _stateSerializers[entity.Id].MarkFieldChanged(fieldId, _tick, ref newValue);
         }
