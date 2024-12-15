@@ -372,14 +372,15 @@ namespace LiteEntitySystem
             {
                 ClientManager.RemoveOwned(this);
             }
-            var parent = EntityManager.GetEntityById<EntityLogic>(_parentId);
-            if (parent != null && !parent.IsDestroyed)
+            if (EntityManager.TryGetEntityById<EntityLogic>(_parentId, out var parent) && !parent.IsDestroyed)
             {
                 parent.RemoveChild(this);
             }
             
             foreach (var entityLogicRef in Childs)
                 EntityManager.GetEntityById<EntityLogic>(entityLogicRef)?.Destroy();
+            _firstChild.Value = EntitySharedReference.Empty;
+            _childsCount.Value = 0;
         }
 
         /// <summary>
