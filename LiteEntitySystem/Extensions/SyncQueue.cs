@@ -22,6 +22,8 @@ namespace Plugins.LiteEntitySystem.Extensions
         public bool IsSynchronized => false;
         public object SyncRoot => throw new NotImplementedException("The SyncQueue Collection isn't thread-safe.");
 
+        public override bool IsRollbackSupported => true;
+
         protected internal override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
             base.RegisterRPC(ref r);
@@ -110,7 +112,8 @@ namespace Plugins.LiteEntitySystem.Extensions
         
         public void CopyTo(Array array, int index) => ((ICollection)_data).CopyTo(array, index);
 
-        public IEnumerator<T> GetEnumerator() => _data.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public Queue<T>.Enumerator GetEnumerator() => _data.GetEnumerator();
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => _data.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => _data.GetEnumerator();
     }
 }

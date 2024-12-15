@@ -31,6 +31,8 @@ namespace LiteEntitySystem.Extensions
 
         public Dictionary<TKey, TValue>.KeyCollection Keys => _data.Keys;
         public Dictionary<TKey, TValue>.ValueCollection Values => _data.Values;
+        
+        public override bool IsRollbackSupported => true;
 
         protected internal override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
@@ -137,9 +139,9 @@ namespace LiteEntitySystem.Extensions
             _data.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() =>
-            GetEnumerator();
+            _data.GetEnumerator();
 
         IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator() =>
-            GetEnumerator();
+            _data.GetEnumerator();
     }
 }

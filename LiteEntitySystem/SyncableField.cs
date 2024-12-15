@@ -18,6 +18,11 @@ namespace LiteEntitySystem
         /// </summary>
         protected internal bool IsServer => ParentEntityInternal != null && ParentEntityInternal.IsServer;
 
+        /// <summary>
+        /// Is supported rollback by this syncable field
+        /// </summary>
+        public virtual bool IsRollbackSupported => false;
+
         protected internal virtual void BeforeReadRPC()
         {
             

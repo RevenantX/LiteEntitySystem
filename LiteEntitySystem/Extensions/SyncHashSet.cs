@@ -16,6 +16,8 @@ namespace LiteEntitySystem.Extensions
         private static RemoteCall _clearAction;
         private static RemoteCall<T> _removeAction;
         private static RemoteCallSpan<T> _initAction;
+        
+        public override bool IsRollbackSupported => true;
 
         protected internal override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
@@ -105,9 +107,7 @@ namespace LiteEntitySystem.Extensions
         }
 
         public HashSet<T>.Enumerator GetEnumerator() => _data.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => _data.GetEnumerator();
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => _data.GetEnumerator();
     }
 }

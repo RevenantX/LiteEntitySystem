@@ -27,6 +27,8 @@ namespace LiteEntitySystem.Extensions
         private static RemoteCall<int> _removeAtAction;
         private static RemoteCallSpan<T> _initAction;
         private static RemoteCall<SetValueData> _setAction;
+        
+        public override bool IsRollbackSupported => true;
 
         protected internal override void BeforeReadRPC()
         {
