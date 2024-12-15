@@ -225,7 +225,7 @@ namespace LiteEntitySystem.Internal
             if(classData.RemoteCallsClient == null)
             {
                 rpcCahce = new List<RpcFieldInfo>();
-                var rpcRegistrator = new RPCRegistrator(rpcCahce);
+                var rpcRegistrator = new RPCRegistrator(rpcCahce, classData.Fields);
                 RegisterRPC(ref rpcRegistrator);
                 //Logger.Log($"RegisterRPCs for class: {classData.ClassId}");
             }
@@ -265,6 +265,59 @@ namespace LiteEntitySystem.Internal
         protected virtual void RegisterRPC(ref RPCRegistrator r)
         {
             r.BindOnChange(this, ref _isDestroyed, OnDestroyChange);
+        }
+        
+        protected void ExecuteRPC(in RemoteCall rpc)
+        {
+            if (IsServer)
+            {
+                if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
+                    rpc.CachedAction(this);
+                ServerManager.AddRemoteCall(this, rpc.Id, rpc.Flags);
+            }
+            else if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction) && IsLocalControlled)
+                rpc.CachedAction(this);
+        }
+
+        protected void ExecuteRPC<T>(in RemoteCall<T> rpc, T value) where T : unmanaged
+        {
+            if (IsServer)
+            {
+                if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
+                    rpc.CachedAction(this, value);
+                unsafe
+                {
+                    ServerManager.AddRemoteCall(this, new ReadOnlySpan<T>(&value, 1), rpc.Id, rpc.Flags);
+                }
+            }
+            else if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction) && IsLocalControlled)
+                rpc.CachedAction(this, value);
+        }
+
+        protected void ExecuteRPC<T>(in RemoteCallSpan<T> rpc, ReadOnlySpan<T> value) where T : unmanaged
+        {
+            if (IsServer)
+            {
+                if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
+                    rpc.CachedAction(this, value);
+                ServerManager.AddRemoteCall(this, value, rpc.Id, rpc.Flags);
+            }
+            else if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction) && IsLocalControlled)
+                rpc.CachedAction(this, value);
+        }
+
+        protected void ExecuteRPC<T>(in RemoteCallSerializable<T> rpc, T value) where T : struct, ISpanSerializable
+        {
+            if (IsServer)
+            {
+                if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
+                    rpc.CachedAction(this, value);
+                var writer = new SpanWriter(stackalloc byte[value.MaxSize]);
+                value.Serialize(ref writer);
+                ServerManager.AddRemoteCall<byte>(this, writer.RawData.Slice(0, writer.Position), rpc.Id, rpc.Flags);
+            }
+            else if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction) && IsLocalControlled)
+                rpc.CachedAction(this, value);
         }
 
         protected InternalEntity(EntityParams entityParams)

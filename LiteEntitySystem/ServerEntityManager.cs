@@ -614,7 +614,7 @@ namespace LiteEntitySystem
                             }
                             header->PacketType = InternalPackets.DiffSync;
                             //Logger.LogWarning($"P:{pidx} Sending diff part {*partCount}: {_tick}");
-                            player.Peer.SendUnreliable(new ReadOnlySpan<byte>(_packetBuffer, 0, maxPartSize));
+                            player.Peer.SendUnreliable(new ReadOnlySpan<byte>(packetBuffer, maxPartSize));
                             header->Part++;
 
                             //repeat in next packet

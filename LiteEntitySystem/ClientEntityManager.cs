@@ -157,10 +157,10 @@ namespace LiteEntitySystem
         {
             public readonly InternalEntity Entity;
             
-            private readonly OnSyncCallDelegate _onSync;
+            private readonly MethodCallDelegate _onSync;
             private readonly int _prevDataPos;
 
-            public SyncCallInfo(OnSyncCallDelegate onSync, InternalEntity entity, int prevDataPos)
+            public SyncCallInfo(MethodCallDelegate onSync, InternalEntity entity, int prevDataPos)
             {
                 _onSync = onSync;
                 Entity = entity;

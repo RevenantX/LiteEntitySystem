@@ -25,7 +25,7 @@
         public readonly bool IsPredicted;
         public OnSyncExecutionOrder OnSyncExecutionOrder;
         
-        public OnSyncCallDelegate OnSync;
+        public MethodCallDelegate OnSync;
         public int FixedOffset;
         public int PredictedOffset;
 
