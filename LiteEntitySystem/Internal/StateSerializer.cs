@@ -191,7 +191,7 @@ namespace LiteEntitySystem.Internal
                 }
                 rpcNode = rpcNode.Next;
             }
-            
+            rpcNode = _rpcHead;
             while (rpcNode != null)
             {
                 if (rpcNode.ShouldSend(isOwned) && rpcNode.Header.Tick == serverTick)
