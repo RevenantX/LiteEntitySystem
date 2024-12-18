@@ -218,6 +218,11 @@ namespace LiteEntitySystem.Internal
             for (int i = 0; i < readCount; i++)
             {
                 var header = *(RPCHeader*)(rawData + position);
+                if (header.Id >= classData.RemoteCallsClient.Length)
+                {
+                    Logger.LogError($"BrokenRPC at position: {position}, entityId: {entityId}, classId: {classData.ClassId}");
+                    return;
+                }
                 position += sizeof(RPCHeader);
                 var rpcCache = new RemoteCallsCache(header, entityId, classData.RemoteCallsClient[header.Id], position);
                 //Logger.Log($"[CEM] ReadRPC. RpcId: {header.Id}, Tick: {header.Tick}, TypeSize: {header.TypeSize}, Count: {header.Count}");
