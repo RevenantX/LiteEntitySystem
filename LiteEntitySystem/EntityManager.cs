@@ -66,7 +66,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Maximum synchronized (without LocalOnly) entities
         /// </summary>
-        public const int MaxSyncedEntityCount = 8192;
+        public const int MaxSyncedEntityCount = 16384;
 
         public const int MaxEntityCount = MaxSyncedEntityCount * 2;
         
@@ -420,7 +420,7 @@ namespace LiteEntitySystem
             return false;
         }
 
-        protected InternalEntity AddEntity(EntityParams entityParams)
+        protected T AddEntity<T>(EntityParams entityParams) where T : InternalEntity
         {
             var entityHeader = entityParams.Header;
             if (entityHeader.Id == InvalidEntityId || entityHeader.Id >= EntitiesDict.Length)
@@ -438,7 +438,7 @@ namespace LiteEntitySystem
             {
                 throw new Exception($"Unregistered entity class: {entityHeader.ClassId}");
             }
-            var entity = classData.EntityConstructor(entityParams);
+            var entity = (T)classData.EntityConstructor(entityParams);
             entity.RegisterRpcInternal();
             
             if(entity.Id < EntitiesDict.Length)

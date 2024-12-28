@@ -30,7 +30,7 @@ namespace LiteEntitySystem
         public ushort CurrentRPCTick { get; internal set; }
 
         /// <summary>
-        /// Is rpc currently executing
+        /// Is server->client rpc currently executing
         /// </summary>
         public bool IsExecutingRPC { get; internal set; }
 
@@ -266,16 +266,17 @@ namespace LiteEntitySystem
                 Logger.LogError("Max local entities count reached");
                 return null;
             }
-
-            var ioBuffer = ClassDataDict[EntityClassInfo<T>.ClassId].AllocateDataCache(this);
-            var entity = (T)AddEntity(new EntityParams(
+            
+            var entity = AddEntity<T>(new EntityParams(
                 new EntityDataHeader(
                     _localIdQueue.GetNewId(), 
                     EntityClassInfo<T>.ClassId, 
                     0, 
                     0),
                 this,
-                ioBuffer));
+                ClassDataDict[EntityClassInfo<T>.ClassId].AllocateDataCache(this)));
+            
+            //Logger.Log($"AddPredicted, tick: {_tick}, rb: {InRollBackState}, id: {entity.Id}");
             
             entity.InternalOwnerId.Value = InternalPlayerId;
             initMethod?.Invoke(entity);
@@ -617,10 +618,11 @@ namespace LiteEntitySystem
             {
                 if (Utils.SequenceDiff(_stateA.ProcessedTick, info.tick) >= 0)
                 {
-                    //Logger.Log("Delete predicted");
+                    //Logger.Log($"Delete predicted. Tick: {info.tick}, Entity: {info.entity}");
                     _spawnPredictedEntities.Dequeue();
                     info.entity.DestroyInternal();
                     RemoveEntity(info.entity);
+                    _localIdQueue.ReuseId(info.entity.Id);
                 }
                 else
                 {
@@ -631,9 +633,7 @@ namespace LiteEntitySystem
 
         internal override void OnEntityDestroyed(InternalEntity e)
         {
-            if (e.IsLocal)
-                _localIdQueue.ReuseId(e.Id);
-            else
+            if (!e.IsLocal)
                 Utils.AddToArrayDynamic(ref _entitiesToRemove, ref _entitiesToRemoveCount, e);
             
             base.OnEntityDestroyed(e);
@@ -943,7 +943,7 @@ namespace LiteEntitySystem
                     if (entity == null) //create new
                     {
                         classData = ref ClassDataDict[entityDataHeader.ClassId];
-                        entity = AddEntity(new EntityParams(entityDataHeader, this, classData.AllocateDataCache(this)));
+                        entity = AddEntity<InternalEntity>(new EntityParams(entityDataHeader, this, classData.AllocateDataCache(this)));
                      
                         if (classData.PredictedSize > 0 || classData.SyncableFields.Length > 0)
                         {

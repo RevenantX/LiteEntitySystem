@@ -233,6 +233,12 @@ namespace LiteEntitySystem
                 return entity;
             }
 
+            if (ClientManager.IsExecutingRPC)
+            {
+                Logger.LogError($"AddPredictedEntity called inside server->client RPC on client");
+                return null;
+            }
+
             if (IsRemoteControlled)
             {
                 Logger.LogError("AddPredictedEntity called on RemoteControlled");
@@ -243,10 +249,13 @@ namespace LiteEntitySystem
             {
                 //local counter here should be reset
                 ushort potentialId = _localPredictedIdCounter.Value++;
-                entity = ClientManager.FindEntityByPredictedId(ClientManager.RollBackTick, Id, potentialId) as T;
+
+                var origEnt = ClientManager.FindEntityByPredictedId(ClientManager.RollBackTick, Id, potentialId);
+                entity = origEnt as T;
                 if (entity == null)
                 {
-                    Logger.LogWarning("Misspredicted entity add?");
+                    Logger.LogWarning($"Requested RbTick{ClientManager.RollBackTick}, ParentId: {Id}, potentialId: {potentialId}, requestedType: {typeof(T)}, foundType: {origEnt?.GetType()}");
+                    Logger.LogWarning($"Misspredicted entity add? RbTick: {ClientManager.RollBackTick}, potentialId: {potentialId}");
                 }
                 else
                 {

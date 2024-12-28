@@ -409,7 +409,7 @@ namespace LiteEntitySystem
 
             var ioBuffer = classData.AllocateDataCache(this);
             stateSerializer.AllocateMemory(ref classData, ioBuffer);
-            var entity = (T)AddEntity(new EntityParams(
+            var entity = AddEntity<T>(new EntityParams(
                 new EntityDataHeader(
                     entityId,
                     classData.ClassId, 
