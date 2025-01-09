@@ -376,7 +376,7 @@ namespace LiteEntitySystem
                 return;
 
             //temporary copy childs to array because childSet can be modified inside
-            if (Childs.Count > 0)
+            if ((IsLocalControlled || IsServer) && Childs.Count > 0)
             {
                 var childsCopy = Childs.ToArray();
                 //notify child entities about parent destruction
@@ -393,9 +393,12 @@ namespace LiteEntitySystem
             {
                 parent.RemoveChild(this);
             }
-            
-            foreach (var entityLogicRef in Childs)
-                EntityManager.GetEntityById<EntityLogic>(entityLogicRef)?.Destroy();
+
+            if (IsLocalControlled || IsServer)
+            {
+                foreach (var entityLogicRef in Childs)
+                    EntityManager.GetEntityById<EntityLogic>(entityLogicRef)?.Destroy();
+            }
             _firstChild.Value = EntitySharedReference.Empty;
             _childsCount.Value = 0;
         }

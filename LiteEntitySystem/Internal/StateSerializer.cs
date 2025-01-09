@@ -170,8 +170,10 @@ namespace LiteEntitySystem.Internal
         public unsafe void MakeBaseline(byte playerId, ushort serverTick, byte* resultData, ref int position)
         {
             //skip inactive and other controlled controllers
+            if (_entity == null || _entity.IsDestroyed)
+                return;
             bool isOwned = _entity.InternalOwnerId.Value == playerId;
-            if (_entity == null || _entity.IsDestroyed || (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned))
+            if (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned)
                 return;
             //don't write total size in full sync and fields
 
