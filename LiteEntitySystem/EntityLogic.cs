@@ -44,30 +44,31 @@ namespace LiteEntitySystem
         public struct ChildEnumerator : IEnumerator<EntitySharedReference>
         {
             private readonly EntityLogic _parent;
-            private bool _end;
-        
+            private readonly int _childsCount;
+            private int _index;
+
             public ChildEnumerator(EntityLogic entityLogic)
             {
                 _parent = entityLogic;
                 Current = EntitySharedReference.Empty;
-                _end = false;
+                _childsCount = entityLogic._childsCount;
+                _index = -1;
             }
         
             public bool MoveNext()
             {
-                if (_end)
+                if (_index == _childsCount)
                     return false;
-                Current = Current == EntitySharedReference.Empty 
+                Current = _index == -1
                     ? _parent._firstChild 
                     : _parent.EntityManager.GetEntityById<EntityLogic>(Current)._nextChild.Value;
-                if (Current == EntitySharedReference.Empty)
-                    _end = true;
-                return !_end;
+                _index++;
+                return true;
             }
 
             public void Reset()
             {
-                _end = false;
+                _index = -1;
                 Current = EntitySharedReference.Empty;
             }
 
@@ -93,7 +94,14 @@ namespace LiteEntitySystem
                 for(int i = 0; i < result.Length; i++)
                 {
                     result[i] = iter;
-                    iter = _parent.EntityManager.GetEntityById<EntityLogic>(iter.Value)._nextChild;
+                    if(!_parent.EntityManager.TryGetEntityById<EntityLogic>(iter.Value, out var currentChild))
+                    {
+                        Logger.Log($"ChildIsNull: {currentChild}, childRef: {iter.Value.ToString()}, childsCount: {_parent._childsCount}, i: {i}");
+                        var corruptedResult = new EntitySharedReference[i];
+                        Array.Copy(result, corruptedResult, corruptedResult.Length);
+                        return corruptedResult;
+                    }
+                    iter = currentChild._nextChild;
                 }
                 return result;
             }
@@ -132,7 +140,7 @@ namespace LiteEntitySystem
                 return;
             
             ref var iter = ref _firstChild;
-            while (iter != EntitySharedReference.Empty)
+            for(int i = 0; i < _childsCount; i++)
             {
                 if (iter.Value == entity)
                 {
@@ -151,7 +159,7 @@ namespace LiteEntitySystem
             if (_firstChild == EntitySharedReference.Empty || entity == EntitySharedReference.Empty)
                 return;
             ref var childPtr = ref _firstChild;
-            while (childPtr != EntitySharedReference.Empty)
+            for(int i = 0; i < _childsCount; i++)
             {
                 if (childPtr.Value == entity)
                 {
