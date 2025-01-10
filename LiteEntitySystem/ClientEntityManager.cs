@@ -634,7 +634,11 @@ namespace LiteEntitySystem
         internal override void OnEntityDestroyed(InternalEntity e)
         {
             if (!e.IsLocal)
+            {
+                if(e.IsLocalControlled && e is EntityLogic eLogic)
+                    RemoveOwned(eLogic);
                 Utils.AddToArrayDynamic(ref _entitiesToRemove, ref _entitiesToRemoveCount, e);
+            }
             
             base.OnEntityDestroyed(e);
         }

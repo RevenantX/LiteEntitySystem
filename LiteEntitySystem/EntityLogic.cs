@@ -383,19 +383,13 @@ namespace LiteEntitySystem
                 foreach (var entityLogicRef in childsCopy)
                     EntityManager.GetEntityById<EntityLogic>(entityLogicRef)?.OnBeforeParentDestroy();
             }
-
             base.DestroyInternal();
-            if (EntityManager.IsClient && IsLocalControlled && !IsLocal)
-            {
-                ClientManager.RemoveOwned(this);
-            }
-            if (EntityManager.TryGetEntityById<EntityLogic>(_parentId, out var parent) && !parent.IsDestroyed)
-            {
-                parent.RemoveChild(this);
-            }
-
             if (IsLocalControlled || IsServer)
             {
+                if (EntityManager.TryGetEntityById<EntityLogic>(_parentId, out var parent) && !parent.IsDestroyed)
+                {
+                    parent.RemoveChild(this);
+                }
                 foreach (var entityLogicRef in Childs)
                     EntityManager.GetEntityById<EntityLogic>(entityLogicRef)?.Destroy();
             }
