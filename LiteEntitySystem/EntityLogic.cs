@@ -44,20 +44,20 @@ namespace LiteEntitySystem
         public struct ChildEnumerator : IEnumerator<EntitySharedReference>
         {
             private readonly EntityLogic _parent;
-            private readonly int _childsCount;
+            private readonly int _lastIndex;
             private int _index;
 
             public ChildEnumerator(EntityLogic entityLogic)
             {
                 _parent = entityLogic;
                 Current = EntitySharedReference.Empty;
-                _childsCount = entityLogic._childsCount;
+                _lastIndex = entityLogic._childsCount - 1;
                 _index = -1;
             }
         
             public bool MoveNext()
             {
-                if (_index == _childsCount)
+                if (_index == _lastIndex)
                     return false;
                 Current = _index == -1
                     ? _parent._firstChild 
