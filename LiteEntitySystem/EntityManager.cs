@@ -268,6 +268,13 @@ namespace LiteEntitySystem
         }
 
         /// <summary>
+        /// Get type of entity from classId. Returns null if classId is unknown
+        /// </summary>
+        /// <param name="classId"></param>
+        /// <returns></returns>
+        public Type GetEntityTypeFromClassId(ushort classId) => classId >= ClassDataDict.Length ? null : ClassDataDict[classId].Type;
+
+        /// <summary>
         /// Remove all entities and reset all counters and timers
         /// </summary>
         public virtual void Reset()
