@@ -57,6 +57,14 @@ namespace LiteEntitySystem
         Size64 = 64,
         Size128 = 128
     }
+    
+    /// <summary>
+    /// Helper interface for printing entity syncVar names and values
+    /// </summary>
+    public interface IEntitySyncVarInfoPrinter
+    {
+        void PrintFieldInfo(string fieldName, string fieldValue);
+    }
 
     /// <summary>
     /// Base class for client and server manager
@@ -273,6 +281,18 @@ namespace LiteEntitySystem
         /// <param name="classId"></param>
         /// <returns></returns>
         public Type GetEntityTypeFromClassId(ushort classId) => classId >= ClassDataDict.Length ? null : ClassDataDict[classId].Type;
+        
+        /// <summary>
+        /// Prints names and values of entity syncVars using IEntitySyncVarInfoPrinter
+        /// </summary>
+        /// <param name="entity">entity to show</param>
+        /// <param name="resultPrinter">IEntitySyncVarInfoPrinter implementation</param>
+        public void GetEntitySyncVarInfo(InternalEntity entity, IEntitySyncVarInfoPrinter resultPrinter)
+        {
+            ref var classData = ref ClassDataDict[entity.ClassId];
+            foreach (EntityFieldInfo fi in classData.Fields)
+                resultPrinter.PrintFieldInfo(fi.Name, fi.TypeProcessor.ToString(entity, fi.Offset));
+        }
 
         /// <summary>
         /// Remove all entities and reset all counters and timers

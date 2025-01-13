@@ -20,6 +20,7 @@ namespace LiteEntitySystem.Internal
         internal abstract void SetInterpolation(InternalBaseClass obj, int offset, byte* prev, byte* current, float fTimer);
         internal abstract void LoadHistory(InternalBaseClass obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime);
         internal abstract int GetHashCode(InternalBaseClass obj, int offset);
+        internal abstract string ToString(InternalBaseClass obj, int offset);
     }
 
     internal unsafe class ValueTypeProcessor<T> : ValueTypeProcessor where T : unmanaged
@@ -50,6 +51,9 @@ namespace LiteEntitySystem.Internal
 
         internal override int GetHashCode(InternalBaseClass obj, int offset) =>
             RefMagic.RefFieldValue<SyncVar<T>>(obj, offset).GetHashCode();
+        
+        internal override string ToString(InternalBaseClass obj, int offset) =>
+            RefMagic.RefFieldValue<SyncVar<T>>(obj, offset).ToString();
     }
 
     internal class ValueTypeProcessorInt : ValueTypeProcessor<int>

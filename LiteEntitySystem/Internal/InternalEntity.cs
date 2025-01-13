@@ -48,12 +48,12 @@ namespace LiteEntitySystem.Internal
         /// <summary>
         /// Is entity on server
         /// </summary>
-        protected internal bool IsServer => EntityManager.IsServer;
+        public bool IsServer => EntityManager.IsServer;
         
         /// <summary>
         /// Is entity on server
         /// </summary>
-        protected internal bool IsClient => EntityManager.IsClient;
+        public bool IsClient => EntityManager.IsClient;
 
         /// <summary>
         /// Entity version (for id reuse)
@@ -112,6 +112,11 @@ namespace LiteEntitySystem.Internal
         /// Is locally created entity
         /// </summary>
         public bool IsLocal => Id >= EntityManager.MaxSyncedEntityCount;
+
+        /// <summary>
+        /// Is entity based on SingletonEntityLogic
+        /// </summary>
+        public bool IsSingleton => ClassData.IsSingleton;
         
         internal ref EntityClassData ClassData => ref EntityManager.ClassDataDict[ClassId];
 
