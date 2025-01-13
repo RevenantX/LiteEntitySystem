@@ -81,17 +81,20 @@ namespace LiteEntitySystem
         /// <param name="packetHeader">Header byte that will be used for packets (to distinguish entity system packets)</param>
         /// <param name="framesPerSecond">Fixed framerate of game logic</param>
         /// <param name="sendRate">Send rate of server (depends on fps)</param>
+        /// <param name="maxHistorySize">Maximum size of lag compensation history in ticks</param>
         public ServerEntityManager(
             EntityTypesMap typesMap, 
             InputProcessor inputProcessor,
             byte packetHeader, 
             byte framesPerSecond,
-            ServerSendRate sendRate) 
-            : base(typesMap, inputProcessor, NetworkMode.Server, framesPerSecond, packetHeader)
+            ServerSendRate sendRate,
+            MaxHistorySize maxHistorySize = MaxHistorySize.Size32) 
+            : base(typesMap, inputProcessor, NetworkMode.Server, packetHeader, maxHistorySize)
         {
             InternalPlayerId = ServerPlayerId;
             _packetBuffer[0] = packetHeader;
             SendRate = sendRate;
+            SetTickrate(framesPerSecond);
         }
         
         /// <summary>
@@ -101,20 +104,21 @@ namespace LiteEntitySystem
         /// <param name="packetHeader">Header byte that will be used for packets (to distinguish entity system packets)</param>
         /// <param name="framesPerSecond">Fixed framerate of game logic</param>
         /// <param name="sendRate">Send rate of server (depends on fps)</param>
+        /// <param name="maxHistorySize">Maximum size of lag compensation history in ticks</param>
         /// <typeparam name="TInput">Main input packet type</typeparam>
         public static ServerEntityManager Create<TInput>(
             EntityTypesMap typesMap, 
             byte packetHeader, 
             byte framesPerSecond,
-            ServerSendRate sendRate) where TInput : unmanaged
-        {
-            return new ServerEntityManager(
+            ServerSendRate sendRate,
+            MaxHistorySize maxHistorySize = MaxHistorySize.Size32) where TInput : unmanaged =>
+            new ServerEntityManager(
                 typesMap, 
                 new InputProcessor<TInput>(),
                 packetHeader,
                 framesPerSecond,
-                sendRate);
-        }
+                sendRate,
+                maxHistorySize);
 
         public override void Reset()
         {
@@ -527,7 +531,8 @@ namespace LiteEntitySystem
                         OriginalLength = originalLength,
                         Tick = _tick,
                         PlayerId = player.Id,
-                        SendRate = (byte)SendRate
+                        SendRate = (byte)SendRate,
+                        Tickrate = Tickrate
                     };
                     
                     //compress

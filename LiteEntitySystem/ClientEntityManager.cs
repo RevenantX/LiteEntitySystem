@@ -212,13 +212,13 @@ namespace LiteEntitySystem
         /// <param name="inputProcessor">Input processor (you can use default InputProcessor/<T/> or derive from abstract one to make your own input serialization</param>
         /// <param name="netPeer">Local AbstractPeer</param>
         /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
-        /// <param name="framesPerSecond">Fixed framerate of game logic</param>
+        /// <param name="maxHistorySize">Maximum size of lag compensation history in ticks</param>
         public ClientEntityManager(
             EntityTypesMap typesMap, 
             InputProcessor inputProcessor, 
             AbstractNetPeer netPeer, 
             byte headerByte, 
-            byte framesPerSecond) : base(typesMap, inputProcessor, NetworkMode.Client, framesPerSecond, headerByte)
+            MaxHistorySize maxHistorySize = MaxHistorySize.Size32) : base(typesMap, inputProcessor, NetworkMode.Client, headerByte, maxHistorySize)
         {
             _netPeer = netPeer;
             _sendBuffer[0] = headerByte;
@@ -241,18 +241,18 @@ namespace LiteEntitySystem
         /// <param name="typesMap">EntityTypesMap with registered entity types</param>
         /// <param name="netPeer">Local AbstractPeer</param>
         /// <param name="headerByte">Header byte that will be used for packets (to distinguish entity system packets)</param>
-        /// <param name="framesPerSecond">Fixed framerate of game logic</param>
+        /// <param name="maxHistorySize">Maximum size of lag compensation history in ticks</param>
         /// <typeparam name="TInput">Main input packet type</typeparam>
         public static ClientEntityManager Create<TInput>(
             EntityTypesMap typesMap, 
             AbstractNetPeer netPeer, 
             byte headerByte, 
-            byte framesPerSecond) where TInput : unmanaged =>
+            MaxHistorySize maxHistorySize = MaxHistorySize.Size32) where TInput : unmanaged =>
             new (typesMap, 
                 new InputProcessor<TInput>(),
                 netPeer,
                 headerByte,
-                framesPerSecond);
+                maxHistorySize);
         
         /// <summary>
         /// Add local entity that will be not synchronized
@@ -331,6 +331,7 @@ namespace LiteEntitySystem
                 {
                     if (inData.Length < sizeof(BaselineDataHeader))
                         return DeserializeResult.Error;
+                    
                     _entitiesToConstruct.Clear();
                     _syncCallsCount = 0;
                     _syncCallsBeforeConstructCount = 0;
@@ -339,6 +340,7 @@ namespace LiteEntitySystem
                     var header = *(BaselineDataHeader*)rawData;
                     if (header.OriginalLength < 0)
                         return DeserializeResult.Error;
+                    SetTickrate(header.Tickrate);
                     _serverSendRate = (ServerSendRate)header.SendRate;
 
                     //reset pooled
@@ -386,7 +388,6 @@ namespace LiteEntitySystem
                     ServerTick = _stateA.Tick;
                     _lastReadyTick = ServerTick;
                     _inputCommands.Clear();
-                    _isSyncReceived = true;
                     _jitterTimer.Reset();
                     ConstructAndSync(true);
                     _entitiesToConstruct.Clear();
@@ -720,7 +721,8 @@ namespace LiteEntitySystem
         /// </summary>
         public override unsafe void Update()
         {
-            if (!_isSyncReceived)
+            //skip update until receive first sync and tickrate
+            if (Tickrate == 0)
                 return;
             
             //logic update

@@ -10,6 +10,7 @@ namespace LiteEntitySystem.Internal
         public byte PlayerId;
         public byte SendRate;
         public ushort Tick;
+        public byte Tickrate;
         public int OriginalLength;
     }
 

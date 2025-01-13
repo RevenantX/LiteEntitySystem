@@ -121,24 +121,24 @@ namespace LiteEntitySystem
         public readonly bool IsClient;
         
         /// <summary>
-        /// FPS of game logic
+        /// tick rate of game logic (logic FPS, not visual)
         /// </summary>
-        public readonly int FramesPerSecond;
+        public byte Tickrate { get; private set; }
         
         /// <summary>
         /// Fixed delta time
         /// </summary>
-        public readonly double DeltaTime;
+        public double DeltaTime { get; private set; }
 
         /// <summary>
         /// Fixed delta time (float for less precision)
         /// </summary>
-        public readonly float DeltaTimeF;
+        public float DeltaTimeF { get; private set; }
         
         /// <summary>
         /// Size of history (in ticks) for lag compensation. Tune for your game fps 
         /// </summary>
-        public MaxHistorySize MaxHistorySize = MaxHistorySize.Size32;
+        public readonly MaxHistorySize MaxHistorySize;
 
         /// <summary>
         /// Local player id (0 on server)
@@ -173,8 +173,8 @@ namespace LiteEntitySystem
         internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount+1];
         internal readonly EntityClassData[] ClassDataDict;
 
-        private readonly long _deltaTimeTicks;
-        private readonly long _slowdownTicks;
+        private long _deltaTimeTicks;
+        private long _slowdownTicks;
         private long _accumulator;
         private long _lastTime;
         private bool _lagCompensationEnabled;
@@ -230,21 +230,31 @@ namespace LiteEntitySystem
             RegisterFieldType<FloatAngle>(FloatAngle.Lerp);
         }
 
-        protected EntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetworkMode mode, byte framesPerSecond, byte headerByte)
+        protected void SetTickrate(byte tickrate)
         {
+            Tickrate = tickrate;
+            DeltaTime = 1.0 / tickrate;
+            DeltaTimeF = (float) DeltaTime;
+            _deltaTimeTicks = (long)(DeltaTime * Stopwatch.Frequency);
+            _slowdownTicks = (long)(DeltaTime * TimeSpeedChangeCoef * Stopwatch.Frequency);
+            if (_slowdownTicks < 100)
+                _slowdownTicks = 100;
+        }
+
+        protected EntityManager(
+            EntityTypesMap typesMap, 
+            InputProcessor inputProcessor, 
+            NetworkMode mode,
+            byte headerByte,
+            MaxHistorySize maxHistorySize)
+        {
+            MaxHistorySize = maxHistorySize;
             HeaderByte = headerByte;
             ClassDataDict = new EntityClassData[typesMap.MaxId+1];
             Mode = mode;
             IsServer = Mode == NetworkMode.Server;
             IsClient = Mode == NetworkMode.Client;
             InputProcessor = inputProcessor;
-            FramesPerSecond = framesPerSecond;
-            DeltaTime = 1.0 / framesPerSecond;
-            DeltaTimeF = (float) DeltaTime;
-            _deltaTimeTicks = (long)(DeltaTime * Stopwatch.Frequency);
-            _slowdownTicks = (long)(DeltaTime * TimeSpeedChangeCoef * Stopwatch.Frequency);
-            if (_slowdownTicks < 100)
-                _slowdownTicks = 100;
 
             ushort filterCount = 0;
             ushort singletonCount = 0;
