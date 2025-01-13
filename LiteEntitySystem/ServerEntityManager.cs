@@ -204,7 +204,7 @@ namespace LiteEntitySystem
         {
             if (player == null || !_netPlayers.Contains(player.Id))
                 return null;
-            foreach (var controller in GetControllers<HumanControllerLogic>())
+            foreach (var controller in GetEntities<HumanControllerLogic>())
             {
                 if (controller.InternalOwnerId.Value == player.Id)
                     return controller;
@@ -407,7 +407,7 @@ namespace LiteEntitySystem
             ushort entityId = _entityIdQueue.GetNewId();
             ref var stateSerializer = ref _stateSerializers[entityId];
 
-            var ioBuffer = classData.AllocateDataCache(this);
+            byte[] ioBuffer = classData.AllocateDataCache();
             stateSerializer.AllocateMemory(ref classData, ioBuffer);
             var entity = AddEntity<T>(new EntityParams(
                 new EntityDataHeader(
@@ -497,7 +497,7 @@ namespace LiteEntitySystem
                 else if (maxBaseline == 0)
                 {
                     maxBaseline = sizeof(BaselineDataHeader);
-                    foreach (var e in AllEntities)
+                    foreach (var e in GetEntities<InternalEntity>())
                         maxBaseline += _stateSerializers[e.Id].GetMaximumSize(_tick);
                     if (_packetBuffer.Length < maxBaseline)
                         _packetBuffer = new byte[maxBaseline];
@@ -516,7 +516,7 @@ namespace LiteEntitySystem
                 if (player.State == NetPlayerState.RequestBaseline)
                 {
                     int originalLength = 0;
-                    foreach (var e in AllEntities)
+                    foreach (var e in GetEntities<InternalEntity>())
                         _stateSerializers[e.Id].MakeBaseline(player.Id, _tick, packetBuffer, ref originalLength);
                     
                     //set header
@@ -577,7 +577,7 @@ namespace LiteEntitySystem
                             if (entity.UpdateOrderNum == _nextOrderNum)
                             {
                                 //this was highest
-                                _nextOrderNum = AllEntities.TryGetMax(out var highestEntity)
+                                _nextOrderNum = GetEntities<InternalEntity>().TryGetMax(out var highestEntity)
                                     ? highestEntity.UpdateOrderNum
                                     : 0;
                                 //Logger.Log($"Removed highest order entity: {e.UpdateOrderNum}, new highest: {_nextOrderNum}");

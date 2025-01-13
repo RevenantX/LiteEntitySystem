@@ -199,7 +199,7 @@ namespace LiteEntitySystem
         {
             if (_localPlayer == null)
                 return null;
-            foreach (var controller in GetControllers<T>())
+            foreach (var controller in GetEntities<T>())
                 if (controller.InternalOwnerId.Value == _localPlayer.Id)
                     return controller;
             return null;
@@ -274,7 +274,7 @@ namespace LiteEntitySystem
                     0, 
                     0),
                 this,
-                ClassDataDict[EntityClassInfo<T>.ClassId].AllocateDataCache(this)));
+                ClassDataDict[EntityClassInfo<T>.ClassId].AllocateDataCache()));
             
             //Logger.Log($"AddPredicted, tick: {_tick}, rb: {InRollBackState}, id: {entity.Id}");
             
@@ -947,7 +947,7 @@ namespace LiteEntitySystem
                     if (entity == null) //create new
                     {
                         classData = ref ClassDataDict[entityDataHeader.ClassId];
-                        entity = AddEntity<InternalEntity>(new EntityParams(entityDataHeader, this, classData.AllocateDataCache(this)));
+                        entity = AddEntity<InternalEntity>(new EntityParams(entityDataHeader, this, classData.AllocateDataCache()));
                      
                         if (classData.PredictedSize > 0 || classData.SyncableFields.Length > 0)
                         {

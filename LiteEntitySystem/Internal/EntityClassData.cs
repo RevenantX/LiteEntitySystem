@@ -35,14 +35,26 @@ namespace LiteEntitySystem.Internal
             Method = method;
         }
     }
+
+    internal struct BaseTypeInfo
+    {
+        public readonly Type Type;
+        public readonly bool IsSingleton;
+        public ushort Id;
+
+        public BaseTypeInfo(Type type)
+        {
+            Type = type;
+            IsSingleton = type.IsSubclassOf(EntityClassData.SingletonEntityType);
+            Id = ushort.MaxValue;
+        }
+    }
     
     internal struct EntityClassData
     {
         public readonly ushort ClassId;
         public readonly ushort FilterId;
         public readonly bool IsSingleton;
-        public readonly bool IsEntityLogic;
-        public readonly ushort[] BaseIds;
         public readonly int FieldsCount;
         public readonly int FieldsFlagsSize;
         public readonly int FixedFieldsSize;
@@ -57,22 +69,19 @@ namespace LiteEntitySystem.Internal
         public readonly int LagCompensatedCount;
         public readonly EntityFlags Flags;
         public readonly EntityConstructor<InternalEntity> EntityConstructor;
-        
+        public readonly BaseTypeInfo[] BaseTypes;
         public RpcFieldInfo[] RemoteCallsClient;
         
-        private readonly bool _isCreated;
-        private readonly Type[] _baseTypes;
-        private readonly Queue<byte[]> _dataCache;
-        
         private static readonly Type InternalEntityType = typeof(InternalEntity);
-        private static readonly Type SingletonEntityType = typeof(SingletonEntityLogic);
+        internal static readonly Type SingletonEntityType = typeof(SingletonEntityLogic);
         private static readonly Type SyncableFieldType = typeof(SyncableField);
         private static readonly Type EntityLogicType = typeof(EntityLogic);
 
-        private int _dataCacheSize;
-        private int _historySize;
-        private int _maxHistoryCount;
-        private int _historyStart;
+        private readonly bool _isCreated;
+        private readonly Queue<byte[]> _dataCache;
+        private readonly int _dataCacheSize;
+        private readonly int _maxHistoryCount;
+        private readonly int _historyStart;
 
         public Span<byte> ClientInterpolatedPrevData(InternalEntity e) => new (e.IOBuffer, 0, InterpolatedFieldsSize);
         public Span<byte> ClientInterpolatedNextData(InternalEntity e) => new (e.IOBuffer, InterpolatedFieldsSize, InterpolatedFieldsSize);
@@ -130,24 +139,8 @@ namespace LiteEntitySystem.Internal
             }
         }
         
-        public byte[] AllocateDataCache(EntityManager entityManager)
+        public byte[] AllocateDataCache()
         {
-            if (_maxHistoryCount == 0)
-            {
-                _maxHistoryCount = (byte)entityManager.MaxHistorySize;
-                _historySize = IsEntityLogic ? (_maxHistoryCount + 1) * LagCompensatedSize : 0;
-
-                if (entityManager.IsServer)
-                {
-                    _dataCacheSize = _historySize + StateSerializer.HeaderSize + FixedFieldsSize;
-                    _historyStart = StateSerializer.HeaderSize + FixedFieldsSize;
-                }
-                else
-                {
-                    _dataCacheSize = InterpolatedFieldsSize * 2 + PredictedSize + _historySize;
-                    _historyStart = InterpolatedFieldsSize * 2 + PredictedSize;
-                }
-            }
             if (_dataCache.Count > 0)
             {
                 byte[] data = _dataCache.Dequeue();
@@ -167,7 +160,7 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        public EntityClassData(ushort filterId, Type entType, RegisteredTypeInfo typeInfo)
+        public EntityClassData(EntityManager entityManager, ushort filterId, Type entType, RegisteredTypeInfo typeInfo)
         {
             _dataCache = new Queue<byte[]>();
             HasRemoteRollbackFields = false;
@@ -178,11 +171,6 @@ namespace LiteEntitySystem.Internal
             InterpolatedCount = 0;
             InterpolatedFieldsSize = 0;
             
-            _dataCacheSize = 0;
-            _maxHistoryCount = 0;
-            _historySize = 0;
-            _historyStart = 0;
-            
             RemoteCallsClient = null;
 
             ClassId = typeInfo.ClassId;
@@ -190,17 +178,18 @@ namespace LiteEntitySystem.Internal
             
             EntityConstructor = typeInfo.Constructor;
             IsSingleton = entType.IsSubclassOf(SingletonEntityType);
-            IsEntityLogic = entType.IsSubclassOf(EntityLogicType);
             FilterId = filterId;
-            
-            _baseTypes = Utils.GetBaseTypes(entType, InternalEntityType, false).ToArray();
-            BaseIds = new ushort[_baseTypes.Length];
+
+            var tempBaseTypes = Utils.GetBaseTypes(entType, InternalEntityType, false, true);
+            BaseTypes = new BaseTypeInfo[tempBaseTypes.Count];
+            for (int i = 0; i < BaseTypes.Length; i++)
+                BaseTypes[i] = new BaseTypeInfo(tempBaseTypes.Pop());
             
             var fields = new List<EntityFieldInfo>();
             var syncableFields = new List<SyncableFieldInfo>();
             var lagCompensatedFields = new List<EntityFieldInfo>();
             
-            var allTypesStack = Utils.GetBaseTypes(entType, typeof(object), true);
+            var allTypesStack = Utils.GetBaseTypes(entType, InternalEntityType, true, true);
             while(allTypesStack.Count > 0)
             {
                 var baseType = allTypesStack.Pop();
@@ -261,7 +250,7 @@ namespace LiteEntitySystem.Internal
                             throw new Exception($"Syncable fields should be readonly! (Class: {entType} Field: {field.Name})");
                         
                         syncableFields.Add(new SyncableFieldInfo(offset, syncFlags));
-                        var syncableFieldTypesWithBase = Utils.GetBaseTypes(ft, SyncableFieldType, true);
+                        var syncableFieldTypesWithBase = Utils.GetBaseTypes(ft, SyncableFieldType, true, true);
                         while(syncableFieldTypesWithBase.Count > 0)
                         {
                             var syncableType = syncableFieldTypesWithBase.Pop();
@@ -330,6 +319,20 @@ namespace LiteEntitySystem.Internal
                     field.PredictedOffset = -1;
                 }
             }
+            
+            _maxHistoryCount = (byte)entityManager.MaxHistorySize;
+            int historySize = entType.IsSubclassOf(EntityLogicType) ? (_maxHistoryCount + 1) * LagCompensatedSize : 0;
+            if (entityManager.IsServer)
+            {
+                _dataCacheSize = historySize + StateSerializer.HeaderSize + FixedFieldsSize;
+                _historyStart = StateSerializer.HeaderSize + FixedFieldsSize;
+            }
+            else
+            {
+                _dataCacheSize = InterpolatedFieldsSize * 2 + PredictedSize + historySize;
+                _historyStart = InterpolatedFieldsSize * 2 + PredictedSize;
+            }
+            
             _isCreated = true;
         }
 
@@ -337,16 +340,17 @@ namespace LiteEntitySystem.Internal
         {
             if (!_isCreated)
                 return;
-            for (int i = 0; i < BaseIds.Length; i++)
+            for (int i = 0; i < BaseTypes.Length; i++)
             {
-                if (!registeredTypeIds.TryGetValue(_baseTypes[i], out BaseIds[i]))
+                ref var baseTypeInfo = ref BaseTypes[i];
+                if (!registeredTypeIds.TryGetValue(baseTypeInfo.Type, out baseTypeInfo.Id))
                 {
-                    BaseIds[i] = IsSingleton
+                    baseTypeInfo.Id = baseTypeInfo.IsSingleton
                         ? singletonCount++
                         : filterCount++;
-                    registeredTypeIds.Add(_baseTypes[i], BaseIds[i]);
+                    registeredTypeIds.Add(baseTypeInfo.Type, baseTypeInfo.Id);
+                    //Logger.Log($"Register Base {i} type of {ClassId} - type: {_baseTypes[i]}, id: {BaseIds[i]}");
                 }
-                //Logger.Log($"Base type of {classData.ClassId} - {baseTypes[i]}");
             }
         }
     }

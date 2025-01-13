@@ -91,7 +91,7 @@ namespace LiteEntitySystem
         {
             fixed (byte* rawData = inputsData)
             {
-                foreach (var controller in manager.GetControllers<HumanControllerLogic<TInput>>())
+                foreach (var controller in manager.GetEntities<HumanControllerLogic<TInput>>())
                 {
                     if(controller.InternalOwnerId.Value != ownerId)
                         continue;
@@ -106,7 +106,7 @@ namespace LiteEntitySystem
         {
             fixed (byte* rawData = data)
             {
-                foreach (var controller in manager.GetControllers<HumanControllerLogic<TInput>>())
+                foreach (var controller in manager.GetEntities<HumanControllerLogic<TInput>>())
                 {
                     if(controller.InternalOwnerId.Value != ownerId)
                         continue;

@@ -153,7 +153,6 @@ namespace LiteEntitySystem
         
         protected readonly AVLTree<InternalEntity> AliveEntities = new();
         protected readonly AVLTree<EntityLogic> LagCompensatedEntities = new();
-        protected readonly AVLTree<InternalEntity> AllEntities = new();
 
         private static readonly double InvStopwatchFrequency = 1.0 / Stopwatch.Frequency;
         private readonly Stopwatch _stopwatch = new();
@@ -227,16 +226,25 @@ namespace LiteEntitySystem
         {
             HeaderByte = headerByte;
             ClassDataDict = new EntityClassData[typesMap.MaxId+1];
+            Mode = mode;
+            IsServer = Mode == NetworkMode.Server;
+            IsClient = Mode == NetworkMode.Client;
+            InputProcessor = inputProcessor;
+            FramesPerSecond = framesPerSecond;
+            DeltaTime = 1.0 / framesPerSecond;
+            DeltaTimeF = (float) DeltaTime;
+            _deltaTimeTicks = (long)(DeltaTime * Stopwatch.Frequency);
+            _slowdownTicks = (long)(DeltaTime * TimeSpeedChangeCoef * Stopwatch.Frequency);
+            if (_slowdownTicks < 100)
+                _slowdownTicks = 100;
 
             ushort filterCount = 0;
             ushort singletonCount = 0;
             
-            //preregister some types
-            _registeredTypeIds.Add(typeof(ControllerLogic), filterCount++);
-            
             foreach (var (entType, typeInfo) in typesMap.RegisteredTypes)
             {
                 var classData = new EntityClassData(
+                    this,
                     entType.IsSubclassOf(typeof(SingletonEntityLogic)) ? singletonCount++ : filterCount++, 
                     entType, 
                     typeInfo);
@@ -253,19 +261,10 @@ namespace LiteEntitySystem
 
             _entityFilters = new IEntityFilter[filterCount];
             _singletonEntities = new SingletonEntityLogic[singletonCount];
-
-            InputProcessor = inputProcessor;
             
-            Mode = mode;
-            IsServer = Mode == NetworkMode.Server;
-            IsClient = Mode == NetworkMode.Client;
-            FramesPerSecond = framesPerSecond;
-            DeltaTime = 1.0 / framesPerSecond;
-            DeltaTimeF = (float) DeltaTime;
-            _deltaTimeTicks = (long)(DeltaTime * Stopwatch.Frequency);
-            _slowdownTicks = (long)(DeltaTime * TimeSpeedChangeCoef * Stopwatch.Frequency);
-            if (_slowdownTicks < 100)
-                _slowdownTicks = 100;
+            if (!_registeredTypeIds.TryGetValue(typeof(InternalEntity), out var internalEntityFilterId))
+                throw new Exception("Internal entity isn't registered?");
+            _entityFilters[internalEntityFilterId] = new EntityFilter<InternalEntity>();
         }
 
         /// <summary>
@@ -288,9 +287,8 @@ namespace LiteEntitySystem
             _stopwatch.Reset();
             AliveEntities.Clear();
             
-            foreach (var entity in AllEntities)
+            foreach (var entity in GetEntities<InternalEntity>())
                 entity.DestroyInternal();
-            AllEntities.Clear();
             Array.Clear(EntitiesDict, 0, EntitiesDict.Length);
             Array.Clear(_entityFilters, 0, _entityFilters.Length);
         }
@@ -317,41 +315,40 @@ namespace LiteEntitySystem
                 ? EntitiesDict[id.Id] is T castedEnt && castedEnt.Version == id.Version ? castedEnt : null
                 : null) != null;
         
-        private EntityFilter<T> GetEntitiesInternal<T>() where T : InternalEntity
-        {
-            if (!_registeredTypeIds.TryGetValue(typeof(T), out ushort typeId))
-                throw new Exception($"Unregistered type: {typeof(T)}");
-            
-            ref var entityFilter = ref _entityFilters[typeId];
-            EntityFilter<T> typedFilter;
-            if (entityFilter != null)
-            {
-                typedFilter = (EntityFilter<T>)entityFilter;
-                return typedFilter;
-            }
-            typedFilter = new EntityFilter<T>();
-            entityFilter = typedFilter;
-            foreach (var entity in AllEntities)
-            {
-                if(entity is T castedEnt)
-                    typedFilter.Add(castedEnt);
-            }
-            return typedFilter;
-        }
-
         /// <summary>
         /// Get all entities with type
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Entity filter that can be used in foreach</returns>
-        public EntityFilter<T> GetEntities<T>() where T : EntityLogic => GetEntitiesInternal<T>();
-        
+        public EntityFilter<T> GetEntities<T>() where T : InternalEntity
+        {
+            if (!_registeredTypeIds.TryGetValue(typeof(T), out ushort typeId))
+                throw new Exception($"Unregistered type: {typeof(T)}");
+            
+            ref var entityFilter = ref _entityFilters[typeId];
+            if (entityFilter != null)
+                return (EntityFilter<T>)entityFilter;
+            
+            var typedFilter = new EntityFilter<T>();
+            entityFilter = typedFilter;
+            if (typeof(T) != typeof(InternalEntity))
+            {
+                foreach (var entity in GetEntities<InternalEntity>())
+                {
+                    if(entity is T castedEnt)
+                        typedFilter.Add(castedEnt);
+                }
+            }
+
+            return typedFilter;
+        }
+
         /// <summary>
         /// Get all controller entities with type
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Entity filter that can be used in foreach</returns>
-        public EntityFilter<T> GetControllers<T>() where T : ControllerLogic => GetEntitiesInternal<T>();
+        public EntityFilter<T> GetControllers<T>() where T : ControllerLogic => GetEntities<T>();
 
         /// <summary>
         /// Get existing singleton entity
@@ -453,27 +450,27 @@ namespace LiteEntitySystem
             if (classData.IsSingleton)
             {
                 _singletonEntities[classData.FilterId] = (SingletonEntityLogic)e;
-                foreach (int baseId in classData.BaseIds)
-                    _singletonEntities[baseId] = (SingletonEntityLogic)e;
+                foreach (var baseTypeInfo in classData.BaseTypes)
+                    if(baseTypeInfo.IsSingleton)
+                        _singletonEntities[baseTypeInfo.Id] = (SingletonEntityLogic)e;
+                    else
+                        _entityFilters[baseTypeInfo.Id]?.Add(e);
+                e.OnConstructed();
             }
-
-            e.OnConstructed();
-
-            if (!classData.IsSingleton)
+            else
             {
+                e.OnConstructed();
                 _entityFilters[classData.FilterId]?.Add(e);
-                foreach (int baseId in classData.BaseIds)
-                    _entityFilters[baseId]?.Add(e);
+                foreach (var baseTypeInfo in classData.BaseTypes)
+                    _entityFilters[baseTypeInfo.Id]?.Add(e);
+                if (IsEntityLagCompensated(e))
+                    LagCompensatedEntities.Add((EntityLogic)e);
             }
-            
-            AllEntities.Add(e);
             if (IsEntityAlive(classData.Flags, e))
             {
                 AliveEntities.Add(e);
                 OnAliveEntityAdded(e);
             }
-            if (IsEntityLagCompensated(e))
-                LagCompensatedEntities.Add((EntityLogic)e);
         }
         
         protected virtual void OnAliveEntityAdded(InternalEntity e)
@@ -493,17 +490,22 @@ namespace LiteEntitySystem
             if (classData.IsSingleton)
             {
                 _singletonEntities[classData.FilterId] = null;
-                foreach (int baseId in classData.BaseIds) 
-                    _singletonEntities[baseId] = null;
+                foreach (var baseTypeInfo in classData.BaseTypes)
+                {
+                    if (baseTypeInfo.IsSingleton)
+                        _singletonEntities[baseTypeInfo.Id] = null;
+                    else
+                        _entityFilters[baseTypeInfo.Id]?.Remove(e);
+                }
             }
             else
             {
                 _entityFilters[classData.FilterId]?.Remove(e);
-                foreach (int baseId in classData.BaseIds) 
-                    _entityFilters[baseId]?.Remove(e);
+                foreach (var baseTypeInfo in classData.BaseTypes)
+                    _entityFilters[baseTypeInfo.Id]?.Remove(e);
+                if(IsEntityLagCompensated(e))
+                    LagCompensatedEntities.Remove((EntityLogic)e);
             }
-            if(IsEntityLagCompensated(e))
-                LagCompensatedEntities.Remove((EntityLogic)e);
             if (IsEntityAlive(classData.Flags, e))
                 AliveEntities.Remove(e);
         }
@@ -512,7 +514,7 @@ namespace LiteEntitySystem
         {
             if(!e.IsDestroyed)
                 Logger.LogError($"Remove not destroyed entity!: {e}");
-            AllEntities.Remove(e);
+
             if(e.Id < EntitiesDict.Length)
                 EntitiesDict[e.Id] = null;
             EntitiesCount--;

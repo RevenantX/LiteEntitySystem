@@ -205,7 +205,7 @@ namespace LiteEntitySystem
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static T CreateDelegateHelper<T>(this MethodInfo method) where T : Delegate => (T)method.CreateDelegate(typeof(T));
         
-        internal static Stack<Type> GetBaseTypes(Type ofType, Type until, bool includeSelf)
+        internal static Stack<Type> GetBaseTypes(Type ofType, Type until, bool includeSelf, bool includeLast)
         {
             var resultTypes = new Stack<Type>();
             if(!includeSelf)
@@ -215,6 +215,8 @@ namespace LiteEntitySystem
                 resultTypes.Push(ofType);
                 ofType = ofType.BaseType;
             }
+            if(includeLast)
+                resultTypes.Push(until);
             return resultTypes;
         }
 
