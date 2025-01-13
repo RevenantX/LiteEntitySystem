@@ -167,15 +167,11 @@ namespace LiteEntitySystem.Internal
             PredictedSize = 0;
             FixedFieldsSize = 0;
             LagCompensatedSize = 0;
-            LagCompensatedCount = 0;
             InterpolatedCount = 0;
             InterpolatedFieldsSize = 0;
-            
             RemoteCallsClient = null;
-
             ClassId = typeInfo.ClassId;
             Flags = 0;
-            
             EntityConstructor = typeInfo.Constructor;
             IsSingleton = entType.IsSubclassOf(SingletonEntityType);
             FilterId = filterId;
