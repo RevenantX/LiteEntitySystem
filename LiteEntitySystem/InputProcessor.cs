@@ -10,9 +10,18 @@ namespace LiteEntitySystem
         private const int FieldsDivision = 2;
         
         public abstract void ReadInput(EntityManager manager, byte ownerId, ReadOnlySpan<byte> inputsData);
-        public abstract void GenerateAndWriteInput(EntityManager manager, byte ownerId, byte[] data, int offset);
+        public abstract void GenerateAndApplyInput(EntityManager manager, byte ownerId, InputPacketHeader inputPacketHeader);
         public abstract void ReadClientRequest(EntityManager manager, NetDataReader reader);
-      
+        
+        public abstract void ClearClientStoredInputs();
+        public abstract void RemoveClientProcessedInputs(ushort processedTick);
+        public abstract int ClientStoredInputsCount { get; }
+        public abstract (InputPacketHeader header, ushort tick) GetStoredInputInfo(int index);
+        public abstract void WriteStoredInputData(int index, Span<byte> target);
+        public abstract void WriteStoredInputHeader(int index, Span<byte> target);
+        public abstract void ReadStoredInput(EntityManager manager, byte ownerId, int index);
+        public abstract int DeltaEncode(int prevInputIndex, int currentInputIndex, Span<byte> result);
+        
         private readonly byte[] _firstFullInput;
         
         public readonly int InputSize;
@@ -51,10 +60,8 @@ namespace LiteEntitySystem
             return resultSize;
         }
         
-        public void DeltaDecodeInit(ReadOnlySpan<byte> fullInput)
-        {
+        public void DeltaDecodeInit(ReadOnlySpan<byte> fullInput) => 
             fullInput.CopyTo(_firstFullInput);
-        }
 
         public int DeltaDecode(ReadOnlySpan<byte> currentDeltaInput, Span<byte> result)
         {
@@ -82,6 +89,64 @@ namespace LiteEntitySystem
 
     public unsafe class InputProcessor<TInput> : InputProcessor where TInput : unmanaged
     {
+        private const int InputBufferSize = 64;
+        private readonly CircularBuffer<InputCommand> _inputCommands = new (InputBufferSize);
+        
+        struct InputCommand
+        {
+            public ushort Tick;
+            public InputPacketHeader Header;
+            public TInput Data;
+
+            public InputCommand(ushort tick, TInput data, InputPacketHeader header)
+            {
+                Tick = tick;
+                Data = data;
+                Header = header;
+            }
+        }
+        
+        public override void ClearClientStoredInputs() => _inputCommands.Clear();
+        
+        public override int ClientStoredInputsCount => _inputCommands.Count;
+        
+        public override void RemoveClientProcessedInputs(ushort processedTick)
+        {
+            while (_inputCommands.Count > 0 && Utils.SequenceDiff(processedTick, _inputCommands.Front().Tick) >= 0)
+                _inputCommands.PopFront();
+        }
+
+        public override (InputPacketHeader header, ushort tick) GetStoredInputInfo(int index)
+        {
+            ref var input = ref _inputCommands[index];
+            return (input.Header, input.Tick);
+        }
+
+        public override void WriteStoredInputData(int index, Span<byte> target) => target.WriteStruct(_inputCommands[index].Data);
+
+        public override void WriteStoredInputHeader(int index, Span<byte> target) => target.WriteStruct(_inputCommands[index].Header);
+        
+        public override void ReadStoredInput(EntityManager manager, byte ownerId, int index)
+        {
+            var input = _inputCommands[index].Data;
+            foreach (var controller in manager.GetEntities<HumanControllerLogic<TInput>>())
+            {
+                if(controller.InternalOwnerId.Value != ownerId)
+                    continue;
+                controller.CurrentInput = input;
+                return;
+            }
+        }
+
+        public override int DeltaEncode(int prevInputIndex, int currentInputIndex, Span<byte> result)
+        {
+            fixed (void* ptrA = &_inputCommands[prevInputIndex].Data, ptrB = &_inputCommands[currentInputIndex].Data)
+            {
+                return DeltaEncode(new ReadOnlySpan<byte>(ptrA, InputSize), new ReadOnlySpan<byte>(ptrB, InputSize),
+                    result);
+            }
+        }
+
         public InputProcessor() : base(sizeof(TInput))
         {
             
@@ -96,27 +161,24 @@ namespace LiteEntitySystem
                     if(controller.InternalOwnerId.Value != ownerId)
                         continue;
                     controller.CurrentInput = *(TInput*)rawData;
-                    controller.ReadInput(*(TInput*)rawData);
                     return;
                 }
             }
         }
 
-        public override void GenerateAndWriteInput(EntityManager manager, byte ownerId, byte[] data, int offset)
+        public override void GenerateAndApplyInput(EntityManager manager, byte ownerId, InputPacketHeader inputPacketHeader)
         {
-            fixed (byte* rawData = data)
+            //if no controller just put zeroes for simplicity
+            TInput inputData = default;
+            foreach (var controller in manager.GetEntities<HumanControllerLogic<TInput>>())
             {
-                foreach (var controller in manager.GetEntities<HumanControllerLogic<TInput>>())
-                {
-                    if(controller.InternalOwnerId.Value != ownerId)
-                        continue;
-                    controller.GenerateInput(out var input);
-                    *(TInput*)(rawData + offset) = input;
-                    return;
-                }
-                //if no controller just put zeroes for simplicity
-                *(TInput*)(rawData + offset) = default;
+                if(controller.InternalOwnerId.Value != ownerId)
+                    continue;
+                controller.GenerateInput(out inputData);
+                controller.CurrentInput = inputData;
+                break;
             }
+            _inputCommands.PushBack(new InputCommand(manager.Tick, inputData, inputPacketHeader));
         }
 
         public override void ReadClientRequest(EntityManager manager, NetDataReader reader)

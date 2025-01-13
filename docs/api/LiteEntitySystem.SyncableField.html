@@ -89,21 +89,10 @@
       <div class="level3"><a class="xref" href="LiteEntitySystem.Extensions.SyncStateMachine-1.html">SyncStateMachine&lt;T&gt;</a></div>
       <div class="level3"><a class="xref" href="LiteEntitySystem.Extensions.SyncString.html">SyncString</a></div>
       <div class="level3"><a class="xref" href="LiteEntitySystem.Extensions.SyncTimer.html">SyncTimer</a></div>
+      <div class="level3"><a class="xref" href="Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html">SyncQueue&lt;T&gt;</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_ExecuteRPC_LiteEntitySystem_RemoteCall__">InternalBaseClass.ExecuteRPC(in RemoteCall)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">InternalBaseClass.ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt;, T)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">InternalBaseClass.ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_">InternalBaseClass.ExecuteRPC&lt;T&gt;(in RemoteCallSerializable&lt;T&gt;, T)</a>
-    </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">InternalBaseClass.OnSyncRequested()</a>
     </div>
@@ -126,6 +115,32 @@
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected bool IsClient { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_SyncableField_IsRollbackSupported_" data-uid="LiteEntitySystem.SyncableField.IsRollbackSupported*"></a>
+  <h4 id="LiteEntitySystem_SyncableField_IsRollbackSupported" data-uid="LiteEntitySystem.SyncableField.IsRollbackSupported">IsRollbackSupported</h4>
+  <div class="markdown level1 summary"><p>Is supported rollback by this syncable field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual bool IsRollbackSupported { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-condensed">
@@ -190,6 +205,174 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void BeforeReadRPC()</code></pre>
   </div>
+
+
+  <a id="LiteEntitySystem_SyncableField_ExecuteRPC_" data-uid="LiteEntitySystem.SyncableField.ExecuteRPC*"></a>
+  <h4 id="LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__" data-uid="LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)">ExecuteRPC(in RemoteCall)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void ExecuteRPC(in RemoteCall rpc)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.RemoteCall.html">RemoteCall</a></td>
+        <td><span class="parametername">rpc</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_SyncableField_ExecuteRPC_" data-uid="LiteEntitySystem.SyncableField.ExecuteRPC*"></a>
+  <h4 id="LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_" data-uid="LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)">ExecuteRPC&lt;T&gt;(in RemoteCallSerializable&lt;T&gt;, T)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void ExecuteRPC&lt;T&gt;(in RemoteCallSerializable&lt;T&gt; rpc, T value) where T : struct, ISpanSerializable</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.RemoteCallSerializable-1.html">RemoteCallSerializable</a>&lt;T&gt;</td>
+        <td><span class="parametername">rpc</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_SyncableField_ExecuteRPC_" data-uid="LiteEntitySystem.SyncableField.ExecuteRPC*"></a>
+  <h4 id="LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__" data-uid="LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})">ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt; rpc, ReadOnlySpan&lt;T&gt; value) where T : unmanaged</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.RemoteCallSpan-1.html">RemoteCallSpan</a>&lt;T&gt;</td>
+        <td><span class="parametername">rpc</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;T&gt;</td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_SyncableField_ExecuteRPC_" data-uid="LiteEntitySystem.SyncableField.ExecuteRPC*"></a>
+  <h4 id="LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_" data-uid="LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)">ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt;, T)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt; rpc, T value) where T : unmanaged</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.RemoteCall-1.html">RemoteCall</a>&lt;T&gt;</td>
+        <td><span class="parametername">rpc</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 
 
   <a id="LiteEntitySystem_SyncableField_OnRollback_" data-uid="LiteEntitySystem.SyncableField.OnRollback*"></a>

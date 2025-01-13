@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Class SyncDict&lt;TKey, TValue&gt; </title>
+      <title>Class SyncQueue&lt;T&gt; </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Class SyncDict&lt;TKey, TValue&gt; ">
+      <meta name="title" content="Class SyncQueue&lt;T&gt; ">
     
     
       <link rel="shortcut icon" href="../favicon.ico">
@@ -66,11 +66,11 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.Extensions.SyncDict`2">
+            <article class="content wrap" id="_content" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1">
 
 
 
-  <h1 id="LiteEntitySystem_Extensions_SyncDict_2" data-uid="LiteEntitySystem.Extensions.SyncDict`2" class="text-break">Class SyncDict&lt;TKey, TValue&gt;</h1>
+  <h1 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1" class="text-break">Class SyncQueue&lt;T&gt;</h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -78,11 +78,13 @@
     <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
     <div class="level2"><a class="xref" href="LiteEntitySystem.SyncableField.html">SyncableField</a></div>
-    <div class="level3"><span class="xref">SyncDict&lt;TKey, TValue&gt;</span></div>
+    <div class="level3"><span class="xref">SyncQueue&lt;T&gt;</span></div>
   </div>
   <div class="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2">KeyValuePair</a>&lt;TKey, TValue&gt;&gt;</div>
+    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection</a>&lt;T&gt;</div>
+    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;T&gt;</div>
+    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a></div>
     <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
   </div>
   <div class="inheritedMembers">
@@ -106,11 +108,11 @@
       <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_">SyncableField.ExecuteRPC&lt;T&gt;(in RemoteCallSerializable&lt;T&gt;, T)</a>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a>.<a class="xref" href="LiteEntitySystem.Extensions.html">Extensions</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Plugins.html">Plugins</a>.<a class="xref" href="Plugins.LiteEntitySystem.html">LiteEntitySystem</a>.<a class="xref" href="Plugins.LiteEntitySystem.Extensions.html">Extensions</a></h6>
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
-  <h5 id="LiteEntitySystem_Extensions_SyncDict_2_syntax">Syntax</h5>
+  <h5 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SyncDict&lt;TKey, TValue&gt; : SyncableField, IEnumerable&lt;KeyValuePair&lt;TKey, TValue&gt;&gt;, IEnumerable where TKey : unmanaged where TValue : unmanaged</code></pre>
+    <pre><code class="lang-csharp hljs">public class SyncQueue&lt;T&gt; : SyncableField, IReadOnlyCollection&lt;T&gt;, IEnumerable&lt;T&gt;, ICollection, IEnumerable where T : unmanaged</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -122,11 +124,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">TKey</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="parametername">TValue</span></td>
+        <td><span class="parametername">T</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -135,9 +133,10 @@
 </h3>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_Count_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.Count*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_Count" data-uid="LiteEntitySystem.Extensions.SyncDict`2.Count">Count</h4>
-  <div class="markdown level1 summary"></div>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Count_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Count*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Count" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Count">Count</h4>
+  <div class="markdown level1 summary"><p>Gets the number of elements in the collection.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
@@ -154,14 +153,15 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td></td>
+        <td><p>The number of elements in the collection.</p>
+</td>
       </tr>
     </tbody>
   </table>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_IsRollbackSupported_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.IsRollbackSupported*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_IsRollbackSupported" data-uid="LiteEntitySystem.Extensions.SyncDict`2.IsRollbackSupported">IsRollbackSupported</h4>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_IsRollbackSupported_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_IsRollbackSupported" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported">IsRollbackSupported</h4>
   <div class="markdown level1 summary"><p>Is supported rollback by this syncable field</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -188,55 +188,14 @@
   <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsRollbackSupported">SyncableField.IsRollbackSupported</a></div>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_Item_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.Item*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_Item__0_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.Item(`0)">this[TKey]</h4>
-  <div class="markdown level1 summary"></div>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_IsSynchronized_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.IsSynchronized*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_IsSynchronized" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.IsSynchronized">IsSynchronized</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether access to the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a> is synchronized (thread safe).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TValue this[TKey index] { get; set; }</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TKey</span></td>
-        <td><span class="parametername">index</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TValue</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_Keys_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.Keys*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_Keys" data-uid="LiteEntitySystem.Extensions.SyncDict`2.Keys">Keys</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Dictionary&lt;TKey, TValue&gt;.KeyCollection Keys { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool IsSynchronized { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-condensed">
@@ -248,20 +207,22 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;TKey, TValue&gt;.<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2.keycollection">KeyCollection</a></td>
-        <td></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if access to the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a> is synchronized (thread safe); otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</td>
       </tr>
     </tbody>
   </table>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_Values_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.Values*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_Values" data-uid="LiteEntitySystem.Extensions.SyncDict`2.Values">Values</h4>
-  <div class="markdown level1 summary"></div>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_SyncRoot_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.SyncRoot*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_SyncRoot" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.SyncRoot">SyncRoot</h4>
+  <div class="markdown level1 summary"><p>Gets an object that can be used to synchronize access to the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Dictionary&lt;TKey, TValue&gt;.ValueCollection Values { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public object SyncRoot { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-condensed">
@@ -273,8 +234,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;TKey, TValue&gt;.<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2.valuecollection">ValueCollection</a></td>
-        <td></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></td>
+        <td><p>An object that can be used to synchronize access to the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -282,40 +244,8 @@
 </h3>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_Add_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.Add*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_Add__0__1_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.Add(`0,`1)">Add(TKey, TValue)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Add(TKey key, TValue value)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TKey</span></td>
-        <td><span class="parametername">key</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">TValue</span></td>
-        <td><span class="parametername">value</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_AfterReadRPC_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.AfterReadRPC*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_AfterReadRPC" data-uid="LiteEntitySystem.Extensions.SyncDict`2.AfterReadRPC">AfterReadRPC()</h4>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_AfterReadRPC_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.AfterReadRPC*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_AfterReadRPC" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.AfterReadRPC">AfterReadRPC()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -326,8 +256,8 @@
   <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC">SyncableField.AfterReadRPC()</a></div>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_BeforeReadRPC_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.BeforeReadRPC*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_BeforeReadRPC" data-uid="LiteEntitySystem.Extensions.SyncDict`2.BeforeReadRPC">BeforeReadRPC()</h4>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_BeforeReadRPC_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.BeforeReadRPC*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_BeforeReadRPC" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.BeforeReadRPC">BeforeReadRPC()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -338,8 +268,8 @@
   <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC">SyncableField.BeforeReadRPC()</a></div>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_Clear_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.Clear*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_Clear" data-uid="LiteEntitySystem.Extensions.SyncDict`2.Clear">Clear()</h4>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Clear_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Clear*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Clear" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Clear">Clear()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -348,13 +278,13 @@
   </div>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_ContainsKey_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.ContainsKey*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_ContainsKey__0_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.ContainsKey(`0)">ContainsKey(TKey)</h4>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Contains_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Contains*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Contains__0_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Contains(`0)">Contains(T)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool ContainsKey(TKey key)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Contains(T item)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -367,8 +297,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">TKey</span></td>
-        <td><span class="parametername">key</span></td>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">item</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -390,13 +320,14 @@
   </table>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_ContainsValue_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.ContainsValue*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_ContainsValue__1_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.ContainsValue(`1)">ContainsValue(TValue)</h4>
-  <div class="markdown level1 summary"></div>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_CopyTo_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.CopyTo*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_CopyTo_System_Array_System_Int32_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.CopyTo(System.Array,System.Int32)">CopyTo(Array, int)</h4>
+  <div class="markdown level1 summary"><p>Copies the elements of the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a> to an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a>, starting at a particular <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a> index.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool ContainsValue(TValue value)</code></pre>
+    <pre><code class="lang-csharp hljs">public void CopyTo(Array array, int index)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -409,36 +340,59 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">TValue</span></td>
-        <td><span class="parametername">value</span></td>
-        <td></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a></td>
+        <td><span class="parametername">array</span></td>
+        <td><p>The one-dimensional <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a> that is the destination of the elements copied from <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a>. The <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a> must have zero-based indexing.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">index</span></td>
+        <td><p>The zero-based index in <code class="paramref">array</code> at which copying begins.</p>
+</td>
       </tr>
     </tbody>
   </table>
-  <h5 class="returns">Returns</h5>
+  <h5 class="exceptions">Exceptions</h5>
   <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
-        <th>Description</th>
+        <th>Condition</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p><code class="paramref">array</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></td>
+        <td><p><code class="paramref">index</code> is less than zero.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><pre><code>&lt;code class=&quot;paramref&quot;&gt;array&lt;/code&gt; is multidimensional.  
+</code></pre>
+<p>-or-<br>
+The number of elements in the source <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a> is greater than the available space from <code class="paramref">index</code> to the end of the destination <code class="paramref">array</code>.<br>
+-or-<br>
+The type of the source <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a> cannot be cast automatically to the type of the destination <code class="paramref">array</code>.</p>
+</td>
       </tr>
     </tbody>
   </table>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_GetEnumerator_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.GetEnumerator*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_GetEnumerator" data-uid="LiteEntitySystem.Extensions.SyncDict`2.GetEnumerator">GetEnumerator()</h4>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Dequeue_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Dequeue*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Dequeue" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Dequeue">Dequeue()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Dictionary&lt;TKey, TValue&gt;.Enumerator GetEnumerator()</code></pre>
+    <pre><code class="lang-csharp hljs">public T Dequeue()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-condensed">
@@ -450,15 +404,67 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;TKey, TValue&gt;.<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2.enumerator">Enumerator</a></td>
+        <td><span class="xref">T</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_OnRollback_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.OnRollback*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_OnRollback" data-uid="LiteEntitySystem.Extensions.SyncDict`2.OnRollback">OnRollback()</h4>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Enqueue_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Enqueue*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Enqueue__0_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Enqueue(`0)">Enqueue(T)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Enqueue(T item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">item</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_GetEnumerator_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.GetEnumerator*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_GetEnumerator" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.GetEnumerator">GetEnumerator()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Queue&lt;T&gt;.Enumerator GetEnumerator()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.queue-1">Queue</a>&lt;T&gt;.<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.queue-1.enumerator">Enumerator</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_OnRollback_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.OnRollback*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_OnRollback" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.OnRollback">OnRollback()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -469,8 +475,8 @@
   <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback">SyncableField.OnRollback()</a></div>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_OnSyncRequested_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.OnSyncRequested*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_OnSyncRequested" data-uid="LiteEntitySystem.Extensions.SyncDict`2.OnSyncRequested">OnSyncRequested()</h4>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_OnSyncRequested_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.OnSyncRequested*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_OnSyncRequested" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.OnSyncRequested">OnSyncRequested()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -481,8 +487,33 @@
   <div><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">InternalBaseClass.OnSyncRequested()</a></div>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_RegisterRPC_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.RegisterRPC*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__" data-uid="LiteEntitySystem.Extensions.SyncDict`2.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)">RegisterRPC(ref SyncableRPCRegistrator)</h4>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Peek_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Peek*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Peek" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Peek">Peek()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public T Peek()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_RegisterRPC_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.RegisterRPC*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)">RegisterRPC(ref SyncableRPCRegistrator)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -510,13 +541,13 @@
   <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__">SyncableField.RegisterRPC(ref SyncableRPCRegistrator)</a></div>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_Remove_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.Remove*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_Remove__0_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.Remove(`0)">Remove(TKey)</h4>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_TryDequeue_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.TryDequeue*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_TryDequeue__0__" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.TryDequeue(`0@)">TryDequeue(out T)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Remove(TKey key)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool TryDequeue(out T item)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -529,8 +560,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">TKey</span></td>
-        <td><span class="parametername">key</span></td>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">item</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -552,13 +583,13 @@
   </table>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncDict_2_TryGetValue_" data-uid="LiteEntitySystem.Extensions.SyncDict`2.TryGetValue*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncDict_2_TryGetValue__0__1__" data-uid="LiteEntitySystem.Extensions.SyncDict`2.TryGetValue(`0,`1@)">TryGetValue(TKey, out TValue)</h4>
+  <a id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_TryPeek_" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.TryPeek*"></a>
+  <h4 id="Plugins_LiteEntitySystem_Extensions_SyncQueue_1_TryPeek__0__" data-uid="Plugins.LiteEntitySystem.Extensions.SyncQueue`1.TryPeek(`0@)">TryPeek(out T)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool TryGetValue(TKey key, out TValue value)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool TryPeek(out T item)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -571,13 +602,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">TKey</span></td>
-        <td><span class="parametername">key</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">TValue</span></td>
-        <td><span class="parametername">value</span></td>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">item</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -599,7 +625,13 @@
   </table>
   <h3 id="implements">Implements</h3>
   <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection&lt;T&gt;</a>
+  </div>
+  <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a>
   </div>
   <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a>

@@ -92,12 +92,12 @@
 
 
   <a id="LiteEntitySystem_EntityManager__ctor_" data-uid="LiteEntitySystem.EntityManager.#ctor*"></a>
-  <h4 id="LiteEntitySystem_EntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteEntitySystem_NetworkMode_System_Byte_System_Byte_" data-uid="LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteEntitySystem.NetworkMode,System.Byte,System.Byte)">EntityManager(EntityTypesMap, InputProcessor, NetworkMode, byte, byte)</h4>
+  <h4 id="LiteEntitySystem_EntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteEntitySystem_NetworkMode_System_Byte_LiteEntitySystem_MaxHistorySize_" data-uid="LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteEntitySystem.NetworkMode,System.Byte,LiteEntitySystem.MaxHistorySize)">EntityManager(EntityTypesMap, InputProcessor, NetworkMode, byte, MaxHistorySize)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected EntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetworkMode mode, byte framesPerSecond, byte headerByte)</code></pre>
+    <pre><code class="lang-csharp hljs">protected EntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, NetworkMode mode, byte headerByte, MaxHistorySize maxHistorySize)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -126,12 +126,12 @@
       </tr>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
-        <td><span class="parametername">framesPerSecond</span></td>
+        <td><span class="parametername">headerByte</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
-        <td><span class="parametername">headerByte</span></td>
+        <td><a class="xref" href="LiteEntitySystem.MaxHistorySize.html">MaxHistorySize</a></td>
+        <td><span class="parametername">maxHistorySize</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -158,105 +158,6 @@
     <tbody>
       <tr>
         <td><a class="xref" href="LiteEntitySystem.Collections.AVLTree-1.html">AVLTree</a>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <h4 id="LiteEntitySystem_EntityManager_AllEntities" data-uid="LiteEntitySystem.EntityManager.AllEntities">AllEntities</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected readonly AVLTree&lt;InternalEntity&gt; AllEntities</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.Collections.AVLTree-1.html">AVLTree</a>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <h4 id="LiteEntitySystem_EntityManager_DeltaTime" data-uid="LiteEntitySystem.EntityManager.DeltaTime">DeltaTime</h4>
-  <div class="markdown level1 summary"><p>Fixed delta time</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly double DeltaTime</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <h4 id="LiteEntitySystem_EntityManager_DeltaTimeF" data-uid="LiteEntitySystem.EntityManager.DeltaTimeF">DeltaTimeF</h4>
-  <div class="markdown level1 summary"><p>Fixed delta time (float for less precision)</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly float DeltaTimeF</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <h4 id="LiteEntitySystem_EntityManager_FramesPerSecond" data-uid="LiteEntitySystem.EntityManager.FramesPerSecond">FramesPerSecond</h4>
-  <div class="markdown level1 summary"><p>FPS of game logic</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly int FramesPerSecond</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -415,7 +316,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const int MaxEntityCount = 16384</code></pre>
+    <pre><code class="lang-csharp hljs">public const int MaxEntityCount = 32768</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-condensed">
@@ -440,7 +341,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MaxHistorySize MaxHistorySize</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly MaxHistorySize MaxHistorySize</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-condensed">
@@ -513,7 +414,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const int MaxSyncedEntityCount = 8192</code></pre>
+    <pre><code class="lang-csharp hljs">public const int MaxSyncedEntityCount = 16384</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-condensed">
@@ -653,6 +554,58 @@
   </table>
   <h3 id="properties">Properties
 </h3>
+
+
+  <a id="LiteEntitySystem_EntityManager_DeltaTime_" data-uid="LiteEntitySystem.EntityManager.DeltaTime*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_DeltaTime" data-uid="LiteEntitySystem.EntityManager.DeltaTime">DeltaTime</h4>
+  <div class="markdown level1 summary"><p>Fixed delta time</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DeltaTime { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_EntityManager_DeltaTimeF_" data-uid="LiteEntitySystem.EntityManager.DeltaTimeF*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_DeltaTimeF" data-uid="LiteEntitySystem.EntityManager.DeltaTimeF">DeltaTimeF</h4>
+  <div class="markdown level1 summary"><p>Fixed delta time (float for less precision)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float DeltaTimeF { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 
 
   <a id="LiteEntitySystem_EntityManager_EntitiesCount_" data-uid="LiteEntitySystem.EntityManager.EntitiesCount*"></a>
@@ -837,6 +790,32 @@ IsRunning - sets to false after Reset() call</p>
   </table>
 
 
+  <a id="LiteEntitySystem_EntityManager_Tickrate_" data-uid="LiteEntitySystem.EntityManager.Tickrate*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_Tickrate" data-uid="LiteEntitySystem.EntityManager.Tickrate">Tickrate</h4>
+  <div class="markdown level1 summary"><p>tick rate of game logic (logic FPS, not visual)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte Tickrate { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
   <a id="LiteEntitySystem_EntityManager_UpdateMode_" data-uid="LiteEntitySystem.EntityManager.UpdateMode*"></a>
   <h4 id="LiteEntitySystem_EntityManager_UpdateMode" data-uid="LiteEntitySystem.EntityManager.UpdateMode">UpdateMode</h4>
   <div class="markdown level1 summary"><p>Current update mode (can be used inside entities to separate logic for rollbacks)</p>
@@ -891,12 +870,12 @@ IsRunning - sets to false after Reset() call</p>
 
 
   <a id="LiteEntitySystem_EntityManager_AddEntity_" data-uid="LiteEntitySystem.EntityManager.AddEntity*"></a>
-  <h4 id="LiteEntitySystem_EntityManager_AddEntity_LiteEntitySystem_EntityParams_" data-uid="LiteEntitySystem.EntityManager.AddEntity(LiteEntitySystem.EntityParams)">AddEntity(EntityParams)</h4>
+  <h4 id="LiteEntitySystem_EntityManager_AddEntity__1_LiteEntitySystem_EntityParams_" data-uid="LiteEntitySystem.EntityManager.AddEntity``1(LiteEntitySystem.EntityParams)">AddEntity&lt;T&gt;(EntityParams)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected InternalEntity AddEntity(EntityParams entityParams)</code></pre>
+    <pre><code class="lang-csharp hljs">protected T AddEntity&lt;T&gt;(EntityParams entityParams) where T : InternalEntity</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -925,7 +904,22 @@ IsRunning - sets to false after Reset() call</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></td>
+        <td><span class="xref">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -1090,7 +1084,7 @@ IsRunning - sets to false after Reset() call</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EntityFilter&lt;T&gt; GetEntities&lt;T&gt;() where T : EntityLogic</code></pre>
+    <pre><code class="lang-csharp hljs">public EntityFilter&lt;T&gt; GetEntities&lt;T&gt;() where T : InternalEntity</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-condensed">
@@ -1180,6 +1174,84 @@ IsRunning - sets to false after Reset() call</p>
     <tbody>
       <tr>
         <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_EntityManager_GetEntitySyncVarInfo_" data-uid="LiteEntitySystem.EntityManager.GetEntitySyncVarInfo*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_GetEntitySyncVarInfo_LiteEntitySystem_Internal_InternalEntity_LiteEntitySystem_IEntitySyncVarInfoPrinter_" data-uid="LiteEntitySystem.EntityManager.GetEntitySyncVarInfo(LiteEntitySystem.Internal.InternalEntity,LiteEntitySystem.IEntitySyncVarInfoPrinter)">GetEntitySyncVarInfo(InternalEntity, IEntitySyncVarInfoPrinter)</h4>
+  <div class="markdown level1 summary"><p>Prints names and values of entity syncVars using IEntitySyncVarInfoPrinter</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void GetEntitySyncVarInfo(InternalEntity entity, IEntitySyncVarInfoPrinter resultPrinter)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></td>
+        <td><span class="parametername">entity</span></td>
+        <td><p>entity to show</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.IEntitySyncVarInfoPrinter.html">IEntitySyncVarInfoPrinter</a></td>
+        <td><span class="parametername">resultPrinter</span></td>
+        <td><p>IEntitySyncVarInfoPrinter implementation</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_EntityManager_GetEntityTypeFromClassId_" data-uid="LiteEntitySystem.EntityManager.GetEntityTypeFromClassId*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_GetEntityTypeFromClassId_System_UInt16_" data-uid="LiteEntitySystem.EntityManager.GetEntityTypeFromClassId(System.UInt16)">GetEntityTypeFromClassId(ushort)</h4>
+  <div class="markdown level1 summary"><p>Get type of entity from classId. Returns null if classId is unknown</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Type GetEntityTypeFromClassId(ushort classId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
+        <td><span class="parametername">classId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -1454,6 +1526,33 @@ IsRunning - sets to false after Reset() call</p>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public virtual void Reset()</code></pre>
   </div>
+
+
+  <a id="LiteEntitySystem_EntityManager_SetTickrate_" data-uid="LiteEntitySystem.EntityManager.SetTickrate*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_SetTickrate_System_Byte_" data-uid="LiteEntitySystem.EntityManager.SetTickrate(System.Byte)">SetTickrate(byte)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void SetTickrate(byte tickrate)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
+        <td><span class="parametername">tickrate</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 
 
   <a id="LiteEntitySystem_EntityManager_TryGetEntityById_" data-uid="LiteEntitySystem.EntityManager.TryGetEntityById*"></a>

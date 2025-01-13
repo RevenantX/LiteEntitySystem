@@ -52,7 +52,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Stored input commands count for prediction correction
         /// </summary>
-        public int StoredCommands => _inputCommands.Count;
+        public int StoredCommands => InputProcessor.ClientStoredInputsCount;
         
         /// <summary>
         /// Player tick processed by server
@@ -113,21 +113,10 @@ namespace LiteEntitySystem
 
         public int PendingToRemoveEntites => _entitiesToRemoveCount;
         
-        private const int InputBufferSize = 128;
+
         private const float TimeSpeedChangeFadeTime = 0.1f;
         private const float MaxJitter = 0.2f;
 
-        struct InputCommand
-        {
-            public ushort Tick;
-            public byte[] Data;
-
-            public InputCommand(ushort tick, byte[] data)
-            {
-                Tick = tick;
-                Data = data;
-            }
-        }
 
         //predicted entities that should use rollback
         private readonly AVLTree<InternalEntity> _predictedEntities = new();
@@ -136,8 +125,6 @@ namespace LiteEntitySystem
         private readonly Queue<ServerStateData> _statesPool = new(MaxSavedStateDiff);
         private readonly Dictionary<ushort, ServerStateData> _receivedStates = new();
         private readonly SequenceBinaryHeap<ServerStateData> _readyStates = new(MaxSavedStateDiff);
-        private readonly Queue<InputCommand> _inputCommands = new (InputBufferSize);
-        private readonly Queue<byte[]> _inputPool = new (InputBufferSize);
         private readonly Queue<(ushort tick, EntityLogic entity)> _spawnPredictedEntities = new ();
         private readonly byte[] _sendBuffer = new byte[NetConstants.MaxPacketSize];
         private readonly HashSet<InternalEntity> _changedEntities = new();
@@ -149,7 +136,6 @@ namespace LiteEntitySystem
         private ServerStateData _stateB;
         private float _lerpTime;
         private double _timer;
-        private bool _isSyncReceived;
         
         private readonly IdGeneratorUShort _localIdQueue = new(MaxSyncedEntityCount, MaxEntityCount);
 
@@ -387,7 +373,7 @@ namespace LiteEntitySystem
 
                     ServerTick = _stateA.Tick;
                     _lastReadyTick = ServerTick;
-                    _inputCommands.Clear();
+                    InputProcessor.ClearClientStoredInputs();
                     _jitterTimer.Reset();
                     ConstructAndSync(true);
                     _entitiesToConstruct.Clear();
@@ -490,8 +476,7 @@ namespace LiteEntitySystem
             SpeedMultiplier = GetSpeedMultiplier(_stateB.BufferedInputsCount * DeltaTimeF);
             
             //remove processed inputs
-            while (_inputCommands.Count > 0 && Utils.SequenceDiff(_stateB.ProcessedTick, _inputCommands.Peek().Tick) >= 0)
-                _inputPool.Enqueue(_inputCommands.Dequeue().Data);
+            InputProcessor.RemoveClientProcessedInputs(_stateB.ProcessedTick);
             
             return true;
 
@@ -550,25 +535,15 @@ namespace LiteEntitySystem
 
             //reapply input
             UpdateMode = UpdateMode.PredictionRollback;
-            int cmdNum = 0;
-            foreach (var inputCommand in _inputCommands)
+            for(int cmdNum = 0; cmdNum < InputProcessor.ClientStoredInputsCount; cmdNum++)
             {
                 //reapply input data
-                fixed (byte* rawInputData = inputCommand.Data)
-                {
-                    var header = *(InputPacketHeader*)rawInputData;
-                    _localPlayer.StateATick = header.StateA;
-                    _localPlayer.StateBTick = header.StateB;
-                    _localPlayer.LerpTime = header.LerpMsec;
-                }
-                RollBackTick = inputCommand.Tick;
-                InputProcessor.ReadInput(
-                    this,
-                    _localPlayer.Id, 
-                    new ReadOnlySpan<byte>(
-                        inputCommand.Data,
-                        InputPacketHeader.Size, 
-                        inputCommand.Data.Length-InputPacketHeader.Size));
+                var storedInput = InputProcessor.GetStoredInputInfo(cmdNum);
+                _localPlayer.StateATick = storedInput.header.StateA;
+                _localPlayer.StateBTick = storedInput.header.StateB;
+                _localPlayer.LerpTime = storedInput.header.LerpMsec;
+                RollBackTick = storedInput.tick;
+                InputProcessor.ReadStoredInput(this, _localPlayer.Id, cmdNum);
                 
                 foreach (var entity in AliveEntities)
                 {
@@ -576,7 +551,7 @@ namespace LiteEntitySystem
                         continue;
                     
                     //if new entity set previous interp data from data that was before latest rollback update
-                    if (cmdNum == _inputCommands.Count - 1 && _entitiesToConstruct.Contains(entity))
+                    if (cmdNum == InputProcessor.ClientStoredInputsCount - 1 && _entitiesToConstruct.Contains(entity))
                     {
                         ref var classData = ref ClassDataDict[entity.ClassId];
                         fixed (byte* prevDataPtr = classData.ClientInterpolatedPrevData(entity))
@@ -591,7 +566,6 @@ namespace LiteEntitySystem
                     
                     entity.Update();
                 }
-                cmdNum++;
             }
             UpdateMode = UpdateMode.Normal;
                         
@@ -651,31 +625,14 @@ namespace LiteEntitySystem
                 ServerTick = Utils.LerpSequence(_stateA.Tick, _stateB.Tick, (float)(_timer/_lerpTime));
                 _stateB.ExecuteRpcs(this, _stateA.Tick, false);
             }
-            
-            //remove overflow
-            while(_inputCommands.Count >= InputBufferSize)
-                _inputPool.Enqueue(_inputCommands.Dequeue().Data);
-            
-            if (!_inputPool.TryDequeue(out byte[] inputWriter) || inputWriter.Length < InputProcessor.InputSizeWithHeader)
-                inputWriter = new byte[InputProcessor.InputSizeWithHeader];
 
-            //generate input
-            var inputHeader = new InputPacketHeader
+            //generate and apply input
+            InputProcessor.GenerateAndApplyInput(this, _localPlayer.Id, new InputPacketHeader
             {
                 StateA = _stateA.Tick,
                 StateB = RawTargetServerTick,
                 LerpMsec = _logicLerpMsec
-            };
-            fixed(byte* writerData = inputWriter)
-                *(InputPacketHeader*)writerData = inputHeader;
-            InputProcessor.GenerateAndWriteInput(this, _localPlayer.Id, inputWriter, InputPacketHeader.Size);
-
-            //read
-            InputProcessor.ReadInput(
-                this,
-                _localPlayer.Id,
-                new ReadOnlySpan<byte>(inputWriter, InputPacketHeader.Size, inputWriter.Length - InputPacketHeader.Size));
-            _inputCommands.Enqueue(new InputCommand(_tick, inputWriter));
+            });
 
             //local only and UpdateOnClient
             foreach (var entity in AliveEntities)
@@ -790,24 +747,24 @@ namespace LiteEntitySystem
                 
                 fixed (byte* sendBuffer = _sendBuffer)
                 {
-                    ushort currentTick = _inputCommands.Peek().Tick;
+                    ushort currentTick = InputProcessor.GetStoredInputInfo(0).tick;
                     ushort tickIndex = 0;
-                    byte[] prevCommand = null;
+                    int prevCommand = -1;
                     
                     //Logger.Log($"SendingCommands start {_tick}");
-                    foreach (var inputCommand in _inputCommands)
+                    for(int i = 0; i < InputProcessor.ClientStoredInputsCount; i++)
                     {
                         if (Utils.SequenceDiff(currentTick, _lastReceivedInputTick) <= 0)
                         {
                             currentTick++;
                             continue;
                         }
-                        if(prevCommand != null)//make delta
+                        if(prevCommand >= 0)//make delta
                         {
                             //overflow
                             if (offset + InputPacketHeader.Size + InputProcessor.MaxDeltaSize > maxSinglePacketSize)
                             {
-                                prevCommand = null;
+                                prevCommand = -1;
                                 *(ushort*)(sendBuffer + 2) = currentTick;
                                 _netPeer.SendUnreliable(new ReadOnlySpan<byte>(_sendBuffer, 0, offset));
                                 offset = 4;
@@ -817,24 +774,22 @@ namespace LiteEntitySystem
                             else
                             {
                                 //put header
-                                fixed (byte* inputData = inputCommand.Data)
-                                    RefMagic.CopyBlock(sendBuffer + offset, inputData, (uint)InputPacketHeader.Size);
+                                var span = new Span<byte>(sendBuffer + offset, InputPacketHeader.Size+InputProcessor.MaxDeltaSize);
+                                InputProcessor.WriteStoredInputHeader(i, span);
                                 offset += InputPacketHeader.Size;
                                 //put delta
-                                offset += InputProcessor.DeltaEncode(
-                                    new ReadOnlySpan<byte>(prevCommand, InputPacketHeader.Size, prevCommand.Length - InputPacketHeader.Size), 
-                                    new ReadOnlySpan<byte>(inputCommand.Data, InputPacketHeader.Size, inputCommand.Data.Length - InputPacketHeader.Size), 
-                                    new Span<byte>(sendBuffer + offset, InputProcessor.MaxDeltaSize));
+                                offset += InputProcessor.DeltaEncode(prevCommand, i, new Span<byte>(sendBuffer + offset, InputProcessor.MaxDeltaSize));
                             }
                         }
-                        if (prevCommand == null) //first full input
+                        if (prevCommand == -1) //first full input
                         {
                             //put data
-                            fixed (byte* rawInputCommand = inputCommand.Data)
-                                RefMagic.CopyBlock(sendBuffer + offset, rawInputCommand, (uint)InputProcessor.InputSizeWithHeader);
+                            var span = new Span<byte>(sendBuffer + offset, InputProcessor.InputSizeWithHeader);
+                            InputProcessor.WriteStoredInputHeader(i, span);
+                            InputProcessor.WriteStoredInputData(i, span.Slice(InputPacketHeader.Size));
                             offset += InputProcessor.InputSizeWithHeader;
                         }
-                        prevCommand = inputCommand.Data;
+                        prevCommand = i;
                         tickIndex++;
                         if (tickIndex == ServerEntityManager.MaxStoredInputs)
                             break;

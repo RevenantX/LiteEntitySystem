@@ -19,11 +19,17 @@ namespace LiteEntitySystem
         public T GetControlledEntity<T>() where T : PawnLogic =>
             EntityManager.GetEntityById<T>(_controlledEntity);
 
-        public virtual void BeforeControlledUpdate()
+        /// <summary>
+        /// Called before controlled entity update. Useful for input
+        /// </summary>
+        protected internal virtual void BeforeControlledUpdate()
         {
             
         }
 
+        /// <summary>
+        /// Destroy controller and controlled pawn
+        /// </summary>
         public void DestroyWithControlledEntity()
         {
             GetControlledEntity<PawnLogic>()?.Destroy();
@@ -31,6 +37,10 @@ namespace LiteEntitySystem
             Destroy();
         }
 
+        /// <summary>
+        /// Start control pawn
+        /// </summary>
+        /// <param name="target"></param>
         public void StartControl(PawnLogic target)
         {
             if (IsClient)
@@ -46,6 +56,9 @@ namespace LiteEntitySystem
             base.DestroyInternal();
         }
 
+        /// <summary>
+        /// Stop control pawn
+        /// </summary>
         public void StopControl()
         {
             if (IsClient)

@@ -116,7 +116,7 @@
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_IsClient">EntityManager.IsClient</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_FramesPerSecond">EntityManager.FramesPerSecond</a>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Tickrate">EntityManager.Tickrate</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_DeltaTime">EntityManager.DeltaTime</a>
@@ -153,6 +153,12 @@
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_RegisterFieldType__1">EntityManager.RegisterFieldType&lt;T&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetEntityTypeFromClassId_System_UInt16_">EntityManager.GetEntityTypeFromClassId(ushort)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetEntitySyncVarInfo_LiteEntitySystem_Internal_InternalEntity_LiteEntitySystem_IEntitySyncVarInfoPrinter_">EntityManager.GetEntitySyncVarInfo(InternalEntity, IEntitySyncVarInfoPrinter)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetEntityById__1_LiteEntitySystem_EntitySharedReference_">EntityManager.GetEntityById&lt;T&gt;(EntitySharedReference)</a>
@@ -205,13 +211,13 @@
 
 
   <a id="LiteEntitySystem_ServerEntityManager__ctor_" data-uid="LiteEntitySystem.ServerEntityManager.#ctor*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_System_Byte_System_Byte_LiteEntitySystem_ServerSendRate_" data-uid="LiteEntitySystem.ServerEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,System.Byte,System.Byte,LiteEntitySystem.ServerSendRate)">ServerEntityManager(EntityTypesMap, InputProcessor, byte, byte, ServerSendRate)</h4>
+  <h4 id="LiteEntitySystem_ServerEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_System_Byte_System_Byte_LiteEntitySystem_ServerSendRate_LiteEntitySystem_MaxHistorySize_" data-uid="LiteEntitySystem.ServerEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,System.Byte,System.Byte,LiteEntitySystem.ServerSendRate,LiteEntitySystem.MaxHistorySize)">ServerEntityManager(EntityTypesMap, InputProcessor, byte, byte, ServerSendRate, MaxHistorySize)</h4>
   <div class="markdown level1 summary"><p>Constructor</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ServerEntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, byte packetHeader, byte framesPerSecond, ServerSendRate sendRate)</code></pre>
+    <pre><code class="lang-csharp hljs">public ServerEntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, byte packetHeader, byte framesPerSecond, ServerSendRate sendRate, MaxHistorySize maxHistorySize = MaxHistorySize.Size32)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -251,6 +257,12 @@
         <td><a class="xref" href="LiteEntitySystem.ServerSendRate.html">ServerSendRate</a></td>
         <td><span class="parametername">sendRate</span></td>
         <td><p>Send rate of server (depends on fps)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.MaxHistorySize.html">MaxHistorySize</a></td>
+        <td><span class="parametername">maxHistorySize</span></td>
+        <td><p>Maximum size of lag compensation history in ticks</p>
 </td>
       </tr>
     </tbody>
@@ -799,13 +811,13 @@
 
 
   <a id="LiteEntitySystem_ServerEntityManager_Create_" data-uid="LiteEntitySystem.ServerEntityManager.Create*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_Create__1_LiteEntitySystem_EntityTypesMap_System_Byte_System_Byte_LiteEntitySystem_ServerSendRate_" data-uid="LiteEntitySystem.ServerEntityManager.Create``1(LiteEntitySystem.EntityTypesMap,System.Byte,System.Byte,LiteEntitySystem.ServerSendRate)">Create&lt;TInput&gt;(EntityTypesMap, byte, byte, ServerSendRate)</h4>
+  <h4 id="LiteEntitySystem_ServerEntityManager_Create__1_LiteEntitySystem_EntityTypesMap_System_Byte_System_Byte_LiteEntitySystem_ServerSendRate_LiteEntitySystem_MaxHistorySize_" data-uid="LiteEntitySystem.ServerEntityManager.Create``1(LiteEntitySystem.EntityTypesMap,System.Byte,System.Byte,LiteEntitySystem.ServerSendRate,LiteEntitySystem.MaxHistorySize)">Create&lt;TInput&gt;(EntityTypesMap, byte, byte, ServerSendRate, MaxHistorySize)</h4>
   <div class="markdown level1 summary"><p>Simplified constructor</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static ServerEntityManager Create&lt;TInput&gt;(EntityTypesMap typesMap, byte packetHeader, byte framesPerSecond, ServerSendRate sendRate) where TInput : unmanaged</code></pre>
+    <pre><code class="lang-csharp hljs">public static ServerEntityManager Create&lt;TInput&gt;(EntityTypesMap typesMap, byte packetHeader, byte framesPerSecond, ServerSendRate sendRate, MaxHistorySize maxHistorySize = MaxHistorySize.Size32) where TInput : unmanaged</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -839,6 +851,12 @@
         <td><a class="xref" href="LiteEntitySystem.ServerSendRate.html">ServerSendRate</a></td>
         <td><span class="parametername">sendRate</span></td>
         <td><p>Send rate of server (depends on fps)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.MaxHistorySize.html">MaxHistorySize</a></td>
+        <td><span class="parametername">maxHistorySize</span></td>
+        <td><p>Maximum size of lag compensation history in ticks</p>
 </td>
       </tr>
     </tbody>

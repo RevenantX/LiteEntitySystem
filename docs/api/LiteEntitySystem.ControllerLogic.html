@@ -132,6 +132,9 @@
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsLocal">InternalEntity.IsLocal</a>
     </div>
     <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsSingleton">InternalEntity.IsSingleton</a>
+    </div>
+    <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Destroy">InternalEntity.Destroy()</a>
     </div>
     <div>
@@ -156,6 +159,18 @@
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_RegisterRPC_LiteEntitySystem_RPCRegistrator__">InternalEntity.RegisterRPC(ref RPCRegistrator)</a>
     </div>
     <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_LiteEntitySystem_RemoteCall__">InternalEntity.ExecuteRPC(in RemoteCall)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">InternalEntity.ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt;, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">InternalEntity.ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_">InternalEntity.ExecuteRPC&lt;T&gt;(in RemoteCallSerializable&lt;T&gt;, T)</a>
+    </div>
+    <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_CompareTo_LiteEntitySystem_Internal_InternalEntity_">InternalEntity.CompareTo(InternalEntity)</a>
     </div>
     <div>
@@ -163,18 +178,6 @@
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ToString">InternalEntity.ToString()</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_ExecuteRPC_LiteEntitySystem_RemoteCall__">InternalBaseClass.ExecuteRPC(in RemoteCall)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_">InternalBaseClass.ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt;, T)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__">InternalBaseClass.ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</a>
-    </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_">InternalBaseClass.ExecuteRPC&lt;T&gt;(in RemoteCallSerializable&lt;T&gt;, T)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">InternalBaseClass.OnSyncRequested()</a>
@@ -250,17 +253,19 @@ public abstract class ControllerLogic : InternalEntity, IComparable&lt;InternalE
 
   <a id="LiteEntitySystem_ControllerLogic_BeforeControlledUpdate_" data-uid="LiteEntitySystem.ControllerLogic.BeforeControlledUpdate*"></a>
   <h4 id="LiteEntitySystem_ControllerLogic_BeforeControlledUpdate" data-uid="LiteEntitySystem.ControllerLogic.BeforeControlledUpdate">BeforeControlledUpdate()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Called before controlled entity update. Useful for input</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual void BeforeControlledUpdate()</code></pre>
+    <pre><code class="lang-csharp hljs">protected virtual void BeforeControlledUpdate()</code></pre>
   </div>
 
 
   <a id="LiteEntitySystem_ControllerLogic_DestroyWithControlledEntity_" data-uid="LiteEntitySystem.ControllerLogic.DestroyWithControlledEntity*"></a>
   <h4 id="LiteEntitySystem_ControllerLogic_DestroyWithControlledEntity" data-uid="LiteEntitySystem.ControllerLogic.DestroyWithControlledEntity">DestroyWithControlledEntity()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Destroy controller and controlled pawn</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
@@ -310,7 +315,8 @@ public abstract class ControllerLogic : InternalEntity, IComparable&lt;InternalE
 
   <a id="LiteEntitySystem_ControllerLogic_StartControl_" data-uid="LiteEntitySystem.ControllerLogic.StartControl*"></a>
   <h4 id="LiteEntitySystem_ControllerLogic_StartControl_LiteEntitySystem_PawnLogic_" data-uid="LiteEntitySystem.ControllerLogic.StartControl(LiteEntitySystem.PawnLogic)">StartControl(PawnLogic)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Start control pawn</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
@@ -337,7 +343,8 @@ public abstract class ControllerLogic : InternalEntity, IComparable&lt;InternalE
 
   <a id="LiteEntitySystem_ControllerLogic_StopControl_" data-uid="LiteEntitySystem.ControllerLogic.StopControl*"></a>
   <h4 id="LiteEntitySystem_ControllerLogic_StopControl" data-uid="LiteEntitySystem.ControllerLogic.StopControl">StopControl()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Stop control pawn</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">

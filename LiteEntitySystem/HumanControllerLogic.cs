@@ -165,12 +165,16 @@ namespace LiteEntitySystem
                 Success = success;
             }
         }
-        
+
         /// <summary>
         /// Called on client and server to read generated from <see cref="GenerateInput"/> input
         /// </summary>
         /// <param name="input">user defined input structure</param>
-        protected internal abstract void ReadInput(in TInput input);
+        [Obsolete("Read input in update or onBeforeControlledUpdate")]
+        protected internal virtual void ReadInput(in TInput input)
+        {
+            
+        }
         
         /// <summary>
         /// Called on client to generate input
@@ -185,11 +189,22 @@ namespace LiteEntitySystem
         private static RemoteCall<ServerResponse> _serverResponseRpc;
         private ushort _requestId;
         private readonly Dictionary<ushort,Action<bool>> _awaitingRequests;
-        
+        private TInput _currentInput;
+
         /// <summary>
         /// Input that created by ReadInput before all entity updates
         /// </summary>
-        public TInput CurrentInput { get; internal set; }
+        public TInput CurrentInput
+        {
+            get => _currentInput;
+            set
+            {
+                _currentInput = value;
+#pragma warning disable CS0618 // Type or member is obsolete
+                ReadInput(in value);
+#pragma warning restore CS0618 // Type or member is obsolete
+            }
+        }
 
         /// <summary>
         /// Get player that uses this controller

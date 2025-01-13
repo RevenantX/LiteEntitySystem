@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem.Collections
 {

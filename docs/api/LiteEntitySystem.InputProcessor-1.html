@@ -139,17 +139,112 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public InputProcessor()</code></pre>
   </div>
-  <h3 id="methods">Methods
+  <h3 id="properties">Properties
 </h3>
 
 
-  <a id="LiteEntitySystem_InputProcessor_1_GenerateAndWriteInput_" data-uid="LiteEntitySystem.InputProcessor`1.GenerateAndWriteInput*"></a>
-  <h4 id="LiteEntitySystem_InputProcessor_1_GenerateAndWriteInput_LiteEntitySystem_EntityManager_System_Byte_System_Byte___System_Int32_" data-uid="LiteEntitySystem.InputProcessor`1.GenerateAndWriteInput(LiteEntitySystem.EntityManager,System.Byte,System.Byte[],System.Int32)">GenerateAndWriteInput(EntityManager, byte, byte[], int)</h4>
+  <a id="LiteEntitySystem_InputProcessor_1_ClientStoredInputsCount_" data-uid="LiteEntitySystem.InputProcessor`1.ClientStoredInputsCount*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_1_ClientStoredInputsCount" data-uid="LiteEntitySystem.InputProcessor`1.ClientStoredInputsCount">ClientStoredInputsCount</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void GenerateAndWriteInput(EntityManager manager, byte ownerId, byte[] data, int offset)</code></pre>
+    <pre><code class="lang-csharp hljs">public override int ClientStoredInputsCount { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_ClientStoredInputsCount">InputProcessor.ClientStoredInputsCount</a></div>
+  <h3 id="methods">Methods
+</h3>
+
+
+  <a id="LiteEntitySystem_InputProcessor_1_ClearClientStoredInputs_" data-uid="LiteEntitySystem.InputProcessor`1.ClearClientStoredInputs*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_1_ClearClientStoredInputs" data-uid="LiteEntitySystem.InputProcessor`1.ClearClientStoredInputs">ClearClientStoredInputs()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void ClearClientStoredInputs()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_ClearClientStoredInputs">InputProcessor.ClearClientStoredInputs()</a></div>
+
+
+  <a id="LiteEntitySystem_InputProcessor_1_DeltaEncode_" data-uid="LiteEntitySystem.InputProcessor`1.DeltaEncode*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_1_DeltaEncode_System_Int32_System_Int32_System_Span_System_Byte__" data-uid="LiteEntitySystem.InputProcessor`1.DeltaEncode(System.Int32,System.Int32,System.Span{System.Byte})">DeltaEncode(int, int, Span&lt;byte&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int DeltaEncode(int prevInputIndex, int currentInputIndex, Span&lt;byte&gt; result)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">prevInputIndex</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">currentInputIndex</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
+        <td><span class="parametername">result</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_DeltaEncode_System_Int32_System_Int32_System_Span_System_Byte__">InputProcessor.DeltaEncode(int, int, Span&lt;byte&gt;)</a></div>
+
+
+  <a id="LiteEntitySystem_InputProcessor_1_GenerateAndApplyInput_" data-uid="LiteEntitySystem.InputProcessor`1.GenerateAndApplyInput*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_1_GenerateAndApplyInput_LiteEntitySystem_EntityManager_System_Byte_LiteEntitySystem_Internal_InputPacketHeader_" data-uid="LiteEntitySystem.InputProcessor`1.GenerateAndApplyInput(LiteEntitySystem.EntityManager,System.Byte,LiteEntitySystem.Internal.InputPacketHeader)">GenerateAndApplyInput(EntityManager, byte, InputPacketHeader)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void GenerateAndApplyInput(EntityManager manager, byte ownerId, InputPacketHeader inputPacketHeader)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -172,19 +267,58 @@
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</td>
-        <td><span class="parametername">data</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td><span class="parametername">offset</span></td>
+        <td><a class="xref" href="LiteEntitySystem.Internal.InputPacketHeader.html">InputPacketHeader</a></td>
+        <td><span class="parametername">inputPacketHeader</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_GenerateAndWriteInput_LiteEntitySystem_EntityManager_System_Byte_System_Byte___System_Int32_">InputProcessor.GenerateAndWriteInput(EntityManager, byte, byte[], int)</a></div>
+  <div><a class="xref" href="LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_GenerateAndApplyInput_LiteEntitySystem_EntityManager_System_Byte_LiteEntitySystem_Internal_InputPacketHeader_">InputProcessor.GenerateAndApplyInput(EntityManager, byte, InputPacketHeader)</a></div>
+
+
+  <a id="LiteEntitySystem_InputProcessor_1_GetStoredInputInfo_" data-uid="LiteEntitySystem.InputProcessor`1.GetStoredInputInfo*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_1_GetStoredInputInfo_System_Int32_" data-uid="LiteEntitySystem.InputProcessor`1.GetStoredInputInfo(System.Int32)">GetStoredInputInfo(int)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override (InputPacketHeader header, ushort tick) GetStoredInputInfo(int index)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">index</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>(<a class="xref" href="LiteEntitySystem.Internal.InputPacketHeader.html">InputPacketHeader</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-liteentitysystem.internal.inputpacketheader,system.uint16-.header">header</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-liteentitysystem.internal.inputpacketheader,system.uint16-.tick">tick</a>)</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_GetStoredInputInfo_System_Int32_">InputProcessor.GetStoredInputInfo(int)</a></div>
 
 
   <a id="LiteEntitySystem_InputProcessor_1_ReadClientRequest_" data-uid="LiteEntitySystem.InputProcessor`1.ReadClientRequest*"></a>
@@ -258,6 +392,142 @@
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_ReadInput_LiteEntitySystem_EntityManager_System_Byte_System_ReadOnlySpan_System_Byte__">InputProcessor.ReadInput(EntityManager, byte, ReadOnlySpan&lt;byte&gt;)</a></div>
+
+
+  <a id="LiteEntitySystem_InputProcessor_1_ReadStoredInput_" data-uid="LiteEntitySystem.InputProcessor`1.ReadStoredInput*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_1_ReadStoredInput_LiteEntitySystem_EntityManager_System_Byte_System_Int32_" data-uid="LiteEntitySystem.InputProcessor`1.ReadStoredInput(LiteEntitySystem.EntityManager,System.Byte,System.Int32)">ReadStoredInput(EntityManager, byte, int)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void ReadStoredInput(EntityManager manager, byte ownerId, int index)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.EntityManager.html">EntityManager</a></td>
+        <td><span class="parametername">manager</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
+        <td><span class="parametername">ownerId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">index</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_ReadStoredInput_LiteEntitySystem_EntityManager_System_Byte_System_Int32_">InputProcessor.ReadStoredInput(EntityManager, byte, int)</a></div>
+
+
+  <a id="LiteEntitySystem_InputProcessor_1_RemoveClientProcessedInputs_" data-uid="LiteEntitySystem.InputProcessor`1.RemoveClientProcessedInputs*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_1_RemoveClientProcessedInputs_System_UInt16_" data-uid="LiteEntitySystem.InputProcessor`1.RemoveClientProcessedInputs(System.UInt16)">RemoveClientProcessedInputs(ushort)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void RemoveClientProcessedInputs(ushort processedTick)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
+        <td><span class="parametername">processedTick</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_RemoveClientProcessedInputs_System_UInt16_">InputProcessor.RemoveClientProcessedInputs(ushort)</a></div>
+
+
+  <a id="LiteEntitySystem_InputProcessor_1_WriteStoredInputData_" data-uid="LiteEntitySystem.InputProcessor`1.WriteStoredInputData*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_1_WriteStoredInputData_System_Int32_System_Span_System_Byte__" data-uid="LiteEntitySystem.InputProcessor`1.WriteStoredInputData(System.Int32,System.Span{System.Byte})">WriteStoredInputData(int, Span&lt;byte&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void WriteStoredInputData(int index, Span&lt;byte&gt; target)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">index</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
+        <td><span class="parametername">target</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_WriteStoredInputData_System_Int32_System_Span_System_Byte__">InputProcessor.WriteStoredInputData(int, Span&lt;byte&gt;)</a></div>
+
+
+  <a id="LiteEntitySystem_InputProcessor_1_WriteStoredInputHeader_" data-uid="LiteEntitySystem.InputProcessor`1.WriteStoredInputHeader*"></a>
+  <h4 id="LiteEntitySystem_InputProcessor_1_WriteStoredInputHeader_System_Int32_System_Span_System_Byte__" data-uid="LiteEntitySystem.InputProcessor`1.WriteStoredInputHeader(System.Int32,System.Span{System.Byte})">WriteStoredInputHeader(int, Span&lt;byte&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void WriteStoredInputHeader(int index, Span&lt;byte&gt; target)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">index</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
+        <td><span class="parametername">target</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_WriteStoredInputHeader_System_Int32_System_Span_System_Byte__">InputProcessor.WriteStoredInputHeader(int, Span&lt;byte&gt;)</a></div>
 
 </article>
           </div>

@@ -74,6 +74,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Collections.CircularBuffer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Collections.CircularBuffer-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.yml",
       "output": {
         ".html": {
@@ -168,6 +178,26 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.EntityList-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.EntityLogic.ChildAccessor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.EntityLogic.ChildAccessor.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.EntityLogic.ChildEnumerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.EntityLogic.ChildEnumerator.html"
         }
       },
       "version": ""
@@ -434,6 +464,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.IEntitySyncVarInfoPrinter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.IEntitySyncVarInfoPrinter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.ILocalSingleton.yml",
       "output": {
         ".html": {
@@ -528,6 +568,16 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.Internal.EntityDataHeader.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Internal.InputPacketHeader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Internal.InputPacketHeader.html"
         }
       },
       "version": ""
@@ -878,6 +928,26 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteNetLib.Utils.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Plugins.LiteEntitySystem.Extensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Plugins.LiteEntitySystem.Extensions.html"
         }
       },
       "version": ""

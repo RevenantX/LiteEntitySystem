@@ -116,7 +116,7 @@
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_IsClient">EntityManager.IsClient</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_FramesPerSecond">EntityManager.FramesPerSecond</a>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Tickrate">EntityManager.Tickrate</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_DeltaTime">EntityManager.DeltaTime</a>
@@ -153,6 +153,12 @@
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_RegisterFieldType__1">EntityManager.RegisterFieldType&lt;T&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetEntityTypeFromClassId_System_UInt16_">EntityManager.GetEntityTypeFromClassId(ushort)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetEntitySyncVarInfo_LiteEntitySystem_Internal_InternalEntity_LiteEntitySystem_IEntitySyncVarInfoPrinter_">EntityManager.GetEntitySyncVarInfo(InternalEntity, IEntitySyncVarInfoPrinter)</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetEntityById__1_LiteEntitySystem_EntitySharedReference_">EntityManager.GetEntityById&lt;T&gt;(EntitySharedReference)</a>
@@ -202,13 +208,13 @@
 
 
   <a id="LiteEntitySystem_ClientEntityManager__ctor_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteEntitySystem_Transport_AbstractNetPeer_System_Byte_System_Byte_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,System.Byte)">ClientEntityManager(EntityTypesMap, InputProcessor, AbstractNetPeer, byte, byte)</h4>
+  <h4 id="LiteEntitySystem_ClientEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteEntitySystem_Transport_AbstractNetPeer_System_Byte_LiteEntitySystem_MaxHistorySize_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,LiteEntitySystem.MaxHistorySize)">ClientEntityManager(EntityTypesMap, InputProcessor, AbstractNetPeer, byte, MaxHistorySize)</h4>
   <div class="markdown level1 summary"><p>Constructor</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ClientEntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, AbstractNetPeer netPeer, byte headerByte, byte framesPerSecond)</code></pre>
+    <pre><code class="lang-csharp hljs">public ClientEntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, AbstractNetPeer netPeer, byte headerByte, MaxHistorySize maxHistorySize = MaxHistorySize.Size32)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -245,9 +251,9 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
-        <td><span class="parametername">framesPerSecond</span></td>
-        <td><p>Fixed framerate of game logic</p>
+        <td><a class="xref" href="LiteEntitySystem.MaxHistorySize.html">MaxHistorySize</a></td>
+        <td><span class="parametername">maxHistorySize</span></td>
+        <td><p>Maximum size of lag compensation history in ticks</p>
 </td>
       </tr>
     </tbody>
@@ -310,6 +316,32 @@ Buffer automatically increases to Jitter time + PreferredBufferTimeLowest</p>
 </h3>
 
 
+  <a id="LiteEntitySystem_ClientEntityManager_AverageJitter_" data-uid="LiteEntitySystem.ClientEntityManager.AverageJitter*"></a>
+  <h4 id="LiteEntitySystem_ClientEntityManager_AverageJitter" data-uid="LiteEntitySystem.ClientEntityManager.AverageJitter">AverageJitter</h4>
+  <div class="markdown level1 summary"><p>Average jitter</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float AverageJitter { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
   <a id="LiteEntitySystem_ClientEntityManager_CurrentRPCTick_" data-uid="LiteEntitySystem.ClientEntityManager.CurrentRPCTick*"></a>
   <h4 id="LiteEntitySystem_ClientEntityManager_CurrentRPCTick" data-uid="LiteEntitySystem.ClientEntityManager.CurrentRPCTick">CurrentRPCTick</h4>
   <div class="markdown level1 summary"><p>Tick of currently executing rpc (check only in client RPC methods)</p>
@@ -338,7 +370,7 @@ Buffer automatically increases to Jitter time + PreferredBufferTimeLowest</p>
 
   <a id="LiteEntitySystem_ClientEntityManager_IsExecutingRPC_" data-uid="LiteEntitySystem.ClientEntityManager.IsExecutingRPC*"></a>
   <h4 id="LiteEntitySystem_ClientEntityManager_IsExecutingRPC" data-uid="LiteEntitySystem.ClientEntityManager.IsExecutingRPC">IsExecutingRPC</h4>
-  <div class="markdown level1 summary"><p>Is rpc currently executing</p>
+  <div class="markdown level1 summary"><p>Is server-&gt;client rpc currently executing</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -754,13 +786,13 @@ Buffer automatically increases to Jitter time + PreferredBufferTimeLowest</p>
 
 
   <a id="LiteEntitySystem_ClientEntityManager_Create_" data-uid="LiteEntitySystem.ClientEntityManager.Create*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_Create__1_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_Transport_AbstractNetPeer_System_Byte_System_Byte_" data-uid="LiteEntitySystem.ClientEntityManager.Create``1(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,System.Byte)">Create&lt;TInput&gt;(EntityTypesMap, AbstractNetPeer, byte, byte)</h4>
+  <h4 id="LiteEntitySystem_ClientEntityManager_Create__1_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_Transport_AbstractNetPeer_System_Byte_LiteEntitySystem_MaxHistorySize_" data-uid="LiteEntitySystem.ClientEntityManager.Create``1(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,LiteEntitySystem.MaxHistorySize)">Create&lt;TInput&gt;(EntityTypesMap, AbstractNetPeer, byte, MaxHistorySize)</h4>
   <div class="markdown level1 summary"><p>Simplified constructor</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static ClientEntityManager Create&lt;TInput&gt;(EntityTypesMap typesMap, AbstractNetPeer netPeer, byte headerByte, byte framesPerSecond) where TInput : unmanaged</code></pre>
+    <pre><code class="lang-csharp hljs">public static ClientEntityManager Create&lt;TInput&gt;(EntityTypesMap typesMap, AbstractNetPeer netPeer, byte headerByte, MaxHistorySize maxHistorySize = MaxHistorySize.Size32) where TInput : unmanaged</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -791,9 +823,9 @@ Buffer automatically increases to Jitter time + PreferredBufferTimeLowest</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
-        <td><span class="parametername">framesPerSecond</span></td>
-        <td><p>Fixed framerate of game logic</p>
+        <td><a class="xref" href="LiteEntitySystem.MaxHistorySize.html">MaxHistorySize</a></td>
+        <td><span class="parametername">maxHistorySize</span></td>
+        <td><p>Maximum size of lag compensation history in ticks</p>
 </td>
       </tr>
     </tbody>
