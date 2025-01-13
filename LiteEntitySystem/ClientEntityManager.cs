@@ -686,58 +686,7 @@ namespace LiteEntitySystem
             ushort prevTick = _tick;
             
             base.Update();
-
-            if (PreloadNextState())
-            {
-                _timer += VisualDeltaTime;
-                while(_timer >= _lerpTime)
-                {
-                    GoToNextState();
-                    if (!PreloadNextState())
-                        break;
-                }
-            }
-
-            if (_stateB != null)
-            {
-                //remote interpolation
-                _logicLerpMsec = (float)(_timer/_lerpTime);
-                for(int i = 0; i < _stateB.InterpolatedCachesCount; i++)
-                {
-                    ref var interpolatedCache = ref _stateB.InterpolatedCaches[i];
-                    fixed (byte* initialDataPtr = interpolatedCache.Entity.ClassData.ClientInterpolatedNextData(interpolatedCache.Entity), nextDataPtr = _stateB.Data)
-                        interpolatedCache.TypeProcessor.SetInterpolation(
-                            interpolatedCache.Entity, 
-                            interpolatedCache.FieldOffset,
-                            initialDataPtr + interpolatedCache.FieldFixedOffset,
-                            nextDataPtr + interpolatedCache.StateReaderOffset, 
-                            _logicLerpMsec);
-                }
-            }
-
-            //local interpolation
-            float localLerpT = LerpFactor;
-            foreach (var entity in AliveEntities)
-            {
-                if (!entity.IsLocalControlled && !entity.IsLocal)
-                    continue;
-                
-                ref var classData = ref ClassDataDict[entity.ClassId];
-                fixed (byte* currentDataPtr = classData.ClientInterpolatedNextData(entity), prevDataPtr = classData.ClientInterpolatedPrevData(entity))
-                {
-                    for(int i = 0; i < classData.InterpolatedCount; i++)
-                    {
-                        var field = classData.Fields[i];
-                        field.TypeProcessor.SetInterpolation(
-                            entity,
-                            field.Offset,
-                            prevDataPtr + field.FixedOffset,
-                            currentDataPtr + field.FixedOffset,
-                            localLerpT);
-                    }
-                }
-            }
-
+            
             //send buffered input
             if (_tick != prevTick)
             {
@@ -797,6 +746,57 @@ namespace LiteEntitySystem
                     *(ushort*)(sendBuffer + 2) = currentTick;
                     _netPeer.SendUnreliable(new ReadOnlySpan<byte>(_sendBuffer, 0, offset));
                     _netPeer.TriggerSend();
+                }
+            }
+            
+            if (PreloadNextState())
+            {
+                _timer += VisualDeltaTime;
+                while(_timer >= _lerpTime)
+                {
+                    GoToNextState();
+                    if (!PreloadNextState())
+                        break;
+                }
+                
+                if (_stateB != null)
+                {
+                    //remote interpolation
+                    _logicLerpMsec = (float)(_timer/_lerpTime);
+                    for(int i = 0; i < _stateB.InterpolatedCachesCount; i++)
+                    {
+                        ref var interpolatedCache = ref _stateB.InterpolatedCaches[i];
+                        fixed (byte* initialDataPtr = interpolatedCache.Entity.ClassData.ClientInterpolatedNextData(interpolatedCache.Entity), nextDataPtr = _stateB.Data)
+                            interpolatedCache.TypeProcessor.SetInterpolation(
+                                interpolatedCache.Entity, 
+                                interpolatedCache.FieldOffset,
+                                initialDataPtr + interpolatedCache.FieldFixedOffset,
+                                nextDataPtr + interpolatedCache.StateReaderOffset, 
+                                _logicLerpMsec);
+                    }
+                }
+            }
+
+            //local interpolation
+            float localLerpT = LerpFactor;
+            foreach (var entity in AliveEntities)
+            {
+                if (!entity.IsLocalControlled && !entity.IsLocal)
+                    continue;
+                
+                ref var classData = ref ClassDataDict[entity.ClassId];
+                fixed (byte* currentDataPtr = classData.ClientInterpolatedNextData(entity), prevDataPtr = classData.ClientInterpolatedPrevData(entity))
+                {
+                    for(int i = 0; i < classData.InterpolatedCount; i++)
+                    {
+                        var field = classData.Fields[i];
+                        field.TypeProcessor.SetInterpolation(
+                            entity,
+                            field.Offset,
+                            prevDataPtr + field.FixedOffset,
+                            currentDataPtr + field.FixedOffset,
+                            localLerpT);
+                    }
                 }
             }
             
