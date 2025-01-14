@@ -3259,6 +3259,53 @@ references:
   fullName.vb: LiteEntitySystem.Extensions.FloatAngle.CType
   nameWithType: FloatAngle.implicit operator
   nameWithType.vb: FloatAngle.CType
+- uid: LiteEntitySystem.Extensions.NetDataExtensions
+  name: NetDataExtensions
+  href: api/LiteEntitySystem.Extensions.NetDataExtensions.html
+  commentId: T:LiteEntitySystem.Extensions.NetDataExtensions
+  fullName: LiteEntitySystem.Extensions.NetDataExtensions
+  nameWithType: NetDataExtensions
+- uid: LiteEntitySystem.Extensions.NetDataExtensions.Get*
+  name: Get
+  href: api/LiteEntitySystem.Extensions.NetDataExtensions.html#LiteEntitySystem_Extensions_NetDataExtensions_Get_
+  commentId: Overload:LiteEntitySystem.Extensions.NetDataExtensions.Get
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.NetDataExtensions.Get
+  nameWithType: NetDataExtensions.Get
+- uid: LiteEntitySystem.Extensions.NetDataExtensions.Get``1(LiteNetLib.Utils.NetDataReader)
+  name: Get<T>(NetDataReader)
+  href: api/LiteEntitySystem.Extensions.NetDataExtensions.html#LiteEntitySystem_Extensions_NetDataExtensions_Get__1_LiteNetLib_Utils_NetDataReader_
+  commentId: M:LiteEntitySystem.Extensions.NetDataExtensions.Get``1(LiteNetLib.Utils.NetDataReader)
+  name.vb: Get(Of T)(NetDataReader)
+  fullName: LiteEntitySystem.Extensions.NetDataExtensions.Get<T>(LiteNetLib.Utils.NetDataReader)
+  fullName.vb: LiteEntitySystem.Extensions.NetDataExtensions.Get(Of T)(LiteNetLib.Utils.NetDataReader)
+  nameWithType: NetDataExtensions.Get<T>(NetDataReader)
+  nameWithType.vb: NetDataExtensions.Get(Of T)(NetDataReader)
+- uid: LiteEntitySystem.Extensions.NetDataExtensions.Get``1(LiteNetLib.Utils.NetDataReader,``0@)
+  name: Get<T>(NetDataReader, out T)
+  href: api/LiteEntitySystem.Extensions.NetDataExtensions.html#LiteEntitySystem_Extensions_NetDataExtensions_Get__1_LiteNetLib_Utils_NetDataReader___0__
+  commentId: M:LiteEntitySystem.Extensions.NetDataExtensions.Get``1(LiteNetLib.Utils.NetDataReader,``0@)
+  name.vb: Get(Of T)(NetDataReader, T)
+  fullName: LiteEntitySystem.Extensions.NetDataExtensions.Get<T>(LiteNetLib.Utils.NetDataReader, out T)
+  fullName.vb: LiteEntitySystem.Extensions.NetDataExtensions.Get(Of T)(LiteNetLib.Utils.NetDataReader, T)
+  nameWithType: NetDataExtensions.Get<T>(NetDataReader, out T)
+  nameWithType.vb: NetDataExtensions.Get(Of T)(NetDataReader, T)
+- uid: LiteEntitySystem.Extensions.NetDataExtensions.Put*
+  name: Put
+  href: api/LiteEntitySystem.Extensions.NetDataExtensions.html#LiteEntitySystem_Extensions_NetDataExtensions_Put_
+  commentId: Overload:LiteEntitySystem.Extensions.NetDataExtensions.Put
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.NetDataExtensions.Put
+  nameWithType: NetDataExtensions.Put
+- uid: LiteEntitySystem.Extensions.NetDataExtensions.Put``1(LiteNetLib.Utils.NetDataWriter,``0)
+  name: Put<T>(NetDataWriter, T)
+  href: api/LiteEntitySystem.Extensions.NetDataExtensions.html#LiteEntitySystem_Extensions_NetDataExtensions_Put__1_LiteNetLib_Utils_NetDataWriter___0_
+  commentId: M:LiteEntitySystem.Extensions.NetDataExtensions.Put``1(LiteNetLib.Utils.NetDataWriter,``0)
+  name.vb: Put(Of T)(NetDataWriter, T)
+  fullName: LiteEntitySystem.Extensions.NetDataExtensions.Put<T>(LiteNetLib.Utils.NetDataWriter, T)
+  fullName.vb: LiteEntitySystem.Extensions.NetDataExtensions.Put(Of T)(LiteNetLib.Utils.NetDataWriter, T)
+  nameWithType: NetDataExtensions.Put<T>(NetDataWriter, T)
+  nameWithType.vb: NetDataExtensions.Put(Of T)(NetDataWriter, T)
 - uid: LiteEntitySystem.Extensions.StateCalls
   name: StateCalls
   href: api/LiteEntitySystem.Extensions.StateCalls.html

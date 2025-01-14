@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using LiteNetLib.Utils;
 #if UNITY_2021_2_OR_NEWER
 using UnityEngine;
 #endif
 
-namespace LiteNetLib.Utils
+namespace LiteEntitySystem.Extensions
 {
     public static class NetDataExtensions
     {

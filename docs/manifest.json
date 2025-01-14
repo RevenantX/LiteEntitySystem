@@ -284,6 +284,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Extensions.NetDataExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Extensions.NetDataExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.Extensions.StateCalls.yml",
       "output": {
         ".html": {
