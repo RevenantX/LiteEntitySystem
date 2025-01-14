@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using LiteEntitySystem;
 
-namespace Plugins.LiteEntitySystem.Extensions
+namespace LiteEntitySystem.Extensions
 {
     public class SyncQueue<T> : SyncableField, IReadOnlyCollection<T>, ICollection where T : unmanaged
     {

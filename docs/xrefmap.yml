@@ -4539,6 +4539,325 @@ references:
   fullName.vb: LiteEntitySystem.Extensions.SyncNetSerializable(Of T).CType
   nameWithType: SyncNetSerializable<T>.implicit operator
   nameWithType.vb: SyncNetSerializable(Of T).CType
+- uid: LiteEntitySystem.Extensions.SyncQueue`1
+  name: SyncQueue<T>
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html
+  commentId: T:LiteEntitySystem.Extensions.SyncQueue`1
+  name.vb: SyncQueue(Of T)
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T)
+  nameWithType: SyncQueue<T>
+  nameWithType.vb: SyncQueue(Of T)
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.AfterReadRPC
+  name: AfterReadRPC()
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_AfterReadRPC
+  commentId: M:LiteEntitySystem.Extensions.SyncQueue`1.AfterReadRPC
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.AfterReadRPC()
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).AfterReadRPC()
+  nameWithType: SyncQueue<T>.AfterReadRPC()
+  nameWithType.vb: SyncQueue(Of T).AfterReadRPC()
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.AfterReadRPC*
+  name: AfterReadRPC
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_AfterReadRPC_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.AfterReadRPC
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.AfterReadRPC
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).AfterReadRPC
+  nameWithType: SyncQueue<T>.AfterReadRPC
+  nameWithType.vb: SyncQueue(Of T).AfterReadRPC
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.BeforeReadRPC
+  name: BeforeReadRPC()
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_BeforeReadRPC
+  commentId: M:LiteEntitySystem.Extensions.SyncQueue`1.BeforeReadRPC
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.BeforeReadRPC()
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).BeforeReadRPC()
+  nameWithType: SyncQueue<T>.BeforeReadRPC()
+  nameWithType.vb: SyncQueue(Of T).BeforeReadRPC()
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.BeforeReadRPC*
+  name: BeforeReadRPC
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_BeforeReadRPC_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.BeforeReadRPC
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.BeforeReadRPC
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).BeforeReadRPC
+  nameWithType: SyncQueue<T>.BeforeReadRPC
+  nameWithType.vb: SyncQueue(Of T).BeforeReadRPC
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.Clear
+  name: Clear()
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_Clear
+  commentId: M:LiteEntitySystem.Extensions.SyncQueue`1.Clear
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.Clear()
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).Clear()
+  nameWithType: SyncQueue<T>.Clear()
+  nameWithType.vb: SyncQueue(Of T).Clear()
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.Clear*
+  name: Clear
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_Clear_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.Clear
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.Clear
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).Clear
+  nameWithType: SyncQueue<T>.Clear
+  nameWithType.vb: SyncQueue(Of T).Clear
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.Contains(`0)
+  name: Contains(T)
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_Contains__0_
+  commentId: M:LiteEntitySystem.Extensions.SyncQueue`1.Contains(`0)
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.Contains(T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).Contains(T)
+  nameWithType: SyncQueue<T>.Contains(T)
+  nameWithType.vb: SyncQueue(Of T).Contains(T)
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.Contains*
+  name: Contains
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_Contains_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.Contains
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.Contains
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).Contains
+  nameWithType: SyncQueue<T>.Contains
+  nameWithType.vb: SyncQueue(Of T).Contains
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.CopyTo(System.Array,System.Int32)
+  name: CopyTo(Array, int)
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_CopyTo_System_Array_System_Int32_
+  commentId: M:LiteEntitySystem.Extensions.SyncQueue`1.CopyTo(System.Array,System.Int32)
+  name.vb: CopyTo(Array, Integer)
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.CopyTo(System.Array, int)
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).CopyTo(System.Array, Integer)
+  nameWithType: SyncQueue<T>.CopyTo(Array, int)
+  nameWithType.vb: SyncQueue(Of T).CopyTo(Array, Integer)
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.CopyTo*
+  name: CopyTo
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_CopyTo_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.CopyTo
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.CopyTo
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).CopyTo
+  nameWithType: SyncQueue<T>.CopyTo
+  nameWithType.vb: SyncQueue(Of T).CopyTo
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.Count
+  name: Count
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_Count
+  commentId: P:LiteEntitySystem.Extensions.SyncQueue`1.Count
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.Count
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).Count
+  nameWithType: SyncQueue<T>.Count
+  nameWithType.vb: SyncQueue(Of T).Count
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.Count*
+  name: Count
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_Count_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.Count
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.Count
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).Count
+  nameWithType: SyncQueue<T>.Count
+  nameWithType.vb: SyncQueue(Of T).Count
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.Dequeue
+  name: Dequeue()
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_Dequeue
+  commentId: M:LiteEntitySystem.Extensions.SyncQueue`1.Dequeue
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.Dequeue()
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).Dequeue()
+  nameWithType: SyncQueue<T>.Dequeue()
+  nameWithType.vb: SyncQueue(Of T).Dequeue()
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.Dequeue*
+  name: Dequeue
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_Dequeue_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.Dequeue
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.Dequeue
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).Dequeue
+  nameWithType: SyncQueue<T>.Dequeue
+  nameWithType.vb: SyncQueue(Of T).Dequeue
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.Enqueue(`0)
+  name: Enqueue(T)
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_Enqueue__0_
+  commentId: M:LiteEntitySystem.Extensions.SyncQueue`1.Enqueue(`0)
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.Enqueue(T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).Enqueue(T)
+  nameWithType: SyncQueue<T>.Enqueue(T)
+  nameWithType.vb: SyncQueue(Of T).Enqueue(T)
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.Enqueue*
+  name: Enqueue
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_Enqueue_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.Enqueue
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.Enqueue
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).Enqueue
+  nameWithType: SyncQueue<T>.Enqueue
+  nameWithType.vb: SyncQueue(Of T).Enqueue
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.GetEnumerator
+  name: GetEnumerator()
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_GetEnumerator
+  commentId: M:LiteEntitySystem.Extensions.SyncQueue`1.GetEnumerator
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.GetEnumerator()
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).GetEnumerator()
+  nameWithType: SyncQueue<T>.GetEnumerator()
+  nameWithType.vb: SyncQueue(Of T).GetEnumerator()
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.GetEnumerator*
+  name: GetEnumerator
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_GetEnumerator_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.GetEnumerator
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.GetEnumerator
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).GetEnumerator
+  nameWithType: SyncQueue<T>.GetEnumerator
+  nameWithType.vb: SyncQueue(Of T).GetEnumerator
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported
+  name: IsRollbackSupported
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_IsRollbackSupported
+  commentId: P:LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.IsRollbackSupported
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).IsRollbackSupported
+  nameWithType: SyncQueue<T>.IsRollbackSupported
+  nameWithType.vb: SyncQueue(Of T).IsRollbackSupported
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported*
+  name: IsRollbackSupported
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_IsRollbackSupported_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.IsRollbackSupported
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).IsRollbackSupported
+  nameWithType: SyncQueue<T>.IsRollbackSupported
+  nameWithType.vb: SyncQueue(Of T).IsRollbackSupported
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.IsSynchronized
+  name: IsSynchronized
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_IsSynchronized
+  commentId: P:LiteEntitySystem.Extensions.SyncQueue`1.IsSynchronized
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.IsSynchronized
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).IsSynchronized
+  nameWithType: SyncQueue<T>.IsSynchronized
+  nameWithType.vb: SyncQueue(Of T).IsSynchronized
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.IsSynchronized*
+  name: IsSynchronized
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_IsSynchronized_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.IsSynchronized
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.IsSynchronized
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).IsSynchronized
+  nameWithType: SyncQueue<T>.IsSynchronized
+  nameWithType.vb: SyncQueue(Of T).IsSynchronized
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.OnRollback
+  name: OnRollback()
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_OnRollback
+  commentId: M:LiteEntitySystem.Extensions.SyncQueue`1.OnRollback
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.OnRollback()
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).OnRollback()
+  nameWithType: SyncQueue<T>.OnRollback()
+  nameWithType.vb: SyncQueue(Of T).OnRollback()
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.OnRollback*
+  name: OnRollback
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_OnRollback_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.OnRollback
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.OnRollback
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).OnRollback
+  nameWithType: SyncQueue<T>.OnRollback
+  nameWithType.vb: SyncQueue(Of T).OnRollback
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.OnSyncRequested
+  name: OnSyncRequested()
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_OnSyncRequested
+  commentId: M:LiteEntitySystem.Extensions.SyncQueue`1.OnSyncRequested
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.OnSyncRequested()
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).OnSyncRequested()
+  nameWithType: SyncQueue<T>.OnSyncRequested()
+  nameWithType.vb: SyncQueue(Of T).OnSyncRequested()
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.OnSyncRequested*
+  name: OnSyncRequested
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_OnSyncRequested_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.OnSyncRequested
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.OnSyncRequested
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).OnSyncRequested
+  nameWithType: SyncQueue<T>.OnSyncRequested
+  nameWithType.vb: SyncQueue(Of T).OnSyncRequested
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.Peek
+  name: Peek()
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_Peek
+  commentId: M:LiteEntitySystem.Extensions.SyncQueue`1.Peek
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.Peek()
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).Peek()
+  nameWithType: SyncQueue<T>.Peek()
+  nameWithType.vb: SyncQueue(Of T).Peek()
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.Peek*
+  name: Peek
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_Peek_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.Peek
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.Peek
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).Peek
+  nameWithType: SyncQueue<T>.Peek
+  nameWithType.vb: SyncQueue(Of T).Peek
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  name: RegisterRPC(ref SyncableRPCRegistrator)
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
+  commentId: M:LiteEntitySystem.Extensions.SyncQueue`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  name.vb: RegisterRPC(SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
+  nameWithType: SyncQueue<T>.RegisterRPC(ref SyncableRPCRegistrator)
+  nameWithType.vb: SyncQueue(Of T).RegisterRPC(SyncableRPCRegistrator)
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.RegisterRPC*
+  name: RegisterRPC
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_RegisterRPC_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.RegisterRPC
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.RegisterRPC
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).RegisterRPC
+  nameWithType: SyncQueue<T>.RegisterRPC
+  nameWithType.vb: SyncQueue(Of T).RegisterRPC
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.SyncRoot
+  name: SyncRoot
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_SyncRoot
+  commentId: P:LiteEntitySystem.Extensions.SyncQueue`1.SyncRoot
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.SyncRoot
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).SyncRoot
+  nameWithType: SyncQueue<T>.SyncRoot
+  nameWithType.vb: SyncQueue(Of T).SyncRoot
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.SyncRoot*
+  name: SyncRoot
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_SyncRoot_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.SyncRoot
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.SyncRoot
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).SyncRoot
+  nameWithType: SyncQueue<T>.SyncRoot
+  nameWithType.vb: SyncQueue(Of T).SyncRoot
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.TryDequeue(`0@)
+  name: TryDequeue(out T)
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_TryDequeue__0__
+  commentId: M:LiteEntitySystem.Extensions.SyncQueue`1.TryDequeue(`0@)
+  name.vb: TryDequeue(T)
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.TryDequeue(out T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).TryDequeue(T)
+  nameWithType: SyncQueue<T>.TryDequeue(out T)
+  nameWithType.vb: SyncQueue(Of T).TryDequeue(T)
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.TryDequeue*
+  name: TryDequeue
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_TryDequeue_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.TryDequeue
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.TryDequeue
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).TryDequeue
+  nameWithType: SyncQueue<T>.TryDequeue
+  nameWithType.vb: SyncQueue(Of T).TryDequeue
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.TryPeek(`0@)
+  name: TryPeek(out T)
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_TryPeek__0__
+  commentId: M:LiteEntitySystem.Extensions.SyncQueue`1.TryPeek(`0@)
+  name.vb: TryPeek(T)
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.TryPeek(out T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).TryPeek(T)
+  nameWithType: SyncQueue<T>.TryPeek(out T)
+  nameWithType.vb: SyncQueue(Of T).TryPeek(T)
+- uid: LiteEntitySystem.Extensions.SyncQueue`1.TryPeek*
+  name: TryPeek
+  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_TryPeek_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.TryPeek
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.TryPeek
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).TryPeek
+  nameWithType: SyncQueue<T>.TryPeek
+  nameWithType.vb: SyncQueue(Of T).TryPeek
 - uid: LiteEntitySystem.Extensions.SyncSpanSerializable`1
   name: SyncSpanSerializable<T>
   href: api/LiteEntitySystem.Extensions.SyncSpanSerializable-1.html
