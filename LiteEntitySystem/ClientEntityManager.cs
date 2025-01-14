@@ -715,7 +715,7 @@ namespace LiteEntitySystem
                             {
                                 prevCommand = -1;
                                 *(ushort*)(sendBuffer + 2) = currentTick;
-                                _netPeer.SendUnreliable(new ReadOnlySpan<byte>(_sendBuffer, 0, offset));
+                                _netPeer.SendUnreliable(new ReadOnlySpan<byte>(sendBuffer, offset));
                                 offset = 4;
                                 currentTick += tickIndex;
                                 tickIndex = 0;
@@ -744,7 +744,7 @@ namespace LiteEntitySystem
                             break;
                     }
                     *(ushort*)(sendBuffer + 2) = currentTick;
-                    _netPeer.SendUnreliable(new ReadOnlySpan<byte>(_sendBuffer, 0, offset));
+                    _netPeer.SendUnreliable(new ReadOnlySpan<byte>(sendBuffer, offset));
                     _netPeer.TriggerSend();
                 }
             }
