@@ -36,7 +36,7 @@ Only SyncVar.Value can be changed (never do x = new SyncVar())
 * Client input system
 * Basic hierarchy system (childs, parent)
 * Controllers and Pawns concept
-* Interpolation system
+* Interpolation system (local and remote for smooth visuals)
 * Delta-compressed state synchronization and input
 * LZ4 compression of initial world state
 * Also works as game logic engine
