@@ -295,8 +295,8 @@ namespace LiteEntitySystem
                 return DeserializeResult.Error;
             }
             
-            int minInputSize = int.MaxValue;
-            int minDeltaSize = int.MaxValue;
+            int minInputSize = 0;
+            int minDeltaSize = 0;
             foreach (var humanControllerLogic in GetEntities<HumanControllerLogic>())
             {
                 if(humanControllerLogic.OwnerId != player.Id)
@@ -315,6 +315,16 @@ namespace LiteEntitySystem
                     inputInfo.Header = *(InputPacketHeader*)rawData;
                 
                 inData = inData.Slice(InputPacketHeader.Size);
+                bool correctInput = player.State == NetPlayerState.WaitingForFirstInput ||
+                                    Utils.SequenceDiff(inputInfo.Tick, player.LastReceivedTick) > 0;
+                
+                if (inData.Length == 0)
+                {
+                    //empty input when no controllers
+                    player.AvailableInput.Add(inputInfo, inputInfo.Tick);
+                    player.LastReceivedTick = inputInfo.Tick;
+                    break;
+                }
                 
                 //possibly empty but with header
                 if (isFirstInput && inData.Length < minInputSize)
@@ -336,7 +346,7 @@ namespace LiteEntitySystem
                 inputInfo.Header.LerpMsec = Math.Clamp(inputInfo.Header.LerpMsec, 0f, 1f);
                 if (Utils.SequenceDiff(inputInfo.Header.StateB, player.CurrentServerTick) > 0)
                     player.CurrentServerTick = inputInfo.Header.StateB;
-                //Logger.Log($"ReadInput: {clientTick} stateA: {inputBuffer.InputHeader.StateA}");
+                //Logger.Log($"ReadInput: {clientTick} stateA: {inputInfo.Header.StateA}");
                 clientTick++;
                     
            
@@ -344,10 +354,6 @@ namespace LiteEntitySystem
                 int removedTick = player.AvailableInput.Count == MaxStoredInputs 
                     ? player.AvailableInput.ExtractMin().Tick 
                     : -1;
-
-                //check that input is actual
-                bool correctInput = player.State == NetPlayerState.WaitingForFirstInput ||
-                                    Utils.SequenceDiff(inputInfo.Tick, player.LastReceivedTick) > 0;
                 
                 //read input
                 foreach (var controller in GetEntities<HumanControllerLogic>())
@@ -387,7 +393,6 @@ namespace LiteEntitySystem
                     //to reduce data
                     player.LastReceivedTick = inputInfo.Tick;
                 }
-                    
             }
             if(player.State == NetPlayerState.WaitingForFirstInput)
                 player.State = NetPlayerState.WaitingForFirstInputProcess;

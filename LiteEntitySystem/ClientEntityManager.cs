@@ -620,15 +620,19 @@ namespace LiteEntitySystem
             }
 
             //apply input
-            _storedInputHeaders.PushBack(new InputInfo(_tick, new InputPacketHeader
+            var humanControllers = GetEntities<HumanControllerLogic>();
+            if (humanControllers.Count > 0)
             {
-                StateA = _stateA.Tick,
-                StateB = RawTargetServerTick,
-                LerpMsec = _logicLerpMsec
-            }));
-            foreach (var controller in GetEntities<HumanControllerLogic>())
-            {
-                controller.ApplyPendingInput();
+                _storedInputHeaders.PushBack(new InputInfo(_tick, new InputPacketHeader
+                {
+                    StateA = _stateA.Tick,
+                    StateB = RawTargetServerTick,
+                    LerpMsec = _logicLerpMsec
+                }));
+                foreach (var controller in humanControllers)
+                {
+                    controller.ApplyPendingInput();
+                }
             }
 
             //local only and UpdateOnClient
@@ -686,88 +690,7 @@ namespace LiteEntitySystem
             
             //send buffered input
             if (_tick != prevTick)
-            {
-                //pack tick first
-                int offset = 4;
-                int maxSinglePacketSize = _netPeer.GetMaxUnreliablePacketSize();
-                ushort currentTick = _storedInputHeaders[0].Tick;
-                ushort tickIndex = 0;
-                int prevInputIndex = -1;
-
-                int maxDeltaSize = 0;
-                int maxInputSize = 0;
-                foreach (var humanControllerLogic in GetEntities<HumanControllerLogic>())
-                {
-                    maxDeltaSize += humanControllerLogic.MaxInputDeltaSize;
-                    maxInputSize += humanControllerLogic.InputSize + InputPacketHeader.Size;
-                }
-
-                if (offset + maxInputSize > maxSinglePacketSize)
-                {
-                    Logger.LogError($"Input data from controllers is more than MTU: {maxSinglePacketSize}");
-                    return;
-                }
-                
-                fixed (byte* sendBuffer = _sendBuffer)
-                {
-                    //Logger.Log($"SendingCommands start {_tick}");
-                    for(int i = 0; i < _storedInputHeaders.Count; i++)
-                    {
-                        if (Utils.SequenceDiff(currentTick, _lastReceivedInputTick) <= 0)
-                        {
-                            currentTick++;
-                            continue;
-                        }
-                        if(prevInputIndex >= 0)//make delta
-                        {
-                            //overflow
-                            if (offset + InputPacketHeader.Size + maxDeltaSize > maxSinglePacketSize)
-                            {
-                                prevInputIndex = -1;
-                                *(ushort*)(sendBuffer + 2) = currentTick;
-                                _netPeer.SendUnreliable(new ReadOnlySpan<byte>(sendBuffer, offset));
-                                offset = 4;
-                                currentTick += tickIndex;
-                                tickIndex = 0;
-                            }
-                            else
-                            {
-                                //write header
-                                *(InputPacketHeader*)(sendBuffer + offset) = _storedInputHeaders[i].Header;
-                                offset += InputPacketHeader.Size;
-                                
-                                //write current into temporary buffer for delta encoding
-                                foreach (var controller in GetEntities<HumanControllerLogic>())
-                                {
-                                    offset += controller.DeltaEncode(
-                                        prevInputIndex,
-                                        i,
-                                        new Span<byte>(sendBuffer + offset, controller.MaxInputDeltaSize));
-                                }
-                            }
-                        }
-                        if (prevInputIndex == -1) //first full input
-                        {
-                            //write header
-                            *(InputPacketHeader*)(sendBuffer + offset) = _storedInputHeaders[i].Header;
-                            offset += InputPacketHeader.Size;
-                            //write data
-                            foreach (var controller in GetEntities<HumanControllerLogic>())
-                            {
-                                controller.WriteStoredInput(i, new Span<byte>(sendBuffer + offset, controller.InputSize));
-                                offset += controller.InputSize;
-                            }
-                        }
-                        prevInputIndex = i;
-                        tickIndex++;
-                        if (tickIndex == ServerEntityManager.MaxStoredInputs)
-                            break;
-                    }
-                    *(ushort*)(sendBuffer + 2) = currentTick;
-                    _netPeer.SendUnreliable(new ReadOnlySpan<byte>(sendBuffer, offset));
-                    _netPeer.TriggerSend();
-                }
-            }
+                SendBufferedInput();
             
             if (PreloadNextState())
             {
@@ -824,6 +747,107 @@ namespace LiteEntitySystem
             foreach (var entity in AliveEntities)
             {
                 entity.VisualUpdate();
+            }
+        }
+
+        private unsafe void SendBufferedInput()
+        {
+            if (_storedInputHeaders.Count == 0)
+            {
+                fixed (byte* sendBuffer = _sendBuffer)
+                {
+                    *(ushort*)(sendBuffer + 2) = Tick;
+                    *(InputPacketHeader*)(sendBuffer + 4) = new InputPacketHeader
+                    {
+                        LerpMsec = _logicLerpMsec, 
+                        StateA = _stateA.Tick, 
+                        StateB = RawTargetServerTick
+                    };
+                    _netPeer.SendUnreliable(new ReadOnlySpan<byte>(sendBuffer, 4+InputPacketHeader.Size));
+                    _netPeer.TriggerSend();
+                }
+                return;
+            }
+            
+            //pack tick first
+            int offset = 4;
+            int maxSinglePacketSize = _netPeer.GetMaxUnreliablePacketSize();
+            ushort currentTick = _storedInputHeaders[0].Tick;
+            ushort tickIndex = 0;
+            int prevInputIndex = -1;
+
+            int maxDeltaSize = 0;
+            int maxInputSize = 0;
+            foreach (var humanControllerLogic in GetEntities<HumanControllerLogic>())
+            {
+                maxDeltaSize += humanControllerLogic.MaxInputDeltaSize;
+                maxInputSize += humanControllerLogic.InputSize + InputPacketHeader.Size;
+            }
+
+            if (offset + maxInputSize > maxSinglePacketSize)
+            {
+                Logger.LogError($"Input data from controllers is more than MTU: {maxSinglePacketSize}");
+                return;
+            }
+            
+            fixed (byte* sendBuffer = _sendBuffer)
+            {
+                //Logger.Log($"SendingCommands start {_tick}");
+                for(int i = 0; i < _storedInputHeaders.Count; i++)
+                {
+                    if (Utils.SequenceDiff(currentTick, _lastReceivedInputTick) <= 0)
+                    {
+                        currentTick++;
+                        continue;
+                    }
+                    if(prevInputIndex >= 0)//make delta
+                    {
+                        //overflow
+                        if (offset + InputPacketHeader.Size + maxDeltaSize > maxSinglePacketSize)
+                        {
+                            prevInputIndex = -1;
+                            *(ushort*)(sendBuffer + 2) = currentTick;
+                            _netPeer.SendUnreliable(new ReadOnlySpan<byte>(sendBuffer, offset));
+                            offset = 4;
+                            currentTick += tickIndex;
+                            tickIndex = 0;
+                        }
+                        else
+                        {
+                            //write header
+                            *(InputPacketHeader*)(sendBuffer + offset) = _storedInputHeaders[i].Header;
+                            offset += InputPacketHeader.Size;
+                            
+                            //write current into temporary buffer for delta encoding
+                            foreach (var controller in GetEntities<HumanControllerLogic>())
+                            {
+                                offset += controller.DeltaEncode(
+                                    prevInputIndex,
+                                    i,
+                                    new Span<byte>(sendBuffer + offset, controller.MaxInputDeltaSize));
+                            }
+                        }
+                    }
+                    if (prevInputIndex == -1) //first full input
+                    {
+                        //write header
+                        *(InputPacketHeader*)(sendBuffer + offset) = _storedInputHeaders[i].Header;
+                        offset += InputPacketHeader.Size;
+                        //write data
+                        foreach (var controller in GetEntities<HumanControllerLogic>())
+                        {
+                            controller.WriteStoredInput(i, new Span<byte>(sendBuffer + offset, controller.InputSize));
+                            offset += controller.InputSize;
+                        }
+                    }
+                    prevInputIndex = i;
+                    tickIndex++;
+                    if (tickIndex == ServerEntityManager.MaxStoredInputs)
+                        break;
+                }
+                *(ushort*)(sendBuffer + 2) = currentTick;
+                _netPeer.SendUnreliable(new ReadOnlySpan<byte>(sendBuffer, offset));
+                _netPeer.TriggerSend();
             }
         }
 
