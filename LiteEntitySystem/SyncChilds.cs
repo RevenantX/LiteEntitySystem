@@ -6,10 +6,18 @@ namespace LiteEntitySystem
 {
     public sealed class SyncChilds : SyncableField, IEnumerable<EntitySharedReference>
     {
+        class EqualityComparer : IEqualityComparer<EntitySharedReference>
+        {
+            public bool Equals(EntitySharedReference x, EntitySharedReference y) => x.Id == y.Id && x.Version == y.Version;
+            public int GetHashCode(EntitySharedReference obj) => obj.GetHashCode();
+        }
+        
         public int Count => _data?.Count ?? 0;
 
+        // ReSharper disable once CollectionNeverUpdated.Local
         private static readonly HashSet<EntitySharedReference> TempSetForEnumerator = new(0);
-        
+        private static readonly EqualityComparer SharedReferenceComparer = new();
+
         private HashSet<EntitySharedReference> _serverData;
         private HashSet<EntitySharedReference> _tempData;
         private HashSet<EntitySharedReference> _data;
@@ -42,7 +50,7 @@ namespace LiteEntitySystem
         {
             if (_data == null)
                 return;
-            _serverData ??= new HashSet<EntitySharedReference>();
+            _serverData ??= new HashSet<EntitySharedReference>(SharedReferenceComparer);
             _tempData = _data;
             _data = _serverData;
         }
@@ -74,7 +82,7 @@ namespace LiteEntitySystem
             {
                 if (data.IsEmpty)
                     return;
-                _data = new HashSet<EntitySharedReference>();
+                _data = new HashSet<EntitySharedReference>(SharedReferenceComparer);
             }
             else
             {
@@ -101,7 +109,7 @@ namespace LiteEntitySystem
 
         internal void Add(EntitySharedReference x)
         {
-            _data ??= new HashSet<EntitySharedReference>();
+            _data ??= new HashSet<EntitySharedReference>(SharedReferenceComparer);
             _data.Add(x);
             ExecuteRPC(_addAction, x);
         }
