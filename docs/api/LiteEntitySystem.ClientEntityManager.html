@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
 
@@ -76,7 +76,7 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+    <div class="level0"><span class="xref">object</span></div>
     <div class="level1"><a class="xref" href="LiteEntitySystem.EntityManager.html">EntityManager</a></div>
     <div class="level2"><span class="xref">ClientEntityManager</span></div>
   </div>
@@ -208,13 +208,13 @@
 
 
   <a id="LiteEntitySystem_ClientEntityManager__ctor_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteEntitySystem_Transport_AbstractNetPeer_System_Byte_LiteEntitySystem_MaxHistorySize_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,LiteEntitySystem.MaxHistorySize)">ClientEntityManager(EntityTypesMap, InputProcessor, AbstractNetPeer, byte, MaxHistorySize)</h4>
+  <h4 id="LiteEntitySystem_ClientEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_Transport_AbstractNetPeer_System_Byte_LiteEntitySystem_MaxHistorySize_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,LiteEntitySystem.MaxHistorySize)">ClientEntityManager(EntityTypesMap, AbstractNetPeer, byte, MaxHistorySize)</h4>
   <div class="markdown level1 summary"><p>Constructor</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ClientEntityManager(EntityTypesMap typesMap, InputProcessor inputProcessor, AbstractNetPeer netPeer, byte headerByte, MaxHistorySize maxHistorySize = MaxHistorySize.Size32)</code></pre>
+    <pre><code class="lang-csharp hljs">public ClientEntityManager(EntityTypesMap typesMap, AbstractNetPeer netPeer, byte headerByte, MaxHistorySize maxHistorySize = MaxHistorySize.Size32)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -230,12 +230,6 @@
         <td><a class="xref" href="LiteEntitySystem.EntityTypesMap.html">EntityTypesMap</a></td>
         <td><span class="parametername">typesMap</span></td>
         <td><p>EntityTypesMap with registered entity types</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.InputProcessor.html">InputProcessor</a></td>
-        <td><span class="parametername">inputProcessor</span></td>
-        <td><p>Input processor (you can use default InputProcessor/<t></t> or derive from abstract one to make your own input serialization</p>
 </td>
       </tr>
       <tr>
@@ -260,6 +254,31 @@
   </table>
   <h3 id="fields">Fields
 </h3>
+
+
+  <h4 id="LiteEntitySystem_ClientEntityManager_InputBufferSize" data-uid="LiteEntitySystem.ClientEntityManager.InputBufferSize">InputBufferSize</h4>
+  <div class="markdown level1 summary"><p>Maximum stored inputs count</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int InputBufferSize = 64</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 
 
   <h4 id="LiteEntitySystem_ClientEntityManager_PreferredBufferTimeHighest" data-uid="LiteEntitySystem.ClientEntityManager.PreferredBufferTimeHighest">PreferredBufferTimeHighest</h4>
@@ -578,7 +597,8 @@ Buffer automatically increases to Jitter time + PreferredBufferTimeLowest</p>
 
   <a id="LiteEntitySystem_ClientEntityManager_PendingToRemoveEntites_" data-uid="LiteEntitySystem.ClientEntityManager.PendingToRemoveEntites*"></a>
   <h4 id="LiteEntitySystem_ClientEntityManager_PendingToRemoveEntites" data-uid="LiteEntitySystem.ClientEntityManager.PendingToRemoveEntites">PendingToRemoveEntites</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Entities that waiting for remove</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
@@ -783,84 +803,6 @@ Buffer automatically increases to Jitter time + PreferredBufferTimeLowest</p>
   </table>
   <h3 id="methods">Methods
 </h3>
-
-
-  <a id="LiteEntitySystem_ClientEntityManager_Create_" data-uid="LiteEntitySystem.ClientEntityManager.Create*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_Create__1_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_Transport_AbstractNetPeer_System_Byte_LiteEntitySystem_MaxHistorySize_" data-uid="LiteEntitySystem.ClientEntityManager.Create``1(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,LiteEntitySystem.MaxHistorySize)">Create&lt;TInput&gt;(EntityTypesMap, AbstractNetPeer, byte, MaxHistorySize)</h4>
-  <div class="markdown level1 summary"><p>Simplified constructor</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static ClientEntityManager Create&lt;TInput&gt;(EntityTypesMap typesMap, AbstractNetPeer netPeer, byte headerByte, MaxHistorySize maxHistorySize = MaxHistorySize.Size32) where TInput : unmanaged</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityTypesMap.html">EntityTypesMap</a></td>
-        <td><span class="parametername">typesMap</span></td>
-        <td><p>EntityTypesMap with registered entity types</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
-        <td><span class="parametername">netPeer</span></td>
-        <td><p>Local AbstractPeer</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
-        <td><span class="parametername">headerByte</span></td>
-        <td><p>Header byte that will be used for packets (to distinguish entity system packets)</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.MaxHistorySize.html">MaxHistorySize</a></td>
-        <td><span class="parametername">maxHistorySize</span></td>
-        <td><p>Maximum size of lag compensation history in ticks</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.ClientEntityManager.html">ClientEntityManager</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">TInput</span></td>
-        <td><p>Main input packet type</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
 
 
   <a id="LiteEntitySystem_ClientEntityManager_Deserialize_" data-uid="LiteEntitySystem.ClientEntityManager.Deserialize*"></a>

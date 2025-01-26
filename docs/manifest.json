@@ -434,16 +434,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Helpers.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Helpers.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.HumanControllerLogic-1.yml",
       "output": {
         ".html": {
@@ -554,30 +544,10 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.InputProcessor-1.yml",
+      "source_relative_path": "api/LiteEntitySystem.InputInfo.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LiteEntitySystem.InputProcessor-1.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.InputProcessor.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.InputProcessor.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.EntityComparer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.EntityComparer.html"
+          "relative_path": "api/LiteEntitySystem.InputInfo.html"
         }
       },
       "version": ""
@@ -628,16 +598,6 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.Internal.OnSyncExecutionOrder.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.Internal.Utils.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.Internal.Utils.html"
         }
       },
       "version": ""
@@ -928,46 +888,6 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteNetLib.Utils.NetDataExtensions.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteNetLib.Utils.NetDataExtensions.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteNetLib.Utils.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteNetLib.Utils.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Plugins.LiteEntitySystem.Extensions.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Plugins.LiteEntitySystem.Extensions.html"
         }
       },
       "version": ""

@@ -181,7 +181,6 @@ namespace LiteEntitySystem
         private float _lerpFactor;
 
         internal byte InternalPlayerId;
-        protected readonly InputProcessor InputProcessor;
         protected float SpeedMultiplier;
 
         protected const float TimeSpeedChangeCoef = 0.1f;
@@ -243,7 +242,6 @@ namespace LiteEntitySystem
 
         protected EntityManager(
             EntityTypesMap typesMap, 
-            InputProcessor inputProcessor, 
             NetworkMode mode,
             byte headerByte,
             MaxHistorySize maxHistorySize)
@@ -254,7 +252,6 @@ namespace LiteEntitySystem
             Mode = mode;
             IsServer = Mode == NetworkMode.Server;
             IsClient = Mode == NetworkMode.Client;
-            InputProcessor = inputProcessor;
 
             ushort filterCount = 0;
             ushort singletonCount = 0;

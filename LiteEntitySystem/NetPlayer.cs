@@ -1,8 +1,29 @@
 ﻿using LiteEntitySystem.Collections;
+using LiteEntitySystem.Internal;
 using LiteEntitySystem.Transport;
 
 namespace LiteEntitySystem
 {
+    public enum NetPlayerState
+    {
+        Active,
+        WaitingForFirstInput,
+        WaitingForFirstInputProcess,
+        RequestBaseline
+    }
+
+    public struct InputInfo
+    {
+        public ushort Tick;
+        public InputPacketHeader Header;
+
+        public InputInfo(ushort tick, InputPacketHeader header)
+        {
+            Tick = tick;
+            Header = header;
+        }
+    }
+    
     public class NetPlayer
     {
         public readonly byte Id;
@@ -17,7 +38,7 @@ namespace LiteEntitySystem
         
         //server only
         internal NetPlayerState State;
-        internal readonly SequenceBinaryHeap<InputBuffer> AvailableInput = new (ServerEntityManager.MaxStoredInputs);
+        internal SequenceBinaryHeap<InputInfo> AvailableInput;
 
         internal NetPlayer(AbstractNetPeer peer, byte id)
         {

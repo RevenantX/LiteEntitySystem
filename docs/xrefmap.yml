@@ -96,15 +96,15 @@ references:
   commentId: T:LiteEntitySystem.ClientEntityManager
   fullName: LiteEntitySystem.ClientEntityManager
   nameWithType: ClientEntityManager
-- uid: LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,LiteEntitySystem.MaxHistorySize)
-  name: ClientEntityManager(EntityTypesMap, InputProcessor, AbstractNetPeer, byte, MaxHistorySize)
-  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteEntitySystem_Transport_AbstractNetPeer_System_Byte_LiteEntitySystem_MaxHistorySize_
-  commentId: M:LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,LiteEntitySystem.MaxHistorySize)
-  name.vb: New(EntityTypesMap, InputProcessor, AbstractNetPeer, Byte, MaxHistorySize)
-  fullName: LiteEntitySystem.ClientEntityManager.ClientEntityManager(LiteEntitySystem.EntityTypesMap, LiteEntitySystem.InputProcessor, LiteEntitySystem.Transport.AbstractNetPeer, byte, LiteEntitySystem.MaxHistorySize)
-  fullName.vb: LiteEntitySystem.ClientEntityManager.New(LiteEntitySystem.EntityTypesMap, LiteEntitySystem.InputProcessor, LiteEntitySystem.Transport.AbstractNetPeer, Byte, LiteEntitySystem.MaxHistorySize)
-  nameWithType: ClientEntityManager.ClientEntityManager(EntityTypesMap, InputProcessor, AbstractNetPeer, byte, MaxHistorySize)
-  nameWithType.vb: ClientEntityManager.New(EntityTypesMap, InputProcessor, AbstractNetPeer, Byte, MaxHistorySize)
+- uid: LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,LiteEntitySystem.MaxHistorySize)
+  name: ClientEntityManager(EntityTypesMap, AbstractNetPeer, byte, MaxHistorySize)
+  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_Transport_AbstractNetPeer_System_Byte_LiteEntitySystem_MaxHistorySize_
+  commentId: M:LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,LiteEntitySystem.MaxHistorySize)
+  name.vb: New(EntityTypesMap, AbstractNetPeer, Byte, MaxHistorySize)
+  fullName: LiteEntitySystem.ClientEntityManager.ClientEntityManager(LiteEntitySystem.EntityTypesMap, LiteEntitySystem.Transport.AbstractNetPeer, byte, LiteEntitySystem.MaxHistorySize)
+  fullName.vb: LiteEntitySystem.ClientEntityManager.New(LiteEntitySystem.EntityTypesMap, LiteEntitySystem.Transport.AbstractNetPeer, Byte, LiteEntitySystem.MaxHistorySize)
+  nameWithType: ClientEntityManager.ClientEntityManager(EntityTypesMap, AbstractNetPeer, byte, MaxHistorySize)
+  nameWithType.vb: ClientEntityManager.New(EntityTypesMap, AbstractNetPeer, Byte, MaxHistorySize)
 - uid: LiteEntitySystem.ClientEntityManager.#ctor*
   name: ClientEntityManager
   href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager__ctor_
@@ -128,22 +128,6 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.ClientEntityManager.AverageJitter
   nameWithType: ClientEntityManager.AverageJitter
-- uid: LiteEntitySystem.ClientEntityManager.Create*
-  name: Create
-  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_Create_
-  commentId: Overload:LiteEntitySystem.ClientEntityManager.Create
-  isSpec: "True"
-  fullName: LiteEntitySystem.ClientEntityManager.Create
-  nameWithType: ClientEntityManager.Create
-- uid: LiteEntitySystem.ClientEntityManager.Create``1(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,LiteEntitySystem.MaxHistorySize)
-  name: Create<TInput>(EntityTypesMap, AbstractNetPeer, byte, MaxHistorySize)
-  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_Create__1_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_Transport_AbstractNetPeer_System_Byte_LiteEntitySystem_MaxHistorySize_
-  commentId: M:LiteEntitySystem.ClientEntityManager.Create``1(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,LiteEntitySystem.MaxHistorySize)
-  name.vb: Create(Of TInput)(EntityTypesMap, AbstractNetPeer, Byte, MaxHistorySize)
-  fullName: LiteEntitySystem.ClientEntityManager.Create<TInput>(LiteEntitySystem.EntityTypesMap, LiteEntitySystem.Transport.AbstractNetPeer, byte, LiteEntitySystem.MaxHistorySize)
-  fullName.vb: LiteEntitySystem.ClientEntityManager.Create(Of TInput)(LiteEntitySystem.EntityTypesMap, LiteEntitySystem.Transport.AbstractNetPeer, Byte, LiteEntitySystem.MaxHistorySize)
-  nameWithType: ClientEntityManager.Create<TInput>(EntityTypesMap, AbstractNetPeer, byte, MaxHistorySize)
-  nameWithType.vb: ClientEntityManager.Create(Of TInput)(EntityTypesMap, AbstractNetPeer, Byte, MaxHistorySize)
 - uid: LiteEntitySystem.ClientEntityManager.CurrentRPCTick
   name: CurrentRPCTick
   href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_CurrentRPCTick
@@ -189,6 +173,12 @@ references:
   fullName.vb: LiteEntitySystem.ClientEntityManager.GetPlayerController(Of T)()
   nameWithType: ClientEntityManager.GetPlayerController<T>()
   nameWithType.vb: ClientEntityManager.GetPlayerController(Of T)()
+- uid: LiteEntitySystem.ClientEntityManager.InputBufferSize
+  name: InputBufferSize
+  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_InputBufferSize
+  commentId: F:LiteEntitySystem.ClientEntityManager.InputBufferSize
+  fullName: LiteEntitySystem.ClientEntityManager.InputBufferSize
+  nameWithType: ClientEntityManager.InputBufferSize
 - uid: LiteEntitySystem.ClientEntityManager.IsExecutingRPC
   name: IsExecutingRPC
   href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_IsExecutingRPC
@@ -2131,15 +2121,15 @@ references:
   commentId: T:LiteEntitySystem.EntityManager
   fullName: LiteEntitySystem.EntityManager
   nameWithType: EntityManager
-- uid: LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteEntitySystem.NetworkMode,System.Byte,LiteEntitySystem.MaxHistorySize)
-  name: EntityManager(EntityTypesMap, InputProcessor, NetworkMode, byte, MaxHistorySize)
-  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_LiteEntitySystem_NetworkMode_System_Byte_LiteEntitySystem_MaxHistorySize_
-  commentId: M:LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,LiteEntitySystem.NetworkMode,System.Byte,LiteEntitySystem.MaxHistorySize)
-  name.vb: New(EntityTypesMap, InputProcessor, NetworkMode, Byte, MaxHistorySize)
-  fullName: LiteEntitySystem.EntityManager.EntityManager(LiteEntitySystem.EntityTypesMap, LiteEntitySystem.InputProcessor, LiteEntitySystem.NetworkMode, byte, LiteEntitySystem.MaxHistorySize)
-  fullName.vb: LiteEntitySystem.EntityManager.New(LiteEntitySystem.EntityTypesMap, LiteEntitySystem.InputProcessor, LiteEntitySystem.NetworkMode, Byte, LiteEntitySystem.MaxHistorySize)
-  nameWithType: EntityManager.EntityManager(EntityTypesMap, InputProcessor, NetworkMode, byte, MaxHistorySize)
-  nameWithType.vb: EntityManager.New(EntityTypesMap, InputProcessor, NetworkMode, Byte, MaxHistorySize)
+- uid: LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.NetworkMode,System.Byte,LiteEntitySystem.MaxHistorySize)
+  name: EntityManager(EntityTypesMap, NetworkMode, byte, MaxHistorySize)
+  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_NetworkMode_System_Byte_LiteEntitySystem_MaxHistorySize_
+  commentId: M:LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.NetworkMode,System.Byte,LiteEntitySystem.MaxHistorySize)
+  name.vb: New(EntityTypesMap, NetworkMode, Byte, MaxHistorySize)
+  fullName: LiteEntitySystem.EntityManager.EntityManager(LiteEntitySystem.EntityTypesMap, LiteEntitySystem.NetworkMode, byte, LiteEntitySystem.MaxHistorySize)
+  fullName.vb: LiteEntitySystem.EntityManager.New(LiteEntitySystem.EntityTypesMap, LiteEntitySystem.NetworkMode, Byte, LiteEntitySystem.MaxHistorySize)
+  nameWithType: EntityManager.EntityManager(EntityTypesMap, NetworkMode, byte, MaxHistorySize)
+  nameWithType.vb: EntityManager.New(EntityTypesMap, NetworkMode, Byte, MaxHistorySize)
 - uid: LiteEntitySystem.EntityManager.#ctor*
   name: EntityManager
   href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager__ctor_
@@ -2423,12 +2413,6 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.EntityManager.InRollBackState
   nameWithType: EntityManager.InRollBackState
-- uid: LiteEntitySystem.EntityManager.InputProcessor
-  name: InputProcessor
-  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_InputProcessor
-  commentId: F:LiteEntitySystem.EntityManager.InputProcessor
-  fullName: LiteEntitySystem.EntityManager.InputProcessor
-  nameWithType: EntityManager.InputProcessor
 - uid: LiteEntitySystem.EntityManager.InvalidEntityId
   name: InvalidEntityId
   href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_InvalidEntityId
@@ -5629,150 +5613,21 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.Extensions.SyncTimer.UpdateAndReset
   nameWithType: SyncTimer.UpdateAndReset
-- uid: LiteEntitySystem.Helpers
-  name: Helpers
-  href: api/LiteEntitySystem.Helpers.html
-  commentId: T:LiteEntitySystem.Helpers
-  fullName: LiteEntitySystem.Helpers
-  nameWithType: Helpers
-- uid: LiteEntitySystem.Helpers.GetEnumValue*
-  name: GetEnumValue
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_GetEnumValue_
-  commentId: Overload:LiteEntitySystem.Helpers.GetEnumValue
-  isSpec: "True"
-  fullName: LiteEntitySystem.Helpers.GetEnumValue
-  nameWithType: Helpers.GetEnumValue
-- uid: LiteEntitySystem.Helpers.GetEnumValueInt*
-  name: GetEnumValueInt
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_GetEnumValueInt_
-  commentId: Overload:LiteEntitySystem.Helpers.GetEnumValueInt
-  isSpec: "True"
-  fullName: LiteEntitySystem.Helpers.GetEnumValueInt
-  nameWithType: Helpers.GetEnumValueInt
-- uid: LiteEntitySystem.Helpers.GetEnumValueInt``1(``0)
-  name: GetEnumValueInt<T>(T)
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_GetEnumValueInt__1___0_
-  commentId: M:LiteEntitySystem.Helpers.GetEnumValueInt``1(``0)
-  name.vb: GetEnumValueInt(Of T)(T)
-  fullName: LiteEntitySystem.Helpers.GetEnumValueInt<T>(T)
-  fullName.vb: LiteEntitySystem.Helpers.GetEnumValueInt(Of T)(T)
-  nameWithType: Helpers.GetEnumValueInt<T>(T)
-  nameWithType.vb: Helpers.GetEnumValueInt(Of T)(T)
-- uid: LiteEntitySystem.Helpers.GetEnumValue``1(LiteEntitySystem.SyncVar{``0})
-  name: GetEnumValue<T>(SyncVar<T>)
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_GetEnumValue__1_LiteEntitySystem_SyncVar___0__
-  commentId: M:LiteEntitySystem.Helpers.GetEnumValue``1(LiteEntitySystem.SyncVar{``0})
-  name.vb: GetEnumValue(Of T)(SyncVar(Of T))
-  fullName: LiteEntitySystem.Helpers.GetEnumValue<T>(LiteEntitySystem.SyncVar<T>)
-  fullName.vb: LiteEntitySystem.Helpers.GetEnumValue(Of T)(LiteEntitySystem.SyncVar(Of T))
-  nameWithType: Helpers.GetEnumValue<T>(SyncVar<T>)
-  nameWithType.vb: Helpers.GetEnumValue(Of T)(SyncVar(Of T))
-- uid: LiteEntitySystem.Helpers.GetEnumValue``1(``0)
-  name: GetEnumValue<T>(T)
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_GetEnumValue__1___0_
-  commentId: M:LiteEntitySystem.Helpers.GetEnumValue``1(``0)
-  name.vb: GetEnumValue(Of T)(T)
-  fullName: LiteEntitySystem.Helpers.GetEnumValue<T>(T)
-  fullName.vb: LiteEntitySystem.Helpers.GetEnumValue(Of T)(T)
-  nameWithType: Helpers.GetEnumValue<T>(T)
-  nameWithType.vb: Helpers.GetEnumValue(Of T)(T)
-- uid: LiteEntitySystem.Helpers.HasFlagFast*
-  name: HasFlagFast
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_HasFlagFast_
-  commentId: Overload:LiteEntitySystem.Helpers.HasFlagFast
-  isSpec: "True"
-  fullName: LiteEntitySystem.Helpers.HasFlagFast
-  nameWithType: Helpers.HasFlagFast
-- uid: LiteEntitySystem.Helpers.HasFlagFast``1(LiteEntitySystem.SyncVar{``0},``0)
-  name: HasFlagFast<T>(SyncVar<T>, T)
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_HasFlagFast__1_LiteEntitySystem_SyncVar___0____0_
-  commentId: M:LiteEntitySystem.Helpers.HasFlagFast``1(LiteEntitySystem.SyncVar{``0},``0)
-  name.vb: HasFlagFast(Of T)(SyncVar(Of T), T)
-  fullName: LiteEntitySystem.Helpers.HasFlagFast<T>(LiteEntitySystem.SyncVar<T>, T)
-  fullName.vb: LiteEntitySystem.Helpers.HasFlagFast(Of T)(LiteEntitySystem.SyncVar(Of T), T)
-  nameWithType: Helpers.HasFlagFast<T>(SyncVar<T>, T)
-  nameWithType.vb: Helpers.HasFlagFast(Of T)(SyncVar(Of T), T)
-- uid: LiteEntitySystem.Helpers.HasFlagFast``1(``0,``0)
-  name: HasFlagFast<T>(T, T)
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_HasFlagFast__1___0___0_
-  commentId: M:LiteEntitySystem.Helpers.HasFlagFast``1(``0,``0)
-  name.vb: HasFlagFast(Of T)(T, T)
-  fullName: LiteEntitySystem.Helpers.HasFlagFast<T>(T, T)
-  fullName.vb: LiteEntitySystem.Helpers.HasFlagFast(Of T)(T, T)
-  nameWithType: Helpers.HasFlagFast<T>(T, T)
-  nameWithType.vb: Helpers.HasFlagFast(Of T)(T, T)
-- uid: LiteEntitySystem.Helpers.ReadStruct*
-  name: ReadStruct
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_ReadStruct_
-  commentId: Overload:LiteEntitySystem.Helpers.ReadStruct
-  isSpec: "True"
-  fullName: LiteEntitySystem.Helpers.ReadStruct
-  nameWithType: Helpers.ReadStruct
-- uid: LiteEntitySystem.Helpers.ReadStruct``1(System.ReadOnlySpan{System.Byte})
-  name: ReadStruct<T>(ReadOnlySpan<byte>)
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_ReadStruct__1_System_ReadOnlySpan_System_Byte__
-  commentId: M:LiteEntitySystem.Helpers.ReadStruct``1(System.ReadOnlySpan{System.Byte})
-  name.vb: ReadStruct(Of T)(ReadOnlySpan(Of Byte))
-  fullName: LiteEntitySystem.Helpers.ReadStruct<T>(System.ReadOnlySpan<byte>)
-  fullName.vb: LiteEntitySystem.Helpers.ReadStruct(Of T)(System.ReadOnlySpan(Of Byte))
-  nameWithType: Helpers.ReadStruct<T>(ReadOnlySpan<byte>)
-  nameWithType.vb: Helpers.ReadStruct(Of T)(ReadOnlySpan(Of Byte))
-- uid: LiteEntitySystem.Helpers.ReadStruct``1(System.ReadOnlySpan{System.Byte},``0@)
-  name: ReadStruct<T>(ReadOnlySpan<byte>, out T)
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_ReadStruct__1_System_ReadOnlySpan_System_Byte____0__
-  commentId: M:LiteEntitySystem.Helpers.ReadStruct``1(System.ReadOnlySpan{System.Byte},``0@)
-  name.vb: ReadStruct(Of T)(ReadOnlySpan(Of Byte), T)
-  fullName: LiteEntitySystem.Helpers.ReadStruct<T>(System.ReadOnlySpan<byte>, out T)
-  fullName.vb: LiteEntitySystem.Helpers.ReadStruct(Of T)(System.ReadOnlySpan(Of Byte), T)
-  nameWithType: Helpers.ReadStruct<T>(ReadOnlySpan<byte>, out T)
-  nameWithType.vb: Helpers.ReadStruct(Of T)(ReadOnlySpan(Of Byte), T)
-- uid: LiteEntitySystem.Helpers.SizeOfStruct*
-  name: SizeOfStruct
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_SizeOfStruct_
-  commentId: Overload:LiteEntitySystem.Helpers.SizeOfStruct
-  isSpec: "True"
-  fullName: LiteEntitySystem.Helpers.SizeOfStruct
-  nameWithType: Helpers.SizeOfStruct
-- uid: LiteEntitySystem.Helpers.SizeOfStruct``1
-  name: SizeOfStruct<T>()
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_SizeOfStruct__1
-  commentId: M:LiteEntitySystem.Helpers.SizeOfStruct``1
-  name.vb: SizeOfStruct(Of T)()
-  fullName: LiteEntitySystem.Helpers.SizeOfStruct<T>()
-  fullName.vb: LiteEntitySystem.Helpers.SizeOfStruct(Of T)()
-  nameWithType: Helpers.SizeOfStruct<T>()
-  nameWithType.vb: Helpers.SizeOfStruct(Of T)()
-- uid: LiteEntitySystem.Helpers.WriteStruct*
-  name: WriteStruct
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_WriteStruct_
-  commentId: Overload:LiteEntitySystem.Helpers.WriteStruct
-  isSpec: "True"
-  fullName: LiteEntitySystem.Helpers.WriteStruct
-  nameWithType: Helpers.WriteStruct
-- uid: LiteEntitySystem.Helpers.WriteStruct``1(System.Span{System.Byte},``0)
-  name: WriteStruct<T>(Span<byte>, T)
-  href: api/LiteEntitySystem.Helpers.html#LiteEntitySystem_Helpers_WriteStruct__1_System_Span_System_Byte____0_
-  commentId: M:LiteEntitySystem.Helpers.WriteStruct``1(System.Span{System.Byte},``0)
-  name.vb: WriteStruct(Of T)(Span(Of Byte), T)
-  fullName: LiteEntitySystem.Helpers.WriteStruct<T>(System.Span<byte>, T)
-  fullName.vb: LiteEntitySystem.Helpers.WriteStruct(Of T)(System.Span(Of Byte), T)
-  nameWithType: Helpers.WriteStruct<T>(Span<byte>, T)
-  nameWithType.vb: Helpers.WriteStruct(Of T)(Span(Of Byte), T)
 - uid: LiteEntitySystem.HumanControllerLogic
   name: HumanControllerLogic
   href: api/LiteEntitySystem.HumanControllerLogic.html
   commentId: T:LiteEntitySystem.HumanControllerLogic
   fullName: LiteEntitySystem.HumanControllerLogic
   nameWithType: HumanControllerLogic
-- uid: LiteEntitySystem.HumanControllerLogic.#ctor(LiteEntitySystem.EntityParams)
-  name: HumanControllerLogic(EntityParams)
-  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic__ctor_LiteEntitySystem_EntityParams_
-  commentId: M:LiteEntitySystem.HumanControllerLogic.#ctor(LiteEntitySystem.EntityParams)
-  name.vb: New(EntityParams)
-  fullName: LiteEntitySystem.HumanControllerLogic.HumanControllerLogic(LiteEntitySystem.EntityParams)
-  fullName.vb: LiteEntitySystem.HumanControllerLogic.New(LiteEntitySystem.EntityParams)
-  nameWithType: HumanControllerLogic.HumanControllerLogic(EntityParams)
-  nameWithType.vb: HumanControllerLogic.New(EntityParams)
+- uid: LiteEntitySystem.HumanControllerLogic.#ctor(LiteEntitySystem.EntityParams,System.Int32)
+  name: HumanControllerLogic(EntityParams, int)
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic__ctor_LiteEntitySystem_EntityParams_System_Int32_
+  commentId: M:LiteEntitySystem.HumanControllerLogic.#ctor(LiteEntitySystem.EntityParams,System.Int32)
+  name.vb: New(EntityParams, Integer)
+  fullName: LiteEntitySystem.HumanControllerLogic.HumanControllerLogic(LiteEntitySystem.EntityParams, int)
+  fullName.vb: LiteEntitySystem.HumanControllerLogic.New(LiteEntitySystem.EntityParams, Integer)
+  nameWithType: HumanControllerLogic.HumanControllerLogic(EntityParams, int)
+  nameWithType.vb: HumanControllerLogic.New(EntityParams, Integer)
 - uid: LiteEntitySystem.HumanControllerLogic.#ctor*
   name: HumanControllerLogic
   href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic__ctor_
@@ -5799,6 +5654,25 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.HumanControllerLogic.ChangeEntityDiffSync
   nameWithType: HumanControllerLogic.ChangeEntityDiffSync
+- uid: LiteEntitySystem.HumanControllerLogic.FieldsDivision
+  name: FieldsDivision
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_FieldsDivision
+  commentId: F:LiteEntitySystem.HumanControllerLogic.FieldsDivision
+  fullName: LiteEntitySystem.HumanControllerLogic.FieldsDivision
+  nameWithType: HumanControllerLogic.FieldsDivision
+- uid: LiteEntitySystem.HumanControllerLogic.GetAssignedPlayer
+  name: GetAssignedPlayer()
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_GetAssignedPlayer
+  commentId: M:LiteEntitySystem.HumanControllerLogic.GetAssignedPlayer
+  fullName: LiteEntitySystem.HumanControllerLogic.GetAssignedPlayer()
+  nameWithType: HumanControllerLogic.GetAssignedPlayer()
+- uid: LiteEntitySystem.HumanControllerLogic.GetAssignedPlayer*
+  name: GetAssignedPlayer
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_GetAssignedPlayer_
+  commentId: Overload:LiteEntitySystem.HumanControllerLogic.GetAssignedPlayer
+  isSpec: "True"
+  fullName: LiteEntitySystem.HumanControllerLogic.GetAssignedPlayer
+  nameWithType: HumanControllerLogic.GetAssignedPlayer
 - uid: LiteEntitySystem.HumanControllerLogic.IsEntityDiffSyncDisabled(LiteEntitySystem.EntitySharedReference)
   name: IsEntityDiffSyncDisabled(EntitySharedReference)
   href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_IsEntityDiffSyncDisabled_LiteEntitySystem_EntitySharedReference_
@@ -5854,6 +5728,31 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.HumanControllerLogic.OnEntityDiffSyncChanged
   nameWithType: HumanControllerLogic.OnEntityDiffSyncChanged
+- uid: LiteEntitySystem.HumanControllerLogic.RegisterClientCustomType*
+  name: RegisterClientCustomType
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_RegisterClientCustomType_
+  commentId: Overload:LiteEntitySystem.HumanControllerLogic.RegisterClientCustomType
+  isSpec: "True"
+  fullName: LiteEntitySystem.HumanControllerLogic.RegisterClientCustomType
+  nameWithType: HumanControllerLogic.RegisterClientCustomType
+- uid: LiteEntitySystem.HumanControllerLogic.RegisterClientCustomType``1
+  name: RegisterClientCustomType<T>()
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_RegisterClientCustomType__1
+  commentId: M:LiteEntitySystem.HumanControllerLogic.RegisterClientCustomType``1
+  name.vb: RegisterClientCustomType(Of T)()
+  fullName: LiteEntitySystem.HumanControllerLogic.RegisterClientCustomType<T>()
+  fullName.vb: LiteEntitySystem.HumanControllerLogic.RegisterClientCustomType(Of T)()
+  nameWithType: HumanControllerLogic.RegisterClientCustomType<T>()
+  nameWithType.vb: HumanControllerLogic.RegisterClientCustomType(Of T)()
+- uid: LiteEntitySystem.HumanControllerLogic.RegisterClientCustomType``1(System.Action{LiteNetLib.Utils.NetDataWriter,``0},System.Func{LiteNetLib.Utils.NetDataReader,``0})
+  name: RegisterClientCustomType<T>(Action<NetDataWriter, T>, Func<NetDataReader, T>)
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_RegisterClientCustomType__1_System_Action_LiteNetLib_Utils_NetDataWriter___0__System_Func_LiteNetLib_Utils_NetDataReader___0__
+  commentId: M:LiteEntitySystem.HumanControllerLogic.RegisterClientCustomType``1(System.Action{LiteNetLib.Utils.NetDataWriter,``0},System.Func{LiteNetLib.Utils.NetDataReader,``0})
+  name.vb: RegisterClientCustomType(Of T)(Action(Of NetDataWriter, T), Func(Of NetDataReader, T))
+  fullName: LiteEntitySystem.HumanControllerLogic.RegisterClientCustomType<T>(System.Action<LiteNetLib.Utils.NetDataWriter, T>, System.Func<LiteNetLib.Utils.NetDataReader, T>)
+  fullName.vb: LiteEntitySystem.HumanControllerLogic.RegisterClientCustomType(Of T)(System.Action(Of LiteNetLib.Utils.NetDataWriter, T), System.Func(Of LiteNetLib.Utils.NetDataReader, T))
+  nameWithType: HumanControllerLogic.RegisterClientCustomType<T>(Action<NetDataWriter, T>, Func<NetDataReader, T>)
+  nameWithType.vb: HumanControllerLogic.RegisterClientCustomType(Of T)(Action(Of NetDataWriter, T), Func(Of NetDataReader, T))
 - uid: LiteEntitySystem.HumanControllerLogic.RegisterRPC(LiteEntitySystem.RPCRegistrator@)
   name: RegisterRPC(ref RPCRegistrator)
   href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_RegisterRPC_LiteEntitySystem_RPCRegistrator__
@@ -5883,6 +5782,112 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.HumanControllerLogic.ResetEntitiesDiffSync
   nameWithType: HumanControllerLogic.ResetEntitiesDiffSync
+- uid: LiteEntitySystem.HumanControllerLogic.SendRequest*
+  name: SendRequest
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SendRequest_
+  commentId: Overload:LiteEntitySystem.HumanControllerLogic.SendRequest
+  isSpec: "True"
+  fullName: LiteEntitySystem.HumanControllerLogic.SendRequest
+  nameWithType: HumanControllerLogic.SendRequest
+- uid: LiteEntitySystem.HumanControllerLogic.SendRequestStruct*
+  name: SendRequestStruct
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SendRequestStruct_
+  commentId: Overload:LiteEntitySystem.HumanControllerLogic.SendRequestStruct
+  isSpec: "True"
+  fullName: LiteEntitySystem.HumanControllerLogic.SendRequestStruct
+  nameWithType: HumanControllerLogic.SendRequestStruct
+- uid: LiteEntitySystem.HumanControllerLogic.SendRequestStruct``1(``0)
+  name: SendRequestStruct<T>(T)
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SendRequestStruct__1___0_
+  commentId: M:LiteEntitySystem.HumanControllerLogic.SendRequestStruct``1(``0)
+  name.vb: SendRequestStruct(Of T)(T)
+  fullName: LiteEntitySystem.HumanControllerLogic.SendRequestStruct<T>(T)
+  fullName.vb: LiteEntitySystem.HumanControllerLogic.SendRequestStruct(Of T)(T)
+  nameWithType: HumanControllerLogic.SendRequestStruct<T>(T)
+  nameWithType.vb: HumanControllerLogic.SendRequestStruct(Of T)(T)
+- uid: LiteEntitySystem.HumanControllerLogic.SendRequestStruct``1(``0,System.Action{System.Boolean})
+  name: SendRequestStruct<T>(T, Action<bool>)
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SendRequestStruct__1___0_System_Action_System_Boolean__
+  commentId: M:LiteEntitySystem.HumanControllerLogic.SendRequestStruct``1(``0,System.Action{System.Boolean})
+  name.vb: SendRequestStruct(Of T)(T, Action(Of Boolean))
+  fullName: LiteEntitySystem.HumanControllerLogic.SendRequestStruct<T>(T, System.Action<bool>)
+  fullName.vb: LiteEntitySystem.HumanControllerLogic.SendRequestStruct(Of T)(T, System.Action(Of Boolean))
+  nameWithType: HumanControllerLogic.SendRequestStruct<T>(T, Action<bool>)
+  nameWithType.vb: HumanControllerLogic.SendRequestStruct(Of T)(T, Action(Of Boolean))
+- uid: LiteEntitySystem.HumanControllerLogic.SendRequest``1(``0)
+  name: SendRequest<T>(T)
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SendRequest__1___0_
+  commentId: M:LiteEntitySystem.HumanControllerLogic.SendRequest``1(``0)
+  name.vb: SendRequest(Of T)(T)
+  fullName: LiteEntitySystem.HumanControllerLogic.SendRequest<T>(T)
+  fullName.vb: LiteEntitySystem.HumanControllerLogic.SendRequest(Of T)(T)
+  nameWithType: HumanControllerLogic.SendRequest<T>(T)
+  nameWithType.vb: HumanControllerLogic.SendRequest(Of T)(T)
+- uid: LiteEntitySystem.HumanControllerLogic.SendRequest``1(``0,System.Action{System.Boolean})
+  name: SendRequest<T>(T, Action<bool>)
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SendRequest__1___0_System_Action_System_Boolean__
+  commentId: M:LiteEntitySystem.HumanControllerLogic.SendRequest``1(``0,System.Action{System.Boolean})
+  name.vb: SendRequest(Of T)(T, Action(Of Boolean))
+  fullName: LiteEntitySystem.HumanControllerLogic.SendRequest<T>(T, System.Action<bool>)
+  fullName.vb: LiteEntitySystem.HumanControllerLogic.SendRequest(Of T)(T, System.Action(Of Boolean))
+  nameWithType: HumanControllerLogic.SendRequest<T>(T, Action<bool>)
+  nameWithType.vb: HumanControllerLogic.SendRequest(Of T)(T, Action(Of Boolean))
+- uid: LiteEntitySystem.HumanControllerLogic.StringSizeLimit
+  name: StringSizeLimit
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_StringSizeLimit
+  commentId: F:LiteEntitySystem.HumanControllerLogic.StringSizeLimit
+  fullName: LiteEntitySystem.HumanControllerLogic.StringSizeLimit
+  nameWithType: HumanControllerLogic.StringSizeLimit
+- uid: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequest*
+  name: SubscribeToClientRequest
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SubscribeToClientRequest_
+  commentId: Overload:LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequest
+  isSpec: "True"
+  fullName: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequest
+  nameWithType: HumanControllerLogic.SubscribeToClientRequest
+- uid: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequestStruct*
+  name: SubscribeToClientRequestStruct
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SubscribeToClientRequestStruct_
+  commentId: Overload:LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequestStruct
+  isSpec: "True"
+  fullName: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequestStruct
+  nameWithType: HumanControllerLogic.SubscribeToClientRequestStruct
+- uid: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequestStruct``1(System.Action{``0})
+  name: SubscribeToClientRequestStruct<T>(Action<T>)
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SubscribeToClientRequestStruct__1_System_Action___0__
+  commentId: M:LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequestStruct``1(System.Action{``0})
+  name.vb: SubscribeToClientRequestStruct(Of T)(Action(Of T))
+  fullName: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequestStruct<T>(System.Action<T>)
+  fullName.vb: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequestStruct(Of T)(System.Action(Of T))
+  nameWithType: HumanControllerLogic.SubscribeToClientRequestStruct<T>(Action<T>)
+  nameWithType.vb: HumanControllerLogic.SubscribeToClientRequestStruct(Of T)(Action(Of T))
+- uid: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequestStruct``1(System.Func{``0,System.Boolean})
+  name: SubscribeToClientRequestStruct<T>(Func<T, bool>)
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SubscribeToClientRequestStruct__1_System_Func___0_System_Boolean__
+  commentId: M:LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequestStruct``1(System.Func{``0,System.Boolean})
+  name.vb: SubscribeToClientRequestStruct(Of T)(Func(Of T, Boolean))
+  fullName: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequestStruct<T>(System.Func<T, bool>)
+  fullName.vb: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequestStruct(Of T)(System.Func(Of T, Boolean))
+  nameWithType: HumanControllerLogic.SubscribeToClientRequestStruct<T>(Func<T, bool>)
+  nameWithType.vb: HumanControllerLogic.SubscribeToClientRequestStruct(Of T)(Func(Of T, Boolean))
+- uid: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequest``1(System.Action{``0})
+  name: SubscribeToClientRequest<T>(Action<T>)
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SubscribeToClientRequest__1_System_Action___0__
+  commentId: M:LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequest``1(System.Action{``0})
+  name.vb: SubscribeToClientRequest(Of T)(Action(Of T))
+  fullName: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequest<T>(System.Action<T>)
+  fullName.vb: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequest(Of T)(System.Action(Of T))
+  nameWithType: HumanControllerLogic.SubscribeToClientRequest<T>(Action<T>)
+  nameWithType.vb: HumanControllerLogic.SubscribeToClientRequest(Of T)(Action(Of T))
+- uid: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequest``1(System.Func{``0,System.Boolean})
+  name: SubscribeToClientRequest<T>(Func<T, bool>)
+  href: api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SubscribeToClientRequest__1_System_Func___0_System_Boolean__
+  commentId: M:LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequest``1(System.Func{``0,System.Boolean})
+  name.vb: SubscribeToClientRequest(Of T)(Func(Of T, Boolean))
+  fullName: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequest<T>(System.Func<T, bool>)
+  fullName.vb: LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequest(Of T)(System.Func(Of T, Boolean))
+  nameWithType: HumanControllerLogic.SubscribeToClientRequest<T>(Func<T, bool>)
+  nameWithType.vb: HumanControllerLogic.SubscribeToClientRequest(Of T)(Func(Of T, Boolean))
 - uid: LiteEntitySystem.HumanControllerLogic`1
   name: HumanControllerLogic<TInput>
   href: api/LiteEntitySystem.HumanControllerLogic-1.html
@@ -5928,41 +5933,6 @@ references:
   fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).CurrentInput
   nameWithType: HumanControllerLogic<TInput>.CurrentInput
   nameWithType.vb: HumanControllerLogic(Of TInput).CurrentInput
-- uid: LiteEntitySystem.HumanControllerLogic`1.GenerateInput(`0@)
-  name: GenerateInput(out TInput)
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GenerateInput__0__
-  commentId: M:LiteEntitySystem.HumanControllerLogic`1.GenerateInput(`0@)
-  name.vb: GenerateInput(TInput)
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.GenerateInput(out TInput)
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).GenerateInput(TInput)
-  nameWithType: HumanControllerLogic<TInput>.GenerateInput(out TInput)
-  nameWithType.vb: HumanControllerLogic(Of TInput).GenerateInput(TInput)
-- uid: LiteEntitySystem.HumanControllerLogic`1.GenerateInput*
-  name: GenerateInput
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GenerateInput_
-  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.GenerateInput
-  isSpec: "True"
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.GenerateInput
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).GenerateInput
-  nameWithType: HumanControllerLogic<TInput>.GenerateInput
-  nameWithType.vb: HumanControllerLogic(Of TInput).GenerateInput
-- uid: LiteEntitySystem.HumanControllerLogic`1.GetAssignedPlayer
-  name: GetAssignedPlayer()
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GetAssignedPlayer
-  commentId: M:LiteEntitySystem.HumanControllerLogic`1.GetAssignedPlayer
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.GetAssignedPlayer()
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).GetAssignedPlayer()
-  nameWithType: HumanControllerLogic<TInput>.GetAssignedPlayer()
-  nameWithType.vb: HumanControllerLogic(Of TInput).GetAssignedPlayer()
-- uid: LiteEntitySystem.HumanControllerLogic`1.GetAssignedPlayer*
-  name: GetAssignedPlayer
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GetAssignedPlayer_
-  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.GetAssignedPlayer
-  isSpec: "True"
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.GetAssignedPlayer
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).GetAssignedPlayer
-  nameWithType: HumanControllerLogic<TInput>.GetAssignedPlayer
-  nameWithType.vb: HumanControllerLogic(Of TInput).GetAssignedPlayer
 - uid: LiteEntitySystem.HumanControllerLogic`1.IsBot
   name: IsBot
   href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_IsBot
@@ -5980,185 +5950,23 @@ references:
   fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).IsBot
   nameWithType: HumanControllerLogic<TInput>.IsBot
   nameWithType.vb: HumanControllerLogic(Of TInput).IsBot
-- uid: LiteEntitySystem.HumanControllerLogic`1.ReadInput(`0@)
-  name: ReadInput(in TInput)
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_ReadInput__0__
-  commentId: M:LiteEntitySystem.HumanControllerLogic`1.ReadInput(`0@)
-  name.vb: ReadInput(TInput)
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.ReadInput(in TInput)
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).ReadInput(TInput)
-  nameWithType: HumanControllerLogic<TInput>.ReadInput(in TInput)
-  nameWithType.vb: HumanControllerLogic(Of TInput).ReadInput(TInput)
-- uid: LiteEntitySystem.HumanControllerLogic`1.ReadInput*
-  name: ReadInput
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_ReadInput_
-  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.ReadInput
+- uid: LiteEntitySystem.HumanControllerLogic`1.ModifyPendingInput
+  name: ModifyPendingInput()
+  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_ModifyPendingInput
+  commentId: M:LiteEntitySystem.HumanControllerLogic`1.ModifyPendingInput
+  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.ModifyPendingInput()
+  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).ModifyPendingInput()
+  nameWithType: HumanControllerLogic<TInput>.ModifyPendingInput()
+  nameWithType.vb: HumanControllerLogic(Of TInput).ModifyPendingInput()
+- uid: LiteEntitySystem.HumanControllerLogic`1.ModifyPendingInput*
+  name: ModifyPendingInput
+  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_ModifyPendingInput_
+  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.ModifyPendingInput
   isSpec: "True"
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.ReadInput
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).ReadInput
-  nameWithType: HumanControllerLogic<TInput>.ReadInput
-  nameWithType.vb: HumanControllerLogic(Of TInput).ReadInput
-- uid: LiteEntitySystem.HumanControllerLogic`1.RegisterClientCustomType*
-  name: RegisterClientCustomType
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_RegisterClientCustomType_
-  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.RegisterClientCustomType
-  isSpec: "True"
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.RegisterClientCustomType
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).RegisterClientCustomType
-  nameWithType: HumanControllerLogic<TInput>.RegisterClientCustomType
-  nameWithType.vb: HumanControllerLogic(Of TInput).RegisterClientCustomType
-- uid: LiteEntitySystem.HumanControllerLogic`1.RegisterClientCustomType``1
-  name: RegisterClientCustomType<T>()
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_RegisterClientCustomType__1
-  commentId: M:LiteEntitySystem.HumanControllerLogic`1.RegisterClientCustomType``1
-  name.vb: RegisterClientCustomType(Of T)()
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.RegisterClientCustomType<T>()
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).RegisterClientCustomType(Of T)()
-  nameWithType: HumanControllerLogic<TInput>.RegisterClientCustomType<T>()
-  nameWithType.vb: HumanControllerLogic(Of TInput).RegisterClientCustomType(Of T)()
-- uid: LiteEntitySystem.HumanControllerLogic`1.RegisterClientCustomType``1(System.Action{LiteNetLib.Utils.NetDataWriter,``0},System.Func{LiteNetLib.Utils.NetDataReader,``0})
-  name: RegisterClientCustomType<T>(Action<NetDataWriter, T>, Func<NetDataReader, T>)
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_RegisterClientCustomType__1_System_Action_LiteNetLib_Utils_NetDataWriter___0__System_Func_LiteNetLib_Utils_NetDataReader___0__
-  commentId: M:LiteEntitySystem.HumanControllerLogic`1.RegisterClientCustomType``1(System.Action{LiteNetLib.Utils.NetDataWriter,``0},System.Func{LiteNetLib.Utils.NetDataReader,``0})
-  name.vb: RegisterClientCustomType(Of T)(Action(Of NetDataWriter, T), Func(Of NetDataReader, T))
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.RegisterClientCustomType<T>(System.Action<LiteNetLib.Utils.NetDataWriter, T>, System.Func<LiteNetLib.Utils.NetDataReader, T>)
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).RegisterClientCustomType(Of T)(System.Action(Of LiteNetLib.Utils.NetDataWriter, T), System.Func(Of LiteNetLib.Utils.NetDataReader, T))
-  nameWithType: HumanControllerLogic<TInput>.RegisterClientCustomType<T>(Action<NetDataWriter, T>, Func<NetDataReader, T>)
-  nameWithType.vb: HumanControllerLogic(Of TInput).RegisterClientCustomType(Of T)(Action(Of NetDataWriter, T), Func(Of NetDataReader, T))
-- uid: LiteEntitySystem.HumanControllerLogic`1.RegisterRPC(LiteEntitySystem.RPCRegistrator@)
-  name: RegisterRPC(ref RPCRegistrator)
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_RegisterRPC_LiteEntitySystem_RPCRegistrator__
-  commentId: M:LiteEntitySystem.HumanControllerLogic`1.RegisterRPC(LiteEntitySystem.RPCRegistrator@)
-  name.vb: RegisterRPC(RPCRegistrator)
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.RegisterRPC(ref LiteEntitySystem.RPCRegistrator)
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).RegisterRPC(LiteEntitySystem.RPCRegistrator)
-  nameWithType: HumanControllerLogic<TInput>.RegisterRPC(ref RPCRegistrator)
-  nameWithType.vb: HumanControllerLogic(Of TInput).RegisterRPC(RPCRegistrator)
-- uid: LiteEntitySystem.HumanControllerLogic`1.RegisterRPC*
-  name: RegisterRPC
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_RegisterRPC_
-  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.RegisterRPC
-  isSpec: "True"
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.RegisterRPC
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).RegisterRPC
-  nameWithType: HumanControllerLogic<TInput>.RegisterRPC
-  nameWithType.vb: HumanControllerLogic(Of TInput).RegisterRPC
-- uid: LiteEntitySystem.HumanControllerLogic`1.SendRequest*
-  name: SendRequest
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SendRequest_
-  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.SendRequest
-  isSpec: "True"
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.SendRequest
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).SendRequest
-  nameWithType: HumanControllerLogic<TInput>.SendRequest
-  nameWithType.vb: HumanControllerLogic(Of TInput).SendRequest
-- uid: LiteEntitySystem.HumanControllerLogic`1.SendRequestStruct*
-  name: SendRequestStruct
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SendRequestStruct_
-  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.SendRequestStruct
-  isSpec: "True"
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.SendRequestStruct
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).SendRequestStruct
-  nameWithType: HumanControllerLogic<TInput>.SendRequestStruct
-  nameWithType.vb: HumanControllerLogic(Of TInput).SendRequestStruct
-- uid: LiteEntitySystem.HumanControllerLogic`1.SendRequestStruct``1(``0)
-  name: SendRequestStruct<T>(T)
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SendRequestStruct__1___0_
-  commentId: M:LiteEntitySystem.HumanControllerLogic`1.SendRequestStruct``1(``0)
-  name.vb: SendRequestStruct(Of T)(T)
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.SendRequestStruct<T>(T)
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).SendRequestStruct(Of T)(T)
-  nameWithType: HumanControllerLogic<TInput>.SendRequestStruct<T>(T)
-  nameWithType.vb: HumanControllerLogic(Of TInput).SendRequestStruct(Of T)(T)
-- uid: LiteEntitySystem.HumanControllerLogic`1.SendRequestStruct``1(``0,System.Action{System.Boolean})
-  name: SendRequestStruct<T>(T, Action<bool>)
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SendRequestStruct__1___0_System_Action_System_Boolean__
-  commentId: M:LiteEntitySystem.HumanControllerLogic`1.SendRequestStruct``1(``0,System.Action{System.Boolean})
-  name.vb: SendRequestStruct(Of T)(T, Action(Of Boolean))
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.SendRequestStruct<T>(T, System.Action<bool>)
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).SendRequestStruct(Of T)(T, System.Action(Of Boolean))
-  nameWithType: HumanControllerLogic<TInput>.SendRequestStruct<T>(T, Action<bool>)
-  nameWithType.vb: HumanControllerLogic(Of TInput).SendRequestStruct(Of T)(T, Action(Of Boolean))
-- uid: LiteEntitySystem.HumanControllerLogic`1.SendRequest``1(``0)
-  name: SendRequest<T>(T)
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SendRequest__1___0_
-  commentId: M:LiteEntitySystem.HumanControllerLogic`1.SendRequest``1(``0)
-  name.vb: SendRequest(Of T)(T)
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.SendRequest<T>(T)
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).SendRequest(Of T)(T)
-  nameWithType: HumanControllerLogic<TInput>.SendRequest<T>(T)
-  nameWithType.vb: HumanControllerLogic(Of TInput).SendRequest(Of T)(T)
-- uid: LiteEntitySystem.HumanControllerLogic`1.SendRequest``1(``0,System.Action{System.Boolean})
-  name: SendRequest<T>(T, Action<bool>)
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SendRequest__1___0_System_Action_System_Boolean__
-  commentId: M:LiteEntitySystem.HumanControllerLogic`1.SendRequest``1(``0,System.Action{System.Boolean})
-  name.vb: SendRequest(Of T)(T, Action(Of Boolean))
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.SendRequest<T>(T, System.Action<bool>)
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).SendRequest(Of T)(T, System.Action(Of Boolean))
-  nameWithType: HumanControllerLogic<TInput>.SendRequest<T>(T, Action<bool>)
-  nameWithType.vb: HumanControllerLogic(Of TInput).SendRequest(Of T)(T, Action(Of Boolean))
-- uid: LiteEntitySystem.HumanControllerLogic`1.StringSizeLimit
-  name: StringSizeLimit
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_StringSizeLimit
-  commentId: F:LiteEntitySystem.HumanControllerLogic`1.StringSizeLimit
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.StringSizeLimit
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).StringSizeLimit
-  nameWithType: HumanControllerLogic<TInput>.StringSizeLimit
-  nameWithType.vb: HumanControllerLogic(Of TInput).StringSizeLimit
-- uid: LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequest*
-  name: SubscribeToClientRequest
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequest_
-  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequest
-  isSpec: "True"
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.SubscribeToClientRequest
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).SubscribeToClientRequest
-  nameWithType: HumanControllerLogic<TInput>.SubscribeToClientRequest
-  nameWithType.vb: HumanControllerLogic(Of TInput).SubscribeToClientRequest
-- uid: LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequestStruct*
-  name: SubscribeToClientRequestStruct
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequestStruct_
-  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequestStruct
-  isSpec: "True"
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.SubscribeToClientRequestStruct
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).SubscribeToClientRequestStruct
-  nameWithType: HumanControllerLogic<TInput>.SubscribeToClientRequestStruct
-  nameWithType.vb: HumanControllerLogic(Of TInput).SubscribeToClientRequestStruct
-- uid: LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequestStruct``1(System.Action{``0})
-  name: SubscribeToClientRequestStruct<T>(Action<T>)
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequestStruct__1_System_Action___0__
-  commentId: M:LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequestStruct``1(System.Action{``0})
-  name.vb: SubscribeToClientRequestStruct(Of T)(Action(Of T))
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.SubscribeToClientRequestStruct<T>(System.Action<T>)
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).SubscribeToClientRequestStruct(Of T)(System.Action(Of T))
-  nameWithType: HumanControllerLogic<TInput>.SubscribeToClientRequestStruct<T>(Action<T>)
-  nameWithType.vb: HumanControllerLogic(Of TInput).SubscribeToClientRequestStruct(Of T)(Action(Of T))
-- uid: LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequestStruct``1(System.Func{``0,System.Boolean})
-  name: SubscribeToClientRequestStruct<T>(Func<T, bool>)
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequestStruct__1_System_Func___0_System_Boolean__
-  commentId: M:LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequestStruct``1(System.Func{``0,System.Boolean})
-  name.vb: SubscribeToClientRequestStruct(Of T)(Func(Of T, Boolean))
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.SubscribeToClientRequestStruct<T>(System.Func<T, bool>)
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).SubscribeToClientRequestStruct(Of T)(System.Func(Of T, Boolean))
-  nameWithType: HumanControllerLogic<TInput>.SubscribeToClientRequestStruct<T>(Func<T, bool>)
-  nameWithType.vb: HumanControllerLogic(Of TInput).SubscribeToClientRequestStruct(Of T)(Func(Of T, Boolean))
-- uid: LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequest``1(System.Action{``0})
-  name: SubscribeToClientRequest<T>(Action<T>)
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequest__1_System_Action___0__
-  commentId: M:LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequest``1(System.Action{``0})
-  name.vb: SubscribeToClientRequest(Of T)(Action(Of T))
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.SubscribeToClientRequest<T>(System.Action<T>)
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).SubscribeToClientRequest(Of T)(System.Action(Of T))
-  nameWithType: HumanControllerLogic<TInput>.SubscribeToClientRequest<T>(Action<T>)
-  nameWithType.vb: HumanControllerLogic(Of TInput).SubscribeToClientRequest(Of T)(Action(Of T))
-- uid: LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequest``1(System.Func{``0,System.Boolean})
-  name: SubscribeToClientRequest<T>(Func<T, bool>)
-  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_SubscribeToClientRequest__1_System_Func___0_System_Boolean__
-  commentId: M:LiteEntitySystem.HumanControllerLogic`1.SubscribeToClientRequest``1(System.Func{``0,System.Boolean})
-  name.vb: SubscribeToClientRequest(Of T)(Func(Of T, Boolean))
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.SubscribeToClientRequest<T>(System.Func<T, bool>)
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).SubscribeToClientRequest(Of T)(System.Func(Of T, Boolean))
-  nameWithType: HumanControllerLogic<TInput>.SubscribeToClientRequest<T>(Func<T, bool>)
-  nameWithType.vb: HumanControllerLogic(Of TInput).SubscribeToClientRequest(Of T)(Func(Of T, Boolean))
+  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.ModifyPendingInput
+  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).ModifyPendingInput
+  nameWithType: HumanControllerLogic<TInput>.ModifyPendingInput
+  nameWithType.vb: HumanControllerLogic(Of TInput).ModifyPendingInput
 - uid: LiteEntitySystem.HumanControllerLogic`2
   name: HumanControllerLogic<TInput, T>
   href: api/LiteEntitySystem.HumanControllerLogic-2.html
@@ -6554,523 +6362,49 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.IdGeneratorUShort.ReuseId
   nameWithType: IdGeneratorUShort.ReuseId
-- uid: LiteEntitySystem.InputProcessor
-  name: InputProcessor
-  href: api/LiteEntitySystem.InputProcessor.html
-  commentId: T:LiteEntitySystem.InputProcessor
-  fullName: LiteEntitySystem.InputProcessor
-  nameWithType: InputProcessor
-- uid: LiteEntitySystem.InputProcessor.#ctor(System.Int32)
-  name: InputProcessor(int)
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor__ctor_System_Int32_
-  commentId: M:LiteEntitySystem.InputProcessor.#ctor(System.Int32)
-  name.vb: New(Integer)
-  fullName: LiteEntitySystem.InputProcessor.InputProcessor(int)
-  fullName.vb: LiteEntitySystem.InputProcessor.New(Integer)
-  nameWithType: InputProcessor.InputProcessor(int)
-  nameWithType.vb: InputProcessor.New(Integer)
-- uid: LiteEntitySystem.InputProcessor.#ctor*
-  name: InputProcessor
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor__ctor_
-  commentId: Overload:LiteEntitySystem.InputProcessor.#ctor
+- uid: LiteEntitySystem.InputInfo
+  name: InputInfo
+  href: api/LiteEntitySystem.InputInfo.html
+  commentId: T:LiteEntitySystem.InputInfo
+  fullName: LiteEntitySystem.InputInfo
+  nameWithType: InputInfo
+- uid: LiteEntitySystem.InputInfo.#ctor(System.UInt16,LiteEntitySystem.Internal.InputPacketHeader)
+  name: InputInfo(ushort, InputPacketHeader)
+  href: api/LiteEntitySystem.InputInfo.html#LiteEntitySystem_InputInfo__ctor_System_UInt16_LiteEntitySystem_Internal_InputPacketHeader_
+  commentId: M:LiteEntitySystem.InputInfo.#ctor(System.UInt16,LiteEntitySystem.Internal.InputPacketHeader)
+  name.vb: New(UShort, InputPacketHeader)
+  fullName: LiteEntitySystem.InputInfo.InputInfo(ushort, LiteEntitySystem.Internal.InputPacketHeader)
+  fullName.vb: LiteEntitySystem.InputInfo.New(UShort, LiteEntitySystem.Internal.InputPacketHeader)
+  nameWithType: InputInfo.InputInfo(ushort, InputPacketHeader)
+  nameWithType.vb: InputInfo.New(UShort, InputPacketHeader)
+- uid: LiteEntitySystem.InputInfo.#ctor*
+  name: InputInfo
+  href: api/LiteEntitySystem.InputInfo.html#LiteEntitySystem_InputInfo__ctor_
+  commentId: Overload:LiteEntitySystem.InputInfo.#ctor
   isSpec: "True"
   name.vb: New
-  fullName: LiteEntitySystem.InputProcessor.InputProcessor
-  fullName.vb: LiteEntitySystem.InputProcessor.New
-  nameWithType: InputProcessor.InputProcessor
-  nameWithType.vb: InputProcessor.New
-- uid: LiteEntitySystem.InputProcessor.ClearClientStoredInputs
-  name: ClearClientStoredInputs()
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_ClearClientStoredInputs
-  commentId: M:LiteEntitySystem.InputProcessor.ClearClientStoredInputs
-  fullName: LiteEntitySystem.InputProcessor.ClearClientStoredInputs()
-  nameWithType: InputProcessor.ClearClientStoredInputs()
-- uid: LiteEntitySystem.InputProcessor.ClearClientStoredInputs*
-  name: ClearClientStoredInputs
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_ClearClientStoredInputs_
-  commentId: Overload:LiteEntitySystem.InputProcessor.ClearClientStoredInputs
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor.ClearClientStoredInputs
-  nameWithType: InputProcessor.ClearClientStoredInputs
-- uid: LiteEntitySystem.InputProcessor.ClientStoredInputsCount
-  name: ClientStoredInputsCount
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_ClientStoredInputsCount
-  commentId: P:LiteEntitySystem.InputProcessor.ClientStoredInputsCount
-  fullName: LiteEntitySystem.InputProcessor.ClientStoredInputsCount
-  nameWithType: InputProcessor.ClientStoredInputsCount
-- uid: LiteEntitySystem.InputProcessor.ClientStoredInputsCount*
-  name: ClientStoredInputsCount
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_ClientStoredInputsCount_
-  commentId: Overload:LiteEntitySystem.InputProcessor.ClientStoredInputsCount
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor.ClientStoredInputsCount
-  nameWithType: InputProcessor.ClientStoredInputsCount
-- uid: LiteEntitySystem.InputProcessor.DeltaBits
-  name: DeltaBits
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_DeltaBits
-  commentId: F:LiteEntitySystem.InputProcessor.DeltaBits
-  fullName: LiteEntitySystem.InputProcessor.DeltaBits
-  nameWithType: InputProcessor.DeltaBits
-- uid: LiteEntitySystem.InputProcessor.DeltaDecode(System.ReadOnlySpan{System.Byte},System.Span{System.Byte})
-  name: DeltaDecode(ReadOnlySpan<byte>, Span<byte>)
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_DeltaDecode_System_ReadOnlySpan_System_Byte__System_Span_System_Byte__
-  commentId: M:LiteEntitySystem.InputProcessor.DeltaDecode(System.ReadOnlySpan{System.Byte},System.Span{System.Byte})
-  name.vb: DeltaDecode(ReadOnlySpan(Of Byte), Span(Of Byte))
-  fullName: LiteEntitySystem.InputProcessor.DeltaDecode(System.ReadOnlySpan<byte>, System.Span<byte>)
-  fullName.vb: LiteEntitySystem.InputProcessor.DeltaDecode(System.ReadOnlySpan(Of Byte), System.Span(Of Byte))
-  nameWithType: InputProcessor.DeltaDecode(ReadOnlySpan<byte>, Span<byte>)
-  nameWithType.vb: InputProcessor.DeltaDecode(ReadOnlySpan(Of Byte), Span(Of Byte))
-- uid: LiteEntitySystem.InputProcessor.DeltaDecode*
-  name: DeltaDecode
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_DeltaDecode_
-  commentId: Overload:LiteEntitySystem.InputProcessor.DeltaDecode
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor.DeltaDecode
-  nameWithType: InputProcessor.DeltaDecode
-- uid: LiteEntitySystem.InputProcessor.DeltaDecodeInit(System.ReadOnlySpan{System.Byte})
-  name: DeltaDecodeInit(ReadOnlySpan<byte>)
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_DeltaDecodeInit_System_ReadOnlySpan_System_Byte__
-  commentId: M:LiteEntitySystem.InputProcessor.DeltaDecodeInit(System.ReadOnlySpan{System.Byte})
-  name.vb: DeltaDecodeInit(ReadOnlySpan(Of Byte))
-  fullName: LiteEntitySystem.InputProcessor.DeltaDecodeInit(System.ReadOnlySpan<byte>)
-  fullName.vb: LiteEntitySystem.InputProcessor.DeltaDecodeInit(System.ReadOnlySpan(Of Byte))
-  nameWithType: InputProcessor.DeltaDecodeInit(ReadOnlySpan<byte>)
-  nameWithType.vb: InputProcessor.DeltaDecodeInit(ReadOnlySpan(Of Byte))
-- uid: LiteEntitySystem.InputProcessor.DeltaDecodeInit*
-  name: DeltaDecodeInit
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_DeltaDecodeInit_
-  commentId: Overload:LiteEntitySystem.InputProcessor.DeltaDecodeInit
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor.DeltaDecodeInit
-  nameWithType: InputProcessor.DeltaDecodeInit
-- uid: LiteEntitySystem.InputProcessor.DeltaEncode(System.Int32,System.Int32,System.Span{System.Byte})
-  name: DeltaEncode(int, int, Span<byte>)
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_DeltaEncode_System_Int32_System_Int32_System_Span_System_Byte__
-  commentId: M:LiteEntitySystem.InputProcessor.DeltaEncode(System.Int32,System.Int32,System.Span{System.Byte})
-  name.vb: DeltaEncode(Integer, Integer, Span(Of Byte))
-  fullName: LiteEntitySystem.InputProcessor.DeltaEncode(int, int, System.Span<byte>)
-  fullName.vb: LiteEntitySystem.InputProcessor.DeltaEncode(Integer, Integer, System.Span(Of Byte))
-  nameWithType: InputProcessor.DeltaEncode(int, int, Span<byte>)
-  nameWithType.vb: InputProcessor.DeltaEncode(Integer, Integer, Span(Of Byte))
-- uid: LiteEntitySystem.InputProcessor.DeltaEncode(System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.Span{System.Byte})
-  name: DeltaEncode(ReadOnlySpan<byte>, ReadOnlySpan<byte>, Span<byte>)
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_DeltaEncode_System_ReadOnlySpan_System_Byte__System_ReadOnlySpan_System_Byte__System_Span_System_Byte__
-  commentId: M:LiteEntitySystem.InputProcessor.DeltaEncode(System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.Span{System.Byte})
-  name.vb: DeltaEncode(ReadOnlySpan(Of Byte), ReadOnlySpan(Of Byte), Span(Of Byte))
-  fullName: LiteEntitySystem.InputProcessor.DeltaEncode(System.ReadOnlySpan<byte>, System.ReadOnlySpan<byte>, System.Span<byte>)
-  fullName.vb: LiteEntitySystem.InputProcessor.DeltaEncode(System.ReadOnlySpan(Of Byte), System.ReadOnlySpan(Of Byte), System.Span(Of Byte))
-  nameWithType: InputProcessor.DeltaEncode(ReadOnlySpan<byte>, ReadOnlySpan<byte>, Span<byte>)
-  nameWithType.vb: InputProcessor.DeltaEncode(ReadOnlySpan(Of Byte), ReadOnlySpan(Of Byte), Span(Of Byte))
-- uid: LiteEntitySystem.InputProcessor.DeltaEncode*
-  name: DeltaEncode
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_DeltaEncode_
-  commentId: Overload:LiteEntitySystem.InputProcessor.DeltaEncode
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor.DeltaEncode
-  nameWithType: InputProcessor.DeltaEncode
-- uid: LiteEntitySystem.InputProcessor.GenerateAndApplyInput(LiteEntitySystem.EntityManager,System.Byte,LiteEntitySystem.Internal.InputPacketHeader)
-  name: GenerateAndApplyInput(EntityManager, byte, InputPacketHeader)
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_GenerateAndApplyInput_LiteEntitySystem_EntityManager_System_Byte_LiteEntitySystem_Internal_InputPacketHeader_
-  commentId: M:LiteEntitySystem.InputProcessor.GenerateAndApplyInput(LiteEntitySystem.EntityManager,System.Byte,LiteEntitySystem.Internal.InputPacketHeader)
-  name.vb: GenerateAndApplyInput(EntityManager, Byte, InputPacketHeader)
-  fullName: LiteEntitySystem.InputProcessor.GenerateAndApplyInput(LiteEntitySystem.EntityManager, byte, LiteEntitySystem.Internal.InputPacketHeader)
-  fullName.vb: LiteEntitySystem.InputProcessor.GenerateAndApplyInput(LiteEntitySystem.EntityManager, Byte, LiteEntitySystem.Internal.InputPacketHeader)
-  nameWithType: InputProcessor.GenerateAndApplyInput(EntityManager, byte, InputPacketHeader)
-  nameWithType.vb: InputProcessor.GenerateAndApplyInput(EntityManager, Byte, InputPacketHeader)
-- uid: LiteEntitySystem.InputProcessor.GenerateAndApplyInput*
-  name: GenerateAndApplyInput
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_GenerateAndApplyInput_
-  commentId: Overload:LiteEntitySystem.InputProcessor.GenerateAndApplyInput
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor.GenerateAndApplyInput
-  nameWithType: InputProcessor.GenerateAndApplyInput
-- uid: LiteEntitySystem.InputProcessor.GetStoredInputInfo(System.Int32)
-  name: GetStoredInputInfo(int)
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_GetStoredInputInfo_System_Int32_
-  commentId: M:LiteEntitySystem.InputProcessor.GetStoredInputInfo(System.Int32)
-  name.vb: GetStoredInputInfo(Integer)
-  fullName: LiteEntitySystem.InputProcessor.GetStoredInputInfo(int)
-  fullName.vb: LiteEntitySystem.InputProcessor.GetStoredInputInfo(Integer)
-  nameWithType: InputProcessor.GetStoredInputInfo(int)
-  nameWithType.vb: InputProcessor.GetStoredInputInfo(Integer)
-- uid: LiteEntitySystem.InputProcessor.GetStoredInputInfo*
-  name: GetStoredInputInfo
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_GetStoredInputInfo_
-  commentId: Overload:LiteEntitySystem.InputProcessor.GetStoredInputInfo
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor.GetStoredInputInfo
-  nameWithType: InputProcessor.GetStoredInputInfo
-- uid: LiteEntitySystem.InputProcessor.InputSize
-  name: InputSize
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_InputSize
-  commentId: F:LiteEntitySystem.InputProcessor.InputSize
-  fullName: LiteEntitySystem.InputProcessor.InputSize
-  nameWithType: InputProcessor.InputSize
-- uid: LiteEntitySystem.InputProcessor.InputSizeWithHeader
-  name: InputSizeWithHeader
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_InputSizeWithHeader
-  commentId: F:LiteEntitySystem.InputProcessor.InputSizeWithHeader
-  fullName: LiteEntitySystem.InputProcessor.InputSizeWithHeader
-  nameWithType: InputProcessor.InputSizeWithHeader
-- uid: LiteEntitySystem.InputProcessor.MaxDeltaSize
-  name: MaxDeltaSize
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_MaxDeltaSize
-  commentId: F:LiteEntitySystem.InputProcessor.MaxDeltaSize
-  fullName: LiteEntitySystem.InputProcessor.MaxDeltaSize
-  nameWithType: InputProcessor.MaxDeltaSize
-- uid: LiteEntitySystem.InputProcessor.MinDeltaSize
-  name: MinDeltaSize
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_MinDeltaSize
-  commentId: F:LiteEntitySystem.InputProcessor.MinDeltaSize
-  fullName: LiteEntitySystem.InputProcessor.MinDeltaSize
-  nameWithType: InputProcessor.MinDeltaSize
-- uid: LiteEntitySystem.InputProcessor.ReadClientRequest(LiteEntitySystem.EntityManager,LiteNetLib.Utils.NetDataReader)
-  name: ReadClientRequest(EntityManager, NetDataReader)
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_ReadClientRequest_LiteEntitySystem_EntityManager_LiteNetLib_Utils_NetDataReader_
-  commentId: M:LiteEntitySystem.InputProcessor.ReadClientRequest(LiteEntitySystem.EntityManager,LiteNetLib.Utils.NetDataReader)
-  fullName: LiteEntitySystem.InputProcessor.ReadClientRequest(LiteEntitySystem.EntityManager, LiteNetLib.Utils.NetDataReader)
-  nameWithType: InputProcessor.ReadClientRequest(EntityManager, NetDataReader)
-- uid: LiteEntitySystem.InputProcessor.ReadClientRequest*
-  name: ReadClientRequest
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_ReadClientRequest_
-  commentId: Overload:LiteEntitySystem.InputProcessor.ReadClientRequest
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor.ReadClientRequest
-  nameWithType: InputProcessor.ReadClientRequest
-- uid: LiteEntitySystem.InputProcessor.ReadInput(LiteEntitySystem.EntityManager,System.Byte,System.ReadOnlySpan{System.Byte})
-  name: ReadInput(EntityManager, byte, ReadOnlySpan<byte>)
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_ReadInput_LiteEntitySystem_EntityManager_System_Byte_System_ReadOnlySpan_System_Byte__
-  commentId: M:LiteEntitySystem.InputProcessor.ReadInput(LiteEntitySystem.EntityManager,System.Byte,System.ReadOnlySpan{System.Byte})
-  name.vb: ReadInput(EntityManager, Byte, ReadOnlySpan(Of Byte))
-  fullName: LiteEntitySystem.InputProcessor.ReadInput(LiteEntitySystem.EntityManager, byte, System.ReadOnlySpan<byte>)
-  fullName.vb: LiteEntitySystem.InputProcessor.ReadInput(LiteEntitySystem.EntityManager, Byte, System.ReadOnlySpan(Of Byte))
-  nameWithType: InputProcessor.ReadInput(EntityManager, byte, ReadOnlySpan<byte>)
-  nameWithType.vb: InputProcessor.ReadInput(EntityManager, Byte, ReadOnlySpan(Of Byte))
-- uid: LiteEntitySystem.InputProcessor.ReadInput*
-  name: ReadInput
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_ReadInput_
-  commentId: Overload:LiteEntitySystem.InputProcessor.ReadInput
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor.ReadInput
-  nameWithType: InputProcessor.ReadInput
-- uid: LiteEntitySystem.InputProcessor.ReadStoredInput(LiteEntitySystem.EntityManager,System.Byte,System.Int32)
-  name: ReadStoredInput(EntityManager, byte, int)
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_ReadStoredInput_LiteEntitySystem_EntityManager_System_Byte_System_Int32_
-  commentId: M:LiteEntitySystem.InputProcessor.ReadStoredInput(LiteEntitySystem.EntityManager,System.Byte,System.Int32)
-  name.vb: ReadStoredInput(EntityManager, Byte, Integer)
-  fullName: LiteEntitySystem.InputProcessor.ReadStoredInput(LiteEntitySystem.EntityManager, byte, int)
-  fullName.vb: LiteEntitySystem.InputProcessor.ReadStoredInput(LiteEntitySystem.EntityManager, Byte, Integer)
-  nameWithType: InputProcessor.ReadStoredInput(EntityManager, byte, int)
-  nameWithType.vb: InputProcessor.ReadStoredInput(EntityManager, Byte, Integer)
-- uid: LiteEntitySystem.InputProcessor.ReadStoredInput*
-  name: ReadStoredInput
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_ReadStoredInput_
-  commentId: Overload:LiteEntitySystem.InputProcessor.ReadStoredInput
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor.ReadStoredInput
-  nameWithType: InputProcessor.ReadStoredInput
-- uid: LiteEntitySystem.InputProcessor.RemoveClientProcessedInputs(System.UInt16)
-  name: RemoveClientProcessedInputs(ushort)
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_RemoveClientProcessedInputs_System_UInt16_
-  commentId: M:LiteEntitySystem.InputProcessor.RemoveClientProcessedInputs(System.UInt16)
-  name.vb: RemoveClientProcessedInputs(UShort)
-  fullName: LiteEntitySystem.InputProcessor.RemoveClientProcessedInputs(ushort)
-  fullName.vb: LiteEntitySystem.InputProcessor.RemoveClientProcessedInputs(UShort)
-  nameWithType: InputProcessor.RemoveClientProcessedInputs(ushort)
-  nameWithType.vb: InputProcessor.RemoveClientProcessedInputs(UShort)
-- uid: LiteEntitySystem.InputProcessor.RemoveClientProcessedInputs*
-  name: RemoveClientProcessedInputs
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_RemoveClientProcessedInputs_
-  commentId: Overload:LiteEntitySystem.InputProcessor.RemoveClientProcessedInputs
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor.RemoveClientProcessedInputs
-  nameWithType: InputProcessor.RemoveClientProcessedInputs
-- uid: LiteEntitySystem.InputProcessor.WriteStoredInputData(System.Int32,System.Span{System.Byte})
-  name: WriteStoredInputData(int, Span<byte>)
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_WriteStoredInputData_System_Int32_System_Span_System_Byte__
-  commentId: M:LiteEntitySystem.InputProcessor.WriteStoredInputData(System.Int32,System.Span{System.Byte})
-  name.vb: WriteStoredInputData(Integer, Span(Of Byte))
-  fullName: LiteEntitySystem.InputProcessor.WriteStoredInputData(int, System.Span<byte>)
-  fullName.vb: LiteEntitySystem.InputProcessor.WriteStoredInputData(Integer, System.Span(Of Byte))
-  nameWithType: InputProcessor.WriteStoredInputData(int, Span<byte>)
-  nameWithType.vb: InputProcessor.WriteStoredInputData(Integer, Span(Of Byte))
-- uid: LiteEntitySystem.InputProcessor.WriteStoredInputData*
-  name: WriteStoredInputData
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_WriteStoredInputData_
-  commentId: Overload:LiteEntitySystem.InputProcessor.WriteStoredInputData
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor.WriteStoredInputData
-  nameWithType: InputProcessor.WriteStoredInputData
-- uid: LiteEntitySystem.InputProcessor.WriteStoredInputHeader(System.Int32,System.Span{System.Byte})
-  name: WriteStoredInputHeader(int, Span<byte>)
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_WriteStoredInputHeader_System_Int32_System_Span_System_Byte__
-  commentId: M:LiteEntitySystem.InputProcessor.WriteStoredInputHeader(System.Int32,System.Span{System.Byte})
-  name.vb: WriteStoredInputHeader(Integer, Span(Of Byte))
-  fullName: LiteEntitySystem.InputProcessor.WriteStoredInputHeader(int, System.Span<byte>)
-  fullName.vb: LiteEntitySystem.InputProcessor.WriteStoredInputHeader(Integer, System.Span(Of Byte))
-  nameWithType: InputProcessor.WriteStoredInputHeader(int, Span<byte>)
-  nameWithType.vb: InputProcessor.WriteStoredInputHeader(Integer, Span(Of Byte))
-- uid: LiteEntitySystem.InputProcessor.WriteStoredInputHeader*
-  name: WriteStoredInputHeader
-  href: api/LiteEntitySystem.InputProcessor.html#LiteEntitySystem_InputProcessor_WriteStoredInputHeader_
-  commentId: Overload:LiteEntitySystem.InputProcessor.WriteStoredInputHeader
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor.WriteStoredInputHeader
-  nameWithType: InputProcessor.WriteStoredInputHeader
-- uid: LiteEntitySystem.InputProcessor`1
-  name: InputProcessor<TInput>
-  href: api/LiteEntitySystem.InputProcessor-1.html
-  commentId: T:LiteEntitySystem.InputProcessor`1
-  name.vb: InputProcessor(Of TInput)
-  fullName: LiteEntitySystem.InputProcessor<TInput>
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput)
-  nameWithType: InputProcessor<TInput>
-  nameWithType.vb: InputProcessor(Of TInput)
-- uid: LiteEntitySystem.InputProcessor`1.#ctor
-  name: InputProcessor()
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1__ctor
-  commentId: M:LiteEntitySystem.InputProcessor`1.#ctor
-  name.vb: New()
-  fullName: LiteEntitySystem.InputProcessor<TInput>.InputProcessor()
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).New()
-  nameWithType: InputProcessor<TInput>.InputProcessor()
-  nameWithType.vb: InputProcessor(Of TInput).New()
-- uid: LiteEntitySystem.InputProcessor`1.#ctor*
-  name: InputProcessor
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1__ctor_
-  commentId: Overload:LiteEntitySystem.InputProcessor`1.#ctor
-  isSpec: "True"
-  name.vb: New
-  fullName: LiteEntitySystem.InputProcessor<TInput>.InputProcessor
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).New
-  nameWithType: InputProcessor<TInput>.InputProcessor
-  nameWithType.vb: InputProcessor(Of TInput).New
-- uid: LiteEntitySystem.InputProcessor`1.ClearClientStoredInputs
-  name: ClearClientStoredInputs()
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_ClearClientStoredInputs
-  commentId: M:LiteEntitySystem.InputProcessor`1.ClearClientStoredInputs
-  fullName: LiteEntitySystem.InputProcessor<TInput>.ClearClientStoredInputs()
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).ClearClientStoredInputs()
-  nameWithType: InputProcessor<TInput>.ClearClientStoredInputs()
-  nameWithType.vb: InputProcessor(Of TInput).ClearClientStoredInputs()
-- uid: LiteEntitySystem.InputProcessor`1.ClearClientStoredInputs*
-  name: ClearClientStoredInputs
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_ClearClientStoredInputs_
-  commentId: Overload:LiteEntitySystem.InputProcessor`1.ClearClientStoredInputs
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor<TInput>.ClearClientStoredInputs
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).ClearClientStoredInputs
-  nameWithType: InputProcessor<TInput>.ClearClientStoredInputs
-  nameWithType.vb: InputProcessor(Of TInput).ClearClientStoredInputs
-- uid: LiteEntitySystem.InputProcessor`1.ClientStoredInputsCount
-  name: ClientStoredInputsCount
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_ClientStoredInputsCount
-  commentId: P:LiteEntitySystem.InputProcessor`1.ClientStoredInputsCount
-  fullName: LiteEntitySystem.InputProcessor<TInput>.ClientStoredInputsCount
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).ClientStoredInputsCount
-  nameWithType: InputProcessor<TInput>.ClientStoredInputsCount
-  nameWithType.vb: InputProcessor(Of TInput).ClientStoredInputsCount
-- uid: LiteEntitySystem.InputProcessor`1.ClientStoredInputsCount*
-  name: ClientStoredInputsCount
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_ClientStoredInputsCount_
-  commentId: Overload:LiteEntitySystem.InputProcessor`1.ClientStoredInputsCount
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor<TInput>.ClientStoredInputsCount
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).ClientStoredInputsCount
-  nameWithType: InputProcessor<TInput>.ClientStoredInputsCount
-  nameWithType.vb: InputProcessor(Of TInput).ClientStoredInputsCount
-- uid: LiteEntitySystem.InputProcessor`1.DeltaEncode(System.Int32,System.Int32,System.Span{System.Byte})
-  name: DeltaEncode(int, int, Span<byte>)
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_DeltaEncode_System_Int32_System_Int32_System_Span_System_Byte__
-  commentId: M:LiteEntitySystem.InputProcessor`1.DeltaEncode(System.Int32,System.Int32,System.Span{System.Byte})
-  name.vb: DeltaEncode(Integer, Integer, Span(Of Byte))
-  fullName: LiteEntitySystem.InputProcessor<TInput>.DeltaEncode(int, int, System.Span<byte>)
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).DeltaEncode(Integer, Integer, System.Span(Of Byte))
-  nameWithType: InputProcessor<TInput>.DeltaEncode(int, int, Span<byte>)
-  nameWithType.vb: InputProcessor(Of TInput).DeltaEncode(Integer, Integer, Span(Of Byte))
-- uid: LiteEntitySystem.InputProcessor`1.DeltaEncode*
-  name: DeltaEncode
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_DeltaEncode_
-  commentId: Overload:LiteEntitySystem.InputProcessor`1.DeltaEncode
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor<TInput>.DeltaEncode
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).DeltaEncode
-  nameWithType: InputProcessor<TInput>.DeltaEncode
-  nameWithType.vb: InputProcessor(Of TInput).DeltaEncode
-- uid: LiteEntitySystem.InputProcessor`1.GenerateAndApplyInput(LiteEntitySystem.EntityManager,System.Byte,LiteEntitySystem.Internal.InputPacketHeader)
-  name: GenerateAndApplyInput(EntityManager, byte, InputPacketHeader)
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_GenerateAndApplyInput_LiteEntitySystem_EntityManager_System_Byte_LiteEntitySystem_Internal_InputPacketHeader_
-  commentId: M:LiteEntitySystem.InputProcessor`1.GenerateAndApplyInput(LiteEntitySystem.EntityManager,System.Byte,LiteEntitySystem.Internal.InputPacketHeader)
-  name.vb: GenerateAndApplyInput(EntityManager, Byte, InputPacketHeader)
-  fullName: LiteEntitySystem.InputProcessor<TInput>.GenerateAndApplyInput(LiteEntitySystem.EntityManager, byte, LiteEntitySystem.Internal.InputPacketHeader)
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).GenerateAndApplyInput(LiteEntitySystem.EntityManager, Byte, LiteEntitySystem.Internal.InputPacketHeader)
-  nameWithType: InputProcessor<TInput>.GenerateAndApplyInput(EntityManager, byte, InputPacketHeader)
-  nameWithType.vb: InputProcessor(Of TInput).GenerateAndApplyInput(EntityManager, Byte, InputPacketHeader)
-- uid: LiteEntitySystem.InputProcessor`1.GenerateAndApplyInput*
-  name: GenerateAndApplyInput
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_GenerateAndApplyInput_
-  commentId: Overload:LiteEntitySystem.InputProcessor`1.GenerateAndApplyInput
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor<TInput>.GenerateAndApplyInput
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).GenerateAndApplyInput
-  nameWithType: InputProcessor<TInput>.GenerateAndApplyInput
-  nameWithType.vb: InputProcessor(Of TInput).GenerateAndApplyInput
-- uid: LiteEntitySystem.InputProcessor`1.GetStoredInputInfo(System.Int32)
-  name: GetStoredInputInfo(int)
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_GetStoredInputInfo_System_Int32_
-  commentId: M:LiteEntitySystem.InputProcessor`1.GetStoredInputInfo(System.Int32)
-  name.vb: GetStoredInputInfo(Integer)
-  fullName: LiteEntitySystem.InputProcessor<TInput>.GetStoredInputInfo(int)
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).GetStoredInputInfo(Integer)
-  nameWithType: InputProcessor<TInput>.GetStoredInputInfo(int)
-  nameWithType.vb: InputProcessor(Of TInput).GetStoredInputInfo(Integer)
-- uid: LiteEntitySystem.InputProcessor`1.GetStoredInputInfo*
-  name: GetStoredInputInfo
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_GetStoredInputInfo_
-  commentId: Overload:LiteEntitySystem.InputProcessor`1.GetStoredInputInfo
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor<TInput>.GetStoredInputInfo
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).GetStoredInputInfo
-  nameWithType: InputProcessor<TInput>.GetStoredInputInfo
-  nameWithType.vb: InputProcessor(Of TInput).GetStoredInputInfo
-- uid: LiteEntitySystem.InputProcessor`1.ReadClientRequest(LiteEntitySystem.EntityManager,LiteNetLib.Utils.NetDataReader)
-  name: ReadClientRequest(EntityManager, NetDataReader)
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_ReadClientRequest_LiteEntitySystem_EntityManager_LiteNetLib_Utils_NetDataReader_
-  commentId: M:LiteEntitySystem.InputProcessor`1.ReadClientRequest(LiteEntitySystem.EntityManager,LiteNetLib.Utils.NetDataReader)
-  fullName: LiteEntitySystem.InputProcessor<TInput>.ReadClientRequest(LiteEntitySystem.EntityManager, LiteNetLib.Utils.NetDataReader)
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).ReadClientRequest(LiteEntitySystem.EntityManager, LiteNetLib.Utils.NetDataReader)
-  nameWithType: InputProcessor<TInput>.ReadClientRequest(EntityManager, NetDataReader)
-  nameWithType.vb: InputProcessor(Of TInput).ReadClientRequest(EntityManager, NetDataReader)
-- uid: LiteEntitySystem.InputProcessor`1.ReadClientRequest*
-  name: ReadClientRequest
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_ReadClientRequest_
-  commentId: Overload:LiteEntitySystem.InputProcessor`1.ReadClientRequest
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor<TInput>.ReadClientRequest
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).ReadClientRequest
-  nameWithType: InputProcessor<TInput>.ReadClientRequest
-  nameWithType.vb: InputProcessor(Of TInput).ReadClientRequest
-- uid: LiteEntitySystem.InputProcessor`1.ReadInput(LiteEntitySystem.EntityManager,System.Byte,System.ReadOnlySpan{System.Byte})
-  name: ReadInput(EntityManager, byte, ReadOnlySpan<byte>)
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_ReadInput_LiteEntitySystem_EntityManager_System_Byte_System_ReadOnlySpan_System_Byte__
-  commentId: M:LiteEntitySystem.InputProcessor`1.ReadInput(LiteEntitySystem.EntityManager,System.Byte,System.ReadOnlySpan{System.Byte})
-  name.vb: ReadInput(EntityManager, Byte, ReadOnlySpan(Of Byte))
-  fullName: LiteEntitySystem.InputProcessor<TInput>.ReadInput(LiteEntitySystem.EntityManager, byte, System.ReadOnlySpan<byte>)
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).ReadInput(LiteEntitySystem.EntityManager, Byte, System.ReadOnlySpan(Of Byte))
-  nameWithType: InputProcessor<TInput>.ReadInput(EntityManager, byte, ReadOnlySpan<byte>)
-  nameWithType.vb: InputProcessor(Of TInput).ReadInput(EntityManager, Byte, ReadOnlySpan(Of Byte))
-- uid: LiteEntitySystem.InputProcessor`1.ReadInput*
-  name: ReadInput
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_ReadInput_
-  commentId: Overload:LiteEntitySystem.InputProcessor`1.ReadInput
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor<TInput>.ReadInput
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).ReadInput
-  nameWithType: InputProcessor<TInput>.ReadInput
-  nameWithType.vb: InputProcessor(Of TInput).ReadInput
-- uid: LiteEntitySystem.InputProcessor`1.ReadStoredInput(LiteEntitySystem.EntityManager,System.Byte,System.Int32)
-  name: ReadStoredInput(EntityManager, byte, int)
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_ReadStoredInput_LiteEntitySystem_EntityManager_System_Byte_System_Int32_
-  commentId: M:LiteEntitySystem.InputProcessor`1.ReadStoredInput(LiteEntitySystem.EntityManager,System.Byte,System.Int32)
-  name.vb: ReadStoredInput(EntityManager, Byte, Integer)
-  fullName: LiteEntitySystem.InputProcessor<TInput>.ReadStoredInput(LiteEntitySystem.EntityManager, byte, int)
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).ReadStoredInput(LiteEntitySystem.EntityManager, Byte, Integer)
-  nameWithType: InputProcessor<TInput>.ReadStoredInput(EntityManager, byte, int)
-  nameWithType.vb: InputProcessor(Of TInput).ReadStoredInput(EntityManager, Byte, Integer)
-- uid: LiteEntitySystem.InputProcessor`1.ReadStoredInput*
-  name: ReadStoredInput
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_ReadStoredInput_
-  commentId: Overload:LiteEntitySystem.InputProcessor`1.ReadStoredInput
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor<TInput>.ReadStoredInput
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).ReadStoredInput
-  nameWithType: InputProcessor<TInput>.ReadStoredInput
-  nameWithType.vb: InputProcessor(Of TInput).ReadStoredInput
-- uid: LiteEntitySystem.InputProcessor`1.RemoveClientProcessedInputs(System.UInt16)
-  name: RemoveClientProcessedInputs(ushort)
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_RemoveClientProcessedInputs_System_UInt16_
-  commentId: M:LiteEntitySystem.InputProcessor`1.RemoveClientProcessedInputs(System.UInt16)
-  name.vb: RemoveClientProcessedInputs(UShort)
-  fullName: LiteEntitySystem.InputProcessor<TInput>.RemoveClientProcessedInputs(ushort)
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).RemoveClientProcessedInputs(UShort)
-  nameWithType: InputProcessor<TInput>.RemoveClientProcessedInputs(ushort)
-  nameWithType.vb: InputProcessor(Of TInput).RemoveClientProcessedInputs(UShort)
-- uid: LiteEntitySystem.InputProcessor`1.RemoveClientProcessedInputs*
-  name: RemoveClientProcessedInputs
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_RemoveClientProcessedInputs_
-  commentId: Overload:LiteEntitySystem.InputProcessor`1.RemoveClientProcessedInputs
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor<TInput>.RemoveClientProcessedInputs
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).RemoveClientProcessedInputs
-  nameWithType: InputProcessor<TInput>.RemoveClientProcessedInputs
-  nameWithType.vb: InputProcessor(Of TInput).RemoveClientProcessedInputs
-- uid: LiteEntitySystem.InputProcessor`1.WriteStoredInputData(System.Int32,System.Span{System.Byte})
-  name: WriteStoredInputData(int, Span<byte>)
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_WriteStoredInputData_System_Int32_System_Span_System_Byte__
-  commentId: M:LiteEntitySystem.InputProcessor`1.WriteStoredInputData(System.Int32,System.Span{System.Byte})
-  name.vb: WriteStoredInputData(Integer, Span(Of Byte))
-  fullName: LiteEntitySystem.InputProcessor<TInput>.WriteStoredInputData(int, System.Span<byte>)
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).WriteStoredInputData(Integer, System.Span(Of Byte))
-  nameWithType: InputProcessor<TInput>.WriteStoredInputData(int, Span<byte>)
-  nameWithType.vb: InputProcessor(Of TInput).WriteStoredInputData(Integer, Span(Of Byte))
-- uid: LiteEntitySystem.InputProcessor`1.WriteStoredInputData*
-  name: WriteStoredInputData
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_WriteStoredInputData_
-  commentId: Overload:LiteEntitySystem.InputProcessor`1.WriteStoredInputData
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor<TInput>.WriteStoredInputData
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).WriteStoredInputData
-  nameWithType: InputProcessor<TInput>.WriteStoredInputData
-  nameWithType.vb: InputProcessor(Of TInput).WriteStoredInputData
-- uid: LiteEntitySystem.InputProcessor`1.WriteStoredInputHeader(System.Int32,System.Span{System.Byte})
-  name: WriteStoredInputHeader(int, Span<byte>)
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_WriteStoredInputHeader_System_Int32_System_Span_System_Byte__
-  commentId: M:LiteEntitySystem.InputProcessor`1.WriteStoredInputHeader(System.Int32,System.Span{System.Byte})
-  name.vb: WriteStoredInputHeader(Integer, Span(Of Byte))
-  fullName: LiteEntitySystem.InputProcessor<TInput>.WriteStoredInputHeader(int, System.Span<byte>)
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).WriteStoredInputHeader(Integer, System.Span(Of Byte))
-  nameWithType: InputProcessor<TInput>.WriteStoredInputHeader(int, Span<byte>)
-  nameWithType.vb: InputProcessor(Of TInput).WriteStoredInputHeader(Integer, Span(Of Byte))
-- uid: LiteEntitySystem.InputProcessor`1.WriteStoredInputHeader*
-  name: WriteStoredInputHeader
-  href: api/LiteEntitySystem.InputProcessor-1.html#LiteEntitySystem_InputProcessor_1_WriteStoredInputHeader_
-  commentId: Overload:LiteEntitySystem.InputProcessor`1.WriteStoredInputHeader
-  isSpec: "True"
-  fullName: LiteEntitySystem.InputProcessor<TInput>.WriteStoredInputHeader
-  fullName.vb: LiteEntitySystem.InputProcessor(Of TInput).WriteStoredInputHeader
-  nameWithType: InputProcessor<TInput>.WriteStoredInputHeader
-  nameWithType.vb: InputProcessor(Of TInput).WriteStoredInputHeader
+  fullName: LiteEntitySystem.InputInfo.InputInfo
+  fullName.vb: LiteEntitySystem.InputInfo.New
+  nameWithType: InputInfo.InputInfo
+  nameWithType.vb: InputInfo.New
+- uid: LiteEntitySystem.InputInfo.Header
+  name: Header
+  href: api/LiteEntitySystem.InputInfo.html#LiteEntitySystem_InputInfo_Header
+  commentId: F:LiteEntitySystem.InputInfo.Header
+  fullName: LiteEntitySystem.InputInfo.Header
+  nameWithType: InputInfo.Header
+- uid: LiteEntitySystem.InputInfo.Tick
+  name: Tick
+  href: api/LiteEntitySystem.InputInfo.html#LiteEntitySystem_InputInfo_Tick
+  commentId: F:LiteEntitySystem.InputInfo.Tick
+  fullName: LiteEntitySystem.InputInfo.Tick
+  nameWithType: InputInfo.Tick
 - uid: LiteEntitySystem.Internal
   name: LiteEntitySystem.Internal
   href: api/LiteEntitySystem.Internal.html
   commentId: N:LiteEntitySystem.Internal
   fullName: LiteEntitySystem.Internal
   nameWithType: LiteEntitySystem.Internal
-- uid: LiteEntitySystem.Internal.EntityComparer
-  name: EntityComparer
-  href: api/LiteEntitySystem.Internal.EntityComparer.html
-  commentId: T:LiteEntitySystem.Internal.EntityComparer
-  fullName: LiteEntitySystem.Internal.EntityComparer
-  nameWithType: EntityComparer
-- uid: LiteEntitySystem.Internal.EntityComparer.Compare(LiteEntitySystem.Internal.InternalEntity,LiteEntitySystem.Internal.InternalEntity)
-  name: Compare(InternalEntity, InternalEntity)
-  href: api/LiteEntitySystem.Internal.EntityComparer.html#LiteEntitySystem_Internal_EntityComparer_Compare_LiteEntitySystem_Internal_InternalEntity_LiteEntitySystem_Internal_InternalEntity_
-  commentId: M:LiteEntitySystem.Internal.EntityComparer.Compare(LiteEntitySystem.Internal.InternalEntity,LiteEntitySystem.Internal.InternalEntity)
-  fullName: LiteEntitySystem.Internal.EntityComparer.Compare(LiteEntitySystem.Internal.InternalEntity, LiteEntitySystem.Internal.InternalEntity)
-  nameWithType: EntityComparer.Compare(InternalEntity, InternalEntity)
-- uid: LiteEntitySystem.Internal.EntityComparer.Compare*
-  name: Compare
-  href: api/LiteEntitySystem.Internal.EntityComparer.html#LiteEntitySystem_Internal_EntityComparer_Compare_
-  commentId: Overload:LiteEntitySystem.Internal.EntityComparer.Compare
-  isSpec: "True"
-  fullName: LiteEntitySystem.Internal.EntityComparer.Compare
-  nameWithType: EntityComparer.Compare
-- uid: LiteEntitySystem.Internal.EntityComparer.Instance
-  name: Instance
-  href: api/LiteEntitySystem.Internal.EntityComparer.html#LiteEntitySystem_Internal_EntityComparer_Instance
-  commentId: F:LiteEntitySystem.Internal.EntityComparer.Instance
-  fullName: LiteEntitySystem.Internal.EntityComparer.Instance
-  nameWithType: EntityComparer.Instance
 - uid: LiteEntitySystem.Internal.EntityDataHeader
   name: EntityDataHeader
   href: api/LiteEntitySystem.Internal.EntityDataHeader.html
@@ -7568,204 +6902,6 @@ references:
   commentId: F:LiteEntitySystem.Internal.OnSyncExecutionOrder.BeforeConstruct
   fullName: LiteEntitySystem.Internal.OnSyncExecutionOrder.BeforeConstruct
   nameWithType: OnSyncExecutionOrder.BeforeConstruct
-- uid: LiteEntitySystem.Internal.Utils
-  name: Utils
-  href: api/LiteEntitySystem.Internal.Utils.html
-  commentId: T:LiteEntitySystem.Internal.Utils
-  fullName: LiteEntitySystem.Internal.Utils
-  nameWithType: Utils
-- uid: LiteEntitySystem.Internal.Utils.Encoding
-  name: Encoding
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_Encoding
-  commentId: F:LiteEntitySystem.Internal.Utils.Encoding
-  fullName: LiteEntitySystem.Internal.Utils.Encoding
-  nameWithType: Utils.Encoding
-- uid: LiteEntitySystem.Internal.Utils.FastEquals*
-  name: FastEquals
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_FastEquals_
-  commentId: Overload:LiteEntitySystem.Internal.Utils.FastEquals
-  isSpec: "True"
-  fullName: LiteEntitySystem.Internal.Utils.FastEquals
-  nameWithType: Utils.FastEquals
-- uid: LiteEntitySystem.Internal.Utils.FastEquals``1(``0@,System.Byte*)
-  name: FastEquals<T>(ref T, byte*)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_FastEquals__1___0__System_Byte__
-  commentId: M:LiteEntitySystem.Internal.Utils.FastEquals``1(``0@,System.Byte*)
-  name.vb: FastEquals(Of T)(T, Byte*)
-  fullName: LiteEntitySystem.Internal.Utils.FastEquals<T>(ref T, byte*)
-  fullName.vb: LiteEntitySystem.Internal.Utils.FastEquals(Of T)(T, Byte*)
-  nameWithType: Utils.FastEquals<T>(ref T, byte*)
-  nameWithType.vb: Utils.FastEquals(Of T)(T, Byte*)
-- uid: LiteEntitySystem.Internal.Utils.FastEquals``1(``0@,``0@)
-  name: FastEquals<T>(ref T, ref T)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_FastEquals__1___0____0__
-  commentId: M:LiteEntitySystem.Internal.Utils.FastEquals``1(``0@,``0@)
-  name.vb: FastEquals(Of T)(T, T)
-  fullName: LiteEntitySystem.Internal.Utils.FastEquals<T>(ref T, ref T)
-  fullName.vb: LiteEntitySystem.Internal.Utils.FastEquals(Of T)(T, T)
-  nameWithType: Utils.FastEquals<T>(ref T, ref T)
-  nameWithType.vb: Utils.FastEquals(Of T)(T, T)
-- uid: LiteEntitySystem.Internal.Utils.GetBaseTypes(System.Type,System.Type,System.Boolean)
-  name: GetBaseTypes(Type, Type, bool)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_GetBaseTypes_System_Type_System_Type_System_Boolean_
-  commentId: M:LiteEntitySystem.Internal.Utils.GetBaseTypes(System.Type,System.Type,System.Boolean)
-  name.vb: GetBaseTypes(Type, Type, Boolean)
-  fullName: LiteEntitySystem.Internal.Utils.GetBaseTypes(System.Type, System.Type, bool)
-  fullName.vb: LiteEntitySystem.Internal.Utils.GetBaseTypes(System.Type, System.Type, Boolean)
-  nameWithType: Utils.GetBaseTypes(Type, Type, bool)
-  nameWithType.vb: Utils.GetBaseTypes(Type, Type, Boolean)
-- uid: LiteEntitySystem.Internal.Utils.GetBaseTypes*
-  name: GetBaseTypes
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_GetBaseTypes_
-  commentId: Overload:LiteEntitySystem.Internal.Utils.GetBaseTypes
-  isSpec: "True"
-  fullName: LiteEntitySystem.Internal.Utils.GetBaseTypes
-  nameWithType: Utils.GetBaseTypes
-- uid: LiteEntitySystem.Internal.Utils.GetFieldOffset(System.Reflection.FieldInfo)
-  name: GetFieldOffset(FieldInfo)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_GetFieldOffset_System_Reflection_FieldInfo_
-  commentId: M:LiteEntitySystem.Internal.Utils.GetFieldOffset(System.Reflection.FieldInfo)
-  fullName: LiteEntitySystem.Internal.Utils.GetFieldOffset(System.Reflection.FieldInfo)
-  nameWithType: Utils.GetFieldOffset(FieldInfo)
-- uid: LiteEntitySystem.Internal.Utils.GetFieldOffset*
-  name: GetFieldOffset
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_GetFieldOffset_
-  commentId: Overload:LiteEntitySystem.Internal.Utils.GetFieldOffset
-  isSpec: "True"
-  fullName: LiteEntitySystem.Internal.Utils.GetFieldOffset
-  nameWithType: Utils.GetFieldOffset
-- uid: LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte*,System.Int32)
-  name: IsBitSet(byte*, int)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_IsBitSet_System_Byte__System_Int32_
-  commentId: M:LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte*,System.Int32)
-  name.vb: IsBitSet(Byte*, Integer)
-  fullName: LiteEntitySystem.Internal.Utils.IsBitSet(byte*, int)
-  fullName.vb: LiteEntitySystem.Internal.Utils.IsBitSet(Byte*, Integer)
-  nameWithType: Utils.IsBitSet(byte*, int)
-  nameWithType.vb: Utils.IsBitSet(Byte*, Integer)
-- uid: LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte[],System.Int32,System.Int32)
-  name: IsBitSet(byte[], int, int)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_IsBitSet_System_Byte___System_Int32_System_Int32_
-  commentId: M:LiteEntitySystem.Internal.Utils.IsBitSet(System.Byte[],System.Int32,System.Int32)
-  name.vb: IsBitSet(Byte(), Integer, Integer)
-  fullName: LiteEntitySystem.Internal.Utils.IsBitSet(byte[], int, int)
-  fullName.vb: LiteEntitySystem.Internal.Utils.IsBitSet(Byte(), Integer, Integer)
-  nameWithType: Utils.IsBitSet(byte[], int, int)
-  nameWithType.vb: Utils.IsBitSet(Byte(), Integer, Integer)
-- uid: LiteEntitySystem.Internal.Utils.IsBitSet*
-  name: IsBitSet
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_IsBitSet_
-  commentId: Overload:LiteEntitySystem.Internal.Utils.IsBitSet
-  isSpec: "True"
-  fullName: LiteEntitySystem.Internal.Utils.IsBitSet
-  nameWithType: Utils.IsBitSet
-- uid: LiteEntitySystem.Internal.Utils.Lerp(System.Double,System.Double,System.Single)
-  name: Lerp(double, double, float)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_Lerp_System_Double_System_Double_System_Single_
-  commentId: M:LiteEntitySystem.Internal.Utils.Lerp(System.Double,System.Double,System.Single)
-  name.vb: Lerp(Double, Double, Single)
-  fullName: LiteEntitySystem.Internal.Utils.Lerp(double, double, float)
-  fullName.vb: LiteEntitySystem.Internal.Utils.Lerp(Double, Double, Single)
-  nameWithType: Utils.Lerp(double, double, float)
-  nameWithType.vb: Utils.Lerp(Double, Double, Single)
-- uid: LiteEntitySystem.Internal.Utils.Lerp(System.Int32,System.Int32,System.Single)
-  name: Lerp(int, int, float)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_Lerp_System_Int32_System_Int32_System_Single_
-  commentId: M:LiteEntitySystem.Internal.Utils.Lerp(System.Int32,System.Int32,System.Single)
-  name.vb: Lerp(Integer, Integer, Single)
-  fullName: LiteEntitySystem.Internal.Utils.Lerp(int, int, float)
-  fullName.vb: LiteEntitySystem.Internal.Utils.Lerp(Integer, Integer, Single)
-  nameWithType: Utils.Lerp(int, int, float)
-  nameWithType.vb: Utils.Lerp(Integer, Integer, Single)
-- uid: LiteEntitySystem.Internal.Utils.Lerp(System.Int64,System.Int64,System.Single)
-  name: Lerp(long, long, float)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_Lerp_System_Int64_System_Int64_System_Single_
-  commentId: M:LiteEntitySystem.Internal.Utils.Lerp(System.Int64,System.Int64,System.Single)
-  name.vb: Lerp(Long, Long, Single)
-  fullName: LiteEntitySystem.Internal.Utils.Lerp(long, long, float)
-  fullName.vb: LiteEntitySystem.Internal.Utils.Lerp(Long, Long, Single)
-  nameWithType: Utils.Lerp(long, long, float)
-  nameWithType.vb: Utils.Lerp(Long, Long, Single)
-- uid: LiteEntitySystem.Internal.Utils.Lerp(System.Single,System.Single,System.Single)
-  name: Lerp(float, float, float)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_Lerp_System_Single_System_Single_System_Single_
-  commentId: M:LiteEntitySystem.Internal.Utils.Lerp(System.Single,System.Single,System.Single)
-  name.vb: Lerp(Single, Single, Single)
-  fullName: LiteEntitySystem.Internal.Utils.Lerp(float, float, float)
-  fullName.vb: LiteEntitySystem.Internal.Utils.Lerp(Single, Single, Single)
-  nameWithType: Utils.Lerp(float, float, float)
-  nameWithType.vb: Utils.Lerp(Single, Single, Single)
-- uid: LiteEntitySystem.Internal.Utils.Lerp*
-  name: Lerp
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_Lerp_
-  commentId: Overload:LiteEntitySystem.Internal.Utils.Lerp
-  isSpec: "True"
-  fullName: LiteEntitySystem.Internal.Utils.Lerp
-  nameWithType: Utils.Lerp
-- uid: LiteEntitySystem.Internal.Utils.LerpSequence(System.UInt16,System.UInt16,System.Single)
-  name: LerpSequence(ushort, ushort, float)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_LerpSequence_System_UInt16_System_UInt16_System_Single_
-  commentId: M:LiteEntitySystem.Internal.Utils.LerpSequence(System.UInt16,System.UInt16,System.Single)
-  name.vb: LerpSequence(UShort, UShort, Single)
-  fullName: LiteEntitySystem.Internal.Utils.LerpSequence(ushort, ushort, float)
-  fullName.vb: LiteEntitySystem.Internal.Utils.LerpSequence(UShort, UShort, Single)
-  nameWithType: Utils.LerpSequence(ushort, ushort, float)
-  nameWithType.vb: Utils.LerpSequence(UShort, UShort, Single)
-- uid: LiteEntitySystem.Internal.Utils.LerpSequence*
-  name: LerpSequence
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_LerpSequence_
-  commentId: Overload:LiteEntitySystem.Internal.Utils.LerpSequence
-  isSpec: "True"
-  fullName: LiteEntitySystem.Internal.Utils.LerpSequence
-  nameWithType: Utils.LerpSequence
-- uid: LiteEntitySystem.Internal.Utils.ResizeIfFull*
-  name: ResizeIfFull
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_ResizeIfFull_
-  commentId: Overload:LiteEntitySystem.Internal.Utils.ResizeIfFull
-  isSpec: "True"
-  fullName: LiteEntitySystem.Internal.Utils.ResizeIfFull
-  nameWithType: Utils.ResizeIfFull
-- uid: LiteEntitySystem.Internal.Utils.ResizeIfFull``1(``0[]@,System.Int32)
-  name: ResizeIfFull<T>(ref T[], int)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_ResizeIfFull__1___0____System_Int32_
-  commentId: M:LiteEntitySystem.Internal.Utils.ResizeIfFull``1(``0[]@,System.Int32)
-  name.vb: ResizeIfFull(Of T)(T(), Integer)
-  fullName: LiteEntitySystem.Internal.Utils.ResizeIfFull<T>(ref T[], int)
-  fullName.vb: LiteEntitySystem.Internal.Utils.ResizeIfFull(Of T)(T(), Integer)
-  nameWithType: Utils.ResizeIfFull<T>(ref T[], int)
-  nameWithType.vb: Utils.ResizeIfFull(Of T)(T(), Integer)
-- uid: LiteEntitySystem.Internal.Utils.ResizeOrCreate*
-  name: ResizeOrCreate
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_ResizeOrCreate_
-  commentId: Overload:LiteEntitySystem.Internal.Utils.ResizeOrCreate
-  isSpec: "True"
-  fullName: LiteEntitySystem.Internal.Utils.ResizeOrCreate
-  nameWithType: Utils.ResizeOrCreate
-- uid: LiteEntitySystem.Internal.Utils.ResizeOrCreate``1(``0[]@,System.Int32)
-  name: ResizeOrCreate<T>(ref T[], int)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_ResizeOrCreate__1___0____System_Int32_
-  commentId: M:LiteEntitySystem.Internal.Utils.ResizeOrCreate``1(``0[]@,System.Int32)
-  name.vb: ResizeOrCreate(Of T)(T(), Integer)
-  fullName: LiteEntitySystem.Internal.Utils.ResizeOrCreate<T>(ref T[], int)
-  fullName.vb: LiteEntitySystem.Internal.Utils.ResizeOrCreate(Of T)(T(), Integer)
-  nameWithType: Utils.ResizeOrCreate<T>(ref T[], int)
-  nameWithType.vb: Utils.ResizeOrCreate(Of T)(T(), Integer)
-- uid: LiteEntitySystem.Internal.Utils.SequenceDiff(System.UInt16,System.UInt16)
-  name: SequenceDiff(ushort, ushort)
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_SequenceDiff_System_UInt16_System_UInt16_
-  commentId: M:LiteEntitySystem.Internal.Utils.SequenceDiff(System.UInt16,System.UInt16)
-  name.vb: SequenceDiff(UShort, UShort)
-  fullName: LiteEntitySystem.Internal.Utils.SequenceDiff(ushort, ushort)
-  fullName.vb: LiteEntitySystem.Internal.Utils.SequenceDiff(UShort, UShort)
-  nameWithType: Utils.SequenceDiff(ushort, ushort)
-  nameWithType.vb: Utils.SequenceDiff(UShort, UShort)
-- uid: LiteEntitySystem.Internal.Utils.SequenceDiff*
-  name: SequenceDiff
-  href: api/LiteEntitySystem.Internal.Utils.html#LiteEntitySystem_Internal_Utils_SequenceDiff_
-  commentId: Overload:LiteEntitySystem.Internal.Utils.SequenceDiff
-  isSpec: "True"
-  fullName: LiteEntitySystem.Internal.Utils.SequenceDiff
-  nameWithType: Utils.SequenceDiff
 - uid: LiteEntitySystem.Logger
   name: Logger
   href: api/LiteEntitySystem.Logger.html
@@ -8074,15 +7210,15 @@ references:
   commentId: T:LiteEntitySystem.ServerEntityManager
   fullName: LiteEntitySystem.ServerEntityManager
   nameWithType: ServerEntityManager
-- uid: LiteEntitySystem.ServerEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,System.Byte,System.Byte,LiteEntitySystem.ServerSendRate,LiteEntitySystem.MaxHistorySize)
-  name: ServerEntityManager(EntityTypesMap, InputProcessor, byte, byte, ServerSendRate, MaxHistorySize)
-  href: api/LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_InputProcessor_System_Byte_System_Byte_LiteEntitySystem_ServerSendRate_LiteEntitySystem_MaxHistorySize_
-  commentId: M:LiteEntitySystem.ServerEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.InputProcessor,System.Byte,System.Byte,LiteEntitySystem.ServerSendRate,LiteEntitySystem.MaxHistorySize)
-  name.vb: New(EntityTypesMap, InputProcessor, Byte, Byte, ServerSendRate, MaxHistorySize)
-  fullName: LiteEntitySystem.ServerEntityManager.ServerEntityManager(LiteEntitySystem.EntityTypesMap, LiteEntitySystem.InputProcessor, byte, byte, LiteEntitySystem.ServerSendRate, LiteEntitySystem.MaxHistorySize)
-  fullName.vb: LiteEntitySystem.ServerEntityManager.New(LiteEntitySystem.EntityTypesMap, LiteEntitySystem.InputProcessor, Byte, Byte, LiteEntitySystem.ServerSendRate, LiteEntitySystem.MaxHistorySize)
-  nameWithType: ServerEntityManager.ServerEntityManager(EntityTypesMap, InputProcessor, byte, byte, ServerSendRate, MaxHistorySize)
-  nameWithType.vb: ServerEntityManager.New(EntityTypesMap, InputProcessor, Byte, Byte, ServerSendRate, MaxHistorySize)
+- uid: LiteEntitySystem.ServerEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,System.Byte,System.Byte,LiteEntitySystem.ServerSendRate,LiteEntitySystem.MaxHistorySize)
+  name: ServerEntityManager(EntityTypesMap, byte, byte, ServerSendRate, MaxHistorySize)
+  href: api/LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager__ctor_LiteEntitySystem_EntityTypesMap_System_Byte_System_Byte_LiteEntitySystem_ServerSendRate_LiteEntitySystem_MaxHistorySize_
+  commentId: M:LiteEntitySystem.ServerEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,System.Byte,System.Byte,LiteEntitySystem.ServerSendRate,LiteEntitySystem.MaxHistorySize)
+  name.vb: New(EntityTypesMap, Byte, Byte, ServerSendRate, MaxHistorySize)
+  fullName: LiteEntitySystem.ServerEntityManager.ServerEntityManager(LiteEntitySystem.EntityTypesMap, byte, byte, LiteEntitySystem.ServerSendRate, LiteEntitySystem.MaxHistorySize)
+  fullName.vb: LiteEntitySystem.ServerEntityManager.New(LiteEntitySystem.EntityTypesMap, Byte, Byte, LiteEntitySystem.ServerSendRate, LiteEntitySystem.MaxHistorySize)
+  nameWithType: ServerEntityManager.ServerEntityManager(EntityTypesMap, byte, byte, ServerSendRate, MaxHistorySize)
+  nameWithType.vb: ServerEntityManager.New(EntityTypesMap, Byte, Byte, ServerSendRate, MaxHistorySize)
 - uid: LiteEntitySystem.ServerEntityManager.#ctor*
   name: ServerEntityManager
   href: api/LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager__ctor_
@@ -8188,22 +7324,6 @@ references:
   fullName.vb: LiteEntitySystem.ServerEntityManager.AddSingleton(Of T)(System.Action(Of T))
   nameWithType: ServerEntityManager.AddSingleton<T>(Action<T>)
   nameWithType.vb: ServerEntityManager.AddSingleton(Of T)(Action(Of T))
-- uid: LiteEntitySystem.ServerEntityManager.Create*
-  name: Create
-  href: api/LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager_Create_
-  commentId: Overload:LiteEntitySystem.ServerEntityManager.Create
-  isSpec: "True"
-  fullName: LiteEntitySystem.ServerEntityManager.Create
-  nameWithType: ServerEntityManager.Create
-- uid: LiteEntitySystem.ServerEntityManager.Create``1(LiteEntitySystem.EntityTypesMap,System.Byte,System.Byte,LiteEntitySystem.ServerSendRate,LiteEntitySystem.MaxHistorySize)
-  name: Create<TInput>(EntityTypesMap, byte, byte, ServerSendRate, MaxHistorySize)
-  href: api/LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager_Create__1_LiteEntitySystem_EntityTypesMap_System_Byte_System_Byte_LiteEntitySystem_ServerSendRate_LiteEntitySystem_MaxHistorySize_
-  commentId: M:LiteEntitySystem.ServerEntityManager.Create``1(LiteEntitySystem.EntityTypesMap,System.Byte,System.Byte,LiteEntitySystem.ServerSendRate,LiteEntitySystem.MaxHistorySize)
-  name.vb: Create(Of TInput)(EntityTypesMap, Byte, Byte, ServerSendRate, MaxHistorySize)
-  fullName: LiteEntitySystem.ServerEntityManager.Create<TInput>(LiteEntitySystem.EntityTypesMap, byte, byte, LiteEntitySystem.ServerSendRate, LiteEntitySystem.MaxHistorySize)
-  fullName.vb: LiteEntitySystem.ServerEntityManager.Create(Of TInput)(LiteEntitySystem.EntityTypesMap, Byte, Byte, LiteEntitySystem.ServerSendRate, LiteEntitySystem.MaxHistorySize)
-  nameWithType: ServerEntityManager.Create<TInput>(EntityTypesMap, byte, byte, ServerSendRate, MaxHistorySize)
-  nameWithType.vb: ServerEntityManager.Create(Of TInput)(EntityTypesMap, Byte, Byte, ServerSendRate, MaxHistorySize)
 - uid: LiteEntitySystem.ServerEntityManager.Deserialize(LiteEntitySystem.NetPlayer,System.ReadOnlySpan{System.Byte})
   name: Deserialize(NetPlayer, ReadOnlySpan<byte>)
   href: api/LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager_Deserialize_LiteEntitySystem_NetPlayer_System_ReadOnlySpan_System_Byte__
@@ -11004,381 +10124,3 @@ references:
   fullName.vb: LiteEntitySystem.Utils.WriteStruct(Of T)(System.Span(Of Byte), T)
   nameWithType: Utils.WriteStruct<T>(Span<byte>, T)
   nameWithType.vb: Utils.WriteStruct(Of T)(Span(Of Byte), T)
-- uid: LiteNetLib.Utils
-  name: LiteNetLib.Utils
-  href: api/LiteNetLib.Utils.html
-  commentId: N:LiteNetLib.Utils
-  fullName: LiteNetLib.Utils
-  nameWithType: LiteNetLib.Utils
-- uid: LiteNetLib.Utils.NetDataExtensions
-  name: NetDataExtensions
-  href: api/LiteNetLib.Utils.NetDataExtensions.html
-  commentId: T:LiteNetLib.Utils.NetDataExtensions
-  fullName: LiteNetLib.Utils.NetDataExtensions
-  nameWithType: NetDataExtensions
-- uid: LiteNetLib.Utils.NetDataExtensions.Get*
-  name: Get
-  href: api/LiteNetLib.Utils.NetDataExtensions.html#LiteNetLib_Utils_NetDataExtensions_Get_
-  commentId: Overload:LiteNetLib.Utils.NetDataExtensions.Get
-  isSpec: "True"
-  fullName: LiteNetLib.Utils.NetDataExtensions.Get
-  nameWithType: NetDataExtensions.Get
-- uid: LiteNetLib.Utils.NetDataExtensions.Get``1(LiteNetLib.Utils.NetDataReader)
-  name: Get<T>(NetDataReader)
-  href: api/LiteNetLib.Utils.NetDataExtensions.html#LiteNetLib_Utils_NetDataExtensions_Get__1_LiteNetLib_Utils_NetDataReader_
-  commentId: M:LiteNetLib.Utils.NetDataExtensions.Get``1(LiteNetLib.Utils.NetDataReader)
-  name.vb: Get(Of T)(NetDataReader)
-  fullName: LiteNetLib.Utils.NetDataExtensions.Get<T>(LiteNetLib.Utils.NetDataReader)
-  fullName.vb: LiteNetLib.Utils.NetDataExtensions.Get(Of T)(LiteNetLib.Utils.NetDataReader)
-  nameWithType: NetDataExtensions.Get<T>(NetDataReader)
-  nameWithType.vb: NetDataExtensions.Get(Of T)(NetDataReader)
-- uid: LiteNetLib.Utils.NetDataExtensions.Get``1(LiteNetLib.Utils.NetDataReader,``0@)
-  name: Get<T>(NetDataReader, out T)
-  href: api/LiteNetLib.Utils.NetDataExtensions.html#LiteNetLib_Utils_NetDataExtensions_Get__1_LiteNetLib_Utils_NetDataReader___0__
-  commentId: M:LiteNetLib.Utils.NetDataExtensions.Get``1(LiteNetLib.Utils.NetDataReader,``0@)
-  name.vb: Get(Of T)(NetDataReader, T)
-  fullName: LiteNetLib.Utils.NetDataExtensions.Get<T>(LiteNetLib.Utils.NetDataReader, out T)
-  fullName.vb: LiteNetLib.Utils.NetDataExtensions.Get(Of T)(LiteNetLib.Utils.NetDataReader, T)
-  nameWithType: NetDataExtensions.Get<T>(NetDataReader, out T)
-  nameWithType.vb: NetDataExtensions.Get(Of T)(NetDataReader, T)
-- uid: LiteNetLib.Utils.NetDataExtensions.Put*
-  name: Put
-  href: api/LiteNetLib.Utils.NetDataExtensions.html#LiteNetLib_Utils_NetDataExtensions_Put_
-  commentId: Overload:LiteNetLib.Utils.NetDataExtensions.Put
-  isSpec: "True"
-  fullName: LiteNetLib.Utils.NetDataExtensions.Put
-  nameWithType: NetDataExtensions.Put
-- uid: LiteNetLib.Utils.NetDataExtensions.Put``1(LiteNetLib.Utils.NetDataWriter,``0)
-  name: Put<T>(NetDataWriter, T)
-  href: api/LiteNetLib.Utils.NetDataExtensions.html#LiteNetLib_Utils_NetDataExtensions_Put__1_LiteNetLib_Utils_NetDataWriter___0_
-  commentId: M:LiteNetLib.Utils.NetDataExtensions.Put``1(LiteNetLib.Utils.NetDataWriter,``0)
-  name.vb: Put(Of T)(NetDataWriter, T)
-  fullName: LiteNetLib.Utils.NetDataExtensions.Put<T>(LiteNetLib.Utils.NetDataWriter, T)
-  fullName.vb: LiteNetLib.Utils.NetDataExtensions.Put(Of T)(LiteNetLib.Utils.NetDataWriter, T)
-  nameWithType: NetDataExtensions.Put<T>(NetDataWriter, T)
-  nameWithType.vb: NetDataExtensions.Put(Of T)(NetDataWriter, T)
-- uid: Plugins.LiteEntitySystem.Extensions
-  name: Plugins.LiteEntitySystem.Extensions
-  href: api/Plugins.LiteEntitySystem.Extensions.html
-  commentId: N:Plugins.LiteEntitySystem.Extensions
-  fullName: Plugins.LiteEntitySystem.Extensions
-  nameWithType: Plugins.LiteEntitySystem.Extensions
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1
-  name: SyncQueue<T>
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html
-  commentId: T:Plugins.LiteEntitySystem.Extensions.SyncQueue`1
-  name.vb: SyncQueue(Of T)
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T)
-  nameWithType: SyncQueue<T>
-  nameWithType.vb: SyncQueue(Of T)
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.AfterReadRPC
-  name: AfterReadRPC()
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_AfterReadRPC
-  commentId: M:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.AfterReadRPC
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.AfterReadRPC()
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).AfterReadRPC()
-  nameWithType: SyncQueue<T>.AfterReadRPC()
-  nameWithType.vb: SyncQueue(Of T).AfterReadRPC()
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.AfterReadRPC*
-  name: AfterReadRPC
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_AfterReadRPC_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.AfterReadRPC
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.AfterReadRPC
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).AfterReadRPC
-  nameWithType: SyncQueue<T>.AfterReadRPC
-  nameWithType.vb: SyncQueue(Of T).AfterReadRPC
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.BeforeReadRPC
-  name: BeforeReadRPC()
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_BeforeReadRPC
-  commentId: M:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.BeforeReadRPC
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.BeforeReadRPC()
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).BeforeReadRPC()
-  nameWithType: SyncQueue<T>.BeforeReadRPC()
-  nameWithType.vb: SyncQueue(Of T).BeforeReadRPC()
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.BeforeReadRPC*
-  name: BeforeReadRPC
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_BeforeReadRPC_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.BeforeReadRPC
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.BeforeReadRPC
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).BeforeReadRPC
-  nameWithType: SyncQueue<T>.BeforeReadRPC
-  nameWithType.vb: SyncQueue(Of T).BeforeReadRPC
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Clear
-  name: Clear()
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Clear
-  commentId: M:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Clear
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.Clear()
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).Clear()
-  nameWithType: SyncQueue<T>.Clear()
-  nameWithType.vb: SyncQueue(Of T).Clear()
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Clear*
-  name: Clear
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Clear_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Clear
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.Clear
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).Clear
-  nameWithType: SyncQueue<T>.Clear
-  nameWithType.vb: SyncQueue(Of T).Clear
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Contains(`0)
-  name: Contains(T)
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Contains__0_
-  commentId: M:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Contains(`0)
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.Contains(T)
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).Contains(T)
-  nameWithType: SyncQueue<T>.Contains(T)
-  nameWithType.vb: SyncQueue(Of T).Contains(T)
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Contains*
-  name: Contains
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Contains_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Contains
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.Contains
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).Contains
-  nameWithType: SyncQueue<T>.Contains
-  nameWithType.vb: SyncQueue(Of T).Contains
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.CopyTo(System.Array,System.Int32)
-  name: CopyTo(Array, int)
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_CopyTo_System_Array_System_Int32_
-  commentId: M:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.CopyTo(System.Array,System.Int32)
-  name.vb: CopyTo(Array, Integer)
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.CopyTo(System.Array, int)
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).CopyTo(System.Array, Integer)
-  nameWithType: SyncQueue<T>.CopyTo(Array, int)
-  nameWithType.vb: SyncQueue(Of T).CopyTo(Array, Integer)
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.CopyTo*
-  name: CopyTo
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_CopyTo_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.CopyTo
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.CopyTo
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).CopyTo
-  nameWithType: SyncQueue<T>.CopyTo
-  nameWithType.vb: SyncQueue(Of T).CopyTo
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Count
-  name: Count
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Count
-  commentId: P:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Count
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.Count
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).Count
-  nameWithType: SyncQueue<T>.Count
-  nameWithType.vb: SyncQueue(Of T).Count
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Count*
-  name: Count
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Count_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Count
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.Count
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).Count
-  nameWithType: SyncQueue<T>.Count
-  nameWithType.vb: SyncQueue(Of T).Count
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Dequeue
-  name: Dequeue()
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Dequeue
-  commentId: M:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Dequeue
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.Dequeue()
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).Dequeue()
-  nameWithType: SyncQueue<T>.Dequeue()
-  nameWithType.vb: SyncQueue(Of T).Dequeue()
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Dequeue*
-  name: Dequeue
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Dequeue_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Dequeue
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.Dequeue
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).Dequeue
-  nameWithType: SyncQueue<T>.Dequeue
-  nameWithType.vb: SyncQueue(Of T).Dequeue
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Enqueue(`0)
-  name: Enqueue(T)
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Enqueue__0_
-  commentId: M:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Enqueue(`0)
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.Enqueue(T)
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).Enqueue(T)
-  nameWithType: SyncQueue<T>.Enqueue(T)
-  nameWithType.vb: SyncQueue(Of T).Enqueue(T)
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Enqueue*
-  name: Enqueue
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Enqueue_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Enqueue
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.Enqueue
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).Enqueue
-  nameWithType: SyncQueue<T>.Enqueue
-  nameWithType.vb: SyncQueue(Of T).Enqueue
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.GetEnumerator
-  name: GetEnumerator()
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_GetEnumerator
-  commentId: M:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.GetEnumerator
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.GetEnumerator()
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).GetEnumerator()
-  nameWithType: SyncQueue<T>.GetEnumerator()
-  nameWithType.vb: SyncQueue(Of T).GetEnumerator()
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.GetEnumerator*
-  name: GetEnumerator
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_GetEnumerator_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.GetEnumerator
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.GetEnumerator
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).GetEnumerator
-  nameWithType: SyncQueue<T>.GetEnumerator
-  nameWithType.vb: SyncQueue(Of T).GetEnumerator
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported
-  name: IsRollbackSupported
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_IsRollbackSupported
-  commentId: P:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.IsRollbackSupported
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).IsRollbackSupported
-  nameWithType: SyncQueue<T>.IsRollbackSupported
-  nameWithType.vb: SyncQueue(Of T).IsRollbackSupported
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported*
-  name: IsRollbackSupported
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_IsRollbackSupported_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.IsRollbackSupported
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).IsRollbackSupported
-  nameWithType: SyncQueue<T>.IsRollbackSupported
-  nameWithType.vb: SyncQueue(Of T).IsRollbackSupported
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.IsSynchronized
-  name: IsSynchronized
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_IsSynchronized
-  commentId: P:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.IsSynchronized
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.IsSynchronized
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).IsSynchronized
-  nameWithType: SyncQueue<T>.IsSynchronized
-  nameWithType.vb: SyncQueue(Of T).IsSynchronized
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.IsSynchronized*
-  name: IsSynchronized
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_IsSynchronized_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.IsSynchronized
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.IsSynchronized
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).IsSynchronized
-  nameWithType: SyncQueue<T>.IsSynchronized
-  nameWithType.vb: SyncQueue(Of T).IsSynchronized
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.OnRollback
-  name: OnRollback()
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_OnRollback
-  commentId: M:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.OnRollback
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.OnRollback()
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).OnRollback()
-  nameWithType: SyncQueue<T>.OnRollback()
-  nameWithType.vb: SyncQueue(Of T).OnRollback()
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.OnRollback*
-  name: OnRollback
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_OnRollback_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.OnRollback
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.OnRollback
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).OnRollback
-  nameWithType: SyncQueue<T>.OnRollback
-  nameWithType.vb: SyncQueue(Of T).OnRollback
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.OnSyncRequested
-  name: OnSyncRequested()
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_OnSyncRequested
-  commentId: M:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.OnSyncRequested
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.OnSyncRequested()
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).OnSyncRequested()
-  nameWithType: SyncQueue<T>.OnSyncRequested()
-  nameWithType.vb: SyncQueue(Of T).OnSyncRequested()
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.OnSyncRequested*
-  name: OnSyncRequested
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_OnSyncRequested_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.OnSyncRequested
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.OnSyncRequested
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).OnSyncRequested
-  nameWithType: SyncQueue<T>.OnSyncRequested
-  nameWithType.vb: SyncQueue(Of T).OnSyncRequested
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Peek
-  name: Peek()
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Peek
-  commentId: M:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Peek
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.Peek()
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).Peek()
-  nameWithType: SyncQueue<T>.Peek()
-  nameWithType.vb: SyncQueue(Of T).Peek()
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Peek*
-  name: Peek
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_Peek_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.Peek
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.Peek
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).Peek
-  nameWithType: SyncQueue<T>.Peek
-  nameWithType.vb: SyncQueue(Of T).Peek
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
-  name: RegisterRPC(ref SyncableRPCRegistrator)
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
-  commentId: M:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
-  name.vb: RegisterRPC(SyncableRPCRegistrator)
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
-  nameWithType: SyncQueue<T>.RegisterRPC(ref SyncableRPCRegistrator)
-  nameWithType.vb: SyncQueue(Of T).RegisterRPC(SyncableRPCRegistrator)
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.RegisterRPC*
-  name: RegisterRPC
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_RegisterRPC_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.RegisterRPC
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.RegisterRPC
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).RegisterRPC
-  nameWithType: SyncQueue<T>.RegisterRPC
-  nameWithType.vb: SyncQueue(Of T).RegisterRPC
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.SyncRoot
-  name: SyncRoot
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_SyncRoot
-  commentId: P:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.SyncRoot
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.SyncRoot
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).SyncRoot
-  nameWithType: SyncQueue<T>.SyncRoot
-  nameWithType.vb: SyncQueue(Of T).SyncRoot
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.SyncRoot*
-  name: SyncRoot
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_SyncRoot_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.SyncRoot
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.SyncRoot
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).SyncRoot
-  nameWithType: SyncQueue<T>.SyncRoot
-  nameWithType.vb: SyncQueue(Of T).SyncRoot
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.TryDequeue(`0@)
-  name: TryDequeue(out T)
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_TryDequeue__0__
-  commentId: M:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.TryDequeue(`0@)
-  name.vb: TryDequeue(T)
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.TryDequeue(out T)
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).TryDequeue(T)
-  nameWithType: SyncQueue<T>.TryDequeue(out T)
-  nameWithType.vb: SyncQueue(Of T).TryDequeue(T)
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.TryDequeue*
-  name: TryDequeue
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_TryDequeue_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.TryDequeue
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.TryDequeue
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).TryDequeue
-  nameWithType: SyncQueue<T>.TryDequeue
-  nameWithType.vb: SyncQueue(Of T).TryDequeue
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.TryPeek(`0@)
-  name: TryPeek(out T)
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_TryPeek__0__
-  commentId: M:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.TryPeek(`0@)
-  name.vb: TryPeek(T)
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.TryPeek(out T)
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).TryPeek(T)
-  nameWithType: SyncQueue<T>.TryPeek(out T)
-  nameWithType.vb: SyncQueue(Of T).TryPeek(T)
-- uid: Plugins.LiteEntitySystem.Extensions.SyncQueue`1.TryPeek*
-  name: TryPeek
-  href: api/Plugins.LiteEntitySystem.Extensions.SyncQueue-1.html#Plugins_LiteEntitySystem_Extensions_SyncQueue_1_TryPeek_
-  commentId: Overload:Plugins.LiteEntitySystem.Extensions.SyncQueue`1.TryPeek
-  isSpec: "True"
-  fullName: Plugins.LiteEntitySystem.Extensions.SyncQueue<T>.TryPeek
-  fullName.vb: Plugins.LiteEntitySystem.Extensions.SyncQueue(Of T).TryPeek
-  nameWithType: SyncQueue<T>.TryPeek
-  nameWithType.vb: SyncQueue(Of T).TryPeek
