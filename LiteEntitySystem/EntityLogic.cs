@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using LiteEntitySystem.Extensions;
 using LiteEntitySystem.Internal;
 
@@ -41,83 +39,13 @@ namespace LiteEntitySystem
     /// </summary>
     public abstract class EntityLogic : InternalEntity
     {
-        public struct ChildEnumerator : IEnumerator<EntitySharedReference>
-        {
-            private readonly EntityLogic _parent;
-            private readonly int _lastIndex;
-            private int _index;
-
-            public ChildEnumerator(EntityLogic entityLogic)
-            {
-                _parent = entityLogic;
-                Current = EntitySharedReference.Empty;
-                _lastIndex = entityLogic._childsCount - 1;
-                _index = -1;
-            }
-        
-            public bool MoveNext()
-            {
-                if (_index == _lastIndex)
-                    return false;
-                Current = _index == -1
-                    ? _parent._firstChild 
-                    : _parent.EntityManager.GetEntityById<EntityLogic>(Current)._nextChild.Value;
-                _index++;
-                return true;
-            }
-
-            public void Reset()
-            {
-                _index = -1;
-                Current = EntitySharedReference.Empty;
-            }
-
-            public EntitySharedReference Current { get; private set; }
-            object IEnumerator.Current => Current;
-            public void Dispose() {}
-        }
-        
-        public struct ChildAccessor : IEnumerable<EntitySharedReference>
-        {
-            private readonly EntityLogic _parent;
-        
-            public ChildAccessor(EntityLogic entityLogic) => _parent = entityLogic;
-            public int Count => _parent._childsCount;
-            public ChildEnumerator GetEnumerator() => new ChildEnumerator(_parent);
-            IEnumerator<EntitySharedReference> IEnumerable<EntitySharedReference>.GetEnumerator() => new ChildEnumerator(_parent);
-            IEnumerator IEnumerable.GetEnumerator() => new ChildEnumerator(_parent);
-
-            public EntitySharedReference[] ToArray()
-            {
-                var result = new EntitySharedReference[_parent._childsCount];
-                var iter = _parent._firstChild;
-                for(int i = 0; i < result.Length; i++)
-                {
-                    result[i] = iter;
-                    if(!_parent.EntityManager.TryGetEntityById<EntityLogic>(iter.Value, out var currentChild))
-                    {
-                        Logger.Log($"ChildIsNull: {currentChild}, childRef: {iter.Value.ToString()}, childsCount: {_parent._childsCount}, i: {i}");
-                        var corruptedResult = new EntitySharedReference[i];
-                        Array.Copy(result, corruptedResult, corruptedResult.Length);
-                        return corruptedResult;
-                    }
-                    iter = currentChild._nextChild;
-                }
-                return result;
-            }
-        }
-        
         [SyncVarFlags(SyncFlags.NeverRollBack)]
         private SyncVar<EntitySharedReference> _parentId;
 
         /// <summary>
         /// Child entities (can be used for transforms or as components)
         /// </summary>
-        public readonly ChildAccessor Childs;
-
-        private SyncVar<EntitySharedReference> _firstChild;
-        private SyncVar<EntitySharedReference> _nextChild;
-        private SyncVar<ushort> _childsCount;
+        public readonly SyncChilds Childs = new();
 
         public EntitySharedReference ParentId => _parentId;
         
@@ -131,50 +59,6 @@ namespace LiteEntitySystem
         private SyncVar<ushort> _predictedId;
         
         internal ulong PredictedId => _predictedId.Value;
-        
-        private void AddChild(EntitySharedReference entity)
-        {
-            if (_childsCount.Value == ushort.MaxValue)
-                throw new Exception($"Too many childs > {ushort.MaxValue}");
-            if (entity == EntitySharedReference.Empty)
-                return;
-            
-            ref var iter = ref _firstChild;
-            for(int i = 0; i < _childsCount; i++)
-            {
-                if (iter.Value == entity)
-                {
-                    //entity already child
-                    return;
-                }
-                iter = ref EntityManager.GetEntityById<EntityLogic>(iter.Value)._nextChild;
-            }
-            iter.Value = entity;
-            //Logger.Log($"AddChild: {_childsCount}");
-            _childsCount.Value++;
-        }
-
-        private void RemoveChild(EntitySharedReference entity)
-        {
-            if (_firstChild == EntitySharedReference.Empty || entity == EntitySharedReference.Empty)
-                return;
-            ref var childPtr = ref _firstChild;
-            for(int i = 0; i < _childsCount; i++)
-            {
-                if (childPtr.Value == entity)
-                {
-                    var currentChild = EntityManager.GetEntityById<EntityLogic>(childPtr.Value);
-                    childPtr.Value = currentChild._nextChild;
-                    currentChild._nextChild.Value = EntitySharedReference.Empty;
-                    
-                    //Logger.Log($"RemoveChild: {_childsCount}");
-                    _childsCount.Value--;
-                    return;
-                }
-                childPtr = ref EntityManager.GetEntityById<EntityLogic>(childPtr.Value)._nextChild;
-            }
-            //Logger.Log("RemoveChild failed");
-        }
         
         //on client it works only in rollback
         internal void EnableLagCompensation(NetPlayer player)
@@ -268,7 +152,7 @@ namespace LiteEntitySystem
                 else
                 {
                     //add to childs on rollback
-                    AddChild(entity);
+                    Childs.Add(entity);
                 }
                 return entity;
             }
@@ -277,7 +161,7 @@ namespace LiteEntitySystem
             entity._predictedId.Value = _localPredictedIdCounter.Value++;
             entity._parentId.Value = new EntitySharedReference(this);
             entity.InternalOwnerId.Value = InternalOwnerId.Value;
-            AddChild(entity);
+            Childs.Add(entity);
             entity.OnOwnerChange(EntityManager.InternalPlayerId);
             return entity;
         }
@@ -298,7 +182,7 @@ namespace LiteEntitySystem
                 if (EntityManager.TryGetEntityById(targetReference.Value, out entity) && entity.IsLocal)
                 {
                     //add to childs on rollback
-                    AddChild(entity);
+                    Childs.Add(entity);
                 }
                 return;
             }
@@ -319,7 +203,7 @@ namespace LiteEntitySystem
             entity = ClientManager.AddLocalEntity(initMethod);
             entity._parentId.Value = new EntitySharedReference(this);
             entity.InternalOwnerId.Value = InternalOwnerId.Value;
-            AddChild(entity);
+            Childs.Add(entity);
             entity.OnOwnerChange(EntityManager.InternalPlayerId);
             targetReference.Value = entity;
         }
@@ -337,8 +221,8 @@ namespace LiteEntitySystem
             if (id == _parentId.Value)
                 return;
             
-            EntityManager.GetEntityById<EntityLogic>(_parentId)?.RemoveChild(this);
-            EntityManager.GetEntityById<EntityLogic>(id)?.AddChild(this);
+            EntityManager.GetEntityById<EntityLogic>(_parentId)?.Childs.Remove(this);
+            EntityManager.GetEntityById<EntityLogic>(id)?.Childs.Add(this);
             _parentId.Value = id;
             
             var newParent = EntityManager.GetEntityById<EntityLogic>(_parentId)?.InternalOwnerId ?? EntityManager.ServerPlayerId;
@@ -383,18 +267,20 @@ namespace LiteEntitySystem
                 foreach (var entityLogicRef in childsCopy)
                     EntityManager.GetEntityById<EntityLogic>(entityLogicRef)?.OnBeforeParentDestroy();
             }
+
             base.DestroyInternal();
-            if (IsLocalControlled || IsServer)
+            if (EntityManager.IsClient && IsLocalControlled && !IsLocal)
             {
-                if (EntityManager.TryGetEntityById<EntityLogic>(_parentId, out var parent) && !parent.IsDestroyed)
-                {
-                    parent.RemoveChild(this);
-                }
-                foreach (var entityLogicRef in Childs)
-                    EntityManager.GetEntityById<EntityLogic>(entityLogicRef)?.Destroy();
+                ClientManager.RemoveOwned(this);
             }
-            _firstChild.Value = EntitySharedReference.Empty;
-            _childsCount.Value = 0;
+            var parent = EntityManager.GetEntityById<EntityLogic>(_parentId);
+            if (parent != null && !parent.IsDestroyed)
+            {
+                parent.Childs.Remove(this);
+            }
+            
+            foreach (var entityLogicRef in Childs)
+                EntityManager.GetEntityById<EntityLogic>(entityLogicRef)?.Destroy();
         }
 
         /// <summary>
@@ -434,7 +320,7 @@ namespace LiteEntitySystem
         
         protected EntityLogic(EntityParams entityParams) : base(entityParams)
         {
-            Childs = new ChildAccessor(this);
+
         }
     }
 }
