@@ -118,7 +118,10 @@ namespace LiteEntitySystem.Internal
                     ReadRPCs(rawData, ref stateReaderOffset, new EntitySharedReference(entity.Id, entity.Version), classData);
 
                 if (stateReaderOffset != initialReaderPosition + totalSize)
+                {
                     Logger.LogError($"Missread! {stateReaderOffset} > {initialReaderPosition + totalSize}");
+                    return;
+                }
             }
         }
         
