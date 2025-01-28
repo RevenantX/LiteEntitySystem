@@ -279,7 +279,7 @@ namespace LiteEntitySystem
                     Buffer.MemoryCopy(&value, byteArrayPtr, sizeof(T), sizeof(T));
                 }
 
-                writer.PutBytesWithLength(byteArray);
+                writer.Put(byteArray);
             }
 
             _netPeer.SendReliableOrdered(writer.AsReadOnlySpan());
@@ -312,7 +312,7 @@ namespace LiteEntitySystem
             }
 
             // Write the byte array
-            writer.PutBytesWithLength(byteArray);
+            writer.Put(byteArray);
 
             // Send the data
             _netPeer.SendReliableOrdered(writer.AsReadOnlySpan());
