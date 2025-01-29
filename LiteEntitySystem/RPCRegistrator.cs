@@ -136,141 +136,7 @@ namespace LiteEntitySystem
             if (ent != target)
                 throw new Exception("You can call this only on this class methods");
         }
-                
-        // --------------------------------------------------------------
-        //  SERVER ACTIONS (client calls, method runs on server)
-        // --------------------------------------------------------------
-
-        public void CreateServerAction<TEntity, T>(
-            TEntity self,
-            Action<T> methodToCall,
-            ref RemoteCallNetSerializable<T> remoteCallHandle,
-            ExecuteFlags flags
-        )
-            where T : INetSerializable, new()
-            where TEntity : InternalEntity
-        {
-            CheckTarget(self, methodToCall.Target);
-
-            if (!remoteCallHandle.Initialized)
-            {
-                var finalFlags = flags | ExecuteFlags.ExecuteOnServer;
-                remoteCallHandle = new RemoteCallNetSerializable<T>(
-                    (e, val) => methodToCall.Method.CreateDelegateHelper<Action<TEntity, T>>()((TEntity)e, val),
-                    (ushort)_calls.Count,
-                    finalFlags
-                );
-            }
-
-            _calls.Add(new RpcFieldInfo(RemoteCallNetSerializable<T>.CreateMCD(
-                methodToCall.Method.CreateDelegateHelper<Action<TEntity, T>>()
-            )));
-        }
         
-        public void CreateServerAction<TEntity>(
-            TEntity self,
-            Action methodToCall,
-            ref RemoteCall remoteCallHandle,
-            ExecuteFlags flags
-        )
-            where TEntity : InternalEntity
-        {
-            CheckTarget(self, methodToCall.Target);
-
-            if (!remoteCallHandle.Initialized)
-            {
-                // ensure we set ExecuteOnServer
-                var finalFlags = flags | ExecuteFlags.ExecuteOnServer;
-                remoteCallHandle = new RemoteCall(
-                    e => methodToCall.Method.CreateDelegateHelper<Action<TEntity>>()((TEntity)e),
-                    (ushort)_calls.Count,
-                    finalFlags
-                );
-            }
-
-            _calls.Add(new RpcFieldInfo(RemoteCall.CreateMCD(
-                methodToCall.Method.CreateDelegateHelper<Action<TEntity>>()
-            )));
-        }
-
-        public void CreateServerAction<TEntity, T>(
-            TEntity self,
-            Action<T> methodToCall,
-            ref RemoteCall<T> remoteCallHandle,
-            ExecuteFlags flags
-        )
-            where T : unmanaged
-            where TEntity : InternalEntity
-        {
-            CheckTarget(self, methodToCall.Target);
-
-            if (!remoteCallHandle.Initialized)
-            {
-                var finalFlags = flags | ExecuteFlags.ExecuteOnServer;
-                remoteCallHandle = new RemoteCall<T>(
-                    (e, val) => methodToCall.Method.CreateDelegateHelper<Action<TEntity, T>>()((TEntity)e, val),
-                    (ushort)_calls.Count,
-                    finalFlags
-                );
-            }
-
-            _calls.Add(new RpcFieldInfo(RemoteCall<T>.CreateMCD(
-                methodToCall.Method.CreateDelegateHelper<Action<TEntity, T>>()
-            )));
-        }
-
-        public void CreateServerAction<TEntity, T>(
-            TEntity self,
-            SpanAction<T> methodToCall,
-            ref RemoteCallSpan<T> remoteCallHandle,
-            ExecuteFlags flags
-        )
-            where T : unmanaged
-            where TEntity : InternalEntity
-        {
-            CheckTarget(self, methodToCall.Target);
-
-            if (!remoteCallHandle.Initialized)
-            {
-                var finalFlags = flags | ExecuteFlags.ExecuteOnServer;
-                remoteCallHandle = new RemoteCallSpan<T>(
-                    (e, spanVal) =>
-                        methodToCall.Method.CreateDelegateHelper<SpanAction<TEntity, T>>()((TEntity)e, spanVal),
-                    (ushort)_calls.Count,
-                    finalFlags
-                );
-            }
-
-            _calls.Add(new RpcFieldInfo(RemoteCallSpan<T>.CreateMCD(
-                methodToCall.Method.CreateDelegateHelper<SpanAction<TEntity, T>>()
-            )));
-        }
-
-        public void CreateServerAction<TEntity, T>(
-            TEntity self,
-            Action<T> methodToCall,
-            ref RemoteCallSerializable<T> remoteCallHandle,
-            ExecuteFlags flags
-        )
-            where T : struct, ISpanSerializable
-            where TEntity : InternalEntity
-        {
-            CheckTarget(self, methodToCall.Target);
-
-            if (!remoteCallHandle.Initialized)
-            {
-                var finalFlags = flags | ExecuteFlags.ExecuteOnServer;
-                remoteCallHandle = new RemoteCallSerializable<T>(
-                    (e, val) => methodToCall.Method.CreateDelegateHelper<Action<TEntity, T>>()((TEntity)e, val),
-                    (ushort)_calls.Count,
-                    finalFlags
-                );
-            }
-
-            _calls.Add(new RpcFieldInfo(RemoteCallSerializable<T>.CreateMCD(
-                methodToCall.Method.CreateDelegateHelper<Action<TEntity, T>>()
-            )));
-        }
         /// <summary>
         /// Bind notification of SyncVar changes to action
         /// </summary>
@@ -308,7 +174,20 @@ namespace LiteEntitySystem
             where TEntity : InternalEntity
         {
             CheckTarget(self, methodToCall.Target);
-            CreateRPCAction(methodToCall.Method.CreateDelegateHelper<Action<TEntity, T>>(), ref remoteCallHandle, flags);
+
+            if (!remoteCallHandle.Initialized)
+            {
+                var finalFlags = flags | ExecuteFlags.ExecuteOnServer;
+                remoteCallHandle = new RemoteCallNetSerializable<T>(
+                    (e, val) => methodToCall.Method.CreateDelegateHelper<Action<TEntity, T>>()((TEntity)e, val),
+                    (ushort)_calls.Count,
+                    finalFlags
+                );
+            }
+
+            _calls.Add(new RpcFieldInfo(RemoteCallNetSerializable<T>.CreateMCD(
+                methodToCall.Method.CreateDelegateHelper<Action<TEntity, T>>()
+            )));
         }
 
         public void CreateRPCAction<TEntity, T>(
