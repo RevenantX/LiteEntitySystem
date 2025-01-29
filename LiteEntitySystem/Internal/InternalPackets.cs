@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 
 namespace LiteEntitySystem.Internal
 {
@@ -47,5 +47,6 @@ namespace LiteEntitySystem.Internal
         public const byte BaselineSync = 3;
         public const byte DiffSyncLast = 4;
         public const byte ClientRequest = 5;
+        public const byte ClientRPC = 6;
     }
 }
