@@ -75,4 +75,10 @@ namespace LiteEntitySystem
             }
         }
     }
+    
+    public abstract class SyncableField<T> : SyncableField, INotifySyncVarChanged<T>
+    {
+        public abstract event EventHandler<SyncVarChangedEventArgs<T>> ValueChanged;
+        public abstract T Value { get; set; }
+    }
 }

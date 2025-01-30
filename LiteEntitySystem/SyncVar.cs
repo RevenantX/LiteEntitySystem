@@ -4,6 +4,7 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
+    
     [Flags]
     public enum SyncFlags : byte
     {
@@ -38,9 +39,26 @@ namespace LiteEntitySystem
             OnSyncExecutionOrder = executionOrder;
         }
     }
+    
+    public class SyncVarChangedEventArgs<T> : EventArgs
+    {
+        public T OldValue { get; }
+        public T NewValue { get; }
+
+        public SyncVarChangedEventArgs(T oldValue, T newValue)
+        {
+            OldValue = oldValue;
+            NewValue = newValue;
+        }
+    }
+    
+    public interface INotifySyncVarChanged<T>
+    {
+        event EventHandler<SyncVarChangedEventArgs<T>> ValueChanged;
+    }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct SyncVar<T> : IEquatable<T>, IEquatable<SyncVar<T>> where T : unmanaged
+    public struct SyncVar<T> : INotifySyncVarChanged<T>, IEquatable<T>, IEquatable<SyncVar<T>> where T : unmanaged
     {
         private T _value;
         internal ushort FieldId;
@@ -48,16 +66,22 @@ namespace LiteEntitySystem
         
         internal void SetDirect(T value) => _value = value;
         
+        public event EventHandler<SyncVarChangedEventArgs<T>> ValueChanged;
+        
         public T Value
         {
             get => _value;
             set
             {
-                if (Container != null && !Utils.FastEquals(ref value, ref _value))
-                    Container.EntityManager.EntityFieldChanged(Container, FieldId, ref value);
+                if (!Utils.FastEquals(ref value, ref _value))
+                {
+                    Container?.EntityManager.EntityFieldChanged(Container, FieldId, ref value);
+                    ValueChanged?.Invoke(this, new SyncVarChangedEventArgs<T>(_value, value));
+                }
                 _value = value;
             }
         }
+        
 
         internal void Init(InternalEntity container, ushort fieldId)
         {
@@ -102,5 +126,6 @@ namespace LiteEntitySystem
         public bool Equals(T v) => Utils.FastEquals(ref _value, ref v);
         
         public bool Equals(SyncVar<T> tv) => Utils.FastEquals(ref _value, ref tv._value);
+        
     }
 }
