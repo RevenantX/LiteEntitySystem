@@ -464,22 +464,20 @@ namespace LiteEntitySystem
 
         internal override void ApplyIncomingInput(ushort tick)
         {
-            while(AvailableInput.Count > 0)
+            int seqDiff;
+            while (AvailableInput.Count > 0 && (seqDiff = Utils.SequenceDiff(AvailableInput.PeekMinWithSequence().sequence, tick)) <= 0)
             {
-                (ushort inputTick, TInput input) = AvailableInput.ExtractMinWithSequence();
-                int seqDiff = Utils.SequenceDiff(inputTick, tick);
                 if (seqDiff < 0)
                 {
+                    AvailableInput.ExtractMin();
                     //Logger.Log("OLD INPUT");
-                    continue;
                 } 
-                if (seqDiff == 0)
+                else if (seqDiff == 0)
                 {
                     //Set input if tick equals
-                    CurrentInput = input;
+                    CurrentInput = AvailableInput.ExtractMin();
+                    break;
                 }
-                //ignore more recent inputs
-                break;
             }
         }
 
