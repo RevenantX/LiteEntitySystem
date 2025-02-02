@@ -30,7 +30,7 @@ namespace LiteEntitySystem.Internal
         private uint _fullDataSize;
         private int _syncFrame;
         private RPCMode _rpcMode;
-        public byte NextVersion => (byte)(_entity?.Version + 1 ?? 0);
+        public byte NextVersion;
 
         public ushort LastChangedTick;
 
@@ -95,6 +95,7 @@ namespace LiteEntitySystem.Internal
         public unsafe void Init(InternalEntity e, ushort tick)
         {
             _entity = e;
+            NextVersion = (byte)(_entity.Version + 1);
             _syncFrame = -1;
             _rpcMode = RPCMode.Normal;
             _versionChangedTick = tick;

@@ -83,6 +83,11 @@ namespace LiteEntitySystem
         /// Total states time in interpolation buffer
         /// </summary>
         public float LerpBufferTimeLength => _readyStates.Count * DeltaTimeF * (int)_serverSendRate;
+        
+        /// <summary>
+        /// Current state size in bytes
+        /// </summary>
+        public int StateSize => _stateA?.Size ?? 0;
 
         /// <summary>
         /// Client network peer
