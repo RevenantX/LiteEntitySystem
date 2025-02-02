@@ -64,7 +64,8 @@ namespace LiteEntitySystem
         /// <param name="enable">true - enable sync (if was disabled), disable otherwise</param>
         public void ChangeEntityDiffSync(EntityLogic entity, bool enable)
         {
-            if (EntityManager.IsClient || entity == GetControlledEntity<PawnLogic>())
+            //ignore destroyed and owned
+            if (EntityManager.IsClient || entity.IsDestroyed || entity.InternalOwnerId == InternalOwnerId)
                 return;
             if (!enable && !_skippedEntities.Contains(entity))
             {

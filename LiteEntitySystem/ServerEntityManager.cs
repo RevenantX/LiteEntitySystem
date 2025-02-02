@@ -655,7 +655,7 @@ namespace LiteEntitySystem
         
         internal override void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue)
         {
-            if (entity.IsDestroyed && _stateSerializers[entity.Id].Entity != entity)
+            if (entity.IsRemoved)
             {
                 //old freed entity
                 return;
@@ -675,7 +675,7 @@ namespace LiteEntitySystem
         
         internal void AddRemoteCall(InternalEntity entity, ushort rpcId, ExecuteFlags flags)
         {
-            if (PlayersCount == 0)
+            if (PlayersCount == 0 || entity.IsRemoved)
                 return;
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             rpc.Init(_tick, 0, rpcId, flags);
@@ -685,7 +685,7 @@ namespace LiteEntitySystem
         
         internal unsafe void AddRemoteCall<T>(InternalEntity entity, ReadOnlySpan<T> value, ushort rpcId, ExecuteFlags flags) where T : unmanaged
         {
-            if (PlayersCount == 0)
+            if (PlayersCount == 0 || entity.IsRemoved)
                 return;
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             int dataSize = sizeof(T) * value.Length;

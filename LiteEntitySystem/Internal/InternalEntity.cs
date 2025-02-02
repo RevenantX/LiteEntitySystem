@@ -121,6 +121,11 @@ namespace LiteEntitySystem.Internal
         internal ref EntityClassData ClassData => ref EntityManager.ClassDataDict[ClassId];
 
         /// <summary>
+        /// Is entity released and not used after destroy.
+        /// </summary>
+        public bool IsRemoved { get; internal set; }
+
+        /// <summary>
         /// Destroy entity
         /// </summary>
         public void Destroy()

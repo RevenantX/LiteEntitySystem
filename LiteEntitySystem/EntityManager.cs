@@ -553,6 +553,7 @@ namespace LiteEntitySystem
                 EntitiesDict[e.Id] = null;
             EntitiesCount--;
             ClassDataDict[e.ClassId].ReleaseDataCache(e);
+            e.IsRemoved = true;
             //Logger.Log($"{Mode} - RemoveEntity: {e.Id}");
         }
         
