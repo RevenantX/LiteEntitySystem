@@ -6,6 +6,7 @@ using LiteEntitySystem.Internal;
 using LiteEntitySystem.Transport;
 using LiteEntitySystem.Collections;
 using LiteNetLib;
+using LiteNetLib.Utils;
 
 namespace LiteEntitySystem
 {
@@ -261,6 +262,86 @@ namespace LiteEntitySystem
             _spawnPredictedEntities.Enqueue((_tick, entity));
             
             return entity;
+        }
+        internal void SendServerRPC<T>(ushort entityId, ushort rpcId, T value) where T : unmanaged
+        {
+            // Prepare a NetDataWriter
+            NetDataWriter writer = new NetDataWriter();
+
+            // Add packet header and type
+            writer.Put(HeaderByte); // Header byte for this entity system
+            writer.Put((byte)InternalPackets.ClientRPC); // Denote it's a client->server RPC
+
+            // Add entity ID and RPC ID
+            writer.Put(entityId);
+            writer.Put(rpcId);
+
+            unsafe
+            {
+                byte[] byteArray = new byte[sizeof(T)];
+                fixed (byte* byteArrayPtr = byteArray)
+                {
+                    Buffer.MemoryCopy(&value, byteArrayPtr, sizeof(T), sizeof(T));
+                }
+
+                writer.Put(byteArray);
+            }
+
+            _netPeer.SendReliableOrdered(writer.AsReadOnlySpan());
+        }
+
+        // For "RemoteCallSpan<T>"
+        internal void SendServerRPC<T>(ushort entityId, ushort rpcId, ReadOnlySpan<T> data) where T : unmanaged
+        {
+            // Prepare a NetDataWriter
+            NetDataWriter writer = new NetDataWriter();
+
+            // Add packet header and type
+            writer.Put(HeaderByte);
+            writer.Put(InternalPackets.ClientRPC);
+
+            // Add entity ID and RPC ID
+            writer.Put(entityId);
+            writer.Put(rpcId);
+
+            byte[] byteArray;
+            // Convert span to byte array
+            unsafe
+            {
+                byteArray = new byte[data.Length * sizeof(T)];
+                fixed (T* dataPtr = data)
+                fixed (byte* bytePtr = byteArray)
+                {
+                    Buffer.MemoryCopy(dataPtr, bytePtr, byteArray.Length, byteArray.Length);
+                }
+            }
+
+            // Write the byte array
+            writer.Put(byteArray);
+
+            // Send the data
+            _netPeer.SendReliableOrdered(writer.AsReadOnlySpan());
+        }
+
+        // For "RemoteCallSerializable<T>"
+        internal void SendServerRPC(ushort entityId, ushort rpcId, ReadOnlySpan<byte> data)
+        {
+            // Prepare a NetDataWriter
+            NetDataWriter writer = new NetDataWriter();
+
+            // Add packet header and type
+            writer.Put(HeaderByte);
+            writer.Put(InternalPackets.ClientRPC);
+
+            // Add entity ID and RPC ID
+            writer.Put(entityId);
+            writer.Put(rpcId);
+
+            // Convert span to byte array and write
+            writer.Put(data.ToArray());
+
+            // Send the data
+            _netPeer.SendReliableOrdered(writer.AsReadOnlySpan());
         }
 
         internal EntityLogic FindEntityByPredictedId(ushort tick, ushort parentId, ushort predictedId)
