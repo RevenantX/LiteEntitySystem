@@ -1,9 +1,11 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Text;
+using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncString : SyncableField
+    public class SyncString : SyncableField, ISyncFieldChanged<string>
     {
         private static readonly UTF8Encoding Encoding = new(false, true);
         private byte[] _stringData;
@@ -12,6 +14,7 @@ namespace LiteEntitySystem.Extensions
 
         private static RemoteCallSpan<byte> _setStringClientCall;
 
+        public event Action<string, string> ValueChanged;
         public string Value
         {
             get => _string;
@@ -43,7 +46,9 @@ namespace LiteEntitySystem.Extensions
         
         private void SetNewString(ReadOnlySpan<byte> data)
         {
-            _string = Encoding.GetString(data);
+            var newString = Encoding.GetString(data);
+            ValueChanged?.Invoke(_string, newString);
+            _string = newString;
         }
 
         protected internal override void OnSyncRequested()
