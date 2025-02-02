@@ -41,6 +41,22 @@ namespace LiteEntitySystem.Collections
             MoveDown(0);
             return minNode.Data;
         }
+
+        public (ushort sequence, T input) ExtractMinWithSequence()
+        {
+            var minNode = _data[0];
+            (_data[0], _data[_count - 1]) = (_data[_count - 1], _data[0]);
+            _count--;
+            MoveDown(0);
+            return (minNode.Sequence,minNode.Data);
+        }
+        
+        public void AddAndOverwrite(T item, ushort sequence)
+        {
+            if (_count == _data.Length)
+                ExtractMin();
+            Add(item, sequence);
+        }
         
         private void MoveUp(int position)
         {

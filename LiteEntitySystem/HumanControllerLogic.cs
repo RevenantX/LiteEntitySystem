@@ -326,8 +326,6 @@ namespace LiteEntitySystem
         internal abstract void AddIncomingInput(ushort tick, ReadOnlySpan<byte> inputsData);
 
         internal abstract void ApplyIncomingInput(ushort tick);
-
-        internal abstract void RemoveIncomingInput(ushort tick);
         
         internal abstract void ApplyPendingInput();
         
@@ -395,7 +393,7 @@ namespace LiteEntitySystem
         private readonly CircularBuffer<InputCommand> _inputCommands;
         
         //server part
-        internal readonly Dictionary<ushort, TInput> AvailableInput;
+        internal readonly SequenceBinaryHeap<TInput> AvailableInput;
         
         /// <summary>
         /// Get pending input reference for modifications
@@ -428,7 +426,7 @@ namespace LiteEntitySystem
             }
             else
             {
-                AvailableInput = new();
+                AvailableInput = new(ServerEntityManager.MaxStoredInputs);
             }
         }
         
@@ -460,20 +458,30 @@ namespace LiteEntitySystem
         {
             fixed (byte* rawData = inputsData)
             { 
-                AvailableInput.Add(tick, *(TInput*)rawData);
+                AvailableInput.AddAndOverwrite(*(TInput*)rawData, tick);
             }
         }
 
         internal override void ApplyIncomingInput(ushort tick)
         {
-            if (AvailableInput.Remove(tick, out var input))
+            while(AvailableInput.Count > 0)
             {
-                CurrentInput = input;
+                (ushort inputTick, TInput input) = AvailableInput.ExtractMinWithSequence();
+                int seqDiff = Utils.SequenceDiff(inputTick, tick);
+                if (seqDiff < 0)
+                {
+                    //Logger.Log("OLD INPUT");
+                    continue;
+                } 
+                if (seqDiff == 0)
+                {
+                    //Set input if tick equals
+                    CurrentInput = input;
+                }
+                //ignore more recent inputs
+                break;
             }
         }
-
-        internal override void RemoveIncomingInput(ushort tick) =>
-            AvailableInput.Remove(tick);
 
         internal override unsafe int DeltaEncode(int prevInputIndex, int currentInputIndex, Span<byte> result)
         {
