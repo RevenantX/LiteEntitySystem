@@ -279,6 +279,8 @@ namespace LiteEntitySystem.Internal
         
         protected void ExecuteRPC(in RemoteCall rpc)
         {
+            if (IsRemoved)
+                return;
             if (IsServer)
             {
                 if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
@@ -291,6 +293,8 @@ namespace LiteEntitySystem.Internal
 
         protected void ExecuteRPC<T>(in RemoteCall<T> rpc, T value) where T : unmanaged
         {
+            if (IsRemoved)
+                return;
             if (IsServer)
             {
                 if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
@@ -306,6 +310,8 @@ namespace LiteEntitySystem.Internal
 
         protected void ExecuteRPC<T>(in RemoteCallSpan<T> rpc, ReadOnlySpan<T> value) where T : unmanaged
         {
+            if (IsRemoved)
+                return;
             if (IsServer)
             {
                 if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
@@ -318,6 +324,8 @@ namespace LiteEntitySystem.Internal
 
         protected void ExecuteRPC<T>(in RemoteCallSerializable<T> rpc, T value) where T : struct, ISpanSerializable
         {
+            if (IsRemoved)
+                return;
             if (IsServer)
             {
                 if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
