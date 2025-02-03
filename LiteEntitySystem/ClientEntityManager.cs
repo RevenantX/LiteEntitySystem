@@ -500,7 +500,8 @@ namespace LiteEntitySystem
             foreach (var entity in _predictedEntities)
             {
                 ref var classData = ref ClassDataDict[entity.ClassId];
-                if(entity.IsRemoteControlled && !classData.HasRemoteRollbackFields)
+                bool isRemoteControlled = entity.IsRemoteControlled;
+                if(isRemoteControlled && !classData.HasRemoteRollbackFields)
                     continue;
                 entity.OnBeforeRollback();
 
@@ -509,9 +510,7 @@ namespace LiteEntitySystem
                     for (int i = 0; i < classData.FieldsCount; i++)
                     {
                         ref var field = ref classData.Fields[i];
-                        if ((entity.IsRemoteControlled && !field.Flags.HasFlagFast(SyncFlags.AlwaysRollback)) ||
-                            field.Flags.HasFlagFast(SyncFlags.NeverRollBack) ||
-                            field.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
+                        if (!field.IsPredicted || (isRemoteControlled && !field.Flags.HasFlagFast(SyncFlags.AlwaysRollback)))
                             continue;
                         if (field.FieldType == FieldType.SyncableSyncVar)
                         {
