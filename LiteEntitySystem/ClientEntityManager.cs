@@ -515,11 +515,11 @@ namespace LiteEntitySystem
                         if (field.FieldType == FieldType.SyncableSyncVar)
                         {
                             var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, field.Offset);
-                            field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, predictedData + field.PredictedOffset);
+                            field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, predictedData + field.PredictedOffset, field.Name);
                         }
                         else
                         {
-                            field.TypeProcessor.SetFrom(entity, field.Offset, predictedData + field.PredictedOffset);
+                            field.TypeProcessor.SetFrom(entity, field.Offset, predictedData + field.PredictedOffset, field.Name);
                         }
                     }
                 }
@@ -653,7 +653,7 @@ namespace LiteEntitySystem
                         for(int i = 0; i < classData.InterpolatedCount; i++)
                         {
                             var field = classData.Fields[i];
-                            field.TypeProcessor.SetFrom(entity, field.Offset, currentDataPtr + field.FixedOffset);
+                            field.TypeProcessor.SetFrom(entity, field.Offset, currentDataPtr + field.FixedOffset, field.Name);
                         }
 
                         //update
@@ -1006,7 +1006,7 @@ namespace LiteEntitySystem
                         if (field.FieldType == FieldType.SyncableSyncVar)
                         {
                             var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, field.Offset);
-                            field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, readDataPtr);
+                            field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, readDataPtr, field.Name);
                         }
                         else
                         {
@@ -1027,7 +1027,7 @@ namespace LiteEntitySystem
                             }
                             else
                             {
-                                field.TypeProcessor.SetFrom(entity, field.Offset, readDataPtr);
+                                field.TypeProcessor.SetFrom(entity, field.Offset, readDataPtr, field.Name);
                             }
                         }
                         //Logger.Log($"E {entity.Id} Field updated: {field.Name}");

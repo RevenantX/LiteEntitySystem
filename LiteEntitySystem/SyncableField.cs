@@ -3,6 +3,15 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
+    
+    /// <summary>
+    /// Provides a standard interface for receiving SyncVar change notifications.
+    /// </summary>
+    public interface ISyncFieldChanged<T>
+    {
+        event Action<T, T> ValueChanged;
+    }
+    
     public abstract class SyncableField : InternalBaseClass
     {
         internal InternalEntity ParentEntityInternal;
