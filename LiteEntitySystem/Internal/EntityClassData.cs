@@ -59,7 +59,6 @@ namespace LiteEntitySystem.Internal
         public readonly int FieldsFlagsSize;
         public readonly int FixedFieldsSize;
         public readonly int PredictedSize;
-        public readonly bool HasRemoteRollbackFields;
         public readonly EntityFieldInfo[] Fields;
         public readonly SyncableFieldInfo[] SyncableFields;
         public readonly int InterpolatedFieldsSize;
@@ -72,6 +71,9 @@ namespace LiteEntitySystem.Internal
         public readonly BaseTypeInfo[] BaseTypes;
         public RpcFieldInfo[] RemoteCallsClient;
         public readonly Type Type;
+
+        private readonly EntityFieldInfo[] _ownedRollbackFields;
+        private readonly EntityFieldInfo[] _remoteRollbackFields;
         
         private static readonly Type InternalEntityType = typeof(InternalEntity);
         internal static readonly Type SingletonEntityType = typeof(SingletonEntityLogic);
@@ -86,6 +88,9 @@ namespace LiteEntitySystem.Internal
         public Span<byte> ClientInterpolatedPrevData(InternalEntity e) => new (e.IOBuffer, 0, InterpolatedFieldsSize);
         public Span<byte> ClientInterpolatedNextData(InternalEntity e) => new (e.IOBuffer, InterpolatedFieldsSize, InterpolatedFieldsSize);
         public Span<byte> ClientPredictedData(InternalEntity e) => new (e.IOBuffer, InterpolatedFieldsSize*2, PredictedSize);
+
+        public EntityFieldInfo[] GetRollbackFields(bool isOwned) =>
+            isOwned ? _ownedRollbackFields : _remoteRollbackFields;
         
         public unsafe void WriteHistory(EntityLogic e, ushort tick)
         {
@@ -163,7 +168,6 @@ namespace LiteEntitySystem.Internal
         public EntityClassData(EntityManager entityManager, ushort filterId, Type entType, RegisteredTypeInfo typeInfo)
         {
             _dataCache = new Queue<byte[]>();
-            HasRemoteRollbackFields = false;
             PredictedSize = 0;
             FixedFieldsSize = 0;
             LagCompensatedSize = 0;
@@ -184,6 +188,8 @@ namespace LiteEntitySystem.Internal
             var fields = new List<EntityFieldInfo>();
             var syncableFields = new List<SyncableFieldInfo>();
             var lagCompensatedFields = new List<EntityFieldInfo>();
+            var ownedRollbackFields = new List<EntityFieldInfo>();
+            var remoteRollbackFields = new List<EntityFieldInfo>();
             
             var allTypesStack = Utils.GetBaseTypes(entType, InternalEntityType, true, true);
             while(allTypesStack.Count > 0)
@@ -231,8 +237,6 @@ namespace LiteEntitySystem.Internal
                             lagCompensatedFields.Add(fieldInfo);
                             LagCompensatedSize += fieldSize;
                         }
-                        if (syncFlags.HasFlagFast(SyncFlags.AlwaysRollback))
-                            HasRemoteRollbackFields = true;
 
                         if (fieldInfo.IsPredicted)
                             PredictedSize += fieldSize;
@@ -309,12 +313,19 @@ namespace LiteEntitySystem.Internal
                 {
                     field.PredictedOffset = predictedOffset;
                     predictedOffset += field.IntSize;
+                    ownedRollbackFields.Add(field);
+                    if(field.Flags.HasFlagFast(SyncFlags.AlwaysRollback))
+                        remoteRollbackFields.Add(field);
                 }
                 else
                 {
                     field.PredictedOffset = -1;
                 }
             }
+            
+            //cache rollbackFields
+            _ownedRollbackFields = ownedRollbackFields.ToArray();
+            _remoteRollbackFields = remoteRollbackFields.ToArray();
             
             _maxHistoryCount = (byte)entityManager.MaxHistorySize;
             int historySize = entType.IsSubclassOf(EntityLogicType) ? (_maxHistoryCount + 1) * LagCompensatedSize : 0;
