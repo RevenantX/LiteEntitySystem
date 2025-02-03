@@ -403,8 +403,11 @@ namespace LiteEntitySystem
         /// <returns>Pending input reference</returns>
         protected ref TInput ModifyPendingInput()
         {
-            if(_shouldResetInput)
+            if (_shouldResetInput)
+            {
                 _pendingInput = default;
+                _shouldResetInput = false;
+            }
             return ref _pendingInput;
         }
 
