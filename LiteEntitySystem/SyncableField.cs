@@ -1,6 +1,5 @@
 using System;
 using LiteEntitySystem.Internal;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 
 namespace LiteEntitySystem
 {

@@ -15,7 +15,8 @@ namespace LiteEntitySystem.Internal
         // The dictionary maps (EntityType, fieldName) -> a small record:
         //   typedDelegate: The strongly typed SyncVarCallbackDelegate<TOwner,TValue>
         //   invoker:      Action<Delegate, object, object> that can call typedDelegate
-        private static readonly Dictionary<(Type, string), (Delegate typedDelegate, Action<Delegate, object, object> invoker)>
+        private static readonly Dictionary<(Type, string), (Delegate typedDelegate, Action<Delegate, object, object>
+                invoker)>
             Registry = new();
 
         /// <summary>
@@ -30,10 +31,7 @@ namespace LiteEntitySystem.Internal
             if (methodName == null)
                 throw new Exception("OnChangeCallback method name is null!");
 
-            var methodInfo = entType.GetMethod(
-                methodName,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
-            );
+            var methodInfo = GetMethodInHierarchy(entType, methodName);
 
             if (methodInfo == null)
                 throw new Exception($"Method '{methodName}' not found in {entType}");
@@ -98,7 +96,30 @@ namespace LiteEntitySystem.Internal
                 data.invoker(data.typedDelegate, owner, newValue);
                 return true;
             }
+
             return false;
+        }
+
+        private static MethodInfo GetMethodInHierarchy(Type type, string methodName)
+        {
+            while (type != null && type != typeof(object))
+            {
+                // Search only declared methods on the current 'type'
+                var method = type.GetMethod(
+                    methodName,
+                    BindingFlags.Instance
+                    | BindingFlags.Public
+                    | BindingFlags.NonPublic
+                    | BindingFlags.DeclaredOnly
+                );
+
+                if (method != null)
+                    return method;
+
+                type = type.BaseType;
+            }
+
+            return null;
         }
     }
 }

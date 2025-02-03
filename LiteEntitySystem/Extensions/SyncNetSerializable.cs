@@ -33,7 +33,7 @@ namespace LiteEntitySystem.Extensions
         {
             _constructor = constructor;
         }
-
+        
         protected internal override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, Init, ref _initAction);
