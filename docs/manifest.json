@@ -774,6 +774,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.SyncChilds.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.SyncChilds.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.SyncFlags.yml",
       "output": {
         ".html": {
@@ -888,6 +898,26 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteNetLib.Utils.NetDataExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteNetLib.Utils.NetDataExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteNetLib.Utils.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteNetLib.Utils.html"
         }
       },
       "version": ""
