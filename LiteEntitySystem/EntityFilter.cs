@@ -65,11 +65,4 @@ namespace LiteEntitySystem
             base.Clear();
         }
     }
-
-    public class EntityList<T> : EntityFilter<T> where T : InternalEntity
-    {
-        public new void Add(T entity) => base.Add(entity);
-        public new void Remove(T entity) => base.Remove(entity);
-        public new void Clear() => base.Clear();
-    }
 }
