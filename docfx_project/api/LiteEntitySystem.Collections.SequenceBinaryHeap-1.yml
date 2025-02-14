@@ -1,0 +1,398 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  commentId: T:LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  id: SequenceBinaryHeap`1
+  parent: LiteEntitySystem.Collections
+  children:
+  - LiteEntitySystem.Collections.SequenceBinaryHeap`1.#ctor(System.Int32)
+  - LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add(`0,System.UInt16)
+  - LiteEntitySystem.Collections.SequenceBinaryHeap`1.AddAndOverwrite(`0,System.UInt16)
+  - LiteEntitySystem.Collections.SequenceBinaryHeap`1.Count
+  - LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMin
+  - LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMinWithSequence
+  - LiteEntitySystem.Collections.SequenceBinaryHeap`1.PeekMinWithSequence
+  langs:
+  - csharp
+  - vb
+  name: SequenceBinaryHeap<T>
+  nameWithType: SequenceBinaryHeap<T>
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public class SequenceBinaryHeap<T>
+    typeParameters:
+    - id: T
+    content.vb: Public Class SequenceBinaryHeap(Of T)
+  inheritance:
+  - System.Object
+  nameWithType.vb: SequenceBinaryHeap(Of T)
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T)
+  name.vb: SequenceBinaryHeap(Of T)
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Count
+  commentId: P:LiteEntitySystem.Collections.SequenceBinaryHeap`1.Count
+  id: Count
+  parent: LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  langs:
+  - csharp
+  - vb
+  name: Count
+  nameWithType: SequenceBinaryHeap<T>.Count
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.Count
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public int Count { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Count As Integer
+  overload: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Count*
+  nameWithType.vb: SequenceBinaryHeap(Of T).Count
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).Count
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.#ctor(System.Int32)
+  commentId: M:LiteEntitySystem.Collections.SequenceBinaryHeap`1.#ctor(System.Int32)
+  id: '#ctor(System.Int32)'
+  parent: LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  langs:
+  - csharp
+  - vb
+  name: SequenceBinaryHeap(int)
+  nameWithType: SequenceBinaryHeap<T>.SequenceBinaryHeap(int)
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.SequenceBinaryHeap(int)
+  type: Constructor
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public SequenceBinaryHeap(int capacity)
+    parameters:
+    - id: capacity
+      type: System.Int32
+    content.vb: Public Sub New(capacity As Integer)
+  overload: LiteEntitySystem.Collections.SequenceBinaryHeap`1.#ctor*
+  nameWithType.vb: SequenceBinaryHeap(Of T).New(Integer)
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).New(Integer)
+  name.vb: New(Integer)
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add(`0,System.UInt16)
+  commentId: M:LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add(`0,System.UInt16)
+  id: Add(`0,System.UInt16)
+  parent: LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  langs:
+  - csharp
+  - vb
+  name: Add(T, ushort)
+  nameWithType: SequenceBinaryHeap<T>.Add(T, ushort)
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.Add(T, ushort)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public void Add(T item, ushort sequence)
+    parameters:
+    - id: item
+      type: '{T}'
+    - id: sequence
+      type: System.UInt16
+    content.vb: Public Sub Add(item As T, sequence As UShort)
+  overload: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add*
+  nameWithType.vb: SequenceBinaryHeap(Of T).Add(T, UShort)
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).Add(T, UShort)
+  name.vb: Add(T, UShort)
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMin
+  commentId: M:LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMin
+  id: ExtractMin
+  parent: LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  langs:
+  - csharp
+  - vb
+  name: ExtractMin()
+  nameWithType: SequenceBinaryHeap<T>.ExtractMin()
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.ExtractMin()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public T ExtractMin()
+    return:
+      type: '{T}'
+    content.vb: Public Function ExtractMin() As T
+  overload: LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMin*
+  nameWithType.vb: SequenceBinaryHeap(Of T).ExtractMin()
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).ExtractMin()
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMinWithSequence
+  commentId: M:LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMinWithSequence
+  id: ExtractMinWithSequence
+  parent: LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  langs:
+  - csharp
+  - vb
+  name: ExtractMinWithSequence()
+  nameWithType: SequenceBinaryHeap<T>.ExtractMinWithSequence()
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.ExtractMinWithSequence()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public (ushort sequence, T item) ExtractMinWithSequence()
+    return:
+      type: System.ValueTuple{System.UInt16,{T}}
+    content.vb: Public Function ExtractMinWithSequence() As (sequence As UShort, item As T)
+  overload: LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMinWithSequence*
+  nameWithType.vb: SequenceBinaryHeap(Of T).ExtractMinWithSequence()
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).ExtractMinWithSequence()
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.AddAndOverwrite(`0,System.UInt16)
+  commentId: M:LiteEntitySystem.Collections.SequenceBinaryHeap`1.AddAndOverwrite(`0,System.UInt16)
+  id: AddAndOverwrite(`0,System.UInt16)
+  parent: LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  langs:
+  - csharp
+  - vb
+  name: AddAndOverwrite(T, ushort)
+  nameWithType: SequenceBinaryHeap<T>.AddAndOverwrite(T, ushort)
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.AddAndOverwrite(T, ushort)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public void AddAndOverwrite(T item, ushort sequence)
+    parameters:
+    - id: item
+      type: '{T}'
+    - id: sequence
+      type: System.UInt16
+    content.vb: Public Sub AddAndOverwrite(item As T, sequence As UShort)
+  overload: LiteEntitySystem.Collections.SequenceBinaryHeap`1.AddAndOverwrite*
+  nameWithType.vb: SequenceBinaryHeap(Of T).AddAndOverwrite(T, UShort)
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).AddAndOverwrite(T, UShort)
+  name.vb: AddAndOverwrite(T, UShort)
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.PeekMinWithSequence
+  commentId: M:LiteEntitySystem.Collections.SequenceBinaryHeap`1.PeekMinWithSequence
+  id: PeekMinWithSequence
+  parent: LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  langs:
+  - csharp
+  - vb
+  name: PeekMinWithSequence()
+  nameWithType: SequenceBinaryHeap<T>.PeekMinWithSequence()
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.PeekMinWithSequence()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public (ushort sequence, T item) PeekMinWithSequence()
+    return:
+      type: System.ValueTuple{System.UInt16,{T}}
+    content.vb: Public Function PeekMinWithSequence() As (sequence As UShort, item As T)
+  overload: LiteEntitySystem.Collections.SequenceBinaryHeap`1.PeekMinWithSequence*
+  nameWithType.vb: SequenceBinaryHeap(Of T).PeekMinWithSequence()
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).PeekMinWithSequence()
+references:
+- uid: LiteEntitySystem.Collections
+  commentId: N:LiteEntitySystem.Collections
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Collections
+  nameWithType: LiteEntitySystem.Collections
+  fullName: LiteEntitySystem.Collections
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Collections
+    name: Collections
+    href: LiteEntitySystem.Collections.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Collections
+    name: Collections
+    href: LiteEntitySystem.Collections.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Count*
+  commentId: Overload:LiteEntitySystem.Collections.SequenceBinaryHeap`1.Count
+  href: LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_Count
+  name: Count
+  nameWithType: SequenceBinaryHeap<T>.Count
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.Count
+  nameWithType.vb: SequenceBinaryHeap(Of T).Count
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).Count
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.#ctor*
+  commentId: Overload:LiteEntitySystem.Collections.SequenceBinaryHeap`1.#ctor
+  href: LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1__ctor_System_Int32_
+  name: SequenceBinaryHeap
+  nameWithType: SequenceBinaryHeap<T>.SequenceBinaryHeap
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.SequenceBinaryHeap
+  nameWithType.vb: SequenceBinaryHeap(Of T).New
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).New
+  name.vb: New
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add*
+  commentId: Overload:LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add
+  href: LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_Add__0_System_UInt16_
+  name: Add
+  nameWithType: SequenceBinaryHeap<T>.Add
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.Add
+  nameWithType.vb: SequenceBinaryHeap(Of T).Add
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).Add
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMin*
+  commentId: Overload:LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMin
+  href: LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_ExtractMin
+  name: ExtractMin
+  nameWithType: SequenceBinaryHeap<T>.ExtractMin
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.ExtractMin
+  nameWithType.vb: SequenceBinaryHeap(Of T).ExtractMin
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).ExtractMin
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMinWithSequence*
+  commentId: Overload:LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMinWithSequence
+  href: LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_ExtractMinWithSequence
+  name: ExtractMinWithSequence
+  nameWithType: SequenceBinaryHeap<T>.ExtractMinWithSequence
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.ExtractMinWithSequence
+  nameWithType.vb: SequenceBinaryHeap(Of T).ExtractMinWithSequence
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).ExtractMinWithSequence
+- uid: System.ValueTuple{System.UInt16,{T}}
+  commentId: T:System.ValueTuple{System.UInt16,`0}
+  parent: System
+  definition: System.ValueTuple`2
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: (ushort sequence, T item)
+  nameWithType: (ushort sequence, T item)
+  fullName: (ushort sequence, T item)
+  nameWithType.vb: (sequence As UShort, item As T)
+  fullName.vb: (sequence As UShort, item As T)
+  name.vb: (sequence As UShort, item As T)
+  spec.csharp:
+  - name: (
+  - uid: System.UInt16
+    name: ushort
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint16
+  - name: " "
+  - uid: System.ValueTuple{System.UInt16,`0}.sequence
+    name: sequence
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-system.uint16,-0-.sequence
+  - name: ','
+  - name: " "
+  - name: T
+  - name: " "
+  - uid: System.ValueTuple{System.UInt16,`0}.item
+    name: item
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-system.uint16,-0-.item
+  - name: )
+  spec.vb:
+  - name: (
+  - uid: System.ValueTuple{System.UInt16,`0}.sequence
+    name: sequence
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-system.uint16,-0-.sequence
+  - name: " "
+  - name: As
+  - name: " "
+  - uid: System.UInt16
+    name: UShort
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint16
+  - name: ','
+  - name: " "
+  - uid: System.ValueTuple{System.UInt16,`0}.item
+    name: item
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-system.uint16,-0-.item
+  - name: " "
+  - name: As
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.ValueTuple`2
+  commentId: T:System.ValueTuple`2
+  name: (T1, T2)
+  nameWithType: (T1, T2)
+  fullName: (T1, T2)
+  spec.csharp:
+  - name: (
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: )
+  spec.vb:
+  - name: (
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: )
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.AddAndOverwrite*
+  commentId: Overload:LiteEntitySystem.Collections.SequenceBinaryHeap`1.AddAndOverwrite
+  href: LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_AddAndOverwrite__0_System_UInt16_
+  name: AddAndOverwrite
+  nameWithType: SequenceBinaryHeap<T>.AddAndOverwrite
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.AddAndOverwrite
+  nameWithType.vb: SequenceBinaryHeap(Of T).AddAndOverwrite
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).AddAndOverwrite
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.PeekMinWithSequence*
+  commentId: Overload:LiteEntitySystem.Collections.SequenceBinaryHeap`1.PeekMinWithSequence
+  href: LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_PeekMinWithSequence
+  name: PeekMinWithSequence
+  nameWithType: SequenceBinaryHeap<T>.PeekMinWithSequence
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.PeekMinWithSequence
+  nameWithType.vb: SequenceBinaryHeap(Of T).PeekMinWithSequence
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).PeekMinWithSequence

@@ -6,12 +6,6 @@
         SyncableSyncVar
     }
 
-    public enum OnSyncExecutionOrder
-    {
-        AfterConstruct,
-        BeforeConstruct
-    }
-
     internal struct EntityFieldInfo
     {
         public readonly string Name; //used for debug

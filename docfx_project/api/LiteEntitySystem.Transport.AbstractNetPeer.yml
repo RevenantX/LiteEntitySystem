@@ -1,0 +1,252 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.Transport.AbstractNetPeer
+  commentId: T:LiteEntitySystem.Transport.AbstractNetPeer
+  id: AbstractNetPeer
+  parent: LiteEntitySystem.Transport
+  children:
+  - LiteEntitySystem.Transport.AbstractNetPeer.GetMaxUnreliablePacketSize
+  - LiteEntitySystem.Transport.AbstractNetPeer.SendReliableOrdered(System.ReadOnlySpan{System.Byte})
+  - LiteEntitySystem.Transport.AbstractNetPeer.SendUnreliable(System.ReadOnlySpan{System.Byte})
+  - LiteEntitySystem.Transport.AbstractNetPeer.TriggerSend
+  langs:
+  - csharp
+  - vb
+  name: AbstractNetPeer
+  nameWithType: AbstractNetPeer
+  fullName: LiteEntitySystem.Transport.AbstractNetPeer
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Transport
+  syntax:
+    content: public abstract class AbstractNetPeer
+    content.vb: Public MustInherit Class AbstractNetPeer
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - LiteEntitySystem.Transport.LiteNetLibNetPeer
+- uid: LiteEntitySystem.Transport.AbstractNetPeer.TriggerSend
+  commentId: M:LiteEntitySystem.Transport.AbstractNetPeer.TriggerSend
+  id: TriggerSend
+  parent: LiteEntitySystem.Transport.AbstractNetPeer
+  langs:
+  - csharp
+  - vb
+  name: TriggerSend()
+  nameWithType: AbstractNetPeer.TriggerSend()
+  fullName: LiteEntitySystem.Transport.AbstractNetPeer.TriggerSend()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Transport
+  syntax:
+    content: public abstract void TriggerSend()
+    content.vb: Public MustOverride Sub TriggerSend()
+  overload: LiteEntitySystem.Transport.AbstractNetPeer.TriggerSend*
+- uid: LiteEntitySystem.Transport.AbstractNetPeer.SendReliableOrdered(System.ReadOnlySpan{System.Byte})
+  commentId: M:LiteEntitySystem.Transport.AbstractNetPeer.SendReliableOrdered(System.ReadOnlySpan{System.Byte})
+  id: SendReliableOrdered(System.ReadOnlySpan{System.Byte})
+  parent: LiteEntitySystem.Transport.AbstractNetPeer
+  langs:
+  - csharp
+  - vb
+  name: SendReliableOrdered(ReadOnlySpan<byte>)
+  nameWithType: AbstractNetPeer.SendReliableOrdered(ReadOnlySpan<byte>)
+  fullName: LiteEntitySystem.Transport.AbstractNetPeer.SendReliableOrdered(System.ReadOnlySpan<byte>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Transport
+  syntax:
+    content: public abstract void SendReliableOrdered(ReadOnlySpan<byte> data)
+    parameters:
+    - id: data
+      type: System.ReadOnlySpan{System.Byte}
+    content.vb: Public MustOverride Sub SendReliableOrdered(data As ReadOnlySpan(Of Byte))
+  overload: LiteEntitySystem.Transport.AbstractNetPeer.SendReliableOrdered*
+  nameWithType.vb: AbstractNetPeer.SendReliableOrdered(ReadOnlySpan(Of Byte))
+  fullName.vb: LiteEntitySystem.Transport.AbstractNetPeer.SendReliableOrdered(System.ReadOnlySpan(Of Byte))
+  name.vb: SendReliableOrdered(ReadOnlySpan(Of Byte))
+- uid: LiteEntitySystem.Transport.AbstractNetPeer.SendUnreliable(System.ReadOnlySpan{System.Byte})
+  commentId: M:LiteEntitySystem.Transport.AbstractNetPeer.SendUnreliable(System.ReadOnlySpan{System.Byte})
+  id: SendUnreliable(System.ReadOnlySpan{System.Byte})
+  parent: LiteEntitySystem.Transport.AbstractNetPeer
+  langs:
+  - csharp
+  - vb
+  name: SendUnreliable(ReadOnlySpan<byte>)
+  nameWithType: AbstractNetPeer.SendUnreliable(ReadOnlySpan<byte>)
+  fullName: LiteEntitySystem.Transport.AbstractNetPeer.SendUnreliable(System.ReadOnlySpan<byte>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Transport
+  syntax:
+    content: public abstract void SendUnreliable(ReadOnlySpan<byte> data)
+    parameters:
+    - id: data
+      type: System.ReadOnlySpan{System.Byte}
+    content.vb: Public MustOverride Sub SendUnreliable(data As ReadOnlySpan(Of Byte))
+  overload: LiteEntitySystem.Transport.AbstractNetPeer.SendUnreliable*
+  nameWithType.vb: AbstractNetPeer.SendUnreliable(ReadOnlySpan(Of Byte))
+  fullName.vb: LiteEntitySystem.Transport.AbstractNetPeer.SendUnreliable(System.ReadOnlySpan(Of Byte))
+  name.vb: SendUnreliable(ReadOnlySpan(Of Byte))
+- uid: LiteEntitySystem.Transport.AbstractNetPeer.GetMaxUnreliablePacketSize
+  commentId: M:LiteEntitySystem.Transport.AbstractNetPeer.GetMaxUnreliablePacketSize
+  id: GetMaxUnreliablePacketSize
+  parent: LiteEntitySystem.Transport.AbstractNetPeer
+  langs:
+  - csharp
+  - vb
+  name: GetMaxUnreliablePacketSize()
+  nameWithType: AbstractNetPeer.GetMaxUnreliablePacketSize()
+  fullName: LiteEntitySystem.Transport.AbstractNetPeer.GetMaxUnreliablePacketSize()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Transport
+  syntax:
+    content: public abstract int GetMaxUnreliablePacketSize()
+    return:
+      type: System.Int32
+    content.vb: Public MustOverride Function GetMaxUnreliablePacketSize() As Integer
+  overload: LiteEntitySystem.Transport.AbstractNetPeer.GetMaxUnreliablePacketSize*
+references:
+- uid: LiteEntitySystem.Transport
+  commentId: N:LiteEntitySystem.Transport
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Transport
+  nameWithType: LiteEntitySystem.Transport
+  fullName: LiteEntitySystem.Transport
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Transport
+    name: Transport
+    href: LiteEntitySystem.Transport.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Transport
+    name: Transport
+    href: LiteEntitySystem.Transport.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.Transport.AbstractNetPeer.TriggerSend*
+  commentId: Overload:LiteEntitySystem.Transport.AbstractNetPeer.TriggerSend
+  href: LiteEntitySystem.Transport.AbstractNetPeer.html#LiteEntitySystem_Transport_AbstractNetPeer_TriggerSend
+  name: TriggerSend
+  nameWithType: AbstractNetPeer.TriggerSend
+  fullName: LiteEntitySystem.Transport.AbstractNetPeer.TriggerSend
+- uid: LiteEntitySystem.Transport.AbstractNetPeer.SendReliableOrdered*
+  commentId: Overload:LiteEntitySystem.Transport.AbstractNetPeer.SendReliableOrdered
+  href: LiteEntitySystem.Transport.AbstractNetPeer.html#LiteEntitySystem_Transport_AbstractNetPeer_SendReliableOrdered_System_ReadOnlySpan_System_Byte__
+  name: SendReliableOrdered
+  nameWithType: AbstractNetPeer.SendReliableOrdered
+  fullName: LiteEntitySystem.Transport.AbstractNetPeer.SendReliableOrdered
+- uid: System.ReadOnlySpan{System.Byte}
+  commentId: T:System.ReadOnlySpan{System.Byte}
+  parent: System
+  definition: System.ReadOnlySpan`1
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<byte>
+  nameWithType: ReadOnlySpan<byte>
+  fullName: System.ReadOnlySpan<byte>
+  nameWithType.vb: ReadOnlySpan(Of Byte)
+  fullName.vb: System.ReadOnlySpan(Of Byte)
+  name.vb: ReadOnlySpan(Of Byte)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: )
+- uid: System.ReadOnlySpan`1
+  commentId: T:System.ReadOnlySpan`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<T>
+  nameWithType: ReadOnlySpan<T>
+  fullName: System.ReadOnlySpan<T>
+  nameWithType.vb: ReadOnlySpan(Of T)
+  fullName.vb: System.ReadOnlySpan(Of T)
+  name.vb: ReadOnlySpan(Of T)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Transport.AbstractNetPeer.SendUnreliable*
+  commentId: Overload:LiteEntitySystem.Transport.AbstractNetPeer.SendUnreliable
+  href: LiteEntitySystem.Transport.AbstractNetPeer.html#LiteEntitySystem_Transport_AbstractNetPeer_SendUnreliable_System_ReadOnlySpan_System_Byte__
+  name: SendUnreliable
+  nameWithType: AbstractNetPeer.SendUnreliable
+  fullName: LiteEntitySystem.Transport.AbstractNetPeer.SendUnreliable
+- uid: LiteEntitySystem.Transport.AbstractNetPeer.GetMaxUnreliablePacketSize*
+  commentId: Overload:LiteEntitySystem.Transport.AbstractNetPeer.GetMaxUnreliablePacketSize
+  href: LiteEntitySystem.Transport.AbstractNetPeer.html#LiteEntitySystem_Transport_AbstractNetPeer_GetMaxUnreliablePacketSize
+  name: GetMaxUnreliablePacketSize
+  nameWithType: AbstractNetPeer.GetMaxUnreliablePacketSize
+  fullName: LiteEntitySystem.Transport.AbstractNetPeer.GetMaxUnreliablePacketSize
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer

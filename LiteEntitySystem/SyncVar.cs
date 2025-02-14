@@ -4,6 +4,9 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
+    /// <summary>
+    /// Synchronization flags. 
+    /// </summary>
     [Flags]
     public enum SyncFlags : byte
     {
@@ -41,6 +44,22 @@ namespace LiteEntitySystem
         /// Never rollback value even when entity is owned
         /// </summary>
         NeverRollBack       = 1 << 5
+    }
+    
+    /// <summary>
+    /// BindOnChange execution order
+    /// </summary>
+    public enum OnSyncExecutionOrder
+    {
+        /// <summary>
+        /// Emit method passed to BindOnChange after entity construct
+        /// </summary>
+        AfterConstruct,
+        
+        /// <summary>
+        /// Emit method passed to BindOnChange before entity construct
+        /// </summary>
+        BeforeConstruct
     }
     
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Class)]

@@ -32,7 +32,7 @@ namespace LiteEntitySystem.Internal
         public ushort Tick;
     }
     
-    public struct InputPacketHeader
+    internal struct InputPacketHeader
     {
         public ushort StateA;
         public ushort StateB;

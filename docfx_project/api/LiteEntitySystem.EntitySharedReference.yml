@@ -1,0 +1,766 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.EntitySharedReference
+  commentId: T:LiteEntitySystem.EntitySharedReference
+  id: EntitySharedReference
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.EntitySharedReference.#ctor(LiteEntitySystem.EntityLogic)
+  - LiteEntitySystem.EntitySharedReference.#ctor(System.UInt16,System.Byte)
+  - LiteEntitySystem.EntitySharedReference.Empty
+  - LiteEntitySystem.EntitySharedReference.Equals(LiteEntitySystem.EntitySharedReference)
+  - LiteEntitySystem.EntitySharedReference.Equals(System.Object)
+  - LiteEntitySystem.EntitySharedReference.GetHashCode
+  - LiteEntitySystem.EntitySharedReference.Id
+  - LiteEntitySystem.EntitySharedReference.IsInvalid
+  - LiteEntitySystem.EntitySharedReference.IsLocal
+  - LiteEntitySystem.EntitySharedReference.IsValid
+  - LiteEntitySystem.EntitySharedReference.ToString
+  - LiteEntitySystem.EntitySharedReference.Version
+  - LiteEntitySystem.EntitySharedReference.op_Equality(LiteEntitySystem.EntitySharedReference,LiteEntitySystem.EntitySharedReference)
+  - LiteEntitySystem.EntitySharedReference.op_Implicit(LiteEntitySystem.EntityLogic)~LiteEntitySystem.EntitySharedReference
+  - LiteEntitySystem.EntitySharedReference.op_Inequality(LiteEntitySystem.EntitySharedReference,LiteEntitySystem.EntitySharedReference)
+  langs:
+  - csharp
+  - vb
+  name: EntitySharedReference
+  nameWithType: EntitySharedReference
+  fullName: LiteEntitySystem.EntitySharedReference
+  type: Struct
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public readonly struct EntitySharedReference : IEquatable<EntitySharedReference>'
+    content.vb: Public Structure EntitySharedReference Implements IEquatable(Of EntitySharedReference)
+  implements:
+  - System.IEquatable{LiteEntitySystem.EntitySharedReference}
+- uid: LiteEntitySystem.EntitySharedReference.Id
+  commentId: F:LiteEntitySystem.EntitySharedReference.Id
+  id: Id
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: EntitySharedReference.Id
+  fullName: LiteEntitySystem.EntitySharedReference.Id
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public readonly ushort Id
+    return:
+      type: System.UInt16
+    content.vb: Public ReadOnly Id As UShort
+- uid: LiteEntitySystem.EntitySharedReference.Version
+  commentId: F:LiteEntitySystem.EntitySharedReference.Version
+  id: Version
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: Version
+  nameWithType: EntitySharedReference.Version
+  fullName: LiteEntitySystem.EntitySharedReference.Version
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public readonly byte Version
+    return:
+      type: System.Byte
+    content.vb: Public ReadOnly Version As Byte
+- uid: LiteEntitySystem.EntitySharedReference.IsValid
+  commentId: P:LiteEntitySystem.EntitySharedReference.IsValid
+  id: IsValid
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: IsValid
+  nameWithType: EntitySharedReference.IsValid
+  fullName: LiteEntitySystem.EntitySharedReference.IsValid
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool IsValid { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsValid As Boolean
+  overload: LiteEntitySystem.EntitySharedReference.IsValid*
+- uid: LiteEntitySystem.EntitySharedReference.IsInvalid
+  commentId: P:LiteEntitySystem.EntitySharedReference.IsInvalid
+  id: IsInvalid
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: IsInvalid
+  nameWithType: EntitySharedReference.IsInvalid
+  fullName: LiteEntitySystem.EntitySharedReference.IsInvalid
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool IsInvalid { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsInvalid As Boolean
+  overload: LiteEntitySystem.EntitySharedReference.IsInvalid*
+- uid: LiteEntitySystem.EntitySharedReference.IsLocal
+  commentId: P:LiteEntitySystem.EntitySharedReference.IsLocal
+  id: IsLocal
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: IsLocal
+  nameWithType: EntitySharedReference.IsLocal
+  fullName: LiteEntitySystem.EntitySharedReference.IsLocal
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool IsLocal { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsLocal As Boolean
+  overload: LiteEntitySystem.EntitySharedReference.IsLocal*
+- uid: LiteEntitySystem.EntitySharedReference.Empty
+  commentId: F:LiteEntitySystem.EntitySharedReference.Empty
+  id: Empty
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: Empty
+  nameWithType: EntitySharedReference.Empty
+  fullName: LiteEntitySystem.EntitySharedReference.Empty
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public static readonly EntitySharedReference Empty
+    return:
+      type: LiteEntitySystem.EntitySharedReference
+    content.vb: Public Shared ReadOnly Empty As EntitySharedReference
+- uid: LiteEntitySystem.EntitySharedReference.#ctor(System.UInt16,System.Byte)
+  commentId: M:LiteEntitySystem.EntitySharedReference.#ctor(System.UInt16,System.Byte)
+  id: '#ctor(System.UInt16,System.Byte)'
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: EntitySharedReference(ushort, byte)
+  nameWithType: EntitySharedReference.EntitySharedReference(ushort, byte)
+  fullName: LiteEntitySystem.EntitySharedReference.EntitySharedReference(ushort, byte)
+  type: Constructor
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public EntitySharedReference(ushort id, byte version)
+    parameters:
+    - id: id
+      type: System.UInt16
+    - id: version
+      type: System.Byte
+    content.vb: Public Sub New(id As UShort, version As Byte)
+  overload: LiteEntitySystem.EntitySharedReference.#ctor*
+  nameWithType.vb: EntitySharedReference.New(UShort, Byte)
+  fullName.vb: LiteEntitySystem.EntitySharedReference.New(UShort, Byte)
+  name.vb: New(UShort, Byte)
+- uid: LiteEntitySystem.EntitySharedReference.#ctor(LiteEntitySystem.EntityLogic)
+  commentId: M:LiteEntitySystem.EntitySharedReference.#ctor(LiteEntitySystem.EntityLogic)
+  id: '#ctor(LiteEntitySystem.EntityLogic)'
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: EntitySharedReference(EntityLogic)
+  nameWithType: EntitySharedReference.EntitySharedReference(EntityLogic)
+  fullName: LiteEntitySystem.EntitySharedReference.EntitySharedReference(LiteEntitySystem.EntityLogic)
+  type: Constructor
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public EntitySharedReference(EntityLogic entity)
+    parameters:
+    - id: entity
+      type: LiteEntitySystem.EntityLogic
+    content.vb: Public Sub New(entity As EntityLogic)
+  overload: LiteEntitySystem.EntitySharedReference.#ctor*
+  nameWithType.vb: EntitySharedReference.New(EntityLogic)
+  fullName.vb: LiteEntitySystem.EntitySharedReference.New(LiteEntitySystem.EntityLogic)
+  name.vb: New(EntityLogic)
+- uid: LiteEntitySystem.EntitySharedReference.op_Equality(LiteEntitySystem.EntitySharedReference,LiteEntitySystem.EntitySharedReference)
+  commentId: M:LiteEntitySystem.EntitySharedReference.op_Equality(LiteEntitySystem.EntitySharedReference,LiteEntitySystem.EntitySharedReference)
+  id: op_Equality(LiteEntitySystem.EntitySharedReference,LiteEntitySystem.EntitySharedReference)
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: operator ==(EntitySharedReference, EntitySharedReference)
+  nameWithType: EntitySharedReference.operator ==(EntitySharedReference, EntitySharedReference)
+  fullName: LiteEntitySystem.EntitySharedReference.operator ==(LiteEntitySystem.EntitySharedReference, LiteEntitySystem.EntitySharedReference)
+  type: Operator
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public static bool operator ==(EntitySharedReference obj1, EntitySharedReference obj2)
+    parameters:
+    - id: obj1
+      type: LiteEntitySystem.EntitySharedReference
+    - id: obj2
+      type: LiteEntitySystem.EntitySharedReference
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Operator =(obj1 As EntitySharedReference, obj2 As EntitySharedReference) As Boolean
+  overload: LiteEntitySystem.EntitySharedReference.op_Equality*
+  nameWithType.vb: EntitySharedReference.=(EntitySharedReference, EntitySharedReference)
+  fullName.vb: LiteEntitySystem.EntitySharedReference.=(LiteEntitySystem.EntitySharedReference, LiteEntitySystem.EntitySharedReference)
+  name.vb: =(EntitySharedReference, EntitySharedReference)
+- uid: LiteEntitySystem.EntitySharedReference.op_Inequality(LiteEntitySystem.EntitySharedReference,LiteEntitySystem.EntitySharedReference)
+  commentId: M:LiteEntitySystem.EntitySharedReference.op_Inequality(LiteEntitySystem.EntitySharedReference,LiteEntitySystem.EntitySharedReference)
+  id: op_Inequality(LiteEntitySystem.EntitySharedReference,LiteEntitySystem.EntitySharedReference)
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: operator !=(EntitySharedReference, EntitySharedReference)
+  nameWithType: EntitySharedReference.operator !=(EntitySharedReference, EntitySharedReference)
+  fullName: LiteEntitySystem.EntitySharedReference.operator !=(LiteEntitySystem.EntitySharedReference, LiteEntitySystem.EntitySharedReference)
+  type: Operator
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public static bool operator !=(EntitySharedReference obj1, EntitySharedReference obj2)
+    parameters:
+    - id: obj1
+      type: LiteEntitySystem.EntitySharedReference
+    - id: obj2
+      type: LiteEntitySystem.EntitySharedReference
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Operator <>(obj1 As EntitySharedReference, obj2 As EntitySharedReference) As Boolean
+  overload: LiteEntitySystem.EntitySharedReference.op_Inequality*
+  nameWithType.vb: EntitySharedReference.<>(EntitySharedReference, EntitySharedReference)
+  fullName.vb: LiteEntitySystem.EntitySharedReference.<>(LiteEntitySystem.EntitySharedReference, LiteEntitySystem.EntitySharedReference)
+  name.vb: <>(EntitySharedReference, EntitySharedReference)
+- uid: LiteEntitySystem.EntitySharedReference.Equals(System.Object)
+  commentId: M:LiteEntitySystem.EntitySharedReference.Equals(System.Object)
+  id: Equals(System.Object)
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: Equals(object)
+  nameWithType: EntitySharedReference.Equals(object)
+  fullName: LiteEntitySystem.EntitySharedReference.Equals(object)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Indicates whether this instance and a specified object are equal.
+  example: []
+  syntax:
+    content: public override bool Equals(object obj)
+    parameters:
+    - id: obj
+      type: System.Object
+      description: The object to compare with the current instance.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <code class="paramref">obj</code> and this instance are the same type and represent the same value; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Overrides Function Equals(obj As Object) As Boolean
+  overridden: System.ValueType.Equals(System.Object)
+  overload: LiteEntitySystem.EntitySharedReference.Equals*
+  nameWithType.vb: EntitySharedReference.Equals(Object)
+  fullName.vb: LiteEntitySystem.EntitySharedReference.Equals(Object)
+  name.vb: Equals(Object)
+- uid: LiteEntitySystem.EntitySharedReference.GetHashCode
+  commentId: M:LiteEntitySystem.EntitySharedReference.GetHashCode
+  id: GetHashCode
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: GetHashCode()
+  nameWithType: EntitySharedReference.GetHashCode()
+  fullName: LiteEntitySystem.EntitySharedReference.GetHashCode()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Returns the hash code for this instance.
+  example: []
+  syntax:
+    content: public override int GetHashCode()
+    return:
+      type: System.Int32
+      description: A 32-bit signed integer that is the hash code for this instance.
+    content.vb: Public Overrides Function GetHashCode() As Integer
+  overridden: System.ValueType.GetHashCode
+  overload: LiteEntitySystem.EntitySharedReference.GetHashCode*
+- uid: LiteEntitySystem.EntitySharedReference.op_Implicit(LiteEntitySystem.EntityLogic)~LiteEntitySystem.EntitySharedReference
+  commentId: M:LiteEntitySystem.EntitySharedReference.op_Implicit(LiteEntitySystem.EntityLogic)~LiteEntitySystem.EntitySharedReference
+  id: op_Implicit(LiteEntitySystem.EntityLogic)~LiteEntitySystem.EntitySharedReference
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: implicit operator EntitySharedReference(EntityLogic)
+  nameWithType: EntitySharedReference.implicit operator EntitySharedReference(EntityLogic)
+  fullName: LiteEntitySystem.EntitySharedReference.implicit operator LiteEntitySystem.EntitySharedReference(LiteEntitySystem.EntityLogic)
+  type: Operator
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public static implicit operator EntitySharedReference(EntityLogic entity)
+    parameters:
+    - id: entity
+      type: LiteEntitySystem.EntityLogic
+    return:
+      type: LiteEntitySystem.EntitySharedReference
+    content.vb: Public Shared Widening Operator CType(entity As EntityLogic) As EntitySharedReference
+  overload: LiteEntitySystem.EntitySharedReference.op_Implicit*
+  nameWithType.vb: EntitySharedReference.CType(EntityLogic)
+  fullName.vb: LiteEntitySystem.EntitySharedReference.CType(LiteEntitySystem.EntityLogic)
+  name.vb: CType(EntityLogic)
+- uid: LiteEntitySystem.EntitySharedReference.ToString
+  commentId: M:LiteEntitySystem.EntitySharedReference.ToString
+  id: ToString
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: EntitySharedReference.ToString()
+  fullName: LiteEntitySystem.EntitySharedReference.ToString()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Returns the fully qualified type name of this instance.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: The fully qualified type name.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.ValueType.ToString
+  overload: LiteEntitySystem.EntitySharedReference.ToString*
+- uid: LiteEntitySystem.EntitySharedReference.Equals(LiteEntitySystem.EntitySharedReference)
+  commentId: M:LiteEntitySystem.EntitySharedReference.Equals(LiteEntitySystem.EntitySharedReference)
+  id: Equals(LiteEntitySystem.EntitySharedReference)
+  parent: LiteEntitySystem.EntitySharedReference
+  langs:
+  - csharp
+  - vb
+  name: Equals(EntitySharedReference)
+  nameWithType: EntitySharedReference.Equals(EntitySharedReference)
+  fullName: LiteEntitySystem.EntitySharedReference.Equals(LiteEntitySystem.EntitySharedReference)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Indicates whether the current object is equal to another object of the same type.
+  example: []
+  syntax:
+    content: public bool Equals(EntitySharedReference other)
+    parameters:
+    - id: other
+      type: LiteEntitySystem.EntitySharedReference
+      description: An object to compare with this object.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the current object is equal to the <code class="paramref">other</code> parameter; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Function Equals(other As EntitySharedReference) As Boolean
+  overload: LiteEntitySystem.EntitySharedReference.Equals*
+  implements:
+  - System.IEquatable{LiteEntitySystem.EntitySharedReference}.Equals(LiteEntitySystem.EntitySharedReference)
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.IEquatable{LiteEntitySystem.EntitySharedReference}
+  commentId: T:System.IEquatable{LiteEntitySystem.EntitySharedReference}
+  parent: System
+  definition: System.IEquatable`1
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<EntitySharedReference>
+  nameWithType: IEquatable<EntitySharedReference>
+  fullName: System.IEquatable<LiteEntitySystem.EntitySharedReference>
+  nameWithType.vb: IEquatable(Of EntitySharedReference)
+  fullName.vb: System.IEquatable(Of LiteEntitySystem.EntitySharedReference)
+  name.vb: IEquatable(Of EntitySharedReference)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - uid: LiteEntitySystem.EntitySharedReference
+    name: EntitySharedReference
+    href: LiteEntitySystem.EntitySharedReference.html
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.EntitySharedReference
+    name: EntitySharedReference
+    href: LiteEntitySystem.EntitySharedReference.html
+  - name: )
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: LiteEntitySystem.EntitySharedReference.IsValid*
+  commentId: Overload:LiteEntitySystem.EntitySharedReference.IsValid
+  href: LiteEntitySystem.EntitySharedReference.html#LiteEntitySystem_EntitySharedReference_IsValid
+  name: IsValid
+  nameWithType: EntitySharedReference.IsValid
+  fullName: LiteEntitySystem.EntitySharedReference.IsValid
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: LiteEntitySystem.EntitySharedReference.IsInvalid*
+  commentId: Overload:LiteEntitySystem.EntitySharedReference.IsInvalid
+  href: LiteEntitySystem.EntitySharedReference.html#LiteEntitySystem_EntitySharedReference_IsInvalid
+  name: IsInvalid
+  nameWithType: EntitySharedReference.IsInvalid
+  fullName: LiteEntitySystem.EntitySharedReference.IsInvalid
+- uid: LiteEntitySystem.EntitySharedReference.IsLocal*
+  commentId: Overload:LiteEntitySystem.EntitySharedReference.IsLocal
+  href: LiteEntitySystem.EntitySharedReference.html#LiteEntitySystem_EntitySharedReference_IsLocal
+  name: IsLocal
+  nameWithType: EntitySharedReference.IsLocal
+  fullName: LiteEntitySystem.EntitySharedReference.IsLocal
+- uid: LiteEntitySystem.EntitySharedReference
+  commentId: T:LiteEntitySystem.EntitySharedReference
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.EntitySharedReference.html
+  name: EntitySharedReference
+  nameWithType: EntitySharedReference
+  fullName: LiteEntitySystem.EntitySharedReference
+- uid: LiteEntitySystem.EntitySharedReference.#ctor*
+  commentId: Overload:LiteEntitySystem.EntitySharedReference.#ctor
+  href: LiteEntitySystem.EntitySharedReference.html#LiteEntitySystem_EntitySharedReference__ctor_System_UInt16_System_Byte_
+  name: EntitySharedReference
+  nameWithType: EntitySharedReference.EntitySharedReference
+  fullName: LiteEntitySystem.EntitySharedReference.EntitySharedReference
+  nameWithType.vb: EntitySharedReference.New
+  fullName.vb: LiteEntitySystem.EntitySharedReference.New
+  name.vb: New
+- uid: LiteEntitySystem.EntityLogic
+  commentId: T:LiteEntitySystem.EntityLogic
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.EntityLogic.html
+  name: EntityLogic
+  nameWithType: EntityLogic
+  fullName: LiteEntitySystem.EntityLogic
+- uid: LiteEntitySystem.EntitySharedReference.op_Equality*
+  commentId: Overload:LiteEntitySystem.EntitySharedReference.op_Equality
+  href: LiteEntitySystem.EntitySharedReference.html#LiteEntitySystem_EntitySharedReference_op_Equality_LiteEntitySystem_EntitySharedReference_LiteEntitySystem_EntitySharedReference_
+  name: operator ==
+  nameWithType: EntitySharedReference.operator ==
+  fullName: LiteEntitySystem.EntitySharedReference.operator ==
+  nameWithType.vb: EntitySharedReference.=
+  fullName.vb: LiteEntitySystem.EntitySharedReference.=
+  name.vb: =
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: LiteEntitySystem.EntitySharedReference.op_Equality*
+    name: ==
+    href: LiteEntitySystem.EntitySharedReference.html#LiteEntitySystem_EntitySharedReference_op_Equality_LiteEntitySystem_EntitySharedReference_LiteEntitySystem_EntitySharedReference_
+- uid: LiteEntitySystem.EntitySharedReference.op_Inequality*
+  commentId: Overload:LiteEntitySystem.EntitySharedReference.op_Inequality
+  href: LiteEntitySystem.EntitySharedReference.html#LiteEntitySystem_EntitySharedReference_op_Inequality_LiteEntitySystem_EntitySharedReference_LiteEntitySystem_EntitySharedReference_
+  name: operator !=
+  nameWithType: EntitySharedReference.operator !=
+  fullName: LiteEntitySystem.EntitySharedReference.operator !=
+  nameWithType.vb: EntitySharedReference.<>
+  fullName.vb: LiteEntitySystem.EntitySharedReference.<>
+  name.vb: <>
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: LiteEntitySystem.EntitySharedReference.op_Inequality*
+    name: '!='
+    href: LiteEntitySystem.EntitySharedReference.html#LiteEntitySystem_EntitySharedReference_op_Inequality_LiteEntitySystem_EntitySharedReference_LiteEntitySystem_EntitySharedReference_
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+  - name: )
+- uid: LiteEntitySystem.EntitySharedReference.Equals*
+  commentId: Overload:LiteEntitySystem.EntitySharedReference.Equals
+  href: LiteEntitySystem.EntitySharedReference.html#LiteEntitySystem_EntitySharedReference_Equals_System_Object_
+  name: Equals
+  nameWithType: EntitySharedReference.Equals
+  fullName: LiteEntitySystem.EntitySharedReference.Equals
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.EntitySharedReference.GetHashCode*
+  commentId: Overload:LiteEntitySystem.EntitySharedReference.GetHashCode
+  href: LiteEntitySystem.EntitySharedReference.html#LiteEntitySystem_EntitySharedReference_GetHashCode
+  name: GetHashCode
+  nameWithType: EntitySharedReference.GetHashCode
+  fullName: LiteEntitySystem.EntitySharedReference.GetHashCode
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: LiteEntitySystem.EntitySharedReference.op_Implicit*
+  commentId: Overload:LiteEntitySystem.EntitySharedReference.op_Implicit
+  name: implicit operator
+  nameWithType: EntitySharedReference.implicit operator
+  fullName: LiteEntitySystem.EntitySharedReference.implicit operator
+  nameWithType.vb: EntitySharedReference.CType
+  fullName.vb: LiteEntitySystem.EntitySharedReference.CType
+  name.vb: CType
+  spec.csharp:
+  - name: implicit
+  - name: " "
+  - name: operator
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.EntitySharedReference.ToString*
+  commentId: Overload:LiteEntitySystem.EntitySharedReference.ToString
+  href: LiteEntitySystem.EntitySharedReference.html#LiteEntitySystem_EntitySharedReference_ToString
+  name: ToString
+  nameWithType: EntitySharedReference.ToString
+  fullName: LiteEntitySystem.EntitySharedReference.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.IEquatable{LiteEntitySystem.EntitySharedReference}.Equals(LiteEntitySystem.EntitySharedReference)
+  commentId: M:System.IEquatable{LiteEntitySystem.EntitySharedReference}.Equals(LiteEntitySystem.EntitySharedReference)
+  parent: System.IEquatable{LiteEntitySystem.EntitySharedReference}
+  definition: System.IEquatable`1.Equals(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  name: Equals(EntitySharedReference)
+  nameWithType: IEquatable<EntitySharedReference>.Equals(EntitySharedReference)
+  fullName: System.IEquatable<LiteEntitySystem.EntitySharedReference>.Equals(LiteEntitySystem.EntitySharedReference)
+  nameWithType.vb: IEquatable(Of EntitySharedReference).Equals(EntitySharedReference)
+  fullName.vb: System.IEquatable(Of LiteEntitySystem.EntitySharedReference).Equals(LiteEntitySystem.EntitySharedReference)
+  spec.csharp:
+  - uid: System.IEquatable{LiteEntitySystem.EntitySharedReference}.Equals(LiteEntitySystem.EntitySharedReference)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - uid: LiteEntitySystem.EntitySharedReference
+    name: EntitySharedReference
+    href: LiteEntitySystem.EntitySharedReference.html
+  - name: )
+  spec.vb:
+  - uid: System.IEquatable{LiteEntitySystem.EntitySharedReference}.Equals(LiteEntitySystem.EntitySharedReference)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - uid: LiteEntitySystem.EntitySharedReference
+    name: EntitySharedReference
+    href: LiteEntitySystem.EntitySharedReference.html
+  - name: )
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - name: T
+  - name: )

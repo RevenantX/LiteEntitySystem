@@ -12,7 +12,7 @@ namespace LiteEntitySystem
         RequestBaseline
     }
 
-    public struct InputInfo
+    internal struct InputInfo
     {
         public ushort Tick;
         public InputPacketHeader Header;

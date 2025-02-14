@@ -1,0 +1,353 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.MaxHistorySize
+  commentId: T:LiteEntitySystem.MaxHistorySize
+  id: MaxHistorySize
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.MaxHistorySize.Size128
+  - LiteEntitySystem.MaxHistorySize.Size16
+  - LiteEntitySystem.MaxHistorySize.Size32
+  - LiteEntitySystem.MaxHistorySize.Size64
+  langs:
+  - csharp
+  - vb
+  name: MaxHistorySize
+  nameWithType: MaxHistorySize
+  fullName: LiteEntitySystem.MaxHistorySize
+  type: Enum
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public enum MaxHistorySize : byte'
+    content.vb: Public Enum MaxHistorySize As Byte
+  extensionMethods:
+  - LiteEntitySystem.MaxHistorySize.LiteEntitySystem.Utils.GetEnumValueInt``1
+  - LiteEntitySystem.MaxHistorySize.LiteEntitySystem.Utils.GetEnumValue``1
+  - LiteEntitySystem.MaxHistorySize.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.MaxHistorySize)
+- uid: LiteEntitySystem.MaxHistorySize.Size16
+  commentId: F:LiteEntitySystem.MaxHistorySize.Size16
+  id: Size16
+  parent: LiteEntitySystem.MaxHistorySize
+  langs:
+  - csharp
+  - vb
+  name: Size16
+  nameWithType: MaxHistorySize.Size16
+  fullName: LiteEntitySystem.MaxHistorySize.Size16
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: Size16 = 16
+    return:
+      type: LiteEntitySystem.MaxHistorySize
+- uid: LiteEntitySystem.MaxHistorySize.Size32
+  commentId: F:LiteEntitySystem.MaxHistorySize.Size32
+  id: Size32
+  parent: LiteEntitySystem.MaxHistorySize
+  langs:
+  - csharp
+  - vb
+  name: Size32
+  nameWithType: MaxHistorySize.Size32
+  fullName: LiteEntitySystem.MaxHistorySize.Size32
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: Size32 = 32
+    return:
+      type: LiteEntitySystem.MaxHistorySize
+- uid: LiteEntitySystem.MaxHistorySize.Size64
+  commentId: F:LiteEntitySystem.MaxHistorySize.Size64
+  id: Size64
+  parent: LiteEntitySystem.MaxHistorySize
+  langs:
+  - csharp
+  - vb
+  name: Size64
+  nameWithType: MaxHistorySize.Size64
+  fullName: LiteEntitySystem.MaxHistorySize.Size64
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: Size64 = 64
+    return:
+      type: LiteEntitySystem.MaxHistorySize
+- uid: LiteEntitySystem.MaxHistorySize.Size128
+  commentId: F:LiteEntitySystem.MaxHistorySize.Size128
+  id: Size128
+  parent: LiteEntitySystem.MaxHistorySize
+  langs:
+  - csharp
+  - vb
+  name: Size128
+  nameWithType: MaxHistorySize.Size128
+  fullName: LiteEntitySystem.MaxHistorySize.Size128
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: Size128 = 128
+    return:
+      type: LiteEntitySystem.MaxHistorySize
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: LiteEntitySystem.MaxHistorySize.LiteEntitySystem.Utils.GetEnumValueInt``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<MaxHistorySize>(MaxHistorySize)
+  nameWithType: Utils.GetEnumValueInt<MaxHistorySize>(MaxHistorySize)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<LiteEntitySystem.MaxHistorySize>(LiteEntitySystem.MaxHistorySize)
+  nameWithType.vb: Utils.GetEnumValueInt(Of MaxHistorySize)(MaxHistorySize)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of LiteEntitySystem.MaxHistorySize)(LiteEntitySystem.MaxHistorySize)
+  name.vb: GetEnumValueInt(Of MaxHistorySize)(MaxHistorySize)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.MaxHistorySize)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - uid: LiteEntitySystem.MaxHistorySize
+    name: MaxHistorySize
+    href: LiteEntitySystem.MaxHistorySize.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.MaxHistorySize
+    name: MaxHistorySize
+    href: LiteEntitySystem.MaxHistorySize.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.MaxHistorySize)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.MaxHistorySize
+    name: MaxHistorySize
+    href: LiteEntitySystem.MaxHistorySize.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.MaxHistorySize
+    name: MaxHistorySize
+    href: LiteEntitySystem.MaxHistorySize.html
+  - name: )
+- uid: LiteEntitySystem.MaxHistorySize.LiteEntitySystem.Utils.GetEnumValue``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<MaxHistorySize>(MaxHistorySize)
+  nameWithType: Utils.GetEnumValue<MaxHistorySize>(MaxHistorySize)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<LiteEntitySystem.MaxHistorySize>(LiteEntitySystem.MaxHistorySize)
+  nameWithType.vb: Utils.GetEnumValue(Of MaxHistorySize)(MaxHistorySize)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of LiteEntitySystem.MaxHistorySize)(LiteEntitySystem.MaxHistorySize)
+  name.vb: GetEnumValue(Of MaxHistorySize)(MaxHistorySize)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.MaxHistorySize)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - uid: LiteEntitySystem.MaxHistorySize
+    name: MaxHistorySize
+    href: LiteEntitySystem.MaxHistorySize.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.MaxHistorySize
+    name: MaxHistorySize
+    href: LiteEntitySystem.MaxHistorySize.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.MaxHistorySize)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.MaxHistorySize
+    name: MaxHistorySize
+    href: LiteEntitySystem.MaxHistorySize.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.MaxHistorySize
+    name: MaxHistorySize
+    href: LiteEntitySystem.MaxHistorySize.html
+  - name: )
+- uid: LiteEntitySystem.MaxHistorySize.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.MaxHistorySize)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<MaxHistorySize>(MaxHistorySize, MaxHistorySize)
+  nameWithType: Utils.HasFlagFast<MaxHistorySize>(MaxHistorySize, MaxHistorySize)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<LiteEntitySystem.MaxHistorySize>(LiteEntitySystem.MaxHistorySize, LiteEntitySystem.MaxHistorySize)
+  nameWithType.vb: Utils.HasFlagFast(Of MaxHistorySize)(MaxHistorySize, MaxHistorySize)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of LiteEntitySystem.MaxHistorySize)(LiteEntitySystem.MaxHistorySize, LiteEntitySystem.MaxHistorySize)
+  name.vb: HasFlagFast(Of MaxHistorySize)(MaxHistorySize, MaxHistorySize)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.MaxHistorySize,LiteEntitySystem.MaxHistorySize)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - uid: LiteEntitySystem.MaxHistorySize
+    name: MaxHistorySize
+    href: LiteEntitySystem.MaxHistorySize.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.MaxHistorySize
+    name: MaxHistorySize
+    href: LiteEntitySystem.MaxHistorySize.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.MaxHistorySize
+    name: MaxHistorySize
+    href: LiteEntitySystem.MaxHistorySize.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.MaxHistorySize,LiteEntitySystem.MaxHistorySize)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.MaxHistorySize
+    name: MaxHistorySize
+    href: LiteEntitySystem.MaxHistorySize.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.MaxHistorySize
+    name: MaxHistorySize
+    href: LiteEntitySystem.MaxHistorySize.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.MaxHistorySize
+    name: MaxHistorySize
+    href: LiteEntitySystem.MaxHistorySize.html
+  - name: )
+- uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<T>(T)
+  nameWithType: Utils.GetEnumValueInt<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<T>(T)
+  nameWithType.vb: Utils.GetEnumValueInt(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of T)(T)
+  name.vb: GetEnumValueInt(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils
+  commentId: T:LiteEntitySystem.Utils
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.Utils.html
+  name: Utils
+  nameWithType: Utils
+  fullName: LiteEntitySystem.Utils
+- uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<T>(T)
+  nameWithType: Utils.GetEnumValue<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<T>(T)
+  nameWithType.vb: Utils.GetEnumValue(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of T)(T)
+  name.vb: GetEnumValue(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<T>(T, T)
+  nameWithType: Utils.HasFlagFast<T>(T, T)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<T>(T, T)
+  nameWithType.vb: Utils.HasFlagFast(Of T)(T, T)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of T)(T, T)
+  name.vb: HasFlagFast(Of T)(T, T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.MaxHistorySize
+  commentId: T:LiteEntitySystem.MaxHistorySize
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.MaxHistorySize.html
+  name: MaxHistorySize
+  nameWithType: MaxHistorySize
+  fullName: LiteEntitySystem.MaxHistorySize

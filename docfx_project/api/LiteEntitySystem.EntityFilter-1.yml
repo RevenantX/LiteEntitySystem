@@ -1,0 +1,653 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.EntityFilter`1
+  commentId: T:LiteEntitySystem.EntityFilter`1
+  id: EntityFilter`1
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.EntityFilter`1.OnDestroyed
+  - LiteEntitySystem.EntityFilter`1.SubscribeToConstructed(System.Action{`0},System.Boolean)
+  - LiteEntitySystem.EntityFilter`1.UnsubscribeToConstructed(System.Action{`0})
+  langs:
+  - csharp
+  - vb
+  name: EntityFilter<T>
+  nameWithType: EntityFilter<T>
+  fullName: LiteEntitySystem.EntityFilter<T>
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public class EntityFilter<T> : AVLTree<T>, IEnumerable<T>, IEnumerable, IEntityFilter where T : InternalEntity'
+    typeParameters:
+    - id: T
+    content.vb: Public Class EntityFilter(Of T As InternalEntity) Inherits AVLTree(Of T) Implements IEnumerable(Of T), IEnumerable, IEntityFilter
+  inheritance:
+  - System.Object
+  - LiteEntitySystem.Collections.AVLTree{{T}}
+  implements:
+  - System.Collections.Generic.IEnumerable{{T}}
+  - System.Collections.IEnumerable
+  - LiteEntitySystem.IEntityFilter
+  inheritedMembers:
+  - LiteEntitySystem.Collections.AVLTree{{T}}.Count
+  - LiteEntitySystem.Collections.AVLTree{{T}}.Contains({T})
+  - LiteEntitySystem.Collections.AVLTree{{T}}.TryGetMin({T}@)
+  - LiteEntitySystem.Collections.AVLTree{{T}}.TryGetMax({T}@)
+  - LiteEntitySystem.Collections.AVLTree{{T}}.GetEnumerator
+  nameWithType.vb: EntityFilter(Of T)
+  fullName.vb: LiteEntitySystem.EntityFilter(Of T)
+  name.vb: EntityFilter(Of T)
+- uid: LiteEntitySystem.EntityFilter`1.OnDestroyed
+  commentId: E:LiteEntitySystem.EntityFilter`1.OnDestroyed
+  id: OnDestroyed
+  parent: LiteEntitySystem.EntityFilter`1
+  langs:
+  - csharp
+  - vb
+  name: OnDestroyed
+  nameWithType: EntityFilter<T>.OnDestroyed
+  fullName: LiteEntitySystem.EntityFilter<T>.OnDestroyed
+  type: Event
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Called when entity is removed/destroyed
+  example: []
+  syntax:
+    content: public event Action<T> OnDestroyed
+    return:
+      type: System.Action{{T}}
+    content.vb: Public Event OnDestroyed As Action(Of T)
+  nameWithType.vb: EntityFilter(Of T).OnDestroyed
+  fullName.vb: LiteEntitySystem.EntityFilter(Of T).OnDestroyed
+- uid: LiteEntitySystem.EntityFilter`1.SubscribeToConstructed(System.Action{`0},System.Boolean)
+  commentId: M:LiteEntitySystem.EntityFilter`1.SubscribeToConstructed(System.Action{`0},System.Boolean)
+  id: SubscribeToConstructed(System.Action{`0},System.Boolean)
+  parent: LiteEntitySystem.EntityFilter`1
+  langs:
+  - csharp
+  - vb
+  name: SubscribeToConstructed(Action<T>, bool)
+  nameWithType: EntityFilter<T>.SubscribeToConstructed(Action<T>, bool)
+  fullName: LiteEntitySystem.EntityFilter<T>.SubscribeToConstructed(System.Action<T>, bool)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: >-
+    Called when entity created and synced
+
+    <param name="onConstructed">callback</param><param name="callOnExisting">call that callback on existing entities in this filter/list</param>
+  example: []
+  syntax:
+    content: public void SubscribeToConstructed(Action<T> onConstructed, bool callOnExisting)
+    parameters:
+    - id: onConstructed
+      type: System.Action{{T}}
+    - id: callOnExisting
+      type: System.Boolean
+    content.vb: Public Sub SubscribeToConstructed(onConstructed As Action(Of T), callOnExisting As Boolean)
+  overload: LiteEntitySystem.EntityFilter`1.SubscribeToConstructed*
+  nameWithType.vb: EntityFilter(Of T).SubscribeToConstructed(Action(Of T), Boolean)
+  fullName.vb: LiteEntitySystem.EntityFilter(Of T).SubscribeToConstructed(System.Action(Of T), Boolean)
+  name.vb: SubscribeToConstructed(Action(Of T), Boolean)
+- uid: LiteEntitySystem.EntityFilter`1.UnsubscribeToConstructed(System.Action{`0})
+  commentId: M:LiteEntitySystem.EntityFilter`1.UnsubscribeToConstructed(System.Action{`0})
+  id: UnsubscribeToConstructed(System.Action{`0})
+  parent: LiteEntitySystem.EntityFilter`1
+  langs:
+  - csharp
+  - vb
+  name: UnsubscribeToConstructed(Action<T>)
+  nameWithType: EntityFilter<T>.UnsubscribeToConstructed(Action<T>)
+  fullName: LiteEntitySystem.EntityFilter<T>.UnsubscribeToConstructed(System.Action<T>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: >-
+    Called when entity created and synced
+
+    <param name="onConstructed">callback</param>
+  example: []
+  syntax:
+    content: public void UnsubscribeToConstructed(Action<T> onConstructed)
+    parameters:
+    - id: onConstructed
+      type: System.Action{{T}}
+    content.vb: Public Sub UnsubscribeToConstructed(onConstructed As Action(Of T))
+  overload: LiteEntitySystem.EntityFilter`1.UnsubscribeToConstructed*
+  nameWithType.vb: EntityFilter(Of T).UnsubscribeToConstructed(Action(Of T))
+  fullName.vb: LiteEntitySystem.EntityFilter(Of T).UnsubscribeToConstructed(System.Action(Of T))
+  name.vb: UnsubscribeToConstructed(Action(Of T))
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: LiteEntitySystem.Collections.AVLTree{{T}}
+  commentId: T:LiteEntitySystem.Collections.AVLTree{`0}
+  parent: LiteEntitySystem.Collections
+  definition: LiteEntitySystem.Collections.AVLTree`1
+  href: LiteEntitySystem.Collections.AVLTree-1.html
+  name: AVLTree<T>
+  nameWithType: AVLTree<T>
+  fullName: LiteEntitySystem.Collections.AVLTree<T>
+  nameWithType.vb: AVLTree(Of T)
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T)
+  name.vb: AVLTree(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree`1
+    name: AVLTree
+    href: LiteEntitySystem.Collections.AVLTree-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree`1
+    name: AVLTree
+    href: LiteEntitySystem.Collections.AVLTree-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.IEnumerable{{T}}
+  commentId: T:System.Collections.Generic.IEnumerable{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.IEnumerable
+  commentId: T:System.Collections.IEnumerable
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerable
+  name: IEnumerable
+  nameWithType: IEnumerable
+  fullName: System.Collections.IEnumerable
+- uid: LiteEntitySystem.IEntityFilter
+  commentId: T:LiteEntitySystem.IEntityFilter
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.IEntityFilter.html
+  name: IEntityFilter
+  nameWithType: IEntityFilter
+  fullName: LiteEntitySystem.IEntityFilter
+- uid: LiteEntitySystem.Collections.AVLTree{{T}}.Count
+  commentId: P:LiteEntitySystem.Collections.AVLTree{`0}.Count
+  parent: LiteEntitySystem.Collections.AVLTree{{T}}
+  definition: LiteEntitySystem.Collections.AVLTree`1.Count
+  href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_Count
+  name: Count
+  nameWithType: AVLTree<T>.Count
+  fullName: LiteEntitySystem.Collections.AVLTree<T>.Count
+  nameWithType.vb: AVLTree(Of T).Count
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T).Count
+- uid: LiteEntitySystem.Collections.AVLTree{{T}}.Contains({T})
+  commentId: M:LiteEntitySystem.Collections.AVLTree{`0}.Contains(`0)
+  parent: LiteEntitySystem.Collections.AVLTree{{T}}
+  definition: LiteEntitySystem.Collections.AVLTree`1.Contains(`0)
+  href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_Contains__0_
+  name: Contains(T)
+  nameWithType: AVLTree<T>.Contains(T)
+  fullName: LiteEntitySystem.Collections.AVLTree<T>.Contains(T)
+  nameWithType.vb: AVLTree(Of T).Contains(T)
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T).Contains(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree{`0}.Contains(`0)
+    name: Contains
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_Contains__0_
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree{`0}.Contains(`0)
+    name: Contains
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_Contains__0_
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Collections.AVLTree{{T}}.TryGetMin({T}@)
+  commentId: M:LiteEntitySystem.Collections.AVLTree{`0}.TryGetMin(`0@)
+  parent: LiteEntitySystem.Collections.AVLTree{{T}}
+  definition: LiteEntitySystem.Collections.AVLTree`1.TryGetMin(`0@)
+  href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_TryGetMin__0__
+  name: TryGetMin(out T)
+  nameWithType: AVLTree<T>.TryGetMin(out T)
+  fullName: LiteEntitySystem.Collections.AVLTree<T>.TryGetMin(out T)
+  nameWithType.vb: AVLTree(Of T).TryGetMin(T)
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T).TryGetMin(T)
+  name.vb: TryGetMin(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree{`0}.TryGetMin(`0@)
+    name: TryGetMin
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_TryGetMin__0__
+  - name: (
+  - name: out
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree{`0}.TryGetMin(`0@)
+    name: TryGetMin
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_TryGetMin__0__
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Collections.AVLTree{{T}}.TryGetMax({T}@)
+  commentId: M:LiteEntitySystem.Collections.AVLTree{`0}.TryGetMax(`0@)
+  parent: LiteEntitySystem.Collections.AVLTree{{T}}
+  definition: LiteEntitySystem.Collections.AVLTree`1.TryGetMax(`0@)
+  href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_TryGetMax__0__
+  name: TryGetMax(out T)
+  nameWithType: AVLTree<T>.TryGetMax(out T)
+  fullName: LiteEntitySystem.Collections.AVLTree<T>.TryGetMax(out T)
+  nameWithType.vb: AVLTree(Of T).TryGetMax(T)
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T).TryGetMax(T)
+  name.vb: TryGetMax(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree{`0}.TryGetMax(`0@)
+    name: TryGetMax
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_TryGetMax__0__
+  - name: (
+  - name: out
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree{`0}.TryGetMax(`0@)
+    name: TryGetMax
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_TryGetMax__0__
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Collections.AVLTree{{T}}.GetEnumerator
+  commentId: M:LiteEntitySystem.Collections.AVLTree{`0}.GetEnumerator
+  parent: LiteEntitySystem.Collections.AVLTree{{T}}
+  definition: LiteEntitySystem.Collections.AVLTree`1.GetEnumerator
+  href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_GetEnumerator
+  name: GetEnumerator()
+  nameWithType: AVLTree<T>.GetEnumerator()
+  fullName: LiteEntitySystem.Collections.AVLTree<T>.GetEnumerator()
+  nameWithType.vb: AVLTree(Of T).GetEnumerator()
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T).GetEnumerator()
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree{`0}.GetEnumerator
+    name: GetEnumerator
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_GetEnumerator
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree{`0}.GetEnumerator
+    name: GetEnumerator
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_GetEnumerator
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.Collections.AVLTree`1
+  commentId: T:LiteEntitySystem.Collections.AVLTree`1
+  parent: LiteEntitySystem.Collections
+  href: LiteEntitySystem.Collections.AVLTree-1.html
+  name: AVLTree<T>
+  nameWithType: AVLTree<T>
+  fullName: LiteEntitySystem.Collections.AVLTree<T>
+  nameWithType.vb: AVLTree(Of T)
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T)
+  name.vb: AVLTree(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree`1
+    name: AVLTree
+    href: LiteEntitySystem.Collections.AVLTree-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree`1
+    name: AVLTree
+    href: LiteEntitySystem.Collections.AVLTree-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Collections
+  commentId: N:LiteEntitySystem.Collections
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Collections
+  nameWithType: LiteEntitySystem.Collections
+  fullName: LiteEntitySystem.Collections
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Collections
+    name: Collections
+    href: LiteEntitySystem.Collections.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Collections
+    name: Collections
+    href: LiteEntitySystem.Collections.html
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: LiteEntitySystem.Collections.AVLTree`1.Count
+  commentId: P:LiteEntitySystem.Collections.AVLTree`1.Count
+  href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_Count
+  name: Count
+  nameWithType: AVLTree<T>.Count
+  fullName: LiteEntitySystem.Collections.AVLTree<T>.Count
+  nameWithType.vb: AVLTree(Of T).Count
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T).Count
+- uid: LiteEntitySystem.Collections.AVLTree`1.Contains(`0)
+  commentId: M:LiteEntitySystem.Collections.AVLTree`1.Contains(`0)
+  href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_Contains__0_
+  name: Contains(T)
+  nameWithType: AVLTree<T>.Contains(T)
+  fullName: LiteEntitySystem.Collections.AVLTree<T>.Contains(T)
+  nameWithType.vb: AVLTree(Of T).Contains(T)
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T).Contains(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree`1.Contains(`0)
+    name: Contains
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_Contains__0_
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree`1.Contains(`0)
+    name: Contains
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_Contains__0_
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Collections.AVLTree`1.TryGetMin(`0@)
+  commentId: M:LiteEntitySystem.Collections.AVLTree`1.TryGetMin(`0@)
+  href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_TryGetMin__0__
+  name: TryGetMin(out T)
+  nameWithType: AVLTree<T>.TryGetMin(out T)
+  fullName: LiteEntitySystem.Collections.AVLTree<T>.TryGetMin(out T)
+  nameWithType.vb: AVLTree(Of T).TryGetMin(T)
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T).TryGetMin(T)
+  name.vb: TryGetMin(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree`1.TryGetMin(`0@)
+    name: TryGetMin
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_TryGetMin__0__
+  - name: (
+  - name: out
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree`1.TryGetMin(`0@)
+    name: TryGetMin
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_TryGetMin__0__
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Collections.AVLTree`1.TryGetMax(`0@)
+  commentId: M:LiteEntitySystem.Collections.AVLTree`1.TryGetMax(`0@)
+  href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_TryGetMax__0__
+  name: TryGetMax(out T)
+  nameWithType: AVLTree<T>.TryGetMax(out T)
+  fullName: LiteEntitySystem.Collections.AVLTree<T>.TryGetMax(out T)
+  nameWithType.vb: AVLTree(Of T).TryGetMax(T)
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T).TryGetMax(T)
+  name.vb: TryGetMax(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree`1.TryGetMax(`0@)
+    name: TryGetMax
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_TryGetMax__0__
+  - name: (
+  - name: out
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree`1.TryGetMax(`0@)
+    name: TryGetMax
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_TryGetMax__0__
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Collections.AVLTree`1.GetEnumerator
+  commentId: M:LiteEntitySystem.Collections.AVLTree`1.GetEnumerator
+  href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_GetEnumerator
+  name: GetEnumerator()
+  nameWithType: AVLTree<T>.GetEnumerator()
+  fullName: LiteEntitySystem.Collections.AVLTree<T>.GetEnumerator()
+  nameWithType.vb: AVLTree(Of T).GetEnumerator()
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T).GetEnumerator()
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree`1.GetEnumerator
+    name: GetEnumerator
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_GetEnumerator
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree`1.GetEnumerator
+    name: GetEnumerator
+    href: LiteEntitySystem.Collections.AVLTree-1.html#LiteEntitySystem_Collections_AVLTree_1_GetEnumerator
+  - name: (
+  - name: )
+- uid: System.Action{{T}}
+  commentId: T:System.Action{`0}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.EntityFilter`1.SubscribeToConstructed*
+  commentId: Overload:LiteEntitySystem.EntityFilter`1.SubscribeToConstructed
+  href: LiteEntitySystem.EntityFilter-1.html#LiteEntitySystem_EntityFilter_1_SubscribeToConstructed_System_Action__0__System_Boolean_
+  name: SubscribeToConstructed
+  nameWithType: EntityFilter<T>.SubscribeToConstructed
+  fullName: LiteEntitySystem.EntityFilter<T>.SubscribeToConstructed
+  nameWithType.vb: EntityFilter(Of T).SubscribeToConstructed
+  fullName.vb: LiteEntitySystem.EntityFilter(Of T).SubscribeToConstructed
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: LiteEntitySystem.EntityFilter`1.UnsubscribeToConstructed*
+  commentId: Overload:LiteEntitySystem.EntityFilter`1.UnsubscribeToConstructed
+  href: LiteEntitySystem.EntityFilter-1.html#LiteEntitySystem_EntityFilter_1_UnsubscribeToConstructed_System_Action__0__
+  name: UnsubscribeToConstructed
+  nameWithType: EntityFilter<T>.UnsubscribeToConstructed
+  fullName: LiteEntitySystem.EntityFilter<T>.UnsubscribeToConstructed
+  nameWithType.vb: EntityFilter(Of T).UnsubscribeToConstructed
+  fullName.vb: LiteEntitySystem.EntityFilter(Of T).UnsubscribeToConstructed

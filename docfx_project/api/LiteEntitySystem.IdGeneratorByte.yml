@@ -1,0 +1,215 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.IdGeneratorByte
+  commentId: T:LiteEntitySystem.IdGeneratorByte
+  id: IdGeneratorByte
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.IdGeneratorByte.#ctor(System.Byte,System.Byte)
+  - LiteEntitySystem.IdGeneratorByte.AvailableIds
+  - LiteEntitySystem.IdGeneratorByte.GetNewId
+  - LiteEntitySystem.IdGeneratorByte.Reset
+  - LiteEntitySystem.IdGeneratorByte.ReuseId(System.Byte)
+  langs:
+  - csharp
+  - vb
+  name: IdGeneratorByte
+  nameWithType: IdGeneratorByte
+  fullName: LiteEntitySystem.IdGeneratorByte
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public class IdGeneratorByte
+    content.vb: Public Class IdGeneratorByte
+  inheritance:
+  - System.Object
+- uid: LiteEntitySystem.IdGeneratorByte.GetNewId
+  commentId: M:LiteEntitySystem.IdGeneratorByte.GetNewId
+  id: GetNewId
+  parent: LiteEntitySystem.IdGeneratorByte
+  langs:
+  - csharp
+  - vb
+  name: GetNewId()
+  nameWithType: IdGeneratorByte.GetNewId()
+  fullName: LiteEntitySystem.IdGeneratorByte.GetNewId()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public byte GetNewId()
+    return:
+      type: System.Byte
+    content.vb: Public Function GetNewId() As Byte
+  overload: LiteEntitySystem.IdGeneratorByte.GetNewId*
+- uid: LiteEntitySystem.IdGeneratorByte.AvailableIds
+  commentId: P:LiteEntitySystem.IdGeneratorByte.AvailableIds
+  id: AvailableIds
+  parent: LiteEntitySystem.IdGeneratorByte
+  langs:
+  - csharp
+  - vb
+  name: AvailableIds
+  nameWithType: IdGeneratorByte.AvailableIds
+  fullName: LiteEntitySystem.IdGeneratorByte.AvailableIds
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public int AvailableIds { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property AvailableIds As Integer
+  overload: LiteEntitySystem.IdGeneratorByte.AvailableIds*
+- uid: LiteEntitySystem.IdGeneratorByte.ReuseId(System.Byte)
+  commentId: M:LiteEntitySystem.IdGeneratorByte.ReuseId(System.Byte)
+  id: ReuseId(System.Byte)
+  parent: LiteEntitySystem.IdGeneratorByte
+  langs:
+  - csharp
+  - vb
+  name: ReuseId(byte)
+  nameWithType: IdGeneratorByte.ReuseId(byte)
+  fullName: LiteEntitySystem.IdGeneratorByte.ReuseId(byte)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void ReuseId(byte id)
+    parameters:
+    - id: id
+      type: System.Byte
+    content.vb: Public Sub ReuseId(id As Byte)
+  overload: LiteEntitySystem.IdGeneratorByte.ReuseId*
+  nameWithType.vb: IdGeneratorByte.ReuseId(Byte)
+  fullName.vb: LiteEntitySystem.IdGeneratorByte.ReuseId(Byte)
+  name.vb: ReuseId(Byte)
+- uid: LiteEntitySystem.IdGeneratorByte.#ctor(System.Byte,System.Byte)
+  commentId: M:LiteEntitySystem.IdGeneratorByte.#ctor(System.Byte,System.Byte)
+  id: '#ctor(System.Byte,System.Byte)'
+  parent: LiteEntitySystem.IdGeneratorByte
+  langs:
+  - csharp
+  - vb
+  name: IdGeneratorByte(byte, byte)
+  nameWithType: IdGeneratorByte.IdGeneratorByte(byte, byte)
+  fullName: LiteEntitySystem.IdGeneratorByte.IdGeneratorByte(byte, byte)
+  type: Constructor
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public IdGeneratorByte(byte initialValue, byte maxValue)
+    parameters:
+    - id: initialValue
+      type: System.Byte
+    - id: maxValue
+      type: System.Byte
+    content.vb: Public Sub New(initialValue As Byte, maxValue As Byte)
+  overload: LiteEntitySystem.IdGeneratorByte.#ctor*
+  nameWithType.vb: IdGeneratorByte.New(Byte, Byte)
+  fullName.vb: LiteEntitySystem.IdGeneratorByte.New(Byte, Byte)
+  name.vb: New(Byte, Byte)
+- uid: LiteEntitySystem.IdGeneratorByte.Reset
+  commentId: M:LiteEntitySystem.IdGeneratorByte.Reset
+  id: Reset
+  parent: LiteEntitySystem.IdGeneratorByte
+  langs:
+  - csharp
+  - vb
+  name: Reset()
+  nameWithType: IdGeneratorByte.Reset()
+  fullName: LiteEntitySystem.IdGeneratorByte.Reset()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Reset()
+    content.vb: Public Sub Reset()
+  overload: LiteEntitySystem.IdGeneratorByte.Reset*
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.IdGeneratorByte.GetNewId*
+  commentId: Overload:LiteEntitySystem.IdGeneratorByte.GetNewId
+  href: LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte_GetNewId
+  name: GetNewId
+  nameWithType: IdGeneratorByte.GetNewId
+  fullName: LiteEntitySystem.IdGeneratorByte.GetNewId
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: LiteEntitySystem.IdGeneratorByte.AvailableIds*
+  commentId: Overload:LiteEntitySystem.IdGeneratorByte.AvailableIds
+  href: LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte_AvailableIds
+  name: AvailableIds
+  nameWithType: IdGeneratorByte.AvailableIds
+  fullName: LiteEntitySystem.IdGeneratorByte.AvailableIds
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: LiteEntitySystem.IdGeneratorByte.ReuseId*
+  commentId: Overload:LiteEntitySystem.IdGeneratorByte.ReuseId
+  href: LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte_ReuseId_System_Byte_
+  name: ReuseId
+  nameWithType: IdGeneratorByte.ReuseId
+  fullName: LiteEntitySystem.IdGeneratorByte.ReuseId
+- uid: LiteEntitySystem.IdGeneratorByte.#ctor*
+  commentId: Overload:LiteEntitySystem.IdGeneratorByte.#ctor
+  href: LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte__ctor_System_Byte_System_Byte_
+  name: IdGeneratorByte
+  nameWithType: IdGeneratorByte.IdGeneratorByte
+  fullName: LiteEntitySystem.IdGeneratorByte.IdGeneratorByte
+  nameWithType.vb: IdGeneratorByte.New
+  fullName.vb: LiteEntitySystem.IdGeneratorByte.New
+  name.vb: New
+- uid: LiteEntitySystem.IdGeneratorByte.Reset*
+  commentId: Overload:LiteEntitySystem.IdGeneratorByte.Reset
+  href: LiteEntitySystem.IdGeneratorByte.html#LiteEntitySystem_IdGeneratorByte_Reset
+  name: Reset
+  nameWithType: IdGeneratorByte.Reset
+  fullName: LiteEntitySystem.IdGeneratorByte.Reset

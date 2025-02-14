@@ -1,0 +1,73 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.Logger
+  commentId: T:LiteEntitySystem.Logger
+  id: Logger
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.Logger.LoggerImpl
+  langs:
+  - csharp
+  - vb
+  name: Logger
+  nameWithType: Logger
+  fullName: LiteEntitySystem.Logger
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public static class Logger
+    content.vb: Public Module Logger
+  inheritance:
+  - System.Object
+- uid: LiteEntitySystem.Logger.LoggerImpl
+  commentId: F:LiteEntitySystem.Logger.LoggerImpl
+  id: LoggerImpl
+  parent: LiteEntitySystem.Logger
+  langs:
+  - csharp
+  - vb
+  name: LoggerImpl
+  nameWithType: Logger.LoggerImpl
+  fullName: LiteEntitySystem.Logger.LoggerImpl
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public static ILogger LoggerImpl
+    return:
+      type: LiteEntitySystem.ILogger
+    content.vb: Public Shared LoggerImpl As ILogger
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.ILogger
+  commentId: T:LiteEntitySystem.ILogger
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.ILogger.html
+  name: ILogger
+  nameWithType: ILogger
+  fullName: LiteEntitySystem.ILogger

@@ -1,0 +1,350 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.EntityFlags
+  commentId: T:LiteEntitySystem.EntityFlags
+  id: EntityFlags
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.EntityFlags.OnlyForOwner
+  - LiteEntitySystem.EntityFlags.UpdateOnClient
+  - LiteEntitySystem.EntityFlags.Updateable
+  langs:
+  - csharp
+  - vb
+  name: EntityFlags
+  nameWithType: EntityFlags
+  fullName: LiteEntitySystem.EntityFlags
+  type: Enum
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: >-
+      [Flags]
+
+      public enum EntityFlags
+    content.vb: >-
+      <Flags>
+
+      Public Enum EntityFlags
+  extensionMethods:
+  - LiteEntitySystem.EntityFlags.LiteEntitySystem.Utils.GetEnumValueInt``1
+  - LiteEntitySystem.EntityFlags.LiteEntitySystem.Utils.GetEnumValue``1
+  - LiteEntitySystem.EntityFlags.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.EntityFlags)
+  attributes:
+  - type: System.FlagsAttribute
+    ctor: System.FlagsAttribute.#ctor
+    arguments: []
+- uid: LiteEntitySystem.EntityFlags.UpdateOnClient
+  commentId: F:LiteEntitySystem.EntityFlags.UpdateOnClient
+  id: UpdateOnClient
+  parent: LiteEntitySystem.EntityFlags
+  langs:
+  - csharp
+  - vb
+  name: UpdateOnClient
+  nameWithType: EntityFlags.UpdateOnClient
+  fullName: LiteEntitySystem.EntityFlags.UpdateOnClient
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Update entity on client even when entity isn't owned
+  example: []
+  syntax:
+    content: UpdateOnClient = 3
+    return:
+      type: LiteEntitySystem.EntityFlags
+- uid: LiteEntitySystem.EntityFlags.Updateable
+  commentId: F:LiteEntitySystem.EntityFlags.Updateable
+  id: Updateable
+  parent: LiteEntitySystem.EntityFlags
+  langs:
+  - csharp
+  - vb
+  name: Updateable
+  nameWithType: EntityFlags.Updateable
+  fullName: LiteEntitySystem.EntityFlags.Updateable
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Update entity on server and on client if entity is owned
+  example: []
+  syntax:
+    content: Updateable = 2
+    return:
+      type: LiteEntitySystem.EntityFlags
+- uid: LiteEntitySystem.EntityFlags.OnlyForOwner
+  commentId: F:LiteEntitySystem.EntityFlags.OnlyForOwner
+  id: OnlyForOwner
+  parent: LiteEntitySystem.EntityFlags
+  langs:
+  - csharp
+  - vb
+  name: OnlyForOwner
+  nameWithType: EntityFlags.OnlyForOwner
+  fullName: LiteEntitySystem.EntityFlags.OnlyForOwner
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Sync entity only for owner player
+  example: []
+  syntax:
+    content: OnlyForOwner = 4
+    return:
+      type: LiteEntitySystem.EntityFlags
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: LiteEntitySystem.EntityFlags.LiteEntitySystem.Utils.GetEnumValueInt``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<EntityFlags>(EntityFlags)
+  nameWithType: Utils.GetEnumValueInt<EntityFlags>(EntityFlags)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<LiteEntitySystem.EntityFlags>(LiteEntitySystem.EntityFlags)
+  nameWithType.vb: Utils.GetEnumValueInt(Of EntityFlags)(EntityFlags)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of LiteEntitySystem.EntityFlags)(LiteEntitySystem.EntityFlags)
+  name.vb: GetEnumValueInt(Of EntityFlags)(EntityFlags)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.EntityFlags)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - uid: LiteEntitySystem.EntityFlags
+    name: EntityFlags
+    href: LiteEntitySystem.EntityFlags.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.EntityFlags
+    name: EntityFlags
+    href: LiteEntitySystem.EntityFlags.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.EntityFlags)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.EntityFlags
+    name: EntityFlags
+    href: LiteEntitySystem.EntityFlags.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.EntityFlags
+    name: EntityFlags
+    href: LiteEntitySystem.EntityFlags.html
+  - name: )
+- uid: LiteEntitySystem.EntityFlags.LiteEntitySystem.Utils.GetEnumValue``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<EntityFlags>(EntityFlags)
+  nameWithType: Utils.GetEnumValue<EntityFlags>(EntityFlags)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<LiteEntitySystem.EntityFlags>(LiteEntitySystem.EntityFlags)
+  nameWithType.vb: Utils.GetEnumValue(Of EntityFlags)(EntityFlags)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of LiteEntitySystem.EntityFlags)(LiteEntitySystem.EntityFlags)
+  name.vb: GetEnumValue(Of EntityFlags)(EntityFlags)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.EntityFlags)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - uid: LiteEntitySystem.EntityFlags
+    name: EntityFlags
+    href: LiteEntitySystem.EntityFlags.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.EntityFlags
+    name: EntityFlags
+    href: LiteEntitySystem.EntityFlags.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.EntityFlags)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.EntityFlags
+    name: EntityFlags
+    href: LiteEntitySystem.EntityFlags.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.EntityFlags
+    name: EntityFlags
+    href: LiteEntitySystem.EntityFlags.html
+  - name: )
+- uid: LiteEntitySystem.EntityFlags.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.EntityFlags)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<EntityFlags>(EntityFlags, EntityFlags)
+  nameWithType: Utils.HasFlagFast<EntityFlags>(EntityFlags, EntityFlags)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<LiteEntitySystem.EntityFlags>(LiteEntitySystem.EntityFlags, LiteEntitySystem.EntityFlags)
+  nameWithType.vb: Utils.HasFlagFast(Of EntityFlags)(EntityFlags, EntityFlags)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of LiteEntitySystem.EntityFlags)(LiteEntitySystem.EntityFlags, LiteEntitySystem.EntityFlags)
+  name.vb: HasFlagFast(Of EntityFlags)(EntityFlags, EntityFlags)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.EntityFlags,LiteEntitySystem.EntityFlags)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - uid: LiteEntitySystem.EntityFlags
+    name: EntityFlags
+    href: LiteEntitySystem.EntityFlags.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.EntityFlags
+    name: EntityFlags
+    href: LiteEntitySystem.EntityFlags.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.EntityFlags
+    name: EntityFlags
+    href: LiteEntitySystem.EntityFlags.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.EntityFlags,LiteEntitySystem.EntityFlags)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.EntityFlags
+    name: EntityFlags
+    href: LiteEntitySystem.EntityFlags.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.EntityFlags
+    name: EntityFlags
+    href: LiteEntitySystem.EntityFlags.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.EntityFlags
+    name: EntityFlags
+    href: LiteEntitySystem.EntityFlags.html
+  - name: )
+- uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<T>(T)
+  nameWithType: Utils.GetEnumValueInt<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<T>(T)
+  nameWithType.vb: Utils.GetEnumValueInt(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of T)(T)
+  name.vb: GetEnumValueInt(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils
+  commentId: T:LiteEntitySystem.Utils
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.Utils.html
+  name: Utils
+  nameWithType: Utils
+  fullName: LiteEntitySystem.Utils
+- uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<T>(T)
+  nameWithType: Utils.GetEnumValue<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<T>(T)
+  nameWithType.vb: Utils.GetEnumValue(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of T)(T)
+  name.vb: GetEnumValue(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<T>(T, T)
+  nameWithType: Utils.HasFlagFast<T>(T, T)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<T>(T, T)
+  nameWithType.vb: Utils.HasFlagFast(Of T)(T, T)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of T)(T, T)
+  name.vb: HasFlagFast(Of T)(T, T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.EntityFlags
+  commentId: T:LiteEntitySystem.EntityFlags
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.EntityFlags.html
+  name: EntityFlags
+  nameWithType: EntityFlags
+  fullName: LiteEntitySystem.EntityFlags

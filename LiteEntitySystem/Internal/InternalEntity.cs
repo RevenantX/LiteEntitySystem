@@ -4,22 +4,6 @@ using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
-    public readonly struct EntityDataHeader
-    {
-        public readonly ushort Id;
-        public readonly ushort ClassId;
-        public readonly byte Version;
-        public readonly int UpdateOrder;
-        
-        public EntityDataHeader(ushort id, ushort classId, byte version, int updateOrder)
-        {
-            Id = id;
-            ClassId = classId;
-            Version = version;
-            UpdateOrder = updateOrder;
-        }
-    }
-    
     public abstract class InternalEntity : InternalBaseClass, IComparable<InternalEntity>
     {
         [SyncVarFlags(SyncFlags.NeverRollBack)]

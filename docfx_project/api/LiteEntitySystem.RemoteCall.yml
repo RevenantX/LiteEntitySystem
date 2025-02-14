@@ -1,0 +1,27 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.RemoteCall
+  commentId: T:LiteEntitySystem.RemoteCall
+  id: RemoteCall
+  parent: LiteEntitySystem
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: RemoteCall
+  nameWithType: RemoteCall
+  fullName: LiteEntitySystem.RemoteCall
+  type: Struct
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public readonly struct RemoteCall
+    content.vb: Public Structure RemoteCall
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem

@@ -1,0 +1,3075 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.SpanReader
+  commentId: T:LiteEntitySystem.SpanReader
+  id: SpanReader
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.SpanReader.#ctor(System.ReadOnlySpan{System.Byte})
+  - LiteEntitySystem.SpanReader.AvailableBytes
+  - LiteEntitySystem.SpanReader.Get(System.Boolean@)
+  - LiteEntitySystem.SpanReader.Get(System.Byte@)
+  - LiteEntitySystem.SpanReader.Get(System.Char@)
+  - LiteEntitySystem.SpanReader.Get(System.Double@)
+  - LiteEntitySystem.SpanReader.Get(System.Guid@)
+  - LiteEntitySystem.SpanReader.Get(System.Int16@)
+  - LiteEntitySystem.SpanReader.Get(System.Int32@)
+  - LiteEntitySystem.SpanReader.Get(System.Int64@)
+  - LiteEntitySystem.SpanReader.Get(System.SByte@)
+  - LiteEntitySystem.SpanReader.Get(System.Single@)
+  - LiteEntitySystem.SpanReader.Get(System.String@)
+  - LiteEntitySystem.SpanReader.Get(System.String@,System.Int32)
+  - LiteEntitySystem.SpanReader.Get(System.UInt16@)
+  - LiteEntitySystem.SpanReader.Get(System.UInt32@)
+  - LiteEntitySystem.SpanReader.Get(System.UInt64@)
+  - LiteEntitySystem.SpanReader.GetArray``1
+  - LiteEntitySystem.SpanReader.GetArray``1(System.Func{``0})
+  - LiteEntitySystem.SpanReader.GetArray``1(System.UInt16)
+  - LiteEntitySystem.SpanReader.GetBool
+  - LiteEntitySystem.SpanReader.GetBoolArray
+  - LiteEntitySystem.SpanReader.GetByte
+  - LiteEntitySystem.SpanReader.GetBytes(System.Byte[],System.Int32)
+  - LiteEntitySystem.SpanReader.GetBytes(System.Byte[],System.Int32,System.Int32)
+  - LiteEntitySystem.SpanReader.GetBytesWithLength
+  - LiteEntitySystem.SpanReader.GetChar
+  - LiteEntitySystem.SpanReader.GetDouble
+  - LiteEntitySystem.SpanReader.GetDoubleArray
+  - LiteEntitySystem.SpanReader.GetFloat
+  - LiteEntitySystem.SpanReader.GetFloatArray
+  - LiteEntitySystem.SpanReader.GetGuid
+  - LiteEntitySystem.SpanReader.GetInt
+  - LiteEntitySystem.SpanReader.GetIntArray
+  - LiteEntitySystem.SpanReader.GetLargeString
+  - LiteEntitySystem.SpanReader.GetLong
+  - LiteEntitySystem.SpanReader.GetLongArray
+  - LiteEntitySystem.SpanReader.GetRemainingBytes
+  - LiteEntitySystem.SpanReader.GetRemainingBytesSpan
+  - LiteEntitySystem.SpanReader.GetSByte
+  - LiteEntitySystem.SpanReader.GetSBytesWithLength
+  - LiteEntitySystem.SpanReader.GetShort
+  - LiteEntitySystem.SpanReader.GetShortArray
+  - LiteEntitySystem.SpanReader.GetString
+  - LiteEntitySystem.SpanReader.GetString(System.Int32)
+  - LiteEntitySystem.SpanReader.GetStringArray
+  - LiteEntitySystem.SpanReader.GetStringArray(System.Int32)
+  - LiteEntitySystem.SpanReader.GetUInt
+  - LiteEntitySystem.SpanReader.GetUIntArray
+  - LiteEntitySystem.SpanReader.GetULong
+  - LiteEntitySystem.SpanReader.GetULongArray
+  - LiteEntitySystem.SpanReader.GetUShort
+  - LiteEntitySystem.SpanReader.GetUShortArray
+  - LiteEntitySystem.SpanReader.Get``1
+  - LiteEntitySystem.SpanReader.Get``1(System.Func{``0})
+  - LiteEntitySystem.SpanReader.Get``1(``0@)
+  - LiteEntitySystem.SpanReader.Get``1(``0@,System.Func{``0})
+  - LiteEntitySystem.SpanReader.PeekBool
+  - LiteEntitySystem.SpanReader.PeekByte
+  - LiteEntitySystem.SpanReader.PeekChar
+  - LiteEntitySystem.SpanReader.PeekDouble
+  - LiteEntitySystem.SpanReader.PeekFloat
+  - LiteEntitySystem.SpanReader.PeekInt
+  - LiteEntitySystem.SpanReader.PeekLong
+  - LiteEntitySystem.SpanReader.PeekSByte
+  - LiteEntitySystem.SpanReader.PeekShort
+  - LiteEntitySystem.SpanReader.PeekString
+  - LiteEntitySystem.SpanReader.PeekString(System.Int32)
+  - LiteEntitySystem.SpanReader.PeekUInt
+  - LiteEntitySystem.SpanReader.PeekULong
+  - LiteEntitySystem.SpanReader.PeekUShort
+  - LiteEntitySystem.SpanReader.Position
+  - LiteEntitySystem.SpanReader.RawData
+  - LiteEntitySystem.SpanReader.TryGetBool(System.Boolean@)
+  - LiteEntitySystem.SpanReader.TryGetByte(System.Byte@)
+  - LiteEntitySystem.SpanReader.TryGetBytesWithLength(System.Byte[]@)
+  - LiteEntitySystem.SpanReader.TryGetChar(System.Char@)
+  - LiteEntitySystem.SpanReader.TryGetDouble(System.Double@)
+  - LiteEntitySystem.SpanReader.TryGetFloat(System.Single@)
+  - LiteEntitySystem.SpanReader.TryGetInt(System.Int32@)
+  - LiteEntitySystem.SpanReader.TryGetLong(System.Int64@)
+  - LiteEntitySystem.SpanReader.TryGetSByte(System.SByte@)
+  - LiteEntitySystem.SpanReader.TryGetShort(System.Int16@)
+  - LiteEntitySystem.SpanReader.TryGetString(System.String@)
+  - LiteEntitySystem.SpanReader.TryGetStringArray(System.String[]@)
+  - LiteEntitySystem.SpanReader.TryGetUInt(System.UInt32@)
+  - LiteEntitySystem.SpanReader.TryGetULong(System.UInt64@)
+  - LiteEntitySystem.SpanReader.TryGetUShort(System.UInt16@)
+  langs:
+  - csharp
+  - vb
+  name: SpanReader
+  nameWithType: SpanReader
+  fullName: LiteEntitySystem.SpanReader
+  type: Struct
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public ref struct SpanReader
+    content.vb: Public Structure SpanReader
+- uid: LiteEntitySystem.SpanReader.RawData
+  commentId: F:LiteEntitySystem.SpanReader.RawData
+  id: RawData
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: RawData
+  nameWithType: SpanReader.RawData
+  fullName: LiteEntitySystem.SpanReader.RawData
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public readonly ReadOnlySpan<byte> RawData
+    return:
+      type: System.ReadOnlySpan{System.Byte}
+    content.vb: Public ReadOnly RawData As ReadOnlySpan(Of Byte)
+- uid: LiteEntitySystem.SpanReader.Position
+  commentId: F:LiteEntitySystem.SpanReader.Position
+  id: Position
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Position
+  nameWithType: SpanReader.Position
+  fullName: LiteEntitySystem.SpanReader.Position
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public int Position
+    return:
+      type: System.Int32
+    content.vb: Public Position As Integer
+- uid: LiteEntitySystem.SpanReader.AvailableBytes
+  commentId: P:LiteEntitySystem.SpanReader.AvailableBytes
+  id: AvailableBytes
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: AvailableBytes
+  nameWithType: SpanReader.AvailableBytes
+  fullName: LiteEntitySystem.SpanReader.AvailableBytes
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public int AvailableBytes { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property AvailableBytes As Integer
+  overload: LiteEntitySystem.SpanReader.AvailableBytes*
+- uid: LiteEntitySystem.SpanReader.#ctor(System.ReadOnlySpan{System.Byte})
+  commentId: M:LiteEntitySystem.SpanReader.#ctor(System.ReadOnlySpan{System.Byte})
+  id: '#ctor(System.ReadOnlySpan{System.Byte})'
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: SpanReader(ReadOnlySpan<byte>)
+  nameWithType: SpanReader.SpanReader(ReadOnlySpan<byte>)
+  fullName: LiteEntitySystem.SpanReader.SpanReader(System.ReadOnlySpan<byte>)
+  type: Constructor
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public SpanReader(ReadOnlySpan<byte> rawData)
+    parameters:
+    - id: rawData
+      type: System.ReadOnlySpan{System.Byte}
+    content.vb: Public Sub New(rawData As ReadOnlySpan(Of Byte))
+  overload: LiteEntitySystem.SpanReader.#ctor*
+  nameWithType.vb: SpanReader.New(ReadOnlySpan(Of Byte))
+  fullName.vb: LiteEntitySystem.SpanReader.New(System.ReadOnlySpan(Of Byte))
+  name.vb: New(ReadOnlySpan(Of Byte))
+- uid: LiteEntitySystem.SpanReader.Get``1(``0@)
+  commentId: M:LiteEntitySystem.SpanReader.Get``1(``0@)
+  id: Get``1(``0@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get<T>(out T)
+  nameWithType: SpanReader.Get<T>(out T)
+  fullName: LiteEntitySystem.SpanReader.Get<T>(out T)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public void Get<T>(out T result) where T : struct, ISpanSerializable'
+    parameters:
+    - id: result
+      type: '{T}'
+    typeParameters:
+    - id: T
+    content.vb: Public Sub [Get](Of T As {Structure, ISpanSerializable})(result As T)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(Of T)(T)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(Of T)(T)
+  name.vb: Get(Of T)(T)
+- uid: LiteEntitySystem.SpanReader.Get``1(``0@,System.Func{``0})
+  commentId: M:LiteEntitySystem.SpanReader.Get``1(``0@,System.Func{``0})
+  id: Get``1(``0@,System.Func{``0})
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get<T>(out T, Func<T>)
+  nameWithType: SpanReader.Get<T>(out T, Func<T>)
+  fullName: LiteEntitySystem.SpanReader.Get<T>(out T, System.Func<T>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public void Get<T>(out T result, Func<T> constructor) where T : class, ISpanSerializable'
+    parameters:
+    - id: result
+      type: '{T}'
+    - id: constructor
+      type: System.Func{{T}}
+    typeParameters:
+    - id: T
+    content.vb: Public Sub [Get](Of T As {Class, ISpanSerializable})(result As T, constructor As Func(Of T))
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(Of T)(T, Func(Of T))
+  fullName.vb: LiteEntitySystem.SpanReader.Get(Of T)(T, System.Func(Of T))
+  name.vb: Get(Of T)(T, Func(Of T))
+- uid: LiteEntitySystem.SpanReader.Get(System.Byte@)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.Byte@)
+  id: Get(System.Byte@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out byte)
+  nameWithType: SpanReader.Get(out byte)
+  fullName: LiteEntitySystem.SpanReader.Get(out byte)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out byte result)
+    parameters:
+    - id: result
+      type: System.Byte
+    content.vb: Public Sub [Get](result As Byte)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(Byte)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(Byte)
+  name.vb: Get(Byte)
+- uid: LiteEntitySystem.SpanReader.Get(System.SByte@)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.SByte@)
+  id: Get(System.SByte@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out sbyte)
+  nameWithType: SpanReader.Get(out sbyte)
+  fullName: LiteEntitySystem.SpanReader.Get(out sbyte)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out sbyte result)
+    parameters:
+    - id: result
+      type: System.SByte
+    content.vb: Public Sub [Get](result As SByte)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(SByte)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(SByte)
+  name.vb: Get(SByte)
+- uid: LiteEntitySystem.SpanReader.Get(System.Boolean@)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.Boolean@)
+  id: Get(System.Boolean@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out bool)
+  nameWithType: SpanReader.Get(out bool)
+  fullName: LiteEntitySystem.SpanReader.Get(out bool)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out bool result)
+    parameters:
+    - id: result
+      type: System.Boolean
+    content.vb: Public Sub [Get](result As Boolean)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(Boolean)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(Boolean)
+  name.vb: Get(Boolean)
+- uid: LiteEntitySystem.SpanReader.Get(System.Char@)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.Char@)
+  id: Get(System.Char@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out char)
+  nameWithType: SpanReader.Get(out char)
+  fullName: LiteEntitySystem.SpanReader.Get(out char)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out char result)
+    parameters:
+    - id: result
+      type: System.Char
+    content.vb: Public Sub [Get](result As Char)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(Char)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(Char)
+  name.vb: Get(Char)
+- uid: LiteEntitySystem.SpanReader.Get(System.UInt16@)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.UInt16@)
+  id: Get(System.UInt16@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out ushort)
+  nameWithType: SpanReader.Get(out ushort)
+  fullName: LiteEntitySystem.SpanReader.Get(out ushort)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out ushort result)
+    parameters:
+    - id: result
+      type: System.UInt16
+    content.vb: Public Sub [Get](result As UShort)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(UShort)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(UShort)
+  name.vb: Get(UShort)
+- uid: LiteEntitySystem.SpanReader.Get(System.Int16@)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.Int16@)
+  id: Get(System.Int16@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out short)
+  nameWithType: SpanReader.Get(out short)
+  fullName: LiteEntitySystem.SpanReader.Get(out short)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out short result)
+    parameters:
+    - id: result
+      type: System.Int16
+    content.vb: Public Sub [Get](result As Short)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(Short)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(Short)
+  name.vb: Get(Short)
+- uid: LiteEntitySystem.SpanReader.Get(System.UInt64@)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.UInt64@)
+  id: Get(System.UInt64@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out ulong)
+  nameWithType: SpanReader.Get(out ulong)
+  fullName: LiteEntitySystem.SpanReader.Get(out ulong)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out ulong result)
+    parameters:
+    - id: result
+      type: System.UInt64
+    content.vb: Public Sub [Get](result As ULong)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(ULong)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(ULong)
+  name.vb: Get(ULong)
+- uid: LiteEntitySystem.SpanReader.Get(System.Int64@)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.Int64@)
+  id: Get(System.Int64@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out long)
+  nameWithType: SpanReader.Get(out long)
+  fullName: LiteEntitySystem.SpanReader.Get(out long)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out long result)
+    parameters:
+    - id: result
+      type: System.Int64
+    content.vb: Public Sub [Get](result As Long)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(Long)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(Long)
+  name.vb: Get(Long)
+- uid: LiteEntitySystem.SpanReader.Get(System.UInt32@)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.UInt32@)
+  id: Get(System.UInt32@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out uint)
+  nameWithType: SpanReader.Get(out uint)
+  fullName: LiteEntitySystem.SpanReader.Get(out uint)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out uint result)
+    parameters:
+    - id: result
+      type: System.UInt32
+    content.vb: Public Sub [Get](result As UInteger)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(UInteger)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(UInteger)
+  name.vb: Get(UInteger)
+- uid: LiteEntitySystem.SpanReader.Get(System.Int32@)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.Int32@)
+  id: Get(System.Int32@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out int)
+  nameWithType: SpanReader.Get(out int)
+  fullName: LiteEntitySystem.SpanReader.Get(out int)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out int result)
+    parameters:
+    - id: result
+      type: System.Int32
+    content.vb: Public Sub [Get](result As Integer)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(Integer)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(Integer)
+  name.vb: Get(Integer)
+- uid: LiteEntitySystem.SpanReader.Get(System.Double@)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.Double@)
+  id: Get(System.Double@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out double)
+  nameWithType: SpanReader.Get(out double)
+  fullName: LiteEntitySystem.SpanReader.Get(out double)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out double result)
+    parameters:
+    - id: result
+      type: System.Double
+    content.vb: Public Sub [Get](result As Double)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(Double)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(Double)
+  name.vb: Get(Double)
+- uid: LiteEntitySystem.SpanReader.Get(System.Single@)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.Single@)
+  id: Get(System.Single@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out float)
+  nameWithType: SpanReader.Get(out float)
+  fullName: LiteEntitySystem.SpanReader.Get(out float)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out float result)
+    parameters:
+    - id: result
+      type: System.Single
+    content.vb: Public Sub [Get](result As Single)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(Single)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(Single)
+  name.vb: Get(Single)
+- uid: LiteEntitySystem.SpanReader.Get(System.String@)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.String@)
+  id: Get(System.String@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out string)
+  nameWithType: SpanReader.Get(out string)
+  fullName: LiteEntitySystem.SpanReader.Get(out string)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out string result)
+    parameters:
+    - id: result
+      type: System.String
+    content.vb: Public Sub [Get](result As String)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(String)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(String)
+  name.vb: Get(String)
+- uid: LiteEntitySystem.SpanReader.Get(System.String@,System.Int32)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.String@,System.Int32)
+  id: Get(System.String@,System.Int32)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out string, int)
+  nameWithType: SpanReader.Get(out string, int)
+  fullName: LiteEntitySystem.SpanReader.Get(out string, int)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out string result, int maxLength)
+    parameters:
+    - id: result
+      type: System.String
+    - id: maxLength
+      type: System.Int32
+    content.vb: Public Sub [Get](result As String, maxLength As Integer)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(String, Integer)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(String, Integer)
+  name.vb: Get(String, Integer)
+- uid: LiteEntitySystem.SpanReader.Get(System.Guid@)
+  commentId: M:LiteEntitySystem.SpanReader.Get(System.Guid@)
+  id: Get(System.Guid@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get(out Guid)
+  nameWithType: SpanReader.Get(out Guid)
+  fullName: LiteEntitySystem.SpanReader.Get(out System.Guid)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Get(out Guid result)
+    parameters:
+    - id: result
+      type: System.Guid
+    content.vb: Public Sub [Get](result As Guid)
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(Guid)
+  fullName.vb: LiteEntitySystem.SpanReader.Get(System.Guid)
+  name.vb: Get(Guid)
+- uid: LiteEntitySystem.SpanReader.GetByte
+  commentId: M:LiteEntitySystem.SpanReader.GetByte
+  id: GetByte
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetByte()
+  nameWithType: SpanReader.GetByte()
+  fullName: LiteEntitySystem.SpanReader.GetByte()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public byte GetByte()
+    return:
+      type: System.Byte
+    content.vb: Public Function GetByte() As Byte
+  overload: LiteEntitySystem.SpanReader.GetByte*
+- uid: LiteEntitySystem.SpanReader.GetSByte
+  commentId: M:LiteEntitySystem.SpanReader.GetSByte
+  id: GetSByte
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetSByte()
+  nameWithType: SpanReader.GetSByte()
+  fullName: LiteEntitySystem.SpanReader.GetSByte()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public sbyte GetSByte()
+    return:
+      type: System.SByte
+    content.vb: Public Function GetSByte() As SByte
+  overload: LiteEntitySystem.SpanReader.GetSByte*
+- uid: LiteEntitySystem.SpanReader.GetArray``1(System.UInt16)
+  commentId: M:LiteEntitySystem.SpanReader.GetArray``1(System.UInt16)
+  id: GetArray``1(System.UInt16)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetArray<T>(ushort)
+  nameWithType: SpanReader.GetArray<T>(ushort)
+  fullName: LiteEntitySystem.SpanReader.GetArray<T>(ushort)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public T[] GetArray<T>(ushort size) where T : unmanaged'
+    parameters:
+    - id: size
+      type: System.UInt16
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}[]'
+    content.vb: Public Function GetArray(Of T As Structure)(size As UShort) As T()
+  overload: LiteEntitySystem.SpanReader.GetArray*
+  nameWithType.vb: SpanReader.GetArray(Of T)(UShort)
+  fullName.vb: LiteEntitySystem.SpanReader.GetArray(Of T)(UShort)
+  name.vb: GetArray(Of T)(UShort)
+- uid: LiteEntitySystem.SpanReader.GetArray``1
+  commentId: M:LiteEntitySystem.SpanReader.GetArray``1
+  id: GetArray``1
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetArray<T>()
+  nameWithType: SpanReader.GetArray<T>()
+  fullName: LiteEntitySystem.SpanReader.GetArray<T>()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public T[] GetArray<T>() where T : ISpanSerializable, new()'
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}[]'
+    content.vb: Public Function GetArray(Of T As {ISpanSerializable, New})() As T()
+  overload: LiteEntitySystem.SpanReader.GetArray*
+  nameWithType.vb: SpanReader.GetArray(Of T)()
+  fullName.vb: LiteEntitySystem.SpanReader.GetArray(Of T)()
+  name.vb: GetArray(Of T)()
+- uid: LiteEntitySystem.SpanReader.GetArray``1(System.Func{``0})
+  commentId: M:LiteEntitySystem.SpanReader.GetArray``1(System.Func{``0})
+  id: GetArray``1(System.Func{``0})
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetArray<T>(Func<T>)
+  nameWithType: SpanReader.GetArray<T>(Func<T>)
+  fullName: LiteEntitySystem.SpanReader.GetArray<T>(System.Func<T>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public T[] GetArray<T>(Func<T> constructor) where T : class, ISpanSerializable'
+    parameters:
+    - id: constructor
+      type: System.Func{{T}}
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}[]'
+    content.vb: Public Function GetArray(Of T As {Class, ISpanSerializable})(constructor As Func(Of T)) As T()
+  overload: LiteEntitySystem.SpanReader.GetArray*
+  nameWithType.vb: SpanReader.GetArray(Of T)(Func(Of T))
+  fullName.vb: LiteEntitySystem.SpanReader.GetArray(Of T)(System.Func(Of T))
+  name.vb: GetArray(Of T)(Func(Of T))
+- uid: LiteEntitySystem.SpanReader.GetBoolArray
+  commentId: M:LiteEntitySystem.SpanReader.GetBoolArray
+  id: GetBoolArray
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetBoolArray()
+  nameWithType: SpanReader.GetBoolArray()
+  fullName: LiteEntitySystem.SpanReader.GetBoolArray()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool[] GetBoolArray()
+    return:
+      type: System.Boolean[]
+    content.vb: Public Function GetBoolArray() As Boolean()
+  overload: LiteEntitySystem.SpanReader.GetBoolArray*
+- uid: LiteEntitySystem.SpanReader.GetUShortArray
+  commentId: M:LiteEntitySystem.SpanReader.GetUShortArray
+  id: GetUShortArray
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetUShortArray()
+  nameWithType: SpanReader.GetUShortArray()
+  fullName: LiteEntitySystem.SpanReader.GetUShortArray()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public ushort[] GetUShortArray()
+    return:
+      type: System.UInt16[]
+    content.vb: Public Function GetUShortArray() As UShort()
+  overload: LiteEntitySystem.SpanReader.GetUShortArray*
+- uid: LiteEntitySystem.SpanReader.GetShortArray
+  commentId: M:LiteEntitySystem.SpanReader.GetShortArray
+  id: GetShortArray
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetShortArray()
+  nameWithType: SpanReader.GetShortArray()
+  fullName: LiteEntitySystem.SpanReader.GetShortArray()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public short[] GetShortArray()
+    return:
+      type: System.Int16[]
+    content.vb: Public Function GetShortArray() As Short()
+  overload: LiteEntitySystem.SpanReader.GetShortArray*
+- uid: LiteEntitySystem.SpanReader.GetIntArray
+  commentId: M:LiteEntitySystem.SpanReader.GetIntArray
+  id: GetIntArray
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetIntArray()
+  nameWithType: SpanReader.GetIntArray()
+  fullName: LiteEntitySystem.SpanReader.GetIntArray()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public int[] GetIntArray()
+    return:
+      type: System.Int32[]
+    content.vb: Public Function GetIntArray() As Integer()
+  overload: LiteEntitySystem.SpanReader.GetIntArray*
+- uid: LiteEntitySystem.SpanReader.GetUIntArray
+  commentId: M:LiteEntitySystem.SpanReader.GetUIntArray
+  id: GetUIntArray
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetUIntArray()
+  nameWithType: SpanReader.GetUIntArray()
+  fullName: LiteEntitySystem.SpanReader.GetUIntArray()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public uint[] GetUIntArray()
+    return:
+      type: System.UInt32[]
+    content.vb: Public Function GetUIntArray() As UInteger()
+  overload: LiteEntitySystem.SpanReader.GetUIntArray*
+- uid: LiteEntitySystem.SpanReader.GetFloatArray
+  commentId: M:LiteEntitySystem.SpanReader.GetFloatArray
+  id: GetFloatArray
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetFloatArray()
+  nameWithType: SpanReader.GetFloatArray()
+  fullName: LiteEntitySystem.SpanReader.GetFloatArray()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public float[] GetFloatArray()
+    return:
+      type: System.Single[]
+    content.vb: Public Function GetFloatArray() As Single()
+  overload: LiteEntitySystem.SpanReader.GetFloatArray*
+- uid: LiteEntitySystem.SpanReader.GetDoubleArray
+  commentId: M:LiteEntitySystem.SpanReader.GetDoubleArray
+  id: GetDoubleArray
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetDoubleArray()
+  nameWithType: SpanReader.GetDoubleArray()
+  fullName: LiteEntitySystem.SpanReader.GetDoubleArray()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public double[] GetDoubleArray()
+    return:
+      type: System.Double[]
+    content.vb: Public Function GetDoubleArray() As Double()
+  overload: LiteEntitySystem.SpanReader.GetDoubleArray*
+- uid: LiteEntitySystem.SpanReader.GetLongArray
+  commentId: M:LiteEntitySystem.SpanReader.GetLongArray
+  id: GetLongArray
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetLongArray()
+  nameWithType: SpanReader.GetLongArray()
+  fullName: LiteEntitySystem.SpanReader.GetLongArray()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public long[] GetLongArray()
+    return:
+      type: System.Int64[]
+    content.vb: Public Function GetLongArray() As Long()
+  overload: LiteEntitySystem.SpanReader.GetLongArray*
+- uid: LiteEntitySystem.SpanReader.GetULongArray
+  commentId: M:LiteEntitySystem.SpanReader.GetULongArray
+  id: GetULongArray
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetULongArray()
+  nameWithType: SpanReader.GetULongArray()
+  fullName: LiteEntitySystem.SpanReader.GetULongArray()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public ulong[] GetULongArray()
+    return:
+      type: System.UInt64[]
+    content.vb: Public Function GetULongArray() As ULong()
+  overload: LiteEntitySystem.SpanReader.GetULongArray*
+- uid: LiteEntitySystem.SpanReader.GetStringArray
+  commentId: M:LiteEntitySystem.SpanReader.GetStringArray
+  id: GetStringArray
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetStringArray()
+  nameWithType: SpanReader.GetStringArray()
+  fullName: LiteEntitySystem.SpanReader.GetStringArray()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public string[] GetStringArray()
+    return:
+      type: System.String[]
+    content.vb: Public Function GetStringArray() As String()
+  overload: LiteEntitySystem.SpanReader.GetStringArray*
+- uid: LiteEntitySystem.SpanReader.GetStringArray(System.Int32)
+  commentId: M:LiteEntitySystem.SpanReader.GetStringArray(System.Int32)
+  id: GetStringArray(System.Int32)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetStringArray(int)
+  nameWithType: SpanReader.GetStringArray(int)
+  fullName: LiteEntitySystem.SpanReader.GetStringArray(int)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: >-
+    Note that "maxStringLength" only limits the number of characters in a string, not its size in bytes.
+
+    Strings that exceed this parameter are returned as empty
+  example: []
+  syntax:
+    content: public string[] GetStringArray(int maxStringLength)
+    parameters:
+    - id: maxStringLength
+      type: System.Int32
+    return:
+      type: System.String[]
+    content.vb: Public Function GetStringArray(maxStringLength As Integer) As String()
+  overload: LiteEntitySystem.SpanReader.GetStringArray*
+  nameWithType.vb: SpanReader.GetStringArray(Integer)
+  fullName.vb: LiteEntitySystem.SpanReader.GetStringArray(Integer)
+  name.vb: GetStringArray(Integer)
+- uid: LiteEntitySystem.SpanReader.GetBool
+  commentId: M:LiteEntitySystem.SpanReader.GetBool
+  id: GetBool
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetBool()
+  nameWithType: SpanReader.GetBool()
+  fullName: LiteEntitySystem.SpanReader.GetBool()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool GetBool()
+    return:
+      type: System.Boolean
+    content.vb: Public Function GetBool() As Boolean
+  overload: LiteEntitySystem.SpanReader.GetBool*
+- uid: LiteEntitySystem.SpanReader.GetChar
+  commentId: M:LiteEntitySystem.SpanReader.GetChar
+  id: GetChar
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetChar()
+  nameWithType: SpanReader.GetChar()
+  fullName: LiteEntitySystem.SpanReader.GetChar()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public char GetChar()
+    return:
+      type: System.Char
+    content.vb: Public Function GetChar() As Char
+  overload: LiteEntitySystem.SpanReader.GetChar*
+- uid: LiteEntitySystem.SpanReader.GetUShort
+  commentId: M:LiteEntitySystem.SpanReader.GetUShort
+  id: GetUShort
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetUShort()
+  nameWithType: SpanReader.GetUShort()
+  fullName: LiteEntitySystem.SpanReader.GetUShort()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public ushort GetUShort()
+    return:
+      type: System.UInt16
+    content.vb: Public Function GetUShort() As UShort
+  overload: LiteEntitySystem.SpanReader.GetUShort*
+- uid: LiteEntitySystem.SpanReader.GetShort
+  commentId: M:LiteEntitySystem.SpanReader.GetShort
+  id: GetShort
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetShort()
+  nameWithType: SpanReader.GetShort()
+  fullName: LiteEntitySystem.SpanReader.GetShort()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public short GetShort()
+    return:
+      type: System.Int16
+    content.vb: Public Function GetShort() As Short
+  overload: LiteEntitySystem.SpanReader.GetShort*
+- uid: LiteEntitySystem.SpanReader.GetLong
+  commentId: M:LiteEntitySystem.SpanReader.GetLong
+  id: GetLong
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetLong()
+  nameWithType: SpanReader.GetLong()
+  fullName: LiteEntitySystem.SpanReader.GetLong()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public long GetLong()
+    return:
+      type: System.Int64
+    content.vb: Public Function GetLong() As Long
+  overload: LiteEntitySystem.SpanReader.GetLong*
+- uid: LiteEntitySystem.SpanReader.GetULong
+  commentId: M:LiteEntitySystem.SpanReader.GetULong
+  id: GetULong
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetULong()
+  nameWithType: SpanReader.GetULong()
+  fullName: LiteEntitySystem.SpanReader.GetULong()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public ulong GetULong()
+    return:
+      type: System.UInt64
+    content.vb: Public Function GetULong() As ULong
+  overload: LiteEntitySystem.SpanReader.GetULong*
+- uid: LiteEntitySystem.SpanReader.GetInt
+  commentId: M:LiteEntitySystem.SpanReader.GetInt
+  id: GetInt
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetInt()
+  nameWithType: SpanReader.GetInt()
+  fullName: LiteEntitySystem.SpanReader.GetInt()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public int GetInt()
+    return:
+      type: System.Int32
+    content.vb: Public Function GetInt() As Integer
+  overload: LiteEntitySystem.SpanReader.GetInt*
+- uid: LiteEntitySystem.SpanReader.GetUInt
+  commentId: M:LiteEntitySystem.SpanReader.GetUInt
+  id: GetUInt
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetUInt()
+  nameWithType: SpanReader.GetUInt()
+  fullName: LiteEntitySystem.SpanReader.GetUInt()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public uint GetUInt()
+    return:
+      type: System.UInt32
+    content.vb: Public Function GetUInt() As UInteger
+  overload: LiteEntitySystem.SpanReader.GetUInt*
+- uid: LiteEntitySystem.SpanReader.GetFloat
+  commentId: M:LiteEntitySystem.SpanReader.GetFloat
+  id: GetFloat
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetFloat()
+  nameWithType: SpanReader.GetFloat()
+  fullName: LiteEntitySystem.SpanReader.GetFloat()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public float GetFloat()
+    return:
+      type: System.Single
+    content.vb: Public Function GetFloat() As Single
+  overload: LiteEntitySystem.SpanReader.GetFloat*
+- uid: LiteEntitySystem.SpanReader.GetDouble
+  commentId: M:LiteEntitySystem.SpanReader.GetDouble
+  id: GetDouble
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetDouble()
+  nameWithType: SpanReader.GetDouble()
+  fullName: LiteEntitySystem.SpanReader.GetDouble()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public double GetDouble()
+    return:
+      type: System.Double
+    content.vb: Public Function GetDouble() As Double
+  overload: LiteEntitySystem.SpanReader.GetDouble*
+- uid: LiteEntitySystem.SpanReader.GetString(System.Int32)
+  commentId: M:LiteEntitySystem.SpanReader.GetString(System.Int32)
+  id: GetString(System.Int32)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetString(int)
+  nameWithType: SpanReader.GetString(int)
+  fullName: LiteEntitySystem.SpanReader.GetString(int)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Note that "maxLength" only limits the number of characters in a string, not its size in bytes.
+  example: []
+  syntax:
+    content: public string GetString(int maxLength)
+    parameters:
+    - id: maxLength
+      type: System.Int32
+    return:
+      type: System.String
+      description: "\"string.Empty\" if value &gt; \"maxLength\""
+    content.vb: Public Function GetString(maxLength As Integer) As String
+  overload: LiteEntitySystem.SpanReader.GetString*
+  nameWithType.vb: SpanReader.GetString(Integer)
+  fullName.vb: LiteEntitySystem.SpanReader.GetString(Integer)
+  name.vb: GetString(Integer)
+- uid: LiteEntitySystem.SpanReader.GetString
+  commentId: M:LiteEntitySystem.SpanReader.GetString
+  id: GetString
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetString()
+  nameWithType: SpanReader.GetString()
+  fullName: LiteEntitySystem.SpanReader.GetString()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public string GetString()
+    return:
+      type: System.String
+    content.vb: Public Function GetString() As String
+  overload: LiteEntitySystem.SpanReader.GetString*
+- uid: LiteEntitySystem.SpanReader.GetLargeString
+  commentId: M:LiteEntitySystem.SpanReader.GetLargeString
+  id: GetLargeString
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetLargeString()
+  nameWithType: SpanReader.GetLargeString()
+  fullName: LiteEntitySystem.SpanReader.GetLargeString()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public string GetLargeString()
+    return:
+      type: System.String
+    content.vb: Public Function GetLargeString() As String
+  overload: LiteEntitySystem.SpanReader.GetLargeString*
+- uid: LiteEntitySystem.SpanReader.GetGuid
+  commentId: M:LiteEntitySystem.SpanReader.GetGuid
+  id: GetGuid
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetGuid()
+  nameWithType: SpanReader.GetGuid()
+  fullName: LiteEntitySystem.SpanReader.GetGuid()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public Guid GetGuid()
+    return:
+      type: System.Guid
+    content.vb: Public Function GetGuid() As Guid
+  overload: LiteEntitySystem.SpanReader.GetGuid*
+- uid: LiteEntitySystem.SpanReader.Get``1
+  commentId: M:LiteEntitySystem.SpanReader.Get``1
+  id: Get``1
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get<T>()
+  nameWithType: SpanReader.Get<T>()
+  fullName: LiteEntitySystem.SpanReader.Get<T>()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public T Get<T>() where T : struct, ISpanSerializable'
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Public Function [Get](Of T As {Structure, ISpanSerializable})() As T
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(Of T)()
+  fullName.vb: LiteEntitySystem.SpanReader.Get(Of T)()
+  name.vb: Get(Of T)()
+- uid: LiteEntitySystem.SpanReader.Get``1(System.Func{``0})
+  commentId: M:LiteEntitySystem.SpanReader.Get``1(System.Func{``0})
+  id: Get``1(System.Func{``0})
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: Get<T>(Func<T>)
+  nameWithType: SpanReader.Get<T>(Func<T>)
+  fullName: LiteEntitySystem.SpanReader.Get<T>(System.Func<T>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public T Get<T>(Func<T> constructor) where T : class, ISpanSerializable'
+    parameters:
+    - id: constructor
+      type: System.Func{{T}}
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Public Function [Get](Of T As {Class, ISpanSerializable})(constructor As Func(Of T)) As T
+  overload: LiteEntitySystem.SpanReader.Get*
+  nameWithType.vb: SpanReader.Get(Of T)(Func(Of T))
+  fullName.vb: LiteEntitySystem.SpanReader.Get(Of T)(System.Func(Of T))
+  name.vb: Get(Of T)(Func(Of T))
+- uid: LiteEntitySystem.SpanReader.GetRemainingBytesSpan
+  commentId: M:LiteEntitySystem.SpanReader.GetRemainingBytesSpan
+  id: GetRemainingBytesSpan
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetRemainingBytesSpan()
+  nameWithType: SpanReader.GetRemainingBytesSpan()
+  fullName: LiteEntitySystem.SpanReader.GetRemainingBytesSpan()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public ReadOnlySpan<byte> GetRemainingBytesSpan()
+    return:
+      type: System.ReadOnlySpan{System.Byte}
+    content.vb: Public Function GetRemainingBytesSpan() As ReadOnlySpan(Of Byte)
+  overload: LiteEntitySystem.SpanReader.GetRemainingBytesSpan*
+- uid: LiteEntitySystem.SpanReader.GetRemainingBytes
+  commentId: M:LiteEntitySystem.SpanReader.GetRemainingBytes
+  id: GetRemainingBytes
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetRemainingBytes()
+  nameWithType: SpanReader.GetRemainingBytes()
+  fullName: LiteEntitySystem.SpanReader.GetRemainingBytes()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public byte[] GetRemainingBytes()
+    return:
+      type: System.Byte[]
+    content.vb: Public Function GetRemainingBytes() As Byte()
+  overload: LiteEntitySystem.SpanReader.GetRemainingBytes*
+- uid: LiteEntitySystem.SpanReader.GetBytes(System.Byte[],System.Int32,System.Int32)
+  commentId: M:LiteEntitySystem.SpanReader.GetBytes(System.Byte[],System.Int32,System.Int32)
+  id: GetBytes(System.Byte[],System.Int32,System.Int32)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetBytes(byte[], int, int)
+  nameWithType: SpanReader.GetBytes(byte[], int, int)
+  fullName: LiteEntitySystem.SpanReader.GetBytes(byte[], int, int)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void GetBytes(byte[] destination, int start, int count)
+    parameters:
+    - id: destination
+      type: System.Byte[]
+    - id: start
+      type: System.Int32
+    - id: count
+      type: System.Int32
+    content.vb: Public Sub GetBytes(destination As Byte(), start As Integer, count As Integer)
+  overload: LiteEntitySystem.SpanReader.GetBytes*
+  nameWithType.vb: SpanReader.GetBytes(Byte(), Integer, Integer)
+  fullName.vb: LiteEntitySystem.SpanReader.GetBytes(Byte(), Integer, Integer)
+  name.vb: GetBytes(Byte(), Integer, Integer)
+- uid: LiteEntitySystem.SpanReader.GetBytes(System.Byte[],System.Int32)
+  commentId: M:LiteEntitySystem.SpanReader.GetBytes(System.Byte[],System.Int32)
+  id: GetBytes(System.Byte[],System.Int32)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetBytes(byte[], int)
+  nameWithType: SpanReader.GetBytes(byte[], int)
+  fullName: LiteEntitySystem.SpanReader.GetBytes(byte[], int)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void GetBytes(byte[] destination, int count)
+    parameters:
+    - id: destination
+      type: System.Byte[]
+    - id: count
+      type: System.Int32
+    content.vb: Public Sub GetBytes(destination As Byte(), count As Integer)
+  overload: LiteEntitySystem.SpanReader.GetBytes*
+  nameWithType.vb: SpanReader.GetBytes(Byte(), Integer)
+  fullName.vb: LiteEntitySystem.SpanReader.GetBytes(Byte(), Integer)
+  name.vb: GetBytes(Byte(), Integer)
+- uid: LiteEntitySystem.SpanReader.GetSBytesWithLength
+  commentId: M:LiteEntitySystem.SpanReader.GetSBytesWithLength
+  id: GetSBytesWithLength
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetSBytesWithLength()
+  nameWithType: SpanReader.GetSBytesWithLength()
+  fullName: LiteEntitySystem.SpanReader.GetSBytesWithLength()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public sbyte[] GetSBytesWithLength()
+    return:
+      type: System.SByte[]
+    content.vb: Public Function GetSBytesWithLength() As SByte()
+  overload: LiteEntitySystem.SpanReader.GetSBytesWithLength*
+- uid: LiteEntitySystem.SpanReader.GetBytesWithLength
+  commentId: M:LiteEntitySystem.SpanReader.GetBytesWithLength
+  id: GetBytesWithLength
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: GetBytesWithLength()
+  nameWithType: SpanReader.GetBytesWithLength()
+  fullName: LiteEntitySystem.SpanReader.GetBytesWithLength()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public byte[] GetBytesWithLength()
+    return:
+      type: System.Byte[]
+    content.vb: Public Function GetBytesWithLength() As Byte()
+  overload: LiteEntitySystem.SpanReader.GetBytesWithLength*
+- uid: LiteEntitySystem.SpanReader.PeekByte
+  commentId: M:LiteEntitySystem.SpanReader.PeekByte
+  id: PeekByte
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: PeekByte()
+  nameWithType: SpanReader.PeekByte()
+  fullName: LiteEntitySystem.SpanReader.PeekByte()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public byte PeekByte()
+    return:
+      type: System.Byte
+    content.vb: Public Function PeekByte() As Byte
+  overload: LiteEntitySystem.SpanReader.PeekByte*
+- uid: LiteEntitySystem.SpanReader.PeekSByte
+  commentId: M:LiteEntitySystem.SpanReader.PeekSByte
+  id: PeekSByte
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: PeekSByte()
+  nameWithType: SpanReader.PeekSByte()
+  fullName: LiteEntitySystem.SpanReader.PeekSByte()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public sbyte PeekSByte()
+    return:
+      type: System.SByte
+    content.vb: Public Function PeekSByte() As SByte
+  overload: LiteEntitySystem.SpanReader.PeekSByte*
+- uid: LiteEntitySystem.SpanReader.PeekBool
+  commentId: M:LiteEntitySystem.SpanReader.PeekBool
+  id: PeekBool
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: PeekBool()
+  nameWithType: SpanReader.PeekBool()
+  fullName: LiteEntitySystem.SpanReader.PeekBool()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool PeekBool()
+    return:
+      type: System.Boolean
+    content.vb: Public Function PeekBool() As Boolean
+  overload: LiteEntitySystem.SpanReader.PeekBool*
+- uid: LiteEntitySystem.SpanReader.PeekChar
+  commentId: M:LiteEntitySystem.SpanReader.PeekChar
+  id: PeekChar
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: PeekChar()
+  nameWithType: SpanReader.PeekChar()
+  fullName: LiteEntitySystem.SpanReader.PeekChar()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public char PeekChar()
+    return:
+      type: System.Char
+    content.vb: Public Function PeekChar() As Char
+  overload: LiteEntitySystem.SpanReader.PeekChar*
+- uid: LiteEntitySystem.SpanReader.PeekUShort
+  commentId: M:LiteEntitySystem.SpanReader.PeekUShort
+  id: PeekUShort
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: PeekUShort()
+  nameWithType: SpanReader.PeekUShort()
+  fullName: LiteEntitySystem.SpanReader.PeekUShort()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public ushort PeekUShort()
+    return:
+      type: System.UInt16
+    content.vb: Public Function PeekUShort() As UShort
+  overload: LiteEntitySystem.SpanReader.PeekUShort*
+- uid: LiteEntitySystem.SpanReader.PeekShort
+  commentId: M:LiteEntitySystem.SpanReader.PeekShort
+  id: PeekShort
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: PeekShort()
+  nameWithType: SpanReader.PeekShort()
+  fullName: LiteEntitySystem.SpanReader.PeekShort()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public short PeekShort()
+    return:
+      type: System.Int16
+    content.vb: Public Function PeekShort() As Short
+  overload: LiteEntitySystem.SpanReader.PeekShort*
+- uid: LiteEntitySystem.SpanReader.PeekLong
+  commentId: M:LiteEntitySystem.SpanReader.PeekLong
+  id: PeekLong
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: PeekLong()
+  nameWithType: SpanReader.PeekLong()
+  fullName: LiteEntitySystem.SpanReader.PeekLong()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public long PeekLong()
+    return:
+      type: System.Int64
+    content.vb: Public Function PeekLong() As Long
+  overload: LiteEntitySystem.SpanReader.PeekLong*
+- uid: LiteEntitySystem.SpanReader.PeekULong
+  commentId: M:LiteEntitySystem.SpanReader.PeekULong
+  id: PeekULong
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: PeekULong()
+  nameWithType: SpanReader.PeekULong()
+  fullName: LiteEntitySystem.SpanReader.PeekULong()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public ulong PeekULong()
+    return:
+      type: System.UInt64
+    content.vb: Public Function PeekULong() As ULong
+  overload: LiteEntitySystem.SpanReader.PeekULong*
+- uid: LiteEntitySystem.SpanReader.PeekInt
+  commentId: M:LiteEntitySystem.SpanReader.PeekInt
+  id: PeekInt
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: PeekInt()
+  nameWithType: SpanReader.PeekInt()
+  fullName: LiteEntitySystem.SpanReader.PeekInt()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public int PeekInt()
+    return:
+      type: System.Int32
+    content.vb: Public Function PeekInt() As Integer
+  overload: LiteEntitySystem.SpanReader.PeekInt*
+- uid: LiteEntitySystem.SpanReader.PeekUInt
+  commentId: M:LiteEntitySystem.SpanReader.PeekUInt
+  id: PeekUInt
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: PeekUInt()
+  nameWithType: SpanReader.PeekUInt()
+  fullName: LiteEntitySystem.SpanReader.PeekUInt()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public uint PeekUInt()
+    return:
+      type: System.UInt32
+    content.vb: Public Function PeekUInt() As UInteger
+  overload: LiteEntitySystem.SpanReader.PeekUInt*
+- uid: LiteEntitySystem.SpanReader.PeekFloat
+  commentId: M:LiteEntitySystem.SpanReader.PeekFloat
+  id: PeekFloat
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: PeekFloat()
+  nameWithType: SpanReader.PeekFloat()
+  fullName: LiteEntitySystem.SpanReader.PeekFloat()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public float PeekFloat()
+    return:
+      type: System.Single
+    content.vb: Public Function PeekFloat() As Single
+  overload: LiteEntitySystem.SpanReader.PeekFloat*
+- uid: LiteEntitySystem.SpanReader.PeekDouble
+  commentId: M:LiteEntitySystem.SpanReader.PeekDouble
+  id: PeekDouble
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: PeekDouble()
+  nameWithType: SpanReader.PeekDouble()
+  fullName: LiteEntitySystem.SpanReader.PeekDouble()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public double PeekDouble()
+    return:
+      type: System.Double
+    content.vb: Public Function PeekDouble() As Double
+  overload: LiteEntitySystem.SpanReader.PeekDouble*
+- uid: LiteEntitySystem.SpanReader.PeekString(System.Int32)
+  commentId: M:LiteEntitySystem.SpanReader.PeekString(System.Int32)
+  id: PeekString(System.Int32)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: PeekString(int)
+  nameWithType: SpanReader.PeekString(int)
+  fullName: LiteEntitySystem.SpanReader.PeekString(int)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Note that "maxLength" only limits the number of characters in a string, not its size in bytes.
+  example: []
+  syntax:
+    content: public string PeekString(int maxLength)
+    parameters:
+    - id: maxLength
+      type: System.Int32
+    return:
+      type: System.String
+    content.vb: Public Function PeekString(maxLength As Integer) As String
+  overload: LiteEntitySystem.SpanReader.PeekString*
+  nameWithType.vb: SpanReader.PeekString(Integer)
+  fullName.vb: LiteEntitySystem.SpanReader.PeekString(Integer)
+  name.vb: PeekString(Integer)
+- uid: LiteEntitySystem.SpanReader.PeekString
+  commentId: M:LiteEntitySystem.SpanReader.PeekString
+  id: PeekString
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: PeekString()
+  nameWithType: SpanReader.PeekString()
+  fullName: LiteEntitySystem.SpanReader.PeekString()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public string PeekString()
+    return:
+      type: System.String
+    content.vb: Public Function PeekString() As String
+  overload: LiteEntitySystem.SpanReader.PeekString*
+- uid: LiteEntitySystem.SpanReader.TryGetByte(System.Byte@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetByte(System.Byte@)
+  id: TryGetByte(System.Byte@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetByte(out byte)
+  nameWithType: SpanReader.TryGetByte(out byte)
+  fullName: LiteEntitySystem.SpanReader.TryGetByte(out byte)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetByte(out byte result)
+    parameters:
+    - id: result
+      type: System.Byte
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetByte(result As Byte) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetByte*
+  nameWithType.vb: SpanReader.TryGetByte(Byte)
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetByte(Byte)
+  name.vb: TryGetByte(Byte)
+- uid: LiteEntitySystem.SpanReader.TryGetSByte(System.SByte@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetSByte(System.SByte@)
+  id: TryGetSByte(System.SByte@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetSByte(out sbyte)
+  nameWithType: SpanReader.TryGetSByte(out sbyte)
+  fullName: LiteEntitySystem.SpanReader.TryGetSByte(out sbyte)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetSByte(out sbyte result)
+    parameters:
+    - id: result
+      type: System.SByte
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetSByte(result As SByte) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetSByte*
+  nameWithType.vb: SpanReader.TryGetSByte(SByte)
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetSByte(SByte)
+  name.vb: TryGetSByte(SByte)
+- uid: LiteEntitySystem.SpanReader.TryGetBool(System.Boolean@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetBool(System.Boolean@)
+  id: TryGetBool(System.Boolean@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetBool(out bool)
+  nameWithType: SpanReader.TryGetBool(out bool)
+  fullName: LiteEntitySystem.SpanReader.TryGetBool(out bool)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetBool(out bool result)
+    parameters:
+    - id: result
+      type: System.Boolean
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetBool(result As Boolean) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetBool*
+  nameWithType.vb: SpanReader.TryGetBool(Boolean)
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetBool(Boolean)
+  name.vb: TryGetBool(Boolean)
+- uid: LiteEntitySystem.SpanReader.TryGetChar(System.Char@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetChar(System.Char@)
+  id: TryGetChar(System.Char@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetChar(out char)
+  nameWithType: SpanReader.TryGetChar(out char)
+  fullName: LiteEntitySystem.SpanReader.TryGetChar(out char)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetChar(out char result)
+    parameters:
+    - id: result
+      type: System.Char
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetChar(result As Char) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetChar*
+  nameWithType.vb: SpanReader.TryGetChar(Char)
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetChar(Char)
+  name.vb: TryGetChar(Char)
+- uid: LiteEntitySystem.SpanReader.TryGetShort(System.Int16@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetShort(System.Int16@)
+  id: TryGetShort(System.Int16@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetShort(out short)
+  nameWithType: SpanReader.TryGetShort(out short)
+  fullName: LiteEntitySystem.SpanReader.TryGetShort(out short)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetShort(out short result)
+    parameters:
+    - id: result
+      type: System.Int16
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetShort(result As Short) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetShort*
+  nameWithType.vb: SpanReader.TryGetShort(Short)
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetShort(Short)
+  name.vb: TryGetShort(Short)
+- uid: LiteEntitySystem.SpanReader.TryGetUShort(System.UInt16@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetUShort(System.UInt16@)
+  id: TryGetUShort(System.UInt16@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetUShort(out ushort)
+  nameWithType: SpanReader.TryGetUShort(out ushort)
+  fullName: LiteEntitySystem.SpanReader.TryGetUShort(out ushort)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetUShort(out ushort result)
+    parameters:
+    - id: result
+      type: System.UInt16
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetUShort(result As UShort) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetUShort*
+  nameWithType.vb: SpanReader.TryGetUShort(UShort)
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetUShort(UShort)
+  name.vb: TryGetUShort(UShort)
+- uid: LiteEntitySystem.SpanReader.TryGetInt(System.Int32@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetInt(System.Int32@)
+  id: TryGetInt(System.Int32@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetInt(out int)
+  nameWithType: SpanReader.TryGetInt(out int)
+  fullName: LiteEntitySystem.SpanReader.TryGetInt(out int)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetInt(out int result)
+    parameters:
+    - id: result
+      type: System.Int32
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetInt(result As Integer) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetInt*
+  nameWithType.vb: SpanReader.TryGetInt(Integer)
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetInt(Integer)
+  name.vb: TryGetInt(Integer)
+- uid: LiteEntitySystem.SpanReader.TryGetUInt(System.UInt32@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetUInt(System.UInt32@)
+  id: TryGetUInt(System.UInt32@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetUInt(out uint)
+  nameWithType: SpanReader.TryGetUInt(out uint)
+  fullName: LiteEntitySystem.SpanReader.TryGetUInt(out uint)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetUInt(out uint result)
+    parameters:
+    - id: result
+      type: System.UInt32
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetUInt(result As UInteger) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetUInt*
+  nameWithType.vb: SpanReader.TryGetUInt(UInteger)
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetUInt(UInteger)
+  name.vb: TryGetUInt(UInteger)
+- uid: LiteEntitySystem.SpanReader.TryGetLong(System.Int64@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetLong(System.Int64@)
+  id: TryGetLong(System.Int64@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetLong(out long)
+  nameWithType: SpanReader.TryGetLong(out long)
+  fullName: LiteEntitySystem.SpanReader.TryGetLong(out long)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetLong(out long result)
+    parameters:
+    - id: result
+      type: System.Int64
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetLong(result As Long) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetLong*
+  nameWithType.vb: SpanReader.TryGetLong(Long)
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetLong(Long)
+  name.vb: TryGetLong(Long)
+- uid: LiteEntitySystem.SpanReader.TryGetULong(System.UInt64@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetULong(System.UInt64@)
+  id: TryGetULong(System.UInt64@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetULong(out ulong)
+  nameWithType: SpanReader.TryGetULong(out ulong)
+  fullName: LiteEntitySystem.SpanReader.TryGetULong(out ulong)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetULong(out ulong result)
+    parameters:
+    - id: result
+      type: System.UInt64
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetULong(result As ULong) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetULong*
+  nameWithType.vb: SpanReader.TryGetULong(ULong)
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetULong(ULong)
+  name.vb: TryGetULong(ULong)
+- uid: LiteEntitySystem.SpanReader.TryGetFloat(System.Single@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetFloat(System.Single@)
+  id: TryGetFloat(System.Single@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetFloat(out float)
+  nameWithType: SpanReader.TryGetFloat(out float)
+  fullName: LiteEntitySystem.SpanReader.TryGetFloat(out float)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetFloat(out float result)
+    parameters:
+    - id: result
+      type: System.Single
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetFloat(result As Single) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetFloat*
+  nameWithType.vb: SpanReader.TryGetFloat(Single)
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetFloat(Single)
+  name.vb: TryGetFloat(Single)
+- uid: LiteEntitySystem.SpanReader.TryGetDouble(System.Double@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetDouble(System.Double@)
+  id: TryGetDouble(System.Double@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetDouble(out double)
+  nameWithType: SpanReader.TryGetDouble(out double)
+  fullName: LiteEntitySystem.SpanReader.TryGetDouble(out double)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetDouble(out double result)
+    parameters:
+    - id: result
+      type: System.Double
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetDouble(result As Double) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetDouble*
+  nameWithType.vb: SpanReader.TryGetDouble(Double)
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetDouble(Double)
+  name.vb: TryGetDouble(Double)
+- uid: LiteEntitySystem.SpanReader.TryGetString(System.String@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetString(System.String@)
+  id: TryGetString(System.String@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetString(out string)
+  nameWithType: SpanReader.TryGetString(out string)
+  fullName: LiteEntitySystem.SpanReader.TryGetString(out string)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetString(out string result)
+    parameters:
+    - id: result
+      type: System.String
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetString(result As String) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetString*
+  nameWithType.vb: SpanReader.TryGetString(String)
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetString(String)
+  name.vb: TryGetString(String)
+- uid: LiteEntitySystem.SpanReader.TryGetStringArray(System.String[]@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetStringArray(System.String[]@)
+  id: TryGetStringArray(System.String[]@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetStringArray(out string[])
+  nameWithType: SpanReader.TryGetStringArray(out string[])
+  fullName: LiteEntitySystem.SpanReader.TryGetStringArray(out string[])
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetStringArray(out string[] result)
+    parameters:
+    - id: result
+      type: System.String[]
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetStringArray(result As String()) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetStringArray*
+  nameWithType.vb: SpanReader.TryGetStringArray(String())
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetStringArray(String())
+  name.vb: TryGetStringArray(String())
+- uid: LiteEntitySystem.SpanReader.TryGetBytesWithLength(System.Byte[]@)
+  commentId: M:LiteEntitySystem.SpanReader.TryGetBytesWithLength(System.Byte[]@)
+  id: TryGetBytesWithLength(System.Byte[]@)
+  parent: LiteEntitySystem.SpanReader
+  langs:
+  - csharp
+  - vb
+  name: TryGetBytesWithLength(out byte[])
+  nameWithType: SpanReader.TryGetBytesWithLength(out byte[])
+  fullName: LiteEntitySystem.SpanReader.TryGetBytesWithLength(out byte[])
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool TryGetBytesWithLength(out byte[] result)
+    parameters:
+    - id: result
+      type: System.Byte[]
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetBytesWithLength(result As Byte()) As Boolean
+  overload: LiteEntitySystem.SpanReader.TryGetBytesWithLength*
+  nameWithType.vb: SpanReader.TryGetBytesWithLength(Byte())
+  fullName.vb: LiteEntitySystem.SpanReader.TryGetBytesWithLength(Byte())
+  name.vb: TryGetBytesWithLength(Byte())
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.ReadOnlySpan{System.Byte}
+  commentId: T:System.ReadOnlySpan{System.Byte}
+  parent: System
+  definition: System.ReadOnlySpan`1
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<byte>
+  nameWithType: ReadOnlySpan<byte>
+  fullName: System.ReadOnlySpan<byte>
+  nameWithType.vb: ReadOnlySpan(Of Byte)
+  fullName.vb: System.ReadOnlySpan(Of Byte)
+  name.vb: ReadOnlySpan(Of Byte)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: )
+- uid: System.ReadOnlySpan`1
+  commentId: T:System.ReadOnlySpan`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<T>
+  nameWithType: ReadOnlySpan<T>
+  fullName: System.ReadOnlySpan<T>
+  nameWithType.vb: ReadOnlySpan(Of T)
+  fullName.vb: System.ReadOnlySpan(Of T)
+  name.vb: ReadOnlySpan(Of T)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: LiteEntitySystem.SpanReader.AvailableBytes*
+  commentId: Overload:LiteEntitySystem.SpanReader.AvailableBytes
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_AvailableBytes
+  name: AvailableBytes
+  nameWithType: SpanReader.AvailableBytes
+  fullName: LiteEntitySystem.SpanReader.AvailableBytes
+- uid: LiteEntitySystem.SpanReader.#ctor*
+  commentId: Overload:LiteEntitySystem.SpanReader.#ctor
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader__ctor_System_ReadOnlySpan_System_Byte__
+  name: SpanReader
+  nameWithType: SpanReader.SpanReader
+  fullName: LiteEntitySystem.SpanReader.SpanReader
+  nameWithType.vb: SpanReader.New
+  fullName.vb: LiteEntitySystem.SpanReader.New
+  name.vb: New
+- uid: LiteEntitySystem.SpanReader.Get*
+  commentId: Overload:LiteEntitySystem.SpanReader.Get
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_Get__1___0__
+  name: Get
+  nameWithType: SpanReader.Get
+  fullName: LiteEntitySystem.SpanReader.Get
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: System.Func{{T}}
+  commentId: T:System.Func{``0}
+  parent: System
+  definition: System.Func`1
+  href: https://learn.microsoft.com/dotnet/api/system.func-1
+  name: Func<T>
+  nameWithType: Func<T>
+  fullName: System.Func<T>
+  nameWithType.vb: Func(Of T)
+  fullName.vb: System.Func(Of T)
+  name.vb: Func(Of T)
+  spec.csharp:
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Func`1
+  commentId: T:System.Func`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.func-1
+  name: Func<TResult>
+  nameWithType: Func<TResult>
+  fullName: System.Func<TResult>
+  nameWithType.vb: Func(Of TResult)
+  fullName.vb: System.Func(Of TResult)
+  name.vb: Func(Of TResult)
+  spec.csharp:
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: System.SByte
+  commentId: T:System.SByte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.sbyte
+  name: sbyte
+  nameWithType: sbyte
+  fullName: sbyte
+  nameWithType.vb: SByte
+  fullName.vb: SByte
+  name.vb: SByte
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Char
+  commentId: T:System.Char
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.char
+  name: char
+  nameWithType: char
+  fullName: char
+  nameWithType.vb: Char
+  fullName.vb: Char
+  name.vb: Char
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: System.Int16
+  commentId: T:System.Int16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int16
+  name: short
+  nameWithType: short
+  fullName: short
+  nameWithType.vb: Short
+  fullName.vb: Short
+  name.vb: Short
+- uid: System.UInt64
+  commentId: T:System.UInt64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint64
+  name: ulong
+  nameWithType: ulong
+  fullName: ulong
+  nameWithType.vb: ULong
+  fullName.vb: ULong
+  name.vb: ULong
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Guid
+  commentId: T:System.Guid
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.guid
+  name: Guid
+  nameWithType: Guid
+  fullName: System.Guid
+- uid: LiteEntitySystem.SpanReader.GetByte*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetByte
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetByte
+  name: GetByte
+  nameWithType: SpanReader.GetByte
+  fullName: LiteEntitySystem.SpanReader.GetByte
+- uid: LiteEntitySystem.SpanReader.GetSByte*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetSByte
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetSByte
+  name: GetSByte
+  nameWithType: SpanReader.GetSByte
+  fullName: LiteEntitySystem.SpanReader.GetSByte
+- uid: LiteEntitySystem.SpanReader.GetArray*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetArray
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetArray__1_System_UInt16_
+  name: GetArray
+  nameWithType: SpanReader.GetArray
+  fullName: LiteEntitySystem.SpanReader.GetArray
+- uid: '{T}[]'
+  isExternal: true
+  name: T[]
+  nameWithType: T[]
+  fullName: T[]
+  nameWithType.vb: T()
+  fullName.vb: T()
+  name.vb: T()
+  spec.csharp:
+  - name: T
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - name: T
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SpanReader.GetBoolArray*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetBoolArray
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetBoolArray
+  name: GetBoolArray
+  nameWithType: SpanReader.GetBoolArray
+  fullName: LiteEntitySystem.SpanReader.GetBoolArray
+- uid: System.Boolean[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool[]
+  nameWithType: bool[]
+  fullName: bool[]
+  nameWithType.vb: Boolean()
+  fullName.vb: Boolean()
+  name.vb: Boolean()
+  spec.csharp:
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SpanReader.GetUShortArray*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetUShortArray
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetUShortArray
+  name: GetUShortArray
+  nameWithType: SpanReader.GetUShortArray
+  fullName: LiteEntitySystem.SpanReader.GetUShortArray
+- uid: System.UInt16[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort[]
+  nameWithType: ushort[]
+  fullName: ushort[]
+  nameWithType.vb: UShort()
+  fullName.vb: UShort()
+  name.vb: UShort()
+  spec.csharp:
+  - uid: System.UInt16
+    name: ushort
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint16
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.UInt16
+    name: UShort
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint16
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SpanReader.GetShortArray*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetShortArray
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetShortArray
+  name: GetShortArray
+  nameWithType: SpanReader.GetShortArray
+  fullName: LiteEntitySystem.SpanReader.GetShortArray
+- uid: System.Int16[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int16
+  name: short[]
+  nameWithType: short[]
+  fullName: short[]
+  nameWithType.vb: Short()
+  fullName.vb: Short()
+  name.vb: Short()
+  spec.csharp:
+  - uid: System.Int16
+    name: short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int16
+    name: Short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SpanReader.GetIntArray*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetIntArray
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetIntArray
+  name: GetIntArray
+  nameWithType: SpanReader.GetIntArray
+  fullName: LiteEntitySystem.SpanReader.GetIntArray
+- uid: System.Int32[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int[]
+  nameWithType: int[]
+  fullName: int[]
+  nameWithType.vb: Integer()
+  fullName.vb: Integer()
+  name.vb: Integer()
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SpanReader.GetUIntArray*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetUIntArray
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetUIntArray
+  name: GetUIntArray
+  nameWithType: SpanReader.GetUIntArray
+  fullName: LiteEntitySystem.SpanReader.GetUIntArray
+- uid: System.UInt32[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint[]
+  nameWithType: uint[]
+  fullName: uint[]
+  nameWithType.vb: UInteger()
+  fullName.vb: UInteger()
+  name.vb: UInteger()
+  spec.csharp:
+  - uid: System.UInt32
+    name: uint
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint32
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.UInt32
+    name: UInteger
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint32
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SpanReader.GetFloatArray*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetFloatArray
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetFloatArray
+  name: GetFloatArray
+  nameWithType: SpanReader.GetFloatArray
+  fullName: LiteEntitySystem.SpanReader.GetFloatArray
+- uid: System.Single[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float[]
+  nameWithType: float[]
+  fullName: float[]
+  nameWithType.vb: Single()
+  fullName.vb: Single()
+  name.vb: Single()
+  spec.csharp:
+  - uid: System.Single
+    name: float
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Single
+    name: Single
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SpanReader.GetDoubleArray*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetDoubleArray
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetDoubleArray
+  name: GetDoubleArray
+  nameWithType: SpanReader.GetDoubleArray
+  fullName: LiteEntitySystem.SpanReader.GetDoubleArray
+- uid: System.Double[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double[]
+  nameWithType: double[]
+  fullName: double[]
+  nameWithType.vb: Double()
+  fullName.vb: Double()
+  name.vb: Double()
+  spec.csharp:
+  - uid: System.Double
+    name: double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Double
+    name: Double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SpanReader.GetLongArray*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetLongArray
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetLongArray
+  name: GetLongArray
+  nameWithType: SpanReader.GetLongArray
+  fullName: LiteEntitySystem.SpanReader.GetLongArray
+- uid: System.Int64[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long[]
+  nameWithType: long[]
+  fullName: long[]
+  nameWithType.vb: Long()
+  fullName.vb: Long()
+  name.vb: Long()
+  spec.csharp:
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SpanReader.GetULongArray*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetULongArray
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetULongArray
+  name: GetULongArray
+  nameWithType: SpanReader.GetULongArray
+  fullName: LiteEntitySystem.SpanReader.GetULongArray
+- uid: System.UInt64[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint64
+  name: ulong[]
+  nameWithType: ulong[]
+  fullName: ulong[]
+  nameWithType.vb: ULong()
+  fullName.vb: ULong()
+  name.vb: ULong()
+  spec.csharp:
+  - uid: System.UInt64
+    name: ulong
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint64
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.UInt64
+    name: ULong
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint64
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SpanReader.GetStringArray*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetStringArray
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetStringArray
+  name: GetStringArray
+  nameWithType: SpanReader.GetStringArray
+  fullName: LiteEntitySystem.SpanReader.GetStringArray
+- uid: System.String[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string[]
+  nameWithType: string[]
+  fullName: string[]
+  nameWithType.vb: String()
+  fullName.vb: String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SpanReader.GetBool*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetBool
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetBool
+  name: GetBool
+  nameWithType: SpanReader.GetBool
+  fullName: LiteEntitySystem.SpanReader.GetBool
+- uid: LiteEntitySystem.SpanReader.GetChar*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetChar
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetChar
+  name: GetChar
+  nameWithType: SpanReader.GetChar
+  fullName: LiteEntitySystem.SpanReader.GetChar
+- uid: LiteEntitySystem.SpanReader.GetUShort*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetUShort
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetUShort
+  name: GetUShort
+  nameWithType: SpanReader.GetUShort
+  fullName: LiteEntitySystem.SpanReader.GetUShort
+- uid: LiteEntitySystem.SpanReader.GetShort*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetShort
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetShort
+  name: GetShort
+  nameWithType: SpanReader.GetShort
+  fullName: LiteEntitySystem.SpanReader.GetShort
+- uid: LiteEntitySystem.SpanReader.GetLong*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetLong
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetLong
+  name: GetLong
+  nameWithType: SpanReader.GetLong
+  fullName: LiteEntitySystem.SpanReader.GetLong
+- uid: LiteEntitySystem.SpanReader.GetULong*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetULong
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetULong
+  name: GetULong
+  nameWithType: SpanReader.GetULong
+  fullName: LiteEntitySystem.SpanReader.GetULong
+- uid: LiteEntitySystem.SpanReader.GetInt*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetInt
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetInt
+  name: GetInt
+  nameWithType: SpanReader.GetInt
+  fullName: LiteEntitySystem.SpanReader.GetInt
+- uid: LiteEntitySystem.SpanReader.GetUInt*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetUInt
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetUInt
+  name: GetUInt
+  nameWithType: SpanReader.GetUInt
+  fullName: LiteEntitySystem.SpanReader.GetUInt
+- uid: LiteEntitySystem.SpanReader.GetFloat*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetFloat
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetFloat
+  name: GetFloat
+  nameWithType: SpanReader.GetFloat
+  fullName: LiteEntitySystem.SpanReader.GetFloat
+- uid: LiteEntitySystem.SpanReader.GetDouble*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetDouble
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetDouble
+  name: GetDouble
+  nameWithType: SpanReader.GetDouble
+  fullName: LiteEntitySystem.SpanReader.GetDouble
+- uid: LiteEntitySystem.SpanReader.GetString*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetString
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetString_System_Int32_
+  name: GetString
+  nameWithType: SpanReader.GetString
+  fullName: LiteEntitySystem.SpanReader.GetString
+- uid: LiteEntitySystem.SpanReader.GetLargeString*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetLargeString
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetLargeString
+  name: GetLargeString
+  nameWithType: SpanReader.GetLargeString
+  fullName: LiteEntitySystem.SpanReader.GetLargeString
+- uid: LiteEntitySystem.SpanReader.GetGuid*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetGuid
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetGuid
+  name: GetGuid
+  nameWithType: SpanReader.GetGuid
+  fullName: LiteEntitySystem.SpanReader.GetGuid
+- uid: LiteEntitySystem.SpanReader.GetRemainingBytesSpan*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetRemainingBytesSpan
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetRemainingBytesSpan
+  name: GetRemainingBytesSpan
+  nameWithType: SpanReader.GetRemainingBytesSpan
+  fullName: LiteEntitySystem.SpanReader.GetRemainingBytesSpan
+- uid: LiteEntitySystem.SpanReader.GetRemainingBytes*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetRemainingBytes
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetRemainingBytes
+  name: GetRemainingBytes
+  nameWithType: SpanReader.GetRemainingBytes
+  fullName: LiteEntitySystem.SpanReader.GetRemainingBytes
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SpanReader.GetBytes*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetBytes
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetBytes_System_Byte___System_Int32_System_Int32_
+  name: GetBytes
+  nameWithType: SpanReader.GetBytes
+  fullName: LiteEntitySystem.SpanReader.GetBytes
+- uid: LiteEntitySystem.SpanReader.GetSBytesWithLength*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetSBytesWithLength
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetSBytesWithLength
+  name: GetSBytesWithLength
+  nameWithType: SpanReader.GetSBytesWithLength
+  fullName: LiteEntitySystem.SpanReader.GetSBytesWithLength
+- uid: System.SByte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.sbyte
+  name: sbyte[]
+  nameWithType: sbyte[]
+  fullName: sbyte[]
+  nameWithType.vb: SByte()
+  fullName.vb: SByte()
+  name.vb: SByte()
+  spec.csharp:
+  - uid: System.SByte
+    name: sbyte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.sbyte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.SByte
+    name: SByte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.sbyte
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SpanReader.GetBytesWithLength*
+  commentId: Overload:LiteEntitySystem.SpanReader.GetBytesWithLength
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_GetBytesWithLength
+  name: GetBytesWithLength
+  nameWithType: SpanReader.GetBytesWithLength
+  fullName: LiteEntitySystem.SpanReader.GetBytesWithLength
+- uid: LiteEntitySystem.SpanReader.PeekByte*
+  commentId: Overload:LiteEntitySystem.SpanReader.PeekByte
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_PeekByte
+  name: PeekByte
+  nameWithType: SpanReader.PeekByte
+  fullName: LiteEntitySystem.SpanReader.PeekByte
+- uid: LiteEntitySystem.SpanReader.PeekSByte*
+  commentId: Overload:LiteEntitySystem.SpanReader.PeekSByte
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_PeekSByte
+  name: PeekSByte
+  nameWithType: SpanReader.PeekSByte
+  fullName: LiteEntitySystem.SpanReader.PeekSByte
+- uid: LiteEntitySystem.SpanReader.PeekBool*
+  commentId: Overload:LiteEntitySystem.SpanReader.PeekBool
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_PeekBool
+  name: PeekBool
+  nameWithType: SpanReader.PeekBool
+  fullName: LiteEntitySystem.SpanReader.PeekBool
+- uid: LiteEntitySystem.SpanReader.PeekChar*
+  commentId: Overload:LiteEntitySystem.SpanReader.PeekChar
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_PeekChar
+  name: PeekChar
+  nameWithType: SpanReader.PeekChar
+  fullName: LiteEntitySystem.SpanReader.PeekChar
+- uid: LiteEntitySystem.SpanReader.PeekUShort*
+  commentId: Overload:LiteEntitySystem.SpanReader.PeekUShort
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_PeekUShort
+  name: PeekUShort
+  nameWithType: SpanReader.PeekUShort
+  fullName: LiteEntitySystem.SpanReader.PeekUShort
+- uid: LiteEntitySystem.SpanReader.PeekShort*
+  commentId: Overload:LiteEntitySystem.SpanReader.PeekShort
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_PeekShort
+  name: PeekShort
+  nameWithType: SpanReader.PeekShort
+  fullName: LiteEntitySystem.SpanReader.PeekShort
+- uid: LiteEntitySystem.SpanReader.PeekLong*
+  commentId: Overload:LiteEntitySystem.SpanReader.PeekLong
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_PeekLong
+  name: PeekLong
+  nameWithType: SpanReader.PeekLong
+  fullName: LiteEntitySystem.SpanReader.PeekLong
+- uid: LiteEntitySystem.SpanReader.PeekULong*
+  commentId: Overload:LiteEntitySystem.SpanReader.PeekULong
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_PeekULong
+  name: PeekULong
+  nameWithType: SpanReader.PeekULong
+  fullName: LiteEntitySystem.SpanReader.PeekULong
+- uid: LiteEntitySystem.SpanReader.PeekInt*
+  commentId: Overload:LiteEntitySystem.SpanReader.PeekInt
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_PeekInt
+  name: PeekInt
+  nameWithType: SpanReader.PeekInt
+  fullName: LiteEntitySystem.SpanReader.PeekInt
+- uid: LiteEntitySystem.SpanReader.PeekUInt*
+  commentId: Overload:LiteEntitySystem.SpanReader.PeekUInt
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_PeekUInt
+  name: PeekUInt
+  nameWithType: SpanReader.PeekUInt
+  fullName: LiteEntitySystem.SpanReader.PeekUInt
+- uid: LiteEntitySystem.SpanReader.PeekFloat*
+  commentId: Overload:LiteEntitySystem.SpanReader.PeekFloat
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_PeekFloat
+  name: PeekFloat
+  nameWithType: SpanReader.PeekFloat
+  fullName: LiteEntitySystem.SpanReader.PeekFloat
+- uid: LiteEntitySystem.SpanReader.PeekDouble*
+  commentId: Overload:LiteEntitySystem.SpanReader.PeekDouble
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_PeekDouble
+  name: PeekDouble
+  nameWithType: SpanReader.PeekDouble
+  fullName: LiteEntitySystem.SpanReader.PeekDouble
+- uid: LiteEntitySystem.SpanReader.PeekString*
+  commentId: Overload:LiteEntitySystem.SpanReader.PeekString
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_PeekString_System_Int32_
+  name: PeekString
+  nameWithType: SpanReader.PeekString
+  fullName: LiteEntitySystem.SpanReader.PeekString
+- uid: LiteEntitySystem.SpanReader.TryGetByte*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetByte
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetByte_System_Byte__
+  name: TryGetByte
+  nameWithType: SpanReader.TryGetByte
+  fullName: LiteEntitySystem.SpanReader.TryGetByte
+- uid: LiteEntitySystem.SpanReader.TryGetSByte*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetSByte
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetSByte_System_SByte__
+  name: TryGetSByte
+  nameWithType: SpanReader.TryGetSByte
+  fullName: LiteEntitySystem.SpanReader.TryGetSByte
+- uid: LiteEntitySystem.SpanReader.TryGetBool*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetBool
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetBool_System_Boolean__
+  name: TryGetBool
+  nameWithType: SpanReader.TryGetBool
+  fullName: LiteEntitySystem.SpanReader.TryGetBool
+- uid: LiteEntitySystem.SpanReader.TryGetChar*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetChar
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetChar_System_Char__
+  name: TryGetChar
+  nameWithType: SpanReader.TryGetChar
+  fullName: LiteEntitySystem.SpanReader.TryGetChar
+- uid: LiteEntitySystem.SpanReader.TryGetShort*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetShort
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetShort_System_Int16__
+  name: TryGetShort
+  nameWithType: SpanReader.TryGetShort
+  fullName: LiteEntitySystem.SpanReader.TryGetShort
+- uid: LiteEntitySystem.SpanReader.TryGetUShort*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetUShort
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetUShort_System_UInt16__
+  name: TryGetUShort
+  nameWithType: SpanReader.TryGetUShort
+  fullName: LiteEntitySystem.SpanReader.TryGetUShort
+- uid: LiteEntitySystem.SpanReader.TryGetInt*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetInt
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetInt_System_Int32__
+  name: TryGetInt
+  nameWithType: SpanReader.TryGetInt
+  fullName: LiteEntitySystem.SpanReader.TryGetInt
+- uid: LiteEntitySystem.SpanReader.TryGetUInt*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetUInt
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetUInt_System_UInt32__
+  name: TryGetUInt
+  nameWithType: SpanReader.TryGetUInt
+  fullName: LiteEntitySystem.SpanReader.TryGetUInt
+- uid: LiteEntitySystem.SpanReader.TryGetLong*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetLong
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetLong_System_Int64__
+  name: TryGetLong
+  nameWithType: SpanReader.TryGetLong
+  fullName: LiteEntitySystem.SpanReader.TryGetLong
+- uid: LiteEntitySystem.SpanReader.TryGetULong*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetULong
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetULong_System_UInt64__
+  name: TryGetULong
+  nameWithType: SpanReader.TryGetULong
+  fullName: LiteEntitySystem.SpanReader.TryGetULong
+- uid: LiteEntitySystem.SpanReader.TryGetFloat*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetFloat
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetFloat_System_Single__
+  name: TryGetFloat
+  nameWithType: SpanReader.TryGetFloat
+  fullName: LiteEntitySystem.SpanReader.TryGetFloat
+- uid: LiteEntitySystem.SpanReader.TryGetDouble*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetDouble
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetDouble_System_Double__
+  name: TryGetDouble
+  nameWithType: SpanReader.TryGetDouble
+  fullName: LiteEntitySystem.SpanReader.TryGetDouble
+- uid: LiteEntitySystem.SpanReader.TryGetString*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetString
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetString_System_String__
+  name: TryGetString
+  nameWithType: SpanReader.TryGetString
+  fullName: LiteEntitySystem.SpanReader.TryGetString
+- uid: LiteEntitySystem.SpanReader.TryGetStringArray*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetStringArray
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetStringArray_System_String____
+  name: TryGetStringArray
+  nameWithType: SpanReader.TryGetStringArray
+  fullName: LiteEntitySystem.SpanReader.TryGetStringArray
+- uid: LiteEntitySystem.SpanReader.TryGetBytesWithLength*
+  commentId: Overload:LiteEntitySystem.SpanReader.TryGetBytesWithLength
+  href: LiteEntitySystem.SpanReader.html#LiteEntitySystem_SpanReader_TryGetBytesWithLength_System_Byte____
+  name: TryGetBytesWithLength
+  nameWithType: SpanReader.TryGetBytesWithLength
+  fullName: LiteEntitySystem.SpanReader.TryGetBytesWithLength

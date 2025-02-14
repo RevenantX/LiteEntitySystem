@@ -1,0 +1,188 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteNetLib.Utils.NetDataExtensions
+  commentId: T:LiteNetLib.Utils.NetDataExtensions
+  id: NetDataExtensions
+  parent: LiteNetLib.Utils
+  children:
+  - LiteNetLib.Utils.NetDataExtensions.Get``1(LiteNetLib.Utils.NetDataReader)
+  - LiteNetLib.Utils.NetDataExtensions.Get``1(LiteNetLib.Utils.NetDataReader,``0@)
+  - LiteNetLib.Utils.NetDataExtensions.Put``1(LiteNetLib.Utils.NetDataWriter,``0)
+  langs:
+  - csharp
+  - vb
+  name: NetDataExtensions
+  nameWithType: NetDataExtensions
+  fullName: LiteNetLib.Utils.NetDataExtensions
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteNetLib.Utils
+  syntax:
+    content: public static class NetDataExtensions
+    content.vb: Public Module NetDataExtensions
+  inheritance:
+  - System.Object
+- uid: LiteNetLib.Utils.NetDataExtensions.Put``1(LiteNetLib.Utils.NetDataWriter,``0)
+  commentId: M:LiteNetLib.Utils.NetDataExtensions.Put``1(LiteNetLib.Utils.NetDataWriter,``0)
+  id: Put``1(LiteNetLib.Utils.NetDataWriter,``0)
+  isExtensionMethod: true
+  parent: LiteNetLib.Utils.NetDataExtensions
+  langs:
+  - csharp
+  - vb
+  name: Put<T>(NetDataWriter, T)
+  nameWithType: NetDataExtensions.Put<T>(NetDataWriter, T)
+  fullName: LiteNetLib.Utils.NetDataExtensions.Put<T>(LiteNetLib.Utils.NetDataWriter, T)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteNetLib.Utils
+  syntax:
+    content: 'public static void Put<T>(this NetDataWriter writer, T e) where T : unmanaged, Enum'
+    parameters:
+    - id: writer
+      type: LiteNetLib.Utils.NetDataWriter
+    - id: e
+      type: '{T}'
+    typeParameters:
+    - id: T
+    content.vb: Public Shared Sub Put(Of T As {Structure, [Enum]})(writer As NetDataWriter, e As T)
+  overload: LiteNetLib.Utils.NetDataExtensions.Put*
+  nameWithType.vb: NetDataExtensions.Put(Of T)(NetDataWriter, T)
+  fullName.vb: LiteNetLib.Utils.NetDataExtensions.Put(Of T)(LiteNetLib.Utils.NetDataWriter, T)
+  name.vb: Put(Of T)(NetDataWriter, T)
+- uid: LiteNetLib.Utils.NetDataExtensions.Get``1(LiteNetLib.Utils.NetDataReader,``0@)
+  commentId: M:LiteNetLib.Utils.NetDataExtensions.Get``1(LiteNetLib.Utils.NetDataReader,``0@)
+  id: Get``1(LiteNetLib.Utils.NetDataReader,``0@)
+  isExtensionMethod: true
+  parent: LiteNetLib.Utils.NetDataExtensions
+  langs:
+  - csharp
+  - vb
+  name: Get<T>(NetDataReader, out T)
+  nameWithType: NetDataExtensions.Get<T>(NetDataReader, out T)
+  fullName: LiteNetLib.Utils.NetDataExtensions.Get<T>(LiteNetLib.Utils.NetDataReader, out T)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteNetLib.Utils
+  syntax:
+    content: 'public static void Get<T>(this NetDataReader reader, out T result) where T : unmanaged, Enum'
+    parameters:
+    - id: reader
+      type: LiteNetLib.Utils.NetDataReader
+    - id: result
+      type: '{T}'
+    typeParameters:
+    - id: T
+    content.vb: Public Shared Sub [Get](Of T As {Structure, [Enum]})(reader As NetDataReader, result As T)
+  overload: LiteNetLib.Utils.NetDataExtensions.Get*
+  nameWithType.vb: NetDataExtensions.Get(Of T)(NetDataReader, T)
+  fullName.vb: LiteNetLib.Utils.NetDataExtensions.Get(Of T)(LiteNetLib.Utils.NetDataReader, T)
+  name.vb: Get(Of T)(NetDataReader, T)
+- uid: LiteNetLib.Utils.NetDataExtensions.Get``1(LiteNetLib.Utils.NetDataReader)
+  commentId: M:LiteNetLib.Utils.NetDataExtensions.Get``1(LiteNetLib.Utils.NetDataReader)
+  id: Get``1(LiteNetLib.Utils.NetDataReader)
+  isExtensionMethod: true
+  parent: LiteNetLib.Utils.NetDataExtensions
+  langs:
+  - csharp
+  - vb
+  name: Get<T>(NetDataReader)
+  nameWithType: NetDataExtensions.Get<T>(NetDataReader)
+  fullName: LiteNetLib.Utils.NetDataExtensions.Get<T>(LiteNetLib.Utils.NetDataReader)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteNetLib.Utils
+  syntax:
+    content: 'public static T Get<T>(this NetDataReader reader) where T : unmanaged, Enum'
+    parameters:
+    - id: reader
+      type: LiteNetLib.Utils.NetDataReader
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Public Shared Function [Get](Of T As {Structure, [Enum]})(reader As NetDataReader) As T
+  overload: LiteNetLib.Utils.NetDataExtensions.Get*
+  nameWithType.vb: NetDataExtensions.Get(Of T)(NetDataReader)
+  fullName.vb: LiteNetLib.Utils.NetDataExtensions.Get(Of T)(LiteNetLib.Utils.NetDataReader)
+  name.vb: Get(Of T)(NetDataReader)
+references:
+- uid: LiteNetLib.Utils
+  commentId: N:LiteNetLib.Utils
+  href: LiteNetLib.html
+  name: LiteNetLib.Utils
+  nameWithType: LiteNetLib.Utils
+  fullName: LiteNetLib.Utils
+  spec.csharp:
+  - uid: LiteNetLib
+    name: LiteNetLib
+    href: LiteNetLib.html
+  - name: .
+  - uid: LiteNetLib.Utils
+    name: Utils
+    href: LiteNetLib.Utils.html
+  spec.vb:
+  - uid: LiteNetLib
+    name: LiteNetLib
+    href: LiteNetLib.html
+  - name: .
+  - uid: LiteNetLib.Utils
+    name: Utils
+    href: LiteNetLib.Utils.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteNetLib.Utils.NetDataExtensions.Put*
+  commentId: Overload:LiteNetLib.Utils.NetDataExtensions.Put
+  href: LiteNetLib.Utils.NetDataExtensions.html#LiteNetLib_Utils_NetDataExtensions_Put__1_LiteNetLib_Utils_NetDataWriter___0_
+  name: Put
+  nameWithType: NetDataExtensions.Put
+  fullName: LiteNetLib.Utils.NetDataExtensions.Put
+- uid: LiteNetLib.Utils.NetDataWriter
+  commentId: T:LiteNetLib.Utils.NetDataWriter
+  parent: LiteNetLib.Utils
+  isExternal: true
+  name: NetDataWriter
+  nameWithType: NetDataWriter
+  fullName: LiteNetLib.Utils.NetDataWriter
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: LiteNetLib.Utils.NetDataExtensions.Get*
+  commentId: Overload:LiteNetLib.Utils.NetDataExtensions.Get
+  href: LiteNetLib.Utils.NetDataExtensions.html#LiteNetLib_Utils_NetDataExtensions_Get__1_LiteNetLib_Utils_NetDataReader___0__
+  name: Get
+  nameWithType: NetDataExtensions.Get
+  fullName: LiteNetLib.Utils.NetDataExtensions.Get
+- uid: LiteNetLib.Utils.NetDataReader
+  commentId: T:LiteNetLib.Utils.NetDataReader
+  parent: LiteNetLib.Utils
+  isExternal: true
+  name: NetDataReader
+  nameWithType: NetDataReader
+  fullName: LiteNetLib.Utils.NetDataReader

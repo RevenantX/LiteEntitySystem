@@ -1,0 +1,321 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.OnSyncExecutionOrder
+  commentId: T:LiteEntitySystem.OnSyncExecutionOrder
+  id: OnSyncExecutionOrder
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.OnSyncExecutionOrder.AfterConstruct
+  - LiteEntitySystem.OnSyncExecutionOrder.BeforeConstruct
+  langs:
+  - csharp
+  - vb
+  name: OnSyncExecutionOrder
+  nameWithType: OnSyncExecutionOrder
+  fullName: LiteEntitySystem.OnSyncExecutionOrder
+  type: Enum
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: BindOnChange execution order
+  example: []
+  syntax:
+    content: public enum OnSyncExecutionOrder
+    content.vb: Public Enum OnSyncExecutionOrder
+  extensionMethods:
+  - LiteEntitySystem.OnSyncExecutionOrder.LiteEntitySystem.Utils.GetEnumValueInt``1
+  - LiteEntitySystem.OnSyncExecutionOrder.LiteEntitySystem.Utils.GetEnumValue``1
+  - LiteEntitySystem.OnSyncExecutionOrder.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.OnSyncExecutionOrder)
+- uid: LiteEntitySystem.OnSyncExecutionOrder.AfterConstruct
+  commentId: F:LiteEntitySystem.OnSyncExecutionOrder.AfterConstruct
+  id: AfterConstruct
+  parent: LiteEntitySystem.OnSyncExecutionOrder
+  langs:
+  - csharp
+  - vb
+  name: AfterConstruct
+  nameWithType: OnSyncExecutionOrder.AfterConstruct
+  fullName: LiteEntitySystem.OnSyncExecutionOrder.AfterConstruct
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Emit method passed to BindOnChange after entity construct
+  example: []
+  syntax:
+    content: AfterConstruct = 0
+    return:
+      type: LiteEntitySystem.OnSyncExecutionOrder
+- uid: LiteEntitySystem.OnSyncExecutionOrder.BeforeConstruct
+  commentId: F:LiteEntitySystem.OnSyncExecutionOrder.BeforeConstruct
+  id: BeforeConstruct
+  parent: LiteEntitySystem.OnSyncExecutionOrder
+  langs:
+  - csharp
+  - vb
+  name: BeforeConstruct
+  nameWithType: OnSyncExecutionOrder.BeforeConstruct
+  fullName: LiteEntitySystem.OnSyncExecutionOrder.BeforeConstruct
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Emit method passed to BindOnChange before entity construct
+  example: []
+  syntax:
+    content: BeforeConstruct = 1
+    return:
+      type: LiteEntitySystem.OnSyncExecutionOrder
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: LiteEntitySystem.OnSyncExecutionOrder.LiteEntitySystem.Utils.GetEnumValueInt``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<OnSyncExecutionOrder>(OnSyncExecutionOrder)
+  nameWithType: Utils.GetEnumValueInt<OnSyncExecutionOrder>(OnSyncExecutionOrder)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<LiteEntitySystem.OnSyncExecutionOrder>(LiteEntitySystem.OnSyncExecutionOrder)
+  nameWithType.vb: Utils.GetEnumValueInt(Of OnSyncExecutionOrder)(OnSyncExecutionOrder)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of LiteEntitySystem.OnSyncExecutionOrder)(LiteEntitySystem.OnSyncExecutionOrder)
+  name.vb: GetEnumValueInt(Of OnSyncExecutionOrder)(OnSyncExecutionOrder)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.OnSyncExecutionOrder)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - uid: LiteEntitySystem.OnSyncExecutionOrder
+    name: OnSyncExecutionOrder
+    href: LiteEntitySystem.OnSyncExecutionOrder.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.OnSyncExecutionOrder
+    name: OnSyncExecutionOrder
+    href: LiteEntitySystem.OnSyncExecutionOrder.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.OnSyncExecutionOrder)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.OnSyncExecutionOrder
+    name: OnSyncExecutionOrder
+    href: LiteEntitySystem.OnSyncExecutionOrder.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.OnSyncExecutionOrder
+    name: OnSyncExecutionOrder
+    href: LiteEntitySystem.OnSyncExecutionOrder.html
+  - name: )
+- uid: LiteEntitySystem.OnSyncExecutionOrder.LiteEntitySystem.Utils.GetEnumValue``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<OnSyncExecutionOrder>(OnSyncExecutionOrder)
+  nameWithType: Utils.GetEnumValue<OnSyncExecutionOrder>(OnSyncExecutionOrder)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<LiteEntitySystem.OnSyncExecutionOrder>(LiteEntitySystem.OnSyncExecutionOrder)
+  nameWithType.vb: Utils.GetEnumValue(Of OnSyncExecutionOrder)(OnSyncExecutionOrder)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of LiteEntitySystem.OnSyncExecutionOrder)(LiteEntitySystem.OnSyncExecutionOrder)
+  name.vb: GetEnumValue(Of OnSyncExecutionOrder)(OnSyncExecutionOrder)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.OnSyncExecutionOrder)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - uid: LiteEntitySystem.OnSyncExecutionOrder
+    name: OnSyncExecutionOrder
+    href: LiteEntitySystem.OnSyncExecutionOrder.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.OnSyncExecutionOrder
+    name: OnSyncExecutionOrder
+    href: LiteEntitySystem.OnSyncExecutionOrder.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.OnSyncExecutionOrder)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.OnSyncExecutionOrder
+    name: OnSyncExecutionOrder
+    href: LiteEntitySystem.OnSyncExecutionOrder.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.OnSyncExecutionOrder
+    name: OnSyncExecutionOrder
+    href: LiteEntitySystem.OnSyncExecutionOrder.html
+  - name: )
+- uid: LiteEntitySystem.OnSyncExecutionOrder.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.OnSyncExecutionOrder)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<OnSyncExecutionOrder>(OnSyncExecutionOrder, OnSyncExecutionOrder)
+  nameWithType: Utils.HasFlagFast<OnSyncExecutionOrder>(OnSyncExecutionOrder, OnSyncExecutionOrder)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<LiteEntitySystem.OnSyncExecutionOrder>(LiteEntitySystem.OnSyncExecutionOrder, LiteEntitySystem.OnSyncExecutionOrder)
+  nameWithType.vb: Utils.HasFlagFast(Of OnSyncExecutionOrder)(OnSyncExecutionOrder, OnSyncExecutionOrder)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of LiteEntitySystem.OnSyncExecutionOrder)(LiteEntitySystem.OnSyncExecutionOrder, LiteEntitySystem.OnSyncExecutionOrder)
+  name.vb: HasFlagFast(Of OnSyncExecutionOrder)(OnSyncExecutionOrder, OnSyncExecutionOrder)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.OnSyncExecutionOrder,LiteEntitySystem.OnSyncExecutionOrder)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - uid: LiteEntitySystem.OnSyncExecutionOrder
+    name: OnSyncExecutionOrder
+    href: LiteEntitySystem.OnSyncExecutionOrder.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.OnSyncExecutionOrder
+    name: OnSyncExecutionOrder
+    href: LiteEntitySystem.OnSyncExecutionOrder.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.OnSyncExecutionOrder
+    name: OnSyncExecutionOrder
+    href: LiteEntitySystem.OnSyncExecutionOrder.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.OnSyncExecutionOrder,LiteEntitySystem.OnSyncExecutionOrder)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.OnSyncExecutionOrder
+    name: OnSyncExecutionOrder
+    href: LiteEntitySystem.OnSyncExecutionOrder.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.OnSyncExecutionOrder
+    name: OnSyncExecutionOrder
+    href: LiteEntitySystem.OnSyncExecutionOrder.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.OnSyncExecutionOrder
+    name: OnSyncExecutionOrder
+    href: LiteEntitySystem.OnSyncExecutionOrder.html
+  - name: )
+- uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<T>(T)
+  nameWithType: Utils.GetEnumValueInt<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<T>(T)
+  nameWithType.vb: Utils.GetEnumValueInt(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of T)(T)
+  name.vb: GetEnumValueInt(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils
+  commentId: T:LiteEntitySystem.Utils
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.Utils.html
+  name: Utils
+  nameWithType: Utils
+  fullName: LiteEntitySystem.Utils
+- uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<T>(T)
+  nameWithType: Utils.GetEnumValue<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<T>(T)
+  nameWithType.vb: Utils.GetEnumValue(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of T)(T)
+  name.vb: GetEnumValue(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<T>(T, T)
+  nameWithType: Utils.HasFlagFast<T>(T, T)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<T>(T, T)
+  nameWithType.vb: Utils.HasFlagFast(Of T)(T, T)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of T)(T, T)
+  name.vb: HasFlagFast(Of T)(T, T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.OnSyncExecutionOrder
+  commentId: T:LiteEntitySystem.OnSyncExecutionOrder
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.OnSyncExecutionOrder.html
+  name: OnSyncExecutionOrder
+  nameWithType: OnSyncExecutionOrder
+  fullName: LiteEntitySystem.OnSyncExecutionOrder

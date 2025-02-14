@@ -1,0 +1,936 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.RPCRegistrator
+  commentId: T:LiteEntitySystem.RPCRegistrator
+  id: RPCRegistrator
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.RPCRegistrator.BindOnChange``2(LiteEntitySystem.SyncVar{``0}@,System.Action{``1,``0},LiteEntitySystem.OnSyncExecutionOrder)
+  - LiteEntitySystem.RPCRegistrator.BindOnChange``2(``1,LiteEntitySystem.SyncVar{``0}@,System.Action{``0},LiteEntitySystem.OnSyncExecutionOrder)
+  - LiteEntitySystem.RPCRegistrator.CreateRPCAction``1(System.Action{``0},LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)
+  - LiteEntitySystem.RPCRegistrator.CreateRPCAction``1(``0,System.Action,LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)
+  - LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(LiteEntitySystem.SpanAction{``0,``1},LiteEntitySystem.RemoteCallSpan{``1}@,LiteEntitySystem.ExecuteFlags)
+  - LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCallSerializable{``1}@,LiteEntitySystem.ExecuteFlags)
+  - LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCall{``1}@,LiteEntitySystem.ExecuteFlags)
+  - LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(``0,LiteEntitySystem.SpanAction{``1},LiteEntitySystem.RemoteCallSpan{``1}@,LiteEntitySystem.ExecuteFlags)
+  - LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCallSerializable{``1}@,LiteEntitySystem.ExecuteFlags)
+  - LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCall{``1}@,LiteEntitySystem.ExecuteFlags)
+  langs:
+  - csharp
+  - vb
+  name: RPCRegistrator
+  nameWithType: RPCRegistrator
+  fullName: LiteEntitySystem.RPCRegistrator
+  type: Struct
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public readonly ref struct RPCRegistrator
+    content.vb: Public Structure RPCRegistrator
+- uid: LiteEntitySystem.RPCRegistrator.BindOnChange``2(LiteEntitySystem.SyncVar{``0}@,System.Action{``1,``0},LiteEntitySystem.OnSyncExecutionOrder)
+  commentId: M:LiteEntitySystem.RPCRegistrator.BindOnChange``2(LiteEntitySystem.SyncVar{``0}@,System.Action{``1,``0},LiteEntitySystem.OnSyncExecutionOrder)
+  id: BindOnChange``2(LiteEntitySystem.SyncVar{``0}@,System.Action{``1,``0},LiteEntitySystem.OnSyncExecutionOrder)
+  parent: LiteEntitySystem.RPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: BindOnChange<T, TEntity>(ref SyncVar<T>, Action<TEntity, T>, OnSyncExecutionOrder)
+  nameWithType: RPCRegistrator.BindOnChange<T, TEntity>(ref SyncVar<T>, Action<TEntity, T>, OnSyncExecutionOrder)
+  fullName: LiteEntitySystem.RPCRegistrator.BindOnChange<T, TEntity>(ref LiteEntitySystem.SyncVar<T>, System.Action<TEntity, T>, LiteEntitySystem.OnSyncExecutionOrder)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Bind notification of SyncVar changes to action
+  example: []
+  syntax:
+    content: 'public void BindOnChange<T, TEntity>(ref SyncVar<T> syncVar, Action<TEntity, T> onChangedAction, OnSyncExecutionOrder executionOrder = OnSyncExecutionOrder.AfterConstruct) where T : unmanaged where TEntity : InternalEntity'
+    parameters:
+    - id: syncVar
+      type: LiteEntitySystem.SyncVar{{T}}
+      description: Variable to bind
+    - id: onChangedAction
+      type: System.Action{{TEntity},{T}}
+      description: Action that will be called when variable changes by sync
+    - id: executionOrder
+      type: LiteEntitySystem.OnSyncExecutionOrder
+      description: order of execution
+    typeParameters:
+    - id: T
+    - id: TEntity
+    content.vb: Public Sub BindOnChange(Of T As Structure, TEntity As InternalEntity)(syncVar As SyncVar(Of T), onChangedAction As Action(Of TEntity, T), executionOrder As OnSyncExecutionOrder = OnSyncExecutionOrder.AfterConstruct)
+  overload: LiteEntitySystem.RPCRegistrator.BindOnChange*
+  nameWithType.vb: RPCRegistrator.BindOnChange(Of T, TEntity)(SyncVar(Of T), Action(Of TEntity, T), OnSyncExecutionOrder)
+  fullName.vb: LiteEntitySystem.RPCRegistrator.BindOnChange(Of T, TEntity)(LiteEntitySystem.SyncVar(Of T), System.Action(Of TEntity, T), LiteEntitySystem.OnSyncExecutionOrder)
+  name.vb: BindOnChange(Of T, TEntity)(SyncVar(Of T), Action(Of TEntity, T), OnSyncExecutionOrder)
+- uid: LiteEntitySystem.RPCRegistrator.BindOnChange``2(``1,LiteEntitySystem.SyncVar{``0}@,System.Action{``0},LiteEntitySystem.OnSyncExecutionOrder)
+  commentId: M:LiteEntitySystem.RPCRegistrator.BindOnChange``2(``1,LiteEntitySystem.SyncVar{``0}@,System.Action{``0},LiteEntitySystem.OnSyncExecutionOrder)
+  id: BindOnChange``2(``1,LiteEntitySystem.SyncVar{``0}@,System.Action{``0},LiteEntitySystem.OnSyncExecutionOrder)
+  parent: LiteEntitySystem.RPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: BindOnChange<T, TEntity>(TEntity, ref SyncVar<T>, Action<T>, OnSyncExecutionOrder)
+  nameWithType: RPCRegistrator.BindOnChange<T, TEntity>(TEntity, ref SyncVar<T>, Action<T>, OnSyncExecutionOrder)
+  fullName: LiteEntitySystem.RPCRegistrator.BindOnChange<T, TEntity>(TEntity, ref LiteEntitySystem.SyncVar<T>, System.Action<T>, LiteEntitySystem.OnSyncExecutionOrder)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Bind notification of SyncVar changes to action
+  example: []
+  syntax:
+    content: 'public void BindOnChange<T, TEntity>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction, OnSyncExecutionOrder executionOrder = OnSyncExecutionOrder.AfterConstruct) where T : unmanaged where TEntity : InternalEntity'
+    parameters:
+    - id: self
+      type: '{TEntity}'
+      description: Target entity for binding
+    - id: syncVar
+      type: LiteEntitySystem.SyncVar{{T}}
+      description: Variable to bind
+    - id: onChangedAction
+      type: System.Action{{T}}
+      description: Action that will be called when variable changes by sync
+    - id: executionOrder
+      type: LiteEntitySystem.OnSyncExecutionOrder
+      description: order of execution
+    typeParameters:
+    - id: T
+    - id: TEntity
+    content.vb: Public Sub BindOnChange(Of T As Structure, TEntity As InternalEntity)(self As TEntity, syncVar As SyncVar(Of T), onChangedAction As Action(Of T), executionOrder As OnSyncExecutionOrder = OnSyncExecutionOrder.AfterConstruct)
+  overload: LiteEntitySystem.RPCRegistrator.BindOnChange*
+  nameWithType.vb: RPCRegistrator.BindOnChange(Of T, TEntity)(TEntity, SyncVar(Of T), Action(Of T), OnSyncExecutionOrder)
+  fullName.vb: LiteEntitySystem.RPCRegistrator.BindOnChange(Of T, TEntity)(TEntity, LiteEntitySystem.SyncVar(Of T), System.Action(Of T), LiteEntitySystem.OnSyncExecutionOrder)
+  name.vb: BindOnChange(Of T, TEntity)(TEntity, SyncVar(Of T), Action(Of T), OnSyncExecutionOrder)
+- uid: LiteEntitySystem.RPCRegistrator.CreateRPCAction``1(``0,System.Action,LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)
+  commentId: M:LiteEntitySystem.RPCRegistrator.CreateRPCAction``1(``0,System.Action,LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)
+  id: CreateRPCAction``1(``0,System.Action,LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)
+  parent: LiteEntitySystem.RPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateRPCAction<TEntity>(TEntity, Action, ref RemoteCall, ExecuteFlags)
+  nameWithType: RPCRegistrator.CreateRPCAction<TEntity>(TEntity, Action, ref RemoteCall, ExecuteFlags)
+  fullName: LiteEntitySystem.RPCRegistrator.CreateRPCAction<TEntity>(TEntity, System.Action, ref LiteEntitySystem.RemoteCall, LiteEntitySystem.ExecuteFlags)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Creates cached rpc action
+  example: []
+  syntax:
+    content: 'public void CreateRPCAction<TEntity>(TEntity self, Action methodToCall, ref RemoteCall remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity'
+    parameters:
+    - id: self
+      type: '{TEntity}'
+      description: Target entity with RPC
+    - id: methodToCall
+      type: System.Action
+      description: RPC method to call
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCall
+      description: output handle that should be used to call rpc
+    - id: flags
+      type: LiteEntitySystem.ExecuteFlags
+      description: RPC execution flags
+    typeParameters:
+    - id: TEntity
+    content.vb: Public Sub CreateRPCAction(Of TEntity As InternalEntity)(self As TEntity, methodToCall As Action, remoteCallHandle As RemoteCall, flags As ExecuteFlags)
+  overload: LiteEntitySystem.RPCRegistrator.CreateRPCAction*
+  nameWithType.vb: RPCRegistrator.CreateRPCAction(Of TEntity)(TEntity, Action, RemoteCall, ExecuteFlags)
+  fullName.vb: LiteEntitySystem.RPCRegistrator.CreateRPCAction(Of TEntity)(TEntity, System.Action, LiteEntitySystem.RemoteCall, LiteEntitySystem.ExecuteFlags)
+  name.vb: CreateRPCAction(Of TEntity)(TEntity, Action, RemoteCall, ExecuteFlags)
+- uid: LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCall{``1}@,LiteEntitySystem.ExecuteFlags)
+  commentId: M:LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCall{``1}@,LiteEntitySystem.ExecuteFlags)
+  id: CreateRPCAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCall{``1}@,LiteEntitySystem.ExecuteFlags)
+  parent: LiteEntitySystem.RPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateRPCAction<TEntity, T>(TEntity, Action<T>, ref RemoteCall<T>, ExecuteFlags)
+  nameWithType: RPCRegistrator.CreateRPCAction<TEntity, T>(TEntity, Action<T>, ref RemoteCall<T>, ExecuteFlags)
+  fullName: LiteEntitySystem.RPCRegistrator.CreateRPCAction<TEntity, T>(TEntity, System.Action<T>, ref LiteEntitySystem.RemoteCall<T>, LiteEntitySystem.ExecuteFlags)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Creates cached rpc action with valueType argument
+  example: []
+  syntax:
+    content: 'public void CreateRPCAction<TEntity, T>(TEntity self, Action<T> methodToCall, ref RemoteCall<T> remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity where T : unmanaged'
+    parameters:
+    - id: self
+      type: '{TEntity}'
+      description: Target entity with RPC
+    - id: methodToCall
+      type: System.Action{{T}}
+      description: RPC method to call
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCall{{T}}
+      description: output handle that should be used to call rpc
+    - id: flags
+      type: LiteEntitySystem.ExecuteFlags
+      description: RPC execution flags
+    typeParameters:
+    - id: TEntity
+    - id: T
+    content.vb: Public Sub CreateRPCAction(Of TEntity As InternalEntity, T As Structure)(self As TEntity, methodToCall As Action(Of T), remoteCallHandle As RemoteCall(Of T), flags As ExecuteFlags)
+  overload: LiteEntitySystem.RPCRegistrator.CreateRPCAction*
+  nameWithType.vb: RPCRegistrator.CreateRPCAction(Of TEntity, T)(TEntity, Action(Of T), RemoteCall(Of T), ExecuteFlags)
+  fullName.vb: LiteEntitySystem.RPCRegistrator.CreateRPCAction(Of TEntity, T)(TEntity, System.Action(Of T), LiteEntitySystem.RemoteCall(Of T), LiteEntitySystem.ExecuteFlags)
+  name.vb: CreateRPCAction(Of TEntity, T)(TEntity, Action(Of T), RemoteCall(Of T), ExecuteFlags)
+- uid: LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(``0,LiteEntitySystem.SpanAction{``1},LiteEntitySystem.RemoteCallSpan{``1}@,LiteEntitySystem.ExecuteFlags)
+  commentId: M:LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(``0,LiteEntitySystem.SpanAction{``1},LiteEntitySystem.RemoteCallSpan{``1}@,LiteEntitySystem.ExecuteFlags)
+  id: CreateRPCAction``2(``0,LiteEntitySystem.SpanAction{``1},LiteEntitySystem.RemoteCallSpan{``1}@,LiteEntitySystem.ExecuteFlags)
+  parent: LiteEntitySystem.RPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateRPCAction<TEntity, T>(TEntity, SpanAction<T>, ref RemoteCallSpan<T>, ExecuteFlags)
+  nameWithType: RPCRegistrator.CreateRPCAction<TEntity, T>(TEntity, SpanAction<T>, ref RemoteCallSpan<T>, ExecuteFlags)
+  fullName: LiteEntitySystem.RPCRegistrator.CreateRPCAction<TEntity, T>(TEntity, LiteEntitySystem.SpanAction<T>, ref LiteEntitySystem.RemoteCallSpan<T>, LiteEntitySystem.ExecuteFlags)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Creates cached rpc action with Span argument
+  example: []
+  syntax:
+    content: 'public void CreateRPCAction<TEntity, T>(TEntity self, SpanAction<T> methodToCall, ref RemoteCallSpan<T> remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity where T : unmanaged'
+    parameters:
+    - id: self
+      type: '{TEntity}'
+      description: Target entity with RPC
+    - id: methodToCall
+      type: LiteEntitySystem.SpanAction{{T}}
+      description: RPC method to call
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCallSpan{{T}}
+      description: output handle that should be used to call rpc
+    - id: flags
+      type: LiteEntitySystem.ExecuteFlags
+      description: RPC execution flags
+    typeParameters:
+    - id: TEntity
+    - id: T
+    content.vb: Public Sub CreateRPCAction(Of TEntity As InternalEntity, T As Structure)(self As TEntity, methodToCall As SpanAction(Of T), remoteCallHandle As RemoteCallSpan(Of T), flags As ExecuteFlags)
+  overload: LiteEntitySystem.RPCRegistrator.CreateRPCAction*
+  nameWithType.vb: RPCRegistrator.CreateRPCAction(Of TEntity, T)(TEntity, SpanAction(Of T), RemoteCallSpan(Of T), ExecuteFlags)
+  fullName.vb: LiteEntitySystem.RPCRegistrator.CreateRPCAction(Of TEntity, T)(TEntity, LiteEntitySystem.SpanAction(Of T), LiteEntitySystem.RemoteCallSpan(Of T), LiteEntitySystem.ExecuteFlags)
+  name.vb: CreateRPCAction(Of TEntity, T)(TEntity, SpanAction(Of T), RemoteCallSpan(Of T), ExecuteFlags)
+- uid: LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCallSerializable{``1}@,LiteEntitySystem.ExecuteFlags)
+  commentId: M:LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCallSerializable{``1}@,LiteEntitySystem.ExecuteFlags)
+  id: CreateRPCAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCallSerializable{``1}@,LiteEntitySystem.ExecuteFlags)
+  parent: LiteEntitySystem.RPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateRPCAction<TEntity, T>(TEntity, Action<T>, ref RemoteCallSerializable<T>, ExecuteFlags)
+  nameWithType: RPCRegistrator.CreateRPCAction<TEntity, T>(TEntity, Action<T>, ref RemoteCallSerializable<T>, ExecuteFlags)
+  fullName: LiteEntitySystem.RPCRegistrator.CreateRPCAction<TEntity, T>(TEntity, System.Action<T>, ref LiteEntitySystem.RemoteCallSerializable<T>, LiteEntitySystem.ExecuteFlags)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Creates cached rpc action with ISpanSerializable argument
+  example: []
+  syntax:
+    content: 'public void CreateRPCAction<TEntity, T>(TEntity self, Action<T> methodToCall, ref RemoteCallSerializable<T> remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity where T : struct, ISpanSerializable'
+    parameters:
+    - id: self
+      type: '{TEntity}'
+      description: Target entity with RPC
+    - id: methodToCall
+      type: System.Action{{T}}
+      description: RPC method to call
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCallSerializable{{T}}
+      description: output handle that should be used to call rpc
+    - id: flags
+      type: LiteEntitySystem.ExecuteFlags
+      description: RPC execution flags
+    typeParameters:
+    - id: TEntity
+    - id: T
+    content.vb: Public Sub CreateRPCAction(Of TEntity As InternalEntity, T As {Structure, ISpanSerializable})(self As TEntity, methodToCall As Action(Of T), remoteCallHandle As RemoteCallSerializable(Of T), flags As ExecuteFlags)
+  overload: LiteEntitySystem.RPCRegistrator.CreateRPCAction*
+  nameWithType.vb: RPCRegistrator.CreateRPCAction(Of TEntity, T)(TEntity, Action(Of T), RemoteCallSerializable(Of T), ExecuteFlags)
+  fullName.vb: LiteEntitySystem.RPCRegistrator.CreateRPCAction(Of TEntity, T)(TEntity, System.Action(Of T), LiteEntitySystem.RemoteCallSerializable(Of T), LiteEntitySystem.ExecuteFlags)
+  name.vb: CreateRPCAction(Of TEntity, T)(TEntity, Action(Of T), RemoteCallSerializable(Of T), ExecuteFlags)
+- uid: LiteEntitySystem.RPCRegistrator.CreateRPCAction``1(System.Action{``0},LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)
+  commentId: M:LiteEntitySystem.RPCRegistrator.CreateRPCAction``1(System.Action{``0},LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)
+  id: CreateRPCAction``1(System.Action{``0},LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)
+  parent: LiteEntitySystem.RPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateRPCAction<TEntity>(Action<TEntity>, ref RemoteCall, ExecuteFlags)
+  nameWithType: RPCRegistrator.CreateRPCAction<TEntity>(Action<TEntity>, ref RemoteCall, ExecuteFlags)
+  fullName: LiteEntitySystem.RPCRegistrator.CreateRPCAction<TEntity>(System.Action<TEntity>, ref LiteEntitySystem.RemoteCall, LiteEntitySystem.ExecuteFlags)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Creates cached rpc action
+  example: []
+  syntax:
+    content: 'public void CreateRPCAction<TEntity>(Action<TEntity> methodToCall, ref RemoteCall remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity'
+    parameters:
+    - id: methodToCall
+      type: System.Action{{TEntity}}
+      description: RPC method to call
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCall
+      description: output handle that should be used to call rpc
+    - id: flags
+      type: LiteEntitySystem.ExecuteFlags
+      description: RPC execution flags
+    typeParameters:
+    - id: TEntity
+    content.vb: Public Sub CreateRPCAction(Of TEntity As InternalEntity)(methodToCall As Action(Of TEntity), remoteCallHandle As RemoteCall, flags As ExecuteFlags)
+  overload: LiteEntitySystem.RPCRegistrator.CreateRPCAction*
+  nameWithType.vb: RPCRegistrator.CreateRPCAction(Of TEntity)(Action(Of TEntity), RemoteCall, ExecuteFlags)
+  fullName.vb: LiteEntitySystem.RPCRegistrator.CreateRPCAction(Of TEntity)(System.Action(Of TEntity), LiteEntitySystem.RemoteCall, LiteEntitySystem.ExecuteFlags)
+  name.vb: CreateRPCAction(Of TEntity)(Action(Of TEntity), RemoteCall, ExecuteFlags)
+- uid: LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCall{``1}@,LiteEntitySystem.ExecuteFlags)
+  commentId: M:LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCall{``1}@,LiteEntitySystem.ExecuteFlags)
+  id: CreateRPCAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCall{``1}@,LiteEntitySystem.ExecuteFlags)
+  parent: LiteEntitySystem.RPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateRPCAction<TEntity, T>(Action<TEntity, T>, ref RemoteCall<T>, ExecuteFlags)
+  nameWithType: RPCRegistrator.CreateRPCAction<TEntity, T>(Action<TEntity, T>, ref RemoteCall<T>, ExecuteFlags)
+  fullName: LiteEntitySystem.RPCRegistrator.CreateRPCAction<TEntity, T>(System.Action<TEntity, T>, ref LiteEntitySystem.RemoteCall<T>, LiteEntitySystem.ExecuteFlags)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Creates cached rpc action with valueType argument
+  example: []
+  syntax:
+    content: 'public void CreateRPCAction<TEntity, T>(Action<TEntity, T> methodToCall, ref RemoteCall<T> remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity where T : unmanaged'
+    parameters:
+    - id: methodToCall
+      type: System.Action{{TEntity},{T}}
+      description: RPC method to call
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCall{{T}}
+      description: output handle that should be used to call rpc
+    - id: flags
+      type: LiteEntitySystem.ExecuteFlags
+      description: RPC execution flags
+    typeParameters:
+    - id: TEntity
+    - id: T
+    content.vb: Public Sub CreateRPCAction(Of TEntity As InternalEntity, T As Structure)(methodToCall As Action(Of TEntity, T), remoteCallHandle As RemoteCall(Of T), flags As ExecuteFlags)
+  overload: LiteEntitySystem.RPCRegistrator.CreateRPCAction*
+  nameWithType.vb: RPCRegistrator.CreateRPCAction(Of TEntity, T)(Action(Of TEntity, T), RemoteCall(Of T), ExecuteFlags)
+  fullName.vb: LiteEntitySystem.RPCRegistrator.CreateRPCAction(Of TEntity, T)(System.Action(Of TEntity, T), LiteEntitySystem.RemoteCall(Of T), LiteEntitySystem.ExecuteFlags)
+  name.vb: CreateRPCAction(Of TEntity, T)(Action(Of TEntity, T), RemoteCall(Of T), ExecuteFlags)
+- uid: LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(LiteEntitySystem.SpanAction{``0,``1},LiteEntitySystem.RemoteCallSpan{``1}@,LiteEntitySystem.ExecuteFlags)
+  commentId: M:LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(LiteEntitySystem.SpanAction{``0,``1},LiteEntitySystem.RemoteCallSpan{``1}@,LiteEntitySystem.ExecuteFlags)
+  id: CreateRPCAction``2(LiteEntitySystem.SpanAction{``0,``1},LiteEntitySystem.RemoteCallSpan{``1}@,LiteEntitySystem.ExecuteFlags)
+  parent: LiteEntitySystem.RPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateRPCAction<TEntity, T>(SpanAction<TEntity, T>, ref RemoteCallSpan<T>, ExecuteFlags)
+  nameWithType: RPCRegistrator.CreateRPCAction<TEntity, T>(SpanAction<TEntity, T>, ref RemoteCallSpan<T>, ExecuteFlags)
+  fullName: LiteEntitySystem.RPCRegistrator.CreateRPCAction<TEntity, T>(LiteEntitySystem.SpanAction<TEntity, T>, ref LiteEntitySystem.RemoteCallSpan<T>, LiteEntitySystem.ExecuteFlags)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Creates cached rpc action with Span argument
+  example: []
+  syntax:
+    content: 'public void CreateRPCAction<TEntity, T>(SpanAction<TEntity, T> methodToCall, ref RemoteCallSpan<T> remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity where T : unmanaged'
+    parameters:
+    - id: methodToCall
+      type: LiteEntitySystem.SpanAction{{TEntity},{T}}
+      description: RPC method to call
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCallSpan{{T}}
+      description: output handle that should be used to call rpc
+    - id: flags
+      type: LiteEntitySystem.ExecuteFlags
+      description: RPC execution flags
+    typeParameters:
+    - id: TEntity
+    - id: T
+    content.vb: Public Sub CreateRPCAction(Of TEntity As InternalEntity, T As Structure)(methodToCall As SpanAction(Of TEntity, T), remoteCallHandle As RemoteCallSpan(Of T), flags As ExecuteFlags)
+  overload: LiteEntitySystem.RPCRegistrator.CreateRPCAction*
+  nameWithType.vb: RPCRegistrator.CreateRPCAction(Of TEntity, T)(SpanAction(Of TEntity, T), RemoteCallSpan(Of T), ExecuteFlags)
+  fullName.vb: LiteEntitySystem.RPCRegistrator.CreateRPCAction(Of TEntity, T)(LiteEntitySystem.SpanAction(Of TEntity, T), LiteEntitySystem.RemoteCallSpan(Of T), LiteEntitySystem.ExecuteFlags)
+  name.vb: CreateRPCAction(Of TEntity, T)(SpanAction(Of TEntity, T), RemoteCallSpan(Of T), ExecuteFlags)
+- uid: LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCallSerializable{``1}@,LiteEntitySystem.ExecuteFlags)
+  commentId: M:LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCallSerializable{``1}@,LiteEntitySystem.ExecuteFlags)
+  id: CreateRPCAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCallSerializable{``1}@,LiteEntitySystem.ExecuteFlags)
+  parent: LiteEntitySystem.RPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateRPCAction<TEntity, T>(Action<TEntity, T>, ref RemoteCallSerializable<T>, ExecuteFlags)
+  nameWithType: RPCRegistrator.CreateRPCAction<TEntity, T>(Action<TEntity, T>, ref RemoteCallSerializable<T>, ExecuteFlags)
+  fullName: LiteEntitySystem.RPCRegistrator.CreateRPCAction<TEntity, T>(System.Action<TEntity, T>, ref LiteEntitySystem.RemoteCallSerializable<T>, LiteEntitySystem.ExecuteFlags)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Creates cached rpc action with ISpanSerializable argument
+  example: []
+  syntax:
+    content: 'public void CreateRPCAction<TEntity, T>(Action<TEntity, T> methodToCall, ref RemoteCallSerializable<T> remoteCallHandle, ExecuteFlags flags) where TEntity : InternalEntity where T : struct, ISpanSerializable'
+    parameters:
+    - id: methodToCall
+      type: System.Action{{TEntity},{T}}
+      description: RPC method to call
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCallSerializable{{T}}
+      description: output handle that should be used to call rpc
+    - id: flags
+      type: LiteEntitySystem.ExecuteFlags
+      description: RPC execution flags
+    typeParameters:
+    - id: TEntity
+    - id: T
+    content.vb: Public Sub CreateRPCAction(Of TEntity As InternalEntity, T As {Structure, ISpanSerializable})(methodToCall As Action(Of TEntity, T), remoteCallHandle As RemoteCallSerializable(Of T), flags As ExecuteFlags)
+  overload: LiteEntitySystem.RPCRegistrator.CreateRPCAction*
+  nameWithType.vb: RPCRegistrator.CreateRPCAction(Of TEntity, T)(Action(Of TEntity, T), RemoteCallSerializable(Of T), ExecuteFlags)
+  fullName.vb: LiteEntitySystem.RPCRegistrator.CreateRPCAction(Of TEntity, T)(System.Action(Of TEntity, T), LiteEntitySystem.RemoteCallSerializable(Of T), LiteEntitySystem.ExecuteFlags)
+  name.vb: CreateRPCAction(Of TEntity, T)(Action(Of TEntity, T), RemoteCallSerializable(Of T), ExecuteFlags)
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: LiteEntitySystem.RPCRegistrator.BindOnChange*
+  commentId: Overload:LiteEntitySystem.RPCRegistrator.BindOnChange
+  href: LiteEntitySystem.RPCRegistrator.html#LiteEntitySystem_RPCRegistrator_BindOnChange__2_LiteEntitySystem_SyncVar___0___System_Action___1___0__LiteEntitySystem_OnSyncExecutionOrder_
+  name: BindOnChange
+  nameWithType: RPCRegistrator.BindOnChange
+  fullName: LiteEntitySystem.RPCRegistrator.BindOnChange
+- uid: LiteEntitySystem.SyncVar{{T}}
+  commentId: T:LiteEntitySystem.SyncVar{``0}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.SyncVar`1
+  href: LiteEntitySystem.SyncVar-1.html
+  name: SyncVar<T>
+  nameWithType: SyncVar<T>
+  fullName: LiteEntitySystem.SyncVar<T>
+  nameWithType.vb: SyncVar(Of T)
+  fullName.vb: LiteEntitySystem.SyncVar(Of T)
+  name.vb: SyncVar(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncVar`1
+    name: SyncVar
+    href: LiteEntitySystem.SyncVar-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.SyncVar`1
+    name: SyncVar
+    href: LiteEntitySystem.SyncVar-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Action{{TEntity},{T}}
+  commentId: T:System.Action{``1,``0}
+  parent: System
+  definition: System.Action`2
+  href: https://learn.microsoft.com/dotnet/api/system.action-2
+  name: Action<TEntity, T>
+  nameWithType: Action<TEntity, T>
+  fullName: System.Action<TEntity, T>
+  nameWithType.vb: Action(Of TEntity, T)
+  fullName.vb: System.Action(Of TEntity, T)
+  name.vb: Action(Of TEntity, T)
+  spec.csharp:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: <
+  - name: TEntity
+  - name: ','
+  - name: " "
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TEntity
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.OnSyncExecutionOrder
+  commentId: T:LiteEntitySystem.OnSyncExecutionOrder
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.OnSyncExecutionOrder.html
+  name: OnSyncExecutionOrder
+  nameWithType: OnSyncExecutionOrder
+  fullName: LiteEntitySystem.OnSyncExecutionOrder
+- uid: LiteEntitySystem.SyncVar`1
+  commentId: T:LiteEntitySystem.SyncVar`1
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.SyncVar-1.html
+  name: SyncVar<T>
+  nameWithType: SyncVar<T>
+  fullName: LiteEntitySystem.SyncVar<T>
+  nameWithType.vb: SyncVar(Of T)
+  fullName.vb: LiteEntitySystem.SyncVar(Of T)
+  name.vb: SyncVar(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncVar`1
+    name: SyncVar
+    href: LiteEntitySystem.SyncVar-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.SyncVar`1
+    name: SyncVar
+    href: LiteEntitySystem.SyncVar-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Action`2
+  commentId: T:System.Action`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-2
+  name: Action<T1, T2>
+  nameWithType: Action<T1, T2>
+  fullName: System.Action<T1, T2>
+  nameWithType.vb: Action(Of T1, T2)
+  fullName.vb: System.Action(Of T1, T2)
+  name.vb: Action(Of T1, T2)
+  spec.csharp:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: <
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: '{TEntity}'
+  commentId: '!:TEntity'
+  definition: TEntity
+  name: TEntity
+  nameWithType: TEntity
+  fullName: TEntity
+- uid: System.Action{{T}}
+  commentId: T:System.Action{`0}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: TEntity
+  name: TEntity
+  nameWithType: TEntity
+  fullName: TEntity
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.RPCRegistrator.CreateRPCAction*
+  commentId: Overload:LiteEntitySystem.RPCRegistrator.CreateRPCAction
+  href: LiteEntitySystem.RPCRegistrator.html#LiteEntitySystem_RPCRegistrator_CreateRPCAction__1___0_System_Action_LiteEntitySystem_RemoteCall__LiteEntitySystem_ExecuteFlags_
+  name: CreateRPCAction
+  nameWithType: RPCRegistrator.CreateRPCAction
+  fullName: LiteEntitySystem.RPCRegistrator.CreateRPCAction
+- uid: System.Action
+  commentId: T:System.Action
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action
+  name: Action
+  nameWithType: Action
+  fullName: System.Action
+- uid: LiteEntitySystem.RemoteCall
+  commentId: T:LiteEntitySystem.RemoteCall
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.RemoteCall.html
+  name: RemoteCall
+  nameWithType: RemoteCall
+  fullName: LiteEntitySystem.RemoteCall
+- uid: LiteEntitySystem.ExecuteFlags
+  commentId: T:LiteEntitySystem.ExecuteFlags
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.ExecuteFlags.html
+  name: ExecuteFlags
+  nameWithType: ExecuteFlags
+  fullName: LiteEntitySystem.ExecuteFlags
+- uid: LiteEntitySystem.RemoteCall{{T}}
+  commentId: T:LiteEntitySystem.RemoteCall{``1}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.RemoteCall`1
+  href: LiteEntitySystem.RemoteCall-1.html
+  name: RemoteCall<T>
+  nameWithType: RemoteCall<T>
+  fullName: LiteEntitySystem.RemoteCall<T>
+  nameWithType.vb: RemoteCall(Of T)
+  fullName.vb: LiteEntitySystem.RemoteCall(Of T)
+  name.vb: RemoteCall(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.RemoteCall`1
+  commentId: T:LiteEntitySystem.RemoteCall`1
+  href: LiteEntitySystem.RemoteCall-1.html
+  name: RemoteCall<T>
+  nameWithType: RemoteCall<T>
+  fullName: LiteEntitySystem.RemoteCall<T>
+  nameWithType.vb: RemoteCall(Of T)
+  fullName.vb: LiteEntitySystem.RemoteCall(Of T)
+  name.vb: RemoteCall(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.SpanAction{{T}}
+  commentId: T:LiteEntitySystem.SpanAction{``1}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.SpanAction`1
+  name: SpanAction<T>
+  nameWithType: SpanAction<T>
+  fullName: LiteEntitySystem.SpanAction<T>
+  nameWithType.vb: SpanAction(Of T)
+  fullName.vb: LiteEntitySystem.SpanAction(Of T)
+  name.vb: SpanAction(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SpanAction`1
+    name: SpanAction
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.SpanAction`1
+    name: SpanAction
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.RemoteCallSpan{{T}}
+  commentId: T:LiteEntitySystem.RemoteCallSpan{``1}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.RemoteCallSpan`1
+  href: LiteEntitySystem.RemoteCallSpan-1.html
+  name: RemoteCallSpan<T>
+  nameWithType: RemoteCallSpan<T>
+  fullName: LiteEntitySystem.RemoteCallSpan<T>
+  nameWithType.vb: RemoteCallSpan(Of T)
+  fullName.vb: LiteEntitySystem.RemoteCallSpan(Of T)
+  name.vb: RemoteCallSpan(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.SpanAction`1
+  commentId: T:LiteEntitySystem.SpanAction`1
+  name: SpanAction<T>
+  nameWithType: SpanAction<T>
+  fullName: LiteEntitySystem.SpanAction<T>
+  nameWithType.vb: SpanAction(Of T)
+  fullName.vb: LiteEntitySystem.SpanAction(Of T)
+  name.vb: SpanAction(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SpanAction`1
+    name: SpanAction
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.SpanAction`1
+    name: SpanAction
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.RemoteCallSpan`1
+  commentId: T:LiteEntitySystem.RemoteCallSpan`1
+  href: LiteEntitySystem.RemoteCallSpan-1.html
+  name: RemoteCallSpan<T>
+  nameWithType: RemoteCallSpan<T>
+  fullName: LiteEntitySystem.RemoteCallSpan<T>
+  nameWithType.vb: RemoteCallSpan(Of T)
+  fullName.vb: LiteEntitySystem.RemoteCallSpan(Of T)
+  name.vb: RemoteCallSpan(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.RemoteCallSerializable{{T}}
+  commentId: T:LiteEntitySystem.RemoteCallSerializable{``1}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.RemoteCallSerializable`1
+  href: LiteEntitySystem.RemoteCallSerializable-1.html
+  name: RemoteCallSerializable<T>
+  nameWithType: RemoteCallSerializable<T>
+  fullName: LiteEntitySystem.RemoteCallSerializable<T>
+  nameWithType.vb: RemoteCallSerializable(Of T)
+  fullName.vb: LiteEntitySystem.RemoteCallSerializable(Of T)
+  name.vb: RemoteCallSerializable(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.RemoteCallSerializable`1
+  commentId: T:LiteEntitySystem.RemoteCallSerializable`1
+  href: LiteEntitySystem.RemoteCallSerializable-1.html
+  name: RemoteCallSerializable<T>
+  nameWithType: RemoteCallSerializable<T>
+  fullName: LiteEntitySystem.RemoteCallSerializable<T>
+  nameWithType.vb: RemoteCallSerializable(Of T)
+  fullName.vb: LiteEntitySystem.RemoteCallSerializable(Of T)
+  name.vb: RemoteCallSerializable(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Action{{TEntity}}
+  commentId: T:System.Action{``0}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<TEntity>
+  nameWithType: Action<TEntity>
+  fullName: System.Action<TEntity>
+  nameWithType.vb: Action(Of TEntity)
+  fullName.vb: System.Action(Of TEntity)
+  name.vb: Action(Of TEntity)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: TEntity
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TEntity
+  - name: )
+- uid: LiteEntitySystem.SpanAction{{TEntity},{T}}
+  commentId: T:LiteEntitySystem.SpanAction{``0,``1}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.SpanAction`2
+  name: SpanAction<TEntity, T>
+  nameWithType: SpanAction<TEntity, T>
+  fullName: LiteEntitySystem.SpanAction<TEntity, T>
+  nameWithType.vb: SpanAction(Of TEntity, T)
+  fullName.vb: LiteEntitySystem.SpanAction(Of TEntity, T)
+  name.vb: SpanAction(Of TEntity, T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SpanAction`2
+    name: SpanAction
+  - name: <
+  - name: TEntity
+  - name: ','
+  - name: " "
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.SpanAction`2
+    name: SpanAction
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TEntity
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.SpanAction`2
+  commentId: T:LiteEntitySystem.SpanAction`2
+  name: SpanAction<TCaller, T>
+  nameWithType: SpanAction<TCaller, T>
+  fullName: LiteEntitySystem.SpanAction<TCaller, T>
+  nameWithType.vb: SpanAction(Of TCaller, T)
+  fullName.vb: LiteEntitySystem.SpanAction(Of TCaller, T)
+  name.vb: SpanAction(Of TCaller, T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SpanAction`2
+    name: SpanAction
+  - name: <
+  - name: TCaller
+  - name: ','
+  - name: " "
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.SpanAction`2
+    name: SpanAction
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TCaller
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )

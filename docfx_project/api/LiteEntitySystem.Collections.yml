@@ -1,0 +1,228 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.Collections
+  commentId: N:LiteEntitySystem.Collections
+  id: LiteEntitySystem.Collections
+  children:
+  - LiteEntitySystem.Collections.AVLTree`1
+  - LiteEntitySystem.Collections.AVLTree`1.Enumerator
+  - LiteEntitySystem.Collections.BitReadOnlySpan
+  - LiteEntitySystem.Collections.BitSpan
+  - LiteEntitySystem.Collections.CircularBuffer`1
+  - LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  - LiteEntitySystem.Collections.SparseMap`1
+  - LiteEntitySystem.Collections.SparseMap`1.SparseEntry
+  langs:
+  - csharp
+  - vb
+  name: LiteEntitySystem.Collections
+  nameWithType: LiteEntitySystem.Collections
+  fullName: LiteEntitySystem.Collections
+  type: Namespace
+  assemblies:
+  - LiteEntitySystem
+references:
+- uid: LiteEntitySystem.Collections.AVLTree`1
+  commentId: T:LiteEntitySystem.Collections.AVLTree`1
+  parent: LiteEntitySystem.Collections
+  href: LiteEntitySystem.Collections.AVLTree-1.html
+  name: AVLTree<T>
+  nameWithType: AVLTree<T>
+  fullName: LiteEntitySystem.Collections.AVLTree<T>
+  nameWithType.vb: AVLTree(Of T)
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T)
+  name.vb: AVLTree(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree`1
+    name: AVLTree
+    href: LiteEntitySystem.Collections.AVLTree-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree`1
+    name: AVLTree
+    href: LiteEntitySystem.Collections.AVLTree-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Collections.AVLTree`1.Enumerator
+  commentId: T:LiteEntitySystem.Collections.AVLTree`1.Enumerator
+  parent: LiteEntitySystem.Collections
+  href: LiteEntitySystem.Collections.AVLTree-1.html
+  name: AVLTree<T>.Enumerator
+  nameWithType: AVLTree<T>.Enumerator
+  fullName: LiteEntitySystem.Collections.AVLTree<T>.Enumerator
+  nameWithType.vb: AVLTree(Of T).Enumerator
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T).Enumerator
+  name.vb: AVLTree(Of T).Enumerator
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree`1
+    name: AVLTree
+    href: LiteEntitySystem.Collections.AVLTree-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: .
+  - uid: LiteEntitySystem.Collections.AVLTree`1.Enumerator
+    name: Enumerator
+    href: LiteEntitySystem.Collections.AVLTree-1.Enumerator.html
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree`1
+    name: AVLTree
+    href: LiteEntitySystem.Collections.AVLTree-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: .
+  - uid: LiteEntitySystem.Collections.AVLTree`1.Enumerator
+    name: Enumerator
+    href: LiteEntitySystem.Collections.AVLTree-1.Enumerator.html
+- uid: LiteEntitySystem.Collections.BitSpan
+  commentId: T:LiteEntitySystem.Collections.BitSpan
+  href: LiteEntitySystem.Collections.BitSpan.html
+  name: BitSpan
+  nameWithType: BitSpan
+  fullName: LiteEntitySystem.Collections.BitSpan
+- uid: LiteEntitySystem.Collections.BitReadOnlySpan
+  commentId: T:LiteEntitySystem.Collections.BitReadOnlySpan
+  href: LiteEntitySystem.Collections.BitReadOnlySpan.html
+  name: BitReadOnlySpan
+  nameWithType: BitReadOnlySpan
+  fullName: LiteEntitySystem.Collections.BitReadOnlySpan
+- uid: LiteEntitySystem.Collections.CircularBuffer`1
+  commentId: T:LiteEntitySystem.Collections.CircularBuffer`1
+  href: LiteEntitySystem.Collections.CircularBuffer-1.html
+  name: CircularBuffer<T>
+  nameWithType: CircularBuffer<T>
+  fullName: LiteEntitySystem.Collections.CircularBuffer<T>
+  nameWithType.vb: CircularBuffer(Of T)
+  fullName.vb: LiteEntitySystem.Collections.CircularBuffer(Of T)
+  name.vb: CircularBuffer(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.CircularBuffer`1
+    name: CircularBuffer
+    href: LiteEntitySystem.Collections.CircularBuffer-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.CircularBuffer`1
+    name: CircularBuffer
+    href: LiteEntitySystem.Collections.CircularBuffer-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  commentId: T:LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  href: LiteEntitySystem.Collections.SequenceBinaryHeap-1.html
+  name: SequenceBinaryHeap<T>
+  nameWithType: SequenceBinaryHeap<T>
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>
+  nameWithType.vb: SequenceBinaryHeap(Of T)
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T)
+  name.vb: SequenceBinaryHeap(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1
+    name: SequenceBinaryHeap
+    href: LiteEntitySystem.Collections.SequenceBinaryHeap-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1
+    name: SequenceBinaryHeap
+    href: LiteEntitySystem.Collections.SequenceBinaryHeap-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Collections.SparseMap`1
+  commentId: T:LiteEntitySystem.Collections.SparseMap`1
+  parent: LiteEntitySystem.Collections
+  href: LiteEntitySystem.Collections.SparseMap-1.html
+  name: SparseMap<T>
+  nameWithType: SparseMap<T>
+  fullName: LiteEntitySystem.Collections.SparseMap<T>
+  nameWithType.vb: SparseMap(Of T)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T)
+  name.vb: SparseMap(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.SparseMap`1
+    name: SparseMap
+    href: LiteEntitySystem.Collections.SparseMap-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.SparseMap`1
+    name: SparseMap
+    href: LiteEntitySystem.Collections.SparseMap-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Collections.SparseMap`1.SparseEntry
+  commentId: T:LiteEntitySystem.Collections.SparseMap`1.SparseEntry
+  parent: LiteEntitySystem.Collections
+  href: LiteEntitySystem.Collections.SparseMap-1.html
+  name: SparseMap<T>.SparseEntry
+  nameWithType: SparseMap<T>.SparseEntry
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.SparseEntry
+  nameWithType.vb: SparseMap(Of T).SparseEntry
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).SparseEntry
+  name.vb: SparseMap(Of T).SparseEntry
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.SparseMap`1
+    name: SparseMap
+    href: LiteEntitySystem.Collections.SparseMap-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: .
+  - uid: LiteEntitySystem.Collections.SparseMap`1.SparseEntry
+    name: SparseEntry
+    href: LiteEntitySystem.Collections.SparseMap-1.SparseEntry.html
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.SparseMap`1
+    name: SparseMap
+    href: LiteEntitySystem.Collections.SparseMap-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: .
+  - uid: LiteEntitySystem.Collections.SparseMap`1.SparseEntry
+    name: SparseEntry
+    href: LiteEntitySystem.Collections.SparseMap-1.SparseEntry.html
+- uid: LiteEntitySystem.Collections
+  commentId: N:LiteEntitySystem.Collections
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Collections
+  nameWithType: LiteEntitySystem.Collections
+  fullName: LiteEntitySystem.Collections
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Collections
+    name: Collections
+    href: LiteEntitySystem.Collections.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Collections
+    name: Collections
+    href: LiteEntitySystem.Collections.html

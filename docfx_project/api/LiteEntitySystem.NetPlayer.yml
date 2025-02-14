@@ -1,0 +1,185 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.NetPlayer
+  commentId: T:LiteEntitySystem.NetPlayer
+  id: NetPlayer
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.NetPlayer.Id
+  - LiteEntitySystem.NetPlayer.Peer
+  langs:
+  - csharp
+  - vb
+  name: NetPlayer
+  nameWithType: NetPlayer
+  fullName: LiteEntitySystem.NetPlayer
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public class NetPlayer
+    content.vb: Public Class NetPlayer
+  inheritance:
+  - System.Object
+  extensionMethods:
+  - LiteEntitySystem.NetPlayer.LiteEntitySystem.Transport.LiteNetLibExtensions.GetLiteNetLibNetPeer
+- uid: LiteEntitySystem.NetPlayer.Id
+  commentId: F:LiteEntitySystem.NetPlayer.Id
+  id: Id
+  parent: LiteEntitySystem.NetPlayer
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: NetPlayer.Id
+  fullName: LiteEntitySystem.NetPlayer.Id
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public readonly byte Id
+    return:
+      type: System.Byte
+    content.vb: Public ReadOnly Id As Byte
+- uid: LiteEntitySystem.NetPlayer.Peer
+  commentId: F:LiteEntitySystem.NetPlayer.Peer
+  id: Peer
+  parent: LiteEntitySystem.NetPlayer
+  langs:
+  - csharp
+  - vb
+  name: Peer
+  nameWithType: NetPlayer.Peer
+  fullName: LiteEntitySystem.NetPlayer.Peer
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public readonly AbstractNetPeer Peer
+    return:
+      type: LiteEntitySystem.Transport.AbstractNetPeer
+    content.vb: Public ReadOnly Peer As AbstractNetPeer
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: LiteEntitySystem.NetPlayer.LiteEntitySystem.Transport.LiteNetLibExtensions.GetLiteNetLibNetPeer
+  commentId: M:LiteEntitySystem.Transport.LiteNetLibExtensions.GetLiteNetLibNetPeer(LiteEntitySystem.NetPlayer)
+  parent: LiteEntitySystem.Transport.LiteNetLibExtensions
+  definition: LiteEntitySystem.Transport.LiteNetLibExtensions.GetLiteNetLibNetPeer(LiteEntitySystem.NetPlayer)
+  href: LiteEntitySystem.Transport.LiteNetLibExtensions.html#LiteEntitySystem_Transport_LiteNetLibExtensions_GetLiteNetLibNetPeer_LiteEntitySystem_NetPlayer_
+  name: GetLiteNetLibNetPeer(NetPlayer)
+  nameWithType: LiteNetLibExtensions.GetLiteNetLibNetPeer(NetPlayer)
+  fullName: LiteEntitySystem.Transport.LiteNetLibExtensions.GetLiteNetLibNetPeer(LiteEntitySystem.NetPlayer)
+  spec.csharp:
+  - uid: LiteEntitySystem.Transport.LiteNetLibExtensions.GetLiteNetLibNetPeer(LiteEntitySystem.NetPlayer)
+    name: GetLiteNetLibNetPeer
+    href: LiteEntitySystem.Transport.LiteNetLibExtensions.html#LiteEntitySystem_Transport_LiteNetLibExtensions_GetLiteNetLibNetPeer_LiteEntitySystem_NetPlayer_
+  - name: (
+  - uid: LiteEntitySystem.NetPlayer
+    name: NetPlayer
+    href: LiteEntitySystem.NetPlayer.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Transport.LiteNetLibExtensions.GetLiteNetLibNetPeer(LiteEntitySystem.NetPlayer)
+    name: GetLiteNetLibNetPeer
+    href: LiteEntitySystem.Transport.LiteNetLibExtensions.html#LiteEntitySystem_Transport_LiteNetLibExtensions_GetLiteNetLibNetPeer_LiteEntitySystem_NetPlayer_
+  - name: (
+  - uid: LiteEntitySystem.NetPlayer
+    name: NetPlayer
+    href: LiteEntitySystem.NetPlayer.html
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.Transport.LiteNetLibExtensions.GetLiteNetLibNetPeer(LiteEntitySystem.NetPlayer)
+  commentId: M:LiteEntitySystem.Transport.LiteNetLibExtensions.GetLiteNetLibNetPeer(LiteEntitySystem.NetPlayer)
+  href: LiteEntitySystem.Transport.LiteNetLibExtensions.html#LiteEntitySystem_Transport_LiteNetLibExtensions_GetLiteNetLibNetPeer_LiteEntitySystem_NetPlayer_
+  name: GetLiteNetLibNetPeer(NetPlayer)
+  nameWithType: LiteNetLibExtensions.GetLiteNetLibNetPeer(NetPlayer)
+  fullName: LiteEntitySystem.Transport.LiteNetLibExtensions.GetLiteNetLibNetPeer(LiteEntitySystem.NetPlayer)
+  spec.csharp:
+  - uid: LiteEntitySystem.Transport.LiteNetLibExtensions.GetLiteNetLibNetPeer(LiteEntitySystem.NetPlayer)
+    name: GetLiteNetLibNetPeer
+    href: LiteEntitySystem.Transport.LiteNetLibExtensions.html#LiteEntitySystem_Transport_LiteNetLibExtensions_GetLiteNetLibNetPeer_LiteEntitySystem_NetPlayer_
+  - name: (
+  - uid: LiteEntitySystem.NetPlayer
+    name: NetPlayer
+    href: LiteEntitySystem.NetPlayer.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Transport.LiteNetLibExtensions.GetLiteNetLibNetPeer(LiteEntitySystem.NetPlayer)
+    name: GetLiteNetLibNetPeer
+    href: LiteEntitySystem.Transport.LiteNetLibExtensions.html#LiteEntitySystem_Transport_LiteNetLibExtensions_GetLiteNetLibNetPeer_LiteEntitySystem_NetPlayer_
+  - name: (
+  - uid: LiteEntitySystem.NetPlayer
+    name: NetPlayer
+    href: LiteEntitySystem.NetPlayer.html
+  - name: )
+- uid: LiteEntitySystem.Transport.LiteNetLibExtensions
+  commentId: T:LiteEntitySystem.Transport.LiteNetLibExtensions
+  parent: LiteEntitySystem.Transport
+  href: LiteEntitySystem.Transport.LiteNetLibExtensions.html
+  name: LiteNetLibExtensions
+  nameWithType: LiteNetLibExtensions
+  fullName: LiteEntitySystem.Transport.LiteNetLibExtensions
+- uid: LiteEntitySystem.Transport
+  commentId: N:LiteEntitySystem.Transport
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Transport
+  nameWithType: LiteEntitySystem.Transport
+  fullName: LiteEntitySystem.Transport
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Transport
+    name: Transport
+    href: LiteEntitySystem.Transport.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Transport
+    name: Transport
+    href: LiteEntitySystem.Transport.html
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: LiteEntitySystem.Transport.AbstractNetPeer
+  commentId: T:LiteEntitySystem.Transport.AbstractNetPeer
+  parent: LiteEntitySystem.Transport
+  href: LiteEntitySystem.Transport.AbstractNetPeer.html
+  name: AbstractNetPeer
+  nameWithType: AbstractNetPeer
+  fullName: LiteEntitySystem.Transport.AbstractNetPeer
