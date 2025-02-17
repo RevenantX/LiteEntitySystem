@@ -1034,7 +1034,7 @@ namespace LiteEntitySystem
                 
                 if (fullSync)
                 {
-                    _stateA.ReadRPCs(rawData, ref readerPosition, new EntitySharedReference(entity.Id, entity.Version), classData);
+                    _stateA.ReadRPCs(rawData, ref readerPosition, new EntitySharedReference(entity.Id, entity.Version), ref classData);
                     continue;
                 }
                 readerPosition = endPos;

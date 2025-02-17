@@ -148,10 +148,16 @@ namespace LiteEntitySystem
         
         protected HumanControllerLogic(EntityParams entityParams, int inputSize) : base(entityParams)
         {
+            InputSize = inputSize;
+            InputDeltaBits = InputSize / FieldsDivision + (InputSize % FieldsDivision == 0 ? 0 : 1);
+            MinInputDeltaSize = InputDeltaBits / 8 + (InputDeltaBits % 8 == 0 ? 0 : 1);
+            MaxInputDeltaSize = MinInputDeltaSize + InputSize;
+            
             if (EntityManager.IsServer)
             {
                 _forceSyncEntities = new Dictionary<InternalEntity, ushort>();
                 EntityManager.GetEntities<EntityLogic>().OnDestroyed += OnEntityDestroyed;
+                _firstFullInput = new byte[InputSize];
             }
             else
                 _awaitingRequests = new Dictionary<ushort, Action<bool>>();
@@ -159,12 +165,6 @@ namespace LiteEntitySystem
             _requestWriter.Put(InternalPackets.ClientRequest);
             _requestWriter.Put(entityParams.Header.Id);
             _requestWriter.Put(entityParams.Header.Version);
-
-            InputSize = inputSize;
-            InputDeltaBits = InputSize / FieldsDivision + (InputSize % FieldsDivision == 0 ? 0 : 1);
-            MinInputDeltaSize = InputDeltaBits / 8 + (InputDeltaBits % 8 == 0 ? 0 : 1);
-            MaxInputDeltaSize = MinInputDeltaSize + InputSize;
-            _firstFullInput = new byte[InputSize];
         }
         
         protected override void OnDestroy()

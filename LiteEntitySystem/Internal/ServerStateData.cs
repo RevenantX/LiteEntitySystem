@@ -115,7 +115,7 @@ namespace LiteEntitySystem.Internal
 
                 //preload rpcs
                 fixed(byte* rawData = Data)
-                    ReadRPCs(rawData, ref stateReaderOffset, new EntitySharedReference(entity.Id, entity.Version), classData);
+                    ReadRPCs(rawData, ref stateReaderOffset, new EntitySharedReference(entity.Id, entity.Version), ref classData);
 
                 if (stateReaderOffset != initialReaderPosition + totalSize)
                 {
@@ -210,7 +210,7 @@ namespace LiteEntitySystem.Internal
             entityManager.IsExecutingRPC = false;
         }
 
-        public unsafe void ReadRPCs(byte* rawData, ref int position, EntitySharedReference entityId, EntityClassData classData)
+        public unsafe void ReadRPCs(byte* rawData, ref int position, EntitySharedReference entityId, ref EntityClassData classData)
         {
             int readCount = *(ushort*)(rawData + position);
             //if(readCount > 0)
