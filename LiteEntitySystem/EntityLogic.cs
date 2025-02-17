@@ -157,12 +157,14 @@ namespace LiteEntitySystem
                 return entity;
             }
 
-            entity = ClientManager.AddLocalEntity(initMethod);
-            entity._predictedId.Value = _localPredictedIdCounter.Value++;
-            entity._parentId.Value = new EntitySharedReference(this);
-            entity.InternalOwnerId.Value = InternalOwnerId.Value;
-            Childs.Add(entity);
-            entity.OnOwnerChange(EntityManager.InternalPlayerId);
+            entity = ClientManager.AddLocalEntity<T>(e =>
+            {
+                e._parentId.Value = new EntitySharedReference(this);
+                e.InternalOwnerId.Value = InternalOwnerId.Value;
+                e._predictedId.Value = _localPredictedIdCounter.Value++;
+                Childs.Add(e);
+                initMethod?.Invoke(e);
+            });
             return entity;
         }
         
@@ -200,11 +202,14 @@ namespace LiteEntitySystem
                 return;
             }
 
-            entity = ClientManager.AddLocalEntity(initMethod);
-            entity._parentId.Value = new EntitySharedReference(this);
-            entity.InternalOwnerId.Value = InternalOwnerId.Value;
-            Childs.Add(entity);
-            entity.OnOwnerChange(EntityManager.InternalPlayerId);
+            entity = ClientManager.AddLocalEntity<T>(e =>
+            {
+                e._parentId.Value = new EntitySharedReference(this);
+                e.InternalOwnerId.Value = InternalOwnerId.Value;
+                e._predictedId.Value = _localPredictedIdCounter.Value++;
+                Childs.Add(e);
+                initMethod?.Invoke(e);
+            });
             targetReference.Value = entity;
         }
 

@@ -236,7 +236,7 @@ namespace LiteEntitySystem
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Created entity or null if entities limit is reached (<see cref="EntityManager.MaxEntityCount"/>)</returns>
-        internal T AddLocalEntity<T>(Action<T> initMethod = null) where T : EntityLogic
+        internal T AddLocalEntity<T>(Action<T> initMethod) where T : EntityLogic
         {
             if (_localIdQueue.AvailableIds == 0)
             {
@@ -256,7 +256,7 @@ namespace LiteEntitySystem
             //Logger.Log($"AddPredicted, tick: {_tick}, rb: {InRollBackState}, id: {entity.Id}");
             
             entity.InternalOwnerId.Value = InternalPlayerId;
-            initMethod?.Invoke(entity);
+            initMethod(entity);
             ConstructEntity(entity);
             _spawnPredictedEntities.Enqueue((_tick, entity));
             
