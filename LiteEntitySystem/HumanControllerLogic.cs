@@ -62,7 +62,8 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="entity">entity</param>
         /// <param name="enable">true - enable sync (if was disabled), disable otherwise</param>
-        public void ChangeEntityDiffSync(EntityLogic entity, bool enable)
+        /// <param name="includeChilds">include childs</param>
+        public void ChangeEntityDiffSync(EntityLogic entity, bool enable, bool includeChilds)
         {
             //ignore destroyed and owned
             if (EntityManager.IsClient || entity.IsDestroyed || entity.InternalOwnerId == InternalOwnerId)
@@ -76,6 +77,16 @@ namespace LiteEntitySystem
             {
                 ForceSyncEntity(entity);
                 ExecuteRPC(OnEntitySyncChangedRPC, new EntitySyncInfo { Entity = entity, SyncEnabled = true });
+            }
+
+            if (includeChilds)
+            {
+                foreach (EntitySharedReference child in entity.Childs)
+                {
+                    if (!EntityManager.TryGetEntityById<EntityLogic>(child, out var childEntity))
+                        continue;
+                    ChangeEntityDiffSync(childEntity, enable, true);
+                }
             }
         }
 
