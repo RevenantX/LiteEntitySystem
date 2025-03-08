@@ -46,42 +46,14 @@ namespace LiteEntitySystem
         NeverRollBack       = 1 << 5
     }
     
-    /// <summary>
-    /// BindOnChange execution order
-    /// </summary>
-    public enum OnSyncExecutionOrder
-    {
-        /// <summary>
-        /// Emit method passed to BindOnChange after entity construct
-        /// </summary>
-        AfterConstruct,
-        
-        /// <summary>
-        /// Emit method passed to BindOnChange before entity construct
-        /// </summary>
-        BeforeConstruct
-    }
-    
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Class)]
     public class SyncVarFlags : Attribute
     {
         public readonly SyncFlags Flags;
-        public readonly OnSyncExecutionOrder OnSyncExecutionOrder;
         
         public SyncVarFlags(SyncFlags flags)
         {
             Flags = flags;
-        }
-        
-        public SyncVarFlags(OnSyncExecutionOrder executionOrder)
-        {
-            OnSyncExecutionOrder = executionOrder;
-        }
-        
-        public SyncVarFlags(SyncFlags flags, OnSyncExecutionOrder executionOrder)
-        {
-            Flags = flags;
-            OnSyncExecutionOrder = executionOrder;
         }
     }
 

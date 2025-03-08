@@ -169,8 +169,6 @@ namespace LiteEntitySystem
         }
         private SyncCallInfo[] _syncCalls;
         private int _syncCallsCount;
-        private SyncCallInfo[] _syncCallsBeforeConstruct;
-        private int _syncCallsBeforeConstructCount;
         
         private readonly AVLTree<InternalEntity> _entitiesToConstruct = new();
         private ushort _lastReceivedInputTick;
@@ -311,7 +309,6 @@ namespace LiteEntitySystem
                     
                     _entitiesToConstruct.Clear();
                     _syncCallsCount = 0;
-                    _syncCallsBeforeConstructCount = 0;
                     //read header and decode
                     int decodedBytes;
                     var header = *(BaselineDataHeader*)rawData;
@@ -891,9 +888,6 @@ namespace LiteEntitySystem
             //execute syncable fields first
             _stateA.ExecuteSyncableRpcs(this, minimalTick, firstSync);
             
-            //Make OnChangeCalls before construct
-            ExecuteSyncCalls(_syncCallsBeforeConstruct, ref _syncCallsBeforeConstructCount);
-
             //Call construct methods
             foreach(var entity in _entitiesToConstruct)
                 ConstructEntity(entity);
@@ -989,7 +983,6 @@ namespace LiteEntitySystem
                 _changedEntities.Add(entity);
                 
                 Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
-                Utils.ResizeOrCreate(ref _syncCallsBeforeConstruct, _syncCallsBeforeConstructCount + classData.FieldsCount);
                 
                 int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
                 fixed (byte* interpDataPtr = classData.ClientInterpolatedNextData(entity), predictedData = classData.ClientPredictedData(entity))
@@ -1016,12 +1009,7 @@ namespace LiteEntitySystem
                             if (field.OnSync != null)
                             {
                                 if (field.TypeProcessor.SetFromAndSync(entity, field.Offset, readDataPtr))
-                                {
-                                    if (field.OnSyncExecutionOrder == OnSyncExecutionOrder.BeforeConstruct)
-                                        _syncCallsBeforeConstruct[_syncCallsBeforeConstructCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition);
-                                    else //call on sync immediately
-                                        _syncCalls[_syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition);
-                                }
+                                    _syncCalls[_syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition);
                             }
                             else
                             {

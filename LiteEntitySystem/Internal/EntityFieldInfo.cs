@@ -17,7 +17,6 @@
         public readonly FieldType FieldType;
         public readonly SyncFlags Flags;
         public readonly bool IsPredicted;
-        public OnSyncExecutionOrder OnSyncExecutionOrder;
         
         public MethodCallDelegate OnSync;
         public int FixedOffset;
@@ -41,7 +40,6 @@
             PredictedOffset = 0;
             OnSync = null;
             Flags = flags?.Flags ?? SyncFlags.None;
-            OnSyncExecutionOrder = flags?.OnSyncExecutionOrder ?? OnSyncExecutionOrder.AfterConstruct;
             IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
                           (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
                            !Flags.HasFlagFast(SyncFlags.NeverRollBack));
@@ -66,7 +64,6 @@
             PredictedOffset = 0;
             OnSync = null;
             Flags = flags?.Flags ?? SyncFlags.None;
-            OnSyncExecutionOrder = flags?.OnSyncExecutionOrder ?? OnSyncExecutionOrder.AfterConstruct;
             IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
                           (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
                            !Flags.HasFlagFast(SyncFlags.NeverRollBack));

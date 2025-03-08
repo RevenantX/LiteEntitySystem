@@ -117,10 +117,9 @@ namespace LiteEntitySystem
         /// <param name="syncVar">Variable to bind</param>
         /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
         /// <param name="executionOrder">order of execution</param>
-        public void BindOnChange<T, TEntity>(ref SyncVar<T> syncVar, Action<TEntity, T> onChangedAction, OnSyncExecutionOrder executionOrder = OnSyncExecutionOrder.AfterConstruct) where T : unmanaged where TEntity : InternalEntity
+        public void BindOnChange<T, TEntity>(ref SyncVar<T> syncVar, Action<TEntity, T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
         {
             ref var field = ref _fields[syncVar.FieldId];
-            field.OnSyncExecutionOrder = executionOrder;
             field.OnSync = RemoteCall<T>.CreateMCD(onChangedAction);
         }
         
@@ -131,10 +130,10 @@ namespace LiteEntitySystem
         /// <param name="syncVar">Variable to bind</param>
         /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
         /// <param name="executionOrder">order of execution</param>
-        public void BindOnChange<T, TEntity>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction, OnSyncExecutionOrder executionOrder = OnSyncExecutionOrder.AfterConstruct) where T : unmanaged where TEntity : InternalEntity
+        public void BindOnChange<T, TEntity>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
         {
             CheckTarget(self, onChangedAction.Target);
-            BindOnChange(ref syncVar, onChangedAction.Method.CreateDelegateHelper<Action<TEntity, T>>(), executionOrder);
+            BindOnChange(ref syncVar, onChangedAction.Method.CreateDelegateHelper<Action<TEntity, T>>());
         }
         
         /// <summary>
