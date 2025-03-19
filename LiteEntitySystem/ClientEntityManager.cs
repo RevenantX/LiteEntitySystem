@@ -191,7 +191,7 @@ namespace LiteEntitySystem
         /// </summary>
         /// <typeparam name="T">controller type</typeparam>
         /// <returns>controller if exist otherwise null</returns>
-        public T GetPlayerController<T>() where T : ControllerLogic
+        public T GetPlayerController<T>() where T : HumanControllerLogic
         {
             if (_localPlayer == null)
                 return null;
