@@ -60,6 +60,21 @@ namespace LiteEntitySystem
         
         internal ulong PredictedId => _predictedId.Value;
         
+        /// <summary>
+        /// Client only. Is synchronization of this entity to local player enabled
+        /// </summary>
+        /// <returns>true - when we have data on client or when called on server</returns>
+        public bool IsSyncEnabled
+        {
+            get
+            {
+                if (IsServer)
+                    return true;
+                var localPlayerController = ClientManager.GetPlayerController<HumanControllerLogic>();
+                return localPlayerController == null || !localPlayerController.IsEntityDiffSyncDisabled(this);
+            }
+        }
+        
         //on client it works only in rollback
         internal void EnableLagCompensation(NetPlayer player)
         {
