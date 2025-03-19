@@ -79,16 +79,6 @@ namespace LiteEntitySystem
             }
         }
 
-        protected internal override void OnConstructed()
-        {
-            base.OnConstructed();
-            
-            //call OnEntityDiffSyncChanged for already skipped entities
-            if(EntityManager.IsClient)
-                foreach (var skippedEntity in _skippedEntities)
-                    OnEntityDiffSyncChanged(EntityManager.GetEntityById<EntityLogic>(skippedEntity), false);
-        }
-
         /// <summary>
         /// Is entity delta-diff synchronization disabled. Works on client and server
         /// </summary>
@@ -96,6 +86,14 @@ namespace LiteEntitySystem
         /// <returns>true if entity sync is disabled</returns>
         public bool IsEntityDiffSyncDisabled(EntitySharedReference entity) =>
             _skippedEntities.Contains(entity) && !EntityManager.GetEntityById<EntityLogic>(entity).IsDestroyed;
+        
+        /// <summary>
+        /// Is entity delta-diff synchronization disabled. Works on client and server
+        /// </summary>
+        /// <param name="entity">entity to check</param>
+        /// <returns>true if entity sync is disabled</returns>
+        public bool IsEntityDiffSyncDisabled(EntityLogic entity) =>
+            _skippedEntities.Contains(entity) && !entity.IsDestroyed;
 
         /// <summary>
         /// Enable diff sync for all entities that has disabled diff sync
