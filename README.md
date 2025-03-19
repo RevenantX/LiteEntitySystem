@@ -24,7 +24,8 @@ Only SyncVar.Value can be changed (never do x = new SyncVar())
 
 * .NET Standard 2.1 and pure C# (but with some IL magic)
 * Can be used with Unity (2021.2 and later), Godot, Monogame or just pure .net
-* Can be used for creation any multiplayer game (2d,3d,4d,...)
+* Can be used for creation any multiplayer game (2d,3d,4d,...), but best suited for fast paced games like FPS/TPS shooters and action rpg
+* Can handle up to 255 players on one instance
 * Works with Unity IL2CPP
 * Epic speed
 * Lag compensation
