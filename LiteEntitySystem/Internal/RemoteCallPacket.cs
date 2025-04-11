@@ -1,7 +1,10 @@
+using System.Collections.Generic;
+
 namespace LiteEntitySystem.Internal
 {
     internal struct RPCHeader
     {
+        public ushort EntityId;
         public ushort Id;
         public ushort Tick;
         public ushort ByteCount;
@@ -11,30 +14,35 @@ namespace LiteEntitySystem.Internal
     {
         public RPCHeader Header;
         public byte[] Data;
-        public ExecuteFlags Flags;
-        public RemoteCallPacket Next;
-        public int TotalSize => Header.ByteCount;
+        public int RefCount;
+        
+        public const int ReserverdRPCsCount = 3;
+        public const ushort NewRPCId = 0;
+        public const ushort ConstructRPCId = 1;
+        public const ushort DestroyRPCId = 2;
 
-        public bool ShouldSend(bool isOwned) =>
-            (isOwned && (Flags & ExecuteFlags.SendToOwner) != 0) || 
-            (!isOwned && (Flags & ExecuteFlags.SendToOther) != 0);
+        public static void InitReservedRPCs(List<RpcFieldInfo> rpcCahce)
+        {
+            for(int i = 0; i < ReserverdRPCsCount; i++)
+                rpcCahce.Add(new RpcFieldInfo(-1, null));
+        }
 
         public unsafe void WriteTo(byte* resultData, ref int position)
         {
             *(RPCHeader*)(resultData + position) = Header;
-            position += sizeof(RPCHeader);
             fixed (byte* rpcData = Data)
-                RefMagic.CopyBlock(resultData + position, rpcData, (uint)TotalSize);
-            position += TotalSize;
+                RefMagic.CopyBlock(resultData + sizeof(RPCHeader) + position, rpcData, Header.ByteCount);
+            position += sizeof(RPCHeader) + Header.ByteCount;
         }
         
-        public void Init(ushort tick, ushort typeSize, ushort rpcId, ExecuteFlags flags)
+        public void Init(ushort entityId, ushort tick, ushort byteCount, ushort rpcId)
         {
+            RefCount = 0;
+            Header.EntityId = entityId;
             Header.Tick = tick;
             Header.Id = rpcId;
-            Flags = flags;
-            Header.ByteCount = typeSize;
-            Utils.ResizeOrCreate(ref Data, typeSize);
+            Header.ByteCount = byteCount;
+            Utils.ResizeOrCreate(ref Data, byteCount);
         }
     }
 }

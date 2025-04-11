@@ -169,7 +169,6 @@ namespace LiteEntitySystem
         private readonly IEntityFilter[] _entityFilters;
         private readonly Dictionary<Type, ushort> _registeredTypeIds = new();
         private readonly Dictionary<Type, ILocalSingleton> _localSingletons = new();
-        private readonly Dictionary<Type, ILocalSingleton> _localSingletonBaseTypes = new();
 
         internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount+1];
         internal readonly EntityClassData[] ClassDataDict;
@@ -307,6 +306,10 @@ namespace LiteEntitySystem
         /// </summary>
         public virtual void Reset()
         {
+            foreach (var localSingleton in _localSingletons)
+                localSingleton.Value?.Destroy();
+            
+            _localSingletons.Clear();
             EntitiesCount = 0;
             
             _tick = 0;
@@ -316,16 +319,10 @@ namespace LiteEntitySystem
             InternalPlayerId = 0;
             _stopwatch.Stop();
             _stopwatch.Reset();
-
+            AliveEntities.Clear();
+            
             foreach (var entity in GetEntities<InternalEntity>())
                 entity.DestroyInternal();
-
-            foreach (var localSingleton in _localSingletons)
-                localSingleton.Value?.Destroy();
-            
-            AliveEntities.Clear();
-            _localSingletons.Clear();
-            _localSingletonBaseTypes.Clear();
             Array.Clear(EntitiesDict, 0, EntitiesDict.Length);
             Array.Clear(_entityFilters, 0, _entityFilters.Length);
         }
@@ -407,41 +404,23 @@ namespace LiteEntitySystem
         /// Add local (not synchronized) singleton.
         /// </summary>
         /// <param name="singleton">Signleton to add</param>
-        public void AddLocalSingleton<T>(T singleton) where T : ILocalSingleton
-        {
+        public void AddLocalSingleton<T>(T singleton) where T : ILocalSingleton =>
             _localSingletons[typeof(T)] = singleton;
-            foreach (Type baseType in Utils.GetBaseTypes(typeof(T), typeof(ILocalSingleton), false, false))
-                _localSingletonBaseTypes[baseType] = singleton;
-        }
-
+        
         /// <summary>
         /// Get local (not synchronized) singleton.
         /// </summary>
-        public T GetLocalSingleton<T>() where T : ILocalSingleton
-        {
-            if (_localSingletons.TryGetValue(typeof(T), out var singleton))
-                return (T)singleton;
-
-            if (_localSingletonBaseTypes.TryGetValue(typeof(T), out singleton))
-                return (T)singleton;
-
-            return default;
-        }
+        public T GetLocalSingleton<T>() where T : ILocalSingleton =>
+            _localSingletons.TryGetValue(typeof(T), out var singleton) && singleton is T typedSingleton ? typedSingleton : default;
 
         /// <summary>
         /// TryGet local (not synchronized) singleton.
         /// </summary>
         public bool TryGetLocalSingleton<T>(out T result) where T : ILocalSingleton
         {
-            if (_localSingletons.TryGetValue(typeof(T), out var singleton))
+            if (_localSingletons.TryGetValue(typeof(T), out var singleton) && singleton is T typedSingleton)
             {
-                result = (T)singleton;
-                return true;
-            }
-            
-            if (_localSingletonBaseTypes.TryGetValue(typeof(T), out singleton))
-            {
-                result = (T)singleton;
+                result = typedSingleton;
                 return true;
             }
 
@@ -499,8 +478,12 @@ namespace LiteEntitySystem
             return entity;
         }
 
-        protected void ConstructEntity(InternalEntity e)
+        protected bool ConstructEntity(InternalEntity e)
         {
+            if (e.IsConstructed)
+                return false;
+            e.IsConstructed = true;
+            
             ref var classData = ref ClassDataDict[e.ClassId];
             if (classData.IsSingleton)
             {
@@ -526,6 +509,8 @@ namespace LiteEntitySystem
                 AliveEntities.Add(e);
                 OnAliveEntityAdded(e);
             }
+
+            return true;
         }
         
         protected virtual void OnAliveEntityAdded(InternalEntity e)
@@ -533,7 +518,7 @@ namespace LiteEntitySystem
             
         }
 
-        private static bool IsEntityLagCompensated(InternalEntity e)
+        protected static bool IsEntityLagCompensated(InternalEntity e)
             => !e.IsLocal && e is EntityLogic && e.ClassData.LagCompensatedCount > 0;
 
         private bool IsEntityAlive(EntityFlags flags, InternalEntity entity)

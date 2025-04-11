@@ -68,5 +68,45 @@
                           (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
                            !Flags.HasFlagFast(SyncFlags.NeverRollBack));
         }
+
+        public unsafe bool ReadField(
+            InternalEntity entity, 
+            byte* rawData, 
+            int readerPosition, 
+            byte* predictedData, 
+            byte* nextInterpDataPtr, 
+            byte* prevInterpDataPtr)
+        {
+            rawData += readerPosition;
+            if (IsPredicted)
+                RefMagic.CopyBlock(predictedData + PredictedOffset, rawData, Size);
+            if (FieldType == FieldType.SyncableSyncVar)
+            {
+                var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, Offset);
+                TypeProcessor.SetFrom(syncableField, SyncableSyncVarOffset, rawData);
+            }
+            else
+            {
+                if (Flags.HasFlagFast(SyncFlags.Interpolated))
+                {
+                    if(nextInterpDataPtr != null)
+                        RefMagic.CopyBlock(nextInterpDataPtr + FixedOffset, rawData, Size);
+                    if(prevInterpDataPtr != null)
+                        RefMagic.CopyBlock(prevInterpDataPtr + FixedOffset, rawData, Size);
+                }
+
+                if (OnSync != null)
+                {
+                    if (TypeProcessor.SetFromAndSync(entity, Offset, rawData))
+                        return true; //create sync call
+                }
+                else
+                {
+                    TypeProcessor.SetFrom(entity, Offset, rawData);
+                }
+            }
+
+            return false;
+        }
     }
 }
