@@ -530,6 +530,8 @@ namespace LiteEntitySystem
                 AliveEntities.Add(e);
                 OnAliveEntityAdded(e);
             }
+
+            return true;
         }
         
         protected virtual void OnAliveEntityAdded(InternalEntity e)
