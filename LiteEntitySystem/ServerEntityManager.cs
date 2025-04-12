@@ -34,6 +34,8 @@ namespace LiteEntitySystem
         private readonly byte[] _inputDecodeBuffer = new byte[NetConstants.MaxUnreliableDataSize];
         private readonly NetDataReader _requestsReader = new();
         private readonly Queue<RemoteCallPacket> _pendingRPCs = new();
+                
+        private NetPlayer _syncForPlayer;
         
         //use entity filter for correct sort (id+version+creationTime)
         private readonly AVLTree<InternalEntity> _changedEntities = new();
@@ -507,8 +509,7 @@ namespace LiteEntitySystem
             //calculate minimalTick and potential baseline size
             _minimalTick = _tick;
             int maxBaseline = 0;
-
-            _rpcSizeCalcMode = true;
+            
             for (int pidx = 0; pidx < playersCount; pidx++)
             {
                 var player = _netPlayers.GetByIndex(pidx);
@@ -518,11 +519,11 @@ namespace LiteEntitySystem
                 {
                     maxBaseline = sizeof(BaselineDataHeader);
                     
-                    _rpcTotalSizeVariable = 0;
                     foreach (var e in GetEntities<InternalEntity>())
                         maxBaseline += _stateSerializers[e.Id].GetMaximumSize();
-                    maxBaseline += _rpcTotalSizeVariable;
-                    
+                    foreach (var pendingRPC in _pendingRPCs)
+                        maxBaseline += sizeof(RPCHeader) + pendingRPC.Header.ByteCount;
+
                     if (_packetBuffer.Length < maxBaseline)
                         _packetBuffer = new byte[maxBaseline];
                     int maxCompressedSize = LZ4Codec.MaximumOutputSize(_packetBuffer.Length) + sizeof(BaselineDataHeader);
@@ -530,7 +531,6 @@ namespace LiteEntitySystem
                         _compressionBuffer = new byte[maxCompressedSize];
                 }
             }
-            _rpcSizeCalcMode = false;
             
             //remove old rpcs
             while (_pendingRPCs.TryPeek(out var rpcNode) &&
@@ -556,9 +556,9 @@ namespace LiteEntitySystem
                     int originalLength = 0;
                     foreach (var rpcNode in _pendingRPCs)
                     {
-                        if(Utils.SequenceDiff(rpcNode.Header.Tick, _tick) == 0)
-                            rpcNode.WriteTo(packetBuffer, ref originalLength);
-                        //Logger.Log($"[Sever] T: {Tick}, SendRPC Tick: {rpcNode.Header.Tick}, Id: {rpcNode.Header.Id}, EntityId: {rpcNode.Header.EntityId}, TypeSize: {rpcNode.Header.ByteCount}, TotalSize: {rpcNode.TotalSize}");
+                        if (rpcNode.OnlyForPlayer != player || rpcNode.Header.Tick != _tick)
+                            continue;
+                        rpcNode.WriteTo(packetBuffer, ref originalLength);
                     }
                     
                     //set header
@@ -773,15 +773,10 @@ namespace LiteEntitySystem
             _syncForPlayer = null;
         }
         
-        internal unsafe void AddRemoteCall(InternalEntity entity, ushort rpcId, ExecuteFlags flags)
+        internal void AddRemoteCall(InternalEntity entity, ushort rpcId, ExecuteFlags flags)
         {
             if (PlayersCount == 0 || entity.IsRemoved)
                 return;
-            if (_rpcSizeCalcMode)
-            {
-                _rpcTotalSizeVariable += sizeof(RPCHeader);
-                return;
-            }
             
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             rpc.Init(_syncForPlayer, entity, _tick, 0, rpcId, flags);
@@ -793,11 +788,6 @@ namespace LiteEntitySystem
         {
             if (PlayersCount == 0 || entity.IsRemoved)
                 return;
-            if (_rpcSizeCalcMode)
-            {
-                _rpcTotalSizeVariable += sizeof(T) * value.Length + sizeof(RPCHeader);
-                return;
-            }
             
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
             int dataSize = sizeof(T) * value.Length;
@@ -814,9 +804,5 @@ namespace LiteEntitySystem
             _pendingRPCs.Enqueue(rpc);
             _changedEntities.Add(entity);
         }
-        
-        private bool _rpcSizeCalcMode;
-        private int _rpcTotalSizeVariable;
-        private NetPlayer _syncForPlayer;
     }
 }
