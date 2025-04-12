@@ -67,7 +67,7 @@ namespace LiteEntitySystem.Internal
         public int DataOffset => _dataOffset;
         public int DataSize => _dataSize;
         
-        private static readonly ThreadLocal<HashSet<SyncableField>> SyncablesSet = new(()=>new HashSet<SyncableField>());
+        private readonly HashSet<SyncableField> _syncablesSet = new();
         
         public void Preload(InternalEntity[] entityDict)
         {
@@ -156,8 +156,7 @@ namespace LiteEntitySystem.Internal
         
         public unsafe void ExecuteRpcs(ClientEntityManager entityManager, ushort minimalTick, bool firstSync)
         {
-            var syncSet = SyncablesSet.Value;
-            syncSet.Clear();
+            _syncablesSet.Clear();
             //if(_remoteCallsCount > 0)
             //    Logger.Log($"Executing rpcs (ST: {Tick}) for tick: {entityManager.ServerTick}, Min: {minimalTick}, Count: {_remoteCallsCount}");
             fixed (byte* rawData = Data)
@@ -167,7 +166,7 @@ namespace LiteEntitySystem.Internal
                     if (_rpcEndPos - _rpcReadPos < sizeof(RPCHeader))
                     {
                         Logger.LogError("Broken rpcs sizes?");
-                        return;
+                        break;
                     }
                     
                     var header = *(RPCHeader*)(rawData + _rpcReadPos);
@@ -176,7 +175,7 @@ namespace LiteEntitySystem.Internal
                         if (Utils.SequenceDiff(header.Tick, entityManager.ServerTick) > 0)
                         {
                             //Logger.Log($"Skip rpc. Entity: {header.EntityId}. Tick {header.Tick} > ServerTick: {entityManager.ServerTick}. Id: {header.Id}.");
-                            return;
+                            break;
                         }
 
                         if (Utils.SequenceDiff(header.Tick, minimalTick) <= 0)
@@ -237,8 +236,10 @@ namespace LiteEntitySystem.Internal
                     else
                     {
                         var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, rpcFieldInfo.SyncableOffset);
-                        if (syncSet.Add(syncableField))
+                        if (_syncablesSet.Add(syncableField))
+                        {
                             syncableField.BeforeReadRPC();
+                        }
                         try
                         {
                             rpcFieldInfo.Method(syncableField, new ReadOnlySpan<byte>(rawData + rpcDataStart, header.ByteCount));
@@ -250,7 +251,7 @@ namespace LiteEntitySystem.Internal
                     }
                 }
             }
-            foreach (var syncableField in syncSet)
+            foreach (var syncableField in _syncablesSet)
                 syncableField.AfterReadRPC();
         }
 

@@ -74,11 +74,11 @@ namespace LiteEntitySystem.Internal
             //make on sync
             try
             {
-                _entity.OnSyncRequested();
                 var syncableFields = _entity.ClassData.SyncableFields;
                 for (int i = 0; i < syncableFields.Length; i++)
                     RefMagic.RefFieldValue<SyncableField>(_entity, syncableFields[i].Offset)
                         .OnSyncRequested();
+                _entity.OnSyncRequested();
             }
             catch (Exception e)
             {

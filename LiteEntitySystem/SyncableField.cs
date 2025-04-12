@@ -52,7 +52,7 @@ namespace LiteEntitySystem
         protected void ExecuteRPC(in RemoteCall rpc)
         {
             if(IsServer)
-                ParentEntityInternal.ServerManager.AddRemoteCall(ParentEntityInternal, (ushort)(rpc.Id + RPCOffset), rpc.Flags);
+                ParentEntityInternal.ServerManager.AddRemoteCall(ParentEntityInternal, (ushort)(rpc.Id + RPCOffset), Flags);
         }
 
         protected void ExecuteRPC<T>(in RemoteCall<T> rpc, T value) where T : unmanaged

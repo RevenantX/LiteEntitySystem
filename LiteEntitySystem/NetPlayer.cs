@@ -40,7 +40,6 @@ namespace LiteEntitySystem
         //server only
         internal NetPlayerState State;
         internal SequenceBinaryHeap<InputInfo> AvailableInput;
-        internal Queue<RemoteCallPacket> PendingRPCs;
 
         internal NetPlayer(AbstractNetPeer peer, byte id)
         {

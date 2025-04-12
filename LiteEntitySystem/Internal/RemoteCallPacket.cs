@@ -14,7 +14,8 @@ namespace LiteEntitySystem.Internal
     {
         public RPCHeader Header;
         public byte[] Data;
-        public int RefCount;
+        public NetPlayer OnlyForPlayer;
+        public ExecuteFlags ExecuteFlags;
         
         public const int ReserverdRPCsCount = 3;
         public const ushort NewRPCId = 0;
@@ -35,9 +36,10 @@ namespace LiteEntitySystem.Internal
             position += sizeof(RPCHeader) + Header.ByteCount;
         }
         
-        public void Init(InternalEntity entity, ushort tick, ushort byteCount, ushort rpcId)
+        public void Init(NetPlayer targetPlayer, InternalEntity entity, ushort tick, ushort byteCount, ushort rpcId, ExecuteFlags executeFlags)
         {
-            RefCount = 0;
+            OnlyForPlayer = targetPlayer;
+            ExecuteFlags = executeFlags;
             Header.EntityId = entity.Id;
             Header.Tick = tick;
             Header.Id = rpcId;
