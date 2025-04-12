@@ -616,6 +616,10 @@ namespace LiteEntitySystem
                         //skip disabled rpcs
                         continue;
                     }
+
+                    if (rpcNode.Header.Id == RemoteCallPacket.ConstructRPCId)
+                        _stateSerializers[rpcNode.Header.EntityId].RefreshConstructedRPC(rpcNode);
+                    
                     rpcNode.WriteTo(packetBuffer, ref writePosition);
                     //Logger.Log($"[Sever] T: {Tick}, SendRPC Tick: {rpcNode.Header.Tick}, Id: {rpcNode.Header.Id}, EntityId: {rpcNode.Header.EntityId}, ByteCount: {rpcNode.Header.ByteCount}");
                 }
@@ -753,7 +757,7 @@ namespace LiteEntitySystem
             }
             
             var rpc = _rpcPool.Count > 0 ? _rpcPool.Dequeue() : new RemoteCallPacket();
-            rpc.Init(entity.Id, _tick, 0, rpcId);
+            rpc.Init(entity, _tick, 0, rpcId);
             EnqueueRPC(rpc, flags, entity.InternalOwnerId);
             _changedEntities.Add(entity);
         }
@@ -776,7 +780,7 @@ namespace LiteEntitySystem
                 return;
             }
             
-            rpc.Init(entity.Id, _tick, (ushort)dataSize, rpcId);
+            rpc.Init(entity, _tick, (ushort)dataSize, rpcId);
             if(value.Length > 0)
                 fixed(void* rawValue = value, rawData = rpc.Data)
                     RefMagic.CopyBlock(rawData, rawValue, (uint)dataSize);

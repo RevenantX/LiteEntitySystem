@@ -166,12 +166,19 @@ namespace LiteEntitySystem
                 _prevDataPos = prevDataPos;
             }
 
-            public void Execute(ServerStateData state) => _onSync(_entity, new ReadOnlySpan<byte>(state.Data, _prevDataPos, _dataSize));
-
-            public override string ToString() => _entity.ToString();
+            public void Execute(ServerStateData state)
+            {
+                try
+                {
+                    _onSync(_entity, new ReadOnlySpan<byte>(state.Data, _prevDataPos, _dataSize));
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError($"OnChange error in user code. Entity: {_entity}. Error: {e}");
+                }
+            }
         }
         private SyncCallInfo[] _syncCalls;
-        private int _syncCallsCount;
         
         private ushort _lastReceivedInputTick;
         private float _logicLerpMsec;
@@ -309,7 +316,6 @@ namespace LiteEntitySystem
                     if (inData.Length < sizeof(BaselineDataHeader))
                         return DeserializeResult.Error;
                     
-                    _syncCallsCount = 0;
                     //read header and decode
                     var header = *(BaselineDataHeader*)rawData;
                     if (header.OriginalLength < 0)
@@ -352,7 +358,8 @@ namespace LiteEntitySystem
                     IsExecutingRPC = true;
                     _stateA.ExecuteRpcs(this, 0, true);
                     IsExecutingRPC = false;
-                    ExecuteSyncCalls(_stateA);
+                    foreach (var lagCompensatedEntity in LagCompensatedEntities)
+                        ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
                     
                     Logger.Log($"[CEM] Got baseline sync. Assigned player id: {header.PlayerId}, Original: {_stateA.Size}, Tick: {header.Tick}, SendRate: {_serverSendRate}");
                 }
@@ -482,6 +489,7 @@ namespace LiteEntitySystem
             IsExecutingRPC = false;
 
             int readerPosition = _stateA.DataOffset;
+            int syncCallsCount = 0;
             fixed (byte* rawData = _stateA.Data)
             {
                 while (readerPosition < _stateA.DataOffset + _stateA.DataSize)
@@ -504,7 +512,7 @@ namespace LiteEntitySystem
                     bool writeInterpolationData = entity.IsRemoteControlled;
                     readerPosition += classData.FieldsFlagsSize;
                     _changedEntities.Add(entity);
-                    Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
+                    Utils.ResizeOrCreate(ref _syncCalls, syncCallsCount + classData.FieldsCount);
 
                     int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
                     fixed (byte* interpDataPtr = classData.ClientInterpolatedNextData(entity), 
@@ -522,7 +530,7 @@ namespace LiteEntitySystem
                                     writeInterpolationData ? interpDataPtr : null,
                                     null))
                             {
-                                _syncCalls[_syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition,
+                                _syncCalls[syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition,
                                     field.IntSize);
                             }
 
@@ -535,7 +543,11 @@ namespace LiteEntitySystem
                 }
             }
             
-            ExecuteSyncCalls(_stateA);
+            foreach (var lagCompensatedEntity in LagCompensatedEntities)
+                ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
+
+            for (int i = 0; i < syncCallsCount; i++)
+                _syncCalls[i].Execute(_stateA);
 
             for(int i = 0; i < _entitiesToRemoveCount; i++)
             {
@@ -713,7 +725,8 @@ namespace LiteEntitySystem
                 IsExecutingRPC = true;
                 _stateB.ExecuteRpcs(this, _stateA.Tick, false);
                 IsExecutingRPC = false;
-                ExecuteSyncCalls(_stateB);
+                foreach (var lagCompensatedEntity in LagCompensatedEntities)
+                    ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
             }
 
             if (NetworkJitter > _jitterMiddle)
@@ -900,26 +913,6 @@ namespace LiteEntitySystem
                 AliveEntities.Remove(entity);
         }
 
-        private void ExecuteSyncCalls(ServerStateData serverStateData)
-        {
-            foreach (var lagCompensatedEntity in LagCompensatedEntities)
-                ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
-            
-            //Make OnChangeCalls after construct
-            for (int i = 0; i < _syncCallsCount; i++)
-            {
-                try
-                {
-                    _syncCalls[i].Execute(serverStateData);
-                }
-                catch (Exception e)
-                {
-                    Logger.LogError($"OnChange error in user code. Entity: {_syncCalls[i]}. Error: {e}");
-                }
-            }
-            _syncCallsCount = 0;
-        }
-
         internal unsafe void ReadNewRPC(ushort entityId, byte* rawData)
         {
             //Logger.Log("NewRPC");
@@ -955,7 +948,7 @@ namespace LiteEntitySystem
             }
         }
         
-        internal unsafe void ReadConstructRPC(ushort entityId, byte* rawData, int readerPosition)
+        internal unsafe void ReadConstructRPC(ServerStateData stateData, ushort entityId, byte* rawData, int readerPosition)
         {
             //Logger.Log("ConstructRPC");
             if (!IsEntityIdValid(entityId))
@@ -967,7 +960,8 @@ namespace LiteEntitySystem
             var entity = EntitiesDict[entityId];
             bool writeInterpolationData = !entity.IsConstructed || entity.IsRemoteControlled;
             ref var classData = ref entity.ClassData;
-            Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
+            Utils.ResizeOrCreate(ref _syncCalls, classData.FieldsCount);
+            int syncCallsCount = 0;
             
             fixed (byte* interpDataPtr = classData.ClientInterpolatedNextData(entity),
                 prevDataPtr = classData.ClientInterpolatedPrevData(entity),
@@ -983,19 +977,16 @@ namespace LiteEntitySystem
                             writeInterpolationData ? interpDataPtr : null, 
                             writeInterpolationData ? prevDataPtr : null))
                     {
-                        _syncCalls[_syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition, field.IntSize);
+                        _syncCalls[syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition, field.IntSize);
                     }
 
                     //Logger.Log($"E {entity.Id} Field updated: {field.Name}");
                     readerPosition += field.IntSize;
                 }
             }
-
-            if (!ConstructEntity(entity)) 
-                return;
             
-            //fast forward prediction
-            if (entity.IsLocalControlled && AliveEntities.Contains(entity))
+            //Construct and fast forward predicted entities
+            if (ConstructEntity(entity) && entity is EntityLogic { IsLocalControlled: true, IsPredicted: true } && AliveEntities.Contains(entity))
             {
                 UpdateMode = UpdateMode.PredictionRollback;
                 for(int cmdNum = Utils.SequenceDiff(ServerTick, _stateA.Tick); cmdNum < _storedInputHeaders.Count; cmdNum++)
@@ -1031,6 +1022,9 @@ namespace LiteEntitySystem
                 
                 UpdateMode = UpdateMode.Normal; 
             }
+            
+            for (int i = 0; i < syncCallsCount; i++)
+                _syncCalls[i].Execute(stateData);
         }
         
         private static bool IsEntityIdValid(ushort id)

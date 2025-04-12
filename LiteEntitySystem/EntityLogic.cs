@@ -47,18 +47,33 @@ namespace LiteEntitySystem
         /// </summary>
         public readonly SyncChilds Childs = new();
 
+        /// <summary>
+        /// Parent entity shared reference
+        /// </summary>
         public EntitySharedReference ParentId => _parentId;
         
         private bool _lagCompensationEnabled;
         
+        /// <summary>
+        /// Shared reference of this entity
+        /// </summary>
         public EntitySharedReference SharedReference => new EntitySharedReference(this);
 
         [SyncVarFlags(SyncFlags.OnlyForOwner)]
         private SyncVar<ushort> _localPredictedIdCounter;
+        
         [SyncVarFlags(SyncFlags.OnlyForOwner)]
         private SyncVar<ushort> _predictedId;
         
+        [SyncVarFlags(SyncFlags.OnlyForOwner)]
+        private SyncVar<bool> _isPredicted;
+        
         internal ulong PredictedId => _predictedId.Value;
+        
+        /// <summary>
+        /// Is entity spawned using AddPredictedEntity
+        /// </summary>
+        public bool IsPredicted => _isPredicted.Value;
         
         /// <summary>
         /// Client only. Is synchronization of this entity to local player enabled
@@ -118,6 +133,10 @@ namespace LiteEntitySystem
         public void DisableLagCompensationForOwner() =>
             EntityManager.DisableLagCompensation();
         
+        /// <summary>
+        /// Get synchronized seed for random generators based on current tick. Can be used for rollback or inside RPCs
+        /// </summary>
+        /// <returns>current tick depending on entity manager state (IsExecutingRPC and InRollBackState)</returns>
         public int GetFrameSeed() =>
             EntityManager.IsClient
                 ? (EntityManager.InRollBackState ? ClientManager.RollBackTick : (ClientManager.IsExecutingRPC ? ClientManager.CurrentRPCTick : EntityManager.Tick)) 
@@ -132,17 +151,17 @@ namespace LiteEntitySystem
         /// <returns>Created predicted local entity</returns>
         public T AddPredictedEntity<T>(Action<T> initMethod = null) where T : EntityLogic
         {
-            T entity;
             if (EntityManager.IsServer)
-            {
-                entity = ServerManager.AddEntity(this, initMethod);
-                entity._predictedId.Value = _localPredictedIdCounter.Value++;
-                return entity;
-            }
+                return ServerManager.AddEntity<T>(this, e =>
+                {
+                    e._predictedId.Value = _localPredictedIdCounter.Value++;
+                    e._isPredicted.Value = true;
+                    initMethod?.Invoke(e);
+                });
 
             if (ClientManager.IsExecutingRPC)
             {
-                Logger.LogError($"AddPredictedEntity called inside server->client RPC on client");
+                Logger.LogError("AddPredictedEntity called inside server->client RPC on client");
                 return null;
             }
 
@@ -152,6 +171,7 @@ namespace LiteEntitySystem
                 return null;
             }
             
+            T entity;
             if (EntityManager.InRollBackState)
             {
                 //local counter here should be reset
@@ -177,6 +197,7 @@ namespace LiteEntitySystem
                 e._parentId.Value = new EntitySharedReference(this);
                 e.InternalOwnerId.Value = InternalOwnerId.Value;
                 e._predictedId.Value = _localPredictedIdCounter.Value++;
+                e._isPredicted.Value = true;
                 Childs.Add(e);
                 initMethod?.Invoke(e);
             });

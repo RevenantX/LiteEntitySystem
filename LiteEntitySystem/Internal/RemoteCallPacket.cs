@@ -20,7 +20,7 @@ namespace LiteEntitySystem.Internal
         public const ushort NewRPCId = 0;
         public const ushort ConstructRPCId = 1;
         public const ushort DestroyRPCId = 2;
-
+        
         public static void InitReservedRPCs(List<RpcFieldInfo> rpcCahce)
         {
             for(int i = 0; i < ReserverdRPCsCount; i++)
@@ -35,10 +35,10 @@ namespace LiteEntitySystem.Internal
             position += sizeof(RPCHeader) + Header.ByteCount;
         }
         
-        public void Init(ushort entityId, ushort tick, ushort byteCount, ushort rpcId)
+        public void Init(InternalEntity entity, ushort tick, ushort byteCount, ushort rpcId)
         {
             RefCount = 0;
-            Header.EntityId = entityId;
+            Header.EntityId = entity.Id;
             Header.Tick = tick;
             Header.Id = rpcId;
             Header.ByteCount = byteCount;
