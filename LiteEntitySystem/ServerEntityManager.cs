@@ -608,6 +608,8 @@ namespace LiteEntitySystem
                 {
                     if(rpcNode.OnlyForPlayer != null && rpcNode.OnlyForPlayer != player)
                         continue;
+                    if(Utils.SequenceDiff(rpcNode.Header.Tick, player.LastReceivedTick) < 0)
+                        continue;
                     
                     var entity = EntitiesDict[rpcNode.Header.EntityId];
                     if (entity is EntityLogic el && playerController != null && playerController.IsEntityDiffSyncDisabled(el))
