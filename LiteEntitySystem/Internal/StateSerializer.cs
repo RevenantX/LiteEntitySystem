@@ -173,10 +173,10 @@ namespace LiteEntitySystem.Internal
             fixed (byte* lastEntityData = _latestEntityData) //make diff
             {
                 //overwrite IsSyncEnabled for each player
-                SyncGroup disabledSyncGroups = ~SyncGroup.All;
+                SyncGroup enabledSyncGroups = SyncGroup.All;
                 if (_entity is EntityLogic el && player.EntitySyncInfo.TryGetValue(el, out var syncGroupData) && syncGroupData.IsInitialized)
                 {
-                    disabledSyncGroups = ~syncGroupData.EnabledGroups;
+                    enabledSyncGroups = syncGroupData.EnabledGroups;
                     _fieldChangeTicks[el.IsSyncEnabledFieldId] = syncGroupData.LastChangedTick;
                     lastEntityData[HeaderSize + _fields[el.IsSyncEnabledFieldId].FixedOffset] = (byte)syncGroupData.EnabledGroups;
                 }
@@ -221,7 +221,7 @@ namespace LiteEntitySystem.Internal
                         continue;
                     }
                     
-                    if((field.Flags & SyncGroupUtils.ToSyncFlags(disabledSyncGroups)) != 0)
+                    if(SyncGroupUtils.IsSyncVarDisabled(enabledSyncGroups, field.Flags))
                     {
                         //IgnoreDiffSyncSettings
                         continue;

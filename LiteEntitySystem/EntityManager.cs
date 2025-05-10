@@ -45,7 +45,7 @@ namespace LiteEntitySystem
         SyncGroup4          = 1 << 7,
         
         ///<summary>Toggleable sync group 5. Can include SyncVars and RPCs.</summary>
-        SyncGroup5          = 1 << 8,
+        SyncGroup5          = 1 << 8
     }
 
     public enum NetworkMode

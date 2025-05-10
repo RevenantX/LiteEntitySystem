@@ -30,37 +30,46 @@ namespace LiteEntitySystem
         public bool IsGroupEnabled(SyncGroup group) => 
             !IsInitialized || EnabledGroups.HasFlagFast(group);
 
-        public void SetGroupEnabled(SyncGroup group, bool enabled)
-        {
-            byte bitMask = (byte)EnabledGroups;
-            EnabledGroups = (SyncGroup)(enabled 
-                ? bitMask | (1 << (byte)group)
-                : bitMask & ~(1 << (byte)group));
-        }
+        public void SetGroupEnabled(SyncGroup group, bool enabled) =>
+            EnabledGroups = enabled 
+                ? EnabledGroups | group
+                : EnabledGroups & ~group;
     }
 
     public static class SyncGroupUtils
     {
-        public const int SyncGroupsCount = 5;
-
         public static SyncFlags ToSyncFlags(SyncGroup sv)
         {
-            int bitMask = (byte)sv & 0x1F; //first 5 bits
+            int bitMask = (int)sv & 0x1F; //first 5 bits
             SyncFlags result = bitMask == 0 
                 ? SyncFlags.None
                 : (SyncFlags)(bitMask << 6); //because SyncFlags.SyncGroup1 is 1 << 6
             //Logger.Log($"SyncGroup: {Convert.ToString(bitMask, 2).PadLeft(16, '0')}, SyncFlags: {Convert.ToString((ushort)result, 2).PadLeft(16, '0')}");
             return result;
         }
-
-        public static ExecuteFlags ToExecuteFlag(SyncGroup sv)
+        
+        public static bool IsSyncVarDisabled(SyncGroup sv, SyncFlags flags)
         {
-            int bitMask = (byte)sv & 0x1F; //first 5 bits
-            ExecuteFlags result = bitMask == 0 
-                ? ExecuteFlags.None
-                : (ExecuteFlags)(bitMask << 4); //because ExecuteFlags.SyncGroup1 is 1 << 4
-            //Logger.Log($"SyncGroup: {Convert.ToString(bitMask, 2).PadLeft(16, '0')}, ExecuteFlags: {Convert.ToString((ushort)result, 2).PadLeft(16, '0')}");
-            return result;
+            int disabledMask = ~(int)sv & 0x1F; //first 5 bits
+            int syncFlagsMask = ((int)flags >> 6) & 0x1F; //shift right and cut to 5 bits too
+            if (syncFlagsMask == 0)
+                return false;
+            
+            bool isDisabled = (disabledMask & syncFlagsMask) != 0;
+            //Logger.Log($"IsSyncVarDisabled: {Convert.ToString(disabledMask, 2).PadLeft(16, '0')}, SyncFlags: {Convert.ToString(syncFlagsMask, 2).PadLeft(16, '0')}: {isDisabled}");
+            return isDisabled;
+        }
+
+        public static bool IsRPCDisabled(SyncGroup sv, ExecuteFlags flags)
+        {
+            int disabledMask = ~(int)sv & 0x1F; //first 5 bits
+            int executeFlagsMask = ((int)flags >> 4) & 0x1F; //shift right and cut to 5 bits too
+            if (executeFlagsMask == 0)
+                return false;
+            
+            bool isDisabled = (disabledMask & executeFlagsMask) != 0;
+            //Logger.Log($"IsRPCDisabled: {Convert.ToString(disabledMask, 2).PadLeft(16, '0')}, ExecuteFlags: {Convert.ToString(executeFlagsMask, 2).PadLeft(16, '0')}: {isDisabled}");
+            return isDisabled;
         }
     }
 }

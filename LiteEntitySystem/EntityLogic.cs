@@ -99,17 +99,31 @@ namespace LiteEntitySystem
         /// </summary>
         public bool IsPredicted => _isPredicted.Value;
 
-        /// <summary>
-        /// Client only. Is synchronization of this entity to local player enabled
-        /// </summary>
-        /// <returns>true - when we have data on client or when called on server</returns>
-        public bool IsSyncGroupEnabled(SyncGroup group) => (_isSyncEnabled.Value & group) == group;
-
         //specific per player
         private SyncVar<SyncGroup> _isSyncEnabled;
         
         //for overwriting
         internal int IsSyncEnabledFieldId => _isSyncEnabled.FieldId;
+        
+        /// <summary>
+        /// Client only. Is synchronization of this entity to local player enabled
+        /// </summary>
+        /// <returns>true - when we have data on client or when called on server</returns>
+        public bool IsSyncGroupEnabled(SyncGroup group)
+        {
+            bool result = (_isSyncEnabled.Value & group) == group;
+            //Logger.Log($"IsSyncEnabled: {group} - {result}");
+            return result;
+        }
+
+        /// <summary>
+        /// Called when SyncGroups enabled or disabled on client
+        /// </summary>
+        /// <param name="enabledGroups">groups that are currently enabled</param>
+        protected virtual void OnSyncGroupsChanged(SyncGroup enabledGroups)
+        {
+            
+        }
         
         //on client it works only in rollback
         internal void EnableLagCompensation(NetPlayer player)
@@ -404,6 +418,8 @@ namespace LiteEntitySystem
                 if(e.InternalOwnerId.Value == e.EntityManager.InternalPlayerId)
                     e.ClientManager.AddOwned(this);
             });
+            
+            r.BindOnChange<SyncGroup, EntityLogic>(ref _isSyncEnabled, (e, _) => e.OnSyncGroupsChanged(e._isSyncEnabled.Value));
             
             r.CreateRPCAction<EntityLogic, ChangeParentData>(
                 (e, data) =>

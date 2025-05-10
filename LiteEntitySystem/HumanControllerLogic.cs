@@ -33,8 +33,6 @@ namespace LiteEntitySystem
         //id + version + request id
         internal const int MinRequestSize = sizeof(ushort) + 1 + sizeof(ushort);
         
-        private static RemoteCall<EntitySyncInfo> OnEntitySyncChangedRPC;
-        
         //client requests
         private static RemoteCall<ServerResponse> ServerResponseRpc;
         
@@ -74,22 +72,7 @@ namespace LiteEntitySystem
         protected override void RegisterRPC(ref RPCRegistrator r)
         {
             base.RegisterRPC(ref r);
-            r.CreateRPCAction((HumanControllerLogic c, EntitySyncInfo s) =>
-            {
-                c.OnEntityDiffSyncChanged(c.EntityManager.GetEntityById<EntityLogic>(s.Entity), s.SyncEnabled);
-            }, ref OnEntitySyncChangedRPC, ExecuteFlags.SendToOwner);
             r.CreateRPCAction(this, OnServerResponse, ref ServerResponseRpc, ExecuteFlags.SendToOwner);
-        }
-
-        /// <summary>
-        /// Called when entity diff sync changed (enabled or disabled)
-        /// useful for hiding disabled entities
-        /// </summary>
-        /// <param name="entity">entity</param>
-        /// <param name="enabled">sync enabled or disabled</param>
-        protected virtual void OnEntityDiffSyncChanged(EntityLogic entity, bool enabled)
-        {
-            
         }
 
         /// <summary>

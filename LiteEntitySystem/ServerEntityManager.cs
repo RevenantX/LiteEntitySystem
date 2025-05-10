@@ -493,14 +493,7 @@ namespace LiteEntitySystem
                 for(int i = 0; i < _netPlayers.Count; i++)
                 {
                     if (_netPlayers.GetByIndex(i).EntitySyncInfo.Remove(el, out var syncGroupData))
-                    {
-                        for (int j = 0; j < SyncGroupUtils.SyncGroupsCount; j++)
-                        {
-                            var syncGroup = (SyncGroup)j;
-                            if(!syncGroupData.IsGroupEnabled(syncGroup))
-                                MarkFieldsChanged(e, SyncGroupUtils.ToSyncFlags(syncGroup));
-                        }
-                    }
+                        MarkFieldsChanged(e, SyncGroupUtils.ToSyncFlags(~syncGroupData.EnabledGroups));
                 }
             }
             
@@ -677,15 +670,19 @@ namespace LiteEntitySystem
                     }
                     
                     var entity = EntitiesDict[rpcNode.Header.EntityId];
+                    var flags = rpcNode.ExecuteFlags;
+                    
                     if (entity is EntityLogic el && player.EntitySyncInfo.TryGetValue(el, out var syncGroups) && syncGroups.IsInitialized)
                     {
                         //Logger.Log($"SkipSend disabled: {rpcNode.Header.Tick}, {rpcNode.Header.Id}, EID: {rpcNode.Header.EntityId}");
                         //skip disabled rpcs
-                        if((rpcNode.ExecuteFlags & ~SyncGroupUtils.ToExecuteFlag(syncGroups.EnabledGroups)) != 0)
+                        if (SyncGroupUtils.IsRPCDisabled(syncGroups.EnabledGroups, rpcNode.ExecuteFlags))
+                        {
+                            //Logger.Log($"SkipSend disabled: {rpcNode.Header.Tick}, {rpcNode.Header.Id}, EID: {rpcNode.Header.EntityId}");
                             continue;
+                        }
                     }
-
-                    var flags = rpcNode.ExecuteFlags;
+                    
                     bool send = false;
                     
                     if (flags.HasFlagFast(ExecuteFlags.SendToAll))
