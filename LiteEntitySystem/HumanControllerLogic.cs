@@ -43,9 +43,6 @@ namespace LiteEntitySystem
         private ushort _requestId;
         private readonly Dictionary<ushort,Action<bool>> _awaitingRequests;
         
-        //entities that should be resynced after diffSync (server only)
-        private readonly SyncHashSet<EntitySharedReference> _skippedEntities = new();
-        
         //input part
         private readonly byte[] _firstFullInput;
         
@@ -53,87 +50,6 @@ namespace LiteEntitySystem
         internal readonly int MaxInputDeltaSize;
         internal readonly int InputDeltaBits;
         internal readonly int MinInputDeltaSize;
-        
-        /// <summary>
-        /// Change entity delta-diff synchronization for player that owns this controller
-        /// constructor and destruction will be synchronized anyways
-        /// works only on server
-        /// </summary>
-        /// <param name="entity">entity</param>
-        /// <param name="enable">true - enable sync (if was disabled), disable otherwise</param>
-        public void ChangeEntityDiffSync(EntityLogic entity, bool enable)
-        {
-            //ignore destroyed and owned
-            if (EntityManager.IsClient || entity.IsDestroyed || entity.InternalOwnerId == InternalOwnerId)
-                return;
-            if (!enable && !_skippedEntities.Contains(entity))
-            {
-                _skippedEntities.Add(entity);
-                ExecuteRPC(OnEntitySyncChangedRPC, new EntitySyncInfo { Entity = entity, SyncEnabled = false });
-            }
-            else if (enable && _skippedEntities.Remove(entity))
-            {
-                ForceSyncEntity(entity);
-                ExecuteRPC(OnEntitySyncChangedRPC, new EntitySyncInfo { Entity = entity, SyncEnabled = true });
-            }
-        }
-
-        /// <summary>
-        /// Is entity delta-diff synchronization disabled. Works on client and server
-        /// </summary>
-        /// <param name="entity">entity to check</param>
-        /// <returns>true if entity sync is disabled</returns>
-        public bool IsEntityDiffSyncDisabled(EntitySharedReference entity) =>
-            _skippedEntities.Contains(entity) && !EntityManager.GetEntityById<EntityLogic>(entity).IsDestroyed;
-        
-        /// <summary>
-        /// Is entity delta-diff synchronization disabled. Works on client and server
-        /// </summary>
-        /// <param name="entity">entity to check</param>
-        /// <returns>true if entity sync is disabled</returns>
-        public bool IsEntityDiffSyncDisabled(EntityLogic entity) =>
-            _skippedEntities.Contains(entity) && !entity.IsDestroyed;
-
-        /// <summary>
-        /// Enable diff sync for all entities that has disabled diff sync
-        /// </summary>
-        public void ResetEntitiesDiffSync()
-        {
-            if (EntityManager.IsClient)
-                return;
-            foreach (var entityRef in _skippedEntities)
-            {
-                var entity = EntityManager.GetEntityById<EntityLogic>(entityRef);
-                if(entity == null)
-                    continue;
-                ForceSyncEntity(entity);
-                ExecuteRPC(OnEntitySyncChangedRPC, new EntitySyncInfo { Entity = entity, SyncEnabled = true });
-            }
-            _skippedEntities.Clear();
-        }
-
-        protected internal override void OnSyncRequested()
-        {
-            //send skipped on sync
-            foreach (var entityRef in _skippedEntities)
-            {
-                var entity = EntityManager.GetEntityById<EntityLogic>(entityRef);
-                if(entity != null)
-                    ExecuteRPC(OnEntitySyncChangedRPC, new EntitySyncInfo { Entity = entity, SyncEnabled = false });
-            }
-        }
-
-        //add to force sync list and trigger force entity sync in state serializer
-        internal void ForceSyncEntity(InternalEntity entity) =>
-            ServerManager.ForceEntitySync(InternalOwnerId, entity);
-
-        private void OnEntityDestroyed(EntityLogic entityLogic)
-        {
-            if (_skippedEntities.Remove(entityLogic))
-            {
-                ServerManager.ForceEntitySync(InternalOwnerId, entityLogic);
-            }
-        }
         
         protected HumanControllerLogic(EntityParams entityParams, int inputSize) : base(entityParams)
         {
@@ -144,22 +60,15 @@ namespace LiteEntitySystem
             
             if (EntityManager.IsServer)
             {
-                EntityManager.GetEntities<EntityLogic>().OnDestroyed += OnEntityDestroyed;
                 _firstFullInput = new byte[InputSize];
             }
             else
                 _awaitingRequests = new Dictionary<ushort, Action<bool>>();
+            
             _requestWriter.Put(EntityManager.HeaderByte);
             _requestWriter.Put(InternalPackets.ClientRequest);
             _requestWriter.Put(entityParams.Header.Id);
             _requestWriter.Put(entityParams.Header.Version);
-        }
-        
-        protected override void OnDestroy()
-        {
-            if (EntityManager.IsServer)
-                EntityManager.GetEntities<EntityLogic>().OnDestroyed -= OnEntityDestroyed;
-            base.OnDestroy();
         }
 
         protected override void RegisterRPC(ref RPCRegistrator r)

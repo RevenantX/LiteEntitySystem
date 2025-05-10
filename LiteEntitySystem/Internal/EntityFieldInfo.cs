@@ -23,19 +23,34 @@
         public int PredictedOffset;
 
         //for value type
-        public EntityFieldInfo(
+        public EntityFieldInfo(string name, ValueTypeProcessor valueTypeProcessor, int offset, SyncVarFlags flags) : 
+            this(name, valueTypeProcessor, offset, -1, flags, FieldType.SyncVar)
+        {
+
+        }
+
+        //For syncable syncvar
+        public EntityFieldInfo(string name, ValueTypeProcessor valueTypeProcessor, int offset, int syncableSyncVarOffset, SyncVarFlags flags) :
+            this(name, valueTypeProcessor, offset, syncableSyncVarOffset, flags, FieldType.SyncableSyncVar)
+        {
+
+        }
+        
+        private EntityFieldInfo(
             string name,
             ValueTypeProcessor valueTypeProcessor,
             int offset,
-            SyncVarFlags flags)
+            int syncableSyncVarOffset,
+            SyncVarFlags flags,
+            FieldType fieldType)
         {
             Name = name;
             TypeProcessor = valueTypeProcessor;
-            SyncableSyncVarOffset = -1;
+            SyncableSyncVarOffset = syncableSyncVarOffset;
             Offset = offset;
             Size = (uint)TypeProcessor.Size;
             IntSize = TypeProcessor.Size;
-            FieldType = FieldType.SyncVar;
+            FieldType = fieldType;
             FixedOffset = 0;
             PredictedOffset = 0;
             OnSync = null;
@@ -45,29 +60,6 @@
                            !Flags.HasFlagFast(SyncFlags.NeverRollBack));
         }
 
-        //For syncable syncvar
-        public EntityFieldInfo(
-            string name,
-            ValueTypeProcessor valueTypeProcessor,
-            int offset,
-            int syncableSyncVarOffset,
-            SyncVarFlags flags)
-        {
-            Name = name;
-            TypeProcessor = valueTypeProcessor;
-            SyncableSyncVarOffset = syncableSyncVarOffset;
-            Offset = offset;
-            Size = (uint)TypeProcessor.Size;
-            IntSize = TypeProcessor.Size;
-            FieldType = FieldType.SyncableSyncVar;
-            FixedOffset = 0;
-            PredictedOffset = 0;
-            OnSync = null;
-            Flags = flags?.Flags ?? SyncFlags.None;
-            IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
-                          (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
-                           !Flags.HasFlagFast(SyncFlags.NeverRollBack));
-        }
 
         public unsafe bool ReadField(
             InternalEntity entity, 

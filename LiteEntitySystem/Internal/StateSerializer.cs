@@ -51,12 +51,20 @@ namespace LiteEntitySystem.Internal
                 *(EntityDataHeader*)data = _entity.DataHeader;
         }
         
-        public unsafe void MarkFieldChanged<T>(ushort fieldId, ushort tick, ref T newValue) where T : unmanaged
+        public unsafe void UpdateFieldValue<T>(ushort fieldId, ushort tick, ref T newValue) where T : unmanaged
         {
             LastChangedTick = tick;
             _fieldChangeTicks[fieldId] = tick;
             fixed (byte* data = &_latestEntityData[HeaderSize + _fields[fieldId].FixedOffset])
                 *(T*)data = newValue;
+        }
+        
+        public void MarkFieldsChanged(ushort tick, SyncFlags onlyWithFlags)
+        {
+            LastChangedTick = tick;
+            for (int i = 0; i < _fieldsCount; i++)
+                if ((_fields[i].Flags & onlyWithFlags) == onlyWithFlags)
+                    _fieldChangeTicks[i] = tick;
         }
 
         public int GetMaximumSize() =>
@@ -131,7 +139,7 @@ namespace LiteEntitySystem.Internal
             _latestEntityData = null;
         }
 
-        public unsafe bool MakeDiff(byte playerId, ushort minimalTick, ushort playerTick, byte* resultData, ref int position, HumanControllerLogic playerController)
+        public unsafe bool MakeDiff(NetPlayer player, ushort minimalTick, byte* resultData, ref int position)
         {
             if (_entity == null)
             {
@@ -150,12 +158,8 @@ namespace LiteEntitySystem.Internal
                 _versionChangedTick = minimalTick;
             
             //skip sync for non owners
-            bool isOwned = _entity.InternalOwnerId.Value == playerId;
+            bool isOwned = _entity.InternalOwnerId.Value == player.Id;
             if (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned)
-                return false;
-            
-            //skip diff sync if disabled
-            if (playerController != null && playerController.IsEntityDiffSyncDisabled(new EntitySharedReference(_entity.Id, _entity.Version)))
                 return false;
             
             //make diff
@@ -168,6 +172,15 @@ namespace LiteEntitySystem.Internal
 
             fixed (byte* lastEntityData = _latestEntityData) //make diff
             {
+                //overwrite IsSyncEnabled for each player
+                SyncGroup disabledSyncGroups = ~SyncGroup.All;
+                if (_entity is EntityLogic el && player.EntitySyncInfo.TryGetValue(el, out var syncGroupData) && syncGroupData.IsInitialized)
+                {
+                    disabledSyncGroups = ~syncGroupData.EnabledGroups;
+                    _fieldChangeTicks[el.IsSyncEnabledFieldId] = syncGroupData.LastChangedTick;
+                    lastEntityData[HeaderSize + _fields[el.IsSyncEnabledFieldId].FixedOffset] = (byte)syncGroupData.EnabledGroups;
+                }
+                
                 byte* entityDataAfterHeader = lastEntityData + HeaderSize;
                 // -1 for cycle
                 byte* fields = resultData + startPos + DiffHeaderSize - 1;
@@ -193,7 +206,7 @@ namespace LiteEntitySystem.Internal
                     }
                     
                     //not actual
-                    if (Utils.SequenceDiff(_fieldChangeTicks[i], playerTick) <= 0)
+                    if (Utils.SequenceDiff(_fieldChangeTicks[i], player.CurrentServerTick) <= 0)
                     {
                         //Logger.Log($"SkipOld: {field.Name}");
                         //old data
@@ -205,6 +218,12 @@ namespace LiteEntitySystem.Internal
                         ((field.Flags & SyncFlags.OnlyForOtherPlayers) != 0 && isOwned))
                     {
                         //Logger.Log($"SkipSync: {field.Name}, isOwned: {isOwned}");
+                        continue;
+                    }
+                    
+                    if((field.Flags & SyncGroupUtils.ToSyncFlags(disabledSyncGroups)) != 0)
+                    {
+                        //IgnoreDiffSyncSettings
                         continue;
                     }
                     
