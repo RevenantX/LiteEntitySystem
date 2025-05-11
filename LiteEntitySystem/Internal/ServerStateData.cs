@@ -10,7 +10,7 @@ namespace LiteEntitySystem.Internal
         public readonly RPCHeader Header;
         public readonly EntitySharedReference EntityId;
         public readonly int Offset;
-        public readonly int SyncableOffset;
+        public readonly int[] SyncableOffsets;
         public readonly MethodCallDelegate Delegate;
         public bool Executed;
 
@@ -20,7 +20,7 @@ namespace LiteEntitySystem.Internal
             EntityId = entityId;
             Delegate = rpcFieldInfo.Method;
             Offset = offset;
-            SyncableOffset = rpcFieldInfo.SyncableOffset;
+            SyncableOffsets = rpcFieldInfo.SyncableOffsets;
             Executed = false;
             if (Delegate == null)
                 Logger.LogError($"ZeroRPC: {header.Id}");
@@ -30,7 +30,7 @@ namespace LiteEntitySystem.Internal
     internal readonly struct InterpolatedCache
     {
         public readonly InternalEntity Entity;
-        public readonly int FieldOffset;
+        public readonly int[] FieldOffsets;
         public readonly int FieldFixedOffset;
         public readonly ValueTypeProcessor TypeProcessor;
         public readonly int StateReaderOffset;
@@ -38,7 +38,7 @@ namespace LiteEntitySystem.Internal
         public InterpolatedCache(InternalEntity entity, ref EntityFieldInfo field, int offset)
         {
             Entity = entity;
-            FieldOffset = field.Offset;
+            FieldOffsets = field.Offsets;
             FieldFixedOffset = field.FixedOffset;
             TypeProcessor = field.TypeProcessor;
             StateReaderOffset = offset;
@@ -149,7 +149,14 @@ namespace LiteEntitySystem.Internal
                 }
                 rpc.Executed = true;
                 entityManager.CurrentRPCTick = rpc.Header.Tick;
-                var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, rpc.SyncableOffset);
+                InternalBaseClass syncable = entity;
+                for (int j = 0; j < rpc.SyncableOffsets.Length; j++)
+                {
+                    syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, rpc.SyncableOffsets[j]);
+                    if (syncable == null)
+                        throw new NullReferenceException($"SyncVar at offset {rpc.SyncableOffsets[j]} is null");
+                }
+                var syncableField = (SyncableField)syncable;
                 if (syncSet.Add(syncableField))
                     syncableField.BeforeReadRPC();
                 try
@@ -231,7 +238,7 @@ namespace LiteEntitySystem.Internal
                 //Logger.Log($"[CEM] ReadRPC. RpcId: {header.Id}, Tick: {header.Tick}, TypeSize: {header.TypeSize}, Count: {header.Count}");
 
                 //this is entity rpc
-                if (rpcCache.SyncableOffset == -1)
+                if (rpcCache.SyncableOffsets.Length == 0)
                 {
                     _remoteCallsCaches[_remoteCallsCount] = rpcCache;
                     _remoteCallsCount++;

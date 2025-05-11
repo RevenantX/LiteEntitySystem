@@ -158,8 +158,16 @@ namespace LiteEntitySystem.Internal
                 _entity.OnSyncRequested();
                 var syncableFields = _entity.ClassData.SyncableFields;
                 for (int i = 0; i < syncableFields.Length; i++)
-                    RefMagic.RefFieldValue<SyncableField>(_entity, syncableFields[i].Offset)
-                        .OnSyncRequested();
+                {
+                    InternalBaseClass syncable = _entity;
+                    for (int j = 0; j < syncableFields[i].Offsets.Length; j++)
+                    {
+                        syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, syncableFields[i].Offsets[j]);
+                        if (syncable == null)
+                            throw new NullReferenceException($"SyncVar at offset {syncableFields[i].Offsets[j]} is null");
+                    }
+                    ((SyncableField)syncable).OnSyncRequested();
+                }
             }
             catch (Exception e)
             {

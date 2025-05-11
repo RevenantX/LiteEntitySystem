@@ -283,6 +283,33 @@ namespace LiteEntitySystem
                 : (Marshal.ReadInt32(fieldInfo.FieldHandle.Value + DotNetOffset) & 0xFFFFFF) + IntPtr.Size;
         }
 
+        internal static SyncableField GetSyncableField(InternalBaseClass baseClass, int[] offsets)
+        {
+            InternalBaseClass syncable = baseClass;
+            for (int j = 0; j < offsets.Length; j++)
+            {
+                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsets[j]);
+                if (syncable == null)
+                    throw new NullReferenceException($"SyncableField at offset {offsets[j]} is null");
+            }
+
+            return (SyncableField)syncable;
+        }
+
+        internal static SyncVar<T> GetSyncableSyncVar<T>(InternalBaseClass baseClass, int[] offsets) where T : unmanaged
+        {
+            InternalBaseClass syncable = baseClass;
+            for (int i = 0; i < offsets.Length-1; i++)
+            {
+                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsets[i]);
+                if (syncable == null)
+                    throw new NullReferenceException($"SyncableField at offset {offsets[i]} is null");
+            }
+            ref var a = ref RefMagic.RefFieldValue<SyncVar<T>>(syncable, offsets[offsets.Length-1]);
+
+            return a;
+        }
+
         static Utils()
         {            
             IsMono = Type.GetType("Mono.Runtime") != null
