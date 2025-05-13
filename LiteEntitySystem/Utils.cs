@@ -296,7 +296,7 @@ namespace LiteEntitySystem
             return (SyncableField)syncable;
         }
 
-        internal static SyncVar<T> GetSyncableSyncVar<T>(InternalBaseClass baseClass, int[] offsets) where T : unmanaged
+        internal static ref SyncVar<T> GetSyncableSyncVar<T>(InternalBaseClass baseClass, int[] offsets) where T : unmanaged
         {
             InternalBaseClass syncable = baseClass;
             for (int i = 0; i < offsets.Length-1; i++)
@@ -307,7 +307,7 @@ namespace LiteEntitySystem
             }
             ref var a = ref RefMagic.RefFieldValue<SyncVar<T>>(syncable, offsets[offsets.Length-1]);
 
-            return a;
+            return ref a;
         }
 
         static Utils()

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using ImGuiGodot.Internal;
 
 namespace LiteEntitySystem.Internal
 {
@@ -315,25 +314,25 @@ namespace LiteEntitySystem.Internal
                             // top-level field on the entity itself
                             ef = new EntityFieldInfo(name, processor, offsetMap.ToArray(), syncVarFlags, FieldType.SyncVar);
                             Logger.Log($"Registered field: {name} with offsets {string.Join(",", offsetMap)}");
+                        }
 
-                            if (syncFlags.HasFlagFast(SyncFlags.Interpolated) && !ft.IsEnum)
-                            {
-                                InterpolatedFieldsSize += fieldSize;
-                                InterpolatedCount++;
-                            }
+                        if (syncFlags.HasFlagFast(SyncFlags.Interpolated) && !ft.IsEnum)
+                        {
+                            InterpolatedFieldsSize += fieldSize;
+                            InterpolatedCount++;
+                        }
 
-                            if (syncFlags.HasFlagFast(SyncFlags.LagCompensated))
-                            {
-                                lagCompensatedFields.Add(ef);
-                                LagCompensatedSize += fieldSize;
-                            }
+                        if (syncFlags.HasFlagFast(SyncFlags.LagCompensated))
+                        {
+                            lagCompensatedFields.Add(ef);
+                            LagCompensatedSize += fieldSize;
                         }
 
                         if (ef.IsPredicted)
-                            PredictedSize += ef.IntSize;
+                            PredictedSize += fieldSize;
 
                         fields.Add(ef);
-                        FixedFieldsSize += ef.IntSize;
+                        FixedFieldsSize += fieldSize;
                     }
                     // --- nested SyncableFieldType ---
                     else if (ft.IsSubclassOf(SyncableFieldType))

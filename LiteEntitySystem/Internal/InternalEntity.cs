@@ -206,24 +206,7 @@ namespace LiteEntitySystem.Internal
             {
                 ref var field = ref classData.Fields[i];
 
-                // SyncVar inside a syncable field (first-level only)
-                if (field.FieldType == FieldType.SyncVar)
-                {
-                    field.TypeProcessor.InitSyncVar(this, field.Offsets.Last(), onChangeTarget, (ushort)i);
-                }
-                else
-                {
-                    // find SyncVar via offset map
-                    InternalBaseClass syncable = this;
-                    for (int j = 0; j < field.Offsets.Length-1; j++)
-                    {
-                        syncable = RefMagic.RefFieldValue<SyncableField>(syncable, field.Offsets[j]);
-                        if (syncable == null)
-                            throw new NullReferenceException($"SyncVar at offset {field.Offsets[j]} is null");
-                    }
-
-                    field.TypeProcessor.InitSyncVar(syncable, field.Offsets.Last(), onChangeTarget, (ushort)i);
-                }
+                field.TypeProcessor.InitSyncVar(this, field.Offsets, onChangeTarget, (ushort)i);
             }
 
             // Register top-level RPCs if not yet cached

@@ -4,16 +4,16 @@ using System.Collections.Generic;
 namespace LiteEntitySystem.Internal
 {
     public delegate T InterpolatorDelegateWithReturn<T>(T prev, T current, float t) where T : unmanaged;
-    
+
     internal abstract unsafe class ValueTypeProcessor
     {
-        public static readonly Dictionary<Type, ValueTypeProcessor> Registered = new ();
-        
+        public static readonly Dictionary<Type, ValueTypeProcessor> Registered = new();
+
         internal readonly int Size;
 
         protected ValueTypeProcessor(int size) => Size = size;
 
-        internal abstract void InitSyncVar(InternalBaseClass obj, int offset, InternalEntity entity, ushort fieldId);
+        internal abstract void InitSyncVar(InternalBaseClass obj, int[] offsetMap, InternalEntity entity, ushort fieldId);
         internal abstract void SetFrom(InternalBaseClass obj, int[] offsetMap, byte* data);
         internal abstract bool SetFromAndSync(InternalBaseClass obj, int[] offsetMap, byte* data);
         internal abstract void WriteTo(InternalBaseClass obj, int[] offsetMap, byte* data);
@@ -30,89 +30,44 @@ namespace LiteEntitySystem.Internal
         internal override void SetInterpolation(InternalBaseClass obj, int[] offsetMap, byte* prev, byte* current, float fTimer) =>
             throw new Exception($"This type: {typeof(T)} can't be interpolated");
 
-        internal override void InitSyncVar(InternalBaseClass obj, int offset, InternalEntity entity, ushort fieldId)
+        internal override void InitSyncVar(InternalBaseClass obj, int[] offsetMap, InternalEntity entity, ushort fieldId)
         {
-            
-            RefMagic.RefFieldValue<SyncVar<T>>(obj, offset).Init(entity, fieldId);
+            Utils.GetSyncableSyncVar<T>(obj, offsetMap).Init(entity, fieldId);
         }
 
         internal override void LoadHistory(InternalBaseClass obj, int[] offsetMap, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
-            ref var a = ref RefMagic.RefFieldValue<SyncVar<T>>(syncable, offsetMap[offsetMap.Length-1]);
-            *(T*)tempHistory = a;
-            a.SetDirect(*(T*)historyA);
+            ref var syncvar = ref Utils.GetSyncableSyncVar<T>(obj, offsetMap);
+
+            *(T*)tempHistory = syncvar;
+            syncvar.SetDirect(*(T*)historyA);
         }
-        
+
         internal override void SetFrom(InternalBaseClass obj, int[] offsetMap, byte* data)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
-            RefMagic.RefFieldValue<SyncVar<T>>(syncable, offsetMap[offsetMap.Length-1]).SetDirect(*(T*)data);
+            Utils.GetSyncableSyncVar<T>(obj, offsetMap).SetDirect(*(T*)data);
         }
 
         internal override bool SetFromAndSync(InternalBaseClass obj, int[] offsetMap, byte* data)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
-            return RefMagic.RefFieldValue<SyncVar<T>>(syncable, offsetMap[offsetMap.Length-1]).SetFromAndSync(data);
+            return Utils.GetSyncableSyncVar<T>(obj, offsetMap).SetFromAndSync(data);
         }
-            
+
 
         internal override void WriteTo(InternalBaseClass obj, int[] offsetMap, byte* data)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
-            
-            *(T*)data = RefMagic.RefFieldValue<SyncVar<T>>(syncable, offsetMap[offsetMap.Length-1]);
+            *(T*)data = Utils.GetSyncableSyncVar<T>(obj, offsetMap);
         }
 
         internal override int GetHashCode(InternalBaseClass obj, int[] offsetMap)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
-            
-            return RefMagic.RefFieldValue<SyncVar<T>>(syncable, offsetMap[offsetMap.Length-1]).GetHashCode();
+            return Utils.GetSyncableSyncVar<T>(obj, offsetMap).GetHashCode();
         }
-            
-        
+
+
         internal override string ToString(InternalBaseClass obj, int[] offsetMap)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
-            
-            return RefMagic.RefFieldValue<SyncVar<T>>(syncable, offsetMap[offsetMap.Length-1]).ToString();
+            return Utils.GetSyncableSyncVar<T>(obj, offsetMap).ToString();
         }
     }
 
@@ -120,59 +75,27 @@ namespace LiteEntitySystem.Internal
     {
         internal override unsafe void SetInterpolation(InternalBaseClass obj, int[] offsetMap, byte* prev, byte* current, float fTimer)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
-            
-            RefMagic.RefFieldValue<SyncVar<int>>(syncable, offsetMap[offsetMap.Length-1]).SetDirect(Utils.Lerp(*(int*)prev, *(int*)current, fTimer));
+            Utils.GetSyncableSyncVar<int>(obj, offsetMap).SetDirect(Utils.Lerp(*(int*)prev, *(int*)current, fTimer));
         }
-        
+
         internal override unsafe void LoadHistory(InternalBaseClass obj, int[] offsetMap, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
-
-            ref var a = ref RefMagic.RefFieldValue<SyncVar<int>>(syncable, offsetMap[offsetMap.Length-1]);
+            ref var a = ref Utils.GetSyncableSyncVar<int>(obj, offsetMap);
             *(int*)tempHistory = a;
             a.SetDirect(Utils.Lerp(*(int*)historyA, *(int*)historyB, lerpTime));
         }
     }
-    
+
     internal class ValueTypeProcessorLong : ValueTypeProcessor<long>
     {
         internal override unsafe void SetInterpolation(InternalBaseClass obj, int[] offsetMap, byte* prev, byte* current, float fTimer)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
-
-            RefMagic.RefFieldValue<SyncVar<long>>(syncable, offsetMap[offsetMap.Length-1]).SetDirect(Utils.Lerp(*(long*)prev, *(long*)current, fTimer));
+            Utils.GetSyncableSyncVar<long>(obj, offsetMap).SetDirect(Utils.Lerp(*(long*)prev, *(long*)current, fTimer));
         }
-        
+
         internal override unsafe void LoadHistory(InternalBaseClass obj, int[] offsetMap, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
-
-           ref var a = ref RefMagic.RefFieldValue<SyncVar<long>>(syncable, offsetMap[offsetMap.Length-1]);
+            ref var a = ref Utils.GetSyncableSyncVar<long>(obj, offsetMap);
             *(long*)tempHistory = a;
             a.SetDirect(Utils.Lerp(*(long*)historyA, *(long*)historyB, lerpTime));
         }
@@ -182,59 +105,31 @@ namespace LiteEntitySystem.Internal
     {
         internal override unsafe void SetInterpolation(InternalBaseClass obj, int[] offsetMap, byte* prev, byte* current, float fTimer)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
+            var syncvar = Utils.GetSyncableSyncVar<float>(obj, offsetMap);
+            var a = *(float*)prev;
+            var b = *(float*)current;
 
-            RefMagic.RefFieldValue<SyncVar<float>>(syncable, offsetMap[offsetMap.Length-1]).SetDirect(Utils.Lerp(*(float*)prev, *(float*)current, fTimer));
+            syncvar.SetDirect(Utils.Lerp(a, b, fTimer));
         }
-        
+
         internal override unsafe void LoadHistory(InternalBaseClass obj, int[] offsetMap, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
-            
-            ref var a = ref RefMagic.RefFieldValue<SyncVar<float>>(syncable, offsetMap[offsetMap.Length-1]);
+            ref var a = ref  Utils.GetSyncableSyncVar<float>(obj, offsetMap);
             *(float*)tempHistory = a;
             a.SetDirect(Utils.Lerp(*(float*)historyA, *(float*)historyB, lerpTime));
         }
     }
-    
+
     internal class ValueTypeProcessorDouble : ValueTypeProcessor<double>
     {
         internal override unsafe void SetInterpolation(InternalBaseClass obj, int[] offsetMap, byte* prev, byte* current, float fTimer)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
-            
-            RefMagic.RefFieldValue<SyncVar<double>>(syncable, offsetMap[offsetMap.Length-1]).SetDirect(Utils.Lerp(*(double*)prev, *(double*)current, fTimer));
+            Utils.GetSyncableSyncVar<double>(obj, offsetMap).SetDirect(Utils.Lerp(*(double*)prev, *(double*)current, fTimer));
         }
-        
+
         internal override unsafe void LoadHistory(InternalBaseClass obj, int[] offsetMap, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
-
-            ref var a = ref RefMagic.RefFieldValue<SyncVar<double>>(syncable, offsetMap[offsetMap.Length-1]);
+            ref var a = ref  Utils.GetSyncableSyncVar<double>(obj, offsetMap);
             *(double*)tempHistory = a;
             a.SetDirect(Utils.Lerp(*(double*)historyA, *(double*)historyB, lerpTime));
         }
@@ -246,28 +141,17 @@ namespace LiteEntitySystem.Internal
 
         internal override void SetInterpolation(InternalBaseClass obj, int[] offsetMap, byte* prev, byte* current, float fTimer)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
+            var syncvar = Utils.GetSyncableSyncVar<T>(obj, offsetMap);
 
-            RefMagic.RefFieldValue<SyncVar<T>>(syncable, offsetMap[offsetMap.Length-1]).SetDirect(_interpDelegate?.Invoke(*(T*)prev, *(T*)current, fTimer) ?? *(T*)prev);
+            var a = *(T*)prev;
+            var b = *(T*)current;
+
+            syncvar.SetDirect(_interpDelegate?.Invoke(*(T*)prev, *(T*)current, fTimer) ?? *(T*)prev);
         }
-        
+
         internal override void LoadHistory(InternalBaseClass obj, int[] offsetMap, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime)
         {
-            InternalBaseClass syncable = obj;
-            for (int i = 0; i < offsetMap.Length-1; i++)
-            {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsetMap[i]);
-                if (syncable == null)
-                    throw new NullReferenceException($"SyncVar at offset {offsetMap[i]} is null");
-            }
-            
-            ref var a = ref RefMagic.RefFieldValue<SyncVar<T>>(syncable, offsetMap[offsetMap.Length-1]);
+            ref var a = ref Utils.GetSyncableSyncVar<T>(obj, offsetMap);
             *(T*)tempHistory = a;
             a.SetDirect(_interpDelegate?.Invoke(*(T*)historyA, *(T*)historyB, lerpTime) ?? *(T*)historyA);
         }

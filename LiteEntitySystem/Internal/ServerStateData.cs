@@ -149,14 +149,9 @@ namespace LiteEntitySystem.Internal
                 }
                 rpc.Executed = true;
                 entityManager.CurrentRPCTick = rpc.Header.Tick;
-                InternalBaseClass syncable = entity;
-                for (int j = 0; j < rpc.SyncableOffsets.Length; j++)
-                {
-                    syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, rpc.SyncableOffsets[j]);
-                    if (syncable == null)
-                        throw new NullReferenceException($"SyncVar at offset {rpc.SyncableOffsets[j]} is null");
-                }
-                var syncableField = (SyncableField)syncable;
+
+                var syncableField = Utils.GetSyncableField(entity, rpc.SyncableOffsets);
+
                 if (syncSet.Add(syncableField))
                     syncableField.BeforeReadRPC();
                 try
@@ -168,6 +163,7 @@ namespace LiteEntitySystem.Internal
                     Logger.LogError($"Error when executing syncableRPC: {entity}. RPCID: {rpc.Header.Id}. {e}");
                 }
             }
+            
             foreach (var syncableField in syncSet)
                 syncableField.AfterReadRPC();
             entityManager.IsExecutingRPC = false;
