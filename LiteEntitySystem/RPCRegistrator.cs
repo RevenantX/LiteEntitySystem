@@ -248,14 +248,14 @@ namespace LiteEntitySystem
     public readonly ref struct SyncableRPCRegistrator
     {
         private readonly List<RpcFieldInfo> _calls;
-        private readonly int _syncableOffset;
+        private readonly int[] _syncableOffsets;
         private readonly ushort _initialCallsSize;
 
-        internal SyncableRPCRegistrator(int syncableOffset, List<RpcFieldInfo> remoteCallsList)
+        internal SyncableRPCRegistrator(int[] syncableOffsets, List<RpcFieldInfo> remoteCallsList)
         {
             _calls = remoteCallsList;
             _initialCallsSize = (ushort)_calls.Count;
-            _syncableOffset = syncableOffset;
+            _syncableOffsets = syncableOffsets;
         }
         
         public void CreateClientAction<TSyncField>(TSyncField self, Action methodToCall, ref RemoteCall remoteCallHandle) where TSyncField : SyncableField
@@ -286,28 +286,28 @@ namespace LiteEntitySystem
         {
             if (!remoteCallHandle.Initialized)
                 remoteCallHandle = new RemoteCall(null, (ushort)(_calls.Count - _initialCallsSize), 0);
-            _calls.Add(new RpcFieldInfo(_syncableOffset, RemoteCall.CreateMCD(methodToCall)));
+            _calls.Add(new RpcFieldInfo(_syncableOffsets, RemoteCall.CreateMCD(methodToCall)));
         }
 
         public void CreateClientAction<TSyncField, T>(Action<TSyncField, T> methodToCall, ref RemoteCall<T> remoteCallHandle) where T : unmanaged where TSyncField : SyncableField
         {
             if (!remoteCallHandle.Initialized)
                 remoteCallHandle = new RemoteCall<T>(null, (ushort)(_calls.Count - _initialCallsSize), 0);
-            _calls.Add(new RpcFieldInfo(_syncableOffset, RemoteCall<T>.CreateMCD(methodToCall)));
+            _calls.Add(new RpcFieldInfo(_syncableOffsets, RemoteCall<T>.CreateMCD(methodToCall)));
         }
         
         public void CreateClientAction<TSyncField, T>(SpanAction<TSyncField, T> methodToCall, ref RemoteCallSpan<T> remoteCallHandle) where T : unmanaged where TSyncField : SyncableField
         {
             if (!remoteCallHandle.Initialized)
                 remoteCallHandle = new RemoteCallSpan<T>(null, (ushort)(_calls.Count - _initialCallsSize), 0);
-            _calls.Add(new RpcFieldInfo(_syncableOffset, RemoteCallSpan<T>.CreateMCD(methodToCall)));
+            _calls.Add(new RpcFieldInfo(_syncableOffsets, RemoteCallSpan<T>.CreateMCD(methodToCall)));
         }
         
         public void CreateClientAction<TSyncField, T>(Action<TSyncField, T> methodToCall, ref RemoteCallSerializable<T> remoteCallHandle) where T : struct, ISpanSerializable where TSyncField : SyncableField
         {
             if (!remoteCallHandle.Initialized)
                 remoteCallHandle = new RemoteCallSerializable<T>(null, (ushort)(_calls.Count - _initialCallsSize), 0);
-            _calls.Add(new RpcFieldInfo(_syncableOffset, RemoteCallSerializable<T>.CreateMCD(methodToCall)));
+            _calls.Add(new RpcFieldInfo(_syncableOffsets, RemoteCallSerializable<T>.CreateMCD(methodToCall)));
         }
     }
 }

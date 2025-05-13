@@ -299,7 +299,7 @@ namespace LiteEntitySystem
         {
             ref var classData = ref ClassDataDict[entity.ClassId];
             foreach (EntityFieldInfo fi in classData.Fields)
-                resultPrinter.PrintFieldInfo(fi.Name, fi.TypeProcessor.ToString(entity, fi.Offset));
+                resultPrinter.PrintFieldInfo(fi.Name, fi.TypeProcessor.ToString(entity, fi.Offsets));
         }
 
         /// <summary>

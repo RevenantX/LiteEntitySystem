@@ -1,4 +1,6 @@
-﻿namespace LiteEntitySystem.Internal
+﻿using System.Linq;
+
+namespace LiteEntitySystem.Internal
 {
     internal enum FieldType
     {
@@ -10,8 +12,7 @@
     {
         public readonly string Name; //used for debug
         public readonly ValueTypeProcessor TypeProcessor;
-        public readonly int Offset;
-        public readonly int SyncableSyncVarOffset;
+        public readonly int[] Offsets;
         public readonly uint Size;
         public readonly int IntSize;
         public readonly FieldType FieldType;
@@ -26,16 +27,16 @@
         public EntityFieldInfo(
             string name,
             ValueTypeProcessor valueTypeProcessor,
-            int offset,
-            SyncVarFlags flags)
+            int[] offsets,
+            SyncVarFlags flags,
+            FieldType fieldType)
         {
             Name = name;
             TypeProcessor = valueTypeProcessor;
-            SyncableSyncVarOffset = -1;
-            Offset = offset;
+            Offsets = offsets;
             Size = (uint)TypeProcessor.Size;
             IntSize = TypeProcessor.Size;
-            FieldType = FieldType.SyncVar;
+            FieldType = fieldType;
             FixedOffset = 0;
             PredictedOffset = 0;
             OnSync = null;
@@ -46,27 +47,27 @@
         }
 
         //For syncable syncvar
-        public EntityFieldInfo(
-            string name,
-            ValueTypeProcessor valueTypeProcessor,
-            int offset,
-            int syncableSyncVarOffset,
-            SyncVarFlags flags)
-        {
-            Name = name;
-            TypeProcessor = valueTypeProcessor;
-            SyncableSyncVarOffset = syncableSyncVarOffset;
-            Offset = offset;
-            Size = (uint)TypeProcessor.Size;
-            IntSize = TypeProcessor.Size;
-            FieldType = FieldType.SyncableSyncVar;
-            FixedOffset = 0;
-            PredictedOffset = 0;
-            OnSync = null;
-            Flags = flags?.Flags ?? SyncFlags.None;
-            IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
-                          (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
-                           !Flags.HasFlagFast(SyncFlags.NeverRollBack));
-        }
+        // public EntityFieldInfo(
+        //     string name,
+        //     ValueTypeProcessor valueTypeProcessor,
+        //     int offset,
+        //     int syncableSyncVarOffset,
+        //     SyncVarFlags flags)
+        // {
+        //     Name = name;
+        //     TypeProcessor = valueTypeProcessor;
+        //     SyncableSyncVarOffset = syncableSyncVarOffset;
+        //     Offset = offset;
+        //     Size = (uint)TypeProcessor.Size;
+        //     IntSize = TypeProcessor.Size;
+        //     FieldType = FieldType.SyncableSyncVar;
+        //     FixedOffset = 0;
+        //     PredictedOffset = 0;
+        //     OnSync = null;
+        //     Flags = flags?.Flags ?? SyncFlags.None;
+        //     IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
+        //                   (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
+        //                    !Flags.HasFlagFast(SyncFlags.NeverRollBack));
+        // }
     }
 }

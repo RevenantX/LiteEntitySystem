@@ -158,8 +158,10 @@ namespace LiteEntitySystem.Internal
                 _entity.OnSyncRequested();
                 var syncableFields = _entity.ClassData.SyncableFields;
                 for (int i = 0; i < syncableFields.Length; i++)
-                    RefMagic.RefFieldValue<SyncableField>(_entity, syncableFields[i].Offset)
-                        .OnSyncRequested();
+                {
+                    SyncableField syncable = Utils.GetSyncableField(_entity, syncableFields[i].Offsets);
+                    syncable.OnSyncRequested();
+                }
             }
             catch (Exception e)
             {
