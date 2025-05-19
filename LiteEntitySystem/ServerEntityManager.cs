@@ -40,7 +40,6 @@ namespace LiteEntitySystem
         
         //use entity filter for correct sort (id+version+creationTime)
         private readonly AVLTree<InternalEntity> _changedEntities = new();
-        private readonly AVLTree<InternalEntity> _temporaryEntityTree = new();
         
         private byte[] _compressionBuffer = new byte[4096];
         
@@ -133,6 +132,7 @@ namespace LiteEntitySystem
                     if(enable)
                         MarkFieldsChanged(entity, SyncGroupUtils.ToSyncFlags(syncGroup));
                     forPlayer.EntitySyncInfo[entity] = syncGroupData;
+                    _changedEntities.Add(entity);
                 }
             }
             else if(!enable)
@@ -140,6 +140,7 @@ namespace LiteEntitySystem
                 syncGroupData = new SyncGroupData(_tick);
                 syncGroupData.SetGroupEnabled(syncGroup, false);
                 forPlayer.EntitySyncInfo.Add(entity, syncGroupData);
+                _changedEntities.Add(entity);
             }
         }
 
@@ -490,7 +491,7 @@ namespace LiteEntitySystem
             ConstructEntity(entity);
             
             //create OnConstructed rpc
-            stateSerializer.MakeConstructedRPC();
+            stateSerializer.MakeConstructedRPC(null);
             
             _changedEntities.Add(entity);
             _maxDataSize += stateSerializer.GetMaximumSize();
@@ -620,19 +621,14 @@ namespace LiteEntitySystem
                         player.FirstBaselineSent = true;
                         _syncForPlayer = player;
                         //new rpcs at first
-                        _temporaryEntityTree.Clear();
                         foreach (var e in GetEntities<InternalEntity>())
                         {
                             if (_stateSerializers[e.Id].ShouldSync(player.Id, false))
                             {
                                 _stateSerializers[e.Id].MakeNewRPC();
-                                _temporaryEntityTree.Add(e);
+                                _stateSerializers[e.Id].MakeConstructedRPC(player);
                             }
                         }
-                    
-                        //then construct rpcs
-                        foreach (var e in _temporaryEntityTree)
-                            _stateSerializers[e.Id].MakeConstructedRPC();
                         _syncForPlayer = null;
                         
                         foreach (var rpcNode in _pendingRPCs)
@@ -837,7 +833,7 @@ namespace LiteEntitySystem
                 }
                 
                 if (rpcNode.Header.Id == RemoteCallPacket.ConstructRPCId)
-                    stateSerializer.RefreshConstructedRPC(rpcNode);
+                    stateSerializer.RefreshConstructedRPC(rpcNode, player);
 
                 return true;
             }       

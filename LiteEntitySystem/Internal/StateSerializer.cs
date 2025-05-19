@@ -80,13 +80,30 @@ namespace LiteEntitySystem.Internal
         }
         
         //refresh construct rpc with latest values (old behaviour)
-        public unsafe void RefreshConstructedRPC(RemoteCallPacket packet)
+        public unsafe void RefreshConstructedRPC(RemoteCallPacket packet, NetPlayer player)
         {
-            fixed(byte* sourceData = _latestEntityData, rawData = packet.Data)
+            RefreshSyncGroupsVariable(player);
+            fixed (byte* sourceData = _latestEntityData, rawData = packet.Data)
+            {
                 RefMagic.CopyBlock(rawData, sourceData + HeaderSize, (uint)(_fullDataSize - HeaderSize));
+            }
         }
 
-        public void MakeConstructedRPC()
+        private SyncGroup RefreshSyncGroupsVariable(NetPlayer player)
+        {
+            SyncGroup enabledGroups = SyncGroup.All;
+            if (player != null && _entity is EntityLogic el &&
+                player.EntitySyncInfo.TryGetValue(el, out var syncGroupData) &&
+                syncGroupData.IsInitialized)
+            {
+                enabledGroups = syncGroupData.EnabledGroups;
+                _fieldChangeTicks[el.IsSyncEnabledFieldId] = syncGroupData.LastChangedTick;
+                _latestEntityData[HeaderSize + _fields[el.IsSyncEnabledFieldId].FixedOffset] = (byte)enabledGroups;
+            }
+            return enabledGroups;
+        }
+
+        public void MakeConstructedRPC(NetPlayer player)
         {
             //make on sync
             try
@@ -100,7 +117,9 @@ namespace LiteEntitySystem.Internal
             catch (Exception e)
             {
                 Logger.LogError($"Exception in OnSyncRequested: {e}");
-            }    
+            }
+
+            RefreshSyncGroupsVariable(player);
             
             //actual on constructed rpc
             _entity.ServerManager.AddRemoteCall(
@@ -173,16 +192,11 @@ namespace LiteEntitySystem.Internal
 
             fixed (byte* lastEntityData = _latestEntityData) //make diff
             {
-                //overwrite IsSyncEnabled for each player
-                SyncGroup enabledSyncGroups = SyncGroup.All;
-                if (_entity is EntityLogic el && player.EntitySyncInfo.TryGetValue(el, out var syncGroupData) && syncGroupData.IsInitialized)
-                {
-                    enabledSyncGroups = syncGroupData.EnabledGroups;
-                    _fieldChangeTicks[el.IsSyncEnabledFieldId] = syncGroupData.LastChangedTick;
-                    lastEntityData[HeaderSize + _fields[el.IsSyncEnabledFieldId].FixedOffset] = (byte)syncGroupData.EnabledGroups;
-                }
-                
                 byte* entityDataAfterHeader = lastEntityData + HeaderSize;
+                
+                //overwrite IsSyncEnabled for each player
+                SyncGroup enabledSyncGroups = RefreshSyncGroupsVariable(player);
+                
                 // -1 for cycle
                 byte* fields = resultData + startPos + DiffHeaderSize - 1;
                 //put entity id at 2
