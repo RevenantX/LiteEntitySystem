@@ -9,6 +9,18 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
+    public struct LESDiagnosticDataEntry
+    {
+        public bool IsRPC;
+        public int Count;
+        public int Size;
+        public string Name;
+
+        public override string ToString() => IsRPC
+            ? $"RPC: {Name}, TotalSize: {Size}, Count: {Count}"
+            : $"Entity: {Name}, TotalSize: {Size}, Count: {Count}";
+    }
+    
     public static class Utils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

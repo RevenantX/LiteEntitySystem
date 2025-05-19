@@ -188,6 +188,14 @@ namespace LiteEntitySystem.Internal
         {
             
         }
+        
+        /// <summary>
+        /// Called when entity constructed but at end of frame
+        /// </summary>
+        protected internal virtual void OnLateConstructed()
+        {
+            
+        }
 
         internal void RegisterRpcInternal()
         {

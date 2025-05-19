@@ -333,14 +333,10 @@ namespace LiteEntitySystem
                     }
 
                     while (_readyStates.Count > 0)
-                    {
                         _statesPool.Enqueue(_readyStates.ExtractMin());
-                    }
 
                     foreach (var stateData in _receivedStates.Values)
-                    {
                         _statesPool.Enqueue(stateData);
-                    }
 
                     _receivedStates.Clear();
 
@@ -349,7 +345,8 @@ namespace LiteEntitySystem
                         return DeserializeResult.Error;
                     
                     InternalPlayerId = header.PlayerId;
-                    _localPlayer = new NetPlayer(_netPeer, InternalPlayerId);
+                    if(_localPlayer == null || _localPlayer.Id != InternalPlayerId)
+                        _localPlayer = new NetPlayer(_netPeer, InternalPlayerId);
                     ServerTick = _stateA.Tick;
                     _lastReadyTick = ServerTick;
                     foreach (var controller in GetEntities<HumanControllerLogic>())
@@ -955,6 +952,7 @@ namespace LiteEntitySystem
         
         private void ExecuteSyncCalls(ServerStateData stateData)
         {
+            ExecuteLateConstruct();
             for (int i = 0; i < _syncCallsCount; i++)
                 _syncCalls[i].Execute(stateData);
             _syncCallsCount = 0;
@@ -1051,6 +1049,12 @@ namespace LiteEntitySystem
                 return false;
             }
             return true;
+        }
+        
+        public void GetDiagnosticData(Dictionary<int, LESDiagnosticDataEntry> diagnosticDataDict)
+        {
+            diagnosticDataDict.Clear();
+            _stateA?.GetDiagnosticData(EntitiesDict, ClassDataDict, diagnosticDataDict);
         }
     }
 }

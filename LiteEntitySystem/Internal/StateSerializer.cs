@@ -68,7 +68,7 @@ namespace LiteEntitySystem.Internal
         }
 
         public int GetMaximumSize() =>
-            _entity == null ? 0 : (int)_fullDataSize + sizeof(ushort);
+            _entity == null ? 0 : (int)_fullDataSize + + sizeof(ushort) + sizeof(ushort) + _fieldsFlagsSize;
 
         public void MakeNewRPC()
         {
@@ -100,7 +100,7 @@ namespace LiteEntitySystem.Internal
             catch (Exception e)
             {
                 Logger.LogError($"Exception in OnSyncRequested: {e}");
-            }
+            }    
             
             //actual on constructed rpc
             _entity.ServerManager.AddRemoteCall(
@@ -108,14 +108,13 @@ namespace LiteEntitySystem.Internal
                 new ReadOnlySpan<byte>(_latestEntityData, HeaderSize, (int)(_fullDataSize - HeaderSize)),
                 RemoteCallPacket.ConstructRPCId,
                 ExecuteFlags.SendToAll);
-            
             //Logger.Log($"Added constructed RPC: {_entity}");
         }
 
-        public void MakeDestroyedRPC()
+        public void MakeDestroyedRPC(ushort tick)
         {
             //Logger.Log($"DestroyEntity: {_entity.Id} {_entity.Version}, ClassId: {_entity.ClassId}");
-            LastChangedTick = _entity.EntityManager.Tick;
+            LastChangedTick = tick;
             _entity.ServerManager.AddRemoteCall(
                 _entity,
                 RemoteCallPacket.DestroyRPCId,
@@ -145,15 +144,19 @@ namespace LiteEntitySystem.Internal
                 return false;
             }
 
+            //refresh minimal tick to prevent errors on tick wrap-arounds
+            if (Utils.SequenceDiff(_versionChangedTick, minimalTick) < 0)
+                _versionChangedTick = minimalTick;
+            
+            //skip known
+            if (Utils.SequenceDiff(LastChangedTick, player.StateATick) <= 0)
+                return false;
+            
             if (_entity.IsDestroyed && Utils.SequenceDiff(LastChangedTick, minimalTick) < 0)
             {
                 Logger.LogError($"Should be removed before: {_entity}");
                 return false;
             }
-
-            //refresh minimal tick to prevent errors on tick wrap-arounds
-            if (Utils.SequenceDiff(_versionChangedTick, minimalTick) < 0)
-                _versionChangedTick = minimalTick;
             
             //skip sync for non owners
             bool isOwned = _entity.InternalOwnerId.Value == player.Id;

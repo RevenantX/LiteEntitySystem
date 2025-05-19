@@ -9,11 +9,13 @@ namespace LiteEntitySystem
     internal readonly struct RegisteredTypeInfo
     {
         public readonly ushort ClassId;
+        public readonly string ClassName;
         public readonly EntityConstructor<InternalEntity> Constructor;
 
-        public RegisteredTypeInfo(ushort classId, EntityConstructor<InternalEntity> constructor)
+        public RegisteredTypeInfo(ushort classId, string className, EntityConstructor<InternalEntity> constructor)
         {
             ClassId = classId;
+            ClassName = className;
             Constructor = constructor;
         }
     }
@@ -93,7 +95,7 @@ namespace LiteEntitySystem
         {
             ushort classId = (ushort)(id.GetEnumValue()+1);
             EntityClassInfo<TEntity>.ClassId = classId;
-            RegisteredTypes.Add(typeof(TEntity), new RegisteredTypeInfo(classId, constructor));
+            RegisteredTypes.Add(typeof(TEntity), new RegisteredTypeInfo(classId, id.ToString(), constructor));
             MaxId = Math.Max(MaxId, classId);
             return this;
         }

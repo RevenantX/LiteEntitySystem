@@ -39,6 +39,7 @@ namespace LiteEntitySystem
         internal float LerpTime;
         
         //server only
+        internal bool FirstBaselineSent;
         internal NetPlayerState State;
         internal readonly SequenceBinaryHeap<InputInfo> AvailableInput;
         internal readonly Dictionary<EntityLogic, SyncGroupData> EntitySyncInfo;

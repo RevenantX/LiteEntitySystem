@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using K4os.Compression.LZ4;
 
 namespace LiteEntitySystem.Internal
@@ -68,6 +67,79 @@ namespace LiteEntitySystem.Internal
         public int DataSize => _dataSize;
         
         private readonly HashSet<SyncableField> _syncablesSet = new();
+        
+        public unsafe void GetDiagnosticData(
+            InternalEntity[] entityDict, 
+            EntityClassData[] classDatas,
+            Dictionary<int, LESDiagnosticDataEntry> diagnosticDataDict)
+        {
+            fixed (byte* rawData = Data)
+            {
+                int readPos = 0;
+                while (readPos < _rpcEndPos)
+                {
+                    if (_rpcEndPos - readPos < sizeof(RPCHeader))
+                        break;
+                    var header = *(RPCHeader*)(rawData + readPos);
+                    int rpcSize = header.ByteCount + sizeof(RPCHeader);
+                    readPos += rpcSize;
+
+                    int dictId = ushort.MaxValue + header.Id;
+                    
+                    if(!diagnosticDataDict.TryGetValue(dictId, out LESDiagnosticDataEntry entry))
+                    {
+                        entry = new LESDiagnosticDataEntry { IsRPC = true, Count = 1, Name = $"{header.Id}", Size = rpcSize };
+                    }
+                    else
+                    {
+                        entry.Count++;
+                        entry.Size += rpcSize;
+                    }
+                    diagnosticDataDict[dictId] = entry;
+                }
+            }
+
+            for (int bytesRead = _dataOffset; bytesRead < _dataOffset + _dataSize;)
+            {
+                int initialReaderPosition = bytesRead;
+                int totalSize = BitConverter.ToUInt16(Data, initialReaderPosition);
+                bytesRead += totalSize;
+                ushort entityId = BitConverter.ToUInt16(Data, initialReaderPosition + sizeof(ushort));
+                int classId = entityDict[entityId] != null 
+                    ? entityDict[entityId].ClassId
+                    : -1;
+                string name = classId >= 0 
+                    ? classDatas[classId].ClassEnumName 
+                    : "Unknown";
+                
+                /*
+                if (classId >= 0)
+                {
+                    ref var classData = ref classDatas[classId];
+                    int entityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
+                    //interpolated fields goes first so can skip some checks
+                    for (int i = 0; i < classData.FieldsCount; i++)
+                    {
+                        if (!Utils.IsBitSet(Data, entityFieldsOffset, i))
+                            continue;
+                        ref var field = ref classData.Fields[i];
+                        Logger.Log($"{field.Name}({i}) - {field.Size}");
+                    }
+                }
+                */
+                
+                if(!diagnosticDataDict.TryGetValue(classId, out LESDiagnosticDataEntry entry))
+                {
+                    entry = new LESDiagnosticDataEntry { Count = 1, Name = name, Size = totalSize };
+                }
+                else
+                {
+                    entry.Count++;
+                    entry.Size += totalSize;
+                }
+                diagnosticDataDict[classId] = entry;
+            }
+        }
         
         public void Preload(InternalEntity[] entityDict)
         {
@@ -199,7 +271,7 @@ namespace LiteEntitySystem.Internal
                             continue;
                         }
    
-                        Logger.LogError($"Entity is null: {header.EntityId}");
+                        Logger.LogError($"Entity is null: {header.EntityId}. RPCId: {header.Id}");
                         continue;
                     }
                     
@@ -212,7 +284,7 @@ namespace LiteEntitySystem.Internal
                         {
                             if (header.Id == RemoteCallPacket.NewRPCId)
                             {
-                                Logger.LogError("NewRPC when entity created???");
+                                entityManager.ReadNewRPC(header.EntityId, rawData + rpcDataStart);
                             }
                             else if (header.Id == RemoteCallPacket.ConstructRPCId)
                             {
@@ -266,6 +338,7 @@ namespace LiteEntitySystem.Internal
             Size = 0;
             _partMtu = 0;
             _nullEntitiesCount = 0;
+            _rpcReadPos = 0;
         }
 
         public unsafe bool ReadBaseline(BaselineDataHeader header, byte* rawData, int fullSize)
@@ -275,7 +348,6 @@ namespace LiteEntitySystem.Internal
             Data = new byte[header.OriginalLength];
             _dataOffset = 0;
             _dataSize = 0;
-            _rpcReadPos = 0;
             _rpcEndPos = Size;
             fixed (byte* stateData = Data)
             {
@@ -310,7 +382,6 @@ namespace LiteEntitySystem.Internal
                 ProcessedTick = lastPartData.LastProcessedTick;
                 BufferedInputsCount = lastPartData.BufferedInputsCount;
                 _dataOffset = lastPartData.EventsSize;
-                _rpcReadPos = 0;
                 _rpcEndPos = lastPartData.EventsSize;
                 //Logger.Log($"TPC: {partHeader.Part} {_partMtu}, LastReceivedTick: {LastReceivedTick}, LastProcessedTick: {ProcessedTick}");
             }

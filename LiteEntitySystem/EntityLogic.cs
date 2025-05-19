@@ -231,6 +231,7 @@ namespace LiteEntitySystem
             {
                 e._predictedId.Value = _localPredictedIdCounter.Value++;
                 e._isPredicted.Value = true;
+                //Logger.Log($"AddPredictedEntity. Id: {e.Id}, ClassId: {e.ClassId} PredId: {e._predictedId.Value}, Tick: {e.ClientManager.Tick}");
                 initMethod?.Invoke(e);
             });
             return entity;
