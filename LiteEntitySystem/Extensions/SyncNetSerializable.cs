@@ -4,7 +4,7 @@ using LiteNetLib.Utils;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncNetSerializable<T> : SyncableField where T : INetSerializable
+    public class SyncNetSerializable<T> : SyncableField, ISyncFieldChanged where T : INetSerializable
     {
         private static readonly NetDataWriter WriterCache = new();
         private static readonly NetDataReader ReaderCache = new();
@@ -25,6 +25,8 @@ namespace LiteEntitySystem.Extensions
         private static RemoteCallSpan<byte> _initAction;
 
         private readonly Func<T> _constructor;
+        
+        public event Action ValueChanged;
 
         public SyncNetSerializable(Func<T> constructor)
         {
@@ -69,6 +71,7 @@ namespace LiteEntitySystem.Extensions
             ReaderCache.SetSource(CompressionBuffer, 0, origSize);
             _value ??= _constructor();
             _value.Deserialize(ReaderCache);
+            ValueChanged?.Invoke();
         }
 
         public static implicit operator T(SyncNetSerializable<T> field)
