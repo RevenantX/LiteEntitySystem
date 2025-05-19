@@ -130,7 +130,7 @@ namespace LiteEntitySystem
         {
             if (_lagCompensationEnabled || InternalOwnerId.Value == player.Id)
                 return;
-            ushort tick = EntityManager.IsClient ? ClientManager.ServerTick : EntityManager.Tick;
+            ushort tick = EntityManager.IsClient ? ClientManager.RawTargetServerTick : EntityManager.Tick;
             if (Utils.SequenceDiff(player.StateATick, tick) >= 0 || Utils.SequenceDiff(player.StateBTick, tick) > 0)
             {
                 Logger.Log($"LagCompensationMiss. Tick: {tick}, StateA: {player.StateATick}, StateB: {player.StateBTick}");

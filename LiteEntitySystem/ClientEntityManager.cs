@@ -474,6 +474,23 @@ namespace LiteEntitySystem
             while (_storedInputHeaders.Count > 0 && Utils.SequenceDiff(_stateB.ProcessedTick, _storedInputHeaders.Front().Tick) >= 0)
                 _storedInputHeaders.PopFront();
             
+            //delete predicted
+            while (_spawnPredictedEntities.TryPeek(out var info))
+            {
+                if (Utils.SequenceDiff(_stateB.ProcessedTick, info.tick) >= 0)
+                {
+                    //Logger.Log($"Delete predicted. Tick: {info.tick}, Entity: {info.entity}");
+                    _spawnPredictedEntities.Dequeue();
+                    info.entity.DestroyInternal();
+                    RemoveEntity(info.entity);
+                    _localIdQueue.ReuseId(info.entity.Id);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            
             ushort minimalTick = _stateA.Tick;
             _statesPool.Enqueue(_stateA);
             _stateA = _stateB;
@@ -711,24 +728,6 @@ namespace LiteEntitySystem
                 ExecuteSyncCalls(_stateB);
                 foreach (var lagCompensatedEntity in LagCompensatedEntities)
                     ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
-                
-                //delete predicted
-                ushort removeSequence = Utils.LerpSequence(_stateA.ProcessedTick, _stateB.ProcessedTick, (float)(_timer / _lerpTime));
-                while (_spawnPredictedEntities.TryPeek(out var info))
-                {
-                    if (Utils.SequenceDiff(removeSequence, info.tick) >= 0)
-                    {
-                        //Logger.Log($"Delete predicted. Tick: {info.tick}, Entity: {info.entity}");
-                        _spawnPredictedEntities.Dequeue();
-                        info.entity.DestroyInternal();
-                        RemoveEntity(info.entity);
-                        _localIdQueue.ReuseId(info.entity.Id);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
             }
 
             if (NetworkJitter > _jitterMiddle)
