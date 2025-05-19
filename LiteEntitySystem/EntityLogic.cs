@@ -405,19 +405,19 @@ namespace LiteEntitySystem
             
         }
 
+        internal void RefreshOwnerInfo(EntityLogic oldOwner)
+        {
+            if (EntityManager.IsServer || IsLocal)
+                return;
+            if(oldOwner != null && oldOwner.InternalOwnerId.Value == EntityManager.InternalPlayerId)
+                ClientManager.RemoveOwned(this);
+            if(InternalOwnerId.Value == EntityManager.InternalPlayerId)
+                ClientManager.AddOwned(this);
+        }
+
         protected override void RegisterRPC(ref RPCRegistrator r)
         {
             base.RegisterRPC(ref r);
-            
-            r.BindOnChange<byte, EntityLogic>(ref InternalOwnerId, (e, prevOwner) =>
-            {
-                if (e.IsLocal)
-                    return;
-                if(prevOwner == e.EntityManager.InternalPlayerId)
-                    e.ClientManager.RemoveOwned(this);
-                if(e.InternalOwnerId.Value == e.EntityManager.InternalPlayerId)
-                    e.ClientManager.AddOwned(this);
-            });
             
             r.BindOnChange<SyncGroup, EntityLogic>(ref _isSyncEnabled, (e, _) => e.OnSyncGroupsChanged(e._isSyncEnabled.Value));
             
@@ -427,13 +427,15 @@ namespace LiteEntitySystem
                     switch (data.Type)
                     {
                         case ChangeType.Parent:
-                            e.OnParentChanged(EntityManager.GetEntityById<EntityLogic>(data.Ref));
+                            var oldOwner = e.EntityManager.GetEntityById<EntityLogic>(data.Ref);
+                            e.RefreshOwnerInfo(oldOwner);
+                            e.OnParentChanged(oldOwner);
                             break;
                         case ChangeType.ChildAdd:
-                            EntityManager.GetEntityById<EntityLogic>(data.Ref)?.OnChildAdded(this);
+                            e.EntityManager.GetEntityById<EntityLogic>(data.Ref)?.OnChildAdded(e);
                             break;
                         case ChangeType.ChildRemove:
-                            EntityManager.GetEntityById<EntityLogic>(data.Ref)?.OnChildRemoved(this);
+                            e.EntityManager.GetEntityById<EntityLogic>(data.Ref)?.OnChildRemoved(e);
                             break;
                     }
                 },

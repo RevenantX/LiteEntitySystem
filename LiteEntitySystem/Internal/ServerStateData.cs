@@ -217,7 +217,7 @@ namespace LiteEntitySystem.Internal
                             else if (header.Id == RemoteCallPacket.ConstructRPCId)
                             {
                                 //Logger.Log($"ConstructRPC for entity: {header.EntityId}, RpcReadPos: {_rpcReadPos}, Tick: {header.Tick}");
-                                entityManager.ReadConstructRPC(this, header.EntityId, rawData, rpcDataStart);
+                                entityManager.ReadConstructRPC(header.EntityId, rawData, rpcDataStart);
                             }
                             else if (header.Id == RemoteCallPacket.DestroyRPCId)
                             {

@@ -70,12 +70,21 @@ namespace LiteEntitySystem.Internal
         public int GetMaximumSize() =>
             _entity == null ? 0 : (int)_fullDataSize + sizeof(ushort);
 
-        public void MakeNewRPC() =>
+        public void MakeNewRPC()
+        {
             _entity.ServerManager.AddRemoteCall(
                 _entity,
                 new ReadOnlySpan<byte>(_latestEntityData, 0, HeaderSize),
                 RemoteCallPacket.NewRPCId,
                 ExecuteFlags.SendToAll);
+        }
+        
+        //refresh construct rpc with latest values (old behaviour)
+        public unsafe void RefreshConstructedRPC(RemoteCallPacket packet)
+        {
+            fixed(byte* sourceData = _latestEntityData, rawData = packet.Data)
+                RefMagic.CopyBlock(rawData, sourceData + HeaderSize, (uint)(_fullDataSize - HeaderSize));
+        }
 
         public void MakeConstructedRPC()
         {
@@ -103,15 +112,9 @@ namespace LiteEntitySystem.Internal
             //Logger.Log($"Added constructed RPC: {_entity}");
         }
 
-        //refresh construct rpc with latest values (old behaviour)
-        public unsafe void RefreshConstructedRPC(RemoteCallPacket packet)
-        {
-            fixed(byte* sourceData = _latestEntityData, rawData = packet.Data)
-                RefMagic.CopyBlock(rawData, sourceData + HeaderSize, (uint)(_fullDataSize - HeaderSize));
-        }
-
         public void MakeDestroyedRPC()
         {
+            //Logger.Log($"DestroyEntity: {_entity.Id} {_entity.Version}, ClassId: {_entity.ClassId}");
             LastChangedTick = _entity.EntityManager.Tick;
             _entity.ServerManager.AddRemoteCall(
                 _entity,
@@ -119,18 +122,13 @@ namespace LiteEntitySystem.Internal
                 ExecuteFlags.SendToAll);
         }
 
-        public void MakeBaseline(byte playerId)
+        public bool ShouldSync(byte playerId, bool includeDestroyed)
         {
-            //skip inactive and other controlled controllers
-            if (_entity == null || _entity.IsDestroyed)
-                return;
-            bool isOwned = _entity.InternalOwnerId.Value == playerId;
-            if (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && !isOwned)
-                return;
-            //don't write total size in full sync and fields
-            MakeNewRPC();
-            MakeConstructedRPC();
-            //Logger.Log($"[SEM] SendBaseline for entity: {_entity.Id}, pos: {position}, posAfterData: {position + _fullDataSize}");
+            if (_entity == null || (!includeDestroyed && _entity.IsDestroyed))
+                return false;
+            if (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && _entity.InternalOwnerId.Value != playerId)
+                return false;
+            return true;
         }
 
         public void Free()
@@ -221,7 +219,7 @@ namespace LiteEntitySystem.Internal
                         continue;
                     }
                     
-                    if(SyncGroupUtils.IsSyncVarDisabled(enabledSyncGroups, field.Flags))
+                    if(!isOwned && SyncGroupUtils.IsSyncVarDisabled(enabledSyncGroups, field.Flags))
                     {
                         //IgnoreDiffSyncSettings
                         continue;

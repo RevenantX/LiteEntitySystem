@@ -186,6 +186,7 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         protected internal virtual void OnConstructed()
         {
+            
         }
 
         internal void RegisterRpcInternal()

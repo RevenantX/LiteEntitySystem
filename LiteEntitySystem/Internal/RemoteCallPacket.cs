@@ -16,16 +16,18 @@ namespace LiteEntitySystem.Internal
         public byte[] Data;
         public NetPlayer OnlyForPlayer;
         public ExecuteFlags ExecuteFlags;
+
+        public unsafe int TotalSize => sizeof(RPCHeader) + Header.ByteCount;
         
         public const int ReserverdRPCsCount = 3;
         public const ushort NewRPCId = 0;
         public const ushort ConstructRPCId = 1;
         public const ushort DestroyRPCId = 2;
         
-        public static void InitReservedRPCs(List<RpcFieldInfo> rpcCahce)
+        public static void InitReservedRPCs(List<RpcFieldInfo> rpcCache)
         {
             for(int i = 0; i < ReserverdRPCsCount; i++)
-                rpcCahce.Add(new RpcFieldInfo(-1, null));
+                rpcCache.Add(new RpcFieldInfo(-1, null));
         }
 
         public unsafe void WriteTo(byte* resultData, ref int position)
@@ -33,7 +35,7 @@ namespace LiteEntitySystem.Internal
             *(RPCHeader*)(resultData + position) = Header;
             fixed (byte* rpcData = Data)
                 RefMagic.CopyBlock(resultData + sizeof(RPCHeader) + position, rpcData, Header.ByteCount);
-            position += sizeof(RPCHeader) + Header.ByteCount;
+            position += TotalSize;
         }
         
         public void Init(NetPlayer targetPlayer, InternalEntity entity, ushort tick, ushort byteCount, ushort rpcId, ExecuteFlags executeFlags)

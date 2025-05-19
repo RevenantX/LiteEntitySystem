@@ -21,7 +21,7 @@ namespace LiteEntitySystem.Internal
         public ushort LastProcessedTick;
         public ushort LastReceivedTick;
         public byte BufferedInputsCount;
-        public ushort EventsSize;
+        public int EventsSize;
     }
     
     [StructLayout(LayoutKind.Sequential)]
