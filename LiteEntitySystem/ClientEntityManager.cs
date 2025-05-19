@@ -642,24 +642,6 @@ namespace LiteEntitySystem
             {
                 ServerTick = Utils.LerpSequence(_stateA.Tick, _stateB.Tick, (float)(_timer/_lerpTime));
                 
-                //delete predicted
-                ushort removeSequence = Utils.LerpSequence(_stateA.ProcessedTick, _stateB.ProcessedTick, (float)(_timer / _lerpTime));
-                while (_spawnPredictedEntities.TryPeek(out var info))
-                {
-                    if (Utils.SequenceDiff(removeSequence, info.tick) >= 0)
-                    {
-                        //Logger.Log($"Delete predicted. Tick: {info.tick}, Entity: {info.entity}");
-                        _spawnPredictedEntities.Dequeue();
-                        info.entity.DestroyInternal();
-                        RemoveEntity(info.entity);
-                        _localIdQueue.ReuseId(info.entity.Id);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                
                 //restore actual field values
                 _tempEntityTree.Clear();
                 foreach (var entity in AliveEntities)
@@ -729,6 +711,24 @@ namespace LiteEntitySystem
                 ExecuteSyncCalls(_stateB);
                 foreach (var lagCompensatedEntity in LagCompensatedEntities)
                     ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
+                
+                //delete predicted
+                ushort removeSequence = Utils.LerpSequence(_stateA.ProcessedTick, _stateB.ProcessedTick, (float)(_timer / _lerpTime));
+                while (_spawnPredictedEntities.TryPeek(out var info))
+                {
+                    if (Utils.SequenceDiff(removeSequence, info.tick) >= 0)
+                    {
+                        //Logger.Log($"Delete predicted. Tick: {info.tick}, Entity: {info.entity}");
+                        _spawnPredictedEntities.Dequeue();
+                        info.entity.DestroyInternal();
+                        RemoveEntity(info.entity);
+                        _localIdQueue.ReuseId(info.entity.Id);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
             }
 
             if (NetworkJitter > _jitterMiddle)
@@ -1000,6 +1000,8 @@ namespace LiteEntitySystem
 
             if (entity is not EntityLogic entityLogic)
                 return;
+            
+            //Logger.Log($"ConstructedEntity: {entityId}, pid: {entityLogic.PredictedId}");
             
             entityLogic.RefreshOwnerInfo(null);
             
