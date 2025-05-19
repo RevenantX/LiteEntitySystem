@@ -209,7 +209,7 @@ namespace LiteEntitySystem.Internal
                 }
             }
           
-            List<RpcFieldInfo> rpcCahce = null;
+            List<RpcFieldInfo> rpcCache = null;
             if(classData.RemoteCallsClient == null)
             {
                 rpcCahce = new List<RpcFieldInfo>();
@@ -225,26 +225,20 @@ namespace LiteEntitySystem.Internal
             {
                 ref var syncFieldInfo = ref classData.SyncableFields[i];
                 var syncField = RefMagic.RefFieldValue<SyncableField>(this, syncFieldInfo.Offset);
-                syncField.ParentEntityInternal = this;
-                if (syncFieldInfo.Flags.HasFlagFast(SyncFlags.OnlyForOwner))
-                    syncField.Flags = ExecuteFlags.SendToOwner;
-                else if (syncFieldInfo.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
-                    syncField.Flags = ExecuteFlags.SendToOther;
-                else
-                    syncField.Flags = ExecuteFlags.SendToAll;
-                if (classData.RemoteCallsClient != null)
+                syncField.Init(this, syncFieldInfo.Flags);
+                if (rpcCache == null) //classData.RemoteCallsClient != null
                 {
                     syncField.RPCOffset = syncFieldInfo.RPCOffset;
                 }
                 else
                 {
-                    syncField.RPCOffset = (ushort)rpcCahce.Count;
+                    syncField.RPCOffset = (ushort)rpcCache.Count;
                     syncFieldInfo.RPCOffset = syncField.RPCOffset;
-                    var syncablesRegistrator = new SyncableRPCRegistrator(syncFieldInfo.Offset, rpcCahce);
+                    var syncablesRegistrator = new SyncableRPCRegistrator(syncFieldInfo.Offset, rpcCache);
                     syncField.RegisterRPC(ref syncablesRegistrator);
                 }
             }
-            classData.RemoteCallsClient ??= rpcCahce.ToArray();
+            classData.RemoteCallsClient ??= rpcCache.ToArray();
         }
 
 
