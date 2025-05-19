@@ -1,5 +1,4 @@
 using System;
-using JetBrains.Annotations;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
@@ -68,8 +67,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Owner of this syncable field casted to EntityLogic
         /// </summary>
-        [CanBeNull]
-        protected EntityLogic ParentEntityLogic => ParentEntityInternal as EntityLogic;
+        protected EntityLogic ParentEntityLogic => _parentEntity as EntityLogic;
         
         protected internal virtual void BeforeReadRPC()
         {

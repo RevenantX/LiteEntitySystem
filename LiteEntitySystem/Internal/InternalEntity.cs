@@ -212,11 +212,11 @@ namespace LiteEntitySystem.Internal
             List<RpcFieldInfo> rpcCache = null;
             if(classData.RemoteCallsClient == null)
             {
-                rpcCahce = new List<RpcFieldInfo>();
+                rpcCache = new List<RpcFieldInfo>();
                 //place reserved rpcs
-                RemoteCallPacket.InitReservedRPCs(rpcCahce);
+                RemoteCallPacket.InitReservedRPCs(rpcCache);
 
-                var rpcRegistrator = new RPCRegistrator(rpcCahce, classData.Fields);
+                var rpcRegistrator = new RPCRegistrator(rpcCache, classData.Fields);
                 RegisterRPC(ref rpcRegistrator);
                 //Logger.Log($"RegisterRPCs for class: {classData.ClassId}");
             }
