@@ -168,7 +168,7 @@ namespace LiteEntitySystem.Internal
                 _versionChangedTick = minimalTick;
             
             //skip known
-            if (Utils.SequenceDiff(LastChangedTick, player.StateATick) <= 0)
+            if (Utils.SequenceDiff(LastChangedTick, player.CurrentServerTick) <= 0)
                 return false;
             
             if (_entity.IsDestroyed && Utils.SequenceDiff(LastChangedTick, minimalTick) < 0)
@@ -189,6 +189,11 @@ namespace LiteEntitySystem.Internal
             *totalSize = 0;
             
             position += sizeof(ushort);
+
+            //if constructed not received send difference from constructed. Else from last state
+            ushort compareToTick = Utils.SequenceDiff(_versionChangedTick, player.CurrentServerTick) > 0
+                ? _versionChangedTick
+                : player.CurrentServerTick;
 
             fixed (byte* lastEntityData = _latestEntityData) //make diff
             {
@@ -221,7 +226,7 @@ namespace LiteEntitySystem.Internal
                     }
                     
                     //not actual
-                    if (Utils.SequenceDiff(_fieldChangeTicks[i], player.CurrentServerTick) <= 0)
+                    if (Utils.SequenceDiff(_fieldChangeTicks[i], compareToTick) <= 0)
                     {
                         //Logger.Log($"SkipOld: {field.Name}");
                         //old data

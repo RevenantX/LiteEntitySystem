@@ -664,6 +664,7 @@ namespace LiteEntitySystem
                     
                     player.Peer.SendReliableOrdered(new ReadOnlySpan<byte>(compressionBuffer, sizeof(BaselineDataHeader) + encodedLength));
                     player.StateATick = _tick;
+                    player.StateBTick = _tick;
                     player.CurrentServerTick = _tick;
                     player.State = NetPlayerState.WaitingForFirstInput;
                     Logger.Log($"[SEM] SendWorld to player {player.Id}. orig: {originalLength} b, compressed: {encodedLength} b, ExecutedTick: {_tick}");
@@ -799,7 +800,7 @@ namespace LiteEntitySystem
                 }
                 
                 //old rpc
-                if (Utils.SequenceDiff(rpcNode.Header.Tick, player.LastReceivedTick) < 0)
+                if (Utils.SequenceDiff(rpcNode.Header.Tick, player.CurrentServerTick) <= 0)
                 {
                     //Logger.Log($"SkipSend oldTick: {rpcNode.Header.Tick}, {rpcNode.Header.Id}, EID: {rpcNode.Header.EntityId}");
                     return false;
