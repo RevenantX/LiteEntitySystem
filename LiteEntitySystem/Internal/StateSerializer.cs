@@ -205,7 +205,7 @@ namespace LiteEntitySystem.Internal
                 // -1 for cycle
                 byte* fields = resultData + startPos + DiffHeaderSize - 1;
                 //put entity id at 2
-                *(ushort*)(resultData + position) = *(ushort*)lastEntityData;
+                *(ushort*)(resultData + position) = _entity.Id;
                 position += sizeof(ushort) + _fieldsFlagsSize;
                 int positionBeforeDeltaCompression = position;
 

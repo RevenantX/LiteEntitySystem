@@ -494,9 +494,9 @@ namespace LiteEntitySystem
         protected T AddEntity<T>(EntityParams entityParams) where T : InternalEntity
         {
             var entityHeader = entityParams.Header;
-            if (entityHeader.Id == InvalidEntityId || entityHeader.Id >= EntitiesDict.Length)
+            if (entityParams.Id == InvalidEntityId || entityParams.Id >= EntitiesDict.Length)
             {
-                throw new ArgumentException($"Invalid entity id: {entityHeader.Id}");
+                throw new ArgumentException($"Invalid entity id: {entityParams.Id}");
             }
 
             if (entityHeader.ClassId >= ClassDataDict.Length)

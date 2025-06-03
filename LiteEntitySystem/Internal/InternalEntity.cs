@@ -46,7 +46,6 @@ namespace LiteEntitySystem.Internal
 
         internal EntityDataHeader DataHeader => new EntityDataHeader
         (
-            Id,
             ClassId,
             Version,
             UpdateOrderNum
@@ -324,7 +323,7 @@ namespace LiteEntitySystem.Internal
         protected InternalEntity(EntityParams entityParams)
         {
             EntityManager = entityParams.EntityManager;
-            Id = entityParams.Header.Id;
+            Id = entityParams.Id;
             ClassId = entityParams.Header.ClassId;
             Version = entityParams.Header.Version;
             UpdateOrderNum = entityParams.Header.UpdateOrder;

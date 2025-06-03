@@ -15,6 +15,7 @@ namespace LiteEntitySystem.Internal
         public RPCHeader Header;
         public byte[] Data;
         public NetPlayer OnlyForPlayer;
+        public byte OwnerId;
         public ExecuteFlags ExecuteFlags;
 
         public unsafe int TotalSize => sizeof(RPCHeader) + Header.ByteCount;
@@ -28,6 +29,18 @@ namespace LiteEntitySystem.Internal
         {
             for(int i = 0; i < ReserverdRPCsCount; i++)
                 rpcCache.Add(new RpcFieldInfo(-1, null));
+        }
+
+        public bool AllowToSendForPlayer(byte forPlayerId)
+        {
+            if (ExecuteFlags.HasFlagFast(ExecuteFlags.SendToAll))
+                return true;
+            if (ExecuteFlags.HasFlagFast(ExecuteFlags.SendToOwner) && OwnerId == forPlayerId)
+                return true;
+            if (ExecuteFlags.HasFlagFast(ExecuteFlags.SendToOther) && OwnerId != forPlayerId)
+                return true;
+            
+            return false;
         }
 
         public unsafe void WriteTo(byte* resultData, ref int position)
@@ -46,6 +59,7 @@ namespace LiteEntitySystem.Internal
             Header.Tick = tick;
             Header.Id = rpcId;
             Header.ByteCount = byteCount;
+            OwnerId = entity.OwnerId;
             Utils.ResizeOrCreate(ref Data, byteCount);
         }
     }

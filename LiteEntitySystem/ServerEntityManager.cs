@@ -361,19 +361,17 @@ namespace LiteEntitySystem
                 return DeserializeResult.Error;
             }
             
-            int minInputSize = 0;
             int minDeltaSize = 0;
             foreach (var humanControllerLogic in GetEntities<HumanControllerLogic>())
             {
                 if(humanControllerLogic.OwnerId != player.Id)
                     continue;
-                minInputSize += humanControllerLogic.InputSize;
                 minDeltaSize += humanControllerLogic.MinInputDeltaSize;
+                humanControllerLogic.DeltaDecodeInit();
             }
             
             ushort clientTick = BitConverter.ToUInt16(inData);
             inData = inData.Slice(2);
-            bool isFirstInput = true;
             while (inData.Length >= InputPacketHeader.Size)
             {
                 var inputInfo = new InputInfo{ Tick = clientTick };
@@ -393,12 +391,7 @@ namespace LiteEntitySystem
                 }
                 
                 //possibly empty but with header
-                if (isFirstInput && inData.Length < minInputSize)
-                {
-                    Logger.LogError($"Bad input from: {player.Id} - {player.Peer} too small input");
-                    return DeserializeResult.Error;
-                }
-                if (!isFirstInput && inData.Length < minDeltaSize)
+                if (inData.Length < minDeltaSize)
                 {
                     Logger.LogError($"Bad input from: {player.Id} - {player.Peer} too small delta");
                     return DeserializeResult.Error;
@@ -422,26 +415,12 @@ namespace LiteEntitySystem
                         continue;
                     
                     //decode delta
-                    ReadOnlySpan<byte> actualData;
-                
-                    if (!isFirstInput) //delta
-                    {
-                        var decodedData = new Span<byte>(_inputDecodeBuffer, 0, controller.InputSize);
-                        decodedData.Clear();
-                        int readBytes = controller.DeltaDecode(inData, decodedData);
-                        actualData = decodedData;
-                        inData = inData.Slice(readBytes);
-                    }
-                    else //full
-                    {                  
-                        isFirstInput = false;
-                        actualData = inData.Slice(0, controller.InputSize);
-                        controller.DeltaDecodeInit(actualData);
-                        inData = inData.Slice(controller.InputSize);
-                    }
-
+                    var decodedData = new Span<byte>(_inputDecodeBuffer, 0, controller.InputSize);
+                    decodedData.Clear();
+                    int readBytes = controller.DeltaDecode(inData, decodedData);
+                    inData = inData.Slice(readBytes);
                     if (correctInput)
-                        controller.AddIncomingInput(inputInfo.Tick, actualData);
+                        controller.AddIncomingInput(inputInfo.Tick, decodedData);
                 }
 
                 if (correctInput)
@@ -474,11 +453,8 @@ namespace LiteEntitySystem
             byte[] ioBuffer = classData.AllocateDataCache();
             stateSerializer.AllocateMemory(ref classData, ioBuffer);
             var entity = AddEntity<T>(new EntityParams(
-                new EntityDataHeader(
-                    entityId,
-                    classData.ClassId, 
-                    stateSerializer.NextVersion,
-                    ++_nextOrderNum),
+                entityId,
+                new EntityDataHeader(classData.ClassId, stateSerializer.NextVersion, ++_nextOrderNum),
                 this,
                 ioBuffer));
             stateSerializer.Init(entity, _tick);
@@ -632,7 +608,7 @@ namespace LiteEntitySystem
                         _syncForPlayer = null;
                         
                         foreach (var rpcNode in _pendingRPCs)
-                            if (rpcNode.OnlyForPlayer == player)
+                            if (rpcNode.OnlyForPlayer == player && rpcNode.AllowToSendForPlayer(player.Id))
                                 rpcNode.WriteTo(packetBuffer, ref originalLength);
                     }
                     else //like baseline but only queued rpcs
@@ -811,26 +787,22 @@ namespace LiteEntitySystem
                 //mostly controllers
                 if(!stateSerializer.ShouldSync(player.Id, true))
                     return false;
-                
-                var entity = EntitiesDict[rpcNode.Header.EntityId];
-                var flags = rpcNode.ExecuteFlags;
-                if (!flags.HasFlagFast(ExecuteFlags.SendToAll))
-                {
-                    if (flags.HasFlagFast(ExecuteFlags.SendToOwner) && entity.OwnerId != player.Id)
-                        return false;
-                    if (flags.HasFlagFast(ExecuteFlags.SendToOther) && entity.OwnerId == player.Id)
-                        return false;
-                }
-                
-                if (entity.OwnerId != player.Id &&
-                    entity is EntityLogic el && 
-                    player.EntitySyncInfo.TryGetValue(el, out var syncGroups) &&
-                    syncGroups.IsInitialized &&
-                    SyncGroupUtils.IsRPCDisabled(syncGroups.EnabledGroups, flags))
-                {
-                    //skip disabled rpcs
-                    //Logger.Log($"SkipSend disabled: {rpcNode.Header.Tick}, {rpcNode.Header.Id}, EID: {rpcNode.Header.EntityId}");
+
+                if (!rpcNode.AllowToSendForPlayer(player.Id))
                     return false;
+
+                //check sync groups
+                if (rpcNode.OwnerId != player.Id)
+                {
+                    if (EntitiesDict[rpcNode.Header.EntityId] is EntityLogic el && 
+                        player.EntitySyncInfo.TryGetValue(el, out var syncGroups) &&
+                        syncGroups.IsInitialized &&
+                        SyncGroupUtils.IsRPCDisabled(syncGroups.EnabledGroups, rpcNode.ExecuteFlags))
+                    {
+                        //skip disabled rpcs
+                        //Logger.Log($"SkipSend disabled: {rpcNode.Header.Tick}, {rpcNode.Header.Id}, EID: {rpcNode.Header.EntityId}");
+                        return false;
+                    }
                 }
                 
                 if (rpcNode.Header.Id == RemoteCallPacket.ConstructRPCId)

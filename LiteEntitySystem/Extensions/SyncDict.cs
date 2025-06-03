@@ -44,6 +44,8 @@ namespace LiteEntitySystem.Extensions
 
         protected internal override void OnRollback()
         {
+            if (_serverData == null)
+                return;
             _data.Clear();
             foreach (var kv in _serverData)
                 _data.Add(kv.Key, kv.Value);

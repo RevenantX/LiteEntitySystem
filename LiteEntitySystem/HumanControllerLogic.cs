@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using LiteEntitySystem.Collections;
-using LiteEntitySystem.Extensions;
 using LiteEntitySystem.Internal;
 using LiteNetLib.Utils;
 
@@ -9,12 +8,6 @@ namespace LiteEntitySystem
 {
     public abstract class HumanControllerLogic : ControllerLogic
     {
-        private struct EntitySyncInfo
-        {
-            public EntitySharedReference Entity;
-            public bool SyncEnabled;
-        }
-        
         private struct ServerResponse
         {
             public ushort RequestId;
@@ -42,30 +35,22 @@ namespace LiteEntitySystem
         private readonly Dictionary<ushort,Action<bool>> _awaitingRequests;
         
         //input part
-        private readonly byte[] _firstFullInput;
-        
-        internal readonly int InputSize;
-        internal readonly int MaxInputDeltaSize;
-        internal readonly int InputDeltaBits;
-        internal readonly int MinInputDeltaSize;
-        
+        internal DeltaCompressor DeltaCompressor;
+
+        public int InputSize => DeltaCompressor.Size;
+        public int MinInputDeltaSize => DeltaCompressor.MinDeltaSize;
+        public int MaxInputDeltaSize => DeltaCompressor.MaxDeltaSize;
+
         protected HumanControllerLogic(EntityParams entityParams, int inputSize) : base(entityParams)
         {
-            InputSize = inputSize;
-            InputDeltaBits = InputSize / FieldsDivision + (InputSize % FieldsDivision == 0 ? 0 : 1);
-            MinInputDeltaSize = InputDeltaBits / 8 + (InputDeltaBits % 8 == 0 ? 0 : 1);
-            MaxInputDeltaSize = MinInputDeltaSize + InputSize;
+            DeltaCompressor = new DeltaCompressor(inputSize);
             
-            if (EntityManager.IsServer)
-            {
-                _firstFullInput = new byte[InputSize];
-            }
-            else
+            if (EntityManager.IsClient)
                 _awaitingRequests = new Dictionary<ushort, Action<bool>>();
             
             _requestWriter.Put(EntityManager.HeaderByte);
             _requestWriter.Put(InternalPackets.ClientRequest);
-            _requestWriter.Put(entityParams.Header.Id);
+            _requestWriter.Put(entityParams.Id);
             _requestWriter.Put(entityParams.Header.Version);
         }
 
@@ -214,36 +199,15 @@ namespace LiteEntitySystem
         
         internal abstract void RemoveClientProcessedInputs(ushort processedTick);
         
-        internal abstract void WriteStoredInput(int index, Span<byte> target);
-        
         internal abstract void ReadStoredInput(int index);
-        
+
         internal abstract int DeltaEncode(int prevInputIndex, int currentInputIndex, Span<byte> result);
         
-        internal void DeltaDecodeInit(ReadOnlySpan<byte> fullInput) => fullInput.CopyTo(_firstFullInput);
+        internal void DeltaDecodeInit() =>
+            DeltaCompressor.Init();
 
-        internal int DeltaDecode(ReadOnlySpan<byte> currentDeltaInput, Span<byte> result)
-        {
-            var deltaFlags = new BitReadOnlySpan(currentDeltaInput, InputDeltaBits);
-            int fieldOffset = MinInputDeltaSize;
-            for (int i = 0; i < InputSize; i += FieldsDivision)
-            {
-                if (deltaFlags[i / 2])
-                {
-                    _firstFullInput[i] = result[i] = currentDeltaInput[fieldOffset];
-                    if (i < InputSize - 1)
-                        _firstFullInput[i+1] = result[i+1] = currentDeltaInput[fieldOffset+1];
-                    fieldOffset += FieldsDivision;
-                }
-                else
-                {
-                    result[i] = _firstFullInput[i];
-                    if(i < InputSize - 1)
-                        result[i+1] = _firstFullInput[i+1];
-                }
-            }
-            return fieldOffset;
-        }
+        internal int DeltaDecode(ReadOnlySpan<byte> currentDeltaInput, Span<byte> result) =>
+            DeltaCompressor.Decode(currentDeltaInput, result);
     }
     
     /// <summary>
@@ -323,9 +287,6 @@ namespace LiteEntitySystem
         internal override void ClearClientStoredInputs() =>
             _inputCommands.Clear();
 
-        internal override void WriteStoredInput(int index, Span<byte> target) =>
-            target.WriteStruct(_inputCommands[index].Data);
-
         internal override void ReadStoredInput(int index) => 
             _currentInput = index < _inputCommands.Count 
                 ? _inputCommands[index].Data 
@@ -365,30 +326,10 @@ namespace LiteEntitySystem
             }
         }
 
-        internal override unsafe int DeltaEncode(int prevInputIndex, int currentInputIndex, Span<byte> result)
-        {
-            fixed (void* ptrA = &_inputCommands[prevInputIndex].Data, ptrB = &_inputCommands[currentInputIndex].Data)
-            {
-                byte* prevInput = (byte*)ptrA;
-                byte *currentInput = (byte*)ptrB;
-                
-                var deltaFlags = new BitSpan(result, InputDeltaBits);
-                deltaFlags.Clear();
-                int resultSize = MinInputDeltaSize;
-                for (int i = 0; i < InputSize; i += FieldsDivision)
-                {
-                    if (prevInput[i] != currentInput[i] || (i < InputSize - 1 && prevInput[i + 1] != currentInput[i + 1]))
-                    {
-                        deltaFlags[i / FieldsDivision] = true;
-                        result[resultSize] = currentInput[i];
-                        if(i < InputSize - 1)
-                            result[resultSize + 1] = currentInput[i + 1];
-                        resultSize += FieldsDivision;
-                    }
-                }
-                return resultSize;
-            }
-        }
+        internal override int DeltaEncode(int prevInputIndex, int currentInputIndex, Span<byte> result) =>
+            prevInputIndex >= 0
+                ? DeltaCompressor.Encode(ref _inputCommands[prevInputIndex].Data, ref _inputCommands[currentInputIndex].Data, result)
+                : DeltaCompressor.Encode(ref _inputCommands[currentInputIndex].Data, result);
     }
 
     /// <summary>

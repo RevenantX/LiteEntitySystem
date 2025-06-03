@@ -253,8 +253,8 @@ namespace LiteEntitySystem
             }
             
             var entity = AddEntity<T>(new EntityParams(
+                _localIdQueue.GetNewId(),
                 new EntityDataHeader(
-                    _localIdQueue.GetNewId(), 
                     EntityClassInfo<T>.ClassId, 
                     0, 
                     0),
@@ -825,15 +825,11 @@ namespace LiteEntitySystem
             ushort tickIndex = 0;
             int prevInputIndex = -1;
 
-            int maxDeltaSize = 0;
-            int maxInputSize = 0;
+            int maxDeltaSize = InputPacketHeader.Size;
             foreach (var humanControllerLogic in GetEntities<HumanControllerLogic>())
-            {
                 maxDeltaSize += humanControllerLogic.MaxInputDeltaSize;
-                maxInputSize += humanControllerLogic.InputSize + InputPacketHeader.Size;
-            }
 
-            if (offset + maxInputSize > maxSinglePacketSize)
+            if (offset + maxDeltaSize > maxSinglePacketSize)
             {
                 Logger.LogError($"Input data from controllers is more than MTU: {maxSinglePacketSize}");
                 return;
@@ -849,45 +845,29 @@ namespace LiteEntitySystem
                         currentTick++;
                         continue;
                     }
-                    if(prevInputIndex >= 0)//make delta
+
+                    //overflow
+                    if (offset + maxDeltaSize > maxSinglePacketSize)
                     {
-                        //overflow
-                        if (offset + InputPacketHeader.Size + maxDeltaSize > maxSinglePacketSize)
-                        {
-                            prevInputIndex = -1;
-                            *(ushort*)(sendBuffer + 2) = currentTick;
-                            _netPeer.SendUnreliable(new ReadOnlySpan<byte>(sendBuffer, offset));
-                            offset = 4;
-                            currentTick += tickIndex;
-                            tickIndex = 0;
-                        }
-                        else
-                        {
-                            //write header
-                            *(InputPacketHeader*)(sendBuffer + offset) = _storedInputHeaders[i].Header;
-                            offset += InputPacketHeader.Size;
-                            
-                            //write current into temporary buffer for delta encoding
-                            foreach (var controller in GetEntities<HumanControllerLogic>())
-                            {
-                                offset += controller.DeltaEncode(
-                                    prevInputIndex,
-                                    i,
-                                    new Span<byte>(sendBuffer + offset, controller.MaxInputDeltaSize));
-                            }
-                        }
+                        prevInputIndex = -1;
+                        *(ushort*)(sendBuffer + 2) = currentTick;
+                        _netPeer.SendUnreliable(new ReadOnlySpan<byte>(sendBuffer, offset));
+                        offset = 4;
+                        currentTick += tickIndex;
+                        tickIndex = 0;
                     }
-                    if (prevInputIndex == -1) //first full input
+       
+                    //write header
+                    *(InputPacketHeader*)(sendBuffer + offset) = _storedInputHeaders[i].Header;
+                    offset += InputPacketHeader.Size;
+                    
+                    //write current into temporary buffer for delta encoding
+                    foreach (var controller in GetEntities<HumanControllerLogic>())
                     {
-                        //write header
-                        *(InputPacketHeader*)(sendBuffer + offset) = _storedInputHeaders[i].Header;
-                        offset += InputPacketHeader.Size;
-                        //write data
-                        foreach (var controller in GetEntities<HumanControllerLogic>())
-                        {
-                            controller.WriteStoredInput(i, new Span<byte>(sendBuffer + offset, controller.InputSize));
-                            offset += controller.InputSize;
-                        }
+                        offset += controller.DeltaEncode(
+                            prevInputIndex,
+                            i,
+                            new Span<byte>(sendBuffer + offset, controller.MaxInputDeltaSize));
                     }
                     prevInputIndex = i;
                     tickIndex++;
@@ -918,9 +898,9 @@ namespace LiteEntitySystem
         {
             //Logger.Log("NewRPC");
             var entityDataHeader = *(EntityDataHeader*)rawData;
-            if (!IsEntityIdValid(entityDataHeader.Id) || entityId != entityDataHeader.Id)
+            if (!IsEntityIdValid(entityId))
             {
-                Logger.LogError($"Entity is invalid. Id {entityId}, headerId: {entityDataHeader.Id}");
+                Logger.LogError($"Entity is invalid. Id {entityId}");
                 return;
             }
             var entity = EntitiesDict[entityId];
@@ -930,7 +910,7 @@ namespace LiteEntitySystem
             if (entity != null && entity.Version != entityDataHeader.Version)
             {
                 //this can be only on logics (not on singletons)
-                Logger.Log($"[CEM] Replace entity by new: {entityDataHeader.Version}. Class: {entityDataHeader.ClassId}. Id: {entityDataHeader.Id}");
+                Logger.Log($"[CEM] Replace entity by new: {entityDataHeader.Version}. Class: {entityDataHeader.ClassId}. Id: {entityId}");
                 entity.DestroyInternal();
                 RemoveEntity(entity);
                 _predictedEntities.Remove(entity);
@@ -939,7 +919,7 @@ namespace LiteEntitySystem
             if (entity == null) //create new
             {
                 ref var classData = ref ClassDataDict[entityDataHeader.ClassId];
-                entity = AddEntity<InternalEntity>(new EntityParams(entityDataHeader, this, classData.AllocateDataCache()));
+                entity = AddEntity<InternalEntity>(new EntityParams(entityId, entityDataHeader, this, classData.AllocateDataCache()));
                      
                 if (classData.PredictedSize > 0 || classData.SyncableFields.Length > 0)
                 {
