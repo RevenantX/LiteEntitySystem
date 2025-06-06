@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace LiteEntitySystem.Internal
@@ -15,7 +16,6 @@ namespace LiteEntitySystem.Internal
         public RPCHeader Header;
         public byte[] Data;
         public NetPlayer OnlyForPlayer;
-        public byte OwnerId;
         public ExecuteFlags ExecuteFlags;
 
         public unsafe int TotalSize => sizeof(RPCHeader) + Header.ByteCount;
@@ -31,13 +31,13 @@ namespace LiteEntitySystem.Internal
                 rpcCache.Add(new RpcFieldInfo(-1, null));
         }
 
-        public bool AllowToSendForPlayer(byte forPlayerId)
+        public bool AllowToSendForPlayer(byte forPlayerId, byte entityOwnerId)
         {
             if (ExecuteFlags.HasFlagFast(ExecuteFlags.SendToAll))
                 return true;
-            if (ExecuteFlags.HasFlagFast(ExecuteFlags.SendToOwner) && OwnerId == forPlayerId)
+            if (ExecuteFlags.HasFlagFast(ExecuteFlags.SendToOwner) && entityOwnerId == forPlayerId)
                 return true;
-            if (ExecuteFlags.HasFlagFast(ExecuteFlags.SendToOther) && OwnerId != forPlayerId)
+            if (ExecuteFlags.HasFlagFast(ExecuteFlags.SendToOther) && entityOwnerId != forPlayerId)
                 return true;
             
             return false;
@@ -51,6 +51,14 @@ namespace LiteEntitySystem.Internal
             position += TotalSize;
         }
         
+        public unsafe void WriteToDeltaCompressed(ref DeltaCompressor deltaCompressor, byte* resultData, ref int position, RPCHeader prevHeader)
+        {
+            int headerEncodedSize = deltaCompressor.Encode(ref prevHeader, ref Header, new Span<byte>(resultData + position, sizeof(RPCHeader)));
+            fixed (byte* rpcData = Data)
+                RefMagic.CopyBlock(resultData + headerEncodedSize + position, rpcData, Header.ByteCount);
+            position += headerEncodedSize + Header.ByteCount;
+        }
+        
         public void Init(NetPlayer targetPlayer, InternalEntity entity, ushort tick, ushort byteCount, ushort rpcId, ExecuteFlags executeFlags)
         {
             OnlyForPlayer = targetPlayer;
@@ -59,7 +67,6 @@ namespace LiteEntitySystem.Internal
             Header.Tick = tick;
             Header.Id = rpcId;
             Header.ByteCount = byteCount;
-            OwnerId = entity.OwnerId;
             Utils.ResizeOrCreate(ref Data, byteCount);
         }
     }

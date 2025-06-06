@@ -357,9 +357,9 @@ namespace LiteEntitySystem
                     IsExecutingRPC = true;
                     _stateA.ExecuteRpcs(this, 0, true);
                     IsExecutingRPC = false;
-                    ExecuteSyncCalls(_stateA);
-                    foreach (var lagCompensatedEntity in LagCompensatedEntities)
-                        ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
+                    int readerPosition = _stateA.DataOffset;
+                    ReadDiff(ref readerPosition);
+                    ExecuteSyncCallsAndWriteHistory(_stateA);
                     
                     Logger.Log($"[CEM] Got baseline sync. Assigned player id: {header.PlayerId}, Original: {_stateA.Size}, Tick: {header.Tick}, SendRate: {_serverSendRate}");
                 }
@@ -504,68 +504,9 @@ namespace LiteEntitySystem
             IsExecutingRPC = true;
             _stateA.ExecuteRpcs(this, minimalTick, false);
             IsExecutingRPC = false;
-            ExecuteSyncCalls(_stateA);
-
             int readerPosition = _stateA.DataOffset;
-            int syncCallsCount = 0;
-            fixed (byte* rawData = _stateA.Data)
-            {
-                while (readerPosition < _stateA.DataOffset + _stateA.DataSize)
-                {
-                    ushort totalSize = *(ushort*)(rawData + readerPosition);
-                    int endPos = readerPosition + totalSize;
-                    readerPosition += sizeof(ushort);
-                    ushort entityId = *(ushort*)(rawData + readerPosition);
-                    readerPosition += sizeof(ushort);
-                    if (!IsEntityIdValid(entityId))
-                        break;
-                    var entity = EntitiesDict[entityId];
-                    if (entity == null)
-                    {
-                        readerPosition = endPos;
-                        continue;
-                    }
-
-                    ref var classData = ref entity.ClassData;
-                    bool writeInterpolationData = entity.IsRemoteControlled;
-                    readerPosition += classData.FieldsFlagsSize;
-                    _changedEntities.Add(entity);
-                    Utils.ResizeOrCreate(ref _syncCalls, syncCallsCount + classData.FieldsCount);
-
-                    int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
-                    fixed (byte* interpDataPtr = classData.ClientInterpolatedNextData(entity), 
-                           predictedData = classData.ClientPredictedData(entity))
-                    {
-                        for (int i = 0; i < classData.FieldsCount; i++)
-                        {
-                            if (!Utils.IsBitSet(rawData + fieldsFlagsOffset, i))
-                                continue;
-                            ref var field = ref classData.Fields[i];
-                            if (field.ReadField(entity,
-                                    rawData,
-                                    readerPosition,
-                                    predictedData,
-                                    writeInterpolationData ? interpDataPtr : null,
-                                    null))
-                            {
-                                _syncCalls[syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition,
-                                    field.IntSize);
-                            }
-
-                            //Logger.Log($"E {entity.Id} Field updated: {field.Name}");
-                            readerPosition += field.IntSize;
-                        }
-                    }
-
-                    readerPosition = endPos;
-                }
-            }
-            
-            foreach (var lagCompensatedEntity in LagCompensatedEntities)
-                ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
-
-            for (int i = 0; i < syncCallsCount; i++)
-                _syncCalls[i].Execute(_stateA);
+            ReadDiff(ref readerPosition);
+            ExecuteSyncCallsAndWriteHistory(_stateA);
 
             for(int i = 0; i < _entitiesToRemoveCount; i++)
             {
@@ -725,9 +666,7 @@ namespace LiteEntitySystem
                 IsExecutingRPC = true;
                 _stateB.ExecuteRpcs(this, _stateA.Tick, false);
                 IsExecutingRPC = false;
-                ExecuteSyncCalls(_stateB);
-                foreach (var lagCompensatedEntity in LagCompensatedEntities)
-                    ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
+                ExecuteSyncCallsAndWriteHistory(_stateB);
             }
 
             if (NetworkJitter > _jitterMiddle)
@@ -929,12 +868,14 @@ namespace LiteEntitySystem
             }
         }
         
-        private void ExecuteSyncCalls(ServerStateData stateData)
+        private void ExecuteSyncCallsAndWriteHistory(ServerStateData stateData)
         {
             ExecuteLateConstruct();
             for (int i = 0; i < _syncCallsCount; i++)
                 _syncCalls[i].Execute(stateData);
             _syncCallsCount = 0;
+            foreach (var lagCompensatedEntity in LagCompensatedEntities)
+                ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
         }
         
         internal unsafe void ReadConstructRPC(ushort entityId, byte* rawData, int readerPosition)
@@ -958,9 +899,9 @@ namespace LiteEntitySystem
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
                     ref var field = ref classData.Fields[i];
-                    if (field.ReadField(entity, 
-                            rawData, 
-                            readerPosition, 
+                    if (field.ReadField(
+                            entity, 
+                            rawData + readerPosition, 
                             predictedData, 
                             writeInterpolationData ? interpDataPtr : null, 
                             writeInterpolationData ? prevDataPtr : null))
@@ -1019,6 +960,62 @@ namespace LiteEntitySystem
                 }
                 
                 UpdateMode = UpdateMode.Normal; 
+            }
+        }
+
+        private unsafe void ReadDiff(ref int readerPosition)
+        {
+            fixed (byte* rawData = _stateA.Data)
+            {
+                while (readerPosition < _stateA.DataOffset + _stateA.DataSize)
+                {
+                    ushort totalSize = *(ushort*)(rawData + readerPosition);
+                    int endPos = readerPosition + totalSize;
+                    readerPosition += sizeof(ushort);
+                    ushort entityId = *(ushort*)(rawData + readerPosition);
+                    readerPosition += sizeof(ushort);
+                    if (!IsEntityIdValid(entityId))
+                        break;
+                    var entity = EntitiesDict[entityId];
+                    if (entity == null)
+                    {
+                        readerPosition = endPos;
+                        continue;
+                    }
+
+                    ref var classData = ref entity.ClassData;
+                    bool writeInterpolationData = entity.IsRemoteControlled;
+                    readerPosition += classData.FieldsFlagsSize;
+                    _changedEntities.Add(entity);
+                    Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
+
+                    int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
+                    fixed (byte* interpDataPtr = classData.ClientInterpolatedNextData(entity), 
+                           predictedData = classData.ClientPredictedData(entity))
+                    {
+                        for (int i = 0; i < classData.FieldsCount; i++)
+                        {
+                            if (!Utils.IsBitSet(rawData + fieldsFlagsOffset, i))
+                                continue;
+                            ref var field = ref classData.Fields[i];
+                            if (field.ReadField(
+                                    entity,
+                                    rawData + readerPosition,
+                                    predictedData,
+                                    writeInterpolationData ? interpDataPtr : null,
+                                    null))
+                            {
+                                _syncCalls[_syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition,
+                                    field.IntSize);
+                            }
+
+                            //Logger.Log($"E {entity.Id} Field updated: {field.Name}");
+                            readerPosition += field.IntSize;
+                        }
+                    }
+
+                    readerPosition = endPos;
+                }
             }
         }
         

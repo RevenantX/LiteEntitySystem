@@ -8,6 +8,8 @@ namespace LiteEntitySystem.Internal
         public const int DiffHeaderSize = 4;
         public const int MaxStateSize = 32767; //half of ushort
         
+        private const int TickBetweenFullRefresh = ushort.MaxValue/5;
+        
         private EntityFieldInfo[] _fields;
         private int _fieldsCount;
         private int _fieldsFlagsSize;
@@ -20,7 +22,10 @@ namespace LiteEntitySystem.Internal
         
         public byte NextVersion;
         public ushort LastChangedTick;
-
+        
+        private DateTime _lastRefreshedTime;
+        private int _secondsBetweenRefresh;
+        
         public void AllocateMemory(ref EntityClassData classData, byte[] ioBuffer)
         {
             if (_entity != null)
@@ -49,26 +54,44 @@ namespace LiteEntitySystem.Internal
             
             fixed (byte* data = _latestEntityData)
                 *(EntityDataHeader*)data = _entity.DataHeader;
+
+            _lastRefreshedTime = DateTime.UtcNow;
+            _secondsBetweenRefresh = TickBetweenFullRefresh / e.ServerManager.Tickrate;
         }
         
-        public unsafe void UpdateFieldValue<T>(ushort fieldId, ushort tick, ref T newValue) where T : unmanaged
+        public unsafe void UpdateFieldValue<T>(ushort fieldId, ushort minimalTick, ushort tick, ref T newValue) where T : unmanaged
         {
-            LastChangedTick = tick;
             _fieldChangeTicks[fieldId] = tick;
+            MarkChanged(minimalTick, tick);
             fixed (byte* data = &_latestEntityData[HeaderSize + _fields[fieldId].FixedOffset])
                 *(T*)data = newValue;
         }
         
-        public void MarkFieldsChanged(ushort tick, SyncFlags onlyWithFlags)
+        public void MarkFieldsChanged(ushort minimalTick, ushort tick, SyncFlags onlyWithFlags)
         {
-            LastChangedTick = tick;
             for (int i = 0; i < _fieldsCount; i++)
                 if ((_fields[i].Flags & onlyWithFlags) == onlyWithFlags)
                     _fieldChangeTicks[i] = tick;
+            MarkChanged(minimalTick, tick);
+        }
+
+        public void MarkChanged(ushort minimalTick, ushort tick)
+        {
+            LastChangedTick = tick;
+            //refresh every X seconds to prevent wrap-arounded bugs
+            DateTime currentTime = DateTime.UtcNow;
+            if ((currentTime - _lastRefreshedTime).TotalSeconds > _secondsBetweenRefresh)
+            {
+                _versionChangedTick = minimalTick;
+                for (int i = 0; i < _fieldsCount; i++)
+                    if(_fieldChangeTicks[i] != tick) //change only not refreshed at current tick
+                        _fieldChangeTicks[i] = minimalTick;
+                _lastRefreshedTime = currentTime;
+            }
         }
 
         public int GetMaximumSize() =>
-            _entity == null ? 0 : (int)_fullDataSize + + sizeof(ushort) + sizeof(ushort) + _fieldsFlagsSize;
+            _entity == null ? 0 : (int)_fullDataSize + sizeof(ushort) + sizeof(ushort) + _fieldsFlagsSize;
 
         public void MakeNewRPC()
         {
@@ -92,14 +115,21 @@ namespace LiteEntitySystem.Internal
         private SyncGroup RefreshSyncGroupsVariable(NetPlayer player)
         {
             SyncGroup enabledGroups = SyncGroup.All;
-            if (player != null && _entity is EntityLogic el &&
-                player.EntitySyncInfo.TryGetValue(el, out var syncGroupData) &&
-                syncGroupData.IsInitialized)
+            if (_entity is EntityLogic el)
             {
-                enabledGroups = syncGroupData.EnabledGroups;
-                _fieldChangeTicks[el.IsSyncEnabledFieldId] = syncGroupData.LastChangedTick;
+                if (player.EntitySyncInfo.TryGetValue(el, out var syncGroupData))
+                {
+                    enabledGroups = syncGroupData.EnabledGroups;
+                    _fieldChangeTicks[el.IsSyncEnabledFieldId] = syncGroupData.LastChangedTick;
+                }
+                else
+                {
+                    //if no data it "never" changed
+                    _fieldChangeTicks[el.IsSyncEnabledFieldId] = _versionChangedTick;
+                }
                 _latestEntityData[HeaderSize + _fields[el.IsSyncEnabledFieldId].FixedOffset] = (byte)enabledGroups;
             }
+ 
             return enabledGroups;
         }
 
@@ -119,7 +149,9 @@ namespace LiteEntitySystem.Internal
                 Logger.LogError($"Exception in OnSyncRequested: {e}");
             }
 
-            RefreshSyncGroupsVariable(player);
+            //it can be null on entity creation
+            if(player != null)
+                RefreshSyncGroupsVariable(player);
             
             //actual on constructed rpc
             _entity.ServerManager.AddRemoteCall(
@@ -162,10 +194,6 @@ namespace LiteEntitySystem.Internal
                 Logger.LogWarning("MakeDiff on freed?");
                 return false;
             }
-
-            //refresh minimal tick to prevent errors on tick wrap-arounds
-            if (Utils.SequenceDiff(_versionChangedTick, minimalTick) < 0)
-                _versionChangedTick = minimalTick;
             
             //skip known
             if (Utils.SequenceDiff(LastChangedTick, player.CurrentServerTick) <= 0)
@@ -194,13 +222,13 @@ namespace LiteEntitySystem.Internal
             ushort compareToTick = Utils.SequenceDiff(_versionChangedTick, player.CurrentServerTick) > 0
                 ? _versionChangedTick
                 : player.CurrentServerTick;
+            
+            //overwrite IsSyncEnabled for each player
+            SyncGroup enabledSyncGroups = RefreshSyncGroupsVariable(player);
 
             fixed (byte* lastEntityData = _latestEntityData) //make diff
             {
                 byte* entityDataAfterHeader = lastEntityData + HeaderSize;
-                
-                //overwrite IsSyncEnabled for each player
-                SyncGroup enabledSyncGroups = RefreshSyncGroupsVariable(player);
                 
                 // -1 for cycle
                 byte* fields = resultData + startPos + DiffHeaderSize - 1;
@@ -218,10 +246,9 @@ namespace LiteEntitySystem.Internal
                         *fields = 0;
                     }
                     
-                    //skip very old and increase tick to wrap
-                    if (Utils.SequenceDiff(_fieldChangeTicks[i], minimalTick) < 0)
+                    //skip very old
+                    if (Utils.SequenceDiff(_fieldChangeTicks[i], minimalTick) <= 0)
                     {
-                        _fieldChangeTicks[i] = minimalTick;
                         continue;
                     }
                     

@@ -123,17 +123,24 @@ namespace LiteEntitySystem
                 entity.InternalOwnerId == forPlayer.Id)
                 return;
             
-            if (forPlayer.EntitySyncInfo.TryGetValue(entity, out var syncGroupData) && syncGroupData.IsInitialized)
+            if (forPlayer.EntitySyncInfo.TryGetValue(entity, out var syncGroupData))
             {
-                if (syncGroupData.IsGroupEnabled(syncGroup) != enable)
+                if (syncGroupData.IsGroupEnabled(syncGroup) == enable)
+                    return;
+
+                syncGroupData.SetGroupEnabled(syncGroup, enable);
+                syncGroupData.LastChangedTick = _tick;
+
+                if (enable) //changed entities updated here too
                 {
-                    syncGroupData.SetGroupEnabled(syncGroup, enable);
-                    syncGroupData.LastChangedTick = _tick;
-                    if(enable)
-                        MarkFieldsChanged(entity, SyncGroupUtils.ToSyncFlags(syncGroup));
-                    forPlayer.EntitySyncInfo[entity] = syncGroupData;
-                    _changedEntities.Add(entity);
+                    MarkFieldsChanged(entity, SyncGroupUtils.ToSyncFlags(syncGroup));
                 }
+                else
+                {
+                    _changedEntities.Add(entity);
+                    _stateSerializers[entity.Id].MarkChanged(_minimalTick, _tick);
+                }
+                forPlayer.EntitySyncInfo[entity] = syncGroupData;
             }
             else if(!enable)
             {
@@ -141,6 +148,7 @@ namespace LiteEntitySystem
                 syncGroupData.SetGroupEnabled(syncGroup, false);
                 forPlayer.EntitySyncInfo.Add(entity, syncGroupData);
                 _changedEntities.Add(entity);
+                _stateSerializers[entity.Id].MarkChanged(_minimalTick, _tick);
             }
         }
 
@@ -589,6 +597,7 @@ namespace LiteEntitySystem
             {
                 var player = _netPlayers.GetByIndex(pidx);
                 _syncForPlayer = null;
+                int rpcSize = 0;
                 if (player.State == NetPlayerState.RequestBaseline)
                 {
                     int originalLength = 0;
@@ -608,14 +617,24 @@ namespace LiteEntitySystem
                         _syncForPlayer = null;
                         
                         foreach (var rpcNode in _pendingRPCs)
-                            if (rpcNode.OnlyForPlayer == player && rpcNode.AllowToSendForPlayer(player.Id))
+                        {
+                            if (rpcNode.OnlyForPlayer != player)
+                                continue;
+                            var entity = EntitiesDict[rpcNode.Header.EntityId];
+                            if(rpcNode.AllowToSendForPlayer(player.Id, entity.OwnerId))
                                 rpcNode.WriteTo(packetBuffer, ref originalLength);
+                        }
+                        rpcSize = originalLength;
                     }
-                    else //like baseline but only queued rpcs
+                    else //like baseline but only queued rpcs and diff data
                     {
                         foreach (var rpcNode in _pendingRPCs)
                             if(ShouldSendRPC(rpcNode, player))
                                 rpcNode.WriteTo(packetBuffer, ref originalLength);
+                        rpcSize = originalLength;
+                        
+                        foreach (var e in GetEntities<InternalEntity>())
+                            _stateSerializers[e.Id].MakeDiff(player, _minimalTick, packetBuffer, ref originalLength);
                     }
                     
                     //set header
@@ -627,7 +646,8 @@ namespace LiteEntitySystem
                         Tick = _tick,
                         PlayerId = player.Id,
                         SendRate = (byte)SendRate,
-                        Tickrate = Tickrate
+                        Tickrate = Tickrate,
+                        EventsSize = rpcSize
                     };
                     
                     //compress
@@ -660,7 +680,6 @@ namespace LiteEntitySystem
                 
                 int writePosition = sizeof(DiffPartHeader);
                 ushort maxPartSize = (ushort)(player.Peer.GetMaxUnreliablePacketSize() - sizeof(LastPartData));
-                int rpcSize = 0;
                 
                 foreach (var rpcNode in _pendingRPCs)
                 {
@@ -788,15 +807,15 @@ namespace LiteEntitySystem
                 if(!stateSerializer.ShouldSync(player.Id, true))
                     return false;
 
-                if (!rpcNode.AllowToSendForPlayer(player.Id))
+                var entity = EntitiesDict[rpcNode.Header.EntityId];
+                if (!rpcNode.AllowToSendForPlayer(player.Id, entity.OwnerId))
                     return false;
 
                 //check sync groups
-                if (rpcNode.OwnerId != player.Id)
+                if (entity.OwnerId != player.Id)
                 {
-                    if (EntitiesDict[rpcNode.Header.EntityId] is EntityLogic el && 
+                    if (entity is EntityLogic el && 
                         player.EntitySyncInfo.TryGetValue(el, out var syncGroups) &&
-                        syncGroups.IsInitialized &&
                         SyncGroupUtils.IsRPCDisabled(syncGroups.EnabledGroups, rpcNode.ExecuteFlags))
                     {
                         //skip disabled rpcs
@@ -820,13 +839,13 @@ namespace LiteEntitySystem
                 return;
             }
             _changedEntities.Add(entity);
-            _stateSerializers[entity.Id].UpdateFieldValue(fieldId, _tick, ref newValue);
+            _stateSerializers[entity.Id].UpdateFieldValue(fieldId, _minimalTick, _tick, ref newValue);
         }
 
         internal void MarkFieldsChanged(InternalEntity entity, SyncFlags onlyWithFlags)
         {
             _changedEntities.Add(entity);
-            _stateSerializers[entity.Id].MarkFieldsChanged(_tick, onlyWithFlags);
+            _stateSerializers[entity.Id].MarkFieldsChanged(_minimalTick, _tick, onlyWithFlags);
         }
         
         internal void AddRemoteCall(InternalEntity entity, ushort rpcId, ExecuteFlags flags)
@@ -841,7 +860,6 @@ namespace LiteEntitySystem
             rpc.Init(_syncForPlayer, entity, _tick, 0, rpcId, flags);
             _pendingRPCs.Enqueue(rpc);
             _maxDataSize += rpc.TotalSize;
-            _changedEntities.Add(entity);
         }
         
         internal unsafe void AddRemoteCall<T>(InternalEntity entity, ReadOnlySpan<T> value, ushort rpcId, ExecuteFlags flags) where T : unmanaged
@@ -866,7 +884,6 @@ namespace LiteEntitySystem
                     RefMagic.CopyBlock(rawData, rawValue, (uint)dataSize);
             _pendingRPCs.Enqueue(rpc);
             _maxDataSize += rpc.TotalSize;
-            _changedEntities.Add(entity);
         }
     }
 }

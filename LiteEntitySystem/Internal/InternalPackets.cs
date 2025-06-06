@@ -12,6 +12,7 @@ namespace LiteEntitySystem.Internal
         public ushort Tick;
         public byte Tickrate;
         public int OriginalLength;
+        public int EventsSize;
     }
 
     [StructLayout(LayoutKind.Sequential)]

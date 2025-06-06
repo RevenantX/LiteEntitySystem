@@ -18,17 +18,15 @@ namespace LiteEntitySystem
     {
         public ushort LastChangedTick;
         public SyncGroup EnabledGroups;
-        public readonly bool IsInitialized;
 
         public SyncGroupData(ushort lastChangedTick)
         {
-            IsInitialized = true;
             LastChangedTick = lastChangedTick;
             EnabledGroups = SyncGroup.All;
         }
 
         public bool IsGroupEnabled(SyncGroup group) => 
-            !IsInitialized || EnabledGroups.HasFlagFast(group);
+            EnabledGroups.HasFlagFast(group);
 
         public void SetGroupEnabled(SyncGroup group, bool enabled) =>
             EnabledGroups = enabled 

@@ -346,9 +346,10 @@ namespace LiteEntitySystem.Internal
             Reset(header.Tick);
             Size = header.OriginalLength;
             Data = new byte[header.OriginalLength];
-            _dataOffset = 0;
-            _dataSize = 0;
-            _rpcEndPos = Size;
+            _dataOffset = header.EventsSize;
+            _dataSize = header.OriginalLength - header.EventsSize;
+            _rpcEndPos = header.EventsSize;
+            _rpcReadPos = 0;
             fixed (byte* stateData = Data)
             {
                 int decodedBytes = LZ4Codec.Decode(

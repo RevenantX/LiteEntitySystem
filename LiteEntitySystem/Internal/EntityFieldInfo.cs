@@ -64,12 +64,10 @@
         public unsafe bool ReadField(
             InternalEntity entity, 
             byte* rawData, 
-            int readerPosition, 
             byte* predictedData, 
             byte* nextInterpDataPtr, 
             byte* prevInterpDataPtr)
         {
-            rawData += readerPosition;
             if (IsPredicted)
                 RefMagic.CopyBlock(predictedData + PredictedOffset, rawData, Size);
             if (FieldType == FieldType.SyncableSyncVar)
