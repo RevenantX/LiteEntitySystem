@@ -67,6 +67,7 @@ namespace LiteEntitySystem.Internal
         public int DataSize => _dataSize;
         
         private readonly HashSet<SyncableField> _syncablesSet = new();
+        private DeltaCompressor _rpcDeltaCompressor = new (Utils.SizeOfStruct<RPCHeader>());
         
         public unsafe void GetDiagnosticData(
             InternalEntity[] entityDict, 
@@ -235,13 +236,17 @@ namespace LiteEntitySystem.Internal
             {
                 while (_rpcReadPos < _rpcEndPos)
                 {
-                    if (_rpcEndPos - _rpcReadPos < sizeof(RPCHeader))
+                    if (_rpcEndPos - _rpcReadPos < _rpcDeltaCompressor.MinDeltaSize)
                     {
                         Logger.LogError("Broken rpcs sizes?");
                         break;
                     }
                     
-                    var header = *(RPCHeader*)(rawData + _rpcReadPos);
+                    RPCHeader header = new();
+                    int encodedSize = _rpcDeltaCompressor.Decode(
+                        new ReadOnlySpan<byte>(rawData + _rpcReadPos, _rpcDeltaCompressor.MaxDeltaSize), 
+                        new Span<byte>(&header, sizeof(RPCHeader)));
+                    
                     if (!firstSync)
                     {
                         if (Utils.SequenceDiff(header.Tick, entityManager.ServerTick) > 0)
@@ -252,14 +257,14 @@ namespace LiteEntitySystem.Internal
 
                         if (Utils.SequenceDiff(header.Tick, minimalTick) <= 0)
                         {
-                            _rpcReadPos += header.ByteCount + sizeof(RPCHeader);
+                            _rpcReadPos += header.ByteCount + encodedSize;
                             //Logger.Log($"Skip rpc. Entity: {header.EntityId}. Tick {header.Tick} <= MinimalTick: {minimalTick}. Id: {header.Id}. StateATick: {entityManager.RawServerTick}. StateBTick: {entityManager.RawTargetServerTick}");
                             continue;
                         }
                     }
                     
-                    int rpcDataStart = _rpcReadPos + sizeof(RPCHeader);
-                    _rpcReadPos += header.ByteCount + sizeof(RPCHeader);
+                    int rpcDataStart = _rpcReadPos + encodedSize;
+                    _rpcReadPos += encodedSize + header.ByteCount;
 
                     //Logger.Log($"Executing rpc. Entity: {header.EntityId}. Tick {header.Tick}. Id: {header.Id}");
                     var entity = entityManager.EntitiesDict[header.EntityId];
@@ -339,6 +344,7 @@ namespace LiteEntitySystem.Internal
             _partMtu = 0;
             _nullEntitiesCount = 0;
             _rpcReadPos = 0;
+            _rpcDeltaCompressor.Init();
         }
 
         public unsafe bool ReadBaseline(BaselineDataHeader header, byte* rawData, int fullSize)

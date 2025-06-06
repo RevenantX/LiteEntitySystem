@@ -34,7 +34,7 @@ namespace LiteEntitySystem
         private readonly byte[] _inputDecodeBuffer = new byte[NetConstants.MaxUnreliableDataSize];
         private readonly NetDataReader _requestsReader = new();
         private readonly Queue<RemoteCallPacket> _pendingRPCs = new();
-                
+
         private NetPlayer _syncForPlayer;
         private int _maxDataSize;
         
@@ -598,6 +598,7 @@ namespace LiteEntitySystem
                 var player = _netPlayers.GetByIndex(pidx);
                 _syncForPlayer = null;
                 int rpcSize = 0;
+                RPCHeader prevRpcHeader = new();
                 if (player.State == NetPlayerState.RequestBaseline)
                 {
                     int originalLength = 0;
@@ -622,7 +623,7 @@ namespace LiteEntitySystem
                                 continue;
                             var entity = EntitiesDict[rpcNode.Header.EntityId];
                             if(rpcNode.AllowToSendForPlayer(player.Id, entity.OwnerId))
-                                rpcNode.WriteTo(packetBuffer, ref originalLength);
+                                rpcNode.WriteTo(packetBuffer, ref originalLength, ref prevRpcHeader);
                         }
                         rpcSize = originalLength;
                     }
@@ -630,7 +631,7 @@ namespace LiteEntitySystem
                     {
                         foreach (var rpcNode in _pendingRPCs)
                             if(ShouldSendRPC(rpcNode, player))
-                                rpcNode.WriteTo(packetBuffer, ref originalLength);
+                                rpcNode.WriteTo(packetBuffer, ref originalLength, ref prevRpcHeader);
                         rpcSize = originalLength;
                         
                         foreach (var e in GetEntities<InternalEntity>())
@@ -686,8 +687,9 @@ namespace LiteEntitySystem
                     if(!ShouldSendRPC(rpcNode, player))
                         continue;
                     
-                    rpcSize += rpcNode.TotalSize;
-                    rpcNode.WriteTo(packetBuffer, ref writePosition);
+                    //use another approach to sum size because writePosition can be edited by CheckOverflow
+                    //!!!
+                    rpcSize += rpcNode.WriteTo(packetBuffer, ref writePosition, ref prevRpcHeader);
                     CheckOverflowAndSend(player, header, packetBuffer, ref writePosition, maxPartSize);
                     if(player.State == NetPlayerState.RequestBaseline)
                         break;
@@ -761,6 +763,7 @@ namespace LiteEntitySystem
             _netPlayers.GetByIndex(0).Peer.TriggerSend();
 
             //Logger.Log($"ServerSendTick: {_tick}");
+            //Logger.Log($"SendTotal: {RemoteCallPacket.TotalWriteSizeNormal}, SendDelta: {RemoteCallPacket.TotalWriteSizeDelta}");
             return;
             void CheckOverflowAndSend(NetPlayer player, DiffPartHeader *header, byte* packetBuffer, ref int writePosition, int maxPartSize)
             {

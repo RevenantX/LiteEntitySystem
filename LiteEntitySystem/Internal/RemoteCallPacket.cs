@@ -18,12 +18,15 @@ namespace LiteEntitySystem.Internal
         public NetPlayer OnlyForPlayer;
         public ExecuteFlags ExecuteFlags;
 
-        public unsafe int TotalSize => sizeof(RPCHeader) + Header.ByteCount;
+        public int TotalSize => RpcDeltaCompressor.MaxDeltaSize + Header.ByteCount;
         
         public const int ReserverdRPCsCount = 3;
         public const ushort NewRPCId = 0;
         public const ushort ConstructRPCId = 1;
         public const ushort DestroyRPCId = 2;
+
+        //can be static because doesnt use any buffers
+        private static DeltaCompressor RpcDeltaCompressor = new(Utils.SizeOfStruct<RPCHeader>());
         
         public static void InitReservedRPCs(List<RpcFieldInfo> rpcCache)
         {
@@ -42,21 +45,15 @@ namespace LiteEntitySystem.Internal
             
             return false;
         }
-
-        public unsafe void WriteTo(byte* resultData, ref int position)
-        {
-            *(RPCHeader*)(resultData + position) = Header;
-            fixed (byte* rpcData = Data)
-                RefMagic.CopyBlock(resultData + sizeof(RPCHeader) + position, rpcData, Header.ByteCount);
-            position += TotalSize;
-        }
         
-        public unsafe void WriteToDeltaCompressed(ref DeltaCompressor deltaCompressor, byte* resultData, ref int position, RPCHeader prevHeader)
+        public unsafe int WriteTo(byte* resultData, ref int position, ref RPCHeader prevHeader)
         {
-            int headerEncodedSize = deltaCompressor.Encode(ref prevHeader, ref Header, new Span<byte>(resultData + position, sizeof(RPCHeader)));
+            int headerEncodedSize = RpcDeltaCompressor.Encode(ref prevHeader, ref Header, new Span<byte>(resultData + position, RpcDeltaCompressor.MaxDeltaSize));
             fixed (byte* rpcData = Data)
                 RefMagic.CopyBlock(resultData + headerEncodedSize + position, rpcData, Header.ByteCount);
             position += headerEncodedSize + Header.ByteCount;
+            prevHeader = Header;
+            return headerEncodedSize + Header.ByteCount;
         }
         
         public void Init(NetPlayer targetPlayer, InternalEntity entity, ushort tick, ushort byteCount, ushort rpcId, ExecuteFlags executeFlags)
