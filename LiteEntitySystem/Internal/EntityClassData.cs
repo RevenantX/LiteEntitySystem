@@ -52,6 +52,8 @@ namespace LiteEntitySystem.Internal
     
     internal struct EntityClassData
     {
+        public readonly string ClassEnumName;
+        
         public readonly ushort ClassId;
         public readonly ushort FilterId;
         public readonly bool IsSingleton;
@@ -175,6 +177,7 @@ namespace LiteEntitySystem.Internal
             InterpolatedFieldsSize = 0;
             RemoteCallsClient = null;
             ClassId = typeInfo.ClassId;
+            ClassEnumName = typeInfo.ClassName;
             Flags = 0;
             EntityConstructor = typeInfo.Constructor;
             IsSingleton = entType.IsSubclassOf(SingletonEntityType);

@@ -41,7 +41,8 @@ namespace LiteEntitySystem.Extensions
         protected internal override void OnSyncRequested()
         {
             WriterCache.Reset();
-            _value.Serialize(WriterCache);
+            if(_value != null)
+                _value.Serialize(WriterCache);
             if (WriterCache.Length > ushort.MaxValue)
             {
                 Logger.LogError("Too much sync data!");
@@ -65,6 +66,11 @@ namespace LiteEntitySystem.Extensions
         private void Init(ReadOnlySpan<byte> data)
         {
             ushort origSize = BitConverter.ToUInt16(data);
+            if (origSize == 0)
+            {
+                _value = default;
+                return;
+            }
             if (CompressionBuffer == null || CompressionBuffer.Length < origSize)
                 CompressionBuffer = new byte[origSize];
             LZ4Codec.Decode(data[2..], new Span<byte>(CompressionBuffer));

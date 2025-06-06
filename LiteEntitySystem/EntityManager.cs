@@ -10,8 +10,10 @@ namespace LiteEntitySystem
     public delegate T EntityConstructor<out T>(EntityParams entityParams) where T : InternalEntity;
     
     [Flags]
-    public enum ExecuteFlags : byte
+    public enum ExecuteFlags : ushort
     {
+        None = 0,
+        
         ///<summary>Execute RPC for owner of entity</summary>
         SendToOwner = 1,
         
@@ -28,7 +30,22 @@ namespace LiteEntitySystem
         ExecuteOnServer = 1 << 3,
         
         ///<summary>All flags, send to owner, to others, execute on prediction and on server</summary>
-        All = SendToOther | SendToOwner | ExecuteOnPrediction | ExecuteOnServer
+        All = SendToOther | SendToOwner | ExecuteOnPrediction | ExecuteOnServer,
+        
+        ///<summary>Toggleable sync group 1. Can include SyncVars and RPCs.</summary>
+        SyncGroup1          = 1 << 4,
+        
+        ///<summary>Toggleable sync group 2. Can include SyncVars and RPCs.</summary>
+        SyncGroup2          = 1 << 5,
+        
+        ///<summary>Toggleable sync group 3. Can include SyncVars and RPCs.</summary>
+        SyncGroup3          = 1 << 6,
+        
+        ///<summary>Toggleable sync group 4. Can include SyncVars and RPCs.</summary>
+        SyncGroup4          = 1 << 7,
+        
+        ///<summary>Toggleable sync group 5. Can include SyncVars and RPCs.</summary>
+        SyncGroup5          = 1 << 8
     }
 
     public enum NetworkMode
@@ -74,7 +91,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Maximum synchronized (without LocalOnly) entities
         /// </summary>
-        public const int MaxSyncedEntityCount = 16384;
+        public const int MaxSyncedEntityCount = 32767;
 
         public const int MaxEntityCount = MaxSyncedEntityCount * 2;
         
@@ -170,6 +187,7 @@ namespace LiteEntitySystem
         private readonly Dictionary<Type, ushort> _registeredTypeIds = new();
         private readonly Dictionary<Type, ILocalSingleton> _localSingletons = new();
         private readonly Dictionary<Type, ILocalSingleton> _localSingletonBaseTypes = new();
+        private readonly Queue<InternalEntity> _entitiesToLateConstruct = new();
 
         internal readonly InternalEntity[] EntitiesDict = new InternalEntity[MaxEntityCount+1];
         internal readonly EntityClassData[] ClassDataDict;
@@ -323,6 +341,7 @@ namespace LiteEntitySystem
             foreach (var localSingleton in _localSingletons)
                 localSingleton.Value?.Destroy();
             
+            _entitiesToLateConstruct.Clear();
             AliveEntities.Clear();
             _localSingletons.Clear();
             _localSingletonBaseTypes.Clear();
@@ -475,9 +494,9 @@ namespace LiteEntitySystem
         protected T AddEntity<T>(EntityParams entityParams) where T : InternalEntity
         {
             var entityHeader = entityParams.Header;
-            if (entityHeader.Id == InvalidEntityId || entityHeader.Id >= EntitiesDict.Length)
+            if (entityParams.Id == InvalidEntityId || entityParams.Id >= EntitiesDict.Length)
             {
-                throw new ArgumentException($"Invalid entity id: {entityHeader.Id}");
+                throw new ArgumentException($"Invalid entity id: {entityParams.Id}");
             }
 
             if (entityHeader.ClassId >= ClassDataDict.Length)
@@ -499,8 +518,12 @@ namespace LiteEntitySystem
             return entity;
         }
 
-        protected void ConstructEntity(InternalEntity e)
+        protected bool ConstructEntity(InternalEntity e)
         {
+            if (e.IsConstructed)
+                return false;
+            e.IsConstructed = true;
+            
             ref var classData = ref ClassDataDict[e.ClassId];
             if (classData.IsSingleton)
             {
@@ -526,6 +549,9 @@ namespace LiteEntitySystem
                 AliveEntities.Add(e);
                 OnAliveEntityAdded(e);
             }
+            _entitiesToLateConstruct.Enqueue(e);
+
+            return true;
         }
         
         protected virtual void OnAliveEntityAdded(InternalEntity e)
@@ -533,7 +559,7 @@ namespace LiteEntitySystem
             
         }
 
-        private static bool IsEntityLagCompensated(InternalEntity e)
+        protected static bool IsEntityLagCompensated(InternalEntity e)
             => !e.IsLocal && e is EntityLogic && e.ClassData.LagCompensatedCount > 0;
 
         private bool IsEntityAlive(EntityFlags flags, InternalEntity entity)
@@ -603,6 +629,13 @@ namespace LiteEntitySystem
                 entity.DisableLagCompensation();
                 //entity.DebugPrint();
             }
+        }
+
+        protected void ExecuteLateConstruct()
+        {
+            foreach (var internalEntity in _entitiesToLateConstruct)
+                internalEntity.OnLateConstructed();
+            _entitiesToLateConstruct.Clear();
         }
 
         protected abstract void OnLogicTick();

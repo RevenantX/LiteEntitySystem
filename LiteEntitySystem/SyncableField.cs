@@ -64,6 +64,11 @@ namespace LiteEntitySystem
                 _executeFlags = ExecuteFlags.SendToAll;
         }
         
+        /// <summary>
+        /// Owner of this syncable field casted to EntityLogic
+        /// </summary>
+        protected EntityLogic ParentEntityLogic => _parentEntity as EntityLogic;
+        
         protected internal virtual void BeforeReadRPC()
         {
             
@@ -87,7 +92,7 @@ namespace LiteEntitySystem
         protected void ExecuteRPC(in RemoteCall rpc)
         {
             if(IsServer)
-                _parentEntity.ServerManager.AddRemoteCall(_parentEntity, (ushort)(rpc.Id + RPCOffset), rpc.Flags);
+                _parentEntity.ServerManager.AddRemoteCall(_parentEntity, (ushort)(rpc.Id + RPCOffset), _executeFlags);
         }
 
         protected void ExecuteRPC<T>(in RemoteCall<T> rpc, T value) where T : unmanaged

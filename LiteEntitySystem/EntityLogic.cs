@@ -1,5 +1,4 @@
 using System;
-using LiteEntitySystem.Extensions;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
@@ -39,40 +38,91 @@ namespace LiteEntitySystem
     /// </summary>
     public abstract class EntityLogic : InternalEntity
     {
-        [SyncVarFlags(SyncFlags.NeverRollBack)]
-        private SyncVar<EntitySharedReference> _parentId;
+        private enum ChangeType
+        {
+            Parent,
+            ChildRemove,
+            ChildAdd
+        }
+
+        private struct ChangeParentData
+        {
+            public ChangeType Type;
+            public EntitySharedReference Ref;
+
+            public ChangeParentData(ChangeType type, EntitySharedReference reference)
+            {
+                Type = type;
+                Ref = reference;
+            }
+        }
+        
+        private static RemoteCall<ChangeParentData> ChangeParentRPC;
+        
+        private SyncVar<EntitySharedReference> _parentRef;
 
         /// <summary>
         /// Child entities (can be used for transforms or as components)
         /// </summary>
         public readonly SyncChilds Childs = new();
 
-        public EntitySharedReference ParentId => _parentId;
+        /// <summary>
+        /// Parent entity shared reference
+        /// </summary>
+        public EntitySharedReference ParentId => _parentRef;
+        
+        /// <summary>
+        /// Parent entity
+        /// </summary>
+        public EntityLogic Parent => EntityManager.GetEntityById<EntityLogic>(_parentRef);
         
         private bool _lagCompensationEnabled;
         
+        /// <summary>
+        /// Shared reference of this entity
+        /// </summary>
         public EntitySharedReference SharedReference => new EntitySharedReference(this);
 
         [SyncVarFlags(SyncFlags.OnlyForOwner)]
         private SyncVar<ushort> _localPredictedIdCounter;
+        
         [SyncVarFlags(SyncFlags.OnlyForOwner)]
         private SyncVar<ushort> _predictedId;
         
+        [SyncVarFlags(SyncFlags.OnlyForOwner)]
+        private SyncVar<bool> _isPredicted;
+        
         internal ulong PredictedId => _predictedId.Value;
+        
+        /// <summary>
+        /// Is entity spawned using AddPredictedEntity
+        /// </summary>
+        public bool IsPredicted => _isPredicted.Value;
+
+        //specific per player
+        private SyncVar<SyncGroup> _isSyncEnabled;
+        
+        //for overwriting
+        internal int IsSyncEnabledFieldId => _isSyncEnabled.FieldId;
         
         /// <summary>
         /// Client only. Is synchronization of this entity to local player enabled
         /// </summary>
         /// <returns>true - when we have data on client or when called on server</returns>
-        public bool IsSyncEnabled
+        public bool IsSyncGroupEnabled(SyncGroup group)
         {
-            get
-            {
-                if (IsServer)
-                    return true;
-                var localPlayerController = ClientManager.GetPlayerController<HumanControllerLogic>();
-                return localPlayerController == null || !localPlayerController.IsEntityDiffSyncDisabled(this);
-            }
+            bool result = (_isSyncEnabled.Value & group) == group;
+            //Logger.Log($"IsSyncEnabled: {group} - {result}");
+            return result;
+        }
+
+        /// <summary>
+        /// Called when SyncGroups enabled or disabled on client
+        /// </summary>
+        /// <param name="enabledGroups">groups that are currently enabled</param>
+        protected virtual void OnSyncGroupsChanged(SyncGroup enabledGroups)
+        {
+            
         }
         
         //on client it works only in rollback
@@ -80,7 +130,7 @@ namespace LiteEntitySystem
         {
             if (_lagCompensationEnabled || InternalOwnerId.Value == player.Id)
                 return;
-            ushort tick = EntityManager.IsClient ? ClientManager.ServerTick : EntityManager.Tick;
+            ushort tick = EntityManager.IsClient ? ClientManager.RawTargetServerTick : EntityManager.Tick;
             if (Utils.SequenceDiff(player.StateATick, tick) >= 0 || Utils.SequenceDiff(player.StateBTick, tick) > 0)
             {
                 Logger.Log($"LagCompensationMiss. Tick: {tick}, StateA: {player.StateATick}, StateB: {player.StateBTick}");
@@ -118,6 +168,10 @@ namespace LiteEntitySystem
         public void DisableLagCompensationForOwner() =>
             EntityManager.DisableLagCompensation();
         
+        /// <summary>
+        /// Get synchronized seed for random generators based on current tick. Can be used for rollback or inside RPCs
+        /// </summary>
+        /// <returns>current tick depending on entity manager state (IsExecutingRPC and InRollBackState)</returns>
         public int GetFrameSeed() =>
             EntityManager.IsClient
                 ? (EntityManager.InRollBackState ? ClientManager.RollBackTick : (ClientManager.IsExecutingRPC ? ClientManager.CurrentRPCTick : EntityManager.Tick)) 
@@ -132,17 +186,17 @@ namespace LiteEntitySystem
         /// <returns>Created predicted local entity</returns>
         public T AddPredictedEntity<T>(Action<T> initMethod = null) where T : EntityLogic
         {
-            T entity;
             if (EntityManager.IsServer)
-            {
-                entity = ServerManager.AddEntity(this, initMethod);
-                entity._predictedId.Value = _localPredictedIdCounter.Value++;
-                return entity;
-            }
+                return ServerManager.AddEntity<T>(this, e =>
+                {
+                    e._predictedId.Value = _localPredictedIdCounter.Value++;
+                    e._isPredicted.Value = true;
+                    initMethod?.Invoke(e);
+                });
 
             if (ClientManager.IsExecutingRPC)
             {
-                Logger.LogError($"AddPredictedEntity called inside server->client RPC on client");
+                Logger.LogError("AddPredictedEntity called inside server->client RPC on client");
                 return null;
             }
 
@@ -152,6 +206,7 @@ namespace LiteEntitySystem
                 return null;
             }
             
+            T entity;
             if (EntityManager.InRollBackState)
             {
                 //local counter here should be reset
@@ -172,12 +227,11 @@ namespace LiteEntitySystem
                 return entity;
             }
 
-            entity = ClientManager.AddLocalEntity<T>(e =>
+            entity = ClientManager.AddLocalEntity<T>(this, e =>
             {
-                e._parentId.Value = new EntitySharedReference(this);
-                e.InternalOwnerId.Value = InternalOwnerId.Value;
                 e._predictedId.Value = _localPredictedIdCounter.Value++;
-                Childs.Add(e);
+                e._isPredicted.Value = true;
+                //Logger.Log($"AddPredictedEntity. Id: {e.Id}, ClassId: {e.ClassId} PredId: {e._predictedId.Value}, Tick: {e.ClientManager.Tick}");
                 initMethod?.Invoke(e);
             });
             return entity;
@@ -217,12 +271,9 @@ namespace LiteEntitySystem
                 return;
             }
 
-            entity = ClientManager.AddLocalEntity<T>(e =>
+            entity = ClientManager.AddLocalEntity<T>(this, e =>
             {
-                e._parentId.Value = new EntitySharedReference(this);
-                e.InternalOwnerId.Value = InternalOwnerId.Value;
                 e._predictedId.Value = _localPredictedIdCounter.Value++;
-                Childs.Add(e);
                 initMethod?.Invoke(e);
             });
             targetReference.Value = entity;
@@ -231,32 +282,49 @@ namespace LiteEntitySystem
         /// <summary>
         /// Set parent entity
         /// </summary>
-        /// <param name="parentEntity">parent entity</param>
-        public void SetParent(EntityLogic parentEntity)
+        /// <param name="newParent">parent entity</param>
+        public void SetParent(EntityLogic newParent)
         {
             if (EntityManager.IsClient)
                 return;
-            
-            var id = new EntitySharedReference(parentEntity);
-            if (id == _parentId.Value)
+            SetParentInternal(newParent);
+        }
+
+        internal void SetParentInternal(EntityLogic newParent)
+        {
+            if (newParent == _parentRef.Value)
                 return;
             
-            EntityManager.GetEntityById<EntityLogic>(_parentId)?.Childs.Remove(this);
-            EntityManager.GetEntityById<EntityLogic>(id)?.Childs.Add(this);
-            _parentId.Value = id;
+            var prevParent = EntityManager.GetEntityById<EntityLogic>(_parentRef);
+            prevParent?.Childs.Remove(this);
+            ExecuteRPC(ChangeParentRPC, new ChangeParentData(ChangeType.ChildRemove, prevParent));
+            newParent?.Childs.Add(this);
+            ExecuteRPC(ChangeParentRPC, new ChangeParentData(ChangeType.ChildAdd, newParent));
+            _parentRef.Value = newParent?.SharedReference ?? EntitySharedReference.Empty;
             
-            var newParent = EntityManager.GetEntityById<EntityLogic>(_parentId)?.InternalOwnerId ?? EntityManager.ServerPlayerId;
-            if (InternalOwnerId.Value != newParent)
-                SetOwner(this, newParent);
+            byte newParentOwner = newParent?.InternalOwnerId ?? EntityManager.ServerPlayerId;
+            if (InternalOwnerId.Value != newParentOwner)
+                SetOwner(this, newParentOwner);
+            
+            ExecuteRPC(ChangeParentRPC, new ChangeParentData(ChangeType.Parent, prevParent));
+            //Logger.Log($"SetParent({EntityManager.Mode}). Prev: {prevParent}, New: {newParent}");
         }
         
+        internal static void SetOwner(EntityLogic entity, byte ownerId)
+        {
+            entity.InternalOwnerId.Value = ownerId;
+            entity.ServerManager.MarkFieldsChanged(entity, SyncFlags.OnlyForOwner);
+            entity.ServerManager.MarkFieldsChanged(entity, SyncFlags.OnlyForOtherPlayers);
+            foreach (var child in entity.Childs)
+                SetOwner(entity.EntityManager.GetEntityById<EntityLogic>(child), ownerId);
+        }
+
         /// <summary>
         /// Get parent entity
         /// </summary>
         /// <typeparam name="T">Type of entity</typeparam>
         /// <returns>parent entity</returns>
-        public T GetParent<T>() where T : EntityLogic =>
-            EntityManager.GetEntityById<T>(_parentId);
+        public T GetParent<T>() where T : EntityLogic => EntityManager.GetEntityById<T>(_parentRef);
         
         /// <summary>
         /// Called when lag compensation was started for this entity
@@ -293,7 +361,7 @@ namespace LiteEntitySystem
             {
                 ClientManager.RemoveOwned(this);
             }
-            var parent = EntityManager.GetEntityById<EntityLogic>(_parentId);
+            var parent = EntityManager.GetEntityById<EntityLogic>(_parentRef);
             if (parent != null && !parent.IsDestroyed)
             {
                 parent.Childs.Remove(this);
@@ -310,37 +378,75 @@ namespace LiteEntitySystem
         {
             
         }
-        
-        private void OnOwnerChange(byte prevOwner)
+
+        /// <summary>
+        /// Called when parent changed
+        /// </summary>
+        /// <param name="oldParent"></param>
+        protected virtual void OnParentChanged(EntityLogic oldParent)
         {
-            if (IsLocal)
+            
+        }
+        
+        /// <summary>
+        /// Called when child added
+        /// </summary>
+        /// <param name="child"></param>
+        protected virtual void OnChildAdded(EntityLogic child)
+        {
+            
+        }
+        
+        /// <summary>
+        /// Called when child removed
+        /// </summary>
+        /// <param name="child"></param>
+        protected virtual void OnChildRemoved(EntityLogic child)
+        {
+            
+        }
+
+        internal void RefreshOwnerInfo(EntityLogic oldOwner)
+        {
+            if (EntityManager.IsServer || IsLocal)
                 return;
-            if(prevOwner == EntityManager.InternalPlayerId)
+            if(oldOwner != null && oldOwner.InternalOwnerId.Value == EntityManager.InternalPlayerId)
                 ClientManager.RemoveOwned(this);
             if(InternalOwnerId.Value == EntityManager.InternalPlayerId)
                 ClientManager.AddOwned(this);
         }
 
-        internal static void SetOwner(EntityLogic entity, byte ownerId)
-        {
-            entity.InternalOwnerId.Value = ownerId;
-            if (ownerId != EntityManager.ServerPlayerId)
-                entity.ServerManager.GetPlayerController(ownerId)?.ForceSyncEntity(entity);
-            foreach (var child in entity.Childs)
-            {
-                SetOwner(entity.EntityManager.GetEntityById<EntityLogic>(child), ownerId);
-            }
-        }
-        
         protected override void RegisterRPC(ref RPCRegistrator r)
         {
             base.RegisterRPC(ref r);
-            r.BindOnChange(this, ref InternalOwnerId, OnOwnerChange);
+            
+            r.BindOnChange<SyncGroup, EntityLogic>(ref _isSyncEnabled, (e, _) => e.OnSyncGroupsChanged(e._isSyncEnabled.Value));
+            
+            r.CreateRPCAction<EntityLogic, ChangeParentData>(
+                (e, data) =>
+                {
+                    switch (data.Type)
+                    {
+                        case ChangeType.Parent:
+                            var oldOwner = e.EntityManager.GetEntityById<EntityLogic>(data.Ref);
+                            e.RefreshOwnerInfo(oldOwner);
+                            e.OnParentChanged(oldOwner);
+                            break;
+                        case ChangeType.ChildAdd:
+                            e.EntityManager.GetEntityById<EntityLogic>(data.Ref)?.OnChildAdded(e);
+                            break;
+                        case ChangeType.ChildRemove:
+                            e.EntityManager.GetEntityById<EntityLogic>(data.Ref)?.OnChildRemoved(e);
+                            break;
+                    }
+                },
+                ref ChangeParentRPC, 
+                ExecuteFlags.SendToAll | ExecuteFlags.ExecuteOnServer);
         }
-        
+
         protected EntityLogic(EntityParams entityParams) : base(entityParams)
         {
-
+            _isSyncEnabled.Value = SyncGroup.All;
         }
     }
 }

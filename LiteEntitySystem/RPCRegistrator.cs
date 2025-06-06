@@ -119,8 +119,7 @@ namespace LiteEntitySystem
         /// <param name="executionOrder">order of execution</param>
         public void BindOnChange<T, TEntity>(ref SyncVar<T> syncVar, Action<TEntity, T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
         {
-            ref var field = ref _fields[syncVar.FieldId];
-            field.OnSync = RemoteCall<T>.CreateMCD(onChangedAction);
+            _fields[syncVar.FieldId].OnSync = RemoteCall<T>.CreateMCD(onChangedAction);
         }
         
         /// <summary>
