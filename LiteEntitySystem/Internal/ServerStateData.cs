@@ -68,6 +68,11 @@ namespace LiteEntitySystem.Internal
         
         private readonly HashSet<SyncableField> _syncablesSet = new();
         private DeltaCompressor _rpcDeltaCompressor = new (Utils.SizeOfStruct<RPCHeader>());
+
+        public ServerStateData()
+        {
+            _rpcDeltaCompressor.Init();
+        }
         
         public unsafe void GetDiagnosticData(
             InternalEntity[] entityDict, 
