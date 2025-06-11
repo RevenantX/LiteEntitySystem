@@ -1,0 +1,823 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.Extensions.SyncFixedArray`1
+  commentId: T:LiteEntitySystem.Extensions.SyncFixedArray`1
+  id: SyncFixedArray`1
+  parent: LiteEntitySystem.Extensions
+  children:
+  - LiteEntitySystem.Extensions.SyncFixedArray`1.#ctor(System.Int32)
+  - LiteEntitySystem.Extensions.SyncFixedArray`1.Item(System.Int32)
+  - LiteEntitySystem.Extensions.SyncFixedArray`1.Length
+  - LiteEntitySystem.Extensions.SyncFixedArray`1.OnSyncRequested
+  - LiteEntitySystem.Extensions.SyncFixedArray`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  langs:
+  - csharp
+  - vb
+  name: SyncFixedArray<T>
+  nameWithType: SyncFixedArray<T>
+  fullName: LiteEntitySystem.Extensions.SyncFixedArray<T>
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: 'public class SyncFixedArray<T> : SyncableField where T : unmanaged, IEquatable<T>'
+    typeParameters:
+    - id: T
+    content.vb: Public Class SyncFixedArray(Of T As {Structure, IEquatable(Of T)}) Inherits SyncableField
+  inheritance:
+  - System.Object
+  - LiteEntitySystem.Internal.InternalBaseClass
+  - LiteEntitySystem.SyncableField
+  inheritedMembers:
+  - LiteEntitySystem.SyncableField.IsClient
+  - LiteEntitySystem.SyncableField.IsServer
+  - LiteEntitySystem.SyncableField.IsRollbackSupported
+  - LiteEntitySystem.SyncableField.ParentEntity
+  - LiteEntitySystem.SyncableField.ParentEntityLogic
+  - LiteEntitySystem.SyncableField.BeforeReadRPC
+  - LiteEntitySystem.SyncableField.AfterReadRPC
+  - LiteEntitySystem.SyncableField.OnRollback
+  - LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
+  - LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{{T}}@,{T})
+  - LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{{T}}@,System.ReadOnlySpan{{T}})
+  - LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{{T}}@,{T})
+  nameWithType.vb: SyncFixedArray(Of T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncFixedArray(Of T)
+  name.vb: SyncFixedArray(Of T)
+- uid: LiteEntitySystem.Extensions.SyncFixedArray`1.Length
+  commentId: F:LiteEntitySystem.Extensions.SyncFixedArray`1.Length
+  id: Length
+  parent: LiteEntitySystem.Extensions.SyncFixedArray`1
+  langs:
+  - csharp
+  - vb
+  name: Length
+  nameWithType: SyncFixedArray<T>.Length
+  fullName: LiteEntitySystem.Extensions.SyncFixedArray<T>.Length
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: public readonly int Length
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Length As Integer
+  nameWithType.vb: SyncFixedArray(Of T).Length
+  fullName.vb: LiteEntitySystem.Extensions.SyncFixedArray(Of T).Length
+- uid: LiteEntitySystem.Extensions.SyncFixedArray`1.#ctor(System.Int32)
+  commentId: M:LiteEntitySystem.Extensions.SyncFixedArray`1.#ctor(System.Int32)
+  id: '#ctor(System.Int32)'
+  parent: LiteEntitySystem.Extensions.SyncFixedArray`1
+  langs:
+  - csharp
+  - vb
+  name: SyncFixedArray(int)
+  nameWithType: SyncFixedArray<T>.SyncFixedArray(int)
+  fullName: LiteEntitySystem.Extensions.SyncFixedArray<T>.SyncFixedArray(int)
+  type: Constructor
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: public SyncFixedArray(int size)
+    parameters:
+    - id: size
+      type: System.Int32
+    content.vb: Public Sub New(size As Integer)
+  overload: LiteEntitySystem.Extensions.SyncFixedArray`1.#ctor*
+  nameWithType.vb: SyncFixedArray(Of T).New(Integer)
+  fullName.vb: LiteEntitySystem.Extensions.SyncFixedArray(Of T).New(Integer)
+  name.vb: New(Integer)
+- uid: LiteEntitySystem.Extensions.SyncFixedArray`1.OnSyncRequested
+  commentId: M:LiteEntitySystem.Extensions.SyncFixedArray`1.OnSyncRequested
+  id: OnSyncRequested
+  parent: LiteEntitySystem.Extensions.SyncFixedArray`1
+  langs:
+  - csharp
+  - vb
+  name: OnSyncRequested()
+  nameWithType: SyncFixedArray<T>.OnSyncRequested()
+  fullName: LiteEntitySystem.Extensions.SyncFixedArray<T>.OnSyncRequested()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  example: []
+  syntax:
+    content: protected override void OnSyncRequested()
+    content.vb: Protected Overrides Sub OnSyncRequested()
+  overridden: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+  overload: LiteEntitySystem.Extensions.SyncFixedArray`1.OnSyncRequested*
+  nameWithType.vb: SyncFixedArray(Of T).OnSyncRequested()
+  fullName.vb: LiteEntitySystem.Extensions.SyncFixedArray(Of T).OnSyncRequested()
+- uid: LiteEntitySystem.Extensions.SyncFixedArray`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  commentId: M:LiteEntitySystem.Extensions.SyncFixedArray`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  id: RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  parent: LiteEntitySystem.Extensions.SyncFixedArray`1
+  langs:
+  - csharp
+  - vb
+  name: RegisterRPC(ref SyncableRPCRegistrator)
+  nameWithType: SyncFixedArray<T>.RegisterRPC(ref SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.Extensions.SyncFixedArray<T>.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  example: []
+  syntax:
+    content: protected override void RegisterRPC(ref SyncableRPCRegistrator r)
+    parameters:
+    - id: r
+      type: LiteEntitySystem.SyncableRPCRegistrator
+    content.vb: Protected Overrides Sub RegisterRPC(r As SyncableRPCRegistrator)
+  overridden: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  overload: LiteEntitySystem.Extensions.SyncFixedArray`1.RegisterRPC*
+  nameWithType.vb: SyncFixedArray(Of T).RegisterRPC(SyncableRPCRegistrator)
+  fullName.vb: LiteEntitySystem.Extensions.SyncFixedArray(Of T).RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
+  name.vb: RegisterRPC(SyncableRPCRegistrator)
+- uid: LiteEntitySystem.Extensions.SyncFixedArray`1.Item(System.Int32)
+  commentId: P:LiteEntitySystem.Extensions.SyncFixedArray`1.Item(System.Int32)
+  id: Item(System.Int32)
+  parent: LiteEntitySystem.Extensions.SyncFixedArray`1
+  langs:
+  - csharp
+  - vb
+  name: this[int]
+  nameWithType: SyncFixedArray<T>.this[int]
+  fullName: LiteEntitySystem.Extensions.SyncFixedArray<T>.this[int]
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: public T this[int index] { get; set; }
+    parameters:
+    - id: index
+      type: System.Int32
+    return:
+      type: '{T}'
+    content.vb: Public Default Property this[](index As Integer) As T
+  overload: LiteEntitySystem.Extensions.SyncFixedArray`1.Item*
+  nameWithType.vb: SyncFixedArray(Of T).this[](Integer)
+  fullName.vb: LiteEntitySystem.Extensions.SyncFixedArray(Of T).this[](Integer)
+  name.vb: this[](Integer)
+references:
+- uid: LiteEntitySystem.Extensions
+  commentId: N:LiteEntitySystem.Extensions
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Extensions
+  nameWithType: LiteEntitySystem.Extensions
+  fullName: LiteEntitySystem.Extensions
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Extensions
+    name: Extensions
+    href: LiteEntitySystem.Extensions.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Extensions
+    name: Extensions
+    href: LiteEntitySystem.Extensions.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: LiteEntitySystem.Internal.InternalBaseClass
+  commentId: T:LiteEntitySystem.Internal.InternalBaseClass
+  parent: LiteEntitySystem.Internal
+  href: LiteEntitySystem.Internal.InternalBaseClass.html
+  name: InternalBaseClass
+  nameWithType: InternalBaseClass
+  fullName: LiteEntitySystem.Internal.InternalBaseClass
+- uid: LiteEntitySystem.SyncableField
+  commentId: T:LiteEntitySystem.SyncableField
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.SyncableField.html
+  name: SyncableField
+  nameWithType: SyncableField
+  fullName: LiteEntitySystem.SyncableField
+- uid: LiteEntitySystem.SyncableField.IsClient
+  commentId: P:LiteEntitySystem.SyncableField.IsClient
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsClient
+  name: IsClient
+  nameWithType: SyncableField.IsClient
+  fullName: LiteEntitySystem.SyncableField.IsClient
+- uid: LiteEntitySystem.SyncableField.IsServer
+  commentId: P:LiteEntitySystem.SyncableField.IsServer
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsServer
+  name: IsServer
+  nameWithType: SyncableField.IsServer
+  fullName: LiteEntitySystem.SyncableField.IsServer
+- uid: LiteEntitySystem.SyncableField.IsRollbackSupported
+  commentId: P:LiteEntitySystem.SyncableField.IsRollbackSupported
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsRollbackSupported
+  name: IsRollbackSupported
+  nameWithType: SyncableField.IsRollbackSupported
+  fullName: LiteEntitySystem.SyncableField.IsRollbackSupported
+- uid: LiteEntitySystem.SyncableField.ParentEntity
+  commentId: P:LiteEntitySystem.SyncableField.ParentEntity
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ParentEntity
+  name: ParentEntity
+  nameWithType: SyncableField.ParentEntity
+  fullName: LiteEntitySystem.SyncableField.ParentEntity
+- uid: LiteEntitySystem.SyncableField.ParentEntityLogic
+  commentId: P:LiteEntitySystem.SyncableField.ParentEntityLogic
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ParentEntityLogic
+  name: ParentEntityLogic
+  nameWithType: SyncableField.ParentEntityLogic
+  fullName: LiteEntitySystem.SyncableField.ParentEntityLogic
+- uid: LiteEntitySystem.SyncableField.BeforeReadRPC
+  commentId: M:LiteEntitySystem.SyncableField.BeforeReadRPC
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+  name: BeforeReadRPC()
+  nameWithType: SyncableField.BeforeReadRPC()
+  fullName: LiteEntitySystem.SyncableField.BeforeReadRPC()
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
+    name: BeforeReadRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
+    name: BeforeReadRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SyncableField.AfterReadRPC
+  commentId: M:LiteEntitySystem.SyncableField.AfterReadRPC
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+  name: AfterReadRPC()
+  nameWithType: SyncableField.AfterReadRPC()
+  fullName: LiteEntitySystem.SyncableField.AfterReadRPC()
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
+    name: AfterReadRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
+    name: AfterReadRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SyncableField.OnRollback
+  commentId: M:LiteEntitySystem.SyncableField.OnRollback
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+  name: OnRollback()
+  nameWithType: SyncableField.OnRollback()
+  fullName: LiteEntitySystem.SyncableField.OnRollback()
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.OnRollback
+    name: OnRollback
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.OnRollback
+    name: OnRollback
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
+  commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__
+  name: ExecuteRPC(in RemoteCall)
+  nameWithType: SyncableField.ExecuteRPC(in RemoteCall)
+  fullName: LiteEntitySystem.SyncableField.ExecuteRPC(in LiteEntitySystem.RemoteCall)
+  nameWithType.vb: SyncableField.ExecuteRPC(RemoteCall)
+  fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall)
+  name.vb: ExecuteRPC(RemoteCall)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__
+  - name: (
+  - name: in
+  - name: " "
+  - uid: LiteEntitySystem.RemoteCall
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__
+  - name: (
+  - uid: LiteEntitySystem.RemoteCall
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall.html
+  - name: )
+- uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{{T}}@,{T})
+  commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+  parent: LiteEntitySystem.SyncableField
+  definition: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_
+  name: ExecuteRPC<T>(in RemoteCall<T>, T)
+  nameWithType: SyncableField.ExecuteRPC<T>(in RemoteCall<T>, T)
+  fullName: LiteEntitySystem.SyncableField.ExecuteRPC<T>(in LiteEntitySystem.RemoteCall<T>, T)
+  nameWithType.vb: SyncableField.ExecuteRPC(Of T)(RemoteCall(Of T), T)
+  fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(Of T)(LiteEntitySystem.RemoteCall(Of T), T)
+  name.vb: ExecuteRPC(Of T)(RemoteCall(Of T), T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: in
+  - name: " "
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{{T}}@,System.ReadOnlySpan{{T}})
+  commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+  parent: LiteEntitySystem.SyncableField
+  definition: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__
+  name: ExecuteRPC<T>(in RemoteCallSpan<T>, ReadOnlySpan<T>)
+  nameWithType: SyncableField.ExecuteRPC<T>(in RemoteCallSpan<T>, ReadOnlySpan<T>)
+  fullName: LiteEntitySystem.SyncableField.ExecuteRPC<T>(in LiteEntitySystem.RemoteCallSpan<T>, System.ReadOnlySpan<T>)
+  nameWithType.vb: SyncableField.ExecuteRPC(Of T)(RemoteCallSpan(Of T), ReadOnlySpan(Of T))
+  fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(Of T)(LiteEntitySystem.RemoteCallSpan(Of T), System.ReadOnlySpan(Of T))
+  name.vb: ExecuteRPC(Of T)(RemoteCallSpan(Of T), ReadOnlySpan(Of T))
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: in
+  - name: " "
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - name: T
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{{T}}@,{T})
+  commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+  parent: LiteEntitySystem.SyncableField
+  definition: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_
+  name: ExecuteRPC<T>(in RemoteCallSerializable<T>, T)
+  nameWithType: SyncableField.ExecuteRPC<T>(in RemoteCallSerializable<T>, T)
+  fullName: LiteEntitySystem.SyncableField.ExecuteRPC<T>(in LiteEntitySystem.RemoteCallSerializable<T>, T)
+  nameWithType.vb: SyncableField.ExecuteRPC(Of T)(RemoteCallSerializable(Of T), T)
+  fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(Of T)(LiteEntitySystem.RemoteCallSerializable(Of T), T)
+  name.vb: ExecuteRPC(Of T)(RemoteCallSerializable(Of T), T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: in
+  - name: " "
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.Internal
+  commentId: N:LiteEntitySystem.Internal
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Internal
+  nameWithType: LiteEntitySystem.Internal
+  fullName: LiteEntitySystem.Internal
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Internal
+    name: Internal
+    href: LiteEntitySystem.Internal.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Internal
+    name: Internal
+    href: LiteEntitySystem.Internal.html
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+  commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_
+  name: ExecuteRPC<T>(in RemoteCall<T>, T)
+  nameWithType: SyncableField.ExecuteRPC<T>(in RemoteCall<T>, T)
+  fullName: LiteEntitySystem.SyncableField.ExecuteRPC<T>(in LiteEntitySystem.RemoteCall<T>, T)
+  nameWithType.vb: SyncableField.ExecuteRPC(Of T)(RemoteCall(Of T), T)
+  fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(Of T)(LiteEntitySystem.RemoteCall(Of T), T)
+  name.vb: ExecuteRPC(Of T)(RemoteCall(Of T), T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: in
+  - name: " "
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+  commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+  isExternal: true
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__
+  name: ExecuteRPC<T>(in RemoteCallSpan<T>, ReadOnlySpan<T>)
+  nameWithType: SyncableField.ExecuteRPC<T>(in RemoteCallSpan<T>, ReadOnlySpan<T>)
+  fullName: LiteEntitySystem.SyncableField.ExecuteRPC<T>(in LiteEntitySystem.RemoteCallSpan<T>, System.ReadOnlySpan<T>)
+  nameWithType.vb: SyncableField.ExecuteRPC(Of T)(RemoteCallSpan(Of T), ReadOnlySpan(Of T))
+  fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(Of T)(LiteEntitySystem.RemoteCallSpan(Of T), System.ReadOnlySpan(Of T))
+  name.vb: ExecuteRPC(Of T)(RemoteCallSpan(Of T), ReadOnlySpan(Of T))
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: in
+  - name: " "
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - name: T
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+  commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_
+  name: ExecuteRPC<T>(in RemoteCallSerializable<T>, T)
+  nameWithType: SyncableField.ExecuteRPC<T>(in RemoteCallSerializable<T>, T)
+  fullName: LiteEntitySystem.SyncableField.ExecuteRPC<T>(in LiteEntitySystem.RemoteCallSerializable<T>, T)
+  nameWithType.vb: SyncableField.ExecuteRPC(Of T)(RemoteCallSerializable(Of T), T)
+  fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(Of T)(LiteEntitySystem.RemoteCallSerializable(Of T), T)
+  name.vb: ExecuteRPC(Of T)(RemoteCallSerializable(Of T), T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: in
+  - name: " "
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: LiteEntitySystem.Extensions.SyncFixedArray`1.#ctor*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncFixedArray`1.#ctor
+  href: LiteEntitySystem.Extensions.SyncFixedArray-1.html#LiteEntitySystem_Extensions_SyncFixedArray_1__ctor_System_Int32_
+  name: SyncFixedArray
+  nameWithType: SyncFixedArray<T>.SyncFixedArray
+  fullName: LiteEntitySystem.Extensions.SyncFixedArray<T>.SyncFixedArray
+  nameWithType.vb: SyncFixedArray(Of T).New
+  fullName.vb: LiteEntitySystem.Extensions.SyncFixedArray(Of T).New
+  name.vb: New
+- uid: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+  commentId: M:LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+  parent: LiteEntitySystem.Internal.InternalBaseClass
+  href: LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested
+  name: OnSyncRequested()
+  nameWithType: InternalBaseClass.OnSyncRequested()
+  fullName: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested()
+  spec.csharp:
+  - uid: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+    name: OnSyncRequested
+    href: LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+    name: OnSyncRequested
+    href: LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncFixedArray`1.OnSyncRequested*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncFixedArray`1.OnSyncRequested
+  href: LiteEntitySystem.Extensions.SyncFixedArray-1.html#LiteEntitySystem_Extensions_SyncFixedArray_1_OnSyncRequested
+  name: OnSyncRequested
+  nameWithType: SyncFixedArray<T>.OnSyncRequested
+  fullName: LiteEntitySystem.Extensions.SyncFixedArray<T>.OnSyncRequested
+  nameWithType.vb: SyncFixedArray(Of T).OnSyncRequested
+  fullName.vb: LiteEntitySystem.Extensions.SyncFixedArray(Of T).OnSyncRequested
+- uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  commentId: M:LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
+  name: RegisterRPC(ref SyncableRPCRegistrator)
+  nameWithType: SyncableField.RegisterRPC(ref SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.SyncableField.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
+  nameWithType.vb: SyncableField.RegisterRPC(SyncableRPCRegistrator)
+  fullName.vb: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
+  name.vb: RegisterRPC(SyncableRPCRegistrator)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+    name: RegisterRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
+  - name: (
+  - name: ref
+  - name: " "
+  - uid: LiteEntitySystem.SyncableRPCRegistrator
+    name: SyncableRPCRegistrator
+    href: LiteEntitySystem.SyncableRPCRegistrator.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+    name: RegisterRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
+  - name: (
+  - uid: LiteEntitySystem.SyncableRPCRegistrator
+    name: SyncableRPCRegistrator
+    href: LiteEntitySystem.SyncableRPCRegistrator.html
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncFixedArray`1.RegisterRPC*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncFixedArray`1.RegisterRPC
+  href: LiteEntitySystem.Extensions.SyncFixedArray-1.html#LiteEntitySystem_Extensions_SyncFixedArray_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
+  name: RegisterRPC
+  nameWithType: SyncFixedArray<T>.RegisterRPC
+  fullName: LiteEntitySystem.Extensions.SyncFixedArray<T>.RegisterRPC
+  nameWithType.vb: SyncFixedArray(Of T).RegisterRPC
+  fullName.vb: LiteEntitySystem.Extensions.SyncFixedArray(Of T).RegisterRPC
+- uid: LiteEntitySystem.SyncableRPCRegistrator
+  commentId: T:LiteEntitySystem.SyncableRPCRegistrator
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.SyncableRPCRegistrator.html
+  name: SyncableRPCRegistrator
+  nameWithType: SyncableRPCRegistrator
+  fullName: LiteEntitySystem.SyncableRPCRegistrator
+- uid: LiteEntitySystem.Extensions.SyncFixedArray`1.Item*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncFixedArray`1.Item
+  href: LiteEntitySystem.Extensions.SyncFixedArray-1.html#LiteEntitySystem_Extensions_SyncFixedArray_1_Item_System_Int32_
+  name: this
+  nameWithType: SyncFixedArray<T>.this
+  fullName: LiteEntitySystem.Extensions.SyncFixedArray<T>.this
+  nameWithType.vb: SyncFixedArray(Of T).this[]
+  fullName.vb: LiteEntitySystem.Extensions.SyncFixedArray(Of T).this[]
+  name.vb: this[]
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T

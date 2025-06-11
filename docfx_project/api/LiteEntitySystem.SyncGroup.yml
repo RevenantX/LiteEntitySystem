@@ -1,0 +1,402 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.SyncGroup
+  commentId: T:LiteEntitySystem.SyncGroup
+  id: SyncGroup
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.SyncGroup.All
+  - LiteEntitySystem.SyncGroup.SyncGroup1
+  - LiteEntitySystem.SyncGroup.SyncGroup2
+  - LiteEntitySystem.SyncGroup.SyncGroup3
+  - LiteEntitySystem.SyncGroup.SyncGroup4
+  - LiteEntitySystem.SyncGroup.SyncGroup5
+  langs:
+  - csharp
+  - vb
+  name: SyncGroup
+  nameWithType: SyncGroup
+  fullName: LiteEntitySystem.SyncGroup
+  type: Enum
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: >-
+      [Flags]
+
+      public enum SyncGroup : byte
+    content.vb: >-
+      <Flags>
+
+      Public Enum SyncGroup As Byte
+  extensionMethods:
+  - LiteEntitySystem.SyncGroup.LiteEntitySystem.Utils.GetEnumValueInt``1
+  - LiteEntitySystem.SyncGroup.LiteEntitySystem.Utils.GetEnumValue``1
+  - LiteEntitySystem.SyncGroup.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.SyncGroup)
+  attributes:
+  - type: System.FlagsAttribute
+    ctor: System.FlagsAttribute.#ctor
+    arguments: []
+- uid: LiteEntitySystem.SyncGroup.SyncGroup1
+  commentId: F:LiteEntitySystem.SyncGroup.SyncGroup1
+  id: SyncGroup1
+  parent: LiteEntitySystem.SyncGroup
+  langs:
+  - csharp
+  - vb
+  name: SyncGroup1
+  nameWithType: SyncGroup.SyncGroup1
+  fullName: LiteEntitySystem.SyncGroup.SyncGroup1
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: SyncGroup1 = 1
+    return:
+      type: LiteEntitySystem.SyncGroup
+- uid: LiteEntitySystem.SyncGroup.SyncGroup2
+  commentId: F:LiteEntitySystem.SyncGroup.SyncGroup2
+  id: SyncGroup2
+  parent: LiteEntitySystem.SyncGroup
+  langs:
+  - csharp
+  - vb
+  name: SyncGroup2
+  nameWithType: SyncGroup.SyncGroup2
+  fullName: LiteEntitySystem.SyncGroup.SyncGroup2
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: SyncGroup2 = 2
+    return:
+      type: LiteEntitySystem.SyncGroup
+- uid: LiteEntitySystem.SyncGroup.SyncGroup3
+  commentId: F:LiteEntitySystem.SyncGroup.SyncGroup3
+  id: SyncGroup3
+  parent: LiteEntitySystem.SyncGroup
+  langs:
+  - csharp
+  - vb
+  name: SyncGroup3
+  nameWithType: SyncGroup.SyncGroup3
+  fullName: LiteEntitySystem.SyncGroup.SyncGroup3
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: SyncGroup3 = 4
+    return:
+      type: LiteEntitySystem.SyncGroup
+- uid: LiteEntitySystem.SyncGroup.SyncGroup4
+  commentId: F:LiteEntitySystem.SyncGroup.SyncGroup4
+  id: SyncGroup4
+  parent: LiteEntitySystem.SyncGroup
+  langs:
+  - csharp
+  - vb
+  name: SyncGroup4
+  nameWithType: SyncGroup.SyncGroup4
+  fullName: LiteEntitySystem.SyncGroup.SyncGroup4
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: SyncGroup4 = 8
+    return:
+      type: LiteEntitySystem.SyncGroup
+- uid: LiteEntitySystem.SyncGroup.SyncGroup5
+  commentId: F:LiteEntitySystem.SyncGroup.SyncGroup5
+  id: SyncGroup5
+  parent: LiteEntitySystem.SyncGroup
+  langs:
+  - csharp
+  - vb
+  name: SyncGroup5
+  nameWithType: SyncGroup.SyncGroup5
+  fullName: LiteEntitySystem.SyncGroup.SyncGroup5
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: SyncGroup5 = 16
+    return:
+      type: LiteEntitySystem.SyncGroup
+- uid: LiteEntitySystem.SyncGroup.All
+  commentId: F:LiteEntitySystem.SyncGroup.All
+  id: All
+  parent: LiteEntitySystem.SyncGroup
+  langs:
+  - csharp
+  - vb
+  name: All
+  nameWithType: SyncGroup.All
+  fullName: LiteEntitySystem.SyncGroup.All
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: All = SyncGroup1 | SyncGroup2 | SyncGroup3 | SyncGroup4 | SyncGroup5
+    return:
+      type: LiteEntitySystem.SyncGroup
+    content.vb: All = SyncGroup1 Or SyncGroup2 Or SyncGroup3 Or SyncGroup4 Or SyncGroup5
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: LiteEntitySystem.SyncGroup.LiteEntitySystem.Utils.GetEnumValueInt``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<SyncGroup>(SyncGroup)
+  nameWithType: Utils.GetEnumValueInt<SyncGroup>(SyncGroup)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<LiteEntitySystem.SyncGroup>(LiteEntitySystem.SyncGroup)
+  nameWithType.vb: Utils.GetEnumValueInt(Of SyncGroup)(SyncGroup)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of LiteEntitySystem.SyncGroup)(LiteEntitySystem.SyncGroup)
+  name.vb: GetEnumValueInt(Of SyncGroup)(SyncGroup)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.SyncGroup)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - uid: LiteEntitySystem.SyncGroup
+    name: SyncGroup
+    href: LiteEntitySystem.SyncGroup.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.SyncGroup
+    name: SyncGroup
+    href: LiteEntitySystem.SyncGroup.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.SyncGroup)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.SyncGroup
+    name: SyncGroup
+    href: LiteEntitySystem.SyncGroup.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.SyncGroup
+    name: SyncGroup
+    href: LiteEntitySystem.SyncGroup.html
+  - name: )
+- uid: LiteEntitySystem.SyncGroup.LiteEntitySystem.Utils.GetEnumValue``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<SyncGroup>(SyncGroup)
+  nameWithType: Utils.GetEnumValue<SyncGroup>(SyncGroup)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<LiteEntitySystem.SyncGroup>(LiteEntitySystem.SyncGroup)
+  nameWithType.vb: Utils.GetEnumValue(Of SyncGroup)(SyncGroup)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of LiteEntitySystem.SyncGroup)(LiteEntitySystem.SyncGroup)
+  name.vb: GetEnumValue(Of SyncGroup)(SyncGroup)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.SyncGroup)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - uid: LiteEntitySystem.SyncGroup
+    name: SyncGroup
+    href: LiteEntitySystem.SyncGroup.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.SyncGroup
+    name: SyncGroup
+    href: LiteEntitySystem.SyncGroup.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.SyncGroup)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.SyncGroup
+    name: SyncGroup
+    href: LiteEntitySystem.SyncGroup.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.SyncGroup
+    name: SyncGroup
+    href: LiteEntitySystem.SyncGroup.html
+  - name: )
+- uid: LiteEntitySystem.SyncGroup.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.SyncGroup)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<SyncGroup>(SyncGroup, SyncGroup)
+  nameWithType: Utils.HasFlagFast<SyncGroup>(SyncGroup, SyncGroup)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<LiteEntitySystem.SyncGroup>(LiteEntitySystem.SyncGroup, LiteEntitySystem.SyncGroup)
+  nameWithType.vb: Utils.HasFlagFast(Of SyncGroup)(SyncGroup, SyncGroup)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of LiteEntitySystem.SyncGroup)(LiteEntitySystem.SyncGroup, LiteEntitySystem.SyncGroup)
+  name.vb: HasFlagFast(Of SyncGroup)(SyncGroup, SyncGroup)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.SyncGroup,LiteEntitySystem.SyncGroup)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - uid: LiteEntitySystem.SyncGroup
+    name: SyncGroup
+    href: LiteEntitySystem.SyncGroup.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.SyncGroup
+    name: SyncGroup
+    href: LiteEntitySystem.SyncGroup.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.SyncGroup
+    name: SyncGroup
+    href: LiteEntitySystem.SyncGroup.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.SyncGroup,LiteEntitySystem.SyncGroup)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.SyncGroup
+    name: SyncGroup
+    href: LiteEntitySystem.SyncGroup.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.SyncGroup
+    name: SyncGroup
+    href: LiteEntitySystem.SyncGroup.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.SyncGroup
+    name: SyncGroup
+    href: LiteEntitySystem.SyncGroup.html
+  - name: )
+- uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<T>(T)
+  nameWithType: Utils.GetEnumValueInt<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<T>(T)
+  nameWithType.vb: Utils.GetEnumValueInt(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of T)(T)
+  name.vb: GetEnumValueInt(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils
+  commentId: T:LiteEntitySystem.Utils
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.Utils.html
+  name: Utils
+  nameWithType: Utils
+  fullName: LiteEntitySystem.Utils
+- uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<T>(T)
+  nameWithType: Utils.GetEnumValue<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<T>(T)
+  nameWithType.vb: Utils.GetEnumValue(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of T)(T)
+  name.vb: GetEnumValue(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<T>(T, T)
+  nameWithType: Utils.HasFlagFast<T>(T, T)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<T>(T, T)
+  nameWithType.vb: Utils.HasFlagFast(Of T)(T, T)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of T)(T, T)
+  name.vb: HasFlagFast(Of T)(T, T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.SyncGroup
+  commentId: T:LiteEntitySystem.SyncGroup
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.SyncGroup.html
+  name: SyncGroup
+  nameWithType: SyncGroup
+  fullName: LiteEntitySystem.SyncGroup

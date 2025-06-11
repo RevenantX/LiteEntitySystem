@@ -1,0 +1,315 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.UpdateMode
+  commentId: T:LiteEntitySystem.UpdateMode
+  id: UpdateMode
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.UpdateMode.Normal
+  - LiteEntitySystem.UpdateMode.PredictionRollback
+  langs:
+  - csharp
+  - vb
+  name: UpdateMode
+  nameWithType: UpdateMode
+  fullName: LiteEntitySystem.UpdateMode
+  type: Enum
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public enum UpdateMode
+    content.vb: Public Enum UpdateMode
+  extensionMethods:
+  - LiteEntitySystem.UpdateMode.LiteEntitySystem.Utils.GetEnumValueInt``1
+  - LiteEntitySystem.UpdateMode.LiteEntitySystem.Utils.GetEnumValue``1
+  - LiteEntitySystem.UpdateMode.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.UpdateMode)
+- uid: LiteEntitySystem.UpdateMode.Normal
+  commentId: F:LiteEntitySystem.UpdateMode.Normal
+  id: Normal
+  parent: LiteEntitySystem.UpdateMode
+  langs:
+  - csharp
+  - vb
+  name: Normal
+  nameWithType: UpdateMode.Normal
+  fullName: LiteEntitySystem.UpdateMode.Normal
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: Normal = 0
+    return:
+      type: LiteEntitySystem.UpdateMode
+- uid: LiteEntitySystem.UpdateMode.PredictionRollback
+  commentId: F:LiteEntitySystem.UpdateMode.PredictionRollback
+  id: PredictionRollback
+  parent: LiteEntitySystem.UpdateMode
+  langs:
+  - csharp
+  - vb
+  name: PredictionRollback
+  nameWithType: UpdateMode.PredictionRollback
+  fullName: LiteEntitySystem.UpdateMode.PredictionRollback
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: PredictionRollback = 1
+    return:
+      type: LiteEntitySystem.UpdateMode
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: LiteEntitySystem.UpdateMode.LiteEntitySystem.Utils.GetEnumValueInt``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<UpdateMode>(UpdateMode)
+  nameWithType: Utils.GetEnumValueInt<UpdateMode>(UpdateMode)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<LiteEntitySystem.UpdateMode>(LiteEntitySystem.UpdateMode)
+  nameWithType.vb: Utils.GetEnumValueInt(Of UpdateMode)(UpdateMode)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of LiteEntitySystem.UpdateMode)(LiteEntitySystem.UpdateMode)
+  name.vb: GetEnumValueInt(Of UpdateMode)(UpdateMode)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.UpdateMode)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - uid: LiteEntitySystem.UpdateMode
+    name: UpdateMode
+    href: LiteEntitySystem.UpdateMode.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.UpdateMode
+    name: UpdateMode
+    href: LiteEntitySystem.UpdateMode.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.UpdateMode)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.UpdateMode
+    name: UpdateMode
+    href: LiteEntitySystem.UpdateMode.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.UpdateMode
+    name: UpdateMode
+    href: LiteEntitySystem.UpdateMode.html
+  - name: )
+- uid: LiteEntitySystem.UpdateMode.LiteEntitySystem.Utils.GetEnumValue``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<UpdateMode>(UpdateMode)
+  nameWithType: Utils.GetEnumValue<UpdateMode>(UpdateMode)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<LiteEntitySystem.UpdateMode>(LiteEntitySystem.UpdateMode)
+  nameWithType.vb: Utils.GetEnumValue(Of UpdateMode)(UpdateMode)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of LiteEntitySystem.UpdateMode)(LiteEntitySystem.UpdateMode)
+  name.vb: GetEnumValue(Of UpdateMode)(UpdateMode)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.UpdateMode)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - uid: LiteEntitySystem.UpdateMode
+    name: UpdateMode
+    href: LiteEntitySystem.UpdateMode.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.UpdateMode
+    name: UpdateMode
+    href: LiteEntitySystem.UpdateMode.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.UpdateMode)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.UpdateMode
+    name: UpdateMode
+    href: LiteEntitySystem.UpdateMode.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.UpdateMode
+    name: UpdateMode
+    href: LiteEntitySystem.UpdateMode.html
+  - name: )
+- uid: LiteEntitySystem.UpdateMode.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.UpdateMode)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<UpdateMode>(UpdateMode, UpdateMode)
+  nameWithType: Utils.HasFlagFast<UpdateMode>(UpdateMode, UpdateMode)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<LiteEntitySystem.UpdateMode>(LiteEntitySystem.UpdateMode, LiteEntitySystem.UpdateMode)
+  nameWithType.vb: Utils.HasFlagFast(Of UpdateMode)(UpdateMode, UpdateMode)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of LiteEntitySystem.UpdateMode)(LiteEntitySystem.UpdateMode, LiteEntitySystem.UpdateMode)
+  name.vb: HasFlagFast(Of UpdateMode)(UpdateMode, UpdateMode)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.UpdateMode,LiteEntitySystem.UpdateMode)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - uid: LiteEntitySystem.UpdateMode
+    name: UpdateMode
+    href: LiteEntitySystem.UpdateMode.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.UpdateMode
+    name: UpdateMode
+    href: LiteEntitySystem.UpdateMode.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.UpdateMode
+    name: UpdateMode
+    href: LiteEntitySystem.UpdateMode.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.UpdateMode,LiteEntitySystem.UpdateMode)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.UpdateMode
+    name: UpdateMode
+    href: LiteEntitySystem.UpdateMode.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.UpdateMode
+    name: UpdateMode
+    href: LiteEntitySystem.UpdateMode.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.UpdateMode
+    name: UpdateMode
+    href: LiteEntitySystem.UpdateMode.html
+  - name: )
+- uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<T>(T)
+  nameWithType: Utils.GetEnumValueInt<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<T>(T)
+  nameWithType.vb: Utils.GetEnumValueInt(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of T)(T)
+  name.vb: GetEnumValueInt(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils
+  commentId: T:LiteEntitySystem.Utils
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.Utils.html
+  name: Utils
+  nameWithType: Utils
+  fullName: LiteEntitySystem.Utils
+- uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<T>(T)
+  nameWithType: Utils.GetEnumValue<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<T>(T)
+  nameWithType.vb: Utils.GetEnumValue(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of T)(T)
+  name.vb: GetEnumValue(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<T>(T, T)
+  nameWithType: Utils.HasFlagFast<T>(T, T)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<T>(T, T)
+  nameWithType.vb: Utils.HasFlagFast(Of T)(T, T)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of T)(T, T)
+  name.vb: HasFlagFast(Of T)(T, T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.UpdateMode
+  commentId: T:LiteEntitySystem.UpdateMode
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.UpdateMode.html
+  name: UpdateMode
+  nameWithType: UpdateMode
+  fullName: LiteEntitySystem.UpdateMode

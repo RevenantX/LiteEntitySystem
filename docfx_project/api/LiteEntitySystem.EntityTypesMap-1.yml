@@ -1,0 +1,216 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.EntityTypesMap`1
+  commentId: T:LiteEntitySystem.EntityTypesMap`1
+  id: EntityTypesMap`1
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.EntityTypesMap`1.Register``1(`0,LiteEntitySystem.EntityConstructor{``0})
+  langs:
+  - csharp
+  - vb
+  name: EntityTypesMap<T>
+  nameWithType: EntityTypesMap<T>
+  fullName: LiteEntitySystem.EntityTypesMap<T>
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Entity types map that will be used for EntityManager
+  example: []
+  syntax:
+    content: 'public sealed class EntityTypesMap<T> : EntityTypesMap where T : unmanaged, Enum'
+    typeParameters:
+    - id: T
+      description: ''
+    content.vb: Public NotInheritable Class EntityTypesMap(Of T As {Structure, [Enum]}) Inherits EntityTypesMap
+  inheritance:
+  - System.Object
+  - LiteEntitySystem.EntityTypesMap
+  inheritedMembers:
+  - LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
+  nameWithType.vb: EntityTypesMap(Of T)
+  fullName.vb: LiteEntitySystem.EntityTypesMap(Of T)
+  name.vb: EntityTypesMap(Of T)
+- uid: LiteEntitySystem.EntityTypesMap`1.Register``1(`0,LiteEntitySystem.EntityConstructor{``0})
+  commentId: M:LiteEntitySystem.EntityTypesMap`1.Register``1(`0,LiteEntitySystem.EntityConstructor{``0})
+  id: Register``1(`0,LiteEntitySystem.EntityConstructor{``0})
+  parent: LiteEntitySystem.EntityTypesMap`1
+  langs:
+  - csharp
+  - vb
+  name: Register<TEntity>(T, EntityConstructor<TEntity>)
+  nameWithType: EntityTypesMap<T>.Register<TEntity>(T, EntityConstructor<TEntity>)
+  fullName: LiteEntitySystem.EntityTypesMap<T>.Register<TEntity>(T, LiteEntitySystem.EntityConstructor<TEntity>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Register new entity type that will be used in game
+  example: []
+  syntax:
+    content: 'public EntityTypesMap<T> Register<TEntity>(T id, EntityConstructor<TEntity> constructor) where TEntity : InternalEntity'
+    parameters:
+    - id: id
+      type: '{T}'
+      description: Enum value that will describe entity class id
+    - id: constructor
+      type: LiteEntitySystem.EntityConstructor{{TEntity}}
+      description: Constructor of entity
+    typeParameters:
+    - id: TEntity
+      description: Type of entity
+    return:
+      type: LiteEntitySystem.EntityTypesMap`1
+    content.vb: Public Function Register(Of TEntity As InternalEntity)(id As T, constructor As EntityConstructor(Of TEntity)) As EntityTypesMap(Of T)
+  overload: LiteEntitySystem.EntityTypesMap`1.Register*
+  nameWithType.vb: EntityTypesMap(Of T).Register(Of TEntity)(T, EntityConstructor(Of TEntity))
+  fullName.vb: LiteEntitySystem.EntityTypesMap(Of T).Register(Of TEntity)(T, LiteEntitySystem.EntityConstructor(Of TEntity))
+  name.vb: Register(Of TEntity)(T, EntityConstructor(Of TEntity))
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: LiteEntitySystem.EntityTypesMap
+  commentId: T:LiteEntitySystem.EntityTypesMap
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.EntityTypesMap.html
+  name: EntityTypesMap
+  nameWithType: EntityTypesMap
+  fullName: LiteEntitySystem.EntityTypesMap
+- uid: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
+  commentId: M:LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
+  parent: LiteEntitySystem.EntityTypesMap
+  href: LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_EvaluateEntityClassDataHash
+  name: EvaluateEntityClassDataHash()
+  nameWithType: EntityTypesMap.EvaluateEntityClassDataHash()
+  fullName: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash()
+  spec.csharp:
+  - uid: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
+    name: EvaluateEntityClassDataHash
+    href: LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_EvaluateEntityClassDataHash
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
+    name: EvaluateEntityClassDataHash
+    href: LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_EvaluateEntityClassDataHash
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.EntityTypesMap`1.Register*
+  commentId: Overload:LiteEntitySystem.EntityTypesMap`1.Register
+  href: LiteEntitySystem.EntityTypesMap-1.html#LiteEntitySystem_EntityTypesMap_1_Register__1__0_LiteEntitySystem_EntityConstructor___0__
+  name: Register
+  nameWithType: EntityTypesMap<T>.Register
+  fullName: LiteEntitySystem.EntityTypesMap<T>.Register
+  nameWithType.vb: EntityTypesMap(Of T).Register
+  fullName.vb: LiteEntitySystem.EntityTypesMap(Of T).Register
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: LiteEntitySystem.EntityConstructor{{TEntity}}
+  commentId: T:LiteEntitySystem.EntityConstructor{``0}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.EntityConstructor`1
+  href: LiteEntitySystem.EntityConstructor-1.html
+  name: EntityConstructor<TEntity>
+  nameWithType: EntityConstructor<TEntity>
+  fullName: LiteEntitySystem.EntityConstructor<TEntity>
+  nameWithType.vb: EntityConstructor(Of TEntity)
+  fullName.vb: LiteEntitySystem.EntityConstructor(Of TEntity)
+  name.vb: EntityConstructor(Of TEntity)
+  spec.csharp:
+  - uid: LiteEntitySystem.EntityConstructor`1
+    name: EntityConstructor
+    href: LiteEntitySystem.EntityConstructor-1.html
+  - name: <
+  - name: TEntity
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.EntityConstructor`1
+    name: EntityConstructor
+    href: LiteEntitySystem.EntityConstructor-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TEntity
+  - name: )
+- uid: LiteEntitySystem.EntityTypesMap`1
+  commentId: T:LiteEntitySystem.EntityTypesMap`1
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.EntityTypesMap-1.html
+  name: EntityTypesMap<T>
+  nameWithType: EntityTypesMap<T>
+  fullName: LiteEntitySystem.EntityTypesMap<T>
+  nameWithType.vb: EntityTypesMap(Of T)
+  fullName.vb: LiteEntitySystem.EntityTypesMap(Of T)
+  name.vb: EntityTypesMap(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.EntityTypesMap`1
+    name: EntityTypesMap
+    href: LiteEntitySystem.EntityTypesMap-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.EntityTypesMap`1
+    name: EntityTypesMap
+    href: LiteEntitySystem.EntityTypesMap-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: LiteEntitySystem.EntityConstructor`1
+  commentId: T:LiteEntitySystem.EntityConstructor`1
+  href: LiteEntitySystem.EntityConstructor-1.html
+  name: EntityConstructor<T>
+  nameWithType: EntityConstructor<T>
+  fullName: LiteEntitySystem.EntityConstructor<T>
+  nameWithType.vb: EntityConstructor(Of T)
+  fullName.vb: LiteEntitySystem.EntityConstructor(Of T)
+  name.vb: EntityConstructor(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.EntityConstructor`1
+    name: EntityConstructor
+    href: LiteEntitySystem.EntityConstructor-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.EntityConstructor`1
+    name: EntityConstructor
+    href: LiteEntitySystem.EntityConstructor-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )

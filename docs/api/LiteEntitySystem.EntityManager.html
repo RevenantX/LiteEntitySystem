@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
 
@@ -76,7 +76,7 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><span class="xref">EntityManager</span></div>
       <div class="level2"><a class="xref" href="LiteEntitySystem.ClientEntityManager.html">ClientEntityManager</a></div>
       <div class="level2"><a class="xref" href="LiteEntitySystem.ServerEntityManager.html">ServerEntityManager</a></div>
@@ -287,7 +287,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const int MaxEntityCount = 32768</code></pre>
+    <pre><code class="lang-csharp hljs">public const int MaxEntityCount = 65534</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-condensed">
@@ -385,7 +385,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const int MaxSyncedEntityCount = 16384</code></pre>
+    <pre><code class="lang-csharp hljs">public const int MaxSyncedEntityCount = 32767</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-condensed">
@@ -947,7 +947,7 @@ IsRunning - sets to false after Reset() call</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void ConstructEntity(InternalEntity e)</code></pre>
+    <pre><code class="lang-csharp hljs">protected bool ConstructEntity(InternalEntity e)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -962,6 +962,21 @@ IsRunning - sets to false after Reset() call</p>
       <tr>
         <td><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></td>
         <td><span class="parametername">e</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -1003,6 +1018,16 @@ IsRunning - sets to false after Reset() call</p>
       </tr>
     </tbody>
   </table>
+
+
+  <a id="LiteEntitySystem_EntityManager_ExecuteLateConstruct_" data-uid="LiteEntitySystem.EntityManager.ExecuteLateConstruct*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_ExecuteLateConstruct" data-uid="LiteEntitySystem.EntityManager.ExecuteLateConstruct">ExecuteLateConstruct()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void ExecuteLateConstruct()</code></pre>
+  </div>
 
 
   <a id="LiteEntitySystem_EntityManager_GetControllers_" data-uid="LiteEntitySystem.EntityManager.GetControllers*"></a>
@@ -1354,6 +1379,48 @@ IsRunning - sets to false after Reset() call</p>
   </table>
 
 
+  <a id="LiteEntitySystem_EntityManager_IsEntityLagCompensated_" data-uid="LiteEntitySystem.EntityManager.IsEntityLagCompensated*"></a>
+  <h4 id="LiteEntitySystem_EntityManager_IsEntityLagCompensated_LiteEntitySystem_Internal_InternalEntity_" data-uid="LiteEntitySystem.EntityManager.IsEntityLagCompensated(LiteEntitySystem.Internal.InternalEntity)">IsEntityLagCompensated(InternalEntity)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static bool IsEntityLagCompensated(InternalEntity e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></td>
+        <td><span class="parametername">e</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
   <a id="LiteEntitySystem_EntityManager_OnAliveEntityAdded_" data-uid="LiteEntitySystem.EntityManager.OnAliveEntityAdded*"></a>
   <h4 id="LiteEntitySystem_EntityManager_OnAliveEntityAdded_LiteEntitySystem_Internal_InternalEntity_" data-uid="LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)">OnAliveEntityAdded(InternalEntity)</h4>
   <div class="markdown level1 summary"></div>
@@ -1437,7 +1504,7 @@ IsRunning - sets to false after Reset() call</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">InterpolatorDelegateWithReturn</span>&lt;T&gt;</td>
+        <td><a class="xref" href="LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html">InterpolatorDelegateWithReturn</a>&lt;T&gt;</td>
         <td><span class="parametername">interpolationDelegate</span></td>
         <td><p>interpolation function</p>
 </td>

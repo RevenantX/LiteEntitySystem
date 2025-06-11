@@ -1,0 +1,216 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.IdGeneratorUShort
+  commentId: T:LiteEntitySystem.IdGeneratorUShort
+  id: IdGeneratorUShort
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.IdGeneratorUShort.#ctor(System.UInt16,System.UInt16)
+  - LiteEntitySystem.IdGeneratorUShort.AvailableIds
+  - LiteEntitySystem.IdGeneratorUShort.GetNewId
+  - LiteEntitySystem.IdGeneratorUShort.Reset
+  - LiteEntitySystem.IdGeneratorUShort.ReuseId(System.UInt16)
+  langs:
+  - csharp
+  - vb
+  name: IdGeneratorUShort
+  nameWithType: IdGeneratorUShort
+  fullName: LiteEntitySystem.IdGeneratorUShort
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public class IdGeneratorUShort
+    content.vb: Public Class IdGeneratorUShort
+  inheritance:
+  - System.Object
+- uid: LiteEntitySystem.IdGeneratorUShort.GetNewId
+  commentId: M:LiteEntitySystem.IdGeneratorUShort.GetNewId
+  id: GetNewId
+  parent: LiteEntitySystem.IdGeneratorUShort
+  langs:
+  - csharp
+  - vb
+  name: GetNewId()
+  nameWithType: IdGeneratorUShort.GetNewId()
+  fullName: LiteEntitySystem.IdGeneratorUShort.GetNewId()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public ushort GetNewId()
+    return:
+      type: System.UInt16
+    content.vb: Public Function GetNewId() As UShort
+  overload: LiteEntitySystem.IdGeneratorUShort.GetNewId*
+- uid: LiteEntitySystem.IdGeneratorUShort.AvailableIds
+  commentId: P:LiteEntitySystem.IdGeneratorUShort.AvailableIds
+  id: AvailableIds
+  parent: LiteEntitySystem.IdGeneratorUShort
+  langs:
+  - csharp
+  - vb
+  name: AvailableIds
+  nameWithType: IdGeneratorUShort.AvailableIds
+  fullName: LiteEntitySystem.IdGeneratorUShort.AvailableIds
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public int AvailableIds { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property AvailableIds As Integer
+  overload: LiteEntitySystem.IdGeneratorUShort.AvailableIds*
+- uid: LiteEntitySystem.IdGeneratorUShort.ReuseId(System.UInt16)
+  commentId: M:LiteEntitySystem.IdGeneratorUShort.ReuseId(System.UInt16)
+  id: ReuseId(System.UInt16)
+  parent: LiteEntitySystem.IdGeneratorUShort
+  langs:
+  - csharp
+  - vb
+  name: ReuseId(ushort)
+  nameWithType: IdGeneratorUShort.ReuseId(ushort)
+  fullName: LiteEntitySystem.IdGeneratorUShort.ReuseId(ushort)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void ReuseId(ushort id)
+    parameters:
+    - id: id
+      type: System.UInt16
+    content.vb: Public Sub ReuseId(id As UShort)
+  overload: LiteEntitySystem.IdGeneratorUShort.ReuseId*
+  nameWithType.vb: IdGeneratorUShort.ReuseId(UShort)
+  fullName.vb: LiteEntitySystem.IdGeneratorUShort.ReuseId(UShort)
+  name.vb: ReuseId(UShort)
+- uid: LiteEntitySystem.IdGeneratorUShort.#ctor(System.UInt16,System.UInt16)
+  commentId: M:LiteEntitySystem.IdGeneratorUShort.#ctor(System.UInt16,System.UInt16)
+  id: '#ctor(System.UInt16,System.UInt16)'
+  parent: LiteEntitySystem.IdGeneratorUShort
+  langs:
+  - csharp
+  - vb
+  name: IdGeneratorUShort(ushort, ushort)
+  nameWithType: IdGeneratorUShort.IdGeneratorUShort(ushort, ushort)
+  fullName: LiteEntitySystem.IdGeneratorUShort.IdGeneratorUShort(ushort, ushort)
+  type: Constructor
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public IdGeneratorUShort(ushort initialValue, ushort maxValue)
+    parameters:
+    - id: initialValue
+      type: System.UInt16
+    - id: maxValue
+      type: System.UInt16
+    content.vb: Public Sub New(initialValue As UShort, maxValue As UShort)
+  overload: LiteEntitySystem.IdGeneratorUShort.#ctor*
+  nameWithType.vb: IdGeneratorUShort.New(UShort, UShort)
+  fullName.vb: LiteEntitySystem.IdGeneratorUShort.New(UShort, UShort)
+  name.vb: New(UShort, UShort)
+- uid: LiteEntitySystem.IdGeneratorUShort.Reset
+  commentId: M:LiteEntitySystem.IdGeneratorUShort.Reset
+  id: Reset
+  parent: LiteEntitySystem.IdGeneratorUShort
+  langs:
+  - csharp
+  - vb
+  name: Reset()
+  nameWithType: IdGeneratorUShort.Reset()
+  fullName: LiteEntitySystem.IdGeneratorUShort.Reset()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void Reset()
+    content.vb: Public Sub Reset()
+  overload: LiteEntitySystem.IdGeneratorUShort.Reset*
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.IdGeneratorUShort.GetNewId*
+  commentId: Overload:LiteEntitySystem.IdGeneratorUShort.GetNewId
+  href: LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort_GetNewId
+  name: GetNewId
+  nameWithType: IdGeneratorUShort.GetNewId
+  fullName: LiteEntitySystem.IdGeneratorUShort.GetNewId
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: LiteEntitySystem.IdGeneratorUShort.AvailableIds*
+  commentId: Overload:LiteEntitySystem.IdGeneratorUShort.AvailableIds
+  href: LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort_AvailableIds
+  name: AvailableIds
+  nameWithType: IdGeneratorUShort.AvailableIds
+  fullName: LiteEntitySystem.IdGeneratorUShort.AvailableIds
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: LiteEntitySystem.IdGeneratorUShort.ReuseId*
+  commentId: Overload:LiteEntitySystem.IdGeneratorUShort.ReuseId
+  href: LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort_ReuseId_System_UInt16_
+  name: ReuseId
+  nameWithType: IdGeneratorUShort.ReuseId
+  fullName: LiteEntitySystem.IdGeneratorUShort.ReuseId
+- uid: LiteEntitySystem.IdGeneratorUShort.#ctor*
+  commentId: Overload:LiteEntitySystem.IdGeneratorUShort.#ctor
+  href: LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort__ctor_System_UInt16_System_UInt16_
+  name: IdGeneratorUShort
+  nameWithType: IdGeneratorUShort.IdGeneratorUShort
+  fullName: LiteEntitySystem.IdGeneratorUShort.IdGeneratorUShort
+  nameWithType.vb: IdGeneratorUShort.New
+  fullName.vb: LiteEntitySystem.IdGeneratorUShort.New
+  name.vb: New
+- uid: LiteEntitySystem.IdGeneratorUShort.Reset*
+  commentId: Overload:LiteEntitySystem.IdGeneratorUShort.Reset
+  href: LiteEntitySystem.IdGeneratorUShort.html#LiteEntitySystem_IdGeneratorUShort_Reset
+  name: Reset
+  nameWithType: IdGeneratorUShort.Reset
+  fullName: LiteEntitySystem.IdGeneratorUShort.Reset

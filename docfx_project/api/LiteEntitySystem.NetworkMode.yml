@@ -1,0 +1,315 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.NetworkMode
+  commentId: T:LiteEntitySystem.NetworkMode
+  id: NetworkMode
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.NetworkMode.Client
+  - LiteEntitySystem.NetworkMode.Server
+  langs:
+  - csharp
+  - vb
+  name: NetworkMode
+  nameWithType: NetworkMode
+  fullName: LiteEntitySystem.NetworkMode
+  type: Enum
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public enum NetworkMode
+    content.vb: Public Enum NetworkMode
+  extensionMethods:
+  - LiteEntitySystem.NetworkMode.LiteEntitySystem.Utils.GetEnumValueInt``1
+  - LiteEntitySystem.NetworkMode.LiteEntitySystem.Utils.GetEnumValue``1
+  - LiteEntitySystem.NetworkMode.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.NetworkMode)
+- uid: LiteEntitySystem.NetworkMode.Client
+  commentId: F:LiteEntitySystem.NetworkMode.Client
+  id: Client
+  parent: LiteEntitySystem.NetworkMode
+  langs:
+  - csharp
+  - vb
+  name: Client
+  nameWithType: NetworkMode.Client
+  fullName: LiteEntitySystem.NetworkMode.Client
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: Client = 0
+    return:
+      type: LiteEntitySystem.NetworkMode
+- uid: LiteEntitySystem.NetworkMode.Server
+  commentId: F:LiteEntitySystem.NetworkMode.Server
+  id: Server
+  parent: LiteEntitySystem.NetworkMode
+  langs:
+  - csharp
+  - vb
+  name: Server
+  nameWithType: NetworkMode.Server
+  fullName: LiteEntitySystem.NetworkMode.Server
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: Server = 1
+    return:
+      type: LiteEntitySystem.NetworkMode
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: LiteEntitySystem.NetworkMode.LiteEntitySystem.Utils.GetEnumValueInt``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<NetworkMode>(NetworkMode)
+  nameWithType: Utils.GetEnumValueInt<NetworkMode>(NetworkMode)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<LiteEntitySystem.NetworkMode>(LiteEntitySystem.NetworkMode)
+  nameWithType.vb: Utils.GetEnumValueInt(Of NetworkMode)(NetworkMode)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of LiteEntitySystem.NetworkMode)(LiteEntitySystem.NetworkMode)
+  name.vb: GetEnumValueInt(Of NetworkMode)(NetworkMode)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.NetworkMode)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - uid: LiteEntitySystem.NetworkMode
+    name: NetworkMode
+    href: LiteEntitySystem.NetworkMode.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.NetworkMode
+    name: NetworkMode
+    href: LiteEntitySystem.NetworkMode.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.NetworkMode)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.NetworkMode
+    name: NetworkMode
+    href: LiteEntitySystem.NetworkMode.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.NetworkMode
+    name: NetworkMode
+    href: LiteEntitySystem.NetworkMode.html
+  - name: )
+- uid: LiteEntitySystem.NetworkMode.LiteEntitySystem.Utils.GetEnumValue``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<NetworkMode>(NetworkMode)
+  nameWithType: Utils.GetEnumValue<NetworkMode>(NetworkMode)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<LiteEntitySystem.NetworkMode>(LiteEntitySystem.NetworkMode)
+  nameWithType.vb: Utils.GetEnumValue(Of NetworkMode)(NetworkMode)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of LiteEntitySystem.NetworkMode)(LiteEntitySystem.NetworkMode)
+  name.vb: GetEnumValue(Of NetworkMode)(NetworkMode)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.NetworkMode)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - uid: LiteEntitySystem.NetworkMode
+    name: NetworkMode
+    href: LiteEntitySystem.NetworkMode.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.NetworkMode
+    name: NetworkMode
+    href: LiteEntitySystem.NetworkMode.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.NetworkMode)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.NetworkMode
+    name: NetworkMode
+    href: LiteEntitySystem.NetworkMode.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.NetworkMode
+    name: NetworkMode
+    href: LiteEntitySystem.NetworkMode.html
+  - name: )
+- uid: LiteEntitySystem.NetworkMode.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.NetworkMode)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<NetworkMode>(NetworkMode, NetworkMode)
+  nameWithType: Utils.HasFlagFast<NetworkMode>(NetworkMode, NetworkMode)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<LiteEntitySystem.NetworkMode>(LiteEntitySystem.NetworkMode, LiteEntitySystem.NetworkMode)
+  nameWithType.vb: Utils.HasFlagFast(Of NetworkMode)(NetworkMode, NetworkMode)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of LiteEntitySystem.NetworkMode)(LiteEntitySystem.NetworkMode, LiteEntitySystem.NetworkMode)
+  name.vb: HasFlagFast(Of NetworkMode)(NetworkMode, NetworkMode)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.NetworkMode,LiteEntitySystem.NetworkMode)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - uid: LiteEntitySystem.NetworkMode
+    name: NetworkMode
+    href: LiteEntitySystem.NetworkMode.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.NetworkMode
+    name: NetworkMode
+    href: LiteEntitySystem.NetworkMode.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.NetworkMode
+    name: NetworkMode
+    href: LiteEntitySystem.NetworkMode.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.NetworkMode,LiteEntitySystem.NetworkMode)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.NetworkMode
+    name: NetworkMode
+    href: LiteEntitySystem.NetworkMode.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.NetworkMode
+    name: NetworkMode
+    href: LiteEntitySystem.NetworkMode.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.NetworkMode
+    name: NetworkMode
+    href: LiteEntitySystem.NetworkMode.html
+  - name: )
+- uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<T>(T)
+  nameWithType: Utils.GetEnumValueInt<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<T>(T)
+  nameWithType.vb: Utils.GetEnumValueInt(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of T)(T)
+  name.vb: GetEnumValueInt(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils
+  commentId: T:LiteEntitySystem.Utils
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.Utils.html
+  name: Utils
+  nameWithType: Utils
+  fullName: LiteEntitySystem.Utils
+- uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<T>(T)
+  nameWithType: Utils.GetEnumValue<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<T>(T)
+  nameWithType.vb: Utils.GetEnumValue(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of T)(T)
+  name.vb: GetEnumValue(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<T>(T, T)
+  nameWithType: Utils.HasFlagFast<T>(T, T)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<T>(T, T)
+  nameWithType.vb: Utils.HasFlagFast(Of T)(T, T)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of T)(T, T)
+  name.vb: HasFlagFast(Of T)(T, T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.NetworkMode
+  commentId: T:LiteEntitySystem.NetworkMode
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.NetworkMode.html
+  name: NetworkMode
+  nameWithType: NetworkMode
+  fullName: LiteEntitySystem.NetworkMode

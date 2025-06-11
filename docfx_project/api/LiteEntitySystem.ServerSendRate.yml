@@ -1,0 +1,334 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.ServerSendRate
+  commentId: T:LiteEntitySystem.ServerSendRate
+  id: ServerSendRate
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.ServerSendRate.EqualToFPS
+  - LiteEntitySystem.ServerSendRate.HalfOfFPS
+  - LiteEntitySystem.ServerSendRate.ThirdOfFPS
+  langs:
+  - csharp
+  - vb
+  name: ServerSendRate
+  nameWithType: ServerSendRate
+  fullName: LiteEntitySystem.ServerSendRate
+  type: Enum
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public enum ServerSendRate : byte'
+    content.vb: Public Enum ServerSendRate As Byte
+  extensionMethods:
+  - LiteEntitySystem.ServerSendRate.LiteEntitySystem.Utils.GetEnumValueInt``1
+  - LiteEntitySystem.ServerSendRate.LiteEntitySystem.Utils.GetEnumValue``1
+  - LiteEntitySystem.ServerSendRate.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.ServerSendRate)
+- uid: LiteEntitySystem.ServerSendRate.EqualToFPS
+  commentId: F:LiteEntitySystem.ServerSendRate.EqualToFPS
+  id: EqualToFPS
+  parent: LiteEntitySystem.ServerSendRate
+  langs:
+  - csharp
+  - vb
+  name: EqualToFPS
+  nameWithType: ServerSendRate.EqualToFPS
+  fullName: LiteEntitySystem.ServerSendRate.EqualToFPS
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: EqualToFPS = 1
+    return:
+      type: LiteEntitySystem.ServerSendRate
+- uid: LiteEntitySystem.ServerSendRate.HalfOfFPS
+  commentId: F:LiteEntitySystem.ServerSendRate.HalfOfFPS
+  id: HalfOfFPS
+  parent: LiteEntitySystem.ServerSendRate
+  langs:
+  - csharp
+  - vb
+  name: HalfOfFPS
+  nameWithType: ServerSendRate.HalfOfFPS
+  fullName: LiteEntitySystem.ServerSendRate.HalfOfFPS
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: HalfOfFPS = 2
+    return:
+      type: LiteEntitySystem.ServerSendRate
+- uid: LiteEntitySystem.ServerSendRate.ThirdOfFPS
+  commentId: F:LiteEntitySystem.ServerSendRate.ThirdOfFPS
+  id: ThirdOfFPS
+  parent: LiteEntitySystem.ServerSendRate
+  langs:
+  - csharp
+  - vb
+  name: ThirdOfFPS
+  nameWithType: ServerSendRate.ThirdOfFPS
+  fullName: LiteEntitySystem.ServerSendRate.ThirdOfFPS
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: ThirdOfFPS = 3
+    return:
+      type: LiteEntitySystem.ServerSendRate
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: LiteEntitySystem.ServerSendRate.LiteEntitySystem.Utils.GetEnumValueInt``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<ServerSendRate>(ServerSendRate)
+  nameWithType: Utils.GetEnumValueInt<ServerSendRate>(ServerSendRate)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<LiteEntitySystem.ServerSendRate>(LiteEntitySystem.ServerSendRate)
+  nameWithType.vb: Utils.GetEnumValueInt(Of ServerSendRate)(ServerSendRate)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of LiteEntitySystem.ServerSendRate)(LiteEntitySystem.ServerSendRate)
+  name.vb: GetEnumValueInt(Of ServerSendRate)(ServerSendRate)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.ServerSendRate)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - uid: LiteEntitySystem.ServerSendRate
+    name: ServerSendRate
+    href: LiteEntitySystem.ServerSendRate.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.ServerSendRate
+    name: ServerSendRate
+    href: LiteEntitySystem.ServerSendRate.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.ServerSendRate)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.ServerSendRate
+    name: ServerSendRate
+    href: LiteEntitySystem.ServerSendRate.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.ServerSendRate
+    name: ServerSendRate
+    href: LiteEntitySystem.ServerSendRate.html
+  - name: )
+- uid: LiteEntitySystem.ServerSendRate.LiteEntitySystem.Utils.GetEnumValue``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<ServerSendRate>(ServerSendRate)
+  nameWithType: Utils.GetEnumValue<ServerSendRate>(ServerSendRate)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<LiteEntitySystem.ServerSendRate>(LiteEntitySystem.ServerSendRate)
+  nameWithType.vb: Utils.GetEnumValue(Of ServerSendRate)(ServerSendRate)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of LiteEntitySystem.ServerSendRate)(LiteEntitySystem.ServerSendRate)
+  name.vb: GetEnumValue(Of ServerSendRate)(ServerSendRate)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.ServerSendRate)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - uid: LiteEntitySystem.ServerSendRate
+    name: ServerSendRate
+    href: LiteEntitySystem.ServerSendRate.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.ServerSendRate
+    name: ServerSendRate
+    href: LiteEntitySystem.ServerSendRate.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.ServerSendRate)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.ServerSendRate
+    name: ServerSendRate
+    href: LiteEntitySystem.ServerSendRate.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.ServerSendRate
+    name: ServerSendRate
+    href: LiteEntitySystem.ServerSendRate.html
+  - name: )
+- uid: LiteEntitySystem.ServerSendRate.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.ServerSendRate)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<ServerSendRate>(ServerSendRate, ServerSendRate)
+  nameWithType: Utils.HasFlagFast<ServerSendRate>(ServerSendRate, ServerSendRate)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<LiteEntitySystem.ServerSendRate>(LiteEntitySystem.ServerSendRate, LiteEntitySystem.ServerSendRate)
+  nameWithType.vb: Utils.HasFlagFast(Of ServerSendRate)(ServerSendRate, ServerSendRate)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of LiteEntitySystem.ServerSendRate)(LiteEntitySystem.ServerSendRate, LiteEntitySystem.ServerSendRate)
+  name.vb: HasFlagFast(Of ServerSendRate)(ServerSendRate, ServerSendRate)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.ServerSendRate,LiteEntitySystem.ServerSendRate)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - uid: LiteEntitySystem.ServerSendRate
+    name: ServerSendRate
+    href: LiteEntitySystem.ServerSendRate.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.ServerSendRate
+    name: ServerSendRate
+    href: LiteEntitySystem.ServerSendRate.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.ServerSendRate
+    name: ServerSendRate
+    href: LiteEntitySystem.ServerSendRate.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.ServerSendRate,LiteEntitySystem.ServerSendRate)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.ServerSendRate
+    name: ServerSendRate
+    href: LiteEntitySystem.ServerSendRate.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.ServerSendRate
+    name: ServerSendRate
+    href: LiteEntitySystem.ServerSendRate.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.ServerSendRate
+    name: ServerSendRate
+    href: LiteEntitySystem.ServerSendRate.html
+  - name: )
+- uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<T>(T)
+  nameWithType: Utils.GetEnumValueInt<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<T>(T)
+  nameWithType.vb: Utils.GetEnumValueInt(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of T)(T)
+  name.vb: GetEnumValueInt(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils
+  commentId: T:LiteEntitySystem.Utils
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.Utils.html
+  name: Utils
+  nameWithType: Utils
+  fullName: LiteEntitySystem.Utils
+- uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<T>(T)
+  nameWithType: Utils.GetEnumValue<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<T>(T)
+  nameWithType.vb: Utils.GetEnumValue(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of T)(T)
+  name.vb: GetEnumValue(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<T>(T, T)
+  nameWithType: Utils.HasFlagFast<T>(T, T)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<T>(T, T)
+  nameWithType.vb: Utils.HasFlagFast(Of T)(T, T)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of T)(T, T)
+  name.vb: HasFlagFast(Of T)(T, T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.ServerSendRate
+  commentId: T:LiteEntitySystem.ServerSendRate
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.ServerSendRate.html
+  name: ServerSendRate
+  nameWithType: ServerSendRate
+  fullName: LiteEntitySystem.ServerSendRate

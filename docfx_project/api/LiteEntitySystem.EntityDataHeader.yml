@@ -1,0 +1,165 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.EntityDataHeader
+  commentId: T:LiteEntitySystem.EntityDataHeader
+  id: EntityDataHeader
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.EntityDataHeader.#ctor(System.UInt16,System.Byte,System.Int32)
+  - LiteEntitySystem.EntityDataHeader.ClassId
+  - LiteEntitySystem.EntityDataHeader.UpdateOrder
+  - LiteEntitySystem.EntityDataHeader.Version
+  langs:
+  - csharp
+  - vb
+  name: EntityDataHeader
+  nameWithType: EntityDataHeader
+  fullName: LiteEntitySystem.EntityDataHeader
+  type: Struct
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public readonly struct EntityDataHeader
+    content.vb: Public Structure EntityDataHeader
+- uid: LiteEntitySystem.EntityDataHeader.ClassId
+  commentId: F:LiteEntitySystem.EntityDataHeader.ClassId
+  id: ClassId
+  parent: LiteEntitySystem.EntityDataHeader
+  langs:
+  - csharp
+  - vb
+  name: ClassId
+  nameWithType: EntityDataHeader.ClassId
+  fullName: LiteEntitySystem.EntityDataHeader.ClassId
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public readonly ushort ClassId
+    return:
+      type: System.UInt16
+    content.vb: Public ReadOnly ClassId As UShort
+- uid: LiteEntitySystem.EntityDataHeader.Version
+  commentId: F:LiteEntitySystem.EntityDataHeader.Version
+  id: Version
+  parent: LiteEntitySystem.EntityDataHeader
+  langs:
+  - csharp
+  - vb
+  name: Version
+  nameWithType: EntityDataHeader.Version
+  fullName: LiteEntitySystem.EntityDataHeader.Version
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public readonly byte Version
+    return:
+      type: System.Byte
+    content.vb: Public ReadOnly Version As Byte
+- uid: LiteEntitySystem.EntityDataHeader.UpdateOrder
+  commentId: F:LiteEntitySystem.EntityDataHeader.UpdateOrder
+  id: UpdateOrder
+  parent: LiteEntitySystem.EntityDataHeader
+  langs:
+  - csharp
+  - vb
+  name: UpdateOrder
+  nameWithType: EntityDataHeader.UpdateOrder
+  fullName: LiteEntitySystem.EntityDataHeader.UpdateOrder
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public readonly int UpdateOrder
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly UpdateOrder As Integer
+- uid: LiteEntitySystem.EntityDataHeader.#ctor(System.UInt16,System.Byte,System.Int32)
+  commentId: M:LiteEntitySystem.EntityDataHeader.#ctor(System.UInt16,System.Byte,System.Int32)
+  id: '#ctor(System.UInt16,System.Byte,System.Int32)'
+  parent: LiteEntitySystem.EntityDataHeader
+  langs:
+  - csharp
+  - vb
+  name: EntityDataHeader(ushort, byte, int)
+  nameWithType: EntityDataHeader.EntityDataHeader(ushort, byte, int)
+  fullName: LiteEntitySystem.EntityDataHeader.EntityDataHeader(ushort, byte, int)
+  type: Constructor
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public EntityDataHeader(ushort classId, byte version, int updateOrder)
+    parameters:
+    - id: classId
+      type: System.UInt16
+    - id: version
+      type: System.Byte
+    - id: updateOrder
+      type: System.Int32
+    content.vb: Public Sub New(classId As UShort, version As Byte, updateOrder As Integer)
+  overload: LiteEntitySystem.EntityDataHeader.#ctor*
+  nameWithType.vb: EntityDataHeader.New(UShort, Byte, Integer)
+  fullName.vb: LiteEntitySystem.EntityDataHeader.New(UShort, Byte, Integer)
+  name.vb: New(UShort, Byte, Integer)
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: LiteEntitySystem.EntityDataHeader.#ctor*
+  commentId: Overload:LiteEntitySystem.EntityDataHeader.#ctor
+  href: LiteEntitySystem.EntityDataHeader.html#LiteEntitySystem_EntityDataHeader__ctor_System_UInt16_System_Byte_System_Int32_
+  name: EntityDataHeader
+  nameWithType: EntityDataHeader.EntityDataHeader
+  fullName: LiteEntitySystem.EntityDataHeader.EntityDataHeader
+  nameWithType.vb: EntityDataHeader.New
+  fullName.vb: LiteEntitySystem.EntityDataHeader.New
+  name.vb: New

@@ -1,0 +1,738 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.SyncableRPCRegistrator
+  commentId: T:LiteEntitySystem.SyncableRPCRegistrator
+  id: SyncableRPCRegistrator
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``1(System.Action{``0},LiteEntitySystem.RemoteCall@)
+  - LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``1(``0,System.Action,LiteEntitySystem.RemoteCall@)
+  - LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(LiteEntitySystem.SpanAction{``0,``1},LiteEntitySystem.RemoteCallSpan{``1}@)
+  - LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCallSerializable{``1}@)
+  - LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCall{``1}@)
+  - LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(``0,LiteEntitySystem.SpanAction{``1},LiteEntitySystem.RemoteCallSpan{``1}@)
+  - LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCallSerializable{``1}@)
+  - LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCall{``1}@)
+  langs:
+  - csharp
+  - vb
+  name: SyncableRPCRegistrator
+  nameWithType: SyncableRPCRegistrator
+  fullName: LiteEntitySystem.SyncableRPCRegistrator
+  type: Struct
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public readonly ref struct SyncableRPCRegistrator
+    content.vb: Public Structure SyncableRPCRegistrator
+- uid: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``1(``0,System.Action,LiteEntitySystem.RemoteCall@)
+  commentId: M:LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``1(``0,System.Action,LiteEntitySystem.RemoteCall@)
+  id: CreateClientAction``1(``0,System.Action,LiteEntitySystem.RemoteCall@)
+  parent: LiteEntitySystem.SyncableRPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateClientAction<TSyncField>(TSyncField, Action, ref RemoteCall)
+  nameWithType: SyncableRPCRegistrator.CreateClientAction<TSyncField>(TSyncField, Action, ref RemoteCall)
+  fullName: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction<TSyncField>(TSyncField, System.Action, ref LiteEntitySystem.RemoteCall)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public void CreateClientAction<TSyncField>(TSyncField self, Action methodToCall, ref RemoteCall remoteCallHandle) where TSyncField : SyncableField'
+    parameters:
+    - id: self
+      type: '{TSyncField}'
+    - id: methodToCall
+      type: System.Action
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCall
+    typeParameters:
+    - id: TSyncField
+    content.vb: Public Sub CreateClientAction(Of TSyncField As SyncableField)(self As TSyncField, methodToCall As Action, remoteCallHandle As RemoteCall)
+  overload: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction*
+  nameWithType.vb: SyncableRPCRegistrator.CreateClientAction(Of TSyncField)(TSyncField, Action, RemoteCall)
+  fullName.vb: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction(Of TSyncField)(TSyncField, System.Action, LiteEntitySystem.RemoteCall)
+  name.vb: CreateClientAction(Of TSyncField)(TSyncField, Action, RemoteCall)
+- uid: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCall{``1}@)
+  commentId: M:LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCall{``1}@)
+  id: CreateClientAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCall{``1}@)
+  parent: LiteEntitySystem.SyncableRPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateClientAction<TSyncField, T>(TSyncField, Action<T>, ref RemoteCall<T>)
+  nameWithType: SyncableRPCRegistrator.CreateClientAction<TSyncField, T>(TSyncField, Action<T>, ref RemoteCall<T>)
+  fullName: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction<TSyncField, T>(TSyncField, System.Action<T>, ref LiteEntitySystem.RemoteCall<T>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public void CreateClientAction<TSyncField, T>(TSyncField self, Action<T> methodToCall, ref RemoteCall<T> remoteCallHandle) where TSyncField : SyncableField where T : unmanaged'
+    parameters:
+    - id: self
+      type: '{TSyncField}'
+    - id: methodToCall
+      type: System.Action{{T}}
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCall{{T}}
+    typeParameters:
+    - id: TSyncField
+    - id: T
+    content.vb: Public Sub CreateClientAction(Of TSyncField As SyncableField, T As Structure)(self As TSyncField, methodToCall As Action(Of T), remoteCallHandle As RemoteCall(Of T))
+  overload: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction*
+  nameWithType.vb: SyncableRPCRegistrator.CreateClientAction(Of TSyncField, T)(TSyncField, Action(Of T), RemoteCall(Of T))
+  fullName.vb: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction(Of TSyncField, T)(TSyncField, System.Action(Of T), LiteEntitySystem.RemoteCall(Of T))
+  name.vb: CreateClientAction(Of TSyncField, T)(TSyncField, Action(Of T), RemoteCall(Of T))
+- uid: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(``0,LiteEntitySystem.SpanAction{``1},LiteEntitySystem.RemoteCallSpan{``1}@)
+  commentId: M:LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(``0,LiteEntitySystem.SpanAction{``1},LiteEntitySystem.RemoteCallSpan{``1}@)
+  id: CreateClientAction``2(``0,LiteEntitySystem.SpanAction{``1},LiteEntitySystem.RemoteCallSpan{``1}@)
+  parent: LiteEntitySystem.SyncableRPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateClientAction<TSyncField, T>(TSyncField, SpanAction<T>, ref RemoteCallSpan<T>)
+  nameWithType: SyncableRPCRegistrator.CreateClientAction<TSyncField, T>(TSyncField, SpanAction<T>, ref RemoteCallSpan<T>)
+  fullName: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction<TSyncField, T>(TSyncField, LiteEntitySystem.SpanAction<T>, ref LiteEntitySystem.RemoteCallSpan<T>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public void CreateClientAction<TSyncField, T>(TSyncField self, SpanAction<T> methodToCall, ref RemoteCallSpan<T> remoteCallHandle) where TSyncField : SyncableField where T : unmanaged'
+    parameters:
+    - id: self
+      type: '{TSyncField}'
+    - id: methodToCall
+      type: LiteEntitySystem.SpanAction{{T}}
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCallSpan{{T}}
+    typeParameters:
+    - id: TSyncField
+    - id: T
+    content.vb: Public Sub CreateClientAction(Of TSyncField As SyncableField, T As Structure)(self As TSyncField, methodToCall As SpanAction(Of T), remoteCallHandle As RemoteCallSpan(Of T))
+  overload: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction*
+  nameWithType.vb: SyncableRPCRegistrator.CreateClientAction(Of TSyncField, T)(TSyncField, SpanAction(Of T), RemoteCallSpan(Of T))
+  fullName.vb: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction(Of TSyncField, T)(TSyncField, LiteEntitySystem.SpanAction(Of T), LiteEntitySystem.RemoteCallSpan(Of T))
+  name.vb: CreateClientAction(Of TSyncField, T)(TSyncField, SpanAction(Of T), RemoteCallSpan(Of T))
+- uid: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCallSerializable{``1}@)
+  commentId: M:LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCallSerializable{``1}@)
+  id: CreateClientAction``2(``0,System.Action{``1},LiteEntitySystem.RemoteCallSerializable{``1}@)
+  parent: LiteEntitySystem.SyncableRPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateClientAction<TSyncField, T>(TSyncField, Action<T>, ref RemoteCallSerializable<T>)
+  nameWithType: SyncableRPCRegistrator.CreateClientAction<TSyncField, T>(TSyncField, Action<T>, ref RemoteCallSerializable<T>)
+  fullName: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction<TSyncField, T>(TSyncField, System.Action<T>, ref LiteEntitySystem.RemoteCallSerializable<T>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public void CreateClientAction<TSyncField, T>(TSyncField self, Action<T> methodToCall, ref RemoteCallSerializable<T> remoteCallHandle) where TSyncField : SyncableField where T : struct, ISpanSerializable'
+    parameters:
+    - id: self
+      type: '{TSyncField}'
+    - id: methodToCall
+      type: System.Action{{T}}
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCallSerializable{{T}}
+    typeParameters:
+    - id: TSyncField
+    - id: T
+    content.vb: Public Sub CreateClientAction(Of TSyncField As SyncableField, T As {Structure, ISpanSerializable})(self As TSyncField, methodToCall As Action(Of T), remoteCallHandle As RemoteCallSerializable(Of T))
+  overload: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction*
+  nameWithType.vb: SyncableRPCRegistrator.CreateClientAction(Of TSyncField, T)(TSyncField, Action(Of T), RemoteCallSerializable(Of T))
+  fullName.vb: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction(Of TSyncField, T)(TSyncField, System.Action(Of T), LiteEntitySystem.RemoteCallSerializable(Of T))
+  name.vb: CreateClientAction(Of TSyncField, T)(TSyncField, Action(Of T), RemoteCallSerializable(Of T))
+- uid: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``1(System.Action{``0},LiteEntitySystem.RemoteCall@)
+  commentId: M:LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``1(System.Action{``0},LiteEntitySystem.RemoteCall@)
+  id: CreateClientAction``1(System.Action{``0},LiteEntitySystem.RemoteCall@)
+  parent: LiteEntitySystem.SyncableRPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateClientAction<TSyncField>(Action<TSyncField>, ref RemoteCall)
+  nameWithType: SyncableRPCRegistrator.CreateClientAction<TSyncField>(Action<TSyncField>, ref RemoteCall)
+  fullName: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction<TSyncField>(System.Action<TSyncField>, ref LiteEntitySystem.RemoteCall)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public void CreateClientAction<TSyncField>(Action<TSyncField> methodToCall, ref RemoteCall remoteCallHandle) where TSyncField : SyncableField'
+    parameters:
+    - id: methodToCall
+      type: System.Action{{TSyncField}}
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCall
+    typeParameters:
+    - id: TSyncField
+    content.vb: Public Sub CreateClientAction(Of TSyncField As SyncableField)(methodToCall As Action(Of TSyncField), remoteCallHandle As RemoteCall)
+  overload: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction*
+  nameWithType.vb: SyncableRPCRegistrator.CreateClientAction(Of TSyncField)(Action(Of TSyncField), RemoteCall)
+  fullName.vb: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction(Of TSyncField)(System.Action(Of TSyncField), LiteEntitySystem.RemoteCall)
+  name.vb: CreateClientAction(Of TSyncField)(Action(Of TSyncField), RemoteCall)
+- uid: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCall{``1}@)
+  commentId: M:LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCall{``1}@)
+  id: CreateClientAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCall{``1}@)
+  parent: LiteEntitySystem.SyncableRPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateClientAction<TSyncField, T>(Action<TSyncField, T>, ref RemoteCall<T>)
+  nameWithType: SyncableRPCRegistrator.CreateClientAction<TSyncField, T>(Action<TSyncField, T>, ref RemoteCall<T>)
+  fullName: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction<TSyncField, T>(System.Action<TSyncField, T>, ref LiteEntitySystem.RemoteCall<T>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public void CreateClientAction<TSyncField, T>(Action<TSyncField, T> methodToCall, ref RemoteCall<T> remoteCallHandle) where TSyncField : SyncableField where T : unmanaged'
+    parameters:
+    - id: methodToCall
+      type: System.Action{{TSyncField},{T}}
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCall{{T}}
+    typeParameters:
+    - id: TSyncField
+    - id: T
+    content.vb: Public Sub CreateClientAction(Of TSyncField As SyncableField, T As Structure)(methodToCall As Action(Of TSyncField, T), remoteCallHandle As RemoteCall(Of T))
+  overload: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction*
+  nameWithType.vb: SyncableRPCRegistrator.CreateClientAction(Of TSyncField, T)(Action(Of TSyncField, T), RemoteCall(Of T))
+  fullName.vb: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction(Of TSyncField, T)(System.Action(Of TSyncField, T), LiteEntitySystem.RemoteCall(Of T))
+  name.vb: CreateClientAction(Of TSyncField, T)(Action(Of TSyncField, T), RemoteCall(Of T))
+- uid: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(LiteEntitySystem.SpanAction{``0,``1},LiteEntitySystem.RemoteCallSpan{``1}@)
+  commentId: M:LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(LiteEntitySystem.SpanAction{``0,``1},LiteEntitySystem.RemoteCallSpan{``1}@)
+  id: CreateClientAction``2(LiteEntitySystem.SpanAction{``0,``1},LiteEntitySystem.RemoteCallSpan{``1}@)
+  parent: LiteEntitySystem.SyncableRPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateClientAction<TSyncField, T>(SpanAction<TSyncField, T>, ref RemoteCallSpan<T>)
+  nameWithType: SyncableRPCRegistrator.CreateClientAction<TSyncField, T>(SpanAction<TSyncField, T>, ref RemoteCallSpan<T>)
+  fullName: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction<TSyncField, T>(LiteEntitySystem.SpanAction<TSyncField, T>, ref LiteEntitySystem.RemoteCallSpan<T>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public void CreateClientAction<TSyncField, T>(SpanAction<TSyncField, T> methodToCall, ref RemoteCallSpan<T> remoteCallHandle) where TSyncField : SyncableField where T : unmanaged'
+    parameters:
+    - id: methodToCall
+      type: LiteEntitySystem.SpanAction{{TSyncField},{T}}
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCallSpan{{T}}
+    typeParameters:
+    - id: TSyncField
+    - id: T
+    content.vb: Public Sub CreateClientAction(Of TSyncField As SyncableField, T As Structure)(methodToCall As SpanAction(Of TSyncField, T), remoteCallHandle As RemoteCallSpan(Of T))
+  overload: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction*
+  nameWithType.vb: SyncableRPCRegistrator.CreateClientAction(Of TSyncField, T)(SpanAction(Of TSyncField, T), RemoteCallSpan(Of T))
+  fullName.vb: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction(Of TSyncField, T)(LiteEntitySystem.SpanAction(Of TSyncField, T), LiteEntitySystem.RemoteCallSpan(Of T))
+  name.vb: CreateClientAction(Of TSyncField, T)(SpanAction(Of TSyncField, T), RemoteCallSpan(Of T))
+- uid: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCallSerializable{``1}@)
+  commentId: M:LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCallSerializable{``1}@)
+  id: CreateClientAction``2(System.Action{``0,``1},LiteEntitySystem.RemoteCallSerializable{``1}@)
+  parent: LiteEntitySystem.SyncableRPCRegistrator
+  langs:
+  - csharp
+  - vb
+  name: CreateClientAction<TSyncField, T>(Action<TSyncField, T>, ref RemoteCallSerializable<T>)
+  nameWithType: SyncableRPCRegistrator.CreateClientAction<TSyncField, T>(Action<TSyncField, T>, ref RemoteCallSerializable<T>)
+  fullName: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction<TSyncField, T>(System.Action<TSyncField, T>, ref LiteEntitySystem.RemoteCallSerializable<T>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public void CreateClientAction<TSyncField, T>(Action<TSyncField, T> methodToCall, ref RemoteCallSerializable<T> remoteCallHandle) where TSyncField : SyncableField where T : struct, ISpanSerializable'
+    parameters:
+    - id: methodToCall
+      type: System.Action{{TSyncField},{T}}
+    - id: remoteCallHandle
+      type: LiteEntitySystem.RemoteCallSerializable{{T}}
+    typeParameters:
+    - id: TSyncField
+    - id: T
+    content.vb: Public Sub CreateClientAction(Of TSyncField As SyncableField, T As {Structure, ISpanSerializable})(methodToCall As Action(Of TSyncField, T), remoteCallHandle As RemoteCallSerializable(Of T))
+  overload: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction*
+  nameWithType.vb: SyncableRPCRegistrator.CreateClientAction(Of TSyncField, T)(Action(Of TSyncField, T), RemoteCallSerializable(Of T))
+  fullName.vb: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction(Of TSyncField, T)(System.Action(Of TSyncField, T), LiteEntitySystem.RemoteCallSerializable(Of T))
+  name.vb: CreateClientAction(Of TSyncField, T)(Action(Of TSyncField, T), RemoteCallSerializable(Of T))
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction*
+  commentId: Overload:LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction
+  href: LiteEntitySystem.SyncableRPCRegistrator.html#LiteEntitySystem_SyncableRPCRegistrator_CreateClientAction__1___0_System_Action_LiteEntitySystem_RemoteCall__
+  name: CreateClientAction
+  nameWithType: SyncableRPCRegistrator.CreateClientAction
+  fullName: LiteEntitySystem.SyncableRPCRegistrator.CreateClientAction
+- uid: '{TSyncField}'
+  commentId: '!:TSyncField'
+  definition: TSyncField
+  name: TSyncField
+  nameWithType: TSyncField
+  fullName: TSyncField
+- uid: System.Action
+  commentId: T:System.Action
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action
+  name: Action
+  nameWithType: Action
+  fullName: System.Action
+- uid: LiteEntitySystem.RemoteCall
+  commentId: T:LiteEntitySystem.RemoteCall
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.RemoteCall.html
+  name: RemoteCall
+  nameWithType: RemoteCall
+  fullName: LiteEntitySystem.RemoteCall
+- uid: TSyncField
+  name: TSyncField
+  nameWithType: TSyncField
+  fullName: TSyncField
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Action{{T}}
+  commentId: T:System.Action{`0}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.RemoteCall{{T}}
+  commentId: T:LiteEntitySystem.RemoteCall{``1}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.RemoteCall`1
+  href: LiteEntitySystem.RemoteCall-1.html
+  name: RemoteCall<T>
+  nameWithType: RemoteCall<T>
+  fullName: LiteEntitySystem.RemoteCall<T>
+  nameWithType.vb: RemoteCall(Of T)
+  fullName.vb: LiteEntitySystem.RemoteCall(Of T)
+  name.vb: RemoteCall(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.RemoteCall`1
+  commentId: T:LiteEntitySystem.RemoteCall`1
+  href: LiteEntitySystem.RemoteCall-1.html
+  name: RemoteCall<T>
+  nameWithType: RemoteCall<T>
+  fullName: LiteEntitySystem.RemoteCall<T>
+  nameWithType.vb: RemoteCall(Of T)
+  fullName.vb: LiteEntitySystem.RemoteCall(Of T)
+  name.vb: RemoteCall(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.SpanAction{{T}}
+  commentId: T:LiteEntitySystem.SpanAction{``1}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.SpanAction`1
+  href: LiteEntitySystem.SpanAction-1.html
+  name: SpanAction<T>
+  nameWithType: SpanAction<T>
+  fullName: LiteEntitySystem.SpanAction<T>
+  nameWithType.vb: SpanAction(Of T)
+  fullName.vb: LiteEntitySystem.SpanAction(Of T)
+  name.vb: SpanAction(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SpanAction`1
+    name: SpanAction
+    href: LiteEntitySystem.SpanAction-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.SpanAction`1
+    name: SpanAction
+    href: LiteEntitySystem.SpanAction-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.RemoteCallSpan{{T}}
+  commentId: T:LiteEntitySystem.RemoteCallSpan{``1}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.RemoteCallSpan`1
+  href: LiteEntitySystem.RemoteCallSpan-1.html
+  name: RemoteCallSpan<T>
+  nameWithType: RemoteCallSpan<T>
+  fullName: LiteEntitySystem.RemoteCallSpan<T>
+  nameWithType.vb: RemoteCallSpan(Of T)
+  fullName.vb: LiteEntitySystem.RemoteCallSpan(Of T)
+  name.vb: RemoteCallSpan(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.SpanAction`1
+  commentId: T:LiteEntitySystem.SpanAction`1
+  href: LiteEntitySystem.SpanAction-1.html
+  name: SpanAction<T>
+  nameWithType: SpanAction<T>
+  fullName: LiteEntitySystem.SpanAction<T>
+  nameWithType.vb: SpanAction(Of T)
+  fullName.vb: LiteEntitySystem.SpanAction(Of T)
+  name.vb: SpanAction(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SpanAction`1
+    name: SpanAction
+    href: LiteEntitySystem.SpanAction-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.SpanAction`1
+    name: SpanAction
+    href: LiteEntitySystem.SpanAction-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.RemoteCallSpan`1
+  commentId: T:LiteEntitySystem.RemoteCallSpan`1
+  href: LiteEntitySystem.RemoteCallSpan-1.html
+  name: RemoteCallSpan<T>
+  nameWithType: RemoteCallSpan<T>
+  fullName: LiteEntitySystem.RemoteCallSpan<T>
+  nameWithType.vb: RemoteCallSpan(Of T)
+  fullName.vb: LiteEntitySystem.RemoteCallSpan(Of T)
+  name.vb: RemoteCallSpan(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.RemoteCallSerializable{{T}}
+  commentId: T:LiteEntitySystem.RemoteCallSerializable{``1}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.RemoteCallSerializable`1
+  href: LiteEntitySystem.RemoteCallSerializable-1.html
+  name: RemoteCallSerializable<T>
+  nameWithType: RemoteCallSerializable<T>
+  fullName: LiteEntitySystem.RemoteCallSerializable<T>
+  nameWithType.vb: RemoteCallSerializable(Of T)
+  fullName.vb: LiteEntitySystem.RemoteCallSerializable(Of T)
+  name.vb: RemoteCallSerializable(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.RemoteCallSerializable`1
+  commentId: T:LiteEntitySystem.RemoteCallSerializable`1
+  href: LiteEntitySystem.RemoteCallSerializable-1.html
+  name: RemoteCallSerializable<T>
+  nameWithType: RemoteCallSerializable<T>
+  fullName: LiteEntitySystem.RemoteCallSerializable<T>
+  nameWithType.vb: RemoteCallSerializable(Of T)
+  fullName.vb: LiteEntitySystem.RemoteCallSerializable(Of T)
+  name.vb: RemoteCallSerializable(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Action{{TSyncField}}
+  commentId: T:System.Action{``0}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<TSyncField>
+  nameWithType: Action<TSyncField>
+  fullName: System.Action<TSyncField>
+  nameWithType.vb: Action(Of TSyncField)
+  fullName.vb: System.Action(Of TSyncField)
+  name.vb: Action(Of TSyncField)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: TSyncField
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TSyncField
+  - name: )
+- uid: System.Action{{TSyncField},{T}}
+  commentId: T:System.Action{``0,``1}
+  parent: System
+  definition: System.Action`2
+  href: https://learn.microsoft.com/dotnet/api/system.action-2
+  name: Action<TSyncField, T>
+  nameWithType: Action<TSyncField, T>
+  fullName: System.Action<TSyncField, T>
+  nameWithType.vb: Action(Of TSyncField, T)
+  fullName.vb: System.Action(Of TSyncField, T)
+  name.vb: Action(Of TSyncField, T)
+  spec.csharp:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: <
+  - name: TSyncField
+  - name: ','
+  - name: " "
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TSyncField
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Action`2
+  commentId: T:System.Action`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-2
+  name: Action<T1, T2>
+  nameWithType: Action<T1, T2>
+  fullName: System.Action<T1, T2>
+  nameWithType.vb: Action(Of T1, T2)
+  fullName.vb: System.Action(Of T1, T2)
+  name.vb: Action(Of T1, T2)
+  spec.csharp:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: <
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: )
+- uid: LiteEntitySystem.SpanAction{{TSyncField},{T}}
+  commentId: T:LiteEntitySystem.SpanAction{``0,``1}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.SpanAction`2
+  href: LiteEntitySystem.SpanAction-2.html
+  name: SpanAction<TSyncField, T>
+  nameWithType: SpanAction<TSyncField, T>
+  fullName: LiteEntitySystem.SpanAction<TSyncField, T>
+  nameWithType.vb: SpanAction(Of TSyncField, T)
+  fullName.vb: LiteEntitySystem.SpanAction(Of TSyncField, T)
+  name.vb: SpanAction(Of TSyncField, T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SpanAction`2
+    name: SpanAction
+    href: LiteEntitySystem.SpanAction-2.html
+  - name: <
+  - name: TSyncField
+  - name: ','
+  - name: " "
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.SpanAction`2
+    name: SpanAction
+    href: LiteEntitySystem.SpanAction-2.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TSyncField
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.SpanAction`2
+  commentId: T:LiteEntitySystem.SpanAction`2
+  href: LiteEntitySystem.SpanAction-2.html
+  name: SpanAction<TCaller, T>
+  nameWithType: SpanAction<TCaller, T>
+  fullName: LiteEntitySystem.SpanAction<TCaller, T>
+  nameWithType.vb: SpanAction(Of TCaller, T)
+  fullName.vb: LiteEntitySystem.SpanAction(Of TCaller, T)
+  name.vb: SpanAction(Of TCaller, T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SpanAction`2
+    name: SpanAction
+    href: LiteEntitySystem.SpanAction-2.html
+  - name: <
+  - name: TCaller
+  - name: ','
+  - name: " "
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.SpanAction`2
+    name: SpanAction
+    href: LiteEntitySystem.SpanAction-2.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TCaller
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )

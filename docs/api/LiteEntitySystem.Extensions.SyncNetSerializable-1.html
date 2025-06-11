@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
 
@@ -75,10 +75,14 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
     <div class="level2"><a class="xref" href="LiteEntitySystem.SyncableField.html">SyncableField</a></div>
     <div class="level3"><span class="xref">SyncNetSerializable&lt;T&gt;</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="LiteEntitySystem.ISyncFieldChanged.html">ISyncFieldChanged</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -90,6 +94,12 @@
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsRollbackSupported">SyncableField.IsRollbackSupported</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ParentEntity">SyncableField.ParentEntity</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ParentEntityLogic">SyncableField.ParentEntityLogic</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC">SyncableField.BeforeReadRPC()</a>
@@ -117,7 +127,7 @@
   <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
   <h5 id="LiteEntitySystem_Extensions_SyncNetSerializable_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SyncNetSerializable&lt;T&gt; : SyncableField where T : INetSerializable</code></pre>
+    <pre><code class="lang-csharp hljs">public class SyncNetSerializable&lt;T&gt; : SyncableField, ISyncFieldChanged where T : INetSerializable</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -233,6 +243,32 @@
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__">SyncableField.RegisterRPC(ref SyncableRPCRegistrator)</a></div>
+  <h3 id="events">Events
+</h3>
+
+
+  <h4 id="LiteEntitySystem_Extensions_SyncNetSerializable_1_ValueChanged" data-uid="LiteEntitySystem.Extensions.SyncNetSerializable`1.ValueChanged">ValueChanged</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action ValueChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="operators">Operators
 </h3>
 
@@ -277,6 +313,10 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="LiteEntitySystem.ISyncFieldChanged.html">ISyncFieldChanged</a>
+  </div>
 
 </article>
           </div>

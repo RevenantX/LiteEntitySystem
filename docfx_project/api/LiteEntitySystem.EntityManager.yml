@@ -1,0 +1,2013 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.EntityManager
+  commentId: T:LiteEntitySystem.EntityManager
+  id: EntityManager
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.NetworkMode,System.Byte,LiteEntitySystem.MaxHistorySize)
+  - LiteEntitySystem.EntityManager.AddEntity``1(LiteEntitySystem.EntityParams)
+  - LiteEntitySystem.EntityManager.AddLocalSingleton``1(``0)
+  - LiteEntitySystem.EntityManager.AliveEntities
+  - LiteEntitySystem.EntityManager.ConstructEntity(LiteEntitySystem.Internal.InternalEntity)
+  - LiteEntitySystem.EntityManager.DeltaTime
+  - LiteEntitySystem.EntityManager.DeltaTimeF
+  - LiteEntitySystem.EntityManager.DisableLagCompensation
+  - LiteEntitySystem.EntityManager.EnableLagCompensation(LiteEntitySystem.NetPlayer)
+  - LiteEntitySystem.EntityManager.EntitiesCount
+  - LiteEntitySystem.EntityManager.ExecuteLateConstruct
+  - LiteEntitySystem.EntityManager.GetControllers``1
+  - LiteEntitySystem.EntityManager.GetEntities``1
+  - LiteEntitySystem.EntityManager.GetEntityById``1(LiteEntitySystem.EntitySharedReference)
+  - LiteEntitySystem.EntityManager.GetEntitySyncVarInfo(LiteEntitySystem.Internal.InternalEntity,LiteEntitySystem.IEntitySyncVarInfoPrinter)
+  - LiteEntitySystem.EntityManager.GetEntityTypeFromClassId(System.UInt16)
+  - LiteEntitySystem.EntityManager.GetLocalSingleton``1
+  - LiteEntitySystem.EntityManager.GetSingleton``1
+  - LiteEntitySystem.EntityManager.HasSingleton``1
+  - LiteEntitySystem.EntityManager.HeaderByte
+  - LiteEntitySystem.EntityManager.InNormalState
+  - LiteEntitySystem.EntityManager.InRollBackState
+  - LiteEntitySystem.EntityManager.InvalidEntityId
+  - LiteEntitySystem.EntityManager.IsClient
+  - LiteEntitySystem.EntityManager.IsEntityLagCompensated(LiteEntitySystem.Internal.InternalEntity)
+  - LiteEntitySystem.EntityManager.IsRunning
+  - LiteEntitySystem.EntityManager.IsServer
+  - LiteEntitySystem.EntityManager.LagCompensatedEntities
+  - LiteEntitySystem.EntityManager.LerpFactor
+  - LiteEntitySystem.EntityManager.MaxEntityCount
+  - LiteEntitySystem.EntityManager.MaxHistorySize
+  - LiteEntitySystem.EntityManager.MaxPlayers
+  - LiteEntitySystem.EntityManager.MaxSavedStateDiff
+  - LiteEntitySystem.EntityManager.MaxSyncedEntityCount
+  - LiteEntitySystem.EntityManager.Mode
+  - LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
+  - LiteEntitySystem.EntityManager.OnLogicTick
+  - LiteEntitySystem.EntityManager.PlayerId
+  - LiteEntitySystem.EntityManager.RegisterFieldType``1
+  - LiteEntitySystem.EntityManager.RegisterFieldType``1(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{``0})
+  - LiteEntitySystem.EntityManager.RemoveEntity(LiteEntitySystem.Internal.InternalEntity)
+  - LiteEntitySystem.EntityManager.Reset
+  - LiteEntitySystem.EntityManager.ServerPlayerId
+  - LiteEntitySystem.EntityManager.SetTickrate(System.Byte)
+  - LiteEntitySystem.EntityManager.SpeedMultiplier
+  - LiteEntitySystem.EntityManager.Tick
+  - LiteEntitySystem.EntityManager.Tickrate
+  - LiteEntitySystem.EntityManager.TimeSpeedChangeCoef
+  - LiteEntitySystem.EntityManager.TryGetEntityById``1(LiteEntitySystem.EntitySharedReference,``0@)
+  - LiteEntitySystem.EntityManager.TryGetLocalSingleton``1(``0@)
+  - LiteEntitySystem.EntityManager.TryGetSingleton``1(``0@)
+  - LiteEntitySystem.EntityManager.Update
+  - LiteEntitySystem.EntityManager.UpdateMode
+  - LiteEntitySystem.EntityManager.VisualDeltaTime
+  - LiteEntitySystem.EntityManager._tick
+  langs:
+  - csharp
+  - vb
+  name: EntityManager
+  nameWithType: EntityManager
+  fullName: LiteEntitySystem.EntityManager
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Base class for client and server manager
+  example: []
+  syntax:
+    content: public abstract class EntityManager
+    content.vb: Public MustInherit Class EntityManager
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - LiteEntitySystem.ClientEntityManager
+  - LiteEntitySystem.ServerEntityManager
+- uid: LiteEntitySystem.EntityManager.MaxSyncedEntityCount
+  commentId: F:LiteEntitySystem.EntityManager.MaxSyncedEntityCount
+  id: MaxSyncedEntityCount
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: MaxSyncedEntityCount
+  nameWithType: EntityManager.MaxSyncedEntityCount
+  fullName: LiteEntitySystem.EntityManager.MaxSyncedEntityCount
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Maximum synchronized (without LocalOnly) entities
+  example: []
+  syntax:
+    content: public const int MaxSyncedEntityCount = 32767
+    return:
+      type: System.Int32
+    content.vb: Public Const MaxSyncedEntityCount As Integer = 32767
+- uid: LiteEntitySystem.EntityManager.MaxEntityCount
+  commentId: F:LiteEntitySystem.EntityManager.MaxEntityCount
+  id: MaxEntityCount
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: MaxEntityCount
+  nameWithType: EntityManager.MaxEntityCount
+  fullName: LiteEntitySystem.EntityManager.MaxEntityCount
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public const int MaxEntityCount = 65534
+    return:
+      type: System.Int32
+    content.vb: Public Const MaxEntityCount As Integer = 65534
+- uid: LiteEntitySystem.EntityManager.ServerPlayerId
+  commentId: F:LiteEntitySystem.EntityManager.ServerPlayerId
+  id: ServerPlayerId
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: ServerPlayerId
+  nameWithType: EntityManager.ServerPlayerId
+  fullName: LiteEntitySystem.EntityManager.ServerPlayerId
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public const byte ServerPlayerId = 0
+    return:
+      type: System.Byte
+    content.vb: Public Const ServerPlayerId As Byte = 0
+- uid: LiteEntitySystem.EntityManager.InvalidEntityId
+  commentId: F:LiteEntitySystem.EntityManager.InvalidEntityId
+  id: InvalidEntityId
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: InvalidEntityId
+  nameWithType: EntityManager.InvalidEntityId
+  fullName: LiteEntitySystem.EntityManager.InvalidEntityId
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Invalid entity id
+  example: []
+  syntax:
+    content: public const ushort InvalidEntityId = 0
+    return:
+      type: System.UInt16
+    content.vb: Public Const InvalidEntityId As UShort = 0
+- uid: LiteEntitySystem.EntityManager.EntitiesCount
+  commentId: P:LiteEntitySystem.EntityManager.EntitiesCount
+  id: EntitiesCount
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: EntitiesCount
+  nameWithType: EntityManager.EntitiesCount
+  fullName: LiteEntitySystem.EntityManager.EntitiesCount
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Total entities count (including local)
+  example: []
+  syntax:
+    content: public ushort EntitiesCount { get; }
+    parameters: []
+    return:
+      type: System.UInt16
+    content.vb: Public Property EntitiesCount As UShort
+  overload: LiteEntitySystem.EntityManager.EntitiesCount*
+- uid: LiteEntitySystem.EntityManager.Tick
+  commentId: P:LiteEntitySystem.EntityManager.Tick
+  id: Tick
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: Tick
+  nameWithType: EntityManager.Tick
+  fullName: LiteEntitySystem.EntityManager.Tick
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Current tick
+  example: []
+  syntax:
+    content: public ushort Tick { get; }
+    parameters: []
+    return:
+      type: System.UInt16
+    content.vb: Public ReadOnly Property Tick As UShort
+  overload: LiteEntitySystem.EntityManager.Tick*
+- uid: LiteEntitySystem.EntityManager.LerpFactor
+  commentId: P:LiteEntitySystem.EntityManager.LerpFactor
+  id: LerpFactor
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: LerpFactor
+  nameWithType: EntityManager.LerpFactor
+  fullName: LiteEntitySystem.EntityManager.LerpFactor
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Interpolation time between logic and render
+  example: []
+  syntax:
+    content: public float LerpFactor { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly Property LerpFactor As Single
+  overload: LiteEntitySystem.EntityManager.LerpFactor*
+- uid: LiteEntitySystem.EntityManager.UpdateMode
+  commentId: P:LiteEntitySystem.EntityManager.UpdateMode
+  id: UpdateMode
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: UpdateMode
+  nameWithType: EntityManager.UpdateMode
+  fullName: LiteEntitySystem.EntityManager.UpdateMode
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Current update mode (can be used inside entities to separate logic for rollbacks)
+  example: []
+  syntax:
+    content: public UpdateMode UpdateMode { get; protected set; }
+    parameters: []
+    return:
+      type: LiteEntitySystem.UpdateMode
+    content.vb: Public Property UpdateMode As UpdateMode
+  overload: LiteEntitySystem.EntityManager.UpdateMode*
+- uid: LiteEntitySystem.EntityManager.Mode
+  commentId: F:LiteEntitySystem.EntityManager.Mode
+  id: Mode
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: Mode
+  nameWithType: EntityManager.Mode
+  fullName: LiteEntitySystem.EntityManager.Mode
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Current mode (Server or Client)
+  example: []
+  syntax:
+    content: public readonly NetworkMode Mode
+    return:
+      type: LiteEntitySystem.NetworkMode
+    content.vb: Public ReadOnly Mode As NetworkMode
+- uid: LiteEntitySystem.EntityManager.IsServer
+  commentId: F:LiteEntitySystem.EntityManager.IsServer
+  id: IsServer
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: IsServer
+  nameWithType: EntityManager.IsServer
+  fullName: LiteEntitySystem.EntityManager.IsServer
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Is server
+  example: []
+  syntax:
+    content: public readonly bool IsServer
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly IsServer As Boolean
+- uid: LiteEntitySystem.EntityManager.IsClient
+  commentId: F:LiteEntitySystem.EntityManager.IsClient
+  id: IsClient
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: IsClient
+  nameWithType: EntityManager.IsClient
+  fullName: LiteEntitySystem.EntityManager.IsClient
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Is client
+  example: []
+  syntax:
+    content: public readonly bool IsClient
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly IsClient As Boolean
+- uid: LiteEntitySystem.EntityManager.Tickrate
+  commentId: P:LiteEntitySystem.EntityManager.Tickrate
+  id: Tickrate
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: Tickrate
+  nameWithType: EntityManager.Tickrate
+  fullName: LiteEntitySystem.EntityManager.Tickrate
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: tick rate of game logic (logic FPS, not visual)
+  example: []
+  syntax:
+    content: public byte Tickrate { get; }
+    parameters: []
+    return:
+      type: System.Byte
+    content.vb: Public Property Tickrate As Byte
+  overload: LiteEntitySystem.EntityManager.Tickrate*
+- uid: LiteEntitySystem.EntityManager.DeltaTime
+  commentId: P:LiteEntitySystem.EntityManager.DeltaTime
+  id: DeltaTime
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: DeltaTime
+  nameWithType: EntityManager.DeltaTime
+  fullName: LiteEntitySystem.EntityManager.DeltaTime
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Fixed delta time
+  example: []
+  syntax:
+    content: public double DeltaTime { get; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public Property DeltaTime As Double
+  overload: LiteEntitySystem.EntityManager.DeltaTime*
+- uid: LiteEntitySystem.EntityManager.DeltaTimeF
+  commentId: P:LiteEntitySystem.EntityManager.DeltaTimeF
+  id: DeltaTimeF
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: DeltaTimeF
+  nameWithType: EntityManager.DeltaTimeF
+  fullName: LiteEntitySystem.EntityManager.DeltaTimeF
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Fixed delta time (float for less precision)
+  example: []
+  syntax:
+    content: public float DeltaTimeF { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public Property DeltaTimeF As Single
+  overload: LiteEntitySystem.EntityManager.DeltaTimeF*
+- uid: LiteEntitySystem.EntityManager.MaxHistorySize
+  commentId: F:LiteEntitySystem.EntityManager.MaxHistorySize
+  id: MaxHistorySize
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: MaxHistorySize
+  nameWithType: EntityManager.MaxHistorySize
+  fullName: LiteEntitySystem.EntityManager.MaxHistorySize
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Size of history (in ticks) for lag compensation. Tune for your game fps
+  example: []
+  syntax:
+    content: public readonly MaxHistorySize MaxHistorySize
+    return:
+      type: LiteEntitySystem.MaxHistorySize
+    content.vb: Public ReadOnly MaxHistorySize As MaxHistorySize
+- uid: LiteEntitySystem.EntityManager.PlayerId
+  commentId: P:LiteEntitySystem.EntityManager.PlayerId
+  id: PlayerId
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: PlayerId
+  nameWithType: EntityManager.PlayerId
+  fullName: LiteEntitySystem.EntityManager.PlayerId
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Local player id (0 on server)
+  example: []
+  syntax:
+    content: public byte PlayerId { get; }
+    parameters: []
+    return:
+      type: System.Byte
+    content.vb: Public ReadOnly Property PlayerId As Byte
+  overload: LiteEntitySystem.EntityManager.PlayerId*
+- uid: LiteEntitySystem.EntityManager.HeaderByte
+  commentId: F:LiteEntitySystem.EntityManager.HeaderByte
+  id: HeaderByte
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: HeaderByte
+  nameWithType: EntityManager.HeaderByte
+  fullName: LiteEntitySystem.EntityManager.HeaderByte
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public readonly byte HeaderByte
+    return:
+      type: System.Byte
+    content.vb: Public ReadOnly HeaderByte As Byte
+- uid: LiteEntitySystem.EntityManager.InRollBackState
+  commentId: P:LiteEntitySystem.EntityManager.InRollBackState
+  id: InRollBackState
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: InRollBackState
+  nameWithType: EntityManager.InRollBackState
+  fullName: LiteEntitySystem.EntityManager.InRollBackState
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool InRollBackState { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property InRollBackState As Boolean
+  overload: LiteEntitySystem.EntityManager.InRollBackState*
+- uid: LiteEntitySystem.EntityManager.InNormalState
+  commentId: P:LiteEntitySystem.EntityManager.InNormalState
+  id: InNormalState
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: InNormalState
+  nameWithType: EntityManager.InNormalState
+  fullName: LiteEntitySystem.EntityManager.InNormalState
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool InNormalState { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property InNormalState As Boolean
+  overload: LiteEntitySystem.EntityManager.InNormalState*
+- uid: LiteEntitySystem.EntityManager.MaxSavedStateDiff
+  commentId: F:LiteEntitySystem.EntityManager.MaxSavedStateDiff
+  id: MaxSavedStateDiff
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: MaxSavedStateDiff
+  nameWithType: EntityManager.MaxSavedStateDiff
+  fullName: LiteEntitySystem.EntityManager.MaxSavedStateDiff
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: protected const int MaxSavedStateDiff = 30
+    return:
+      type: System.Int32
+    content.vb: Protected Const MaxSavedStateDiff As Integer = 30
+- uid: LiteEntitySystem.EntityManager.VisualDeltaTime
+  commentId: P:LiteEntitySystem.EntityManager.VisualDeltaTime
+  id: VisualDeltaTime
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: VisualDeltaTime
+  nameWithType: EntityManager.VisualDeltaTime
+  fullName: LiteEntitySystem.EntityManager.VisualDeltaTime
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public double VisualDeltaTime { get; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public Property VisualDeltaTime As Double
+  overload: LiteEntitySystem.EntityManager.VisualDeltaTime*
+- uid: LiteEntitySystem.EntityManager.MaxPlayers
+  commentId: F:LiteEntitySystem.EntityManager.MaxPlayers
+  id: MaxPlayers
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: MaxPlayers
+  nameWithType: EntityManager.MaxPlayers
+  fullName: LiteEntitySystem.EntityManager.MaxPlayers
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public const int MaxPlayers = 254
+    return:
+      type: System.Int32
+    content.vb: Public Const MaxPlayers As Integer = 254
+- uid: LiteEntitySystem.EntityManager._tick
+  commentId: F:LiteEntitySystem.EntityManager._tick
+  id: _tick
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: _tick
+  nameWithType: EntityManager._tick
+  fullName: LiteEntitySystem.EntityManager._tick
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: protected ushort _tick
+    return:
+      type: System.UInt16
+    content.vb: Protected _tick As UShort
+- uid: LiteEntitySystem.EntityManager.AliveEntities
+  commentId: F:LiteEntitySystem.EntityManager.AliveEntities
+  id: AliveEntities
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: AliveEntities
+  nameWithType: EntityManager.AliveEntities
+  fullName: LiteEntitySystem.EntityManager.AliveEntities
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: protected readonly AVLTree<InternalEntity> AliveEntities
+    return:
+      type: LiteEntitySystem.Collections.AVLTree{LiteEntitySystem.Internal.InternalEntity}
+    content.vb: Protected ReadOnly AliveEntities As AVLTree(Of InternalEntity)
+- uid: LiteEntitySystem.EntityManager.LagCompensatedEntities
+  commentId: F:LiteEntitySystem.EntityManager.LagCompensatedEntities
+  id: LagCompensatedEntities
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: LagCompensatedEntities
+  nameWithType: EntityManager.LagCompensatedEntities
+  fullName: LiteEntitySystem.EntityManager.LagCompensatedEntities
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: protected readonly AVLTree<EntityLogic> LagCompensatedEntities
+    return:
+      type: LiteEntitySystem.Collections.AVLTree{LiteEntitySystem.EntityLogic}
+    content.vb: Protected ReadOnly LagCompensatedEntities As AVLTree(Of EntityLogic)
+- uid: LiteEntitySystem.EntityManager.SpeedMultiplier
+  commentId: F:LiteEntitySystem.EntityManager.SpeedMultiplier
+  id: SpeedMultiplier
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: SpeedMultiplier
+  nameWithType: EntityManager.SpeedMultiplier
+  fullName: LiteEntitySystem.EntityManager.SpeedMultiplier
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: protected float SpeedMultiplier
+    return:
+      type: System.Single
+    content.vb: Protected SpeedMultiplier As Single
+- uid: LiteEntitySystem.EntityManager.TimeSpeedChangeCoef
+  commentId: F:LiteEntitySystem.EntityManager.TimeSpeedChangeCoef
+  id: TimeSpeedChangeCoef
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: TimeSpeedChangeCoef
+  nameWithType: EntityManager.TimeSpeedChangeCoef
+  fullName: LiteEntitySystem.EntityManager.TimeSpeedChangeCoef
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: protected const float TimeSpeedChangeCoef = 0.1
+    return:
+      type: System.Single
+    content.vb: Protected Const TimeSpeedChangeCoef As Single = 0.1
+- uid: LiteEntitySystem.EntityManager.IsRunning
+  commentId: P:LiteEntitySystem.EntityManager.IsRunning
+  id: IsRunning
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: IsRunning
+  nameWithType: EntityManager.IsRunning
+  fullName: LiteEntitySystem.EntityManager.IsRunning
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: >-
+    Is entity manager running
+
+    IsRunning - true after first update
+
+    IsRunning - sets to false after Reset() call
+  example: []
+  syntax:
+    content: public bool IsRunning { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsRunning As Boolean
+  overload: LiteEntitySystem.EntityManager.IsRunning*
+- uid: LiteEntitySystem.EntityManager.RegisterFieldType``1(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{``0})
+  commentId: M:LiteEntitySystem.EntityManager.RegisterFieldType``1(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{``0})
+  id: RegisterFieldType``1(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{``0})
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: RegisterFieldType<T>(InterpolatorDelegateWithReturn<T>)
+  nameWithType: EntityManager.RegisterFieldType<T>(InterpolatorDelegateWithReturn<T>)
+  fullName: LiteEntitySystem.EntityManager.RegisterFieldType<T>(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn<T>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Register custom field type with interpolation
+  example: []
+  syntax:
+    content: 'public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged'
+    parameters:
+    - id: interpolationDelegate
+      type: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{{T}}
+      description: interpolation function
+    typeParameters:
+    - id: T
+    content.vb: Public Shared Sub RegisterFieldType(Of T As Structure)(interpolationDelegate As InterpolatorDelegateWithReturn(Of T))
+  overload: LiteEntitySystem.EntityManager.RegisterFieldType*
+  nameWithType.vb: EntityManager.RegisterFieldType(Of T)(InterpolatorDelegateWithReturn(Of T))
+  fullName.vb: LiteEntitySystem.EntityManager.RegisterFieldType(Of T)(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn(Of T))
+  name.vb: RegisterFieldType(Of T)(InterpolatorDelegateWithReturn(Of T))
+- uid: LiteEntitySystem.EntityManager.RegisterFieldType``1
+  commentId: M:LiteEntitySystem.EntityManager.RegisterFieldType``1
+  id: RegisterFieldType``1
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: RegisterFieldType<T>()
+  nameWithType: EntityManager.RegisterFieldType<T>()
+  fullName: LiteEntitySystem.EntityManager.RegisterFieldType<T>()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Register custom field type
+  example: []
+  syntax:
+    content: 'public static void RegisterFieldType<T>() where T : unmanaged'
+    typeParameters:
+    - id: T
+    content.vb: Public Shared Sub RegisterFieldType(Of T As Structure)()
+  overload: LiteEntitySystem.EntityManager.RegisterFieldType*
+  nameWithType.vb: EntityManager.RegisterFieldType(Of T)()
+  fullName.vb: LiteEntitySystem.EntityManager.RegisterFieldType(Of T)()
+  name.vb: RegisterFieldType(Of T)()
+- uid: LiteEntitySystem.EntityManager.SetTickrate(System.Byte)
+  commentId: M:LiteEntitySystem.EntityManager.SetTickrate(System.Byte)
+  id: SetTickrate(System.Byte)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: SetTickrate(byte)
+  nameWithType: EntityManager.SetTickrate(byte)
+  fullName: LiteEntitySystem.EntityManager.SetTickrate(byte)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: protected void SetTickrate(byte tickrate)
+    parameters:
+    - id: tickrate
+      type: System.Byte
+    content.vb: Protected Sub SetTickrate(tickrate As Byte)
+  overload: LiteEntitySystem.EntityManager.SetTickrate*
+  nameWithType.vb: EntityManager.SetTickrate(Byte)
+  fullName.vb: LiteEntitySystem.EntityManager.SetTickrate(Byte)
+  name.vb: SetTickrate(Byte)
+- uid: LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.NetworkMode,System.Byte,LiteEntitySystem.MaxHistorySize)
+  commentId: M:LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.NetworkMode,System.Byte,LiteEntitySystem.MaxHistorySize)
+  id: '#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.NetworkMode,System.Byte,LiteEntitySystem.MaxHistorySize)'
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: EntityManager(EntityTypesMap, NetworkMode, byte, MaxHistorySize)
+  nameWithType: EntityManager.EntityManager(EntityTypesMap, NetworkMode, byte, MaxHistorySize)
+  fullName: LiteEntitySystem.EntityManager.EntityManager(LiteEntitySystem.EntityTypesMap, LiteEntitySystem.NetworkMode, byte, LiteEntitySystem.MaxHistorySize)
+  type: Constructor
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: protected EntityManager(EntityTypesMap typesMap, NetworkMode mode, byte headerByte, MaxHistorySize maxHistorySize)
+    parameters:
+    - id: typesMap
+      type: LiteEntitySystem.EntityTypesMap
+    - id: mode
+      type: LiteEntitySystem.NetworkMode
+    - id: headerByte
+      type: System.Byte
+    - id: maxHistorySize
+      type: LiteEntitySystem.MaxHistorySize
+    content.vb: Protected Sub New(typesMap As EntityTypesMap, mode As NetworkMode, headerByte As Byte, maxHistorySize As MaxHistorySize)
+  overload: LiteEntitySystem.EntityManager.#ctor*
+  nameWithType.vb: EntityManager.New(EntityTypesMap, NetworkMode, Byte, MaxHistorySize)
+  fullName.vb: LiteEntitySystem.EntityManager.New(LiteEntitySystem.EntityTypesMap, LiteEntitySystem.NetworkMode, Byte, LiteEntitySystem.MaxHistorySize)
+  name.vb: New(EntityTypesMap, NetworkMode, Byte, MaxHistorySize)
+- uid: LiteEntitySystem.EntityManager.GetEntityTypeFromClassId(System.UInt16)
+  commentId: M:LiteEntitySystem.EntityManager.GetEntityTypeFromClassId(System.UInt16)
+  id: GetEntityTypeFromClassId(System.UInt16)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: GetEntityTypeFromClassId(ushort)
+  nameWithType: EntityManager.GetEntityTypeFromClassId(ushort)
+  fullName: LiteEntitySystem.EntityManager.GetEntityTypeFromClassId(ushort)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Get type of entity from classId. Returns null if classId is unknown
+  example: []
+  syntax:
+    content: public Type GetEntityTypeFromClassId(ushort classId)
+    parameters:
+    - id: classId
+      type: System.UInt16
+      description: ''
+    return:
+      type: System.Type
+      description: ''
+    content.vb: Public Function GetEntityTypeFromClassId(classId As UShort) As Type
+  overload: LiteEntitySystem.EntityManager.GetEntityTypeFromClassId*
+  nameWithType.vb: EntityManager.GetEntityTypeFromClassId(UShort)
+  fullName.vb: LiteEntitySystem.EntityManager.GetEntityTypeFromClassId(UShort)
+  name.vb: GetEntityTypeFromClassId(UShort)
+- uid: LiteEntitySystem.EntityManager.GetEntitySyncVarInfo(LiteEntitySystem.Internal.InternalEntity,LiteEntitySystem.IEntitySyncVarInfoPrinter)
+  commentId: M:LiteEntitySystem.EntityManager.GetEntitySyncVarInfo(LiteEntitySystem.Internal.InternalEntity,LiteEntitySystem.IEntitySyncVarInfoPrinter)
+  id: GetEntitySyncVarInfo(LiteEntitySystem.Internal.InternalEntity,LiteEntitySystem.IEntitySyncVarInfoPrinter)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: GetEntitySyncVarInfo(InternalEntity, IEntitySyncVarInfoPrinter)
+  nameWithType: EntityManager.GetEntitySyncVarInfo(InternalEntity, IEntitySyncVarInfoPrinter)
+  fullName: LiteEntitySystem.EntityManager.GetEntitySyncVarInfo(LiteEntitySystem.Internal.InternalEntity, LiteEntitySystem.IEntitySyncVarInfoPrinter)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Prints names and values of entity syncVars using IEntitySyncVarInfoPrinter
+  example: []
+  syntax:
+    content: public void GetEntitySyncVarInfo(InternalEntity entity, IEntitySyncVarInfoPrinter resultPrinter)
+    parameters:
+    - id: entity
+      type: LiteEntitySystem.Internal.InternalEntity
+      description: entity to show
+    - id: resultPrinter
+      type: LiteEntitySystem.IEntitySyncVarInfoPrinter
+      description: IEntitySyncVarInfoPrinter implementation
+    content.vb: Public Sub GetEntitySyncVarInfo(entity As InternalEntity, resultPrinter As IEntitySyncVarInfoPrinter)
+  overload: LiteEntitySystem.EntityManager.GetEntitySyncVarInfo*
+- uid: LiteEntitySystem.EntityManager.Reset
+  commentId: M:LiteEntitySystem.EntityManager.Reset
+  id: Reset
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: Reset()
+  nameWithType: EntityManager.Reset()
+  fullName: LiteEntitySystem.EntityManager.Reset()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Remove all entities and reset all counters and timers
+  example: []
+  syntax:
+    content: public virtual void Reset()
+    content.vb: Public Overridable Sub Reset()
+  overload: LiteEntitySystem.EntityManager.Reset*
+- uid: LiteEntitySystem.EntityManager.GetEntityById``1(LiteEntitySystem.EntitySharedReference)
+  commentId: M:LiteEntitySystem.EntityManager.GetEntityById``1(LiteEntitySystem.EntitySharedReference)
+  id: GetEntityById``1(LiteEntitySystem.EntitySharedReference)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: GetEntityById<T>(EntitySharedReference)
+  nameWithType: EntityManager.GetEntityById<T>(EntitySharedReference)
+  fullName: LiteEntitySystem.EntityManager.GetEntityById<T>(LiteEntitySystem.EntitySharedReference)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Get entity by id
+  example: []
+  syntax:
+    content: 'public T GetEntityById<T>(EntitySharedReference id) where T : InternalEntity'
+    parameters:
+    - id: id
+      type: LiteEntitySystem.EntitySharedReference
+      description: Id of entity
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+      description: Entity if it exists, null if id == InvalidEntityId or entity is another type or version
+    content.vb: Public Function GetEntityById(Of T As InternalEntity)(id As EntitySharedReference) As T
+  overload: LiteEntitySystem.EntityManager.GetEntityById*
+  nameWithType.vb: EntityManager.GetEntityById(Of T)(EntitySharedReference)
+  fullName.vb: LiteEntitySystem.EntityManager.GetEntityById(Of T)(LiteEntitySystem.EntitySharedReference)
+  name.vb: GetEntityById(Of T)(EntitySharedReference)
+- uid: LiteEntitySystem.EntityManager.TryGetEntityById``1(LiteEntitySystem.EntitySharedReference,``0@)
+  commentId: M:LiteEntitySystem.EntityManager.TryGetEntityById``1(LiteEntitySystem.EntitySharedReference,``0@)
+  id: TryGetEntityById``1(LiteEntitySystem.EntitySharedReference,``0@)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: TryGetEntityById<T>(EntitySharedReference, out T)
+  nameWithType: EntityManager.TryGetEntityById<T>(EntitySharedReference, out T)
+  fullName: LiteEntitySystem.EntityManager.TryGetEntityById<T>(LiteEntitySystem.EntitySharedReference, out T)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: >-
+    Try get entity by id
+
+    throws exception if entity is null or invalid type
+  example: []
+  syntax:
+    content: 'public bool TryGetEntityById<T>(EntitySharedReference id, out T entity) where T : InternalEntity'
+    parameters:
+    - id: id
+      type: LiteEntitySystem.EntitySharedReference
+      description: Id of entity
+    - id: entity
+      type: '{T}'
+      description: out entity if exists otherwise null
+    typeParameters:
+    - id: T
+    return:
+      type: System.Boolean
+      description: true if it exists, false if id == InvalidEntityId or entity is another type or version
+    content.vb: Public Function TryGetEntityById(Of T As InternalEntity)(id As EntitySharedReference, entity As T) As Boolean
+  overload: LiteEntitySystem.EntityManager.TryGetEntityById*
+  nameWithType.vb: EntityManager.TryGetEntityById(Of T)(EntitySharedReference, T)
+  fullName.vb: LiteEntitySystem.EntityManager.TryGetEntityById(Of T)(LiteEntitySystem.EntitySharedReference, T)
+  name.vb: TryGetEntityById(Of T)(EntitySharedReference, T)
+- uid: LiteEntitySystem.EntityManager.GetEntities``1
+  commentId: M:LiteEntitySystem.EntityManager.GetEntities``1
+  id: GetEntities``1
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: GetEntities<T>()
+  nameWithType: EntityManager.GetEntities<T>()
+  fullName: LiteEntitySystem.EntityManager.GetEntities<T>()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Get all entities with type
+  example: []
+  syntax:
+    content: 'public EntityFilter<T> GetEntities<T>() where T : InternalEntity'
+    typeParameters:
+    - id: T
+      description: Entity type
+    return:
+      type: LiteEntitySystem.EntityFilter{{T}}
+      description: Entity filter that can be used in foreach
+    content.vb: Public Function GetEntities(Of T As InternalEntity)() As EntityFilter(Of T)
+  overload: LiteEntitySystem.EntityManager.GetEntities*
+  nameWithType.vb: EntityManager.GetEntities(Of T)()
+  fullName.vb: LiteEntitySystem.EntityManager.GetEntities(Of T)()
+  name.vb: GetEntities(Of T)()
+- uid: LiteEntitySystem.EntityManager.GetControllers``1
+  commentId: M:LiteEntitySystem.EntityManager.GetControllers``1
+  id: GetControllers``1
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: GetControllers<T>()
+  nameWithType: EntityManager.GetControllers<T>()
+  fullName: LiteEntitySystem.EntityManager.GetControllers<T>()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Get all controller entities with type
+  example: []
+  syntax:
+    content: 'public EntityFilter<T> GetControllers<T>() where T : ControllerLogic'
+    typeParameters:
+    - id: T
+      description: Entity type
+    return:
+      type: LiteEntitySystem.EntityFilter{{T}}
+      description: Entity filter that can be used in foreach
+    content.vb: Public Function GetControllers(Of T As ControllerLogic)() As EntityFilter(Of T)
+  overload: LiteEntitySystem.EntityManager.GetControllers*
+  nameWithType.vb: EntityManager.GetControllers(Of T)()
+  fullName.vb: LiteEntitySystem.EntityManager.GetControllers(Of T)()
+  name.vb: GetControllers(Of T)()
+- uid: LiteEntitySystem.EntityManager.GetSingleton``1
+  commentId: M:LiteEntitySystem.EntityManager.GetSingleton``1
+  id: GetSingleton``1
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: GetSingleton<T>()
+  nameWithType: EntityManager.GetSingleton<T>()
+  fullName: LiteEntitySystem.EntityManager.GetSingleton<T>()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Get existing singleton entity
+  example: []
+  syntax:
+    content: 'public T GetSingleton<T>() where T : SingletonEntityLogic'
+    typeParameters:
+    - id: T
+      description: Singleton entity type
+    return:
+      type: '{T}'
+      description: Singleton entity, can throw exceptions on invalid type
+    content.vb: Public Function GetSingleton(Of T As SingletonEntityLogic)() As T
+  overload: LiteEntitySystem.EntityManager.GetSingleton*
+  nameWithType.vb: EntityManager.GetSingleton(Of T)()
+  fullName.vb: LiteEntitySystem.EntityManager.GetSingleton(Of T)()
+  name.vb: GetSingleton(Of T)()
+- uid: LiteEntitySystem.EntityManager.HasSingleton``1
+  commentId: M:LiteEntitySystem.EntityManager.HasSingleton``1
+  id: HasSingleton``1
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: HasSingleton<T>()
+  nameWithType: EntityManager.HasSingleton<T>()
+  fullName: LiteEntitySystem.EntityManager.HasSingleton<T>()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Is singleton exists and has correct type
+  example: []
+  syntax:
+    content: 'public bool HasSingleton<T>() where T : SingletonEntityLogic'
+    typeParameters:
+    - id: T
+      description: ''
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Function HasSingleton(Of T As SingletonEntityLogic)() As Boolean
+  overload: LiteEntitySystem.EntityManager.HasSingleton*
+  nameWithType.vb: EntityManager.HasSingleton(Of T)()
+  fullName.vb: LiteEntitySystem.EntityManager.HasSingleton(Of T)()
+  name.vb: HasSingleton(Of T)()
+- uid: LiteEntitySystem.EntityManager.AddLocalSingleton``1(``0)
+  commentId: M:LiteEntitySystem.EntityManager.AddLocalSingleton``1(``0)
+  id: AddLocalSingleton``1(``0)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: AddLocalSingleton<T>(T)
+  nameWithType: EntityManager.AddLocalSingleton<T>(T)
+  fullName: LiteEntitySystem.EntityManager.AddLocalSingleton<T>(T)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Add local (not synchronized) singleton.
+  example: []
+  syntax:
+    content: 'public void AddLocalSingleton<T>(T singleton) where T : ILocalSingleton'
+    parameters:
+    - id: singleton
+      type: '{T}'
+      description: Signleton to add
+    typeParameters:
+    - id: T
+    content.vb: Public Sub AddLocalSingleton(Of T As ILocalSingleton)(singleton As T)
+  overload: LiteEntitySystem.EntityManager.AddLocalSingleton*
+  nameWithType.vb: EntityManager.AddLocalSingleton(Of T)(T)
+  fullName.vb: LiteEntitySystem.EntityManager.AddLocalSingleton(Of T)(T)
+  name.vb: AddLocalSingleton(Of T)(T)
+- uid: LiteEntitySystem.EntityManager.GetLocalSingleton``1
+  commentId: M:LiteEntitySystem.EntityManager.GetLocalSingleton``1
+  id: GetLocalSingleton``1
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: GetLocalSingleton<T>()
+  nameWithType: EntityManager.GetLocalSingleton<T>()
+  fullName: LiteEntitySystem.EntityManager.GetLocalSingleton<T>()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Get local (not synchronized) singleton.
+  example: []
+  syntax:
+    content: 'public T GetLocalSingleton<T>() where T : ILocalSingleton'
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Public Function GetLocalSingleton(Of T As ILocalSingleton)() As T
+  overload: LiteEntitySystem.EntityManager.GetLocalSingleton*
+  nameWithType.vb: EntityManager.GetLocalSingleton(Of T)()
+  fullName.vb: LiteEntitySystem.EntityManager.GetLocalSingleton(Of T)()
+  name.vb: GetLocalSingleton(Of T)()
+- uid: LiteEntitySystem.EntityManager.TryGetLocalSingleton``1(``0@)
+  commentId: M:LiteEntitySystem.EntityManager.TryGetLocalSingleton``1(``0@)
+  id: TryGetLocalSingleton``1(``0@)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: TryGetLocalSingleton<T>(out T)
+  nameWithType: EntityManager.TryGetLocalSingleton<T>(out T)
+  fullName: LiteEntitySystem.EntityManager.TryGetLocalSingleton<T>(out T)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: TryGet local (not synchronized) singleton.
+  example: []
+  syntax:
+    content: 'public bool TryGetLocalSingleton<T>(out T result) where T : ILocalSingleton'
+    parameters:
+    - id: result
+      type: '{T}'
+    typeParameters:
+    - id: T
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetLocalSingleton(Of T As ILocalSingleton)(result As T) As Boolean
+  overload: LiteEntitySystem.EntityManager.TryGetLocalSingleton*
+  nameWithType.vb: EntityManager.TryGetLocalSingleton(Of T)(T)
+  fullName.vb: LiteEntitySystem.EntityManager.TryGetLocalSingleton(Of T)(T)
+  name.vb: TryGetLocalSingleton(Of T)(T)
+- uid: LiteEntitySystem.EntityManager.TryGetSingleton``1(``0@)
+  commentId: M:LiteEntitySystem.EntityManager.TryGetSingleton``1(``0@)
+  id: TryGetSingleton``1(``0@)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: TryGetSingleton<T>(out T)
+  nameWithType: EntityManager.TryGetSingleton<T>(out T)
+  fullName: LiteEntitySystem.EntityManager.TryGetSingleton<T>(out T)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Try get singleton entity
+  example: []
+  syntax:
+    content: 'public bool TryGetSingleton<T>(out T singleton) where T : SingletonEntityLogic'
+    parameters:
+    - id: singleton
+      type: '{T}'
+      description: result singleton entity
+    typeParameters:
+    - id: T
+      description: Singleton type
+    return:
+      type: System.Boolean
+      description: true if entity exists
+    content.vb: Public Function TryGetSingleton(Of T As SingletonEntityLogic)(singleton As T) As Boolean
+  overload: LiteEntitySystem.EntityManager.TryGetSingleton*
+  nameWithType.vb: EntityManager.TryGetSingleton(Of T)(T)
+  fullName.vb: LiteEntitySystem.EntityManager.TryGetSingleton(Of T)(T)
+  name.vb: TryGetSingleton(Of T)(T)
+- uid: LiteEntitySystem.EntityManager.AddEntity``1(LiteEntitySystem.EntityParams)
+  commentId: M:LiteEntitySystem.EntityManager.AddEntity``1(LiteEntitySystem.EntityParams)
+  id: AddEntity``1(LiteEntitySystem.EntityParams)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: AddEntity<T>(EntityParams)
+  nameWithType: EntityManager.AddEntity<T>(EntityParams)
+  fullName: LiteEntitySystem.EntityManager.AddEntity<T>(LiteEntitySystem.EntityParams)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'protected T AddEntity<T>(EntityParams entityParams) where T : InternalEntity'
+    parameters:
+    - id: entityParams
+      type: LiteEntitySystem.EntityParams
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Protected Function AddEntity(Of T As InternalEntity)(entityParams As EntityParams) As T
+  overload: LiteEntitySystem.EntityManager.AddEntity*
+  nameWithType.vb: EntityManager.AddEntity(Of T)(EntityParams)
+  fullName.vb: LiteEntitySystem.EntityManager.AddEntity(Of T)(LiteEntitySystem.EntityParams)
+  name.vb: AddEntity(Of T)(EntityParams)
+- uid: LiteEntitySystem.EntityManager.ConstructEntity(LiteEntitySystem.Internal.InternalEntity)
+  commentId: M:LiteEntitySystem.EntityManager.ConstructEntity(LiteEntitySystem.Internal.InternalEntity)
+  id: ConstructEntity(LiteEntitySystem.Internal.InternalEntity)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: ConstructEntity(InternalEntity)
+  nameWithType: EntityManager.ConstructEntity(InternalEntity)
+  fullName: LiteEntitySystem.EntityManager.ConstructEntity(LiteEntitySystem.Internal.InternalEntity)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: protected bool ConstructEntity(InternalEntity e)
+    parameters:
+    - id: e
+      type: LiteEntitySystem.Internal.InternalEntity
+    return:
+      type: System.Boolean
+    content.vb: Protected Function ConstructEntity(e As InternalEntity) As Boolean
+  overload: LiteEntitySystem.EntityManager.ConstructEntity*
+- uid: LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
+  commentId: M:LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
+  id: OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: OnAliveEntityAdded(InternalEntity)
+  nameWithType: EntityManager.OnAliveEntityAdded(InternalEntity)
+  fullName: LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: protected virtual void OnAliveEntityAdded(InternalEntity e)
+    parameters:
+    - id: e
+      type: LiteEntitySystem.Internal.InternalEntity
+    content.vb: Protected Overridable Sub OnAliveEntityAdded(e As InternalEntity)
+  overload: LiteEntitySystem.EntityManager.OnAliveEntityAdded*
+- uid: LiteEntitySystem.EntityManager.IsEntityLagCompensated(LiteEntitySystem.Internal.InternalEntity)
+  commentId: M:LiteEntitySystem.EntityManager.IsEntityLagCompensated(LiteEntitySystem.Internal.InternalEntity)
+  id: IsEntityLagCompensated(LiteEntitySystem.Internal.InternalEntity)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: IsEntityLagCompensated(InternalEntity)
+  nameWithType: EntityManager.IsEntityLagCompensated(InternalEntity)
+  fullName: LiteEntitySystem.EntityManager.IsEntityLagCompensated(LiteEntitySystem.Internal.InternalEntity)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: protected static bool IsEntityLagCompensated(InternalEntity e)
+    parameters:
+    - id: e
+      type: LiteEntitySystem.Internal.InternalEntity
+    return:
+      type: System.Boolean
+    content.vb: Protected Shared Function IsEntityLagCompensated(e As InternalEntity) As Boolean
+  overload: LiteEntitySystem.EntityManager.IsEntityLagCompensated*
+- uid: LiteEntitySystem.EntityManager.RemoveEntity(LiteEntitySystem.Internal.InternalEntity)
+  commentId: M:LiteEntitySystem.EntityManager.RemoveEntity(LiteEntitySystem.Internal.InternalEntity)
+  id: RemoveEntity(LiteEntitySystem.Internal.InternalEntity)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: RemoveEntity(InternalEntity)
+  nameWithType: EntityManager.RemoveEntity(InternalEntity)
+  fullName: LiteEntitySystem.EntityManager.RemoveEntity(LiteEntitySystem.Internal.InternalEntity)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: protected void RemoveEntity(InternalEntity e)
+    parameters:
+    - id: e
+      type: LiteEntitySystem.Internal.InternalEntity
+    content.vb: Protected Sub RemoveEntity(e As InternalEntity)
+  overload: LiteEntitySystem.EntityManager.RemoveEntity*
+- uid: LiteEntitySystem.EntityManager.EnableLagCompensation(LiteEntitySystem.NetPlayer)
+  commentId: M:LiteEntitySystem.EntityManager.EnableLagCompensation(LiteEntitySystem.NetPlayer)
+  id: EnableLagCompensation(LiteEntitySystem.NetPlayer)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: EnableLagCompensation(NetPlayer)
+  nameWithType: EntityManager.EnableLagCompensation(NetPlayer)
+  fullName: LiteEntitySystem.EntityManager.EnableLagCompensation(LiteEntitySystem.NetPlayer)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void EnableLagCompensation(NetPlayer player)
+    parameters:
+    - id: player
+      type: LiteEntitySystem.NetPlayer
+    content.vb: Public Sub EnableLagCompensation(player As NetPlayer)
+  overload: LiteEntitySystem.EntityManager.EnableLagCompensation*
+- uid: LiteEntitySystem.EntityManager.DisableLagCompensation
+  commentId: M:LiteEntitySystem.EntityManager.DisableLagCompensation
+  id: DisableLagCompensation
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: DisableLagCompensation()
+  nameWithType: EntityManager.DisableLagCompensation()
+  fullName: LiteEntitySystem.EntityManager.DisableLagCompensation()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public void DisableLagCompensation()
+    content.vb: Public Sub DisableLagCompensation()
+  overload: LiteEntitySystem.EntityManager.DisableLagCompensation*
+- uid: LiteEntitySystem.EntityManager.ExecuteLateConstruct
+  commentId: M:LiteEntitySystem.EntityManager.ExecuteLateConstruct
+  id: ExecuteLateConstruct
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: ExecuteLateConstruct()
+  nameWithType: EntityManager.ExecuteLateConstruct()
+  fullName: LiteEntitySystem.EntityManager.ExecuteLateConstruct()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: protected void ExecuteLateConstruct()
+    content.vb: Protected Sub ExecuteLateConstruct()
+  overload: LiteEntitySystem.EntityManager.ExecuteLateConstruct*
+- uid: LiteEntitySystem.EntityManager.OnLogicTick
+  commentId: M:LiteEntitySystem.EntityManager.OnLogicTick
+  id: OnLogicTick
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: OnLogicTick()
+  nameWithType: EntityManager.OnLogicTick()
+  fullName: LiteEntitySystem.EntityManager.OnLogicTick()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: protected abstract void OnLogicTick()
+    content.vb: Protected MustOverride Sub OnLogicTick()
+  overload: LiteEntitySystem.EntityManager.OnLogicTick*
+- uid: LiteEntitySystem.EntityManager.Update
+  commentId: M:LiteEntitySystem.EntityManager.Update
+  id: Update
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: Update()
+  nameWithType: EntityManager.Update()
+  fullName: LiteEntitySystem.EntityManager.Update()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Main update method, updates internal fixed timer and do all other stuff
+  example: []
+  syntax:
+    content: public virtual void Update()
+    content.vb: Public Overridable Sub Update()
+  overload: LiteEntitySystem.EntityManager.Update*
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: LiteEntitySystem.EntityManager.EntitiesCount*
+  commentId: Overload:LiteEntitySystem.EntityManager.EntitiesCount
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_EntitiesCount
+  name: EntitiesCount
+  nameWithType: EntityManager.EntitiesCount
+  fullName: LiteEntitySystem.EntityManager.EntitiesCount
+- uid: LiteEntitySystem.EntityManager.Tick*
+  commentId: Overload:LiteEntitySystem.EntityManager.Tick
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Tick
+  name: Tick
+  nameWithType: EntityManager.Tick
+  fullName: LiteEntitySystem.EntityManager.Tick
+- uid: LiteEntitySystem.EntityManager.LerpFactor*
+  commentId: Overload:LiteEntitySystem.EntityManager.LerpFactor
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_LerpFactor
+  name: LerpFactor
+  nameWithType: EntityManager.LerpFactor
+  fullName: LiteEntitySystem.EntityManager.LerpFactor
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: LiteEntitySystem.EntityManager.UpdateMode*
+  commentId: Overload:LiteEntitySystem.EntityManager.UpdateMode
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_UpdateMode
+  name: UpdateMode
+  nameWithType: EntityManager.UpdateMode
+  fullName: LiteEntitySystem.EntityManager.UpdateMode
+- uid: LiteEntitySystem.UpdateMode
+  commentId: T:LiteEntitySystem.UpdateMode
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.UpdateMode.html
+  name: UpdateMode
+  nameWithType: UpdateMode
+  fullName: LiteEntitySystem.UpdateMode
+- uid: LiteEntitySystem.NetworkMode
+  commentId: T:LiteEntitySystem.NetworkMode
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.NetworkMode.html
+  name: NetworkMode
+  nameWithType: NetworkMode
+  fullName: LiteEntitySystem.NetworkMode
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: LiteEntitySystem.EntityManager.Tickrate*
+  commentId: Overload:LiteEntitySystem.EntityManager.Tickrate
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Tickrate
+  name: Tickrate
+  nameWithType: EntityManager.Tickrate
+  fullName: LiteEntitySystem.EntityManager.Tickrate
+- uid: LiteEntitySystem.EntityManager.DeltaTime*
+  commentId: Overload:LiteEntitySystem.EntityManager.DeltaTime
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_DeltaTime
+  name: DeltaTime
+  nameWithType: EntityManager.DeltaTime
+  fullName: LiteEntitySystem.EntityManager.DeltaTime
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: LiteEntitySystem.EntityManager.DeltaTimeF*
+  commentId: Overload:LiteEntitySystem.EntityManager.DeltaTimeF
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_DeltaTimeF
+  name: DeltaTimeF
+  nameWithType: EntityManager.DeltaTimeF
+  fullName: LiteEntitySystem.EntityManager.DeltaTimeF
+- uid: LiteEntitySystem.MaxHistorySize
+  commentId: T:LiteEntitySystem.MaxHistorySize
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.MaxHistorySize.html
+  name: MaxHistorySize
+  nameWithType: MaxHistorySize
+  fullName: LiteEntitySystem.MaxHistorySize
+- uid: LiteEntitySystem.EntityManager.PlayerId*
+  commentId: Overload:LiteEntitySystem.EntityManager.PlayerId
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_PlayerId
+  name: PlayerId
+  nameWithType: EntityManager.PlayerId
+  fullName: LiteEntitySystem.EntityManager.PlayerId
+- uid: LiteEntitySystem.EntityManager.InRollBackState*
+  commentId: Overload:LiteEntitySystem.EntityManager.InRollBackState
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_InRollBackState
+  name: InRollBackState
+  nameWithType: EntityManager.InRollBackState
+  fullName: LiteEntitySystem.EntityManager.InRollBackState
+- uid: LiteEntitySystem.EntityManager.InNormalState*
+  commentId: Overload:LiteEntitySystem.EntityManager.InNormalState
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_InNormalState
+  name: InNormalState
+  nameWithType: EntityManager.InNormalState
+  fullName: LiteEntitySystem.EntityManager.InNormalState
+- uid: LiteEntitySystem.EntityManager.VisualDeltaTime*
+  commentId: Overload:LiteEntitySystem.EntityManager.VisualDeltaTime
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_VisualDeltaTime
+  name: VisualDeltaTime
+  nameWithType: EntityManager.VisualDeltaTime
+  fullName: LiteEntitySystem.EntityManager.VisualDeltaTime
+- uid: LiteEntitySystem.Collections.AVLTree{LiteEntitySystem.Internal.InternalEntity}
+  commentId: T:LiteEntitySystem.Collections.AVLTree{LiteEntitySystem.Internal.InternalEntity}
+  parent: LiteEntitySystem.Collections
+  definition: LiteEntitySystem.Collections.AVLTree`1
+  href: LiteEntitySystem.Collections.AVLTree-1.html
+  name: AVLTree<InternalEntity>
+  nameWithType: AVLTree<InternalEntity>
+  fullName: LiteEntitySystem.Collections.AVLTree<LiteEntitySystem.Internal.InternalEntity>
+  nameWithType.vb: AVLTree(Of InternalEntity)
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of LiteEntitySystem.Internal.InternalEntity)
+  name.vb: AVLTree(Of InternalEntity)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree`1
+    name: AVLTree
+    href: LiteEntitySystem.Collections.AVLTree-1.html
+  - name: <
+  - uid: LiteEntitySystem.Internal.InternalEntity
+    name: InternalEntity
+    href: LiteEntitySystem.Internal.InternalEntity.html
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree`1
+    name: AVLTree
+    href: LiteEntitySystem.Collections.AVLTree-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.Internal.InternalEntity
+    name: InternalEntity
+    href: LiteEntitySystem.Internal.InternalEntity.html
+  - name: )
+- uid: LiteEntitySystem.Collections.AVLTree`1
+  commentId: T:LiteEntitySystem.Collections.AVLTree`1
+  parent: LiteEntitySystem.Collections
+  href: LiteEntitySystem.Collections.AVLTree-1.html
+  name: AVLTree<T>
+  nameWithType: AVLTree<T>
+  fullName: LiteEntitySystem.Collections.AVLTree<T>
+  nameWithType.vb: AVLTree(Of T)
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of T)
+  name.vb: AVLTree(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree`1
+    name: AVLTree
+    href: LiteEntitySystem.Collections.AVLTree-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree`1
+    name: AVLTree
+    href: LiteEntitySystem.Collections.AVLTree-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Collections
+  commentId: N:LiteEntitySystem.Collections
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Collections
+  nameWithType: LiteEntitySystem.Collections
+  fullName: LiteEntitySystem.Collections
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Collections
+    name: Collections
+    href: LiteEntitySystem.Collections.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Collections
+    name: Collections
+    href: LiteEntitySystem.Collections.html
+- uid: LiteEntitySystem.Collections.AVLTree{LiteEntitySystem.EntityLogic}
+  commentId: T:LiteEntitySystem.Collections.AVLTree{LiteEntitySystem.EntityLogic}
+  parent: LiteEntitySystem.Collections
+  definition: LiteEntitySystem.Collections.AVLTree`1
+  href: LiteEntitySystem.Collections.AVLTree-1.html
+  name: AVLTree<EntityLogic>
+  nameWithType: AVLTree<EntityLogic>
+  fullName: LiteEntitySystem.Collections.AVLTree<LiteEntitySystem.EntityLogic>
+  nameWithType.vb: AVLTree(Of EntityLogic)
+  fullName.vb: LiteEntitySystem.Collections.AVLTree(Of LiteEntitySystem.EntityLogic)
+  name.vb: AVLTree(Of EntityLogic)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.AVLTree`1
+    name: AVLTree
+    href: LiteEntitySystem.Collections.AVLTree-1.html
+  - name: <
+  - uid: LiteEntitySystem.EntityLogic
+    name: EntityLogic
+    href: LiteEntitySystem.EntityLogic.html
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.AVLTree`1
+    name: AVLTree
+    href: LiteEntitySystem.Collections.AVLTree-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.EntityLogic
+    name: EntityLogic
+    href: LiteEntitySystem.EntityLogic.html
+  - name: )
+- uid: LiteEntitySystem.EntityManager.IsRunning*
+  commentId: Overload:LiteEntitySystem.EntityManager.IsRunning
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_IsRunning
+  name: IsRunning
+  nameWithType: EntityManager.IsRunning
+  fullName: LiteEntitySystem.EntityManager.IsRunning
+- uid: LiteEntitySystem.EntityManager.RegisterFieldType*
+  commentId: Overload:LiteEntitySystem.EntityManager.RegisterFieldType
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_RegisterFieldType__1_LiteEntitySystem_Internal_InterpolatorDelegateWithReturn___0__
+  name: RegisterFieldType
+  nameWithType: EntityManager.RegisterFieldType
+  fullName: LiteEntitySystem.EntityManager.RegisterFieldType
+- uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{{T}}
+  commentId: T:LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{``0}
+  parent: LiteEntitySystem.Internal
+  definition: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
+  href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
+  name: InterpolatorDelegateWithReturn<T>
+  nameWithType: InterpolatorDelegateWithReturn<T>
+  fullName: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn<T>
+  nameWithType.vb: InterpolatorDelegateWithReturn(Of T)
+  fullName.vb: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn(Of T)
+  name.vb: InterpolatorDelegateWithReturn(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
+    name: InterpolatorDelegateWithReturn
+    href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
+    name: InterpolatorDelegateWithReturn
+    href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
+  commentId: T:LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
+  href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
+  name: InterpolatorDelegateWithReturn<T>
+  nameWithType: InterpolatorDelegateWithReturn<T>
+  fullName: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn<T>
+  nameWithType.vb: InterpolatorDelegateWithReturn(Of T)
+  fullName.vb: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn(Of T)
+  name.vb: InterpolatorDelegateWithReturn(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
+    name: InterpolatorDelegateWithReturn
+    href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
+    name: InterpolatorDelegateWithReturn
+    href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Internal
+  commentId: N:LiteEntitySystem.Internal
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Internal
+  nameWithType: LiteEntitySystem.Internal
+  fullName: LiteEntitySystem.Internal
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Internal
+    name: Internal
+    href: LiteEntitySystem.Internal.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Internal
+    name: Internal
+    href: LiteEntitySystem.Internal.html
+- uid: LiteEntitySystem.EntityManager.SetTickrate*
+  commentId: Overload:LiteEntitySystem.EntityManager.SetTickrate
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_SetTickrate_System_Byte_
+  name: SetTickrate
+  nameWithType: EntityManager.SetTickrate
+  fullName: LiteEntitySystem.EntityManager.SetTickrate
+- uid: LiteEntitySystem.EntityManager.#ctor*
+  commentId: Overload:LiteEntitySystem.EntityManager.#ctor
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_NetworkMode_System_Byte_LiteEntitySystem_MaxHistorySize_
+  name: EntityManager
+  nameWithType: EntityManager.EntityManager
+  fullName: LiteEntitySystem.EntityManager.EntityManager
+  nameWithType.vb: EntityManager.New
+  fullName.vb: LiteEntitySystem.EntityManager.New
+  name.vb: New
+- uid: LiteEntitySystem.EntityTypesMap
+  commentId: T:LiteEntitySystem.EntityTypesMap
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.EntityTypesMap.html
+  name: EntityTypesMap
+  nameWithType: EntityTypesMap
+  fullName: LiteEntitySystem.EntityTypesMap
+- uid: LiteEntitySystem.EntityManager.GetEntityTypeFromClassId*
+  commentId: Overload:LiteEntitySystem.EntityManager.GetEntityTypeFromClassId
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetEntityTypeFromClassId_System_UInt16_
+  name: GetEntityTypeFromClassId
+  nameWithType: EntityManager.GetEntityTypeFromClassId
+  fullName: LiteEntitySystem.EntityManager.GetEntityTypeFromClassId
+- uid: System.Type
+  commentId: T:System.Type
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type
+  nameWithType: Type
+  fullName: System.Type
+- uid: LiteEntitySystem.EntityManager.GetEntitySyncVarInfo*
+  commentId: Overload:LiteEntitySystem.EntityManager.GetEntitySyncVarInfo
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetEntitySyncVarInfo_LiteEntitySystem_Internal_InternalEntity_LiteEntitySystem_IEntitySyncVarInfoPrinter_
+  name: GetEntitySyncVarInfo
+  nameWithType: EntityManager.GetEntitySyncVarInfo
+  fullName: LiteEntitySystem.EntityManager.GetEntitySyncVarInfo
+- uid: LiteEntitySystem.Internal.InternalEntity
+  commentId: T:LiteEntitySystem.Internal.InternalEntity
+  parent: LiteEntitySystem.Internal
+  href: LiteEntitySystem.Internal.InternalEntity.html
+  name: InternalEntity
+  nameWithType: InternalEntity
+  fullName: LiteEntitySystem.Internal.InternalEntity
+- uid: LiteEntitySystem.IEntitySyncVarInfoPrinter
+  commentId: T:LiteEntitySystem.IEntitySyncVarInfoPrinter
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.IEntitySyncVarInfoPrinter.html
+  name: IEntitySyncVarInfoPrinter
+  nameWithType: IEntitySyncVarInfoPrinter
+  fullName: LiteEntitySystem.IEntitySyncVarInfoPrinter
+- uid: LiteEntitySystem.EntityManager.Reset*
+  commentId: Overload:LiteEntitySystem.EntityManager.Reset
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Reset
+  name: Reset
+  nameWithType: EntityManager.Reset
+  fullName: LiteEntitySystem.EntityManager.Reset
+- uid: LiteEntitySystem.EntityManager.GetEntityById*
+  commentId: Overload:LiteEntitySystem.EntityManager.GetEntityById
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetEntityById__1_LiteEntitySystem_EntitySharedReference_
+  name: GetEntityById
+  nameWithType: EntityManager.GetEntityById
+  fullName: LiteEntitySystem.EntityManager.GetEntityById
+- uid: LiteEntitySystem.EntitySharedReference
+  commentId: T:LiteEntitySystem.EntitySharedReference
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.EntitySharedReference.html
+  name: EntitySharedReference
+  nameWithType: EntitySharedReference
+  fullName: LiteEntitySystem.EntitySharedReference
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: LiteEntitySystem.EntityManager.TryGetEntityById*
+  commentId: Overload:LiteEntitySystem.EntityManager.TryGetEntityById
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_TryGetEntityById__1_LiteEntitySystem_EntitySharedReference___0__
+  name: TryGetEntityById
+  nameWithType: EntityManager.TryGetEntityById
+  fullName: LiteEntitySystem.EntityManager.TryGetEntityById
+- uid: LiteEntitySystem.EntityManager.GetEntities*
+  commentId: Overload:LiteEntitySystem.EntityManager.GetEntities
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetEntities__1
+  name: GetEntities
+  nameWithType: EntityManager.GetEntities
+  fullName: LiteEntitySystem.EntityManager.GetEntities
+- uid: LiteEntitySystem.EntityFilter{{T}}
+  commentId: T:LiteEntitySystem.EntityFilter{``0}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.EntityFilter`1
+  href: LiteEntitySystem.EntityFilter-1.html
+  name: EntityFilter<T>
+  nameWithType: EntityFilter<T>
+  fullName: LiteEntitySystem.EntityFilter<T>
+  nameWithType.vb: EntityFilter(Of T)
+  fullName.vb: LiteEntitySystem.EntityFilter(Of T)
+  name.vb: EntityFilter(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.EntityFilter`1
+    name: EntityFilter
+    href: LiteEntitySystem.EntityFilter-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.EntityFilter`1
+    name: EntityFilter
+    href: LiteEntitySystem.EntityFilter-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.EntityFilter`1
+  commentId: T:LiteEntitySystem.EntityFilter`1
+  href: LiteEntitySystem.EntityFilter-1.html
+  name: EntityFilter<T>
+  nameWithType: EntityFilter<T>
+  fullName: LiteEntitySystem.EntityFilter<T>
+  nameWithType.vb: EntityFilter(Of T)
+  fullName.vb: LiteEntitySystem.EntityFilter(Of T)
+  name.vb: EntityFilter(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.EntityFilter`1
+    name: EntityFilter
+    href: LiteEntitySystem.EntityFilter-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.EntityFilter`1
+    name: EntityFilter
+    href: LiteEntitySystem.EntityFilter-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.EntityManager.GetControllers*
+  commentId: Overload:LiteEntitySystem.EntityManager.GetControllers
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetControllers__1
+  name: GetControllers
+  nameWithType: EntityManager.GetControllers
+  fullName: LiteEntitySystem.EntityManager.GetControllers
+- uid: LiteEntitySystem.EntityManager.GetSingleton*
+  commentId: Overload:LiteEntitySystem.EntityManager.GetSingleton
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetSingleton__1
+  name: GetSingleton
+  nameWithType: EntityManager.GetSingleton
+  fullName: LiteEntitySystem.EntityManager.GetSingleton
+- uid: LiteEntitySystem.EntityManager.HasSingleton*
+  commentId: Overload:LiteEntitySystem.EntityManager.HasSingleton
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_HasSingleton__1
+  name: HasSingleton
+  nameWithType: EntityManager.HasSingleton
+  fullName: LiteEntitySystem.EntityManager.HasSingleton
+- uid: LiteEntitySystem.EntityManager.AddLocalSingleton*
+  commentId: Overload:LiteEntitySystem.EntityManager.AddLocalSingleton
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_AddLocalSingleton__1___0_
+  name: AddLocalSingleton
+  nameWithType: EntityManager.AddLocalSingleton
+  fullName: LiteEntitySystem.EntityManager.AddLocalSingleton
+- uid: LiteEntitySystem.EntityManager.GetLocalSingleton*
+  commentId: Overload:LiteEntitySystem.EntityManager.GetLocalSingleton
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetLocalSingleton__1
+  name: GetLocalSingleton
+  nameWithType: EntityManager.GetLocalSingleton
+  fullName: LiteEntitySystem.EntityManager.GetLocalSingleton
+- uid: LiteEntitySystem.EntityManager.TryGetLocalSingleton*
+  commentId: Overload:LiteEntitySystem.EntityManager.TryGetLocalSingleton
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_TryGetLocalSingleton__1___0__
+  name: TryGetLocalSingleton
+  nameWithType: EntityManager.TryGetLocalSingleton
+  fullName: LiteEntitySystem.EntityManager.TryGetLocalSingleton
+- uid: LiteEntitySystem.EntityManager.TryGetSingleton*
+  commentId: Overload:LiteEntitySystem.EntityManager.TryGetSingleton
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_TryGetSingleton__1___0__
+  name: TryGetSingleton
+  nameWithType: EntityManager.TryGetSingleton
+  fullName: LiteEntitySystem.EntityManager.TryGetSingleton
+- uid: LiteEntitySystem.EntityManager.AddEntity*
+  commentId: Overload:LiteEntitySystem.EntityManager.AddEntity
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_AddEntity__1_LiteEntitySystem_EntityParams_
+  name: AddEntity
+  nameWithType: EntityManager.AddEntity
+  fullName: LiteEntitySystem.EntityManager.AddEntity
+- uid: LiteEntitySystem.EntityParams
+  commentId: T:LiteEntitySystem.EntityParams
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.EntityParams.html
+  name: EntityParams
+  nameWithType: EntityParams
+  fullName: LiteEntitySystem.EntityParams
+- uid: LiteEntitySystem.EntityManager.ConstructEntity*
+  commentId: Overload:LiteEntitySystem.EntityManager.ConstructEntity
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_ConstructEntity_LiteEntitySystem_Internal_InternalEntity_
+  name: ConstructEntity
+  nameWithType: EntityManager.ConstructEntity
+  fullName: LiteEntitySystem.EntityManager.ConstructEntity
+- uid: LiteEntitySystem.EntityManager.OnAliveEntityAdded*
+  commentId: Overload:LiteEntitySystem.EntityManager.OnAliveEntityAdded
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_OnAliveEntityAdded_LiteEntitySystem_Internal_InternalEntity_
+  name: OnAliveEntityAdded
+  nameWithType: EntityManager.OnAliveEntityAdded
+  fullName: LiteEntitySystem.EntityManager.OnAliveEntityAdded
+- uid: LiteEntitySystem.EntityManager.IsEntityLagCompensated*
+  commentId: Overload:LiteEntitySystem.EntityManager.IsEntityLagCompensated
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_IsEntityLagCompensated_LiteEntitySystem_Internal_InternalEntity_
+  name: IsEntityLagCompensated
+  nameWithType: EntityManager.IsEntityLagCompensated
+  fullName: LiteEntitySystem.EntityManager.IsEntityLagCompensated
+- uid: LiteEntitySystem.EntityManager.RemoveEntity*
+  commentId: Overload:LiteEntitySystem.EntityManager.RemoveEntity
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_RemoveEntity_LiteEntitySystem_Internal_InternalEntity_
+  name: RemoveEntity
+  nameWithType: EntityManager.RemoveEntity
+  fullName: LiteEntitySystem.EntityManager.RemoveEntity
+- uid: LiteEntitySystem.EntityManager.EnableLagCompensation*
+  commentId: Overload:LiteEntitySystem.EntityManager.EnableLagCompensation
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_EnableLagCompensation_LiteEntitySystem_NetPlayer_
+  name: EnableLagCompensation
+  nameWithType: EntityManager.EnableLagCompensation
+  fullName: LiteEntitySystem.EntityManager.EnableLagCompensation
+- uid: LiteEntitySystem.NetPlayer
+  commentId: T:LiteEntitySystem.NetPlayer
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.NetPlayer.html
+  name: NetPlayer
+  nameWithType: NetPlayer
+  fullName: LiteEntitySystem.NetPlayer
+- uid: LiteEntitySystem.EntityManager.DisableLagCompensation*
+  commentId: Overload:LiteEntitySystem.EntityManager.DisableLagCompensation
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_DisableLagCompensation
+  name: DisableLagCompensation
+  nameWithType: EntityManager.DisableLagCompensation
+  fullName: LiteEntitySystem.EntityManager.DisableLagCompensation
+- uid: LiteEntitySystem.EntityManager.ExecuteLateConstruct*
+  commentId: Overload:LiteEntitySystem.EntityManager.ExecuteLateConstruct
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_ExecuteLateConstruct
+  name: ExecuteLateConstruct
+  nameWithType: EntityManager.ExecuteLateConstruct
+  fullName: LiteEntitySystem.EntityManager.ExecuteLateConstruct
+- uid: LiteEntitySystem.EntityManager.OnLogicTick*
+  commentId: Overload:LiteEntitySystem.EntityManager.OnLogicTick
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_OnLogicTick
+  name: OnLogicTick
+  nameWithType: EntityManager.OnLogicTick
+  fullName: LiteEntitySystem.EntityManager.OnLogicTick
+- uid: LiteEntitySystem.EntityManager.Update*
+  commentId: Overload:LiteEntitySystem.EntityManager.Update
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Update
+  name: Update
+  nameWithType: EntityManager.Update
+  fullName: LiteEntitySystem.EntityManager.Update

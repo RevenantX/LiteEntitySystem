@@ -116,7 +116,6 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="syncVar">Variable to bind</param>
         /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
-        /// <param name="executionOrder">order of execution</param>
         public void BindOnChange<T, TEntity>(ref SyncVar<T> syncVar, Action<TEntity, T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
         {
             _fields[syncVar.FieldId].OnSync = RemoteCall<T>.CreateMCD(onChangedAction);
@@ -128,7 +127,6 @@ namespace LiteEntitySystem
         /// <param name="self">Target entity for binding</param>
         /// <param name="syncVar">Variable to bind</param>
         /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
-        /// <param name="executionOrder">order of execution</param>
         public void BindOnChange<T, TEntity>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
         {
             CheckTarget(self, onChangedAction.Target);

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
 
@@ -79,7 +79,7 @@
   <h5 id="LiteEntitySystem_ExecuteFlags_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[Flags]
-public enum ExecuteFlags : byte</code></pre>
+public enum ExecuteFlags : ushort</code></pre>
   </div>
   <h3 id="fields">Fields
 </h3>
@@ -107,6 +107,10 @@ public enum ExecuteFlags : byte</code></pre>
 </td>
       </tr>
       <tr>
+        <td id="LiteEntitySystem_ExecuteFlags_None">None</td>
+        <td></td>
+      </tr>
+      <tr>
         <td id="LiteEntitySystem_ExecuteFlags_SendToAll">SendToAll</td>
         <td><p>Execute RPC for all players</p>
 </td>
@@ -119,6 +123,31 @@ public enum ExecuteFlags : byte</code></pre>
       <tr>
         <td id="LiteEntitySystem_ExecuteFlags_SendToOwner">SendToOwner</td>
         <td><p>Execute RPC for owner of entity</p>
+</td>
+      </tr>
+      <tr>
+        <td id="LiteEntitySystem_ExecuteFlags_SyncGroup1">SyncGroup1</td>
+        <td><p>Toggleable sync group 1. Can include SyncVars and RPCs.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="LiteEntitySystem_ExecuteFlags_SyncGroup2">SyncGroup2</td>
+        <td><p>Toggleable sync group 2. Can include SyncVars and RPCs.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="LiteEntitySystem_ExecuteFlags_SyncGroup3">SyncGroup3</td>
+        <td><p>Toggleable sync group 3. Can include SyncVars and RPCs.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="LiteEntitySystem_ExecuteFlags_SyncGroup4">SyncGroup4</td>
+        <td><p>Toggleable sync group 4. Can include SyncVars and RPCs.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="LiteEntitySystem_ExecuteFlags_SyncGroup5">SyncGroup5</td>
+        <td><p>Toggleable sync group 5. Can include SyncVars and RPCs.</p>
 </td>
       </tr>
     </tbody>

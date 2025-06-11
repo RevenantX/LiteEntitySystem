@@ -1,0 +1,32 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.RemoteCallSerializable`1
+  commentId: T:LiteEntitySystem.RemoteCallSerializable`1
+  id: RemoteCallSerializable`1
+  parent: LiteEntitySystem
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: RemoteCallSerializable<T>
+  nameWithType: RemoteCallSerializable<T>
+  fullName: LiteEntitySystem.RemoteCallSerializable<T>
+  type: Struct
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public readonly struct RemoteCallSerializable<T> where T : struct, ISpanSerializable'
+    typeParameters:
+    - id: T
+    content.vb: Public Structure RemoteCallSerializable(Of T As {Structure, ISpanSerializable})
+  nameWithType.vb: RemoteCallSerializable(Of T)
+  fullName.vb: LiteEntitySystem.RemoteCallSerializable(Of T)
+  name.vb: RemoteCallSerializable(Of T)
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem

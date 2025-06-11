@@ -1,0 +1,548 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.SyncFlags
+  commentId: T:LiteEntitySystem.SyncFlags
+  id: SyncFlags
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.SyncFlags.AlwaysRollback
+  - LiteEntitySystem.SyncFlags.Interpolated
+  - LiteEntitySystem.SyncFlags.LagCompensated
+  - LiteEntitySystem.SyncFlags.NeverRollBack
+  - LiteEntitySystem.SyncFlags.None
+  - LiteEntitySystem.SyncFlags.OnlyForOtherPlayers
+  - LiteEntitySystem.SyncFlags.OnlyForOwner
+  - LiteEntitySystem.SyncFlags.SyncGroup1
+  - LiteEntitySystem.SyncFlags.SyncGroup2
+  - LiteEntitySystem.SyncFlags.SyncGroup3
+  - LiteEntitySystem.SyncFlags.SyncGroup4
+  - LiteEntitySystem.SyncFlags.SyncGroup5
+  langs:
+  - csharp
+  - vb
+  name: SyncFlags
+  nameWithType: SyncFlags
+  fullName: LiteEntitySystem.SyncFlags
+  type: Enum
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Synchronization flags.
+  example: []
+  syntax:
+    content: >-
+      [Flags]
+
+      public enum SyncFlags : ushort
+    content.vb: >-
+      <Flags>
+
+      Public Enum SyncFlags As UShort
+  extensionMethods:
+  - LiteEntitySystem.SyncFlags.LiteEntitySystem.Utils.GetEnumValueInt``1
+  - LiteEntitySystem.SyncFlags.LiteEntitySystem.Utils.GetEnumValue``1
+  - LiteEntitySystem.SyncFlags.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.SyncFlags)
+  attributes:
+  - type: System.FlagsAttribute
+    ctor: System.FlagsAttribute.#ctor
+    arguments: []
+- uid: LiteEntitySystem.SyncFlags.None
+  commentId: F:LiteEntitySystem.SyncFlags.None
+  id: None
+  parent: LiteEntitySystem.SyncFlags
+  langs:
+  - csharp
+  - vb
+  name: None
+  nameWithType: SyncFlags.None
+  fullName: LiteEntitySystem.SyncFlags.None
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: None = 0
+    return:
+      type: LiteEntitySystem.SyncFlags
+- uid: LiteEntitySystem.SyncFlags.Interpolated
+  commentId: F:LiteEntitySystem.SyncFlags.Interpolated
+  id: Interpolated
+  parent: LiteEntitySystem.SyncFlags
+  langs:
+  - csharp
+  - vb
+  name: Interpolated
+  nameWithType: SyncFlags.Interpolated
+  fullName: LiteEntitySystem.SyncFlags.Interpolated
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: >-
+    Is value interpolated inside VisualUpdate and in LagCompensation checks
+
+    best use for Position, Rotation
+  example: []
+  syntax:
+    content: Interpolated = 1
+    return:
+      type: LiteEntitySystem.SyncFlags
+- uid: LiteEntitySystem.SyncFlags.LagCompensated
+  commentId: F:LiteEntitySystem.SyncFlags.LagCompensated
+  id: LagCompensated
+  parent: LiteEntitySystem.SyncFlags
+  langs:
+  - csharp
+  - vb
+  name: LagCompensated
+  nameWithType: SyncFlags.LagCompensated
+  fullName: LiteEntitySystem.SyncFlags.LagCompensated
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: >-
+    Is value lag compensated (returned in history) when EnableLagCompensation called
+
+    for hit checks on server and on client in rollback state
+  example: []
+  syntax:
+    content: LagCompensated = 2
+    return:
+      type: LiteEntitySystem.SyncFlags
+- uid: LiteEntitySystem.SyncFlags.OnlyForOtherPlayers
+  commentId: F:LiteEntitySystem.SyncFlags.OnlyForOtherPlayers
+  id: OnlyForOtherPlayers
+  parent: LiteEntitySystem.SyncFlags
+  langs:
+  - csharp
+  - vb
+  name: OnlyForOtherPlayers
+  nameWithType: SyncFlags.OnlyForOtherPlayers
+  fullName: LiteEntitySystem.SyncFlags.OnlyForOtherPlayers
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Value synchronized only for non owners
+  example: []
+  syntax:
+    content: OnlyForOtherPlayers = 4
+    return:
+      type: LiteEntitySystem.SyncFlags
+- uid: LiteEntitySystem.SyncFlags.OnlyForOwner
+  commentId: F:LiteEntitySystem.SyncFlags.OnlyForOwner
+  id: OnlyForOwner
+  parent: LiteEntitySystem.SyncFlags
+  langs:
+  - csharp
+  - vb
+  name: OnlyForOwner
+  nameWithType: SyncFlags.OnlyForOwner
+  fullName: LiteEntitySystem.SyncFlags.OnlyForOwner
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Value synchronized only for owner
+  example: []
+  syntax:
+    content: OnlyForOwner = 8
+    return:
+      type: LiteEntitySystem.SyncFlags
+- uid: LiteEntitySystem.SyncFlags.AlwaysRollback
+  commentId: F:LiteEntitySystem.SyncFlags.AlwaysRollback
+  id: AlwaysRollback
+  parent: LiteEntitySystem.SyncFlags
+  langs:
+  - csharp
+  - vb
+  name: AlwaysRollback
+  nameWithType: SyncFlags.AlwaysRollback
+  fullName: LiteEntitySystem.SyncFlags.AlwaysRollback
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: >-
+    Always rollback value even when entity is not owned
+
+    useful for enemy health and damage prediction
+  example: []
+  syntax:
+    content: AlwaysRollback = 16
+    return:
+      type: LiteEntitySystem.SyncFlags
+- uid: LiteEntitySystem.SyncFlags.NeverRollBack
+  commentId: F:LiteEntitySystem.SyncFlags.NeverRollBack
+  id: NeverRollBack
+  parent: LiteEntitySystem.SyncFlags
+  langs:
+  - csharp
+  - vb
+  name: NeverRollBack
+  nameWithType: SyncFlags.NeverRollBack
+  fullName: LiteEntitySystem.SyncFlags.NeverRollBack
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Never rollback value even when entity is owned
+  example: []
+  syntax:
+    content: NeverRollBack = 32
+    return:
+      type: LiteEntitySystem.SyncFlags
+- uid: LiteEntitySystem.SyncFlags.SyncGroup1
+  commentId: F:LiteEntitySystem.SyncFlags.SyncGroup1
+  id: SyncGroup1
+  parent: LiteEntitySystem.SyncFlags
+  langs:
+  - csharp
+  - vb
+  name: SyncGroup1
+  nameWithType: SyncFlags.SyncGroup1
+  fullName: LiteEntitySystem.SyncFlags.SyncGroup1
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Toggleable sync group 1. Can include SyncVars and RPCs.
+  example: []
+  syntax:
+    content: SyncGroup1 = 64
+    return:
+      type: LiteEntitySystem.SyncFlags
+- uid: LiteEntitySystem.SyncFlags.SyncGroup2
+  commentId: F:LiteEntitySystem.SyncFlags.SyncGroup2
+  id: SyncGroup2
+  parent: LiteEntitySystem.SyncFlags
+  langs:
+  - csharp
+  - vb
+  name: SyncGroup2
+  nameWithType: SyncFlags.SyncGroup2
+  fullName: LiteEntitySystem.SyncFlags.SyncGroup2
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Toggleable sync group 2. Can include SyncVars and RPCs.
+  example: []
+  syntax:
+    content: SyncGroup2 = 128
+    return:
+      type: LiteEntitySystem.SyncFlags
+- uid: LiteEntitySystem.SyncFlags.SyncGroup3
+  commentId: F:LiteEntitySystem.SyncFlags.SyncGroup3
+  id: SyncGroup3
+  parent: LiteEntitySystem.SyncFlags
+  langs:
+  - csharp
+  - vb
+  name: SyncGroup3
+  nameWithType: SyncFlags.SyncGroup3
+  fullName: LiteEntitySystem.SyncFlags.SyncGroup3
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Toggleable sync group 3. Can include SyncVars and RPCs.
+  example: []
+  syntax:
+    content: SyncGroup3 = 256
+    return:
+      type: LiteEntitySystem.SyncFlags
+- uid: LiteEntitySystem.SyncFlags.SyncGroup4
+  commentId: F:LiteEntitySystem.SyncFlags.SyncGroup4
+  id: SyncGroup4
+  parent: LiteEntitySystem.SyncFlags
+  langs:
+  - csharp
+  - vb
+  name: SyncGroup4
+  nameWithType: SyncFlags.SyncGroup4
+  fullName: LiteEntitySystem.SyncFlags.SyncGroup4
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Toggleable sync group 4. Can include SyncVars and RPCs.
+  example: []
+  syntax:
+    content: SyncGroup4 = 512
+    return:
+      type: LiteEntitySystem.SyncFlags
+- uid: LiteEntitySystem.SyncFlags.SyncGroup5
+  commentId: F:LiteEntitySystem.SyncFlags.SyncGroup5
+  id: SyncGroup5
+  parent: LiteEntitySystem.SyncFlags
+  langs:
+  - csharp
+  - vb
+  name: SyncGroup5
+  nameWithType: SyncFlags.SyncGroup5
+  fullName: LiteEntitySystem.SyncFlags.SyncGroup5
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Toggleable sync group 5. Can include SyncVars and RPCs.
+  example: []
+  syntax:
+    content: SyncGroup5 = 1024
+    return:
+      type: LiteEntitySystem.SyncFlags
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: LiteEntitySystem.SyncFlags.LiteEntitySystem.Utils.GetEnumValueInt``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<SyncFlags>(SyncFlags)
+  nameWithType: Utils.GetEnumValueInt<SyncFlags>(SyncFlags)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<LiteEntitySystem.SyncFlags>(LiteEntitySystem.SyncFlags)
+  nameWithType.vb: Utils.GetEnumValueInt(Of SyncFlags)(SyncFlags)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of LiteEntitySystem.SyncFlags)(LiteEntitySystem.SyncFlags)
+  name.vb: GetEnumValueInt(Of SyncFlags)(SyncFlags)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.SyncFlags)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - uid: LiteEntitySystem.SyncFlags
+    name: SyncFlags
+    href: LiteEntitySystem.SyncFlags.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.SyncFlags
+    name: SyncFlags
+    href: LiteEntitySystem.SyncFlags.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.SyncFlags)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.SyncFlags
+    name: SyncFlags
+    href: LiteEntitySystem.SyncFlags.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.SyncFlags
+    name: SyncFlags
+    href: LiteEntitySystem.SyncFlags.html
+  - name: )
+- uid: LiteEntitySystem.SyncFlags.LiteEntitySystem.Utils.GetEnumValue``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<SyncFlags>(SyncFlags)
+  nameWithType: Utils.GetEnumValue<SyncFlags>(SyncFlags)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<LiteEntitySystem.SyncFlags>(LiteEntitySystem.SyncFlags)
+  nameWithType.vb: Utils.GetEnumValue(Of SyncFlags)(SyncFlags)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of LiteEntitySystem.SyncFlags)(LiteEntitySystem.SyncFlags)
+  name.vb: GetEnumValue(Of SyncFlags)(SyncFlags)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.SyncFlags)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - uid: LiteEntitySystem.SyncFlags
+    name: SyncFlags
+    href: LiteEntitySystem.SyncFlags.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.SyncFlags
+    name: SyncFlags
+    href: LiteEntitySystem.SyncFlags.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.SyncFlags)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.SyncFlags
+    name: SyncFlags
+    href: LiteEntitySystem.SyncFlags.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.SyncFlags
+    name: SyncFlags
+    href: LiteEntitySystem.SyncFlags.html
+  - name: )
+- uid: LiteEntitySystem.SyncFlags.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.SyncFlags)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<SyncFlags>(SyncFlags, SyncFlags)
+  nameWithType: Utils.HasFlagFast<SyncFlags>(SyncFlags, SyncFlags)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<LiteEntitySystem.SyncFlags>(LiteEntitySystem.SyncFlags, LiteEntitySystem.SyncFlags)
+  nameWithType.vb: Utils.HasFlagFast(Of SyncFlags)(SyncFlags, SyncFlags)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of LiteEntitySystem.SyncFlags)(LiteEntitySystem.SyncFlags, LiteEntitySystem.SyncFlags)
+  name.vb: HasFlagFast(Of SyncFlags)(SyncFlags, SyncFlags)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.SyncFlags,LiteEntitySystem.SyncFlags)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - uid: LiteEntitySystem.SyncFlags
+    name: SyncFlags
+    href: LiteEntitySystem.SyncFlags.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.SyncFlags
+    name: SyncFlags
+    href: LiteEntitySystem.SyncFlags.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.SyncFlags
+    name: SyncFlags
+    href: LiteEntitySystem.SyncFlags.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.SyncFlags,LiteEntitySystem.SyncFlags)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.SyncFlags
+    name: SyncFlags
+    href: LiteEntitySystem.SyncFlags.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.SyncFlags
+    name: SyncFlags
+    href: LiteEntitySystem.SyncFlags.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.SyncFlags
+    name: SyncFlags
+    href: LiteEntitySystem.SyncFlags.html
+  - name: )
+- uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<T>(T)
+  nameWithType: Utils.GetEnumValueInt<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<T>(T)
+  nameWithType.vb: Utils.GetEnumValueInt(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of T)(T)
+  name.vb: GetEnumValueInt(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils
+  commentId: T:LiteEntitySystem.Utils
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.Utils.html
+  name: Utils
+  nameWithType: Utils
+  fullName: LiteEntitySystem.Utils
+- uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<T>(T)
+  nameWithType: Utils.GetEnumValue<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<T>(T)
+  nameWithType.vb: Utils.GetEnumValue(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of T)(T)
+  name.vb: GetEnumValue(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<T>(T, T)
+  nameWithType: Utils.HasFlagFast<T>(T, T)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<T>(T, T)
+  nameWithType.vb: Utils.HasFlagFast(Of T)(T, T)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of T)(T, T)
+  name.vb: HasFlagFast(Of T)(T, T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.SyncFlags
+  commentId: T:LiteEntitySystem.SyncFlags
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.SyncFlags.html
+  name: SyncFlags
+  nameWithType: SyncFlags
+  fullName: LiteEntitySystem.SyncFlags

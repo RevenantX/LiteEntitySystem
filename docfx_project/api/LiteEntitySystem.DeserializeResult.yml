@@ -1,0 +1,334 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.DeserializeResult
+  commentId: T:LiteEntitySystem.DeserializeResult
+  id: DeserializeResult
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.DeserializeResult.Done
+  - LiteEntitySystem.DeserializeResult.Error
+  - LiteEntitySystem.DeserializeResult.HeaderCheckFailed
+  langs:
+  - csharp
+  - vb
+  name: DeserializeResult
+  nameWithType: DeserializeResult
+  fullName: LiteEntitySystem.DeserializeResult
+  type: Enum
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public enum DeserializeResult
+    content.vb: Public Enum DeserializeResult
+  extensionMethods:
+  - LiteEntitySystem.DeserializeResult.LiteEntitySystem.Utils.GetEnumValueInt``1
+  - LiteEntitySystem.DeserializeResult.LiteEntitySystem.Utils.GetEnumValue``1
+  - LiteEntitySystem.DeserializeResult.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.DeserializeResult)
+- uid: LiteEntitySystem.DeserializeResult.Done
+  commentId: F:LiteEntitySystem.DeserializeResult.Done
+  id: Done
+  parent: LiteEntitySystem.DeserializeResult
+  langs:
+  - csharp
+  - vb
+  name: Done
+  nameWithType: DeserializeResult.Done
+  fullName: LiteEntitySystem.DeserializeResult.Done
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: Done = 0
+    return:
+      type: LiteEntitySystem.DeserializeResult
+- uid: LiteEntitySystem.DeserializeResult.Error
+  commentId: F:LiteEntitySystem.DeserializeResult.Error
+  id: Error
+  parent: LiteEntitySystem.DeserializeResult
+  langs:
+  - csharp
+  - vb
+  name: Error
+  nameWithType: DeserializeResult.Error
+  fullName: LiteEntitySystem.DeserializeResult.Error
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: Error = 1
+    return:
+      type: LiteEntitySystem.DeserializeResult
+- uid: LiteEntitySystem.DeserializeResult.HeaderCheckFailed
+  commentId: F:LiteEntitySystem.DeserializeResult.HeaderCheckFailed
+  id: HeaderCheckFailed
+  parent: LiteEntitySystem.DeserializeResult
+  langs:
+  - csharp
+  - vb
+  name: HeaderCheckFailed
+  nameWithType: DeserializeResult.HeaderCheckFailed
+  fullName: LiteEntitySystem.DeserializeResult.HeaderCheckFailed
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: HeaderCheckFailed = 2
+    return:
+      type: LiteEntitySystem.DeserializeResult
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: LiteEntitySystem.DeserializeResult.LiteEntitySystem.Utils.GetEnumValueInt``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<DeserializeResult>(DeserializeResult)
+  nameWithType: Utils.GetEnumValueInt<DeserializeResult>(DeserializeResult)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<LiteEntitySystem.DeserializeResult>(LiteEntitySystem.DeserializeResult)
+  nameWithType.vb: Utils.GetEnumValueInt(Of DeserializeResult)(DeserializeResult)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of LiteEntitySystem.DeserializeResult)(LiteEntitySystem.DeserializeResult)
+  name.vb: GetEnumValueInt(Of DeserializeResult)(DeserializeResult)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.DeserializeResult)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - uid: LiteEntitySystem.DeserializeResult
+    name: DeserializeResult
+    href: LiteEntitySystem.DeserializeResult.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.DeserializeResult
+    name: DeserializeResult
+    href: LiteEntitySystem.DeserializeResult.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(LiteEntitySystem.DeserializeResult)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.DeserializeResult
+    name: DeserializeResult
+    href: LiteEntitySystem.DeserializeResult.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.DeserializeResult
+    name: DeserializeResult
+    href: LiteEntitySystem.DeserializeResult.html
+  - name: )
+- uid: LiteEntitySystem.DeserializeResult.LiteEntitySystem.Utils.GetEnumValue``1
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<DeserializeResult>(DeserializeResult)
+  nameWithType: Utils.GetEnumValue<DeserializeResult>(DeserializeResult)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<LiteEntitySystem.DeserializeResult>(LiteEntitySystem.DeserializeResult)
+  nameWithType.vb: Utils.GetEnumValue(Of DeserializeResult)(DeserializeResult)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of LiteEntitySystem.DeserializeResult)(LiteEntitySystem.DeserializeResult)
+  name.vb: GetEnumValue(Of DeserializeResult)(DeserializeResult)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.DeserializeResult)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - uid: LiteEntitySystem.DeserializeResult
+    name: DeserializeResult
+    href: LiteEntitySystem.DeserializeResult.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.DeserializeResult
+    name: DeserializeResult
+    href: LiteEntitySystem.DeserializeResult.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(LiteEntitySystem.DeserializeResult)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.DeserializeResult
+    name: DeserializeResult
+    href: LiteEntitySystem.DeserializeResult.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.DeserializeResult
+    name: DeserializeResult
+    href: LiteEntitySystem.DeserializeResult.html
+  - name: )
+- uid: LiteEntitySystem.DeserializeResult.LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.DeserializeResult)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  parent: LiteEntitySystem.Utils
+  definition: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<DeserializeResult>(DeserializeResult, DeserializeResult)
+  nameWithType: Utils.HasFlagFast<DeserializeResult>(DeserializeResult, DeserializeResult)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<LiteEntitySystem.DeserializeResult>(LiteEntitySystem.DeserializeResult, LiteEntitySystem.DeserializeResult)
+  nameWithType.vb: Utils.HasFlagFast(Of DeserializeResult)(DeserializeResult, DeserializeResult)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of LiteEntitySystem.DeserializeResult)(LiteEntitySystem.DeserializeResult, LiteEntitySystem.DeserializeResult)
+  name.vb: HasFlagFast(Of DeserializeResult)(DeserializeResult, DeserializeResult)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.DeserializeResult,LiteEntitySystem.DeserializeResult)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - uid: LiteEntitySystem.DeserializeResult
+    name: DeserializeResult
+    href: LiteEntitySystem.DeserializeResult.html
+  - name: '>'
+  - name: (
+  - uid: LiteEntitySystem.DeserializeResult
+    name: DeserializeResult
+    href: LiteEntitySystem.DeserializeResult.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.DeserializeResult
+    name: DeserializeResult
+    href: LiteEntitySystem.DeserializeResult.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(LiteEntitySystem.DeserializeResult,LiteEntitySystem.DeserializeResult)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.DeserializeResult
+    name: DeserializeResult
+    href: LiteEntitySystem.DeserializeResult.html
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.DeserializeResult
+    name: DeserializeResult
+    href: LiteEntitySystem.DeserializeResult.html
+  - name: ','
+  - name: " "
+  - uid: LiteEntitySystem.DeserializeResult
+    name: DeserializeResult
+    href: LiteEntitySystem.DeserializeResult.html
+  - name: )
+- uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  name: GetEnumValueInt<T>(T)
+  nameWithType: Utils.GetEnumValueInt<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValueInt<T>(T)
+  nameWithType.vb: Utils.GetEnumValueInt(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValueInt(Of T)(T)
+  name.vb: GetEnumValueInt(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValueInt``1(``0)
+    name: GetEnumValueInt
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils
+  commentId: T:LiteEntitySystem.Utils
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.Utils.html
+  name: Utils
+  nameWithType: Utils
+  fullName: LiteEntitySystem.Utils
+- uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  commentId: M:LiteEntitySystem.Utils.GetEnumValue``1(``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  name: GetEnumValue<T>(T)
+  nameWithType: Utils.GetEnumValue<T>(T)
+  fullName: LiteEntitySystem.Utils.GetEnumValue<T>(T)
+  nameWithType.vb: Utils.GetEnumValue(Of T)(T)
+  fullName.vb: LiteEntitySystem.Utils.GetEnumValue(Of T)(T)
+  name.vb: GetEnumValue(Of T)(T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.GetEnumValue``1(``0)
+    name: GetEnumValue
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  commentId: M:LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  name: HasFlagFast<T>(T, T)
+  nameWithType: Utils.HasFlagFast<T>(T, T)
+  fullName: LiteEntitySystem.Utils.HasFlagFast<T>(T, T)
+  nameWithType.vb: Utils.HasFlagFast(Of T)(T, T)
+  fullName.vb: LiteEntitySystem.Utils.HasFlagFast(Of T)(T, T)
+  name.vb: HasFlagFast(Of T)(T, T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Utils.HasFlagFast``1(``0,``0)
+    name: HasFlagFast
+    href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.DeserializeResult
+  commentId: T:LiteEntitySystem.DeserializeResult
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.DeserializeResult.html
+  name: DeserializeResult
+  nameWithType: DeserializeResult
+  fullName: LiteEntitySystem.DeserializeResult

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
 
@@ -75,7 +75,7 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
     <div class="level2"><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></div>
     <div class="level3"><a class="xref" href="LiteEntitySystem.ControllerLogic.html">ControllerLogic</a></div>
@@ -152,10 +152,16 @@
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsSingleton">InternalEntity.IsSingleton</a>
     </div>
     <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsConstructed">InternalEntity.IsConstructed</a>
+    </div>
+    <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsRemoved">InternalEntity.IsRemoved</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Destroy">InternalEntity.Destroy()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnDestroy">InternalEntity.OnDestroy()</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Update">InternalEntity.Update()</a>
@@ -168,6 +174,12 @@
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_VisualUpdate">InternalEntity.VisualUpdate()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnConstructed">InternalEntity.OnConstructed()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnLateConstructed">InternalEntity.OnLateConstructed()</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_LiteEntitySystem_RemoteCall__">InternalEntity.ExecuteRPC(in RemoteCall)</a>
@@ -284,45 +296,85 @@
       </tr>
     </tbody>
   </table>
-  <h3 id="methods">Methods
+  <h3 id="properties">Properties
 </h3>
 
 
-  <a id="LiteEntitySystem_HumanControllerLogic_ChangeEntityDiffSync_" data-uid="LiteEntitySystem.HumanControllerLogic.ChangeEntityDiffSync*"></a>
-  <h4 id="LiteEntitySystem_HumanControllerLogic_ChangeEntityDiffSync_LiteEntitySystem_EntityLogic_System_Boolean_" data-uid="LiteEntitySystem.HumanControllerLogic.ChangeEntityDiffSync(LiteEntitySystem.EntityLogic,System.Boolean)">ChangeEntityDiffSync(EntityLogic, bool)</h4>
-  <div class="markdown level1 summary"><p>Change entity delta-diff synchronization for player that owns this controller
-constructor and destruction will be synchronized anyways
-works only on server</p>
-</div>
+  <a id="LiteEntitySystem_HumanControllerLogic_InputSize_" data-uid="LiteEntitySystem.HumanControllerLogic.InputSize*"></a>
+  <h4 id="LiteEntitySystem_HumanControllerLogic_InputSize" data-uid="LiteEntitySystem.HumanControllerLogic.InputSize">InputSize</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void ChangeEntityDiffSync(EntityLogic entity, bool enable)</code></pre>
+    <pre><code class="lang-csharp hljs">public int InputSize { get; }</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
-        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></td>
-        <td><span class="parametername">entity</span></td>
-        <td><p>entity</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td><span class="parametername">enable</span></td>
-        <td><p>true - enable sync (if was disabled), disable otherwise</p>
-</td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
+
+
+  <a id="LiteEntitySystem_HumanControllerLogic_MaxInputDeltaSize_" data-uid="LiteEntitySystem.HumanControllerLogic.MaxInputDeltaSize*"></a>
+  <h4 id="LiteEntitySystem_HumanControllerLogic_MaxInputDeltaSize" data-uid="LiteEntitySystem.HumanControllerLogic.MaxInputDeltaSize">MaxInputDeltaSize</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int MaxInputDeltaSize { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_HumanControllerLogic_MinInputDeltaSize_" data-uid="LiteEntitySystem.HumanControllerLogic.MinInputDeltaSize*"></a>
+  <h4 id="LiteEntitySystem_HumanControllerLogic_MinInputDeltaSize" data-uid="LiteEntitySystem.HumanControllerLogic.MinInputDeltaSize">MinInputDeltaSize</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int MinInputDeltaSize { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
 
 
   <a id="LiteEntitySystem_HumanControllerLogic_GetAssignedPlayer_" data-uid="LiteEntitySystem.HumanControllerLogic.GetAssignedPlayer*"></a>
@@ -346,113 +398,6 @@ works only on server</p>
       <tr>
         <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
         <td><p>assigned player</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_HumanControllerLogic_IsEntityDiffSyncDisabled_" data-uid="LiteEntitySystem.HumanControllerLogic.IsEntityDiffSyncDisabled*"></a>
-  <h4 id="LiteEntitySystem_HumanControllerLogic_IsEntityDiffSyncDisabled_LiteEntitySystem_EntitySharedReference_" data-uid="LiteEntitySystem.HumanControllerLogic.IsEntityDiffSyncDisabled(LiteEntitySystem.EntitySharedReference)">IsEntityDiffSyncDisabled(EntitySharedReference)</h4>
-  <div class="markdown level1 summary"><p>Is entity delta-diff synchronization disabled. Works on client and server</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsEntityDiffSyncDisabled(EntitySharedReference entity)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a></td>
-        <td><span class="parametername">entity</span></td>
-        <td><p>entity to check</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td><p>true if entity sync is disabled</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <a id="LiteEntitySystem_HumanControllerLogic_OnConstructed_" data-uid="LiteEntitySystem.HumanControllerLogic.OnConstructed*"></a>
-  <h4 id="LiteEntitySystem_HumanControllerLogic_OnConstructed" data-uid="LiteEntitySystem.HumanControllerLogic.OnConstructed">OnConstructed()</h4>
-  <div class="markdown level1 summary"><p>Called when entity constructed</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected override void OnConstructed()</code></pre>
-  </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnConstructed">InternalEntity.OnConstructed()</a></div>
-
-
-  <a id="LiteEntitySystem_HumanControllerLogic_OnDestroy_" data-uid="LiteEntitySystem.HumanControllerLogic.OnDestroy*"></a>
-  <h4 id="LiteEntitySystem_HumanControllerLogic_OnDestroy" data-uid="LiteEntitySystem.HumanControllerLogic.OnDestroy">OnDestroy()</h4>
-  <div class="markdown level1 summary"><p>Event called on entity destroy</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected override void OnDestroy()</code></pre>
-  </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnDestroy">InternalEntity.OnDestroy()</a></div>
-
-
-  <a id="LiteEntitySystem_HumanControllerLogic_OnEntityDiffSyncChanged_" data-uid="LiteEntitySystem.HumanControllerLogic.OnEntityDiffSyncChanged*"></a>
-  <h4 id="LiteEntitySystem_HumanControllerLogic_OnEntityDiffSyncChanged_LiteEntitySystem_EntityLogic_System_Boolean_" data-uid="LiteEntitySystem.HumanControllerLogic.OnEntityDiffSyncChanged(LiteEntitySystem.EntityLogic,System.Boolean)">OnEntityDiffSyncChanged(EntityLogic, bool)</h4>
-  <div class="markdown level1 summary"><p>Called when entity diff sync changed (enabled or disabled)
-useful for hiding disabled entities</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected virtual void OnEntityDiffSyncChanged(EntityLogic entity, bool enabled)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></td>
-        <td><span class="parametername">entity</span></td>
-        <td><p>entity</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td><span class="parametername">enabled</span></td>
-        <td><p>sync enabled or disabled</p>
 </td>
       </tr>
     </tbody>
@@ -559,17 +504,6 @@ useful for hiding disabled entities</p>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_RegisterRPC_LiteEntitySystem_RPCRegistrator__">InternalEntity.RegisterRPC(ref RPCRegistrator)</a></div>
-
-
-  <a id="LiteEntitySystem_HumanControllerLogic_ResetEntitiesDiffSync_" data-uid="LiteEntitySystem.HumanControllerLogic.ResetEntitiesDiffSync*"></a>
-  <h4 id="LiteEntitySystem_HumanControllerLogic_ResetEntitiesDiffSync" data-uid="LiteEntitySystem.HumanControllerLogic.ResetEntitiesDiffSync">ResetEntitiesDiffSync()</h4>
-  <div class="markdown level1 summary"><p>Enable diff sync for all entities that has disabled diff sync</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void ResetEntitiesDiffSync()</code></pre>
-  </div>
 
 
   <a id="LiteEntitySystem_HumanControllerLogic_SendRequestStruct_" data-uid="LiteEntitySystem.HumanControllerLogic.SendRequestStruct*"></a>

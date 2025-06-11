@@ -30,7 +30,6 @@ namespace LiteEntitySystem
         private InternalEntity _parentEntity;
         private ExecuteFlags _executeFlags;
         
-        internal int FieldId;
         internal ushort RPCOffset;
         
         /// <summary>
