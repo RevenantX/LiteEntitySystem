@@ -211,7 +211,7 @@ namespace LiteEntitySystem.Internal
                 }
                 else
                 {
-                    var syncableField = RefMagic.RefFieldValue<SyncableField>(this, field.Offset);
+                    var syncableField = RefMagic.GetFieldValue<SyncableField>(this, field.Offset);
                     field.TypeProcessor.InitSyncVar(syncableField, field.SyncableSyncVarOffset, onChangeTarget, (ushort)i);
                 }
             }
@@ -231,7 +231,7 @@ namespace LiteEntitySystem.Internal
             for (int i = 0; i < classData.SyncableFields.Length; i++)
             {
                 ref var syncFieldInfo = ref classData.SyncableFields[i];
-                var syncField = RefMagic.RefFieldValue<SyncableField>(this, syncFieldInfo.Offset);
+                var syncField = RefMagic.GetFieldValue<SyncableField>(this, syncFieldInfo.Offset);
                 syncField.Init(this, syncFieldInfo.Flags);
                 if (rpcCache == null) //classData.RemoteCallsClient != null
                 {

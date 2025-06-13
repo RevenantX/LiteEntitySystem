@@ -69,13 +69,32 @@ namespace LiteEntitySystem
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct SyncVar<T> : IEquatable<T>, IEquatable<SyncVar<T>> where T : unmanaged
+    public struct SyncVar<T> : ISyncVar<T>, IEquatable<T>, IEquatable<SyncVar<T>> where T : unmanaged
     {
         private T _value;
         internal ushort FieldId;
         internal InternalEntity Container;
         
-        internal void SetDirect(T value) => _value = value;
+        void ISyncVar<T>.SvSetDirect(T value) => _value = value;
+        
+        void ISyncVar<T>.SvSetDirectAndStorePrev(T value, out T prevValue)
+        {
+            prevValue = _value;
+            _value = value;
+        }
+        
+        bool ISyncVar<T>.SvSetFromAndSync(ref T value)
+        {
+            if (!Utils.FastEquals(ref _value, ref value))
+            {
+                // ReSharper disable once SwapViaDeconstruction
+                var tmp = _value;
+                _value = value;
+                value = tmp;
+                return true;
+            }
+            return false;
+        }
         
         public T Value
         {
@@ -93,19 +112,6 @@ namespace LiteEntitySystem
             Container = container;
             FieldId = fieldId;
             Container?.EntityManager.EntityFieldChanged(Container, FieldId, ref _value);
-        }
-        
-        internal unsafe bool SetFromAndSync(byte* data)
-        {
-            if (!Utils.FastEquals(ref _value, data))
-            {
-                var temp = _value;
-                _value = *(T*)data;
-                *(T*)data = temp;
-                return true;
-            }
-            _value = *(T*)data;
-            return false;
         }
         
         public static implicit operator T(SyncVar<T> sv) => sv._value;

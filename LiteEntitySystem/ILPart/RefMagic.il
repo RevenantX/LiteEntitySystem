@@ -26,31 +26,95 @@
 .corflags 0x00000001    //  ILONLY
 .module RefMagic.dll
 
-.class public abstract auto ansi sealed beforefieldinit LiteEntitySystem.Internal.RefMagic extends [netstandard]System.Object
+.class interface public abstract auto ansi beforefieldinit LiteEntitySystem.Internal.ISyncVar`1<
+    valuetype .ctor (class System.ValueType modreq ([netstandard]System.Runtime.InteropServices.UnmanagedType)) T>
 {
-    .method public hidebysig static !!T& RefFieldValue<T>(object obj, int32 offs) cil managed aggressiveinlining
+    .param type T
+    .custom instance void [netstandard]System.Runtime.CompilerServices.IsUnmanagedAttribute::.ctor() = (01 00 00 00 )
+    .method public hidebysig virtual newslot abstract instance void SvSetDirect(!T 'value') cil managed {}
+    .method public hidebysig virtual newslot abstract instance void SvSetDirectAndStorePrev(!T 'value', [out] !T& prevValue) cil managed {}
+    .method public hidebysig virtual newslot abstract instance bool SvSetFromAndSync(!T& 'value') cil managed {}
+}
+
+.class public abstract auto ansi sealed beforefieldinit LiteEntitySystem.Internal.RefMagic extends object
+{
+    .method public hidebysig static !!T GetFieldValue<T>(object obj, int32 offs) cil managed aggressiveinlining
     {
         ldarg obj
         conv.i
         ldarg offs
         add
-        ret
-    }
-    
-    .method public hidebysig static !!T& RefFieldValuePin<T>(object obj, int32 offs) cil managed aggressiveinlining
-    {
-        .locals init (
-          [0] object& pinned V_1
-        )
-        ldarg obj
-        stloc.0
-        ldloc.0
-        ldarg offs
-        add
+        ldobj !!T
         ret
     }
 
-    .method public hidebysig static void CopyBlock(void* destination, void* source, unsigned int32 byteCount) cil managed
+    .method public hidebysig static void SetFieldValue<T>(object obj, int32 offs, !!T 'value') cil managed aggressiveinlining
+    {
+        ldarg obj
+        conv.i
+        ldarg offs
+        add
+        ldarg 'value'
+        stobj !!T
+        ret
+    }
+
+    .method public hidebysig static void SyncVarSetDirect<
+        valuetype .ctor (class System.ValueType modreq ([netstandard]System.Runtime.InteropServices.UnmanagedType)) T,
+        valuetype .ctor (class LiteEntitySystem.Internal.ISyncVar`1<!!T>, class System.ValueType) TSyncVar>
+        (object obj, int32 offs, !!T 'value') cil managed aggressiveinlining
+    {
+        .param type T
+        .custom instance void [netstandard]System.Runtime.CompilerServices.IsUnmanagedAttribute::.ctor() = (01 00 00 00 )
+
+        ldarg obj
+        conv.i
+        ldarg offs
+        add
+        ldarg 'value'
+        constrained. !!TSyncVar
+        callvirt instance void class LiteEntitySystem.Internal.ISyncVar`1<!!T>::SvSetDirect(!0)
+        ret
+    }
+
+    .method public hidebysig static void SyncVarSetDirectAndStorePrev<
+        valuetype .ctor (class System.ValueType modreq([netstandard]System.Runtime.InteropServices.UnmanagedType)) T,
+        valuetype .ctor (class LiteEntitySystem.Internal.ISyncVar`1<!!T>, System.ValueType) TSyncVar>
+        (object obj, int32 offs, !!T 'value', [out] !!T& prevValue) cil managed aggressiveinlining
+    {
+        .param type T
+        .custom instance void [netstandard]System.Runtime.CompilerServices.IsUnmanagedAttribute::.ctor() = ( 01 00 00 00 )
+
+        ldarg obj
+        conv.i
+        ldarg offs
+        add
+        ldarg 'value'
+        ldarg prevValue
+        constrained. !!TSyncVar
+        callvirt instance void class LiteEntitySystem.Internal.ISyncVar`1<!!T>::SvSetDirectAndStorePrev(!0, !0&)
+        ret
+    }
+
+    .method public hidebysig static bool SyncVarSetFromAndSync<
+        valuetype .ctor (class System.ValueType modreq([netstandard]System.Runtime.InteropServices.UnmanagedType)) T,
+        valuetype .ctor (class LiteEntitySystem.Internal.ISyncVar`1<!!T>, System.ValueType) TSyncVar>
+        (object obj, int32 offs, !!T& 'value') cil managed aggressiveinlining
+    {
+        .param type T
+        .custom instance void [netstandard]System.Runtime.CompilerServices.IsUnmanagedAttribute::.ctor() = (01 00 00 00 )
+
+        ldarg obj
+        conv.i
+        ldarg offs
+        add
+        ldarg 'value'
+        constrained. !!TSyncVar
+        callvirt instance bool class LiteEntitySystem.Internal.ISyncVar`1<!!T>::SvSetFromAndSync(!0&)
+        ret
+    }
+
+    .method public hidebysig static void CopyBlock(void* destination, void* source, unsigned int32 byteCount) cil managed aggressiveinlining
     {
         .maxstack 3
         ldarg.0

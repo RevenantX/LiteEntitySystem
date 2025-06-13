@@ -72,7 +72,7 @@
                 RefMagic.CopyBlock(predictedData + PredictedOffset, rawData, Size);
             if (FieldType == FieldType.SyncableSyncVar)
             {
-                var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, Offset);
+                var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, Offset);
                 TypeProcessor.SetFrom(syncableField, SyncableSyncVarOffset, rawData);
             }
             else

@@ -305,7 +305,7 @@ namespace LiteEntitySystem
             var field = typeof(TestOffset).GetField("TestValue");
             int offset = GetFieldOffset(field);
             var to = new TestOffset();
-            if (RefMagic.RefFieldValue<uint>(to, offset) != to.TestValue)
+            if (RefMagic.GetFieldValue<uint>(to, offset) != to.TestValue)
                 Logger.LogError("Unknown native field offset");
         }
     }

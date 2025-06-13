@@ -317,7 +317,7 @@ namespace LiteEntitySystem.Internal
                     }
                     else
                     {
-                        var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, rpcFieldInfo.SyncableOffset);
+                        var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, rpcFieldInfo.SyncableOffset);
                         if (_syncablesSet.Add(syncableField))
                         {
                             syncableField.BeforeReadRPC();

@@ -546,7 +546,7 @@ namespace LiteEntitySystem
                         ref var field = ref rollbackFields[i];
                         if (field.FieldType == FieldType.SyncableSyncVar)
                         {
-                            var syncableField = RefMagic.RefFieldValue<SyncableField>(entity, field.Offset);
+                            var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, field.Offset);
                             field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, predictedData + field.PredictedOffset);
                         }
                         else
@@ -556,7 +556,7 @@ namespace LiteEntitySystem
                     }
                 }
                 for (int i = 0; i < classData.SyncableFields.Length; i++)
-                    RefMagic.RefFieldValue<SyncableField>(entity, classData.SyncableFields[i].Offset).OnRollback();
+                    RefMagic.GetFieldValue<SyncableField>(entity, classData.SyncableFields[i].Offset).OnRollback();
                 entity.OnRollback();
             }
     
