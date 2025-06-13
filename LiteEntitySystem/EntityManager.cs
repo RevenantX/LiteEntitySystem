@@ -91,9 +91,15 @@ namespace LiteEntitySystem
         /// <summary>
         /// Maximum synchronized (without LocalOnly) entities
         /// </summary>
-        public const int MaxSyncedEntityCount = 32767;
+        public const int MaxSyncedEntityCount = 64000;
 
-        public const int MaxEntityCount = MaxSyncedEntityCount * 2;
+        //because 0 - invalid id
+        public const int MaxEntityCount = ushort.MaxValue - 1;
+
+        /// <summary>
+        /// Maximum count of predicted local entities
+        /// </summary>
+        public const int MaxLocalEntityCount = MaxEntityCount - MaxSyncedEntityCount;
         
         public const byte ServerPlayerId = 0;
 
