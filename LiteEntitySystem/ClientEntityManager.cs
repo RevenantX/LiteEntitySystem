@@ -140,7 +140,6 @@ namespace LiteEntitySystem
         private readonly HashSet<InternalEntity> _changedEntities = new();
         private readonly CircularBuffer<InputInfo> _storedInputHeaders = new(InputBufferSize);
         private InternalEntity[] _entitiesToRemove = new InternalEntity[64];
-        private readonly AVLTree<InternalEntity> _tempEntityTree = new();
         private int _entitiesToRemoveCount;
 
         private ServerSendRate _serverSendRate;
@@ -580,6 +579,23 @@ namespace LiteEntitySystem
                 }
             }
             UpdateMode = UpdateMode.Normal;
+            
+            //update local interpolated position
+            foreach (var entity in AliveEntities)
+            {
+                if(entity.IsLocal || !entity.IsLocalControlled)
+                    continue;
+                
+                ref var classData = ref ClassDataDict[entity.ClassId];
+                for(int i = 0; i < classData.InterpolatedCount; i++)
+                {
+                    fixed (byte* currentDataPtr = classData.ClientInterpolatedNextData(entity))
+                    {
+                        ref var field = ref classData.Fields[i];
+                        field.TypeProcessor.WriteTo(entity, field.Offset, currentDataPtr + field.FixedOffset);
+                    }
+                }
+            }
         }
 
         internal override void OnEntityDestroyed(InternalEntity e)
@@ -601,25 +617,24 @@ namespace LiteEntitySystem
                 ServerTick = Utils.LerpSequence(_stateA.Tick, _stateB.Tick, (float)(_timer/_lerpTime));
                 
                 //restore actual field values
-                _tempEntityTree.Clear();
                 foreach (var entity in AliveEntities)
                 {
+                    if (!entity.IsLocal && !entity.IsLocalControlled)
+                        continue;
+                    
                     ref var classData = ref ClassDataDict[entity.ClassId];
                     if(classData.InterpolatedCount == 0)
                         continue;
-                    if (entity.IsLocal || entity.IsLocalControlled)
+                    
+                    //save data for interpolation before update
+                    fixed (byte* currentDataPtr = classData.ClientInterpolatedNextData(entity))
                     {
-                        //save data for interpolation before update
-                        fixed (byte* currentDataPtr = classData.ClientInterpolatedNextData(entity))
+                        //restore previous
+                        for (int i = 0; i < classData.InterpolatedCount; i++)
                         {
-                            //restore previous
-                            for (int i = 0; i < classData.InterpolatedCount; i++)
-                            {
-                                var field = classData.Fields[i];
-                                field.TypeProcessor.SetFrom(entity, field.Offset, currentDataPtr + field.FixedOffset);
-                            }
+                            ref var field = ref classData.Fields[i];
+                            field.TypeProcessor.SetFrom(entity, field.Offset, currentDataPtr + field.FixedOffset);
                         }
-                        _tempEntityTree.Add(entity);
                     }
                 }
             }
@@ -647,16 +662,22 @@ namespace LiteEntitySystem
             if (_stateB != null)
             {
                 //save interpolation data
-                foreach (var entity in _tempEntityTree)
+                foreach (var entity in AliveEntities)
                 {
+                    if (!entity.IsLocal && !entity.IsLocalControlled)
+                        continue;
+                    
                     ref var classData = ref ClassDataDict[entity.ClassId];
+                    if(classData.InterpolatedCount == 0)
+                        continue;
+
                     fixed (byte* currentDataPtr = classData.ClientInterpolatedNextData(entity),
                            prevDataPtr = classData.ClientInterpolatedPrevData(entity))
                     {
                         RefMagic.CopyBlock(prevDataPtr, currentDataPtr, (uint)classData.InterpolatedFieldsSize);
                         for(int i = 0; i < classData.InterpolatedCount; i++)
                         {
-                            var field = classData.Fields[i];
+                            ref var field = ref classData.Fields[i];
                             field.TypeProcessor.WriteTo(entity, field.Offset, currentDataPtr + field.FixedOffset);
                         }
                     }
