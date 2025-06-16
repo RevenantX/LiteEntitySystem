@@ -103,16 +103,15 @@ namespace LiteEntitySystem.Internal
         }
         
         //refresh construct rpc with latest values (old behaviour)
-        public unsafe void RefreshConstructedRPC(RemoteCallPacket packet, NetPlayer player)
+        public unsafe void RefreshConstructedRPC(RemoteCallPacket packet)
         {
-            RefreshSyncGroupsVariable(player);
             fixed (byte* sourceData = _latestEntityData, rawData = packet.Data)
             {
                 RefMagic.CopyBlock(rawData, sourceData + HeaderSize, (uint)(_fullDataSize - HeaderSize));
             }
         }
-
-        private SyncGroup RefreshSyncGroupsVariable(NetPlayer player)
+        
+        public SyncGroup RefreshSyncGroupsVariable(NetPlayer player, Span<byte> target)
         {
             SyncGroup enabledGroups = SyncGroup.All;
             if (_entity is EntityLogic el)
@@ -127,7 +126,7 @@ namespace LiteEntitySystem.Internal
                     //if no data it "never" changed
                     _fieldChangeTicks[el.IsSyncEnabledFieldId] = _versionChangedTick;
                 }
-                _latestEntityData[HeaderSize + _fields[el.IsSyncEnabledFieldId].FixedOffset] = (byte)enabledGroups;
+                target[HeaderSize + _fields[el.IsSyncEnabledFieldId].FixedOffset] = (byte)enabledGroups;
             }
  
             return enabledGroups;
@@ -150,7 +149,7 @@ namespace LiteEntitySystem.Internal
 
             //it can be null on entity creation
             if(player != null)
-                RefreshSyncGroupsVariable(player);
+                RefreshSyncGroupsVariable(player, new Span<byte>(_latestEntityData));
             
             //actual on constructed rpc
             _entity.ServerManager.AddRemoteCall(
@@ -223,7 +222,7 @@ namespace LiteEntitySystem.Internal
                 : player.CurrentServerTick;
             
             //overwrite IsSyncEnabled for each player
-            SyncGroup enabledSyncGroups = RefreshSyncGroupsVariable(player);
+            SyncGroup enabledSyncGroups = RefreshSyncGroupsVariable(player, new Span<byte>(_latestEntityData));
 
             fixed (byte* lastEntityData = _latestEntityData) //make diff
             {

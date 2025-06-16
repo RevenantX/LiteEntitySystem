@@ -140,6 +140,7 @@ namespace LiteEntitySystem
         private readonly HashSet<InternalEntity> _changedEntities = new();
         private readonly CircularBuffer<InputInfo> _storedInputHeaders = new(InputBufferSize);
         private InternalEntity[] _entitiesToRemove = new InternalEntity[64];
+        private readonly Queue<EntityLogic> _entitiesToRollback = new();
         private int _entitiesToRemoveCount;
 
         private ServerSendRate _serverSendRate;
@@ -889,8 +890,54 @@ namespace LiteEntitySystem
             }
         }
         
-        private void ExecuteSyncCallsAndWriteHistory(ServerStateData stateData)
+        private unsafe void ExecuteSyncCallsAndWriteHistory(ServerStateData stateData)
         {
+            if (_entitiesToRollback.Count > 0)
+            {
+                //fast forward new but predicted entities
+                UpdateMode = UpdateMode.PredictionRollback;
+                for(int cmdNum = Utils.SequenceDiff(ServerTick, _stateA.Tick); cmdNum < _storedInputHeaders.Count; cmdNum++)
+                {
+                    //reapply input data
+                    var storedInput = _storedInputHeaders[cmdNum];
+                    _localPlayer.LoadInputInfo(storedInput.Header);
+                    RollBackTick = storedInput.Tick;
+                    foreach (var controller in GetEntities<HumanControllerLogic>())
+                        controller.ReadStoredInput(cmdNum);
+                    
+                    foreach (var e in _entitiesToRollback)
+                    {
+                        ref var classData = ref ClassDataDict[e.ClassId];
+                        if (cmdNum == _storedInputHeaders.Count - 1)
+                        {
+                            for(int i = 0; i < classData.InterpolatedCount; i++)
+                            {
+                                fixed (byte* prevDataPtr = classData.ClientInterpolatedPrevData(e))
+                                {
+                                    ref var field = ref classData.Fields[i];
+                                    field.TypeProcessor.WriteTo(e, field.Offset, prevDataPtr + field.FixedOffset);
+                                }
+                            }
+                            e.Update();
+                            for (int i = 0; i < classData.InterpolatedCount; i++)
+                            {
+                                fixed (byte* currentDataPtr = classData.ClientInterpolatedNextData(e))
+                                {
+                                    ref var field = ref classData.Fields[i];
+                                    field.TypeProcessor.WriteTo(e, field.Offset, currentDataPtr + field.FixedOffset);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            e.Update();
+                        }
+                    }
+                }
+                UpdateMode = UpdateMode.Normal;
+                _entitiesToRollback.Clear();
+            }
+            
             ExecuteLateConstruct();
             for (int i = 0; i < _syncCallsCount; i++)
                 _syncCalls[i].Execute(stateData);
@@ -939,49 +986,15 @@ namespace LiteEntitySystem
             if (ConstructEntity(entity) == false)
                 return;
 
-            if (entity is not EntityLogic entityLogic)
-                return;
-            
-            //Logger.Log($"ConstructedEntity: {entityId}, pid: {entityLogic.PredictedId}");
-            
-            entityLogic.RefreshOwnerInfo(null);
-            
-            if (entityLogic.IsLocalControlled && entityLogic.IsPredicted && AliveEntities.Contains(entity))
+            if (entity is EntityLogic entityLogic)
             {
-                UpdateMode = UpdateMode.PredictionRollback;
-                for(int cmdNum = Utils.SequenceDiff(ServerTick, _stateA.Tick); cmdNum < _storedInputHeaders.Count; cmdNum++)
-                {
-                    //reapply input data
-                    var storedInput = _storedInputHeaders[cmdNum];
-                    _localPlayer.LoadInputInfo(storedInput.Header);
-                    RollBackTick = storedInput.Tick;
-                    foreach (var controller in GetEntities<HumanControllerLogic>())
-                        controller.ReadStoredInput(cmdNum);
-
-                    if (cmdNum == _storedInputHeaders.Count - 1)
-                    {
-                        for(int i = 0; i < classData.InterpolatedCount; i++)
-                        {
-                            fixed (byte* prevDataPtr = classData.ClientInterpolatedPrevData(entity))
-                            {
-                                ref var field = ref classData.Fields[i];
-                                field.TypeProcessor.WriteTo(entity, field.Offset, prevDataPtr + field.FixedOffset);
-                            }
-                        }
-                    }
-                    entity.Update();
-                }
-                for (int i = 0; i < classData.InterpolatedCount; i++)
-                {
-                    fixed (byte* currentDataPtr = classData.ClientInterpolatedNextData(entity))
-                    {
-                        ref var field = ref classData.Fields[i];
-                        field.TypeProcessor.WriteTo(entity, field.Offset, currentDataPtr + field.FixedOffset);
-                    }
-                }
-                
-                UpdateMode = UpdateMode.Normal; 
+                entityLogic.RefreshOwnerInfo(null);
+                if(entity.IsLocal || !entity.IsLocalControlled || !entityLogic.IsPredicted || !AliveEntities.Contains(entity))
+                    return;
+                _entitiesToRollback.Enqueue(entityLogic);
             }
+
+            //Logger.Log($"ConstructedEntity: {entityId}, pid: {entityLogic.PredictedId}");
         }
 
         private unsafe void ReadDiff(ref int readerPosition)

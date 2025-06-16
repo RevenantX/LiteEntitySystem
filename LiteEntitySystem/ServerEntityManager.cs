@@ -560,8 +560,15 @@ namespace LiteEntitySystem
                     if(!aliveEntity.IsDestroyed)
                         aliveEntity.Update();
             }
-
+            
             ExecuteLateConstruct();
+
+            //refresh construct rpc with latest updates to entity at creation tick
+            foreach (var rpcNode in _pendingRPCs)
+            {
+                if (rpcNode.Header.Id == RemoteCallPacket.ConstructRPCId && rpcNode.Header.Tick == _tick)
+                    _stateSerializers[rpcNode.Header.EntityId].RefreshConstructedRPC(rpcNode);
+            }
             
             foreach (var lagCompensatedEntity in LagCompensatedEntities)
                 ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, _tick);
@@ -828,7 +835,7 @@ namespace LiteEntitySystem
                 }
                 
                 if (rpcNode.Header.Id == RemoteCallPacket.ConstructRPCId)
-                    stateSerializer.RefreshConstructedRPC(rpcNode, player);
+                    stateSerializer.RefreshSyncGroupsVariable(player, new Span<byte>(rpcNode.Data));
 
                 return true;
             }       
