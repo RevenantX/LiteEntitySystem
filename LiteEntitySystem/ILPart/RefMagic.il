@@ -27,7 +27,7 @@
 .module RefMagic.dll
 
 .class interface public abstract auto ansi beforefieldinit LiteEntitySystem.Internal.ISyncVar`1<
-    valuetype .ctor (class System.ValueType modreq ([netstandard]System.Runtime.InteropServices.UnmanagedType)) T>
+    valuetype .ctor (class [netstandard]System.ValueType modreq([netstandard]System.Runtime.InteropServices.UnmanagedType)) T>
 {
     .param type T
     .custom instance void [netstandard]System.Runtime.CompilerServices.IsUnmanagedAttribute::.ctor() = (01 00 00 00 )
@@ -36,7 +36,7 @@
     .method public hidebysig virtual newslot abstract instance bool SvSetFromAndSync(!T& 'value') cil managed {}
 }
 
-.class public abstract auto ansi sealed beforefieldinit LiteEntitySystem.Internal.RefMagic extends object
+.class public abstract auto ansi sealed beforefieldinit LiteEntitySystem.Internal.RefMagic extends [netstandard]System.Object
 {
     .method public hidebysig static !!T GetFieldValue<T>(object obj, int32 offs) cil managed aggressiveinlining
     {
