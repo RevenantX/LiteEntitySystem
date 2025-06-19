@@ -148,13 +148,15 @@ namespace LiteEntitySystem.Internal
             }
 
             //it can be null on entity creation
+            var entityDataSpan = new Span<byte>(_latestEntityData, HeaderSize, (int)(_fullDataSize - HeaderSize));
+            
             if(player != null)
-                RefreshSyncGroupsVariable(player, new Span<byte>(_latestEntityData, HeaderSize, (int)(_fullDataSize - HeaderSize)));
+                RefreshSyncGroupsVariable(player, entityDataSpan);
             
             //actual on constructed rpc
             _entity.ServerManager.AddRemoteCall(
                 _entity,
-                new ReadOnlySpan<byte>(_latestEntityData, HeaderSize, (int)(_fullDataSize - HeaderSize)),
+                (ReadOnlySpan<byte>)entityDataSpan,
                 RemoteCallPacket.ConstructRPCId,
                 ExecuteFlags.SendToAll);
             //Logger.Log($"Added constructed RPC: {_entity}");
