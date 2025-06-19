@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using LiteEntitySystem.Collections;
 using LiteEntitySystem.Internal;
 
@@ -42,17 +39,17 @@ namespace LiteEntitySystem
         /// </summary>
         public void UnsubscribeToConstructed(Action<T> onConstructed) =>
             OnConstructed -= onConstructed;
-
-        internal override void Add(T entity)
-        {
-            OnConstructed?.Invoke(entity);
-            base.Add(entity);
-        }
         
         internal override bool Remove(T entity)
         {
             OnDestroyed?.Invoke(entity);
             return base.Remove(entity);
+        }
+
+        internal override void Add(T data)
+        {
+            base.Add(data);
+            OnConstructed?.Invoke(data);
         }
 
         void IEntityFilter.Add(InternalEntity entity) => Add((T) entity);

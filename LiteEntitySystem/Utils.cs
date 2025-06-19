@@ -9,6 +9,18 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
+    public struct LESDiagnosticDataEntry
+    {
+        public bool IsRPC;
+        public int Count;
+        public int Size;
+        public string Name;
+
+        public override string ToString() => IsRPC
+            ? $"RPC: {Name}, TotalSize: {Size}, Count: {Count}"
+            : $"Entity: {Name}, TotalSize: {Size}, Count: {Count}";
+    }
+    
     public static class Utils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -288,26 +300,39 @@ namespace LiteEntitySystem
             InternalBaseClass syncable = baseClass;
             for (int j = 0; j < offsets.Length; j++)
             {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsets[j]);
+                syncable = RefMagic.GetFieldValue<InternalBaseClass>(syncable, offsets[j]);
                 if (syncable == null)
                     throw new NullReferenceException($"SyncableField at offset {offsets[j]} is null");
             }
 
             return (SyncableField)syncable;
         }
-
-        internal static ref SyncVar<T> GetSyncableSyncVar<T>(InternalBaseClass baseClass, int[] offsets) where T : unmanaged
+        
+        internal static InternalBaseClass GetSyncVarOwner(InternalBaseClass baseClass, int[] offsets)
         {
-            InternalBaseClass syncable = baseClass;
+            InternalBaseClass owner = baseClass;
             for (int i = 0; i < offsets.Length-1; i++)
             {
-                syncable = RefMagic.RefFieldValue<InternalBaseClass>(syncable, offsets[i]);
+                owner = RefMagic.GetFieldValue<InternalBaseClass>(owner, offsets[i]);
+                if (owner == null)
+                    throw new NullReferenceException($"SyncVar at offset {offsets[i]} is null");
+            }
+
+            return owner;
+        }
+
+        internal static SyncVar<T> GetSyncVar<T>(InternalBaseClass baseClass, int[] offsets) where T : unmanaged
+        {
+            InternalBaseClass syncable = baseClass;
+            for (int i = 0; i < offsets.Length - 1; i++)
+            {
+                syncable = RefMagic.GetFieldValue<InternalBaseClass>(syncable, offsets[i]);
                 if (syncable == null)
                     throw new NullReferenceException($"SyncableField at offset {offsets[i]} is null");
             }
-            ref var a = ref RefMagic.RefFieldValue<SyncVar<T>>(syncable, offsets[offsets.Length-1]);
+            var a = RefMagic.GetFieldValue<SyncVar<T>>(syncable, offsets[offsets.Length - 1]);
 
-            return ref a;
+            return a;
         }
 
         static Utils()
@@ -320,7 +345,7 @@ namespace LiteEntitySystem
             var field = typeof(TestOffset).GetField("TestValue");
             int offset = GetFieldOffset(field);
             var to = new TestOffset();
-            if (RefMagic.RefFieldValue<uint>(to, offset) != to.TestValue)
+            if (RefMagic.GetFieldValue<uint>(to, offset) != to.TestValue)
                 Logger.LogError("Unknown native field offset");
         }
     }

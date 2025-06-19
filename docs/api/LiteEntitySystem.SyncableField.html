@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
 
@@ -9,7 +9,7 @@
       <meta name="viewport" content="width=device-width">
       <meta name="title" content="Class SyncableField ">
     
-    
+    <meta name="description" content="Base class for fields with custom serialization (strings,lists,etc)">
       <link rel="shortcut icon" href="../favicon.ico">
       <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
@@ -71,11 +71,12 @@
 
 
   <h1 id="LiteEntitySystem_SyncableField" data-uid="LiteEntitySystem.SyncableField" class="text-break">Class SyncableField</h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Base class for fields with custom serialization (strings,lists,etc)</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">object</span></div>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
     <div class="level2"><span class="xref">SyncableField</span></div>
       <div class="level3"><a class="xref" href="LiteEntitySystem.Extensions.SyncArray-1.html">SyncArray&lt;T&gt;</a></div>
@@ -180,6 +181,58 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_SyncableField_ParentEntity_" data-uid="LiteEntitySystem.SyncableField.ParentEntity*"></a>
+  <h4 id="LiteEntitySystem_SyncableField_ParentEntity" data-uid="LiteEntitySystem.SyncableField.ParentEntity">ParentEntity</h4>
+  <div class="markdown level1 summary"><p>Owner of this syncable field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected InternalEntity ParentEntity { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="LiteEntitySystem_SyncableField_ParentEntityLogic_" data-uid="LiteEntitySystem.SyncableField.ParentEntityLogic*"></a>
+  <h4 id="LiteEntitySystem_SyncableField_ParentEntityLogic" data-uid="LiteEntitySystem.SyncableField.ParentEntityLogic">ParentEntityLogic</h4>
+  <div class="markdown level1 summary"><p>Owner of this syncable field casted to EntityLogic</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected EntityLogic ParentEntityLogic { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></td>
         <td></td>
       </tr>
     </tbody>

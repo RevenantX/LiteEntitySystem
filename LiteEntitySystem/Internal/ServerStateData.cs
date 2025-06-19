@@ -1,32 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
+using K4os.Compression.LZ4;
 
 namespace LiteEntitySystem.Internal
 {
-    internal struct RemoteCallsCache
-    {
-        public readonly RPCHeader Header;
-        public readonly EntitySharedReference EntityId;
-        public readonly int Offset;
-        public readonly int[] SyncableOffsets;
-        public readonly MethodCallDelegate Delegate;
-        public bool Executed;
-
-        public RemoteCallsCache(RPCHeader header, EntitySharedReference entityId, RpcFieldInfo rpcFieldInfo, int offset)
-        {
-            Header = header;
-            EntityId = entityId;
-            Delegate = rpcFieldInfo.Method;
-            Offset = offset;
-            SyncableOffsets = rpcFieldInfo.SyncableOffsets;
-            Executed = false;
-            if (Delegate == null)
-                Logger.LogError($"ZeroRPC: {header.Id}");
-        }
-    }
-
     internal readonly struct InterpolatedCache
     {
         public readonly InternalEntity Entity;
@@ -45,37 +24,136 @@ namespace LiteEntitySystem.Internal
         }
     }
 
+    internal readonly struct EntityDataCache
+    {
+        public readonly ushort EntityId;
+        public readonly int Offset;
+
+        public EntityDataCache(ushort entityId, int offset)
+        {
+            EntityId = entityId;
+            Offset = offset;
+        }
+    }
+
     internal class ServerStateData
     {
+        private const int DefaultCacheSize = 32;
+        
         public byte[] Data = new byte[1500];
         public int Size;
         public ushort Tick;
         public ushort ProcessedTick;
         public ushort LastReceivedTick;
         public byte BufferedInputsCount;
-        public int InterpolatedCachesCount;
-        public InterpolatedCache[] InterpolatedCaches = new InterpolatedCache[32];
+        
+        private int _interpolatedCachesCount;
+        private InterpolatedCache[] _interpolatedCaches = new InterpolatedCache[DefaultCacheSize];
         
         private int _totalPartsCount;
-        private int _syncableRemoteCallsCount;
-        private int _remoteCallsCount;
-        private RemoteCallsCache[] _syncableRemoteCallsCaches = new RemoteCallsCache[32];
-        private RemoteCallsCache[] _remoteCallsCaches = new RemoteCallsCache[32];
         private int _receivedPartsCount;
         private byte _maxReceivedPart;
         private ushort _partMtu;
         private readonly BitArray _receivedParts = new (EntityManager.MaxParts);
         
-        private static readonly ThreadLocal<HashSet<SyncableField>> SyncablesSet = new(()=>new HashSet<SyncableField>());
+        private int _dataOffset;
+        private int _dataSize;
+        private int _rpcReadPos;
+        private int _rpcEndPos;
 
-        public unsafe void Preload(InternalEntity[] entityDict)
+        private EntityDataCache[] _nullEntitiesData = new EntityDataCache[DefaultCacheSize];
+        private int _nullEntitiesCount;
+        
+        public int DataOffset => _dataOffset;
+        public int DataSize => _dataSize;
+        
+        private readonly HashSet<SyncableField> _syncablesSet = new();
+        private DeltaCompressor _rpcDeltaCompressor = new (Utils.SizeOfStruct<RPCHeader>());
+
+        public ServerStateData()
         {
-            for (int bytesRead = 0; bytesRead < Size;)
+            _rpcDeltaCompressor.Init();
+        }
+        
+        public unsafe void GetDiagnosticData(
+            InternalEntity[] entityDict, 
+            EntityClassData[] classDatas,
+            Dictionary<int, LESDiagnosticDataEntry> diagnosticDataDict)
+        {
+            fixed (byte* rawData = Data)
+            {
+                int readPos = 0;
+                while (readPos < _rpcEndPos)
+                {
+                    if (_rpcEndPos - readPos < sizeof(RPCHeader))
+                        break;
+                    var header = *(RPCHeader*)(rawData + readPos);
+                    int rpcSize = header.ByteCount + sizeof(RPCHeader);
+                    readPos += rpcSize;
+
+                    int dictId = ushort.MaxValue + header.Id;
+                    
+                    if(!diagnosticDataDict.TryGetValue(dictId, out LESDiagnosticDataEntry entry))
+                    {
+                        entry = new LESDiagnosticDataEntry { IsRPC = true, Count = 1, Name = $"{header.Id}", Size = rpcSize };
+                    }
+                    else
+                    {
+                        entry.Count++;
+                        entry.Size += rpcSize;
+                    }
+                    diagnosticDataDict[dictId] = entry;
+                }
+            }
+
+            for (int bytesRead = _dataOffset; bytesRead < _dataOffset + _dataSize;)
             {
                 int initialReaderPosition = bytesRead;
-                ushort fullSyncAndTotalSize = BitConverter.ToUInt16(Data, initialReaderPosition);
-                bool fullSync = (fullSyncAndTotalSize & 1) == 1;
-                int totalSize = fullSyncAndTotalSize >> 1;
+                int totalSize = BitConverter.ToUInt16(Data, initialReaderPosition);
+                bytesRead += totalSize;
+                ushort entityId = BitConverter.ToUInt16(Data, initialReaderPosition + sizeof(ushort));
+                int classId = entityDict[entityId] != null 
+                    ? entityDict[entityId].ClassId
+                    : -1;
+                string name = classId >= 0 
+                    ? classDatas[classId].ClassEnumName 
+                    : "Unknown";
+                
+                /*
+                if (classId >= 0)
+                {
+                    ref var classData = ref classDatas[classId];
+                    int entityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
+                    //interpolated fields goes first so can skip some checks
+                    for (int i = 0; i < classData.FieldsCount; i++)
+                    {
+                        if (!Utils.IsBitSet(Data, entityFieldsOffset, i))
+                            continue;
+                        ref var field = ref classData.Fields[i];
+                        Logger.Log($"{field.Name}({i}) - {field.Size}");
+                    }
+                }
+                */
+                
+                if(!diagnosticDataDict.TryGetValue(classId, out LESDiagnosticDataEntry entry))
+                {
+                    entry = new LESDiagnosticDataEntry { Count = 1, Name = name, Size = totalSize };
+                }
+                else
+                {
+                    entry.Count++;
+                    entry.Size += totalSize;
+                }
+                diagnosticDataDict[classId] = entry;
+            }
+        }
+        
+        public void Preload(InternalEntity[] entityDict)
+        {
+            for (int bytesRead = _dataOffset; bytesRead < _dataOffset + _dataSize;)
+            {
+                int initialReaderPosition = bytesRead;
+                int totalSize = BitConverter.ToUInt16(Data, initialReaderPosition);
                 bytesRead += totalSize;
                 ushort entityId = BitConverter.ToUInt16(Data, initialReaderPosition + sizeof(ushort));
                 if (entityId == EntityManager.InvalidEntityId || entityId >= EntityManager.MaxSyncedEntityCount)
@@ -84,183 +162,219 @@ namespace LiteEntitySystem.Internal
                     Logger.LogError($"[CEM] Invalid entity id: {entityId}");
                     return;
                 }
-      
-                //it should be here at preload
+                
                 var entity = entityDict[entityId];
                 if (entity == null)
                 {
-                    //Removed entity
-                    //Logger.LogError($"Preload entity: {preloadData.EntityId} == null");
+                    Utils.ResizeIfFull(ref _nullEntitiesData, _nullEntitiesCount);
+                   _nullEntitiesData[_nullEntitiesCount++] = new EntityDataCache(entityId, initialReaderPosition);
+                   //Logger.Log($"Add to pending: {entityId}");
                     continue;
                 }
-
-                ref var classData = ref entity.ClassData;
-                int entityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
-                int stateReaderOffset = fullSync 
-                    ? initialReaderPosition + StateSerializer.HeaderSize + sizeof(ushort) 
-                    : entityFieldsOffset + classData.FieldsFlagsSize;
-
-                //preload interpolation info
-                if (entity.IsRemoteControlled && classData.InterpolatedCount > 0)
-                    Utils.ResizeIfFull(ref InterpolatedCaches, InterpolatedCachesCount + classData.InterpolatedCount);
-                for (int i = 0; i < classData.FieldsCount; i++)
-                {
-                    if (!fullSync && !Utils.IsBitSet(Data, entityFieldsOffset, i))
-                        continue;
-                    ref var field = ref classData.Fields[i];
-                    if (entity.IsRemoteControlled && field.Flags.HasFlagFast(SyncFlags.Interpolated))
-                        InterpolatedCaches[InterpolatedCachesCount++] = new InterpolatedCache(entity, ref field, stateReaderOffset);
-                    stateReaderOffset += field.IntSize;
-                }
-
-                //preload rpcs
-                fixed(byte* rawData = Data)
-                    ReadRPCs(rawData, ref stateReaderOffset, new EntitySharedReference(entity.Id, entity.Version), ref classData);
-
-                if (stateReaderOffset != initialReaderPosition + totalSize)
-                {
-                    Logger.LogError($"Missread! {stateReaderOffset} > {initialReaderPosition + totalSize}");
-                    return;
-                }
+            
+                PreloadInterpolation(entity, initialReaderPosition);
             }
         }
-        
-        public void ExecuteSyncableRpcs(ClientEntityManager entityManager, ushort minimalTick, bool firstSync)
+
+        private void PreloadInterpolation(InternalEntity entity, int offset)
         {
-            entityManager.IsExecutingRPC = true;
-            var syncSet = SyncablesSet.Value;
-            syncSet.Clear();
-            for (int i = 0; i < _syncableRemoteCallsCount; i++)
+            if (!entity.IsRemoteControlled)
+                return;
+            
+            ref var classData = ref entity.ClassData;
+            if (classData.InterpolatedCount == 0)
+                return;
+            
+            int entityFieldsOffset = offset + StateSerializer.DiffHeaderSize;
+            int stateReaderOffset = entityFieldsOffset + classData.FieldsFlagsSize;
+
+            //preload interpolation info
+            Utils.ResizeIfFull(ref _interpolatedCaches, _interpolatedCachesCount + classData.InterpolatedCount);
+            
+            //interpolated fields goes first so can skip some checks
+            for (int i = 0; i < classData.InterpolatedCount; i++)
             {
-                ref var rpc = ref _syncableRemoteCallsCaches[i];
-                if (rpc.Executed)
+                if (!Utils.IsBitSet(Data, entityFieldsOffset, i))
                     continue;
-                if (!firstSync && Utils.SequenceDiff(rpc.Header.Tick, minimalTick) <= 0)
-                {
-                    //Logger.Log($"Skip rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick} <= MinimalTick: {minimalTick}. Id: {rpc.Header.Id}.");
-                    continue;
-                }
-                //Logger.Log($"Executing rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}. Type: {rpcType}");
-                var entity = entityManager.GetEntityById<InternalEntity>(rpc.EntityId);
-                if (entity == null)
-                {
-                    Logger.Log($"Entity is null: {rpc.EntityId}");
-                    continue;
-                }
-                rpc.Executed = true;
-                entityManager.CurrentRPCTick = rpc.Header.Tick;
+                ref var field = ref classData.Fields[i];
+                _interpolatedCaches[_interpolatedCachesCount++] = new InterpolatedCache(entity, ref field, stateReaderOffset);
+                stateReaderOffset += field.IntSize;
+            }
+        }
 
-                var syncableField = Utils.GetSyncableField(entity, rpc.SyncableOffsets);
-
-                if (syncSet.Add(syncableField))
-                    syncableField.BeforeReadRPC();
-                try
-                {
-                    rpc.Delegate(syncableField, new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.ByteCount));
-                }
-                catch (Exception e)
-                {
-                    Logger.LogError($"Error when executing syncableRPC: {entity}. RPCID: {rpc.Header.Id}. {e}");
-                }
+        public unsafe void RemoteInterpolation(InternalEntity[] entityDict, float logicLerpMsec)
+        {
+            for (int i = 0; i < _nullEntitiesCount; i++)
+            {
+                var entity = entityDict[_nullEntitiesData[i].EntityId];
+                if (entity == null) 
+                    continue;
+                
+                //Logger.Log($"Read pending interpolation: {entity.Id}");
+                PreloadInterpolation(entity, _nullEntitiesData[i].Offset);
+                    
+                //remove
+                _nullEntitiesCount--;
+                _nullEntitiesData[i] = _nullEntitiesData[_nullEntitiesCount];
+                i--;
             }
             
-            foreach (var syncableField in syncSet)
-                syncableField.AfterReadRPC();
-            entityManager.IsExecutingRPC = false;
+            for(int i = 0; i < _interpolatedCachesCount; i++)
+            {
+                ref var interpolatedCache = ref _interpolatedCaches[i];
+                fixed (byte* initialDataPtr = interpolatedCache.Entity.ClassData.ClientInterpolatedNextData(interpolatedCache.Entity), nextDataPtr = Data)
+                    interpolatedCache.TypeProcessor.SetInterpolation(
+                        interpolatedCache.Entity, 
+                        interpolatedCache.FieldOffsets,
+                        initialDataPtr + interpolatedCache.FieldFixedOffset,
+                        nextDataPtr + interpolatedCache.StateReaderOffset, 
+                        logicLerpMsec);
+            }
         }
         
-        public void ExecuteRpcs(ClientEntityManager entityManager, ushort minimalTick, bool firstSync)
+        public unsafe void ExecuteRpcs(ClientEntityManager entityManager, ushort minimalTick, bool firstSync)
         {
-            entityManager.IsExecutingRPC = true;
+            _syncablesSet.Clear();
             //if(_remoteCallsCount > 0)
             //    Logger.Log($"Executing rpcs (ST: {Tick}) for tick: {entityManager.ServerTick}, Min: {minimalTick}, Count: {_remoteCallsCount}");
-            for (int i = 0; i < _remoteCallsCount; i++)
+            fixed (byte* rawData = Data)
             {
-                ref var rpc = ref _remoteCallsCaches[i];
-                if (rpc.Executed)
-                    continue;
-                if (!firstSync)
+                while (_rpcReadPos < _rpcEndPos)
                 {
-                    if (Utils.SequenceDiff(rpc.Header.Tick, entityManager.ServerTick) > 0)
+                    if (_rpcEndPos - _rpcReadPos < _rpcDeltaCompressor.MinDeltaSize)
                     {
-                        //Logger.Log($"Skip rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick} > ServerTick: {entityManager.ServerTick}. Id: {rpc.Header.Id}.");
+                        Logger.LogError("Broken rpcs sizes?");
+                        break;
+                    }
+                    
+                    RPCHeader header = new();
+                    int encodedSize = _rpcDeltaCompressor.Decode(
+                        new ReadOnlySpan<byte>(rawData + _rpcReadPos, _rpcDeltaCompressor.MaxDeltaSize), 
+                        new Span<byte>(&header, sizeof(RPCHeader)));
+                    
+                    if (!firstSync)
+                    {
+                        if (Utils.SequenceDiff(header.Tick, entityManager.ServerTick) > 0)
+                        {
+                            //Logger.Log($"Skip rpc. Entity: {header.EntityId}. Tick {header.Tick} > ServerTick: {entityManager.ServerTick}. Id: {header.Id}.");
+                            break;
+                        }
+
+                        if (Utils.SequenceDiff(header.Tick, minimalTick) <= 0)
+                        {
+                            _rpcReadPos += header.ByteCount + encodedSize;
+                            //Logger.Log($"Skip rpc. Entity: {header.EntityId}. Tick {header.Tick} <= MinimalTick: {minimalTick}. Id: {header.Id}. StateATick: {entityManager.RawServerTick}. StateBTick: {entityManager.RawTargetServerTick}");
+                            continue;
+                        }
+                    }
+                    
+                    int rpcDataStart = _rpcReadPos + encodedSize;
+                    _rpcReadPos += encodedSize + header.ByteCount;
+
+                    //Logger.Log($"Executing rpc. Entity: {header.EntityId}. Tick {header.Tick}. Id: {header.Id}");
+                    var entity = entityManager.EntitiesDict[header.EntityId];
+                    if (entity == null)
+                    {
+                        if (header.Id == RemoteCallPacket.NewRPCId)
+                        {
+                            entityManager.ReadNewRPC(header.EntityId, rawData + rpcDataStart);
+                            continue;
+                        }
+   
+                        Logger.LogError($"Entity is null: {header.EntityId}. RPCId: {header.Id}");
                         continue;
                     }
-                    if (Utils.SequenceDiff(rpc.Header.Tick, minimalTick) <= 0)
+                    
+                    entityManager.CurrentRPCTick = header.Tick;
+                    
+                    var rpcFieldInfo = entityManager.ClassDataDict[entity.ClassId].RemoteCallsClient[header.Id];
+                    if (rpcFieldInfo.SyncableOffsets.SequenceEqual([-1]))
                     {
-                        //Logger.Log($"Skip rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick} <= MinimalTick: {minimalTick}. Id: {rpc.Header.Id}.");
-                        continue;
+                        try
+                        {
+                            if (header.Id == RemoteCallPacket.NewRPCId)
+                            {
+                                entityManager.ReadNewRPC(header.EntityId, rawData + rpcDataStart);
+                            }
+                            else if (header.Id == RemoteCallPacket.ConstructRPCId)
+                            {
+                                //Logger.Log($"ConstructRPC for entity: {header.EntityId}, RpcReadPos: {_rpcReadPos}, Tick: {header.Tick}");
+                                entityManager.ReadConstructRPC(header.EntityId, rawData, rpcDataStart);
+                            }
+                            else if (header.Id == RemoteCallPacket.DestroyRPCId)
+                            {
+                                entity.DestroyInternal();
+                            }
+                            else
+                            {
+                                rpcFieldInfo.Method(entity, new ReadOnlySpan<byte>(rawData + rpcDataStart, header.ByteCount));
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.LogError($"Error when executing RPC: {entity}. RPCID: {header.Id}. {e}");
+                        }
+                    }
+                    else
+                    {
+                        var syncableField = Utils.GetSyncableField(entity, rpcFieldInfo.SyncableOffsets);
+                        if (_syncablesSet.Add(syncableField))
+                        {
+                            syncableField.BeforeReadRPC();
+                        }
+                        try
+                        {
+                            rpcFieldInfo.Method(syncableField, new ReadOnlySpan<byte>(rawData + rpcDataStart, header.ByteCount));
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.LogError($"Error when executing syncableRPC: {entity}. RPCID: {header.Id}. {e}");
+                        }
                     }
                 }
-                //Logger.Log($"Executing rpc. Entity: {rpc.EntityId}. Tick {rpc.Header.Tick}. Id: {rpc.Header.Id}. Type: {rpcType}");
-                var entity = entityManager.GetEntityById<InternalEntity>(rpc.EntityId);
-                if (entity == null)
-                {
-                    Logger.Log($"Entity is null: {rpc.EntityId}");
-                    continue;
-                }
-                rpc.Executed = true;
-                entityManager.CurrentRPCTick = rpc.Header.Tick;
-                try
-                {
-                    rpc.Delegate(entity, new ReadOnlySpan<byte>(Data, rpc.Offset, rpc.Header.ByteCount));
-                }
-                catch (Exception e)
-                {
-                    Logger.LogError($"Error when executing RPC: {entity}. RPCID: {rpc.Header.Id}. {e}");
-                }
             }
-            entityManager.IsExecutingRPC = false;
-        }
-
-        public unsafe void ReadRPCs(byte* rawData, ref int position, EntitySharedReference entityId, ref EntityClassData classData)
-        {
-            int readCount = *(ushort*)(rawData + position);
-            //if(readCount > 0)
-            //    Logger.Log($"[CEM] ReadRPC Entity: {entityId.Id} Count: {readCount} posAfterData: {position}");
-            position += sizeof(ushort);
-            Utils.ResizeOrCreate(ref _remoteCallsCaches, _remoteCallsCount + readCount);
-            Utils.ResizeOrCreate(ref _syncableRemoteCallsCaches, _syncableRemoteCallsCount + readCount);
-            for (int i = 0; i < readCount; i++)
-            {
-                var header = *(RPCHeader*)(rawData + position);
-                if (header.Id >= classData.RemoteCallsClient.Length)
-                {
-                    Logger.LogError($"BrokenRPC at position: {position}, entityId: {entityId}, classId: {classData.ClassId}");
-                    return;
-                }
-                position += sizeof(RPCHeader);
-                var rpcCache = new RemoteCallsCache(header, entityId, classData.RemoteCallsClient[header.Id], position);
-                //Logger.Log($"[CEM] ReadRPC. RpcId: {header.Id}, Tick: {header.Tick}, TypeSize: {header.TypeSize}, Count: {header.Count}");
-
-                //this is entity rpc
-                if (rpcCache.SyncableOffsets.Length == 0)
-                {
-                    _remoteCallsCaches[_remoteCallsCount] = rpcCache;
-                    _remoteCallsCount++;
-                }
-                else
-                {
-                    _syncableRemoteCallsCaches[_syncableRemoteCallsCount] = rpcCache;
-                    _syncableRemoteCallsCount++;
-                }
-     
-                position += header.ByteCount;
-            }
+            foreach (var syncableField in _syncablesSet)
+                syncableField.AfterReadRPC();
         }
 
         public void Reset(ushort tick)
         {
             Tick = tick;
             _receivedParts.SetAll(false);
-            InterpolatedCachesCount = 0;
+            _interpolatedCachesCount = 0;
             _maxReceivedPart = 0;
             _receivedPartsCount = 0;
             _totalPartsCount = 0;
-            _remoteCallsCount = 0;
-            _syncableRemoteCallsCount = 0;
             Size = 0;
             _partMtu = 0;
+            _nullEntitiesCount = 0;
+            _rpcReadPos = 0;
+            _rpcDeltaCompressor.Init();
+        }
+
+        public unsafe bool ReadBaseline(BaselineDataHeader header, byte* rawData, int fullSize)
+        {
+            Reset(header.Tick);
+            Size = header.OriginalLength;
+            Data = new byte[header.OriginalLength];
+            _dataOffset = header.EventsSize;
+            _dataSize = header.OriginalLength - header.EventsSize;
+            _rpcEndPos = header.EventsSize;
+            _rpcReadPos = 0;
+            fixed (byte* stateData = Data)
+            {
+                int decodedBytes = LZ4Codec.Decode(
+                    rawData + sizeof(BaselineDataHeader),
+                    fullSize - sizeof(BaselineDataHeader),
+                    stateData,
+                    Size);
+                if (decodedBytes != header.OriginalLength)
+                {
+                    Logger.LogError("Error on decompress");
+                    return false;
+                }
+            }
+            return true;
         }
 
         public unsafe bool ReadPart(DiffPartHeader partHeader, byte* rawData, int partSize)
@@ -279,6 +393,8 @@ namespace LiteEntitySystem.Internal
                 LastReceivedTick = lastPartData.LastReceivedTick;
                 ProcessedTick = lastPartData.LastProcessedTick;
                 BufferedInputsCount = lastPartData.BufferedInputsCount;
+                _dataOffset = lastPartData.EventsSize;
+                _rpcEndPos = lastPartData.EventsSize;
                 //Logger.Log($"TPC: {partHeader.Part} {_partMtu}, LastReceivedTick: {LastReceivedTick}, LastProcessedTick: {ProcessedTick}");
             }
             partSize -= sizeof(DiffPartHeader);
@@ -293,7 +409,13 @@ namespace LiteEntitySystem.Internal
             Size += partSize;
             _receivedPartsCount++;
             _maxReceivedPart = partHeader.Part > _maxReceivedPart ? partHeader.Part : _maxReceivedPart;
-            return _receivedPartsCount == _totalPartsCount;
+
+            if (_receivedPartsCount == _totalPartsCount)
+            {
+                _dataSize = Size - _dataOffset;
+                return true;
+            }
+            return false;
         }
     }
 }

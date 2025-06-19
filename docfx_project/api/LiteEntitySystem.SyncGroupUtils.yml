@@ -1,0 +1,173 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.SyncGroupUtils
+  commentId: T:LiteEntitySystem.SyncGroupUtils
+  id: SyncGroupUtils
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.SyncGroupUtils.IsRPCDisabled(LiteEntitySystem.SyncGroup,LiteEntitySystem.ExecuteFlags)
+  - LiteEntitySystem.SyncGroupUtils.IsSyncVarDisabled(LiteEntitySystem.SyncGroup,LiteEntitySystem.SyncFlags)
+  - LiteEntitySystem.SyncGroupUtils.ToSyncFlags(LiteEntitySystem.SyncGroup)
+  langs:
+  - csharp
+  - vb
+  name: SyncGroupUtils
+  nameWithType: SyncGroupUtils
+  fullName: LiteEntitySystem.SyncGroupUtils
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public static class SyncGroupUtils
+    content.vb: Public Module SyncGroupUtils
+  inheritance:
+  - System.Object
+- uid: LiteEntitySystem.SyncGroupUtils.ToSyncFlags(LiteEntitySystem.SyncGroup)
+  commentId: M:LiteEntitySystem.SyncGroupUtils.ToSyncFlags(LiteEntitySystem.SyncGroup)
+  id: ToSyncFlags(LiteEntitySystem.SyncGroup)
+  parent: LiteEntitySystem.SyncGroupUtils
+  langs:
+  - csharp
+  - vb
+  name: ToSyncFlags(SyncGroup)
+  nameWithType: SyncGroupUtils.ToSyncFlags(SyncGroup)
+  fullName: LiteEntitySystem.SyncGroupUtils.ToSyncFlags(LiteEntitySystem.SyncGroup)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public static SyncFlags ToSyncFlags(SyncGroup sv)
+    parameters:
+    - id: sv
+      type: LiteEntitySystem.SyncGroup
+    return:
+      type: LiteEntitySystem.SyncFlags
+    content.vb: Public Shared Function ToSyncFlags(sv As SyncGroup) As SyncFlags
+  overload: LiteEntitySystem.SyncGroupUtils.ToSyncFlags*
+- uid: LiteEntitySystem.SyncGroupUtils.IsSyncVarDisabled(LiteEntitySystem.SyncGroup,LiteEntitySystem.SyncFlags)
+  commentId: M:LiteEntitySystem.SyncGroupUtils.IsSyncVarDisabled(LiteEntitySystem.SyncGroup,LiteEntitySystem.SyncFlags)
+  id: IsSyncVarDisabled(LiteEntitySystem.SyncGroup,LiteEntitySystem.SyncFlags)
+  parent: LiteEntitySystem.SyncGroupUtils
+  langs:
+  - csharp
+  - vb
+  name: IsSyncVarDisabled(SyncGroup, SyncFlags)
+  nameWithType: SyncGroupUtils.IsSyncVarDisabled(SyncGroup, SyncFlags)
+  fullName: LiteEntitySystem.SyncGroupUtils.IsSyncVarDisabled(LiteEntitySystem.SyncGroup, LiteEntitySystem.SyncFlags)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public static bool IsSyncVarDisabled(SyncGroup sv, SyncFlags flags)
+    parameters:
+    - id: sv
+      type: LiteEntitySystem.SyncGroup
+    - id: flags
+      type: LiteEntitySystem.SyncFlags
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function IsSyncVarDisabled(sv As SyncGroup, flags As SyncFlags) As Boolean
+  overload: LiteEntitySystem.SyncGroupUtils.IsSyncVarDisabled*
+- uid: LiteEntitySystem.SyncGroupUtils.IsRPCDisabled(LiteEntitySystem.SyncGroup,LiteEntitySystem.ExecuteFlags)
+  commentId: M:LiteEntitySystem.SyncGroupUtils.IsRPCDisabled(LiteEntitySystem.SyncGroup,LiteEntitySystem.ExecuteFlags)
+  id: IsRPCDisabled(LiteEntitySystem.SyncGroup,LiteEntitySystem.ExecuteFlags)
+  parent: LiteEntitySystem.SyncGroupUtils
+  langs:
+  - csharp
+  - vb
+  name: IsRPCDisabled(SyncGroup, ExecuteFlags)
+  nameWithType: SyncGroupUtils.IsRPCDisabled(SyncGroup, ExecuteFlags)
+  fullName: LiteEntitySystem.SyncGroupUtils.IsRPCDisabled(LiteEntitySystem.SyncGroup, LiteEntitySystem.ExecuteFlags)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public static bool IsRPCDisabled(SyncGroup sv, ExecuteFlags flags)
+    parameters:
+    - id: sv
+      type: LiteEntitySystem.SyncGroup
+    - id: flags
+      type: LiteEntitySystem.ExecuteFlags
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function IsRPCDisabled(sv As SyncGroup, flags As ExecuteFlags) As Boolean
+  overload: LiteEntitySystem.SyncGroupUtils.IsRPCDisabled*
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.SyncGroupUtils.ToSyncFlags*
+  commentId: Overload:LiteEntitySystem.SyncGroupUtils.ToSyncFlags
+  href: LiteEntitySystem.SyncGroupUtils.html#LiteEntitySystem_SyncGroupUtils_ToSyncFlags_LiteEntitySystem_SyncGroup_
+  name: ToSyncFlags
+  nameWithType: SyncGroupUtils.ToSyncFlags
+  fullName: LiteEntitySystem.SyncGroupUtils.ToSyncFlags
+- uid: LiteEntitySystem.SyncGroup
+  commentId: T:LiteEntitySystem.SyncGroup
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.SyncGroup.html
+  name: SyncGroup
+  nameWithType: SyncGroup
+  fullName: LiteEntitySystem.SyncGroup
+- uid: LiteEntitySystem.SyncFlags
+  commentId: T:LiteEntitySystem.SyncFlags
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.SyncFlags.html
+  name: SyncFlags
+  nameWithType: SyncFlags
+  fullName: LiteEntitySystem.SyncFlags
+- uid: LiteEntitySystem.SyncGroupUtils.IsSyncVarDisabled*
+  commentId: Overload:LiteEntitySystem.SyncGroupUtils.IsSyncVarDisabled
+  href: LiteEntitySystem.SyncGroupUtils.html#LiteEntitySystem_SyncGroupUtils_IsSyncVarDisabled_LiteEntitySystem_SyncGroup_LiteEntitySystem_SyncFlags_
+  name: IsSyncVarDisabled
+  nameWithType: SyncGroupUtils.IsSyncVarDisabled
+  fullName: LiteEntitySystem.SyncGroupUtils.IsSyncVarDisabled
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: LiteEntitySystem.SyncGroupUtils.IsRPCDisabled*
+  commentId: Overload:LiteEntitySystem.SyncGroupUtils.IsRPCDisabled
+  href: LiteEntitySystem.SyncGroupUtils.html#LiteEntitySystem_SyncGroupUtils_IsRPCDisabled_LiteEntitySystem_SyncGroup_LiteEntitySystem_ExecuteFlags_
+  name: IsRPCDisabled
+  nameWithType: SyncGroupUtils.IsRPCDisabled
+  fullName: LiteEntitySystem.SyncGroupUtils.IsRPCDisabled
+- uid: LiteEntitySystem.ExecuteFlags
+  commentId: T:LiteEntitySystem.ExecuteFlags
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.ExecuteFlags.html
+  name: ExecuteFlags
+  nameWithType: ExecuteFlags
+  fullName: LiteEntitySystem.ExecuteFlags

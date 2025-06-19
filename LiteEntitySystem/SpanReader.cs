@@ -27,6 +27,17 @@ namespace LiteEntitySystem
             result = constructor();
             result.Deserialize(ref this);
         }
+
+        public void GetStruct<T>(out T result) where T : unmanaged => result = GetStruct<T>();
+        
+        public unsafe T GetStruct<T>() where T : unmanaged
+        {
+            T value;
+            fixed (byte* rawData = RawData)
+                value = *(T*)(rawData+Position);
+            Position += sizeof(T);
+            return value;
+        }
         
         public void Get(out byte result) => result = GetByte();
         public void Get(out sbyte result) => result = (sbyte)GetByte();

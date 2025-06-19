@@ -99,6 +99,12 @@ namespace LiteEntitySystem
             new ReadOnlySpan<byte>(data).CopyTo(RawData.Slice(Position, data.Length));
             Position += data.Length;
         }
+        
+        public void Put(ReadOnlySpan<byte> data)
+        {
+            data.CopyTo(RawData.Slice(Position, data.Length));
+            Position += data.Length;
+        }
 
         public void PutSBytesWithLength(sbyte[] data, int offset, ushort length)
         {
@@ -112,6 +118,21 @@ namespace LiteEntitySystem
             Put(length);
             new ReadOnlySpan<byte>(data, offset, length).CopyTo(RawData.Slice(Position + 2, length));
             Position += 2 + length;
+        }
+
+        public unsafe void PutStruct<T>(T data) where T : unmanaged
+        {
+            Put(sizeof(T));
+            fixed (byte* rawData = RawData)
+                *(T*) (rawData + Position) = data;
+            Position += sizeof(T);
+        }
+        
+        public void PutBytesWithLength(ReadOnlySpan<byte> data)
+        {
+            Put(data.Length);
+            data.CopyTo(RawData.Slice(Position + 2, data.Length));
+            Position += 2 + data.Length;
         }
         
         public void PutArray<T>(T[] arr, int sz) where T : unmanaged

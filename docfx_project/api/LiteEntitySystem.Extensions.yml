@@ -1,0 +1,338 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.Extensions
+  commentId: N:LiteEntitySystem.Extensions
+  id: LiteEntitySystem.Extensions
+  children:
+  - LiteEntitySystem.Extensions.FloatAngle
+  - LiteEntitySystem.Extensions.StateCalls
+  - LiteEntitySystem.Extensions.SyncArray`1
+  - LiteEntitySystem.Extensions.SyncDict`2
+  - LiteEntitySystem.Extensions.SyncFixedArray`1
+  - LiteEntitySystem.Extensions.SyncHashSet`1
+  - LiteEntitySystem.Extensions.SyncList`1
+  - LiteEntitySystem.Extensions.SyncNetSerializable`1
+  - LiteEntitySystem.Extensions.SyncQueue`1
+  - LiteEntitySystem.Extensions.SyncSpanSerializable`1
+  - LiteEntitySystem.Extensions.SyncSquare`1
+  - LiteEntitySystem.Extensions.SyncStateMachine`1
+  - LiteEntitySystem.Extensions.SyncString
+  - LiteEntitySystem.Extensions.SyncTimer
+  langs:
+  - csharp
+  - vb
+  name: LiteEntitySystem.Extensions
+  nameWithType: LiteEntitySystem.Extensions
+  fullName: LiteEntitySystem.Extensions
+  type: Namespace
+  assemblies:
+  - LiteEntitySystem
+references:
+- uid: LiteEntitySystem.Extensions.FloatAngle
+  commentId: T:LiteEntitySystem.Extensions.FloatAngle
+  parent: LiteEntitySystem.Extensions
+  href: LiteEntitySystem.Extensions.FloatAngle.html
+  name: FloatAngle
+  nameWithType: FloatAngle
+  fullName: LiteEntitySystem.Extensions.FloatAngle
+- uid: LiteEntitySystem.Extensions.SyncArray`1
+  commentId: T:LiteEntitySystem.Extensions.SyncArray`1
+  href: LiteEntitySystem.Extensions.SyncArray-1.html
+  name: SyncArray<T>
+  nameWithType: SyncArray<T>
+  fullName: LiteEntitySystem.Extensions.SyncArray<T>
+  nameWithType.vb: SyncArray(Of T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncArray(Of T)
+  name.vb: SyncArray(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Extensions.SyncArray`1
+    name: SyncArray
+    href: LiteEntitySystem.Extensions.SyncArray-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Extensions.SyncArray`1
+    name: SyncArray
+    href: LiteEntitySystem.Extensions.SyncArray-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncDict`2
+  commentId: T:LiteEntitySystem.Extensions.SyncDict`2
+  href: LiteEntitySystem.Extensions.SyncDict-2.html
+  name: SyncDict<TKey, TValue>
+  nameWithType: SyncDict<TKey, TValue>
+  fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>
+  nameWithType.vb: SyncDict(Of TKey, TValue)
+  fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue)
+  name.vb: SyncDict(Of TKey, TValue)
+  spec.csharp:
+  - uid: LiteEntitySystem.Extensions.SyncDict`2
+    name: SyncDict
+    href: LiteEntitySystem.Extensions.SyncDict-2.html
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Extensions.SyncDict`2
+    name: SyncDict
+    href: LiteEntitySystem.Extensions.SyncDict-2.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncFixedArray`1
+  commentId: T:LiteEntitySystem.Extensions.SyncFixedArray`1
+  href: LiteEntitySystem.Extensions.SyncFixedArray-1.html
+  name: SyncFixedArray<T>
+  nameWithType: SyncFixedArray<T>
+  fullName: LiteEntitySystem.Extensions.SyncFixedArray<T>
+  nameWithType.vb: SyncFixedArray(Of T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncFixedArray(Of T)
+  name.vb: SyncFixedArray(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Extensions.SyncFixedArray`1
+    name: SyncFixedArray
+    href: LiteEntitySystem.Extensions.SyncFixedArray-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Extensions.SyncFixedArray`1
+    name: SyncFixedArray
+    href: LiteEntitySystem.Extensions.SyncFixedArray-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1
+  commentId: T:LiteEntitySystem.Extensions.SyncHashSet`1
+  href: LiteEntitySystem.Extensions.SyncHashSet-1.html
+  name: SyncHashSet<T>
+  nameWithType: SyncHashSet<T>
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>
+  nameWithType.vb: SyncHashSet(Of T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T)
+  name.vb: SyncHashSet(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Extensions.SyncHashSet`1
+    name: SyncHashSet
+    href: LiteEntitySystem.Extensions.SyncHashSet-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Extensions.SyncHashSet`1
+    name: SyncHashSet
+    href: LiteEntitySystem.Extensions.SyncHashSet-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncList`1
+  commentId: T:LiteEntitySystem.Extensions.SyncList`1
+  href: LiteEntitySystem.Extensions.SyncList-1.html
+  name: SyncList<T>
+  nameWithType: SyncList<T>
+  fullName: LiteEntitySystem.Extensions.SyncList<T>
+  nameWithType.vb: SyncList(Of T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T)
+  name.vb: SyncList(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Extensions.SyncList`1
+    name: SyncList
+    href: LiteEntitySystem.Extensions.SyncList-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Extensions.SyncList`1
+    name: SyncList
+    href: LiteEntitySystem.Extensions.SyncList-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncNetSerializable`1
+  commentId: T:LiteEntitySystem.Extensions.SyncNetSerializable`1
+  parent: LiteEntitySystem.Extensions
+  href: LiteEntitySystem.Extensions.SyncNetSerializable-1.html
+  name: SyncNetSerializable<T>
+  nameWithType: SyncNetSerializable<T>
+  fullName: LiteEntitySystem.Extensions.SyncNetSerializable<T>
+  nameWithType.vb: SyncNetSerializable(Of T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncNetSerializable(Of T)
+  name.vb: SyncNetSerializable(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Extensions.SyncNetSerializable`1
+    name: SyncNetSerializable
+    href: LiteEntitySystem.Extensions.SyncNetSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Extensions.SyncNetSerializable`1
+    name: SyncNetSerializable
+    href: LiteEntitySystem.Extensions.SyncNetSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncQueue`1
+  commentId: T:LiteEntitySystem.Extensions.SyncQueue`1
+  href: LiteEntitySystem.Extensions.SyncQueue-1.html
+  name: SyncQueue<T>
+  nameWithType: SyncQueue<T>
+  fullName: LiteEntitySystem.Extensions.SyncQueue<T>
+  nameWithType.vb: SyncQueue(Of T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T)
+  name.vb: SyncQueue(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Extensions.SyncQueue`1
+    name: SyncQueue
+    href: LiteEntitySystem.Extensions.SyncQueue-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Extensions.SyncQueue`1
+    name: SyncQueue
+    href: LiteEntitySystem.Extensions.SyncQueue-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncSpanSerializable`1
+  commentId: T:LiteEntitySystem.Extensions.SyncSpanSerializable`1
+  parent: LiteEntitySystem.Extensions
+  href: LiteEntitySystem.Extensions.SyncSpanSerializable-1.html
+  name: SyncSpanSerializable<T>
+  nameWithType: SyncSpanSerializable<T>
+  fullName: LiteEntitySystem.Extensions.SyncSpanSerializable<T>
+  nameWithType.vb: SyncSpanSerializable(Of T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncSpanSerializable(Of T)
+  name.vb: SyncSpanSerializable(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Extensions.SyncSpanSerializable`1
+    name: SyncSpanSerializable
+    href: LiteEntitySystem.Extensions.SyncSpanSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Extensions.SyncSpanSerializable`1
+    name: SyncSpanSerializable
+    href: LiteEntitySystem.Extensions.SyncSpanSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncSquare`1
+  commentId: T:LiteEntitySystem.Extensions.SyncSquare`1
+  href: LiteEntitySystem.Extensions.SyncSquare-1.html
+  name: SyncSquare<T>
+  nameWithType: SyncSquare<T>
+  fullName: LiteEntitySystem.Extensions.SyncSquare<T>
+  nameWithType.vb: SyncSquare(Of T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncSquare(Of T)
+  name.vb: SyncSquare(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Extensions.SyncSquare`1
+    name: SyncSquare
+    href: LiteEntitySystem.Extensions.SyncSquare-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Extensions.SyncSquare`1
+    name: SyncSquare
+    href: LiteEntitySystem.Extensions.SyncSquare-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Extensions.StateCalls
+  commentId: T:LiteEntitySystem.Extensions.StateCalls
+  parent: LiteEntitySystem.Extensions
+  href: LiteEntitySystem.Extensions.StateCalls.html
+  name: StateCalls
+  nameWithType: StateCalls
+  fullName: LiteEntitySystem.Extensions.StateCalls
+- uid: LiteEntitySystem.Extensions.SyncStateMachine`1
+  commentId: T:LiteEntitySystem.Extensions.SyncStateMachine`1
+  parent: LiteEntitySystem.Extensions
+  href: LiteEntitySystem.Extensions.SyncStateMachine-1.html
+  name: SyncStateMachine<T>
+  nameWithType: SyncStateMachine<T>
+  fullName: LiteEntitySystem.Extensions.SyncStateMachine<T>
+  nameWithType.vb: SyncStateMachine(Of T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncStateMachine(Of T)
+  name.vb: SyncStateMachine(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Extensions.SyncStateMachine`1
+    name: SyncStateMachine
+    href: LiteEntitySystem.Extensions.SyncStateMachine-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Extensions.SyncStateMachine`1
+    name: SyncStateMachine
+    href: LiteEntitySystem.Extensions.SyncStateMachine-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncString
+  commentId: T:LiteEntitySystem.Extensions.SyncString
+  parent: LiteEntitySystem.Extensions
+  href: LiteEntitySystem.Extensions.SyncString.html
+  name: SyncString
+  nameWithType: SyncString
+  fullName: LiteEntitySystem.Extensions.SyncString
+- uid: LiteEntitySystem.Extensions.SyncTimer
+  commentId: T:LiteEntitySystem.Extensions.SyncTimer
+  href: LiteEntitySystem.Extensions.SyncTimer.html
+  name: SyncTimer
+  nameWithType: SyncTimer
+  fullName: LiteEntitySystem.Extensions.SyncTimer
+- uid: LiteEntitySystem.Extensions
+  commentId: N:LiteEntitySystem.Extensions
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Extensions
+  nameWithType: LiteEntitySystem.Extensions
+  fullName: LiteEntitySystem.Extensions
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Extensions
+    name: Extensions
+    href: LiteEntitySystem.Extensions.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Extensions
+    name: Extensions
+    href: LiteEntitySystem.Extensions.html

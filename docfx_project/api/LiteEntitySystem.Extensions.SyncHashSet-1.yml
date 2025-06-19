@@ -1,0 +1,1317 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1
+  commentId: T:LiteEntitySystem.Extensions.SyncHashSet`1
+  id: SyncHashSet`1
+  parent: LiteEntitySystem.Extensions
+  children:
+  - LiteEntitySystem.Extensions.SyncHashSet`1.Add(`0)
+  - LiteEntitySystem.Extensions.SyncHashSet`1.AfterReadRPC
+  - LiteEntitySystem.Extensions.SyncHashSet`1.BeforeReadRPC
+  - LiteEntitySystem.Extensions.SyncHashSet`1.Clear
+  - LiteEntitySystem.Extensions.SyncHashSet`1.Contains(`0)
+  - LiteEntitySystem.Extensions.SyncHashSet`1.Count
+  - LiteEntitySystem.Extensions.SyncHashSet`1.GetEnumerator
+  - LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported
+  - LiteEntitySystem.Extensions.SyncHashSet`1.OnRollback
+  - LiteEntitySystem.Extensions.SyncHashSet`1.OnSyncRequested
+  - LiteEntitySystem.Extensions.SyncHashSet`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  - LiteEntitySystem.Extensions.SyncHashSet`1.Remove(`0)
+  - LiteEntitySystem.Extensions.SyncHashSet`1.ToArray
+  langs:
+  - csharp
+  - vb
+  name: SyncHashSet<T>
+  nameWithType: SyncHashSet<T>
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: 'public class SyncHashSet<T> : SyncableField, IEnumerable<T>, IEnumerable where T : unmanaged'
+    typeParameters:
+    - id: T
+    content.vb: Public Class SyncHashSet(Of T As Structure) Inherits SyncableField Implements IEnumerable(Of T), IEnumerable
+  inheritance:
+  - System.Object
+  - LiteEntitySystem.Internal.InternalBaseClass
+  - LiteEntitySystem.SyncableField
+  implements:
+  - System.Collections.Generic.IEnumerable{{T}}
+  - System.Collections.IEnumerable
+  inheritedMembers:
+  - LiteEntitySystem.SyncableField.IsClient
+  - LiteEntitySystem.SyncableField.IsServer
+  - LiteEntitySystem.SyncableField.ParentEntity
+  - LiteEntitySystem.SyncableField.ParentEntityLogic
+  - LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
+  - LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{{T}}@,{T})
+  - LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{{T}}@,System.ReadOnlySpan{{T}})
+  - LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{{T}}@,{T})
+  nameWithType.vb: SyncHashSet(Of T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T)
+  name.vb: SyncHashSet(Of T)
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.Count
+  commentId: P:LiteEntitySystem.Extensions.SyncHashSet`1.Count
+  id: Count
+  parent: LiteEntitySystem.Extensions.SyncHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: Count
+  nameWithType: SyncHashSet<T>.Count
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.Count
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: public int Count { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Count As Integer
+  overload: LiteEntitySystem.Extensions.SyncHashSet`1.Count*
+  nameWithType.vb: SyncHashSet(Of T).Count
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).Count
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported
+  commentId: P:LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported
+  id: IsRollbackSupported
+  parent: LiteEntitySystem.Extensions.SyncHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: IsRollbackSupported
+  nameWithType: SyncHashSet<T>.IsRollbackSupported
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.IsRollbackSupported
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  summary: Is supported rollback by this syncable field
+  example: []
+  syntax:
+    content: public override bool IsRollbackSupported { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Overrides ReadOnly Property IsRollbackSupported As Boolean
+  overridden: LiteEntitySystem.SyncableField.IsRollbackSupported
+  overload: LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported*
+  nameWithType.vb: SyncHashSet(Of T).IsRollbackSupported
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).IsRollbackSupported
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  commentId: M:LiteEntitySystem.Extensions.SyncHashSet`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  id: RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  parent: LiteEntitySystem.Extensions.SyncHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: RegisterRPC(ref SyncableRPCRegistrator)
+  nameWithType: SyncHashSet<T>.RegisterRPC(ref SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  example: []
+  syntax:
+    content: protected override void RegisterRPC(ref SyncableRPCRegistrator r)
+    parameters:
+    - id: r
+      type: LiteEntitySystem.SyncableRPCRegistrator
+    content.vb: Protected Overrides Sub RegisterRPC(r As SyncableRPCRegistrator)
+  overridden: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  overload: LiteEntitySystem.Extensions.SyncHashSet`1.RegisterRPC*
+  nameWithType.vb: SyncHashSet(Of T).RegisterRPC(SyncableRPCRegistrator)
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
+  name.vb: RegisterRPC(SyncableRPCRegistrator)
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.OnRollback
+  commentId: M:LiteEntitySystem.Extensions.SyncHashSet`1.OnRollback
+  id: OnRollback
+  parent: LiteEntitySystem.Extensions.SyncHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: OnRollback()
+  nameWithType: SyncHashSet<T>.OnRollback()
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.OnRollback()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  example: []
+  syntax:
+    content: protected override void OnRollback()
+    content.vb: Protected Overrides Sub OnRollback()
+  overridden: LiteEntitySystem.SyncableField.OnRollback
+  overload: LiteEntitySystem.Extensions.SyncHashSet`1.OnRollback*
+  nameWithType.vb: SyncHashSet(Of T).OnRollback()
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).OnRollback()
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.BeforeReadRPC
+  commentId: M:LiteEntitySystem.Extensions.SyncHashSet`1.BeforeReadRPC
+  id: BeforeReadRPC
+  parent: LiteEntitySystem.Extensions.SyncHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: BeforeReadRPC()
+  nameWithType: SyncHashSet<T>.BeforeReadRPC()
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.BeforeReadRPC()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  example: []
+  syntax:
+    content: protected override void BeforeReadRPC()
+    content.vb: Protected Overrides Sub BeforeReadRPC()
+  overridden: LiteEntitySystem.SyncableField.BeforeReadRPC
+  overload: LiteEntitySystem.Extensions.SyncHashSet`1.BeforeReadRPC*
+  nameWithType.vb: SyncHashSet(Of T).BeforeReadRPC()
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).BeforeReadRPC()
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.AfterReadRPC
+  commentId: M:LiteEntitySystem.Extensions.SyncHashSet`1.AfterReadRPC
+  id: AfterReadRPC
+  parent: LiteEntitySystem.Extensions.SyncHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: AfterReadRPC()
+  nameWithType: SyncHashSet<T>.AfterReadRPC()
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.AfterReadRPC()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  example: []
+  syntax:
+    content: protected override void AfterReadRPC()
+    content.vb: Protected Overrides Sub AfterReadRPC()
+  overridden: LiteEntitySystem.SyncableField.AfterReadRPC
+  overload: LiteEntitySystem.Extensions.SyncHashSet`1.AfterReadRPC*
+  nameWithType.vb: SyncHashSet(Of T).AfterReadRPC()
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).AfterReadRPC()
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.OnSyncRequested
+  commentId: M:LiteEntitySystem.Extensions.SyncHashSet`1.OnSyncRequested
+  id: OnSyncRequested
+  parent: LiteEntitySystem.Extensions.SyncHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: OnSyncRequested()
+  nameWithType: SyncHashSet<T>.OnSyncRequested()
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.OnSyncRequested()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  example: []
+  syntax:
+    content: protected override void OnSyncRequested()
+    content.vb: Protected Overrides Sub OnSyncRequested()
+  overridden: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+  overload: LiteEntitySystem.Extensions.SyncHashSet`1.OnSyncRequested*
+  nameWithType.vb: SyncHashSet(Of T).OnSyncRequested()
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).OnSyncRequested()
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.ToArray
+  commentId: M:LiteEntitySystem.Extensions.SyncHashSet`1.ToArray
+  id: ToArray
+  parent: LiteEntitySystem.Extensions.SyncHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: ToArray()
+  nameWithType: SyncHashSet<T>.ToArray()
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.ToArray()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  summary: To array
+  example: []
+  syntax:
+    content: public T[] ToArray()
+    return:
+      type: '{T}[]'
+      description: hashset copied array. Returns null if HashSet is empty
+    content.vb: Public Function ToArray() As T()
+  overload: LiteEntitySystem.Extensions.SyncHashSet`1.ToArray*
+  nameWithType.vb: SyncHashSet(Of T).ToArray()
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).ToArray()
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.Add(`0)
+  commentId: M:LiteEntitySystem.Extensions.SyncHashSet`1.Add(`0)
+  id: Add(`0)
+  parent: LiteEntitySystem.Extensions.SyncHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: Add(T)
+  nameWithType: SyncHashSet<T>.Add(T)
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.Add(T)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: public void Add(T x)
+    parameters:
+    - id: x
+      type: '{T}'
+    content.vb: Public Sub Add(x As T)
+  overload: LiteEntitySystem.Extensions.SyncHashSet`1.Add*
+  nameWithType.vb: SyncHashSet(Of T).Add(T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).Add(T)
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.Clear
+  commentId: M:LiteEntitySystem.Extensions.SyncHashSet`1.Clear
+  id: Clear
+  parent: LiteEntitySystem.Extensions.SyncHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: Clear()
+  nameWithType: SyncHashSet<T>.Clear()
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.Clear()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: public void Clear()
+    content.vb: Public Sub Clear()
+  overload: LiteEntitySystem.Extensions.SyncHashSet`1.Clear*
+  nameWithType.vb: SyncHashSet(Of T).Clear()
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).Clear()
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.Contains(`0)
+  commentId: M:LiteEntitySystem.Extensions.SyncHashSet`1.Contains(`0)
+  id: Contains(`0)
+  parent: LiteEntitySystem.Extensions.SyncHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: Contains(T)
+  nameWithType: SyncHashSet<T>.Contains(T)
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.Contains(T)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: public bool Contains(T x)
+    parameters:
+    - id: x
+      type: '{T}'
+    return:
+      type: System.Boolean
+    content.vb: Public Function Contains(x As T) As Boolean
+  overload: LiteEntitySystem.Extensions.SyncHashSet`1.Contains*
+  nameWithType.vb: SyncHashSet(Of T).Contains(T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).Contains(T)
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.Remove(`0)
+  commentId: M:LiteEntitySystem.Extensions.SyncHashSet`1.Remove(`0)
+  id: Remove(`0)
+  parent: LiteEntitySystem.Extensions.SyncHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: Remove(T)
+  nameWithType: SyncHashSet<T>.Remove(T)
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.Remove(T)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: public bool Remove(T key)
+    parameters:
+    - id: key
+      type: '{T}'
+    return:
+      type: System.Boolean
+    content.vb: Public Function Remove(key As T) As Boolean
+  overload: LiteEntitySystem.Extensions.SyncHashSet`1.Remove*
+  nameWithType.vb: SyncHashSet(Of T).Remove(T)
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).Remove(T)
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.GetEnumerator
+  commentId: M:LiteEntitySystem.Extensions.SyncHashSet`1.GetEnumerator
+  id: GetEnumerator
+  parent: LiteEntitySystem.Extensions.SyncHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: GetEnumerator()
+  nameWithType: SyncHashSet<T>.GetEnumerator()
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.GetEnumerator()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: public HashSet<T>.Enumerator GetEnumerator()
+    return:
+      type: System.Collections.Generic.HashSet{{T}}.Enumerator
+    content.vb: Public Function GetEnumerator() As HashSet(Of T).Enumerator
+  overload: LiteEntitySystem.Extensions.SyncHashSet`1.GetEnumerator*
+  nameWithType.vb: SyncHashSet(Of T).GetEnumerator()
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).GetEnumerator()
+references:
+- uid: LiteEntitySystem.Extensions
+  commentId: N:LiteEntitySystem.Extensions
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Extensions
+  nameWithType: LiteEntitySystem.Extensions
+  fullName: LiteEntitySystem.Extensions
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Extensions
+    name: Extensions
+    href: LiteEntitySystem.Extensions.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Extensions
+    name: Extensions
+    href: LiteEntitySystem.Extensions.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: LiteEntitySystem.Internal.InternalBaseClass
+  commentId: T:LiteEntitySystem.Internal.InternalBaseClass
+  parent: LiteEntitySystem.Internal
+  href: LiteEntitySystem.Internal.InternalBaseClass.html
+  name: InternalBaseClass
+  nameWithType: InternalBaseClass
+  fullName: LiteEntitySystem.Internal.InternalBaseClass
+- uid: LiteEntitySystem.SyncableField
+  commentId: T:LiteEntitySystem.SyncableField
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.SyncableField.html
+  name: SyncableField
+  nameWithType: SyncableField
+  fullName: LiteEntitySystem.SyncableField
+- uid: System.Collections.Generic.IEnumerable{{T}}
+  commentId: T:System.Collections.Generic.IEnumerable{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.IEnumerable
+  commentId: T:System.Collections.IEnumerable
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerable
+  name: IEnumerable
+  nameWithType: IEnumerable
+  fullName: System.Collections.IEnumerable
+- uid: LiteEntitySystem.SyncableField.IsClient
+  commentId: P:LiteEntitySystem.SyncableField.IsClient
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsClient
+  name: IsClient
+  nameWithType: SyncableField.IsClient
+  fullName: LiteEntitySystem.SyncableField.IsClient
+- uid: LiteEntitySystem.SyncableField.IsServer
+  commentId: P:LiteEntitySystem.SyncableField.IsServer
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsServer
+  name: IsServer
+  nameWithType: SyncableField.IsServer
+  fullName: LiteEntitySystem.SyncableField.IsServer
+- uid: LiteEntitySystem.SyncableField.ParentEntity
+  commentId: P:LiteEntitySystem.SyncableField.ParentEntity
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ParentEntity
+  name: ParentEntity
+  nameWithType: SyncableField.ParentEntity
+  fullName: LiteEntitySystem.SyncableField.ParentEntity
+- uid: LiteEntitySystem.SyncableField.ParentEntityLogic
+  commentId: P:LiteEntitySystem.SyncableField.ParentEntityLogic
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ParentEntityLogic
+  name: ParentEntityLogic
+  nameWithType: SyncableField.ParentEntityLogic
+  fullName: LiteEntitySystem.SyncableField.ParentEntityLogic
+- uid: LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
+  commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__
+  name: ExecuteRPC(in RemoteCall)
+  nameWithType: SyncableField.ExecuteRPC(in RemoteCall)
+  fullName: LiteEntitySystem.SyncableField.ExecuteRPC(in LiteEntitySystem.RemoteCall)
+  nameWithType.vb: SyncableField.ExecuteRPC(RemoteCall)
+  fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall)
+  name.vb: ExecuteRPC(RemoteCall)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__
+  - name: (
+  - name: in
+  - name: " "
+  - uid: LiteEntitySystem.RemoteCall
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__
+  - name: (
+  - uid: LiteEntitySystem.RemoteCall
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall.html
+  - name: )
+- uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{{T}}@,{T})
+  commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+  parent: LiteEntitySystem.SyncableField
+  definition: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_
+  name: ExecuteRPC<T>(in RemoteCall<T>, T)
+  nameWithType: SyncableField.ExecuteRPC<T>(in RemoteCall<T>, T)
+  fullName: LiteEntitySystem.SyncableField.ExecuteRPC<T>(in LiteEntitySystem.RemoteCall<T>, T)
+  nameWithType.vb: SyncableField.ExecuteRPC(Of T)(RemoteCall(Of T), T)
+  fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(Of T)(LiteEntitySystem.RemoteCall(Of T), T)
+  name.vb: ExecuteRPC(Of T)(RemoteCall(Of T), T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: in
+  - name: " "
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{{T}}@,System.ReadOnlySpan{{T}})
+  commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+  parent: LiteEntitySystem.SyncableField
+  definition: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__
+  name: ExecuteRPC<T>(in RemoteCallSpan<T>, ReadOnlySpan<T>)
+  nameWithType: SyncableField.ExecuteRPC<T>(in RemoteCallSpan<T>, ReadOnlySpan<T>)
+  fullName: LiteEntitySystem.SyncableField.ExecuteRPC<T>(in LiteEntitySystem.RemoteCallSpan<T>, System.ReadOnlySpan<T>)
+  nameWithType.vb: SyncableField.ExecuteRPC(Of T)(RemoteCallSpan(Of T), ReadOnlySpan(Of T))
+  fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(Of T)(LiteEntitySystem.RemoteCallSpan(Of T), System.ReadOnlySpan(Of T))
+  name.vb: ExecuteRPC(Of T)(RemoteCallSpan(Of T), ReadOnlySpan(Of T))
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: in
+  - name: " "
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - name: T
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{{T}}@,{T})
+  commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+  parent: LiteEntitySystem.SyncableField
+  definition: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_
+  name: ExecuteRPC<T>(in RemoteCallSerializable<T>, T)
+  nameWithType: SyncableField.ExecuteRPC<T>(in RemoteCallSerializable<T>, T)
+  fullName: LiteEntitySystem.SyncableField.ExecuteRPC<T>(in LiteEntitySystem.RemoteCallSerializable<T>, T)
+  nameWithType.vb: SyncableField.ExecuteRPC(Of T)(RemoteCallSerializable(Of T), T)
+  fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(Of T)(LiteEntitySystem.RemoteCallSerializable(Of T), T)
+  name.vb: ExecuteRPC(Of T)(RemoteCallSerializable(Of T), T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: in
+  - name: " "
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.Internal
+  commentId: N:LiteEntitySystem.Internal
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Internal
+  nameWithType: LiteEntitySystem.Internal
+  fullName: LiteEntitySystem.Internal
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Internal
+    name: Internal
+    href: LiteEntitySystem.Internal.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Internal
+    name: Internal
+    href: LiteEntitySystem.Internal.html
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+  commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_
+  name: ExecuteRPC<T>(in RemoteCall<T>, T)
+  nameWithType: SyncableField.ExecuteRPC<T>(in RemoteCall<T>, T)
+  fullName: LiteEntitySystem.SyncableField.ExecuteRPC<T>(in LiteEntitySystem.RemoteCall<T>, T)
+  nameWithType.vb: SyncableField.ExecuteRPC(Of T)(RemoteCall(Of T), T)
+  fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(Of T)(LiteEntitySystem.RemoteCall(Of T), T)
+  name.vb: ExecuteRPC(Of T)(RemoteCall(Of T), T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: in
+  - name: " "
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.RemoteCall`1
+    name: RemoteCall
+    href: LiteEntitySystem.RemoteCall-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+  commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+  isExternal: true
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__
+  name: ExecuteRPC<T>(in RemoteCallSpan<T>, ReadOnlySpan<T>)
+  nameWithType: SyncableField.ExecuteRPC<T>(in RemoteCallSpan<T>, ReadOnlySpan<T>)
+  fullName: LiteEntitySystem.SyncableField.ExecuteRPC<T>(in LiteEntitySystem.RemoteCallSpan<T>, System.ReadOnlySpan<T>)
+  nameWithType.vb: SyncableField.ExecuteRPC(Of T)(RemoteCallSpan(Of T), ReadOnlySpan(Of T))
+  fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(Of T)(LiteEntitySystem.RemoteCallSpan(Of T), System.ReadOnlySpan(Of T))
+  name.vb: ExecuteRPC(Of T)(RemoteCallSpan(Of T), ReadOnlySpan(Of T))
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: in
+  - name: " "
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - name: T
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.RemoteCallSpan`1
+    name: RemoteCallSpan
+    href: LiteEntitySystem.RemoteCallSpan-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+  commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_
+  name: ExecuteRPC<T>(in RemoteCallSerializable<T>, T)
+  nameWithType: SyncableField.ExecuteRPC<T>(in RemoteCallSerializable<T>, T)
+  fullName: LiteEntitySystem.SyncableField.ExecuteRPC<T>(in LiteEntitySystem.RemoteCallSerializable<T>, T)
+  nameWithType.vb: SyncableField.ExecuteRPC(Of T)(RemoteCallSerializable(Of T), T)
+  fullName.vb: LiteEntitySystem.SyncableField.ExecuteRPC(Of T)(LiteEntitySystem.RemoteCallSerializable(Of T), T)
+  name.vb: ExecuteRPC(Of T)(RemoteCallSerializable(Of T), T)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: in
+  - name: " "
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
+    name: ExecuteRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: LiteEntitySystem.RemoteCallSerializable`1
+    name: RemoteCallSerializable
+    href: LiteEntitySystem.RemoteCallSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.Count*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.Count
+  href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_Count
+  name: Count
+  nameWithType: SyncHashSet<T>.Count
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.Count
+  nameWithType.vb: SyncHashSet(Of T).Count
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).Count
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: LiteEntitySystem.SyncableField.IsRollbackSupported
+  commentId: P:LiteEntitySystem.SyncableField.IsRollbackSupported
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsRollbackSupported
+  name: IsRollbackSupported
+  nameWithType: SyncableField.IsRollbackSupported
+  fullName: LiteEntitySystem.SyncableField.IsRollbackSupported
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported
+  href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_IsRollbackSupported
+  name: IsRollbackSupported
+  nameWithType: SyncHashSet<T>.IsRollbackSupported
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.IsRollbackSupported
+  nameWithType.vb: SyncHashSet(Of T).IsRollbackSupported
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).IsRollbackSupported
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  commentId: M:LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
+  name: RegisterRPC(ref SyncableRPCRegistrator)
+  nameWithType: SyncableField.RegisterRPC(ref SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.SyncableField.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
+  nameWithType.vb: SyncableField.RegisterRPC(SyncableRPCRegistrator)
+  fullName.vb: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
+  name.vb: RegisterRPC(SyncableRPCRegistrator)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+    name: RegisterRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
+  - name: (
+  - name: ref
+  - name: " "
+  - uid: LiteEntitySystem.SyncableRPCRegistrator
+    name: SyncableRPCRegistrator
+    href: LiteEntitySystem.SyncableRPCRegistrator.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+    name: RegisterRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
+  - name: (
+  - uid: LiteEntitySystem.SyncableRPCRegistrator
+    name: SyncableRPCRegistrator
+    href: LiteEntitySystem.SyncableRPCRegistrator.html
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.RegisterRPC*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.RegisterRPC
+  href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
+  name: RegisterRPC
+  nameWithType: SyncHashSet<T>.RegisterRPC
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.RegisterRPC
+  nameWithType.vb: SyncHashSet(Of T).RegisterRPC
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).RegisterRPC
+- uid: LiteEntitySystem.SyncableRPCRegistrator
+  commentId: T:LiteEntitySystem.SyncableRPCRegistrator
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.SyncableRPCRegistrator.html
+  name: SyncableRPCRegistrator
+  nameWithType: SyncableRPCRegistrator
+  fullName: LiteEntitySystem.SyncableRPCRegistrator
+- uid: LiteEntitySystem.SyncableField.OnRollback
+  commentId: M:LiteEntitySystem.SyncableField.OnRollback
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+  name: OnRollback()
+  nameWithType: SyncableField.OnRollback()
+  fullName: LiteEntitySystem.SyncableField.OnRollback()
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.OnRollback
+    name: OnRollback
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.OnRollback
+    name: OnRollback
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.OnRollback*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.OnRollback
+  href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_OnRollback
+  name: OnRollback
+  nameWithType: SyncHashSet<T>.OnRollback
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.OnRollback
+  nameWithType.vb: SyncHashSet(Of T).OnRollback
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).OnRollback
+- uid: LiteEntitySystem.SyncableField.BeforeReadRPC
+  commentId: M:LiteEntitySystem.SyncableField.BeforeReadRPC
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+  name: BeforeReadRPC()
+  nameWithType: SyncableField.BeforeReadRPC()
+  fullName: LiteEntitySystem.SyncableField.BeforeReadRPC()
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
+    name: BeforeReadRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
+    name: BeforeReadRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.BeforeReadRPC*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.BeforeReadRPC
+  href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_BeforeReadRPC
+  name: BeforeReadRPC
+  nameWithType: SyncHashSet<T>.BeforeReadRPC
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.BeforeReadRPC
+  nameWithType.vb: SyncHashSet(Of T).BeforeReadRPC
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).BeforeReadRPC
+- uid: LiteEntitySystem.SyncableField.AfterReadRPC
+  commentId: M:LiteEntitySystem.SyncableField.AfterReadRPC
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+  name: AfterReadRPC()
+  nameWithType: SyncableField.AfterReadRPC()
+  fullName: LiteEntitySystem.SyncableField.AfterReadRPC()
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
+    name: AfterReadRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
+    name: AfterReadRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.AfterReadRPC*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.AfterReadRPC
+  href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_AfterReadRPC
+  name: AfterReadRPC
+  nameWithType: SyncHashSet<T>.AfterReadRPC
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.AfterReadRPC
+  nameWithType.vb: SyncHashSet(Of T).AfterReadRPC
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).AfterReadRPC
+- uid: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+  commentId: M:LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+  parent: LiteEntitySystem.Internal.InternalBaseClass
+  href: LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested
+  name: OnSyncRequested()
+  nameWithType: InternalBaseClass.OnSyncRequested()
+  fullName: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested()
+  spec.csharp:
+  - uid: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+    name: OnSyncRequested
+    href: LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+    name: OnSyncRequested
+    href: LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.OnSyncRequested*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.OnSyncRequested
+  href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_OnSyncRequested
+  name: OnSyncRequested
+  nameWithType: SyncHashSet<T>.OnSyncRequested
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.OnSyncRequested
+  nameWithType.vb: SyncHashSet(Of T).OnSyncRequested
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).OnSyncRequested
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.ToArray*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.ToArray
+  href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_ToArray
+  name: ToArray
+  nameWithType: SyncHashSet<T>.ToArray
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.ToArray
+  nameWithType.vb: SyncHashSet(Of T).ToArray
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).ToArray
+- uid: '{T}[]'
+  isExternal: true
+  name: T[]
+  nameWithType: T[]
+  fullName: T[]
+  nameWithType.vb: T()
+  fullName.vb: T()
+  name.vb: T()
+  spec.csharp:
+  - name: T
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - name: T
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.Add*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.Add
+  href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_Add__0_
+  name: Add
+  nameWithType: SyncHashSet<T>.Add
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.Add
+  nameWithType.vb: SyncHashSet(Of T).Add
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).Add
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.Clear*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.Clear
+  href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_Clear
+  name: Clear
+  nameWithType: SyncHashSet<T>.Clear
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.Clear
+  nameWithType.vb: SyncHashSet(Of T).Clear
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).Clear
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.Contains*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.Contains
+  href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_Contains__0_
+  name: Contains
+  nameWithType: SyncHashSet<T>.Contains
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.Contains
+  nameWithType.vb: SyncHashSet(Of T).Contains
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).Contains
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.Remove*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.Remove
+  href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_Remove__0_
+  name: Remove
+  nameWithType: SyncHashSet<T>.Remove
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.Remove
+  nameWithType.vb: SyncHashSet(Of T).Remove
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).Remove
+- uid: LiteEntitySystem.Extensions.SyncHashSet`1.GetEnumerator*
+  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.GetEnumerator
+  href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_GetEnumerator
+  name: GetEnumerator
+  nameWithType: SyncHashSet<T>.GetEnumerator
+  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.GetEnumerator
+  nameWithType.vb: SyncHashSet(Of T).GetEnumerator
+  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).GetEnumerator
+- uid: System.Collections.Generic.HashSet{{T}}.Enumerator
+  commentId: T:System.Collections.Generic.HashSet{`0}.Enumerator
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.HashSet`1.Enumerator
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  name: HashSet<T>.Enumerator
+  nameWithType: HashSet<T>.Enumerator
+  fullName: System.Collections.Generic.HashSet<T>.Enumerator
+  nameWithType.vb: HashSet(Of T).Enumerator
+  fullName.vb: System.Collections.Generic.HashSet(Of T).Enumerator
+  name.vb: HashSet(Of T).Enumerator
+  spec.csharp:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: <
+  - name: T
+  - name: '>'
+  - name: .
+  - uid: System.Collections.Generic.HashSet{`0}.Enumerator
+    name: Enumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1.enumerator
+  spec.vb:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: .
+  - uid: System.Collections.Generic.HashSet{`0}.Enumerator
+    name: Enumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1.enumerator
+- uid: System.Collections.Generic.HashSet`1.Enumerator
+  commentId: T:System.Collections.Generic.HashSet`1.Enumerator
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  name: HashSet<T>.Enumerator
+  nameWithType: HashSet<T>.Enumerator
+  fullName: System.Collections.Generic.HashSet<T>.Enumerator
+  nameWithType.vb: HashSet(Of T).Enumerator
+  fullName.vb: System.Collections.Generic.HashSet(Of T).Enumerator
+  name.vb: HashSet(Of T).Enumerator
+  spec.csharp:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: <
+  - name: T
+  - name: '>'
+  - name: .
+  - uid: System.Collections.Generic.HashSet`1.Enumerator
+    name: Enumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1.enumerator
+  spec.vb:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: .
+  - uid: System.Collections.Generic.HashSet`1.Enumerator
+    name: Enumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1.enumerator

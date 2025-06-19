@@ -1,0 +1,759 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.SyncChilds
+  commentId: T:LiteEntitySystem.SyncChilds
+  id: SyncChilds
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.SyncChilds.AfterReadRPC
+  - LiteEntitySystem.SyncChilds.BeforeReadRPC
+  - LiteEntitySystem.SyncChilds.Contains(LiteEntitySystem.EntitySharedReference)
+  - LiteEntitySystem.SyncChilds.Count
+  - LiteEntitySystem.SyncChilds.GetEnumerator
+  - LiteEntitySystem.SyncChilds.IsRollbackSupported
+  - LiteEntitySystem.SyncChilds.OnRollback
+  - LiteEntitySystem.SyncChilds.OnSyncRequested
+  - LiteEntitySystem.SyncChilds.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  - LiteEntitySystem.SyncChilds.ToArray
+  langs:
+  - csharp
+  - vb
+  name: SyncChilds
+  nameWithType: SyncChilds
+  fullName: LiteEntitySystem.SyncChilds
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: 'public sealed class SyncChilds : SyncableField, IEnumerable<EntitySharedReference>, IEnumerable'
+    content.vb: Public NotInheritable Class SyncChilds Inherits SyncableField Implements IEnumerable(Of EntitySharedReference), IEnumerable
+  inheritance:
+  - System.Object
+  - LiteEntitySystem.Internal.InternalBaseClass
+  - LiteEntitySystem.SyncableField
+  implements:
+  - System.Collections.Generic.IEnumerable{LiteEntitySystem.EntitySharedReference}
+  - System.Collections.IEnumerable
+- uid: LiteEntitySystem.SyncChilds.Count
+  commentId: P:LiteEntitySystem.SyncChilds.Count
+  id: Count
+  parent: LiteEntitySystem.SyncChilds
+  langs:
+  - csharp
+  - vb
+  name: Count
+  nameWithType: SyncChilds.Count
+  fullName: LiteEntitySystem.SyncChilds.Count
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public int Count { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Count As Integer
+  overload: LiteEntitySystem.SyncChilds.Count*
+- uid: LiteEntitySystem.SyncChilds.IsRollbackSupported
+  commentId: P:LiteEntitySystem.SyncChilds.IsRollbackSupported
+  id: IsRollbackSupported
+  parent: LiteEntitySystem.SyncChilds
+  langs:
+  - csharp
+  - vb
+  name: IsRollbackSupported
+  nameWithType: SyncChilds.IsRollbackSupported
+  fullName: LiteEntitySystem.SyncChilds.IsRollbackSupported
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Is supported rollback by this syncable field
+  example: []
+  syntax:
+    content: public override bool IsRollbackSupported { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Overrides ReadOnly Property IsRollbackSupported As Boolean
+  overridden: LiteEntitySystem.SyncableField.IsRollbackSupported
+  overload: LiteEntitySystem.SyncChilds.IsRollbackSupported*
+- uid: LiteEntitySystem.SyncChilds.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  commentId: M:LiteEntitySystem.SyncChilds.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  id: RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  parent: LiteEntitySystem.SyncChilds
+  langs:
+  - csharp
+  - vb
+  name: RegisterRPC(ref SyncableRPCRegistrator)
+  nameWithType: SyncChilds.RegisterRPC(ref SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.SyncChilds.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  example: []
+  syntax:
+    content: protected override void RegisterRPC(ref SyncableRPCRegistrator r)
+    parameters:
+    - id: r
+      type: LiteEntitySystem.SyncableRPCRegistrator
+    content.vb: Protected Overrides Sub RegisterRPC(r As SyncableRPCRegistrator)
+  overridden: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  overload: LiteEntitySystem.SyncChilds.RegisterRPC*
+  nameWithType.vb: SyncChilds.RegisterRPC(SyncableRPCRegistrator)
+  fullName.vb: LiteEntitySystem.SyncChilds.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
+  name.vb: RegisterRPC(SyncableRPCRegistrator)
+- uid: LiteEntitySystem.SyncChilds.OnRollback
+  commentId: M:LiteEntitySystem.SyncChilds.OnRollback
+  id: OnRollback
+  parent: LiteEntitySystem.SyncChilds
+  langs:
+  - csharp
+  - vb
+  name: OnRollback()
+  nameWithType: SyncChilds.OnRollback()
+  fullName: LiteEntitySystem.SyncChilds.OnRollback()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  example: []
+  syntax:
+    content: protected override void OnRollback()
+    content.vb: Protected Overrides Sub OnRollback()
+  overridden: LiteEntitySystem.SyncableField.OnRollback
+  overload: LiteEntitySystem.SyncChilds.OnRollback*
+- uid: LiteEntitySystem.SyncChilds.BeforeReadRPC
+  commentId: M:LiteEntitySystem.SyncChilds.BeforeReadRPC
+  id: BeforeReadRPC
+  parent: LiteEntitySystem.SyncChilds
+  langs:
+  - csharp
+  - vb
+  name: BeforeReadRPC()
+  nameWithType: SyncChilds.BeforeReadRPC()
+  fullName: LiteEntitySystem.SyncChilds.BeforeReadRPC()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  example: []
+  syntax:
+    content: protected override void BeforeReadRPC()
+    content.vb: Protected Overrides Sub BeforeReadRPC()
+  overridden: LiteEntitySystem.SyncableField.BeforeReadRPC
+  overload: LiteEntitySystem.SyncChilds.BeforeReadRPC*
+- uid: LiteEntitySystem.SyncChilds.AfterReadRPC
+  commentId: M:LiteEntitySystem.SyncChilds.AfterReadRPC
+  id: AfterReadRPC
+  parent: LiteEntitySystem.SyncChilds
+  langs:
+  - csharp
+  - vb
+  name: AfterReadRPC()
+  nameWithType: SyncChilds.AfterReadRPC()
+  fullName: LiteEntitySystem.SyncChilds.AfterReadRPC()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  example: []
+  syntax:
+    content: protected override void AfterReadRPC()
+    content.vb: Protected Overrides Sub AfterReadRPC()
+  overridden: LiteEntitySystem.SyncableField.AfterReadRPC
+  overload: LiteEntitySystem.SyncChilds.AfterReadRPC*
+- uid: LiteEntitySystem.SyncChilds.OnSyncRequested
+  commentId: M:LiteEntitySystem.SyncChilds.OnSyncRequested
+  id: OnSyncRequested
+  parent: LiteEntitySystem.SyncChilds
+  langs:
+  - csharp
+  - vb
+  name: OnSyncRequested()
+  nameWithType: SyncChilds.OnSyncRequested()
+  fullName: LiteEntitySystem.SyncChilds.OnSyncRequested()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  example: []
+  syntax:
+    content: protected override void OnSyncRequested()
+    content.vb: Protected Overrides Sub OnSyncRequested()
+  overridden: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+  overload: LiteEntitySystem.SyncChilds.OnSyncRequested*
+- uid: LiteEntitySystem.SyncChilds.ToArray
+  commentId: M:LiteEntitySystem.SyncChilds.ToArray
+  id: ToArray
+  parent: LiteEntitySystem.SyncChilds
+  langs:
+  - csharp
+  - vb
+  name: ToArray()
+  nameWithType: SyncChilds.ToArray()
+  fullName: LiteEntitySystem.SyncChilds.ToArray()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: To array
+  example: []
+  syntax:
+    content: public EntitySharedReference[] ToArray()
+    return:
+      type: LiteEntitySystem.EntitySharedReference[]
+      description: hashset copied array. Returns null if HashSet is empty
+    content.vb: Public Function ToArray() As EntitySharedReference()
+  overload: LiteEntitySystem.SyncChilds.ToArray*
+- uid: LiteEntitySystem.SyncChilds.Contains(LiteEntitySystem.EntitySharedReference)
+  commentId: M:LiteEntitySystem.SyncChilds.Contains(LiteEntitySystem.EntitySharedReference)
+  id: Contains(LiteEntitySystem.EntitySharedReference)
+  parent: LiteEntitySystem.SyncChilds
+  langs:
+  - csharp
+  - vb
+  name: Contains(EntitySharedReference)
+  nameWithType: SyncChilds.Contains(EntitySharedReference)
+  fullName: LiteEntitySystem.SyncChilds.Contains(LiteEntitySystem.EntitySharedReference)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public bool Contains(EntitySharedReference x)
+    parameters:
+    - id: x
+      type: LiteEntitySystem.EntitySharedReference
+    return:
+      type: System.Boolean
+    content.vb: Public Function Contains(x As EntitySharedReference) As Boolean
+  overload: LiteEntitySystem.SyncChilds.Contains*
+- uid: LiteEntitySystem.SyncChilds.GetEnumerator
+  commentId: M:LiteEntitySystem.SyncChilds.GetEnumerator
+  id: GetEnumerator
+  parent: LiteEntitySystem.SyncChilds
+  langs:
+  - csharp
+  - vb
+  name: GetEnumerator()
+  nameWithType: SyncChilds.GetEnumerator()
+  fullName: LiteEntitySystem.SyncChilds.GetEnumerator()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public HashSet<EntitySharedReference>.Enumerator GetEnumerator()
+    return:
+      type: System.Collections.Generic.HashSet{LiteEntitySystem.EntitySharedReference}.Enumerator
+    content.vb: Public Function GetEnumerator() As HashSet(Of EntitySharedReference).Enumerator
+  overload: LiteEntitySystem.SyncChilds.GetEnumerator*
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: LiteEntitySystem.Internal.InternalBaseClass
+  commentId: T:LiteEntitySystem.Internal.InternalBaseClass
+  parent: LiteEntitySystem.Internal
+  href: LiteEntitySystem.Internal.InternalBaseClass.html
+  name: InternalBaseClass
+  nameWithType: InternalBaseClass
+  fullName: LiteEntitySystem.Internal.InternalBaseClass
+- uid: LiteEntitySystem.SyncableField
+  commentId: T:LiteEntitySystem.SyncableField
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.SyncableField.html
+  name: SyncableField
+  nameWithType: SyncableField
+  fullName: LiteEntitySystem.SyncableField
+- uid: System.Collections.Generic.IEnumerable{LiteEntitySystem.EntitySharedReference}
+  commentId: T:System.Collections.Generic.IEnumerable{LiteEntitySystem.EntitySharedReference}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<EntitySharedReference>
+  nameWithType: IEnumerable<EntitySharedReference>
+  fullName: System.Collections.Generic.IEnumerable<LiteEntitySystem.EntitySharedReference>
+  nameWithType.vb: IEnumerable(Of EntitySharedReference)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of LiteEntitySystem.EntitySharedReference)
+  name.vb: IEnumerable(Of EntitySharedReference)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: LiteEntitySystem.EntitySharedReference
+    name: EntitySharedReference
+    href: LiteEntitySystem.EntitySharedReference.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.EntitySharedReference
+    name: EntitySharedReference
+    href: LiteEntitySystem.EntitySharedReference.html
+  - name: )
+- uid: System.Collections.IEnumerable
+  commentId: T:System.Collections.IEnumerable
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerable
+  name: IEnumerable
+  nameWithType: IEnumerable
+  fullName: System.Collections.IEnumerable
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.Internal
+  commentId: N:LiteEntitySystem.Internal
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Internal
+  nameWithType: LiteEntitySystem.Internal
+  fullName: LiteEntitySystem.Internal
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Internal
+    name: Internal
+    href: LiteEntitySystem.Internal.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Internal
+    name: Internal
+    href: LiteEntitySystem.Internal.html
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: LiteEntitySystem.SyncChilds.Count*
+  commentId: Overload:LiteEntitySystem.SyncChilds.Count
+  href: LiteEntitySystem.SyncChilds.html#LiteEntitySystem_SyncChilds_Count
+  name: Count
+  nameWithType: SyncChilds.Count
+  fullName: LiteEntitySystem.SyncChilds.Count
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: LiteEntitySystem.SyncableField.IsRollbackSupported
+  commentId: P:LiteEntitySystem.SyncableField.IsRollbackSupported
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsRollbackSupported
+  name: IsRollbackSupported
+  nameWithType: SyncableField.IsRollbackSupported
+  fullName: LiteEntitySystem.SyncableField.IsRollbackSupported
+- uid: LiteEntitySystem.SyncChilds.IsRollbackSupported*
+  commentId: Overload:LiteEntitySystem.SyncChilds.IsRollbackSupported
+  href: LiteEntitySystem.SyncChilds.html#LiteEntitySystem_SyncChilds_IsRollbackSupported
+  name: IsRollbackSupported
+  nameWithType: SyncChilds.IsRollbackSupported
+  fullName: LiteEntitySystem.SyncChilds.IsRollbackSupported
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  commentId: M:LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
+  name: RegisterRPC(ref SyncableRPCRegistrator)
+  nameWithType: SyncableField.RegisterRPC(ref SyncableRPCRegistrator)
+  fullName: LiteEntitySystem.SyncableField.RegisterRPC(ref LiteEntitySystem.SyncableRPCRegistrator)
+  nameWithType.vb: SyncableField.RegisterRPC(SyncableRPCRegistrator)
+  fullName.vb: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator)
+  name.vb: RegisterRPC(SyncableRPCRegistrator)
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+    name: RegisterRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
+  - name: (
+  - name: ref
+  - name: " "
+  - uid: LiteEntitySystem.SyncableRPCRegistrator
+    name: SyncableRPCRegistrator
+    href: LiteEntitySystem.SyncableRPCRegistrator.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
+    name: RegisterRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
+  - name: (
+  - uid: LiteEntitySystem.SyncableRPCRegistrator
+    name: SyncableRPCRegistrator
+    href: LiteEntitySystem.SyncableRPCRegistrator.html
+  - name: )
+- uid: LiteEntitySystem.SyncChilds.RegisterRPC*
+  commentId: Overload:LiteEntitySystem.SyncChilds.RegisterRPC
+  href: LiteEntitySystem.SyncChilds.html#LiteEntitySystem_SyncChilds_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__
+  name: RegisterRPC
+  nameWithType: SyncChilds.RegisterRPC
+  fullName: LiteEntitySystem.SyncChilds.RegisterRPC
+- uid: LiteEntitySystem.SyncableRPCRegistrator
+  commentId: T:LiteEntitySystem.SyncableRPCRegistrator
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.SyncableRPCRegistrator.html
+  name: SyncableRPCRegistrator
+  nameWithType: SyncableRPCRegistrator
+  fullName: LiteEntitySystem.SyncableRPCRegistrator
+- uid: LiteEntitySystem.SyncableField.OnRollback
+  commentId: M:LiteEntitySystem.SyncableField.OnRollback
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+  name: OnRollback()
+  nameWithType: SyncableField.OnRollback()
+  fullName: LiteEntitySystem.SyncableField.OnRollback()
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.OnRollback
+    name: OnRollback
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.OnRollback
+    name: OnRollback
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SyncChilds.OnRollback*
+  commentId: Overload:LiteEntitySystem.SyncChilds.OnRollback
+  href: LiteEntitySystem.SyncChilds.html#LiteEntitySystem_SyncChilds_OnRollback
+  name: OnRollback
+  nameWithType: SyncChilds.OnRollback
+  fullName: LiteEntitySystem.SyncChilds.OnRollback
+- uid: LiteEntitySystem.SyncableField.BeforeReadRPC
+  commentId: M:LiteEntitySystem.SyncableField.BeforeReadRPC
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+  name: BeforeReadRPC()
+  nameWithType: SyncableField.BeforeReadRPC()
+  fullName: LiteEntitySystem.SyncableField.BeforeReadRPC()
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
+    name: BeforeReadRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
+    name: BeforeReadRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SyncChilds.BeforeReadRPC*
+  commentId: Overload:LiteEntitySystem.SyncChilds.BeforeReadRPC
+  href: LiteEntitySystem.SyncChilds.html#LiteEntitySystem_SyncChilds_BeforeReadRPC
+  name: BeforeReadRPC
+  nameWithType: SyncChilds.BeforeReadRPC
+  fullName: LiteEntitySystem.SyncChilds.BeforeReadRPC
+- uid: LiteEntitySystem.SyncableField.AfterReadRPC
+  commentId: M:LiteEntitySystem.SyncableField.AfterReadRPC
+  parent: LiteEntitySystem.SyncableField
+  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+  name: AfterReadRPC()
+  nameWithType: SyncableField.AfterReadRPC()
+  fullName: LiteEntitySystem.SyncableField.AfterReadRPC()
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
+    name: AfterReadRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
+    name: AfterReadRPC
+    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SyncChilds.AfterReadRPC*
+  commentId: Overload:LiteEntitySystem.SyncChilds.AfterReadRPC
+  href: LiteEntitySystem.SyncChilds.html#LiteEntitySystem_SyncChilds_AfterReadRPC
+  name: AfterReadRPC
+  nameWithType: SyncChilds.AfterReadRPC
+  fullName: LiteEntitySystem.SyncChilds.AfterReadRPC
+- uid: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+  commentId: M:LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+  parent: LiteEntitySystem.Internal.InternalBaseClass
+  href: LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested
+  name: OnSyncRequested()
+  nameWithType: InternalBaseClass.OnSyncRequested()
+  fullName: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested()
+  spec.csharp:
+  - uid: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+    name: OnSyncRequested
+    href: LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+    name: OnSyncRequested
+    href: LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SyncChilds.OnSyncRequested*
+  commentId: Overload:LiteEntitySystem.SyncChilds.OnSyncRequested
+  href: LiteEntitySystem.SyncChilds.html#LiteEntitySystem_SyncChilds_OnSyncRequested
+  name: OnSyncRequested
+  nameWithType: SyncChilds.OnSyncRequested
+  fullName: LiteEntitySystem.SyncChilds.OnSyncRequested
+- uid: LiteEntitySystem.SyncChilds.ToArray*
+  commentId: Overload:LiteEntitySystem.SyncChilds.ToArray
+  href: LiteEntitySystem.SyncChilds.html#LiteEntitySystem_SyncChilds_ToArray
+  name: ToArray
+  nameWithType: SyncChilds.ToArray
+  fullName: LiteEntitySystem.SyncChilds.ToArray
+- uid: LiteEntitySystem.EntitySharedReference[]
+  isExternal: true
+  href: LiteEntitySystem.EntitySharedReference.html
+  name: EntitySharedReference[]
+  nameWithType: EntitySharedReference[]
+  fullName: LiteEntitySystem.EntitySharedReference[]
+  nameWithType.vb: EntitySharedReference()
+  fullName.vb: LiteEntitySystem.EntitySharedReference()
+  name.vb: EntitySharedReference()
+  spec.csharp:
+  - uid: LiteEntitySystem.EntitySharedReference
+    name: EntitySharedReference
+    href: LiteEntitySystem.EntitySharedReference.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: LiteEntitySystem.EntitySharedReference
+    name: EntitySharedReference
+    href: LiteEntitySystem.EntitySharedReference.html
+  - name: (
+  - name: )
+- uid: LiteEntitySystem.SyncChilds.Contains*
+  commentId: Overload:LiteEntitySystem.SyncChilds.Contains
+  href: LiteEntitySystem.SyncChilds.html#LiteEntitySystem_SyncChilds_Contains_LiteEntitySystem_EntitySharedReference_
+  name: Contains
+  nameWithType: SyncChilds.Contains
+  fullName: LiteEntitySystem.SyncChilds.Contains
+- uid: LiteEntitySystem.EntitySharedReference
+  commentId: T:LiteEntitySystem.EntitySharedReference
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.EntitySharedReference.html
+  name: EntitySharedReference
+  nameWithType: EntitySharedReference
+  fullName: LiteEntitySystem.EntitySharedReference
+- uid: LiteEntitySystem.SyncChilds.GetEnumerator*
+  commentId: Overload:LiteEntitySystem.SyncChilds.GetEnumerator
+  href: LiteEntitySystem.SyncChilds.html#LiteEntitySystem_SyncChilds_GetEnumerator
+  name: GetEnumerator
+  nameWithType: SyncChilds.GetEnumerator
+  fullName: LiteEntitySystem.SyncChilds.GetEnumerator
+- uid: System.Collections.Generic.HashSet{LiteEntitySystem.EntitySharedReference}.Enumerator
+  commentId: T:System.Collections.Generic.HashSet{LiteEntitySystem.EntitySharedReference}.Enumerator
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.HashSet`1.Enumerator
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  name: HashSet<EntitySharedReference>.Enumerator
+  nameWithType: HashSet<EntitySharedReference>.Enumerator
+  fullName: System.Collections.Generic.HashSet<LiteEntitySystem.EntitySharedReference>.Enumerator
+  nameWithType.vb: HashSet(Of EntitySharedReference).Enumerator
+  fullName.vb: System.Collections.Generic.HashSet(Of LiteEntitySystem.EntitySharedReference).Enumerator
+  name.vb: HashSet(Of EntitySharedReference).Enumerator
+  spec.csharp:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: <
+  - uid: LiteEntitySystem.EntitySharedReference
+    name: EntitySharedReference
+    href: LiteEntitySystem.EntitySharedReference.html
+  - name: '>'
+  - name: .
+  - uid: System.Collections.Generic.HashSet{LiteEntitySystem.EntitySharedReference}.Enumerator
+    name: Enumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1.enumerator
+  spec.vb:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.EntitySharedReference
+    name: EntitySharedReference
+    href: LiteEntitySystem.EntitySharedReference.html
+  - name: )
+  - name: .
+  - uid: System.Collections.Generic.HashSet{LiteEntitySystem.EntitySharedReference}.Enumerator
+    name: Enumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1.enumerator
+- uid: System.Collections.Generic.HashSet`1.Enumerator
+  commentId: T:System.Collections.Generic.HashSet`1.Enumerator
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  name: HashSet<T>.Enumerator
+  nameWithType: HashSet<T>.Enumerator
+  fullName: System.Collections.Generic.HashSet<T>.Enumerator
+  nameWithType.vb: HashSet(Of T).Enumerator
+  fullName.vb: System.Collections.Generic.HashSet(Of T).Enumerator
+  name.vb: HashSet(Of T).Enumerator
+  spec.csharp:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: <
+  - name: T
+  - name: '>'
+  - name: .
+  - uid: System.Collections.Generic.HashSet`1.Enumerator
+    name: Enumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1.enumerator
+  spec.vb:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: .
+  - uid: System.Collections.Generic.HashSet`1.Enumerator
+    name: Enumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1.enumerator

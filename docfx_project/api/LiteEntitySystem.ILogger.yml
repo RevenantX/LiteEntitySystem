@@ -1,0 +1,140 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.ILogger
+  commentId: T:LiteEntitySystem.ILogger
+  id: ILogger
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.ILogger.Log(System.String)
+  - LiteEntitySystem.ILogger.LogError(System.String)
+  - LiteEntitySystem.ILogger.LogWarning(System.String)
+  langs:
+  - csharp
+  - vb
+  name: ILogger
+  nameWithType: ILogger
+  fullName: LiteEntitySystem.ILogger
+  type: Interface
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Logger implementation for different situations (client/server/different engine)
+  example: []
+  syntax:
+    content: public interface ILogger
+    content.vb: Public Interface ILogger
+- uid: LiteEntitySystem.ILogger.Log(System.String)
+  commentId: M:LiteEntitySystem.ILogger.Log(System.String)
+  id: Log(System.String)
+  parent: LiteEntitySystem.ILogger
+  langs:
+  - csharp
+  - vb
+  name: Log(string)
+  nameWithType: ILogger.Log(string)
+  fullName: LiteEntitySystem.ILogger.Log(string)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: void Log(string log)
+    parameters:
+    - id: log
+      type: System.String
+    content.vb: Sub Log(log As String)
+  overload: LiteEntitySystem.ILogger.Log*
+  nameWithType.vb: ILogger.Log(String)
+  fullName.vb: LiteEntitySystem.ILogger.Log(String)
+  name.vb: Log(String)
+- uid: LiteEntitySystem.ILogger.LogError(System.String)
+  commentId: M:LiteEntitySystem.ILogger.LogError(System.String)
+  id: LogError(System.String)
+  parent: LiteEntitySystem.ILogger
+  langs:
+  - csharp
+  - vb
+  name: LogError(string)
+  nameWithType: ILogger.LogError(string)
+  fullName: LiteEntitySystem.ILogger.LogError(string)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: void LogError(string log)
+    parameters:
+    - id: log
+      type: System.String
+    content.vb: Sub LogError(log As String)
+  overload: LiteEntitySystem.ILogger.LogError*
+  nameWithType.vb: ILogger.LogError(String)
+  fullName.vb: LiteEntitySystem.ILogger.LogError(String)
+  name.vb: LogError(String)
+- uid: LiteEntitySystem.ILogger.LogWarning(System.String)
+  commentId: M:LiteEntitySystem.ILogger.LogWarning(System.String)
+  id: LogWarning(System.String)
+  parent: LiteEntitySystem.ILogger
+  langs:
+  - csharp
+  - vb
+  name: LogWarning(string)
+  nameWithType: ILogger.LogWarning(string)
+  fullName: LiteEntitySystem.ILogger.LogWarning(string)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: void LogWarning(string log)
+    parameters:
+    - id: log
+      type: System.String
+    content.vb: Sub LogWarning(log As String)
+  overload: LiteEntitySystem.ILogger.LogWarning*
+  nameWithType.vb: ILogger.LogWarning(String)
+  fullName.vb: LiteEntitySystem.ILogger.LogWarning(String)
+  name.vb: LogWarning(String)
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: LiteEntitySystem.ILogger.Log*
+  commentId: Overload:LiteEntitySystem.ILogger.Log
+  href: LiteEntitySystem.ILogger.html#LiteEntitySystem_ILogger_Log_System_String_
+  name: Log
+  nameWithType: ILogger.Log
+  fullName: LiteEntitySystem.ILogger.Log
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.ILogger.LogError*
+  commentId: Overload:LiteEntitySystem.ILogger.LogError
+  href: LiteEntitySystem.ILogger.html#LiteEntitySystem_ILogger_LogError_System_String_
+  name: LogError
+  nameWithType: ILogger.LogError
+  fullName: LiteEntitySystem.ILogger.LogError
+- uid: LiteEntitySystem.ILogger.LogWarning*
+  commentId: Overload:LiteEntitySystem.ILogger.LogWarning
+  href: LiteEntitySystem.ILogger.html#LiteEntitySystem_ILogger_LogWarning_System_String_
+  name: LogWarning
+  nameWithType: ILogger.LogWarning
+  fullName: LiteEntitySystem.ILogger.LogWarning

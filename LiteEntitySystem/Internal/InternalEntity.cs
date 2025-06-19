@@ -47,19 +47,15 @@ namespace LiteEntitySystem.Internal
 
         internal EntityDataHeader DataHeader => new EntityDataHeader
         (
-            Id,
             ClassId,
             Version,
             UpdateOrderNum
         );
-
-        [SyncVarFlags(SyncFlags.NeverRollBack)]
-        private SyncVar<bool> _isDestroyed;
-
+        
         /// <summary>
         /// Is entity is destroyed
         /// </summary>
-        public bool IsDestroyed => _isDestroyed;
+        public bool IsDestroyed { get; private set; }
 
         /// <summary>
         /// Is entity local controlled
@@ -106,6 +102,11 @@ namespace LiteEntitySystem.Internal
         internal ref EntityClassData ClassData => ref EntityManager.ClassDataDict[ClassId];
 
         /// <summary>
+        /// Is entity constructed (OnConstruct called)
+        /// </summary>
+        public bool IsConstructed { get; internal set; }
+
+        /// <summary>
         /// Is entity released and not used after destroy.
         /// </summary>
         public bool IsRemoved { get; internal set; }
@@ -115,18 +116,9 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         public void Destroy()
         {
-            if ((EntityManager.IsClient && !IsLocal) || _isDestroyed)
+            if (EntityManager.IsClient && !IsLocal)
                 return;
             DestroyInternal();
-        }
-
-        private void OnDestroyChange(bool prevValue)
-        {
-            if (!prevValue && _isDestroyed)
-            {
-                _isDestroyed.Value = false;
-                DestroyInternal();
-            }
         }
 
         /// <summary>
@@ -139,9 +131,9 @@ namespace LiteEntitySystem.Internal
 
         internal virtual void DestroyInternal()
         {
-            if (_isDestroyed)
+            if (IsDestroyed)
                 return;
-            _isDestroyed.Value = true;
+            IsDestroyed = true;
             EntityManager.OnEntityDestroyed(this);
             OnDestroy();
         }
@@ -194,6 +186,15 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         protected internal virtual void OnConstructed()
         {
+            
+        }
+        
+        /// <summary>
+        /// Called when entity constructed but at end of frame
+        /// </summary>
+        protected internal virtual void OnLateConstructed()
+        {
+            
         }
 
         internal void RegisterRpcInternal()
@@ -214,56 +215,48 @@ namespace LiteEntitySystem.Internal
             if (classData.RemoteCallsClient == null)
             {
                 rpcCache = new List<RpcFieldInfo>();
+                //place reserved rpcs
+                RemoteCallPacket.InitReservedRPCs(rpcCache);
+
                 var rpcRegistrator = new RPCRegistrator(rpcCache, classData.Fields);
                 RegisterRPC(ref rpcRegistrator);
-                Logger.Log($"RegisterRPCs for class: {classData.ClassId}");
+                // Logger.Log($"RegisterRPCs for class: {classData.ClassId}");
             }
 
-            // Setup SyncableField RPC offsets and bindings with nested traversal
+            // Setup id for later sync calls
             for (int i = 0; i < classData.SyncableFields.Length; i++)
             {
-                ref var syncInfo = ref classData.SyncableFields[i];
+                ref var syncFieldInfo = ref classData.SyncableFields[i];
 
                 // Traverse the chain of nested SyncableFields via offset map
                 object current = this;
-                foreach (var relOffset in syncInfo.Offsets)
+                foreach (var relOffset in syncFieldInfo.Offsets)
                 {
-                    current = RefMagic.RefFieldValue<SyncableField>(current, relOffset);
+                    current = RefMagic.GetFieldValue<SyncableField>(current, relOffset);
                     if (current == null)
                         throw new NullReferenceException($"Nested SyncableField at offset {relOffset} is null");
                 }
                 var syncField = (SyncableField)current;
-                syncField.ParentEntityInternal = this;
+                
 
-                // Apply flag-based RPC targeting
-                if (syncInfo.Flags.HasFlagFast(SyncFlags.OnlyForOwner))
-                    syncField.Flags = ExecuteFlags.SendToOwner;
-                else if (syncInfo.Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
-                    syncField.Flags = ExecuteFlags.SendToOther;
-                else
-                    syncField.Flags = ExecuteFlags.SendToAll;
-
-                // Assign or register RPC offsets
-                if (classData.RemoteCallsClient != null)
+                syncField.Init(this, syncFieldInfo.Flags);
+                if (classData.RemoteCallsClient != null) //rpcCache == null
                 {
                     // Use cached offsets
-                    syncField.RPCOffset = syncInfo.RPCOffset;
+                    syncField.RPCOffset = syncFieldInfo.RPCOffset;
                 }
                 else
                 {
                     // New registration
                     syncField.RPCOffset = (ushort)rpcCache.Count;
-                    syncInfo.RPCOffset = syncField.RPCOffset;
+                    syncFieldInfo.RPCOffset = syncField.RPCOffset;
+
                     // Use AbsoluteOffset to register RPCs on this nested SyncableField
-                    var syncRpcRegistrator = new SyncableRPCRegistrator(syncInfo.Offsets, rpcCache);
-                    syncField.RegisterRPC(ref syncRpcRegistrator);
-                    Logger.Log($"RegisterSyncableRPCs for class: {classData.ClassId}");
+                    var syncablesRegistrator = new SyncableRPCRegistrator(syncFieldInfo.Offsets, rpcCache);
+                    syncField.RegisterRPC(ref syncablesRegistrator);
                 }
             }
-
-            // Cache the RPC list if newly created
-            if (classData.RemoteCallsClient == null)
-                classData.RemoteCallsClient = rpcCache.ToArray();
+            classData.RemoteCallsClient ??= rpcCache.ToArray();
         }
 
 
@@ -275,7 +268,7 @@ namespace LiteEntitySystem.Internal
         /// <param name="r"></param>
         protected virtual void RegisterRPC(ref RPCRegistrator r)
         {
-            r.BindOnChange(this, ref _isDestroyed, OnDestroyChange);
+
         }
 
         protected void ExecuteRPC(in RemoteCall rpc)
@@ -342,7 +335,7 @@ namespace LiteEntitySystem.Internal
         protected InternalEntity(EntityParams entityParams)
         {
             EntityManager = entityParams.EntityManager;
-            Id = entityParams.Header.Id;
+            Id = entityParams.Id;
             ClassId = entityParams.Header.ClassId;
             Version = entityParams.Header.Version;
             UpdateOrderNum = entityParams.Header.UpdateOrder;

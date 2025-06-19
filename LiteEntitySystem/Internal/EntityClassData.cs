@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Godot;
 
 namespace LiteEntitySystem.Internal
 {
@@ -58,8 +59,8 @@ namespace LiteEntitySystem.Internal
         public readonly MethodCallDelegate Method;
 
         public RpcFieldInfo(MethodCallDelegate method)
-        {
-            SyncableOffsets = Array.Empty<int>();
+    {
+            SyncableOffsets = [-1];
             Method = method;
         }
 
@@ -86,6 +87,8 @@ namespace LiteEntitySystem.Internal
 
     internal struct EntityClassData
     {
+        public readonly string ClassEnumName;
+        
         public readonly ushort ClassId;
         public readonly ushort FilterId;
         public readonly bool IsSingleton;
@@ -219,6 +222,7 @@ namespace LiteEntitySystem.Internal
             InterpolatedFieldsSize = 0;
             RemoteCallsClient = null;
             ClassId = typeInfo.ClassId;
+            ClassEnumName = typeInfo.ClassName;
             Flags = 0;
             EntityConstructor = typeInfo.Constructor;
             IsSingleton = entType.IsSubclassOf(SingletonEntityType);
@@ -235,7 +239,7 @@ namespace LiteEntitySystem.Internal
             var ownedRollbackFields = new List<EntityFieldInfo>();
             var remoteRollbackFields = new List<EntityFieldInfo>();
 
-            Logger.LogError($"Class Data for : {entType}");
+            // Logger.LogError($"Class Data for : {entType}");
 
             var allTypesStack = Utils.GetBaseTypes(entType, InternalEntityType, true, true);
             while (allTypesStack.Count > 0)
@@ -307,13 +311,13 @@ namespace LiteEntitySystem.Internal
                         {
                             // nested SyncableField's SyncVar<…>
                             ef = new EntityFieldInfo(name, processor, offsetMap.ToArray(), syncVarFlags, FieldType.SyncableSyncVar);
-                            Logger.Log($"Registered syncable sync var field: {name} with offset {string.Join(",", offsetMap)}");
+                            GD.Print($"Registered syncable sync var field: {name} with offset {string.Join(",", offsetMap)}");
                         }
                         else
                         {
                             // top-level field on the entity itself
                             ef = new EntityFieldInfo(name, processor, offsetMap.ToArray(), syncVarFlags, FieldType.SyncVar);
-                            Logger.Log($"Registered field: {name} with offsets {string.Join(",", offsetMap)}");
+                            GD.Print($"Registered field: {name} with offsets {string.Join(",", offsetMap)}");
                         }
 
                         if (syncFlags.HasFlagFast(SyncFlags.Interpolated) && !ft.IsEnum)

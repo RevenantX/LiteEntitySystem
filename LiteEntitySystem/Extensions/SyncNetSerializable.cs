@@ -4,7 +4,7 @@ using LiteNetLib.Utils;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncNetSerializable<T> : SyncableField where T : INetSerializable
+    public class SyncNetSerializable<T> : SyncableField, ISyncFieldChanged where T : INetSerializable
     {
         private static readonly NetDataWriter WriterCache = new();
         private static readonly NetDataReader ReaderCache = new();
@@ -25,6 +25,8 @@ namespace LiteEntitySystem.Extensions
         private static RemoteCallSpan<byte> _initAction;
 
         private readonly Func<T> _constructor;
+        
+        public event Action ValueChanged;
 
         public SyncNetSerializable(Func<T> constructor)
         {
@@ -39,7 +41,8 @@ namespace LiteEntitySystem.Extensions
         protected internal override void OnSyncRequested()
         {
             WriterCache.Reset();
-            _value.Serialize(WriterCache);
+            if(_value != null)
+                _value.Serialize(WriterCache);
             if (WriterCache.Length > ushort.MaxValue)
             {
                 Logger.LogError("Too much sync data!");
@@ -63,12 +66,18 @@ namespace LiteEntitySystem.Extensions
         private void Init(ReadOnlySpan<byte> data)
         {
             ushort origSize = BitConverter.ToUInt16(data);
+            if (origSize == 0)
+            {
+                _value = default;
+                return;
+            }
             if (CompressionBuffer == null || CompressionBuffer.Length < origSize)
                 CompressionBuffer = new byte[origSize];
             LZ4Codec.Decode(data[2..], new Span<byte>(CompressionBuffer));
             ReaderCache.SetSource(CompressionBuffer, 0, origSize);
             _value ??= _constructor();
             _value.Deserialize(ReaderCache);
+            ValueChanged?.Invoke();
         }
 
         public static implicit operator T(SyncNetSerializable<T> field)

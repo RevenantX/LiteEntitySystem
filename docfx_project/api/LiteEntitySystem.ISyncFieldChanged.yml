@@ -1,0 +1,64 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.ISyncFieldChanged
+  commentId: T:LiteEntitySystem.ISyncFieldChanged
+  id: ISyncFieldChanged
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.ISyncFieldChanged.ValueChanged
+  langs:
+  - csharp
+  - vb
+  name: ISyncFieldChanged
+  nameWithType: ISyncFieldChanged
+  fullName: LiteEntitySystem.ISyncFieldChanged
+  type: Interface
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Provides a standard interface for receiving SyncVar change notifications.
+  example: []
+  syntax:
+    content: public interface ISyncFieldChanged
+    content.vb: Public Interface ISyncFieldChanged
+- uid: LiteEntitySystem.ISyncFieldChanged.ValueChanged
+  commentId: E:LiteEntitySystem.ISyncFieldChanged.ValueChanged
+  id: ValueChanged
+  parent: LiteEntitySystem.ISyncFieldChanged
+  langs:
+  - csharp
+  - vb
+  name: ValueChanged
+  nameWithType: ISyncFieldChanged.ValueChanged
+  fullName: LiteEntitySystem.ISyncFieldChanged.ValueChanged
+  type: Event
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: event Action ValueChanged
+    return:
+      type: System.Action
+    content.vb: Event ValueChanged As Action
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.Action
+  commentId: T:System.Action
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action
+  name: Action
+  nameWithType: Action
+  fullName: System.Action
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System

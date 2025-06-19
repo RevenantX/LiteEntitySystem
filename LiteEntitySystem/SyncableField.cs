@@ -3,10 +3,33 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
+    /// <summary>
+    /// Provides a standard interface for receiving SyncVar change notifications.
+    /// </summary>
+    public interface ISyncFieldChanged<T>
+    {
+        /// <summary>
+        /// Argument contains old value
+        /// </summary>
+        event Action<T> ValueChanged;
+    }
+    
+    /// <summary>
+    /// Provides a standard interface for receiving SyncVar change notifications.
+    /// </summary>
+    public interface ISyncFieldChanged
+    {
+        event Action ValueChanged;
+    }
+    
+    /// <summary>
+    /// Base class for fields with custom serialization (strings,lists,etc)
+    /// </summary>
     public abstract class SyncableField : InternalBaseClass
     {
-        internal InternalEntity ParentEntityInternal;
-        internal ExecuteFlags Flags;
+        private InternalEntity _parentEntity;
+        private ExecuteFlags _executeFlags;
+        
         internal ushort RPCOffset;
         
         /// <summary>
@@ -17,7 +40,7 @@ namespace LiteEntitySystem
         /// <summary>
         /// Is syncableField on server
         /// </summary>
-        protected internal bool IsServer => ParentEntityInternal != null && ParentEntityInternal.IsServer;
+        protected internal bool IsServer => _parentEntity != null && _parentEntity.IsServer;
 
         /// <summary>
         /// Is supported rollback by this syncable field
@@ -27,7 +50,23 @@ namespace LiteEntitySystem
         /// <summary>
         /// Owner of this syncable field
         /// </summary>
-        protected InternalEntity ParentEntity => ParentEntityInternal;
+        protected InternalEntity ParentEntity => _parentEntity;
+
+        internal void Init(InternalEntity parentEntity, SyncFlags fieldFlags)
+        {
+            _parentEntity = parentEntity;
+            if (fieldFlags.HasFlagFast(SyncFlags.OnlyForOwner))
+                _executeFlags = ExecuteFlags.SendToOwner;
+            else if (fieldFlags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
+                _executeFlags = ExecuteFlags.SendToOther;
+            else
+                _executeFlags = ExecuteFlags.SendToAll;
+        }
+        
+        /// <summary>
+        /// Owner of this syncable field casted to EntityLogic
+        /// </summary>
+        protected EntityLogic ParentEntityLogic => _parentEntity as EntityLogic;
         
         protected internal virtual void BeforeReadRPC()
         {
@@ -52,7 +91,7 @@ namespace LiteEntitySystem
         protected void ExecuteRPC(in RemoteCall rpc)
         {
             if(IsServer)
-                ParentEntityInternal.ServerManager.AddRemoteCall(ParentEntityInternal, (ushort)(rpc.Id + RPCOffset), rpc.Flags);
+                _parentEntity.ServerManager.AddRemoteCall(_parentEntity, (ushort)(rpc.Id + RPCOffset), _executeFlags);
         }
 
         protected void ExecuteRPC<T>(in RemoteCall<T> rpc, T value) where T : unmanaged
@@ -60,14 +99,14 @@ namespace LiteEntitySystem
             unsafe
             {
                 if(IsServer)
-                    ParentEntityInternal.ServerManager.AddRemoteCall(ParentEntityInternal, new ReadOnlySpan<T>(&value, 1), (ushort)(rpc.Id + RPCOffset), Flags);
+                    _parentEntity.ServerManager.AddRemoteCall(_parentEntity, new ReadOnlySpan<T>(&value, 1), (ushort)(rpc.Id + RPCOffset), _executeFlags);
             }
         }
 
         protected void ExecuteRPC<T>(in RemoteCallSpan<T> rpc, ReadOnlySpan<T> value) where T : unmanaged
         {
             if(IsServer)
-                ParentEntityInternal.ServerManager.AddRemoteCall(ParentEntityInternal, value, (ushort)(rpc.Id + RPCOffset), Flags);
+                _parentEntity.ServerManager.AddRemoteCall(_parentEntity, value, (ushort)(rpc.Id + RPCOffset), _executeFlags);
         }
 
         protected void ExecuteRPC<T>(in RemoteCallSerializable<T> rpc, T value) where T : struct, ISpanSerializable
@@ -76,7 +115,7 @@ namespace LiteEntitySystem
             {
                 var writer = new SpanWriter(stackalloc byte[value.MaxSize]);
                 value.Serialize(ref writer);
-                ParentEntityInternal.ServerManager.AddRemoteCall<byte>(ParentEntityInternal, writer.RawData.Slice(0, writer.Position), (ushort)(rpc.Id + RPCOffset), Flags);
+                _parentEntity.ServerManager.AddRemoteCall<byte>(_parentEntity, writer.RawData.Slice(0, writer.Position), (ushort)(rpc.Id + RPCOffset), _executeFlags);
             }
         }
     }

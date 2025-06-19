@@ -1,0 +1,181 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.Extensions.StateCalls
+  commentId: T:LiteEntitySystem.Extensions.StateCalls
+  id: StateCalls
+  parent: LiteEntitySystem.Extensions
+  children:
+  - LiteEntitySystem.Extensions.StateCalls.OnEnter
+  - LiteEntitySystem.Extensions.StateCalls.OnExit
+  - LiteEntitySystem.Extensions.StateCalls.OnUpdate
+  langs:
+  - csharp
+  - vb
+  name: StateCalls
+  nameWithType: StateCalls
+  fullName: LiteEntitySystem.Extensions.StateCalls
+  type: Struct
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: public struct StateCalls
+    content.vb: Public Structure StateCalls
+- uid: LiteEntitySystem.Extensions.StateCalls.OnEnter
+  commentId: F:LiteEntitySystem.Extensions.StateCalls.OnEnter
+  id: OnEnter
+  parent: LiteEntitySystem.Extensions.StateCalls
+  langs:
+  - csharp
+  - vb
+  name: OnEnter
+  nameWithType: StateCalls.OnEnter
+  fullName: LiteEntitySystem.Extensions.StateCalls.OnEnter
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: public Action OnEnter
+    return:
+      type: System.Action
+    content.vb: Public OnEnter As Action
+- uid: LiteEntitySystem.Extensions.StateCalls.OnUpdate
+  commentId: F:LiteEntitySystem.Extensions.StateCalls.OnUpdate
+  id: OnUpdate
+  parent: LiteEntitySystem.Extensions.StateCalls
+  langs:
+  - csharp
+  - vb
+  name: OnUpdate
+  nameWithType: StateCalls.OnUpdate
+  fullName: LiteEntitySystem.Extensions.StateCalls.OnUpdate
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: public Action<float> OnUpdate
+    return:
+      type: System.Action{System.Single}
+    content.vb: Public OnUpdate As Action(Of Single)
+- uid: LiteEntitySystem.Extensions.StateCalls.OnExit
+  commentId: F:LiteEntitySystem.Extensions.StateCalls.OnExit
+  id: OnExit
+  parent: LiteEntitySystem.Extensions.StateCalls
+  langs:
+  - csharp
+  - vb
+  name: OnExit
+  nameWithType: StateCalls.OnExit
+  fullName: LiteEntitySystem.Extensions.StateCalls.OnExit
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Extensions
+  syntax:
+    content: public Action OnExit
+    return:
+      type: System.Action
+    content.vb: Public OnExit As Action
+references:
+- uid: LiteEntitySystem.Extensions
+  commentId: N:LiteEntitySystem.Extensions
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Extensions
+  nameWithType: LiteEntitySystem.Extensions
+  fullName: LiteEntitySystem.Extensions
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Extensions
+    name: Extensions
+    href: LiteEntitySystem.Extensions.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Extensions
+    name: Extensions
+    href: LiteEntitySystem.Extensions.html
+- uid: System.Action
+  commentId: T:System.Action
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action
+  name: Action
+  nameWithType: Action
+  fullName: System.Action
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Action{System.Single}
+  commentId: T:System.Action{System.Single}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<float>
+  nameWithType: Action<float>
+  fullName: System.Action<float>
+  nameWithType.vb: Action(Of Single)
+  fullName.vb: System.Action(Of Single)
+  name.vb: Action(Of Single)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: System.Single
+    name: float
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Single
+    name: Single
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: )
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )

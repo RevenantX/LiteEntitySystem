@@ -1,0 +1,658 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.Collections.SparseMap`1
+  commentId: T:LiteEntitySystem.Collections.SparseMap`1
+  id: SparseMap`1
+  parent: LiteEntitySystem.Collections
+  children:
+  - LiteEntitySystem.Collections.SparseMap`1.#ctor
+  - LiteEntitySystem.Collections.SparseMap`1.#ctor(System.Int32)
+  - LiteEntitySystem.Collections.SparseMap`1.Clear
+  - LiteEntitySystem.Collections.SparseMap`1.Contains(System.Int32)
+  - LiteEntitySystem.Collections.SparseMap`1.CopyTo(LiteEntitySystem.Collections.SparseMap{`0})
+  - LiteEntitySystem.Collections.SparseMap`1.Count
+  - LiteEntitySystem.Collections.SparseMap`1.FindIndex(System.Int32)
+  - LiteEntitySystem.Collections.SparseMap`1.GetById(System.Int32)
+  - LiteEntitySystem.Collections.SparseMap`1.GetByIndex(System.Int32)
+  - LiteEntitySystem.Collections.SparseMap`1.GetSparseEntryByIndex(System.Int32)
+  - LiteEntitySystem.Collections.SparseMap`1.Remove(System.Int32)
+  - LiteEntitySystem.Collections.SparseMap`1.Remove(System.Int32,`0@)
+  - LiteEntitySystem.Collections.SparseMap`1.Set(System.Int32,`0)
+  - LiteEntitySystem.Collections.SparseMap`1.TryGetSparseEntry(System.Int32,LiteEntitySystem.Collections.SparseMap{`0}.SparseEntry@)
+  - LiteEntitySystem.Collections.SparseMap`1.TryGetValue(System.Int32,`0@)
+  langs:
+  - csharp
+  - vb
+  name: SparseMap<T>
+  nameWithType: SparseMap<T>
+  fullName: LiteEntitySystem.Collections.SparseMap<T>
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public class SparseMap<T>
+    typeParameters:
+    - id: T
+    content.vb: Public Class SparseMap(Of T)
+  inheritance:
+  - System.Object
+  nameWithType.vb: SparseMap(Of T)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T)
+  name.vb: SparseMap(Of T)
+- uid: LiteEntitySystem.Collections.SparseMap`1.Count
+  commentId: P:LiteEntitySystem.Collections.SparseMap`1.Count
+  id: Count
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: Count
+  nameWithType: SparseMap<T>.Count
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Count
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public int Count { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Count As Integer
+  overload: LiteEntitySystem.Collections.SparseMap`1.Count*
+  nameWithType.vb: SparseMap(Of T).Count
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Count
+- uid: LiteEntitySystem.Collections.SparseMap`1.#ctor
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.#ctor
+  id: '#ctor'
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: SparseMap()
+  nameWithType: SparseMap<T>.SparseMap()
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.SparseMap()
+  type: Constructor
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public SparseMap()
+    content.vb: Public Sub New()
+  overload: LiteEntitySystem.Collections.SparseMap`1.#ctor*
+  nameWithType.vb: SparseMap(Of T).New()
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).New()
+  name.vb: New()
+- uid: LiteEntitySystem.Collections.SparseMap`1.#ctor(System.Int32)
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.#ctor(System.Int32)
+  id: '#ctor(System.Int32)'
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: SparseMap(int)
+  nameWithType: SparseMap<T>.SparseMap(int)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.SparseMap(int)
+  type: Constructor
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public SparseMap(int capacity)
+    parameters:
+    - id: capacity
+      type: System.Int32
+    content.vb: Public Sub New(capacity As Integer)
+  overload: LiteEntitySystem.Collections.SparseMap`1.#ctor*
+  nameWithType.vb: SparseMap(Of T).New(Integer)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).New(Integer)
+  name.vb: New(Integer)
+- uid: LiteEntitySystem.Collections.SparseMap`1.CopyTo(LiteEntitySystem.Collections.SparseMap{`0})
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.CopyTo(LiteEntitySystem.Collections.SparseMap{`0})
+  id: CopyTo(LiteEntitySystem.Collections.SparseMap{`0})
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: CopyTo(SparseMap<T>)
+  nameWithType: SparseMap<T>.CopyTo(SparseMap<T>)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.CopyTo(LiteEntitySystem.Collections.SparseMap<T>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public void CopyTo(SparseMap<T> target)
+    parameters:
+    - id: target
+      type: LiteEntitySystem.Collections.SparseMap`1
+    content.vb: Public Sub CopyTo(target As SparseMap(Of T))
+  overload: LiteEntitySystem.Collections.SparseMap`1.CopyTo*
+  nameWithType.vb: SparseMap(Of T).CopyTo(SparseMap(Of T))
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).CopyTo(LiteEntitySystem.Collections.SparseMap(Of T))
+  name.vb: CopyTo(SparseMap(Of T))
+- uid: LiteEntitySystem.Collections.SparseMap`1.GetByIndex(System.Int32)
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.GetByIndex(System.Int32)
+  id: GetByIndex(System.Int32)
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: GetByIndex(int)
+  nameWithType: SparseMap<T>.GetByIndex(int)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.GetByIndex(int)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public ref T GetByIndex(int index)
+    parameters:
+    - id: index
+      type: System.Int32
+    return:
+      type: '{T}'
+    content.vb: Public ByRef Function GetByIndex(index As Integer) As T
+  overload: LiteEntitySystem.Collections.SparseMap`1.GetByIndex*
+  nameWithType.vb: SparseMap(Of T).GetByIndex(Integer)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).GetByIndex(Integer)
+  name.vb: GetByIndex(Integer)
+- uid: LiteEntitySystem.Collections.SparseMap`1.GetById(System.Int32)
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.GetById(System.Int32)
+  id: GetById(System.Int32)
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: GetById(int)
+  nameWithType: SparseMap<T>.GetById(int)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.GetById(int)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public ref T GetById(int id)
+    parameters:
+    - id: id
+      type: System.Int32
+    return:
+      type: '{T}'
+    content.vb: Public ByRef Function GetById(id As Integer) As T
+  overload: LiteEntitySystem.Collections.SparseMap`1.GetById*
+  nameWithType.vb: SparseMap(Of T).GetById(Integer)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).GetById(Integer)
+  name.vb: GetById(Integer)
+- uid: LiteEntitySystem.Collections.SparseMap`1.GetSparseEntryByIndex(System.Int32)
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.GetSparseEntryByIndex(System.Int32)
+  id: GetSparseEntryByIndex(System.Int32)
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: GetSparseEntryByIndex(int)
+  nameWithType: SparseMap<T>.GetSparseEntryByIndex(int)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.GetSparseEntryByIndex(int)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public ref readonly SparseMap<T>.SparseEntry GetSparseEntryByIndex(int index)
+    parameters:
+    - id: index
+      type: System.Int32
+    return:
+      type: LiteEntitySystem.Collections.SparseMap`1.SparseEntry
+    content.vb: Public Function GetSparseEntryByIndex(index As Integer) As SparseMap(Of T).SparseEntry
+  overload: LiteEntitySystem.Collections.SparseMap`1.GetSparseEntryByIndex*
+  nameWithType.vb: SparseMap(Of T).GetSparseEntryByIndex(Integer)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).GetSparseEntryByIndex(Integer)
+  name.vb: GetSparseEntryByIndex(Integer)
+- uid: LiteEntitySystem.Collections.SparseMap`1.TryGetSparseEntry(System.Int32,LiteEntitySystem.Collections.SparseMap{`0}.SparseEntry@)
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.TryGetSparseEntry(System.Int32,LiteEntitySystem.Collections.SparseMap{`0}.SparseEntry@)
+  id: TryGetSparseEntry(System.Int32,LiteEntitySystem.Collections.SparseMap{`0}.SparseEntry@)
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: TryGetSparseEntry(int, out SparseEntry)
+  nameWithType: SparseMap<T>.TryGetSparseEntry(int, out SparseMap<T>.SparseEntry)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.TryGetSparseEntry(int, out LiteEntitySystem.Collections.SparseMap<T>.SparseEntry)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public bool TryGetSparseEntry(int id, out SparseMap<T>.SparseEntry result)
+    parameters:
+    - id: id
+      type: System.Int32
+    - id: result
+      type: LiteEntitySystem.Collections.SparseMap`1.SparseEntry
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetSparseEntry(id As Integer, result As SparseMap(Of T).SparseEntry) As Boolean
+  overload: LiteEntitySystem.Collections.SparseMap`1.TryGetSparseEntry*
+  nameWithType.vb: SparseMap(Of T).TryGetSparseEntry(Integer, SparseMap(Of T).SparseEntry)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).TryGetSparseEntry(Integer, LiteEntitySystem.Collections.SparseMap(Of T).SparseEntry)
+  name.vb: TryGetSparseEntry(Integer, SparseEntry)
+- uid: LiteEntitySystem.Collections.SparseMap`1.FindIndex(System.Int32)
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.FindIndex(System.Int32)
+  id: FindIndex(System.Int32)
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: FindIndex(int)
+  nameWithType: SparseMap<T>.FindIndex(int)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.FindIndex(int)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public int FindIndex(int id)
+    parameters:
+    - id: id
+      type: System.Int32
+    return:
+      type: System.Int32
+    content.vb: Public Function FindIndex(id As Integer) As Integer
+  overload: LiteEntitySystem.Collections.SparseMap`1.FindIndex*
+  nameWithType.vb: SparseMap(Of T).FindIndex(Integer)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).FindIndex(Integer)
+  name.vb: FindIndex(Integer)
+- uid: LiteEntitySystem.Collections.SparseMap`1.Contains(System.Int32)
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.Contains(System.Int32)
+  id: Contains(System.Int32)
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: Contains(int)
+  nameWithType: SparseMap<T>.Contains(int)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Contains(int)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public bool Contains(int id)
+    parameters:
+    - id: id
+      type: System.Int32
+    return:
+      type: System.Boolean
+    content.vb: Public Function Contains(id As Integer) As Boolean
+  overload: LiteEntitySystem.Collections.SparseMap`1.Contains*
+  nameWithType.vb: SparseMap(Of T).Contains(Integer)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Contains(Integer)
+  name.vb: Contains(Integer)
+- uid: LiteEntitySystem.Collections.SparseMap`1.TryGetValue(System.Int32,`0@)
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.TryGetValue(System.Int32,`0@)
+  id: TryGetValue(System.Int32,`0@)
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: TryGetValue(int, out T)
+  nameWithType: SparseMap<T>.TryGetValue(int, out T)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.TryGetValue(int, out T)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public bool TryGetValue(int id, out T result)
+    parameters:
+    - id: id
+      type: System.Int32
+    - id: result
+      type: '{T}'
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetValue(id As Integer, result As T) As Boolean
+  overload: LiteEntitySystem.Collections.SparseMap`1.TryGetValue*
+  nameWithType.vb: SparseMap(Of T).TryGetValue(Integer, T)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).TryGetValue(Integer, T)
+  name.vb: TryGetValue(Integer, T)
+- uid: LiteEntitySystem.Collections.SparseMap`1.Set(System.Int32,`0)
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.Set(System.Int32,`0)
+  id: Set(System.Int32,`0)
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: Set(int, T)
+  nameWithType: SparseMap<T>.Set(int, T)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Set(int, T)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public void Set(int id, T value)
+    parameters:
+    - id: id
+      type: System.Int32
+    - id: value
+      type: '{T}'
+    content.vb: Public Sub [Set](id As Integer, value As T)
+  overload: LiteEntitySystem.Collections.SparseMap`1.Set*
+  nameWithType.vb: SparseMap(Of T).Set(Integer, T)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Set(Integer, T)
+  name.vb: Set(Integer, T)
+- uid: LiteEntitySystem.Collections.SparseMap`1.Remove(System.Int32)
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.Remove(System.Int32)
+  id: Remove(System.Int32)
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: Remove(int)
+  nameWithType: SparseMap<T>.Remove(int)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Remove(int)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public bool Remove(int id)
+    parameters:
+    - id: id
+      type: System.Int32
+    return:
+      type: System.Boolean
+    content.vb: Public Function Remove(id As Integer) As Boolean
+  overload: LiteEntitySystem.Collections.SparseMap`1.Remove*
+  nameWithType.vb: SparseMap(Of T).Remove(Integer)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Remove(Integer)
+  name.vb: Remove(Integer)
+- uid: LiteEntitySystem.Collections.SparseMap`1.Remove(System.Int32,`0@)
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.Remove(System.Int32,`0@)
+  id: Remove(System.Int32,`0@)
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: Remove(int, out T)
+  nameWithType: SparseMap<T>.Remove(int, out T)
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Remove(int, out T)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public bool Remove(int id, out T removedElement)
+    parameters:
+    - id: id
+      type: System.Int32
+    - id: removedElement
+      type: '{T}'
+    return:
+      type: System.Boolean
+    content.vb: Public Function Remove(id As Integer, removedElement As T) As Boolean
+  overload: LiteEntitySystem.Collections.SparseMap`1.Remove*
+  nameWithType.vb: SparseMap(Of T).Remove(Integer, T)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Remove(Integer, T)
+  name.vb: Remove(Integer, T)
+- uid: LiteEntitySystem.Collections.SparseMap`1.Clear
+  commentId: M:LiteEntitySystem.Collections.SparseMap`1.Clear
+  id: Clear
+  parent: LiteEntitySystem.Collections.SparseMap`1
+  langs:
+  - csharp
+  - vb
+  name: Clear()
+  nameWithType: SparseMap<T>.Clear()
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Clear()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public void Clear()
+    content.vb: Public Sub Clear()
+  overload: LiteEntitySystem.Collections.SparseMap`1.Clear*
+  nameWithType.vb: SparseMap(Of T).Clear()
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Clear()
+references:
+- uid: LiteEntitySystem.Collections
+  commentId: N:LiteEntitySystem.Collections
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Collections
+  nameWithType: LiteEntitySystem.Collections
+  fullName: LiteEntitySystem.Collections
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Collections
+    name: Collections
+    href: LiteEntitySystem.Collections.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Collections
+    name: Collections
+    href: LiteEntitySystem.Collections.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.Collections.SparseMap`1.Count*
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.Count
+  href: LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Count
+  name: Count
+  nameWithType: SparseMap<T>.Count
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Count
+  nameWithType.vb: SparseMap(Of T).Count
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Count
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: LiteEntitySystem.Collections.SparseMap`1.#ctor*
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.#ctor
+  href: LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1__ctor
+  name: SparseMap
+  nameWithType: SparseMap<T>.SparseMap
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.SparseMap
+  nameWithType.vb: SparseMap(Of T).New
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).New
+  name.vb: New
+- uid: LiteEntitySystem.Collections.SparseMap`1.CopyTo*
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.CopyTo
+  href: LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_CopyTo_LiteEntitySystem_Collections_SparseMap__0__
+  name: CopyTo
+  nameWithType: SparseMap<T>.CopyTo
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.CopyTo
+  nameWithType.vb: SparseMap(Of T).CopyTo
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).CopyTo
+- uid: LiteEntitySystem.Collections.SparseMap`1
+  commentId: T:LiteEntitySystem.Collections.SparseMap`1
+  parent: LiteEntitySystem.Collections
+  href: LiteEntitySystem.Collections.SparseMap-1.html
+  name: SparseMap<T>
+  nameWithType: SparseMap<T>
+  fullName: LiteEntitySystem.Collections.SparseMap<T>
+  nameWithType.vb: SparseMap(Of T)
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T)
+  name.vb: SparseMap(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.SparseMap`1
+    name: SparseMap
+    href: LiteEntitySystem.Collections.SparseMap-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.SparseMap`1
+    name: SparseMap
+    href: LiteEntitySystem.Collections.SparseMap-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Collections.SparseMap`1.GetByIndex*
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.GetByIndex
+  href: LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_GetByIndex_System_Int32_
+  name: GetByIndex
+  nameWithType: SparseMap<T>.GetByIndex
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.GetByIndex
+  nameWithType.vb: SparseMap(Of T).GetByIndex
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).GetByIndex
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: LiteEntitySystem.Collections.SparseMap`1.GetById*
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.GetById
+  href: LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_GetById_System_Int32_
+  name: GetById
+  nameWithType: SparseMap<T>.GetById
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.GetById
+  nameWithType.vb: SparseMap(Of T).GetById
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).GetById
+- uid: LiteEntitySystem.Collections.SparseMap`1.GetSparseEntryByIndex*
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.GetSparseEntryByIndex
+  href: LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_GetSparseEntryByIndex_System_Int32_
+  name: GetSparseEntryByIndex
+  nameWithType: SparseMap<T>.GetSparseEntryByIndex
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.GetSparseEntryByIndex
+  nameWithType.vb: SparseMap(Of T).GetSparseEntryByIndex
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).GetSparseEntryByIndex
+- uid: LiteEntitySystem.Collections.SparseMap`1.SparseEntry
+  commentId: T:LiteEntitySystem.Collections.SparseMap`1.SparseEntry
+  parent: LiteEntitySystem.Collections
+  href: LiteEntitySystem.Collections.SparseMap-1.html
+  name: SparseMap<T>.SparseEntry
+  nameWithType: SparseMap<T>.SparseEntry
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.SparseEntry
+  nameWithType.vb: SparseMap(Of T).SparseEntry
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).SparseEntry
+  name.vb: SparseMap(Of T).SparseEntry
+  spec.csharp:
+  - uid: LiteEntitySystem.Collections.SparseMap`1
+    name: SparseMap
+    href: LiteEntitySystem.Collections.SparseMap-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: .
+  - uid: LiteEntitySystem.Collections.SparseMap`1.SparseEntry
+    name: SparseEntry
+    href: LiteEntitySystem.Collections.SparseMap-1.SparseEntry.html
+  spec.vb:
+  - uid: LiteEntitySystem.Collections.SparseMap`1
+    name: SparseMap
+    href: LiteEntitySystem.Collections.SparseMap-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: .
+  - uid: LiteEntitySystem.Collections.SparseMap`1.SparseEntry
+    name: SparseEntry
+    href: LiteEntitySystem.Collections.SparseMap-1.SparseEntry.html
+- uid: LiteEntitySystem.Collections.SparseMap`1.TryGetSparseEntry*
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.TryGetSparseEntry
+  href: LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_TryGetSparseEntry_System_Int32_LiteEntitySystem_Collections_SparseMap__0__SparseEntry__
+  name: TryGetSparseEntry
+  nameWithType: SparseMap<T>.TryGetSparseEntry
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.TryGetSparseEntry
+  nameWithType.vb: SparseMap(Of T).TryGetSparseEntry
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).TryGetSparseEntry
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: LiteEntitySystem.Collections.SparseMap`1.FindIndex*
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.FindIndex
+  href: LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_FindIndex_System_Int32_
+  name: FindIndex
+  nameWithType: SparseMap<T>.FindIndex
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.FindIndex
+  nameWithType.vb: SparseMap(Of T).FindIndex
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).FindIndex
+- uid: LiteEntitySystem.Collections.SparseMap`1.Contains*
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.Contains
+  href: LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Contains_System_Int32_
+  name: Contains
+  nameWithType: SparseMap<T>.Contains
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Contains
+  nameWithType.vb: SparseMap(Of T).Contains
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Contains
+- uid: LiteEntitySystem.Collections.SparseMap`1.TryGetValue*
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.TryGetValue
+  href: LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_TryGetValue_System_Int32__0__
+  name: TryGetValue
+  nameWithType: SparseMap<T>.TryGetValue
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.TryGetValue
+  nameWithType.vb: SparseMap(Of T).TryGetValue
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).TryGetValue
+- uid: LiteEntitySystem.Collections.SparseMap`1.Set*
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.Set
+  href: LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Set_System_Int32__0_
+  name: Set
+  nameWithType: SparseMap<T>.Set
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Set
+  nameWithType.vb: SparseMap(Of T).Set
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Set
+- uid: LiteEntitySystem.Collections.SparseMap`1.Remove*
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.Remove
+  href: LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Remove_System_Int32_
+  name: Remove
+  nameWithType: SparseMap<T>.Remove
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Remove
+  nameWithType.vb: SparseMap(Of T).Remove
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Remove
+- uid: LiteEntitySystem.Collections.SparseMap`1.Clear*
+  commentId: Overload:LiteEntitySystem.Collections.SparseMap`1.Clear
+  href: LiteEntitySystem.Collections.SparseMap-1.html#LiteEntitySystem_Collections_SparseMap_1_Clear
+  name: Clear
+  nameWithType: SparseMap<T>.Clear
+  fullName: LiteEntitySystem.Collections.SparseMap<T>.Clear
+  nameWithType.vb: SparseMap(Of T).Clear
+  fullName.vb: LiteEntitySystem.Collections.SparseMap(Of T).Clear

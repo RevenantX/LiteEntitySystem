@@ -4,7 +4,7 @@ using LiteNetLib.Utils;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncSpanSerializable<T> : SyncableField where T : ISpanSerializable
+    public class SyncSpanSerializable<T> : SyncableField, ISyncFieldChanged where T : ISpanSerializable
     {
         private static byte[] CompressionBuffer;
         
@@ -23,6 +23,8 @@ namespace LiteEntitySystem.Extensions
         private static RemoteCallSpan<byte> _initAction;
 
         private readonly Func<T> _constructor;
+        
+        public event Action ValueChanged;
 
         public SyncSpanSerializable(Func<T> constructor)
         {
@@ -63,6 +65,7 @@ namespace LiteEntitySystem.Extensions
             _value ??= _constructor();
             var spanReader = new SpanReader(new ReadOnlySpan<byte>(CompressionBuffer, 0, origSize));
             _value.Deserialize(ref spanReader);
+            ValueChanged?.Invoke();
         }
 
         public static implicit operator T(SyncSpanSerializable<T> field)

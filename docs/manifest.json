@@ -1,5 +1,5 @@
 {
-  "source_base_path": "/home/revenantx/Projects/LiteEntitySystem/docfx_project",
+  "source_base_path": "E:/Projects/LiteEntitySystem/docfx_project",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -494,6 +494,26 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.ISyncFieldChanged-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.ISyncFieldChanged-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.ISyncFieldChanged.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.ISyncFieldChanged.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.IdGeneratorByte.yml",
       "output": {
         ".html": {
@@ -544,6 +564,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.LESDiagnosticDataEntry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.LESDiagnosticDataEntry.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.Logger.yml",
       "output": {
         ".html": {
@@ -588,16 +618,6 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.NetworkMode.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LiteEntitySystem.OnSyncExecutionOrder.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LiteEntitySystem.OnSyncExecutionOrder.html"
         }
       },
       "version": ""
@@ -728,6 +748,26 @@
       "output": {
         ".html": {
           "relative_path": "api/LiteEntitySystem.SyncFlags.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.SyncGroup.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.SyncGroup.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.SyncGroupUtils.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.SyncGroupUtils.html"
         }
       },
       "version": ""

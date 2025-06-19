@@ -1,0 +1,122 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.ISyncFieldChanged`1
+  commentId: T:LiteEntitySystem.ISyncFieldChanged`1
+  id: ISyncFieldChanged`1
+  parent: LiteEntitySystem
+  children:
+  - LiteEntitySystem.ISyncFieldChanged`1.ValueChanged
+  langs:
+  - csharp
+  - vb
+  name: ISyncFieldChanged<T>
+  nameWithType: ISyncFieldChanged<T>
+  fullName: LiteEntitySystem.ISyncFieldChanged<T>
+  type: Interface
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Provides a standard interface for receiving SyncVar change notifications.
+  example: []
+  syntax:
+    content: public interface ISyncFieldChanged<T>
+    typeParameters:
+    - id: T
+    content.vb: Public Interface ISyncFieldChanged(Of T)
+  nameWithType.vb: ISyncFieldChanged(Of T)
+  fullName.vb: LiteEntitySystem.ISyncFieldChanged(Of T)
+  name.vb: ISyncFieldChanged(Of T)
+- uid: LiteEntitySystem.ISyncFieldChanged`1.ValueChanged
+  commentId: E:LiteEntitySystem.ISyncFieldChanged`1.ValueChanged
+  id: ValueChanged
+  parent: LiteEntitySystem.ISyncFieldChanged`1
+  langs:
+  - csharp
+  - vb
+  name: ValueChanged
+  nameWithType: ISyncFieldChanged<T>.ValueChanged
+  fullName: LiteEntitySystem.ISyncFieldChanged<T>.ValueChanged
+  type: Event
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Argument contains old value
+  example: []
+  syntax:
+    content: event Action<T> ValueChanged
+    return:
+      type: System.Action{{T}}
+    content.vb: Event ValueChanged As Action(Of T)
+  nameWithType.vb: ISyncFieldChanged(Of T).ValueChanged
+  fullName.vb: LiteEntitySystem.ISyncFieldChanged(Of T).ValueChanged
+references:
+- uid: LiteEntitySystem
+  commentId: N:LiteEntitySystem
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem
+  nameWithType: LiteEntitySystem
+  fullName: LiteEntitySystem
+- uid: System.Action{{T}}
+  commentId: T:System.Action{`0}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System

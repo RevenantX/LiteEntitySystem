@@ -1,4 +1,5 @@
-﻿using LiteEntitySystem.Collections;
+﻿using System.Collections.Generic;
+using LiteEntitySystem.Collections;
 using LiteEntitySystem.Internal;
 using LiteEntitySystem.Transport;
 
@@ -9,7 +10,8 @@ namespace LiteEntitySystem
         Active,
         WaitingForFirstInput,
         WaitingForFirstInputProcess,
-        RequestBaseline
+        RequestBaseline,
+        Removed
     }
 
     internal struct InputInfo
@@ -37,13 +39,38 @@ namespace LiteEntitySystem
         internal float LerpTime;
         
         //server only
+        internal bool FirstBaselineSent;
         internal NetPlayerState State;
-        internal SequenceBinaryHeap<InputInfo> AvailableInput;
+        internal readonly SequenceBinaryHeap<InputInfo> AvailableInput;
+        internal readonly Dictionary<EntityLogic, SyncGroupData> EntitySyncInfo;
 
         internal NetPlayer(AbstractNetPeer peer, byte id)
         {
             Id = id;
             Peer = peer;
+        }
+        
+        //server constructor
+        internal NetPlayer(AbstractNetPeer peer, byte id, int serverMaxStoredInputs) : this(peer, id)
+        {
+            AvailableInput = new SequenceBinaryHeap<InputInfo>(serverMaxStoredInputs);
+            EntitySyncInfo = new();
+            State = NetPlayerState.RequestBaseline;
+        }
+
+        internal void LoadInputInfo(InputPacketHeader inputData)
+        {
+            StateATick = inputData.StateA;
+            StateBTick = inputData.StateB;
+            LerpTime = inputData.LerpMsec;
+        }
+        
+        internal void LoadInputInfo(InputInfo inputData)
+        {
+            LastProcessedTick = inputData.Tick;
+            StateATick = inputData.Header.StateA;
+            StateBTick = inputData.Header.StateB;
+            LerpTime = inputData.Header.LerpMsec;
         }
     }
 }

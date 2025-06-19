@@ -1,0 +1,91 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiteEntitySystem.Internal.InternalBaseClass
+  commentId: T:LiteEntitySystem.Internal.InternalBaseClass
+  id: InternalBaseClass
+  parent: LiteEntitySystem.Internal
+  children:
+  - LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+  langs:
+  - csharp
+  - vb
+  name: InternalBaseClass
+  nameWithType: InternalBaseClass
+  fullName: LiteEntitySystem.Internal.InternalBaseClass
+  type: Class
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Internal
+  syntax:
+    content: public abstract class InternalBaseClass
+    content.vb: Public MustInherit Class InternalBaseClass
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - LiteEntitySystem.Internal.InternalEntity
+  - LiteEntitySystem.SyncableField
+- uid: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+  commentId: M:LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+  id: OnSyncRequested
+  parent: LiteEntitySystem.Internal.InternalBaseClass
+  langs:
+  - csharp
+  - vb
+  name: OnSyncRequested()
+  nameWithType: InternalBaseClass.OnSyncRequested()
+  fullName: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Internal
+  syntax:
+    content: protected virtual void OnSyncRequested()
+    content.vb: Protected Overridable Sub OnSyncRequested()
+  overload: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested*
+references:
+- uid: LiteEntitySystem.Internal
+  commentId: N:LiteEntitySystem.Internal
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Internal
+  nameWithType: LiteEntitySystem.Internal
+  fullName: LiteEntitySystem.Internal
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Internal
+    name: Internal
+    href: LiteEntitySystem.Internal.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Internal
+    name: Internal
+    href: LiteEntitySystem.Internal.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested*
+  commentId: Overload:LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
+  href: LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested
+  name: OnSyncRequested
+  nameWithType: InternalBaseClass.OnSyncRequested
+  fullName: LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
