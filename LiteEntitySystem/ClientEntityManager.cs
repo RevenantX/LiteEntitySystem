@@ -923,7 +923,7 @@ namespace LiteEntitySystem
                                     field.TypeProcessor.WriteTo(e, field.Offset, prevDataPtr + field.FixedOffset);
                                 }
                             }
-                            e.Update();
+                            e.SafeUpdate();
                             for (int i = 0; i < classData.InterpolatedCount; i++)
                             {
                                 fixed (byte* currentDataPtr = classData.ClientInterpolatedNextData(e))
@@ -935,7 +935,7 @@ namespace LiteEntitySystem
                         }
                         else
                         {
-                            e.Update();
+                            e.SafeUpdate();
                         }
                     }
                 }
