@@ -122,6 +122,7 @@ namespace LiteEntitySystem
         
         private const float TimeSpeedChangeFadeTime = 0.1f;
         private const float MaxJitter = 0.2f;
+        private const float MinJitter = 0.001f;
         
         /// <summary>
         /// Maximum stored inputs count
@@ -449,8 +450,8 @@ namespace LiteEntitySystem
             //limit jitter for pause scenarios
             if (NetworkJitter > MaxJitter)
                 NetworkJitter = MaxJitter;
-            float lowestBound = NetworkJitter + PreferredBufferTimeLowest;
-            float upperBound = NetworkJitter + PreferredBufferTimeHighest;
+            float lowestBound = NetworkJitter * 1.5f + PreferredBufferTimeLowest;
+            float upperBound = NetworkJitter * 1.5f + PreferredBufferTimeHighest;
 
             //tune buffer playing speed 
             _lerpTime = Utils.SequenceDiff(_stateB.Tick, _stateA.Tick) * DeltaTimeF;
@@ -692,7 +693,11 @@ namespace LiteEntitySystem
             }
 
             if (NetworkJitter > _jitterMiddle)
+            {
                 NetworkJitter -= DeltaTimeF * 0.1f;
+                if (NetworkJitter < MinJitter)
+                    NetworkJitter = MinJitter;
+            }
         }
 
         /// <summary>
