@@ -126,7 +126,7 @@ namespace LiteEntitySystem.Internal
                     //if no data it "never" changed
                     _fieldChangeTicks[el.IsSyncEnabledFieldId] = _versionChangedTick;
                 }
-                target[HeaderSize + _fields[el.IsSyncEnabledFieldId].FixedOffset] = (byte)enabledGroups;
+                target[_fields[el.IsSyncEnabledFieldId].FixedOffset] = (byte)enabledGroups;
             }
  
             return enabledGroups;
@@ -222,7 +222,7 @@ namespace LiteEntitySystem.Internal
                 : player.CurrentServerTick;
             
             //overwrite IsSyncEnabled for each player
-            SyncGroup enabledSyncGroups = RefreshSyncGroupsVariable(player, new Span<byte>(_latestEntityData));
+            SyncGroup enabledSyncGroups = RefreshSyncGroupsVariable(player, new Span<byte>(_latestEntityData, HeaderSize, (int)(_fullDataSize - HeaderSize)));
 
             fixed (byte* lastEntityData = _latestEntityData) //make diff
             {
