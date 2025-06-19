@@ -149,7 +149,7 @@ namespace LiteEntitySystem.Internal
 
             //it can be null on entity creation
             if(player != null)
-                RefreshSyncGroupsVariable(player, new Span<byte>(_latestEntityData));
+                RefreshSyncGroupsVariable(player, new Span<byte>(_latestEntityData, HeaderSize, (int)(_fullDataSize - HeaderSize)));
             
             //actual on constructed rpc
             _entity.ServerManager.AddRemoteCall(
