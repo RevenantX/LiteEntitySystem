@@ -299,8 +299,8 @@ namespace LiteEntitySystem
                 for (int i = 0; i < classData.InterpolatedCount; i++)
                 {
                     var field = classData.Fields[i];
-                    field.TypeProcessor.WriteTo(entity, field.Offset, interpDataPtr + field.FixedOffset);
-                    field.TypeProcessor.WriteTo(entity, field.Offset, prevDataPtr + field.FixedOffset);
+                    field.TypeProcessor.WriteTo(entity, field.Offsets, interpDataPtr + field.FixedOffset);
+                    field.TypeProcessor.WriteTo(entity, field.Offsets, prevDataPtr + field.FixedOffset);
                 }
             }
         }
@@ -546,19 +546,11 @@ namespace LiteEntitySystem
                     for (int i = 0; i < rollbackFields.Length; i++)
                     {
                         ref var field = ref rollbackFields[i];
-                        if (field.FieldType == FieldType.SyncableSyncVar)
-                        {
-                            var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, field.Offset);
-                            field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, predictedData + field.PredictedOffset);
-                        }
-                        else
-                        {
-                            field.TypeProcessor.SetFrom(entity, field.Offset, predictedData + field.PredictedOffset);
-                        }
+                        field.TypeProcessor.SetFrom(entity, field.Offsets, predictedData + field.PredictedOffset);
                     }
                 }
                 for (int i = 0; i < classData.SyncableFields.Length; i++)
-                    RefMagic.GetFieldValue<SyncableField>(entity, classData.SyncableFields[i].Offset).OnRollback();
+                    Utils.GetSyncableField(entity, classData.SyncableFields[i].Offsets).OnRollback();
                 entity.OnRollback();
             }
     
@@ -594,7 +586,7 @@ namespace LiteEntitySystem
                     fixed (byte* currentDataPtr = classData.ClientInterpolatedNextData(entity))
                     {
                         ref var field = ref classData.Fields[i];
-                        field.TypeProcessor.WriteTo(entity, field.Offset, currentDataPtr + field.FixedOffset);
+                        field.TypeProcessor.WriteTo(entity, field.Offsets, currentDataPtr + field.FixedOffset);
                     }
                 }
             }
@@ -635,7 +627,7 @@ namespace LiteEntitySystem
                         for (int i = 0; i < classData.InterpolatedCount; i++)
                         {
                             ref var field = ref classData.Fields[i];
-                            field.TypeProcessor.SetFrom(entity, field.Offset, currentDataPtr + field.FixedOffset);
+                            field.TypeProcessor.SetFrom(entity, field.Offsets, currentDataPtr + field.FixedOffset);
                         }
                     }
                 }
@@ -680,7 +672,7 @@ namespace LiteEntitySystem
                         for(int i = 0; i < classData.InterpolatedCount; i++)
                         {
                             ref var field = ref classData.Fields[i];
-                            field.TypeProcessor.WriteTo(entity, field.Offset, currentDataPtr + field.FixedOffset);
+                            field.TypeProcessor.WriteTo(entity, field.Offsets, currentDataPtr + field.FixedOffset);
                         }
                     }
                 }
@@ -750,7 +742,7 @@ namespace LiteEntitySystem
                         ref var field = ref classData.Fields[i];
                         field.TypeProcessor.SetInterpolation(
                             entity,
-                            field.Offset,
+                            field.Offsets,
                             prevDataPtr + field.FixedOffset,
                             currentDataPtr + field.FixedOffset,
                             localLerpT);
@@ -920,7 +912,7 @@ namespace LiteEntitySystem
                                 fixed (byte* prevDataPtr = classData.ClientInterpolatedPrevData(e))
                                 {
                                     ref var field = ref classData.Fields[i];
-                                    field.TypeProcessor.WriteTo(e, field.Offset, prevDataPtr + field.FixedOffset);
+                                    field.TypeProcessor.WriteTo(e, field.Offsets, prevDataPtr + field.FixedOffset);
                                 }
                             }
                             e.SafeUpdate();
@@ -929,7 +921,7 @@ namespace LiteEntitySystem
                                 fixed (byte* currentDataPtr = classData.ClientInterpolatedNextData(e))
                                 {
                                     ref var field = ref classData.Fields[i];
-                                    field.TypeProcessor.WriteTo(e, field.Offset, currentDataPtr + field.FixedOffset);
+                                    field.TypeProcessor.WriteTo(e, field.Offsets, currentDataPtr + field.FixedOffset);
                                 }
                             }
                         }

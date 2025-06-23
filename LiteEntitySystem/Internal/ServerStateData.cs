@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using K4os.Compression.LZ4;
 
 namespace LiteEntitySystem.Internal
@@ -8,7 +9,7 @@ namespace LiteEntitySystem.Internal
     internal readonly struct InterpolatedCache
     {
         public readonly InternalEntity Entity;
-        public readonly int FieldOffset;
+        public readonly int[] FieldOffsets;
         public readonly int FieldFixedOffset;
         public readonly ValueTypeProcessor TypeProcessor;
         public readonly int StateReaderOffset;
@@ -16,7 +17,7 @@ namespace LiteEntitySystem.Internal
         public InterpolatedCache(InternalEntity entity, ref EntityFieldInfo field, int offset)
         {
             Entity = entity;
-            FieldOffset = field.Offset;
+            FieldOffsets = field.Offsets;
             FieldFixedOffset = field.FixedOffset;
             TypeProcessor = field.TypeProcessor;
             StateReaderOffset = offset;
@@ -225,7 +226,7 @@ namespace LiteEntitySystem.Internal
                 fixed (byte* initialDataPtr = interpolatedCache.Entity.ClassData.ClientInterpolatedNextData(interpolatedCache.Entity), nextDataPtr = Data)
                     interpolatedCache.TypeProcessor.SetInterpolation(
                         interpolatedCache.Entity, 
-                        interpolatedCache.FieldOffset,
+                        interpolatedCache.FieldOffsets,
                         initialDataPtr + interpolatedCache.FieldFixedOffset,
                         nextDataPtr + interpolatedCache.StateReaderOffset, 
                         logicLerpMsec);
@@ -288,7 +289,7 @@ namespace LiteEntitySystem.Internal
                     entityManager.CurrentRPCTick = header.Tick;
                     
                     var rpcFieldInfo = entityManager.ClassDataDict[entity.ClassId].RemoteCallsClient[header.Id];
-                    if (rpcFieldInfo.SyncableOffset == -1)
+                    if (rpcFieldInfo.SyncableOffsets.SequenceEqual([-1]))
                     {
                         try
                         {
@@ -317,7 +318,7 @@ namespace LiteEntitySystem.Internal
                     }
                     else
                     {
-                        var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, rpcFieldInfo.SyncableOffset);
+                        var syncableField = Utils.GetSyncableField(entity, rpcFieldInfo.SyncableOffsets);
                         if (_syncablesSet.Add(syncableField))
                         {
                             syncableField.BeforeReadRPC();

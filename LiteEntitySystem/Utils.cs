@@ -295,6 +295,45 @@ namespace LiteEntitySystem
                 : (Marshal.ReadInt32(fieldInfo.FieldHandle.Value + DotNetOffset) & 0xFFFFFF) + IntPtr.Size;
         }
 
+        internal static SyncableField GetSyncableField(InternalBaseClass baseClass, int[] offsets)
+        {
+            InternalBaseClass syncable = baseClass;
+            for (int j = 0; j < offsets.Length; j++)
+            {
+                syncable = RefMagic.GetFieldValue<InternalBaseClass>(syncable, offsets[j]);
+                if (syncable == null)
+                    throw new NullReferenceException($"SyncableField at offset {offsets[j]} is null");
+            }
+
+            return (SyncableField)syncable;
+        }
+        
+        internal static InternalBaseClass GetSyncVarOwner(InternalBaseClass baseClass, int[] offsets)
+        {
+            InternalBaseClass owner = baseClass;
+            for (int i = 0; i < offsets.Length-1; i++)
+            {
+                owner = RefMagic.GetFieldValue<InternalBaseClass>(owner, offsets[i]);
+                if (owner == null)
+                    throw new NullReferenceException($"SyncVar at offset {offsets[i]} is null");
+            }
+
+            return owner;
+        }
+
+        internal static SyncVar<T> GetSyncVar<T>(InternalBaseClass baseClass, int[] offsets) where T : unmanaged
+        {
+            InternalBaseClass syncable = baseClass;
+            for (int i = 0; i < offsets.Length - 1; i++)
+            {
+                syncable = RefMagic.GetFieldValue<InternalBaseClass>(syncable, offsets[i]);
+                if (syncable == null)
+                    throw new NullReferenceException($"SyncableField at offset {offsets[i]} is null");
+            }
+
+            return RefMagic.GetFieldValue<SyncVar<T>>(syncable, offsets[offsets.Length - 1]);;
+        }
+
         static Utils()
         {            
             IsMono = Type.GetType("Mono.Runtime") != null

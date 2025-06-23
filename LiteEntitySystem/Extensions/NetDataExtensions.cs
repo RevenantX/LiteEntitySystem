@@ -8,6 +8,38 @@ namespace LiteNetLib.Utils
 {
     public static class NetDataExtensions
     {
+        /// <summary>
+        /// Writes the raw bytes of any unmanaged T.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void PutUnmanaged<T>(this NetDataWriter writer, T value)
+            where T : unmanaged
+        {
+            int size = sizeof(T);
+            var buf = new byte[size];
+            fixed (byte* dst = buf)
+            {
+                Buffer.MemoryCopy(&value, dst, size, size);
+            }
+            writer.Put(buf, 0, size);
+        }
+
+        /// <summary>
+        /// Reads sizeof(T) bytes into a temporary buffer and reinterprets them as T.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe T GetUnmanaged<T>(this NetDataReader reader)
+            where T : unmanaged
+        {
+            int size = sizeof(T);
+            var buf = new byte[size];
+            reader.GetBytes(buf, 0, size);
+            fixed (byte* src = buf)
+            {
+                return *(T*)src;
+            }
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Put<T>(this NetDataWriter writer, T e) where T : unmanaged, Enum
         {
@@ -19,7 +51,7 @@ namespace LiteNetLib.Utils
                 case 8: writer.Put(*(long*)&e); break;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Get<T>(this NetDataReader reader, out T result) where T : unmanaged, Enum
         {
@@ -33,7 +65,7 @@ namespace LiteNetLib.Utils
             }
             result = e;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe T Get<T>(this NetDataReader reader) where T : unmanaged, Enum
         {
@@ -47,7 +79,7 @@ namespace LiteNetLib.Utils
             }
             return e;
         }
-        
+
 #if UNITY_2021_2_OR_NEWER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Put(this NetDataWriter writer, Vector3 v)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
@@ -8,22 +9,22 @@ namespace LiteEntitySystem.Internal
     {
         [SyncVarFlags(SyncFlags.NeverRollBack)]
         internal SyncVar<byte> InternalOwnerId;
-        
+
         internal byte[] IOBuffer;
 
         internal readonly int UpdateOrderNum;
-        
+
         /// <summary>
         /// Entity class id
         /// </summary>
         public readonly ushort ClassId;
-        
+
         /// <summary>
         /// Entity instance id
         /// </summary>
         public readonly ushort Id;
 
-        
+
         /// <summary>
         /// Entity manager
         /// </summary>
@@ -33,7 +34,7 @@ namespace LiteEntitySystem.Internal
         /// Is entity on server
         /// </summary>
         public bool IsServer => EntityManager.IsServer;
-        
+
         /// <summary>
         /// Is entity on server
         /// </summary>
@@ -65,22 +66,22 @@ namespace LiteEntitySystem.Internal
         /// Is entity remote controlled
         /// </summary>
         public bool IsRemoteControlled => InternalOwnerId.Value != EntityManager.InternalPlayerId;
-        
+
         /// <summary>
         /// Is entity is controlled by server
         /// </summary>
         public bool IsServerControlled => InternalOwnerId.Value == EntityManager.ServerPlayerId;
-        
+
         /// <summary>
         /// ClientEntityManager that available only on client. Will throw exception if called on server
         /// </summary>
         public ClientEntityManager ClientManager => (ClientEntityManager)EntityManager;
-        
+
         /// <summary>
         /// ServerEntityManager that available only on server. Will throw exception if called on client
         /// </summary>
         public ServerEntityManager ServerManager => (ServerEntityManager)EntityManager;
-        
+
         /// <summary>
         /// Owner player id
         /// ServerPlayerId - 0
@@ -97,7 +98,7 @@ namespace LiteEntitySystem.Internal
         /// Is entity based on SingletonEntityLogic
         /// </summary>
         public bool IsSingleton => ClassData.IsSingleton;
-        
+
         internal ref EntityClassData ClassData => ref EntityManager.ClassDataDict[ClassId];
 
         /// <summary>
@@ -146,7 +147,7 @@ namespace LiteEntitySystem.Internal
             catch (Exception e)
             {
                 Logger.LogError($"Exception in entity({Id}) update:\n{e}");
-            }   
+            }
         }
 
         /// <summary>
@@ -155,13 +156,13 @@ namespace LiteEntitySystem.Internal
         protected internal virtual void Update()
         {
         }
-        
+
         /// <summary>
         /// Called at rollback begin before all values reset to first frame in rollback queue.
         /// </summary>
         protected internal virtual void OnBeforeRollback()
         {
-            
+
         }
 
         /// <summary>
@@ -169,7 +170,7 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         protected internal virtual void OnRollback()
         {
-            
+
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         protected internal virtual void VisualUpdate()
         {
-            
+
         }
 
         /// <summary>
@@ -199,25 +200,19 @@ namespace LiteEntitySystem.Internal
         internal void RegisterRpcInternal()
         {
             ref var classData = ref EntityManager.ClassDataDict[ClassId];
-            
-            //setup field ids for BindOnChange and pass on server this for OnChangedEvent to StateSerializer
+
+            // Setup SyncVar<T> onChange bindings
             var onChangeTarget = EntityManager.IsServer && !IsLocal ? this : null;
             for (int i = 0; i < classData.FieldsCount; i++)
             {
                 ref var field = ref classData.Fields[i];
-                if (field.FieldType == FieldType.SyncVar)
-                {
-                    field.TypeProcessor.InitSyncVar(this, field.Offset, onChangeTarget, (ushort)i);
-                }
-                else
-                {
-                    var syncableField = RefMagic.GetFieldValue<SyncableField>(this, field.Offset);
-                    field.TypeProcessor.InitSyncVar(syncableField, field.SyncableSyncVarOffset, onChangeTarget, (ushort)i);
-                }
+
+                field.TypeProcessor.InitSyncVar(this, field.Offsets, onChangeTarget, (ushort)i);
             }
-          
+
+            // Register top-level RPCs if not yet cached
             List<RpcFieldInfo> rpcCache = null;
-            if(classData.RemoteCallsClient == null)
+            if (classData.RemoteCallsClient == null)
             {
                 rpcCache = new List<RpcFieldInfo>();
                 //place reserved rpcs
@@ -225,28 +220,38 @@ namespace LiteEntitySystem.Internal
 
                 var rpcRegistrator = new RPCRegistrator(rpcCache, classData.Fields);
                 RegisterRPC(ref rpcRegistrator);
-                //Logger.Log($"RegisterRPCs for class: {classData.ClassId}");
+                // Logger.Log($"RegisterRPCs for class: {classData.ClassId}");
             }
-            //setup id for later sync calls
+
+            // Setup id for later sync calls
             for (int i = 0; i < classData.SyncableFields.Length; i++)
             {
                 ref var syncFieldInfo = ref classData.SyncableFields[i];
-                var syncField = RefMagic.GetFieldValue<SyncableField>(this, syncFieldInfo.Offset);
+
+                // Traverse the chain of nested SyncableFields via offset map
+                var syncField = Utils.GetSyncableField(this, syncFieldInfo.Offsets);
+                
+
                 syncField.Init(this, syncFieldInfo.Flags);
-                if (rpcCache == null) //classData.RemoteCallsClient != null
+                if (classData.RemoteCallsClient != null) //rpcCache == null
                 {
+                    // Use cached offsets
                     syncField.RPCOffset = syncFieldInfo.RPCOffset;
                 }
                 else
                 {
+                    // New registration
                     syncField.RPCOffset = (ushort)rpcCache.Count;
                     syncFieldInfo.RPCOffset = syncField.RPCOffset;
-                    var syncablesRegistrator = new SyncableRPCRegistrator(syncFieldInfo.Offset, rpcCache);
+
+                    // Use AbsoluteOffset to register RPCs on this nested SyncableField
+                    var syncablesRegistrator = new SyncableRPCRegistrator(syncFieldInfo.Offsets, rpcCache);
                     syncField.RegisterRPC(ref syncablesRegistrator);
                 }
             }
             classData.RemoteCallsClient ??= rpcCache.ToArray();
         }
+
 
 
 
@@ -258,7 +263,7 @@ namespace LiteEntitySystem.Internal
         {
 
         }
-        
+
         protected void ExecuteRPC(in RemoteCall rpc)
         {
             if (IsRemoved)
