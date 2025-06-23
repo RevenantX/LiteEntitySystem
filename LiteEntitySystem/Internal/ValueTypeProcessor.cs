@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 
 namespace LiteEntitySystem.Internal
 {
@@ -124,6 +125,7 @@ namespace LiteEntitySystem.Internal
         {
             var owner = Utils.GetSyncVarOwner(obj, offsetMap);
             var offset = offsetMap[offsetMap.Length - 1];
+
             RefMagic.SyncVarSetDirect<float, SyncVar<float>>(owner, offset, Utils.Lerp(*(float*)prev, *(float*)current, fTimer));
         }
 

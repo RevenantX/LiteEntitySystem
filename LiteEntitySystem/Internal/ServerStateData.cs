@@ -211,6 +211,7 @@ namespace LiteEntitySystem.Internal
                     continue;
                 
                 //Logger.Log($"Read pending interpolation: {entity.Id}");
+                    
                 PreloadInterpolation(entity, _nullEntitiesData[i].Offset);
                     
                 //remove

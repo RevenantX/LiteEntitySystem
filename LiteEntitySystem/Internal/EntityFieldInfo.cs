@@ -55,29 +55,23 @@ namespace LiteEntitySystem.Internal
         {
             if (IsPredicted)
                 RefMagic.CopyBlock(predictedData + PredictedOffset, rawData, Size);
-            if (FieldType == FieldType.SyncableSyncVar)
+                
+            if (Flags.HasFlagFast(SyncFlags.Interpolated))
             {
-                TypeProcessor.SetFrom(entity, Offsets, rawData);
+                if (nextInterpDataPtr != null)
+                    RefMagic.CopyBlock(nextInterpDataPtr + FixedOffset, rawData, Size);
+                if (prevInterpDataPtr != null)
+                    RefMagic.CopyBlock(prevInterpDataPtr + FixedOffset, rawData, Size);
+            }
+
+            if (OnSync != null)
+            {
+                if (TypeProcessor.SetFromAndSync(entity, Offsets, rawData))
+                    return true; //create sync call
             }
             else
             {
-                if (Flags.HasFlagFast(SyncFlags.Interpolated))
-                {
-                    if (nextInterpDataPtr != null)
-                        RefMagic.CopyBlock(nextInterpDataPtr + FixedOffset, rawData, Size);
-                    if (prevInterpDataPtr != null)
-                        RefMagic.CopyBlock(prevInterpDataPtr + FixedOffset, rawData, Size);
-                }
-
-                if (OnSync != null)
-                {
-                    if (TypeProcessor.SetFromAndSync(entity, Offsets, rawData))
-                        return true; //create sync call
-                }
-                else
-                {
-                    TypeProcessor.SetFrom(entity, Offsets, rawData);
-                }
+                TypeProcessor.SetFrom(entity, Offsets, rawData);
             }
 
             return false;

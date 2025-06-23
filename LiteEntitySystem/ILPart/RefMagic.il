@@ -60,8 +60,8 @@
     }
 
     .method public hidebysig static void SyncVarSetDirect<
-        valuetype .ctor (class System.ValueType modreq ([netstandard]System.Runtime.InteropServices.UnmanagedType)) T,
-        valuetype .ctor (class LiteEntitySystem.Internal.ISyncVar`1<!!T>, class System.ValueType) TSyncVar>
+        valuetype .ctor (class [netstandard]System.ValueType modreq ([netstandard]System.Runtime.InteropServices.UnmanagedType)) T,
+        valuetype .ctor (class LiteEntitySystem.Internal.ISyncVar`1<!!T>, class [netstandard]System.ValueType) TSyncVar>
         (object obj, int32 offs, !!T 'value') cil managed aggressiveinlining
     {
         .param type T
@@ -78,8 +78,8 @@
     }
 
     .method public hidebysig static void SyncVarSetDirectAndStorePrev<
-        valuetype .ctor (class System.ValueType modreq([netstandard]System.Runtime.InteropServices.UnmanagedType)) T,
-        valuetype .ctor (class LiteEntitySystem.Internal.ISyncVar`1<!!T>, System.ValueType) TSyncVar>
+        valuetype .ctor (class [netstandard]System.ValueType modreq([netstandard]System.Runtime.InteropServices.UnmanagedType)) T,
+        valuetype .ctor (class LiteEntitySystem.Internal.ISyncVar`1<!!T>, [netstandard]System.ValueType) TSyncVar>
         (object obj, int32 offs, !!T 'value', [out] !!T& prevValue) cil managed aggressiveinlining
     {
         .param type T
@@ -97,8 +97,8 @@
     }
 
     .method public hidebysig static bool SyncVarSetFromAndSync<
-        valuetype .ctor (class System.ValueType modreq([netstandard]System.Runtime.InteropServices.UnmanagedType)) T,
-        valuetype .ctor (class LiteEntitySystem.Internal.ISyncVar`1<!!T>, System.ValueType) TSyncVar>
+        valuetype .ctor (class [netstandard]System.ValueType modreq([netstandard]System.Runtime.InteropServices.UnmanagedType)) T,
+        valuetype .ctor (class LiteEntitySystem.Internal.ISyncVar`1<!!T>, [netstandard]System.ValueType) TSyncVar>
         (object obj, int32 offs, !!T& 'value') cil managed aggressiveinlining
     {
         .param type T

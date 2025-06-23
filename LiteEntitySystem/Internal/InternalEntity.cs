@@ -229,14 +229,7 @@ namespace LiteEntitySystem.Internal
                 ref var syncFieldInfo = ref classData.SyncableFields[i];
 
                 // Traverse the chain of nested SyncableFields via offset map
-                object current = this;
-                foreach (var relOffset in syncFieldInfo.Offsets)
-                {
-                    current = RefMagic.GetFieldValue<SyncableField>(current, relOffset);
-                    if (current == null)
-                        throw new NullReferenceException($"Nested SyncableField at offset {relOffset} is null");
-                }
-                var syncField = (SyncableField)current;
+                var syncField = Utils.GetSyncableField(this, syncFieldInfo.Offsets);
                 
 
                 syncField.Init(this, syncFieldInfo.Flags);

@@ -312,6 +312,7 @@ namespace LiteEntitySystem.Internal
                             // nested SyncableField's SyncVar<…>
                             ef = new EntityFieldInfo(name, processor, offsetMap.ToArray(), syncVarFlags, FieldType.SyncableSyncVar);
                             GD.Print($"Registered syncable sync var field: {name} with offset {string.Join(",", offsetMap)}");
+                            fieldSize = ef.IntSize;
                         }
                         else
                         {

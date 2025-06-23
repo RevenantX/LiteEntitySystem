@@ -330,9 +330,8 @@ namespace LiteEntitySystem
                 if (syncable == null)
                     throw new NullReferenceException($"SyncableField at offset {offsets[i]} is null");
             }
-            var a = RefMagic.GetFieldValue<SyncVar<T>>(syncable, offsets[offsets.Length - 1]);
 
-            return a;
+            return RefMagic.GetFieldValue<SyncVar<T>>(syncable, offsets[offsets.Length - 1]);;
         }
 
         static Utils()
