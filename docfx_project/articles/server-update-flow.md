@@ -8,7 +8,7 @@ Every state that server send to clients contains:
 * All pending RPCs sincle last recieved server tick by player
 * Entity SyncVar fields data
 
-Each tick, the server does the following in `ServerEntityManager.LogicUpdate` (called internally from `ServerEntityManager.Update` public method):
+Each tick, the server does the following in `ServerEntityManager.LogicUpdate` (called internally from [`ServerEntityManager.Update`](xref:LiteEntitySystem.ServerEntityManager.Update) public method):
 
 ### 1. Read players `ClientRequests`
 
@@ -22,7 +22,7 @@ Each tick, the server does the following in `ServerEntityManager.LogicUpdate` (c
 
 ### 2. Apply players `Input`
 
-Apply pending inputs from all connected players using their controllers based on [`HumanControllerLogic`](xref:LiteEntitySystem.HumanControllerLogic) (LES’s client input system transmits each client’s controller inputs to the server every tick)
+Apply pending inputs (created on client using [`HumanControllerLogic.ModifyPendingInput`](xref:LiteEntitySystem.HumanControllerLogic.ModifyPendingInput)) from all connected players using their controllers based on [`HumanControllerLogic`](xref:LiteEntitySystem.HumanControllerLogic) (LES’s client input system transmits each client’s controller inputs to the server every tick)
 
 Writes incoming input data to `HumanControllerLogic.CurrentInput`
 
@@ -45,20 +45,25 @@ For AI or bots typically inputs directly passed in Update logic to controlled en
 
 ### 5. Make and send baseline state
 
-* Execute <xref:LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested> methods for all `entities` and `SyncableFields`
+* For all new players make baseline state starting from executing <xref:LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested> methods for all `entities` and `SyncableFields`
 This method typically overrided in [`EntityLogic`](xref:LiteEntitySystem.EntityLogic)/[`SyncableField`](xref:LiteEntitySystem.SyncableField) - and calling `ExecuteRPCs`/`ExecuteClientAction` that should send some initial full sync data like full array data and size, dictionary info etc. 
 Mostly used by classes inherited from [`SyncableField`](xref:LiteEntitySystem.SyncableField).
 
-* Sending first state with full data for newly connected players or players requested baseline state because of big lag/unsync
+* Send baseline state with full data for newly connected players or players requested baseline state because of big lag/unsync
  
-    * For new players - rpcs only created inside <xref:LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested> will be sent
+    * For new players - `NewRPC` (calling `new Entity`), `ConstructRPCs` (calling `OnConstructed`) and rpcs created only inside <xref:LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested> will be sent
 
     * For old players - all pending RPCs will be sent to maintain full RPC reliability
 
-### 6. Make delta states
+### 6. Make and send delta states
 
-State Serialization: LES prepares a delta-compressed state for each client.
-It compares each entity’s current state to what that client last acknowledged and serializes only the changes (position deltas, changed variables, etc.) and pending RPCs. This is efficient for bandwidth.
+This part executes for all old players that already received baseline state
+
+* Put in packet all pending RPCs that client didn't received yet. Each RPCs has tick info
+so client can execute them gradually over time to prevent shoot bursts on lags and similar things
+
+* Put delta-compressed state for each client.
+It compares each entity’s current state to what that client last acknowledged and serializes only the changes (position deltas, changed variables, etc.). This is efficient for bandwidth.
 
 You can mark entity RPCs and `SyncVars` to join `SyncGroups` to dynamically enable/disable replication for selected groups and entities for selected players.
 
