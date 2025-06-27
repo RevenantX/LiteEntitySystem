@@ -91,7 +91,7 @@
 <li>All pending RPCs sincle last recieved server tick by player</li>
 <li>Entity SyncVar fields data</li>
 </ul>
-<p>Each tick, the server does the following in <code>ServerEntityManager.LogicUpdate</code>:</p>
+<p>Each tick, the server does the following in <code>ServerEntityManager.LogicUpdate</code> (called internally from <code>ServerEntityManager.Update</code> public method):</p>
 <h3 id="1-read-players-clientrequests">1. Read players <code>ClientRequests</code></h3>
 <ul>
 <li><p>Read client requests generated on client using:
@@ -103,10 +103,11 @@
 <a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SubscribeToClientRequestStruct__1_System_Func___0_System_Boolean__">SubscribeToClientRequestStruct&lt;T&gt;(Func&lt;T, bool&gt;)</a></p>
 </li>
 </ul>
-<h3 id="2-apply-players-input">2. Apply players Input</h3>
+<h3 id="2-apply-players-input">2. Apply players <code>Input</code></h3>
 <p>Apply pending inputs from all connected players using their controllers based on <a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic.html"><code>HumanControllerLogic</code></a> (LES’s client input system transmits each client’s controller inputs to the server every tick)</p>
+<p>Writes incoming input data to <code>HumanControllerLogic.CurrentInput</code></p>
 <p>For AI or bots typically inputs directly passed in Update logic to controlled entities</p>
-<h3 id="3-update-all-updateable-entities">3. Update all updateable Entities</h3>
+<h3 id="3-update-all-updateable-entities">3. <code>Update</code> all updateable Entities</h3>
 <ul>
 <li><p>Update the game state by running each entity’s logic that marked by <a class="xref" href="../api/LiteEntitySystem.EntityFlags.html#LiteEntitySystem_EntityFlags_Updateable"><code>[EntityFlags.Updateable]</code></a> or <a class="xref" href="../api/LiteEntitySystem.EntityFlags.html#LiteEntitySystem_EntityFlags_UpdateOnClient"><code>[EntityFlags.UpdateOnClient]</code></a>. For example, the server updates player pawn positions based on controller input, moves projectiles, checks collisions, etc. This is done in the entity classes update methods (often OnLogicTick in LES). The server is authoritative, so these updates determine the true state (e.g. whether a shot hit a target).</p>
 </li>
@@ -139,7 +140,7 @@ Mostly used by classes inherited from <a class="xref" href="../api/LiteEntitySys
 </ul>
 </li>
 </ul>
-<h3 id="6-make-delta-packets">6. Make delta packets</h3>
+<h3 id="6-make-delta-states">6. Make delta states</h3>
 <p>State Serialization: LES prepares a delta-compressed state for each client.
 It compares each entity’s current state to what that client last acknowledged and serializes only the changes (position deltas, changed variables, etc.) and pending RPCs. This is efficient for bandwidth.</p>
 <p>You can mark entity RPCs and <code>SyncVars</code> to join <code>SyncGroups</code> to dynamically enable/disable replication for selected groups and entities for selected players.</p>

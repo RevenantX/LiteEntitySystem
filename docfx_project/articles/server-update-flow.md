@@ -8,7 +8,7 @@ Every state that server send to clients contains:
 * All pending RPCs sincle last recieved server tick by player
 * Entity SyncVar fields data
 
-Each tick, the server does the following in `ServerEntityManager.LogicUpdate`:
+Each tick, the server does the following in `ServerEntityManager.LogicUpdate` (called internally from `ServerEntityManager.Update` public method):
 
 ### 1. Read players `ClientRequests`
 
