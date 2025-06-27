@@ -2,11 +2,13 @@
 
 The server runs the game simulation and is the source of truth for entity states. It processes ticks (frames of game logic) at a fixed rate.
 
-Every state that server send to clients contains:
+The server sends out state update packets to each client at a regular rate (configured [`SendRate`](xref:LiteEntitySystem.ServerEntityManager.SendRate) and [`Tickrate`](xref:LiteEntitySystem.EntityManager.Tickrate)). These include updated RPCs, positions, velocities, health, etc., for entities relevant to that client. 
+
+Every delta-state that server send to clients contains:
 * ServerTick
 * Last processed (applied) client input tick
 * All pending RPCs sincle last recieved server tick by player
-* Entity SyncVar fields data
+* Entity SyncVar fields data that was changed since last acknowledged tick by player
 
 Each tick, the server does the following in `ServerEntityManager.LogicUpdate` (called internally from [`ServerEntityManager.Update`](xref:LiteEntitySystem.EntityManager.Update) public method):
 
@@ -45,7 +47,7 @@ Entitites created at current logic tick will not be included in this `Update` li
 
 ### 4. Send logic preparations
 
-* Check that current server state should be sent depending on send rate and PlayersCount (skip send logic if 0)
+Check that current server state should be sent depending on send rate and PlayersCount (skip send logic if 0)
 
 ### 5. Make and send baseline state
 
@@ -72,7 +74,5 @@ It compares each entity’s current state to what that client last acknowledged 
 You can mark entity RPCs and `SyncVars` to join `SyncGroups` to dynamically enable/disable replication for selected groups and entities for selected players.
 
 ### 7. Trigger network send
-
-The server sends out state update packets to each client at a regular rate (configured send rate and tick rate). These include updated rpcs, positions, velocities, health, etc., for entities relevant to that client. 
 
 Triggers network library (or custom stransport) Flush/Send logic to reduce latency.

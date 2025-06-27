@@ -980,7 +980,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "LiteEntitySystem.ServerSendRate",
-      "Summary": null
+      "Summary": "<p sourcefile=\"api/LiteEntitySystem.ServerSendRate.yml\" sourcestartlinenumber=\"1\">Rate at which server sends state packets</p>\n"
     },
     {
       "type": "ManagedReference",

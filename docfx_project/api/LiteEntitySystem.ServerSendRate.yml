@@ -18,6 +18,8 @@ items:
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem
+  summary: Rate at which server sends state packets
+  example: []
   syntax:
     content: 'public enum ServerSendRate : byte'
     content.vb: Public Enum ServerSendRate As Byte
@@ -39,6 +41,8 @@ items:
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem
+  summary: Send rate is equal to Tickrate
+  example: []
   syntax:
     content: EqualToFPS = 1
     return:
@@ -57,6 +61,8 @@ items:
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem
+  summary: Send rate is Tickrate / 2
+  example: []
   syntax:
     content: HalfOfFPS = 2
     return:
@@ -75,6 +81,8 @@ items:
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem
+  summary: Send rate is Tickrate / 3
+  example: []
   syntax:
     content: ThirdOfFPS = 3
     return:

@@ -84,12 +84,13 @@
 <h1 id="serverentitymanager-update-flow">ServerEntityManager update flow</h1>
 
 <p>The server runs the game simulation and is the source of truth for entity states. It processes ticks (frames of game logic) at a fixed rate.</p>
-<p>Every state that server send to clients contains:</p>
+<p>The server sends out state update packets to each client at a regular rate (configured <a class="xref" href="../api/LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager_SendRate"><code>SendRate</code></a> and <a class="xref" href="../api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Tickrate"><code>Tickrate</code></a>). These include updated RPCs, positions, velocities, health, etc., for entities relevant to that client.</p>
+<p>Every delta-state that server send to clients contains:</p>
 <ul>
 <li>ServerTick</li>
 <li>Last processed (applied) client input tick</li>
 <li>All pending RPCs sincle last recieved server tick by player</li>
-<li>Entity SyncVar fields data</li>
+<li>Entity SyncVar fields data that was changed since last acknowledged tick by player</li>
 </ul>
 <p>Each tick, the server does the following in <code>ServerEntityManager.LogicUpdate</code> (called internally from <a class="xref" href="../api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Update"><code>ServerEntityManager.Update</code></a> public method):</p>
 <h3 id="1-read-players-clientrequests">1. Read players <code>ClientRequests</code></h3>
@@ -124,9 +125,7 @@
 </ul>
 <p>Entitites created at current logic tick will not be included in this <code>Update</code> list</p>
 <h3 id="4-send-logic-preparations">4. Send logic preparations</h3>
-<ul>
-<li>Check that current server state should be sent depending on send rate and PlayersCount (skip send logic if 0)</li>
-</ul>
+<p>Check that current server state should be sent depending on send rate and PlayersCount (skip send logic if 0)</p>
 <h3 id="5-make-and-send-baseline-state">5. Make and send baseline state</h3>
 <ul>
 <li><p>For all new players make baseline state starting from executing <a class="xref" href="../api/LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">OnSyncRequested()</a> methods for all <code>Entities</code> and <code>SyncableFields</code>
@@ -154,7 +153,6 @@ It compares each entity’s current state to what that client last acknowledged 
 </ul>
 <p>You can mark entity RPCs and <code>SyncVars</code> to join <code>SyncGroups</code> to dynamically enable/disable replication for selected groups and entities for selected players.</p>
 <h3 id="7-trigger-network-send">7. Trigger network send</h3>
-<p>The server sends out state update packets to each client at a regular rate (configured send rate and tick rate). These include updated rpcs, positions, velocities, health, etc., for entities relevant to that client.</p>
 <p>Triggers network library (or custom stransport) Flush/Send logic to reduce latency.</p>
 
 </article>
