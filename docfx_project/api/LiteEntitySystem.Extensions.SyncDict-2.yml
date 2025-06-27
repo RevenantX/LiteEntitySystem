@@ -258,6 +258,10 @@ items:
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem.Extensions
+  summary: >-
+    Method for executing RPCs containing initial sync data that need to be sent after entity creation
+
+    to existing players or when new player connected
   example: []
   syntax:
     content: protected override void OnSyncRequested()

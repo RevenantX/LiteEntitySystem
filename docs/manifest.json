@@ -756,7 +756,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "LiteEntitySystem.Internal.InternalBaseClass",
-      "Summary": null
+      "Summary": "<p sourcefile=\"api/LiteEntitySystem.Internal.InternalBaseClass.yml\" sourcestartlinenumber=\"1\">Base class for SyncableFields and Entities</p>\n"
     },
     {
       "type": "ManagedReference",

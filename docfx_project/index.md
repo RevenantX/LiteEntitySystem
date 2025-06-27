@@ -10,7 +10,7 @@ The game logic is implemented in custom entity classes based on:
 * <xref:LiteEntitySystem.HumanControllerLogic> for player controllers that generate input and also make Client->Server requests
 * <xref:LiteEntitySystem.AiControllerLogic> for AI controllers
 
-## Usefull article to read
+## Usefull articles to read
 
 [Client update flow](articles/client-update-flow.md)
 

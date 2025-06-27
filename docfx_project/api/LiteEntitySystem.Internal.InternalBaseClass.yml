@@ -16,6 +16,8 @@ items:
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem.Internal
+  summary: Base class for SyncableFields and Entities
+  example: []
   syntax:
     content: public abstract class InternalBaseClass
     content.vb: Public MustInherit Class InternalBaseClass
@@ -38,6 +40,11 @@ items:
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem.Internal
+  summary: >-
+    Method for executing RPCs containing initial sync data that need to be sent after entity creation
+
+    to existing players or when new player connected
+  example: []
   syntax:
     content: protected virtual void OnSyncRequested()
     content.vb: Protected Overridable Sub OnSyncRequested()
