@@ -2,188 +2,278 @@
 items:
 - uid: LiteEntitySystem
   name: LiteEntitySystem
+  type: Namespace
   items:
   - uid: LiteEntitySystem.AiControllerLogic
     name: AiControllerLogic
+    type: Class
   - uid: LiteEntitySystem.AiControllerLogic`1
     name: AiControllerLogic<T>
+    type: Class
   - uid: LiteEntitySystem.ClientEntityManager
     name: ClientEntityManager
+    type: Class
   - uid: LiteEntitySystem.ControllerLogic
     name: ControllerLogic
+    type: Class
   - uid: LiteEntitySystem.DeserializeResult
     name: DeserializeResult
+    type: Enum
   - uid: LiteEntitySystem.EntityDataHeader
     name: EntityDataHeader
+    type: Struct
   - uid: LiteEntitySystem.EntityFilter`1
     name: EntityFilter<T>
+    type: Class
   - uid: LiteEntitySystem.EntityFlags
     name: EntityFlags
+    type: Enum
   - uid: LiteEntitySystem.EntityFlagsAttribute
     name: EntityFlagsAttribute
+    type: Class
   - uid: LiteEntitySystem.EntityLogic
     name: EntityLogic
+    type: Class
   - uid: LiteEntitySystem.EntityManager
     name: EntityManager
+    type: Class
   - uid: LiteEntitySystem.EntityParams
     name: EntityParams
+    type: Struct
   - uid: LiteEntitySystem.EntitySharedReference
     name: EntitySharedReference
+    type: Struct
   - uid: LiteEntitySystem.EntityTypesMap
     name: EntityTypesMap
+    type: Class
   - uid: LiteEntitySystem.EntityTypesMap`1
     name: EntityTypesMap<T>
+    type: Class
   - uid: LiteEntitySystem.ExecuteFlags
     name: ExecuteFlags
+    type: Enum
   - uid: LiteEntitySystem.HumanControllerLogic
     name: HumanControllerLogic
+    type: Class
   - uid: LiteEntitySystem.HumanControllerLogic`1
     name: HumanControllerLogic<TInput>
+    type: Class
   - uid: LiteEntitySystem.HumanControllerLogic`2
     name: HumanControllerLogic<TInput, T>
+    type: Class
   - uid: LiteEntitySystem.IEntityFilter
     name: IEntityFilter
+    type: Interface
   - uid: LiteEntitySystem.IEntitySyncVarInfoPrinter
     name: IEntitySyncVarInfoPrinter
+    type: Interface
   - uid: LiteEntitySystem.ILocalSingleton
     name: ILocalSingleton
+    type: Interface
   - uid: LiteEntitySystem.ILocalSingletonWithUpdate
     name: ILocalSingletonWithUpdate
+    type: Interface
   - uid: LiteEntitySystem.ILogger
     name: ILogger
+    type: Interface
   - uid: LiteEntitySystem.ISpanSerializable
     name: ISpanSerializable
+    type: Interface
   - uid: LiteEntitySystem.ISyncFieldChanged
     name: ISyncFieldChanged
+    type: Interface
   - uid: LiteEntitySystem.ISyncFieldChanged`1
     name: ISyncFieldChanged<T>
+    type: Interface
   - uid: LiteEntitySystem.IdGeneratorByte
     name: IdGeneratorByte
+    type: Class
   - uid: LiteEntitySystem.IdGeneratorUShort
     name: IdGeneratorUShort
+    type: Class
   - uid: LiteEntitySystem.LESDiagnosticDataEntry
     name: LESDiagnosticDataEntry
+    type: Struct
   - uid: LiteEntitySystem.Logger
     name: Logger
+    type: Class
   - uid: LiteEntitySystem.MaxHistorySize
     name: MaxHistorySize
+    type: Enum
   - uid: LiteEntitySystem.NetPlayer
     name: NetPlayer
+    type: Class
   - uid: LiteEntitySystem.NetPlayerState
     name: NetPlayerState
+    type: Enum
   - uid: LiteEntitySystem.NetworkMode
     name: NetworkMode
+    type: Enum
   - uid: LiteEntitySystem.PawnLogic
     name: PawnLogic
+    type: Class
   - uid: LiteEntitySystem.RPCRegistrator
     name: RPCRegistrator
+    type: Struct
   - uid: LiteEntitySystem.RemoteCall
     name: RemoteCall
+    type: Struct
   - uid: LiteEntitySystem.RemoteCallSerializable`1
     name: RemoteCallSerializable<T>
+    type: Struct
   - uid: LiteEntitySystem.RemoteCallSpan`1
     name: RemoteCallSpan<T>
+    type: Struct
   - uid: LiteEntitySystem.RemoteCall`1
     name: RemoteCall<T>
+    type: Struct
   - uid: LiteEntitySystem.ServerEntityManager
     name: ServerEntityManager
+    type: Class
   - uid: LiteEntitySystem.ServerSendRate
     name: ServerSendRate
+    type: Enum
   - uid: LiteEntitySystem.SingletonEntityLogic
     name: SingletonEntityLogic
+    type: Class
   - uid: LiteEntitySystem.SpanReader
     name: SpanReader
+    type: Struct
   - uid: LiteEntitySystem.SpanWriter
     name: SpanWriter
+    type: Struct
   - uid: LiteEntitySystem.SyncChilds
     name: SyncChilds
+    type: Class
   - uid: LiteEntitySystem.SyncFlags
     name: SyncFlags
+    type: Enum
   - uid: LiteEntitySystem.SyncGroup
     name: SyncGroup
+    type: Enum
   - uid: LiteEntitySystem.SyncGroupUtils
     name: SyncGroupUtils
+    type: Class
   - uid: LiteEntitySystem.SyncVarFlags
     name: SyncVarFlags
+    type: Class
   - uid: LiteEntitySystem.SyncVar`1
     name: SyncVar<T>
+    type: Struct
   - uid: LiteEntitySystem.SyncableField
     name: SyncableField
+    type: Class
   - uid: LiteEntitySystem.SyncableRPCRegistrator
     name: SyncableRPCRegistrator
+    type: Struct
   - uid: LiteEntitySystem.UpdateMode
     name: UpdateMode
+    type: Enum
   - uid: LiteEntitySystem.Utils
     name: Utils
+    type: Class
 - uid: LiteEntitySystem.Collections
   name: LiteEntitySystem.Collections
+  type: Namespace
   items:
   - uid: LiteEntitySystem.Collections.AVLTree`1
     name: AVLTree<T>
+    type: Class
   - uid: LiteEntitySystem.Collections.AVLTree`1.Enumerator
     name: AVLTree<T>.Enumerator
+    type: Struct
   - uid: LiteEntitySystem.Collections.BitReadOnlySpan
     name: BitReadOnlySpan
+    type: Struct
   - uid: LiteEntitySystem.Collections.BitSpan
     name: BitSpan
+    type: Struct
   - uid: LiteEntitySystem.Collections.CircularBuffer`1
     name: CircularBuffer<T>
+    type: Class
   - uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1
     name: SequenceBinaryHeap<T>
+    type: Class
   - uid: LiteEntitySystem.Collections.SparseMap`1
     name: SparseMap<T>
+    type: Class
   - uid: LiteEntitySystem.Collections.SparseMap`1.SparseEntry
     name: SparseMap<T>.SparseEntry
+    type: Struct
 - uid: LiteEntitySystem.Extensions
   name: LiteEntitySystem.Extensions
+  type: Namespace
   items:
   - uid: LiteEntitySystem.Extensions.FloatAngle
     name: FloatAngle
+    type: Struct
   - uid: LiteEntitySystem.Extensions.StateCalls
     name: StateCalls
+    type: Struct
   - uid: LiteEntitySystem.Extensions.SyncArray`1
     name: SyncArray<T>
+    type: Class
   - uid: LiteEntitySystem.Extensions.SyncDict`2
     name: SyncDict<TKey, TValue>
+    type: Class
   - uid: LiteEntitySystem.Extensions.SyncFixedArray`1
     name: SyncFixedArray<T>
+    type: Class
   - uid: LiteEntitySystem.Extensions.SyncHashSet`1
     name: SyncHashSet<T>
+    type: Class
   - uid: LiteEntitySystem.Extensions.SyncList`1
     name: SyncList<T>
+    type: Class
   - uid: LiteEntitySystem.Extensions.SyncNetSerializable`1
     name: SyncNetSerializable<T>
+    type: Class
   - uid: LiteEntitySystem.Extensions.SyncQueue`1
     name: SyncQueue<T>
+    type: Class
   - uid: LiteEntitySystem.Extensions.SyncSpanSerializable`1
     name: SyncSpanSerializable<T>
+    type: Class
   - uid: LiteEntitySystem.Extensions.SyncSquare`1
     name: SyncSquare<T>
+    type: Class
   - uid: LiteEntitySystem.Extensions.SyncStateMachine`1
     name: SyncStateMachine<T>
+    type: Class
   - uid: LiteEntitySystem.Extensions.SyncString
     name: SyncString
+    type: Class
   - uid: LiteEntitySystem.Extensions.SyncTimer
     name: SyncTimer
+    type: Class
 - uid: LiteEntitySystem.Internal
   name: LiteEntitySystem.Internal
+  type: Namespace
   items:
   - uid: LiteEntitySystem.Internal.InternalBaseClass
     name: InternalBaseClass
+    type: Class
   - uid: LiteEntitySystem.Internal.InternalEntity
     name: InternalEntity
+    type: Class
 - uid: LiteEntitySystem.Transport
   name: LiteEntitySystem.Transport
+  type: Namespace
   items:
   - uid: LiteEntitySystem.Transport.AbstractNetPeer
     name: AbstractNetPeer
+    type: Class
   - uid: LiteEntitySystem.Transport.LiteNetLibExtensions
     name: LiteNetLibExtensions
+    type: Class
   - uid: LiteEntitySystem.Transport.LiteNetLibNetPeer
     name: LiteNetLibNetPeer
+    type: Class
 - uid: LiteNetLib.Utils
   name: LiteNetLib.Utils
+  type: Namespace
   items:
   - uid: LiteNetLib.Utils.NetDataExtensions
     name: NetDataExtensions
+    type: Class
 memberLayout: SamePage

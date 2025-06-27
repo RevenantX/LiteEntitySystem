@@ -422,7 +422,6 @@ references:
   commentId: T:LiteEntitySystem.SpanAction{``1}
   parent: LiteEntitySystem
   definition: LiteEntitySystem.SpanAction`1
-  href: LiteEntitySystem.SpanAction-1.html
   name: SpanAction<T>
   nameWithType: SpanAction<T>
   fullName: LiteEntitySystem.SpanAction<T>
@@ -432,14 +431,12 @@ references:
   spec.csharp:
   - uid: LiteEntitySystem.SpanAction`1
     name: SpanAction
-    href: LiteEntitySystem.SpanAction-1.html
   - name: <
   - name: T
   - name: '>'
   spec.vb:
   - uid: LiteEntitySystem.SpanAction`1
     name: SpanAction
-    href: LiteEntitySystem.SpanAction-1.html
   - name: (
   - name: Of
   - name: " "
@@ -474,7 +471,6 @@ references:
   - name: )
 - uid: LiteEntitySystem.SpanAction`1
   commentId: T:LiteEntitySystem.SpanAction`1
-  href: LiteEntitySystem.SpanAction-1.html
   name: SpanAction<T>
   nameWithType: SpanAction<T>
   fullName: LiteEntitySystem.SpanAction<T>
@@ -484,14 +480,12 @@ references:
   spec.csharp:
   - uid: LiteEntitySystem.SpanAction`1
     name: SpanAction
-    href: LiteEntitySystem.SpanAction-1.html
   - name: <
   - name: T
   - name: '>'
   spec.vb:
   - uid: LiteEntitySystem.SpanAction`1
     name: SpanAction
-    href: LiteEntitySystem.SpanAction-1.html
   - name: (
   - name: Of
   - name: " "
@@ -676,7 +670,6 @@ references:
   commentId: T:LiteEntitySystem.SpanAction{``0,``1}
   parent: LiteEntitySystem
   definition: LiteEntitySystem.SpanAction`2
-  href: LiteEntitySystem.SpanAction-2.html
   name: SpanAction<TSyncField, T>
   nameWithType: SpanAction<TSyncField, T>
   fullName: LiteEntitySystem.SpanAction<TSyncField, T>
@@ -686,7 +679,6 @@ references:
   spec.csharp:
   - uid: LiteEntitySystem.SpanAction`2
     name: SpanAction
-    href: LiteEntitySystem.SpanAction-2.html
   - name: <
   - name: TSyncField
   - name: ','
@@ -696,7 +688,6 @@ references:
   spec.vb:
   - uid: LiteEntitySystem.SpanAction`2
     name: SpanAction
-    href: LiteEntitySystem.SpanAction-2.html
   - name: (
   - name: Of
   - name: " "
@@ -707,7 +698,6 @@ references:
   - name: )
 - uid: LiteEntitySystem.SpanAction`2
   commentId: T:LiteEntitySystem.SpanAction`2
-  href: LiteEntitySystem.SpanAction-2.html
   name: SpanAction<TCaller, T>
   nameWithType: SpanAction<TCaller, T>
   fullName: LiteEntitySystem.SpanAction<TCaller, T>
@@ -717,7 +707,6 @@ references:
   spec.csharp:
   - uid: LiteEntitySystem.SpanAction`2
     name: SpanAction
-    href: LiteEntitySystem.SpanAction-2.html
   - name: <
   - name: TCaller
   - name: ','
@@ -727,7 +716,6 @@ references:
   spec.vb:
   - uid: LiteEntitySystem.SpanAction`2
     name: SpanAction
-    href: LiteEntitySystem.SpanAction-2.html
   - name: (
   - name: Of
   - name: " "

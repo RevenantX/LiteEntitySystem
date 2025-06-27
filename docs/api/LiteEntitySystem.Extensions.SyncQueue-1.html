@@ -1,94 +1,137 @@
-﻿<!DOCTYPE html>
-<!--[if IE]><![endif]-->
+<!DOCTYPE html>
 <html>
-
   <head>
     <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
       <title>Class SyncQueue&lt;T&gt; </title>
-      <meta name="viewport" content="width=device-width">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SyncQueue&lt;T&gt; ">
-    
-    
-      <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
-      <link rel="stylesheet" href="../styles/docfx.css">
-      <link rel="stylesheet" href="../styles/main.css">
-      <meta property="docfx:navrel" content="../toc.html">
-      <meta property="docfx:tocrel" content="toc.html">
-    
-    
-    
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
   </head>
-  <body data-spy="scroll" data-target="#affix" data-offset="120">
-    <div id="wrapper">
-      <header>
 
-        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-
-              <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
-              </a>
-            </div>
-            <div class="collapse navbar-collapse" id="navbar">
-              <form class="navbar-form navbar-right" role="search" id="search">
-                <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
-                </div>
-              </form>
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
             </div>
           </div>
-        </nav>
+        </div>
+      </nav>
+    </header>
 
-        <div class="subnav navbar navbar-default">
-          <div class="container hide-when-search" id="breadcrumb">
-            <ul class="breadcrumb">
-              <li></li>
-            </ul>
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
           </div>
         </div>
-      </header>
-      <div role="main" class="container body-content hide-when-search">
+      </div>
 
-        <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
-          <div class="sidetoggle collapse" id="sidetoggle">
-            <div id="sidetoc"></div>
-          </div>
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
         </div>
-        <div class="article row grid-right">
-          <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.Extensions.SyncQueue`1">
+
+        <article data-uid="LiteEntitySystem.Extensions.SyncQueue`1">
 
 
 
-  <h1 id="LiteEntitySystem_Extensions_SyncQueue_1" data-uid="LiteEntitySystem.Extensions.SyncQueue`1" class="text-break">Class SyncQueue&lt;T&gt;</h1>
-  <div class="markdown level0 summary"></div>
-  <div class="markdown level0 conceptual"></div>
-  <div class="inheritance">
-    <h5>Inheritance</h5>
-    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-    <div class="level1"><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
-    <div class="level2"><a class="xref" href="LiteEntitySystem.SyncableField.html">SyncableField</a></div>
-    <div class="level3"><span class="xref">SyncQueue&lt;T&gt;</span></div>
+  <h1 id="LiteEntitySystem_Extensions_SyncQueue_1" data-uid="LiteEntitySystem.Extensions.SyncQueue`1" class="text-break">
+Class SyncQueue&lt;T&gt;  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a>.<a class="xref" href="LiteEntitySystem.Extensions.html">Extensions</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>LiteEntitySystem.dll</dd></dl>
   </div>
-  <div class="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection</a>&lt;T&gt;</div>
-    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;T&gt;</div>
-    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a></div>
-    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
+
+  <div class="markdown summary"></div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class SyncQueue&lt;T&gt; : SyncableField, IReadOnlyCollection&lt;T&gt;, IEnumerable&lt;T&gt;, ICollection, IEnumerable where T : unmanaged</code></pre>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
+
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd></dd>
+  </dl>
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><span class="xref">object</span></div>
+      <div><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
+      <div><a class="xref" href="LiteEntitySystem.SyncableField.html">SyncableField</a></div>
+      <div><span class="xref">SyncQueue&lt;T&gt;</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection</a>&lt;T&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;T&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
     <div>
       <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsClient">SyncableField.IsClient</a>
     </div>
@@ -113,570 +156,619 @@
     <div>
       <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_">SyncableField.ExecuteRPC&lt;T&gt;(in RemoteCallSerializable&lt;T&gt;, T)</a>
     </div>
-  </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a>.<a class="xref" href="LiteEntitySystem.Extensions.html">Extensions</a></h6>
-  <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
-  <h5 id="LiteEntitySystem_Extensions_SyncQueue_1_syntax">Syntax</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SyncQueue&lt;T&gt; : SyncableField, IReadOnlyCollection&lt;T&gt;, IEnumerable&lt;T&gt;, ICollection, IEnumerable where T : unmanaged</code></pre>
-  </div>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="properties">Properties
-</h3>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_Count_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Count*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_Count" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Count">Count</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_Count" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Count">
+  Count
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Gets the number of elements in the collection.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public int Count { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td><p>The number of elements in the collection.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The number of elements in the collection.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_IsRollbackSupported_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_IsRollbackSupported" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported">IsRollbackSupported</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_IsRollbackSupported" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported">
+  IsRollbackSupported
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Is supported rollback by this syncable field</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public override bool IsRollbackSupported { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsRollbackSupported">SyncableField.IsRollbackSupported</a></div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_IsSynchronized_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.IsSynchronized*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_IsSynchronized" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.IsSynchronized">IsSynchronized</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_IsSynchronized" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.IsSynchronized">
+  IsSynchronized
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Gets a value indicating whether access to the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a> is synchronized (thread safe).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool IsSynchronized { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if access to the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a> is synchronized (thread safe); otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if access to the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a> is synchronized (thread safe); otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_SyncRoot_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.SyncRoot*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_SyncRoot" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.SyncRoot">SyncRoot</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_SyncRoot" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.SyncRoot">
+  SyncRoot
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Gets an object that can be used to synchronize access to the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public object SyncRoot { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></td>
-        <td><p>An object that can be used to synchronize access to the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a>.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-</h3>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">object</span></dt>
+    <dd><p>An object that can be used to synchronize access to the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_AfterReadRPC_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.AfterReadRPC*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_AfterReadRPC" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.AfterReadRPC">AfterReadRPC()</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_AfterReadRPC" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.AfterReadRPC">
+  AfterReadRPC()
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected override void AfterReadRPC()</code></pre>
   </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC">SyncableField.AfterReadRPC()</a></div>
+
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_BeforeReadRPC_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.BeforeReadRPC*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_BeforeReadRPC" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.BeforeReadRPC">BeforeReadRPC()</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_BeforeReadRPC" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.BeforeReadRPC">
+  BeforeReadRPC()
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected override void BeforeReadRPC()</code></pre>
   </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC">SyncableField.BeforeReadRPC()</a></div>
+
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_Clear_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Clear*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_Clear" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Clear">Clear()</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_Clear" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Clear">
+  Clear()
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void Clear()</code></pre>
   </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_Contains_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Contains*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_Contains__0_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Contains(`0)">Contains(T)</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_Contains__0_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Contains(`0)">
+  Contains(T)
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool Contains(T item)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><span class="parametername">item</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>item</code> <span class="xref">T</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_CopyTo_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.CopyTo*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_CopyTo_System_Array_System_Int32_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.CopyTo(System.Array,System.Int32)">CopyTo(Array, int)</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_CopyTo_System_Array_System_Int32_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.CopyTo(System.Array,System.Int32)">
+  CopyTo(Array, int)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Copies the elements of the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a> to an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a>, starting at a particular <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a> index.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void CopyTo(Array array, int index)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a></td>
-        <td><span class="parametername">array</span></td>
-        <td><p>The one-dimensional <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a> that is the destination of the elements copied from <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a>. The <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a> must have zero-based indexing.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td><span class="parametername">index</span></td>
-        <td><p>The zero-based index in <code class="paramref">array</code> at which copying begins.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
-        <td><p><code class="paramref">array</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></td>
-        <td><p><code class="paramref">index</code> is less than zero.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
-        <td><pre><code>&lt;code class=&quot;paramref&quot;&gt;array&lt;/code&gt; is multidimensional.  
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>array</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a></dt>
+    <dd><p>The one-dimensional <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a> that is the destination of the elements copied from <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a>. The <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a> must have zero-based indexing.</p>
+</dd>
+    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The zero-based index in <code class="paramref">array</code> at which copying begins.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">array</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p><code class="paramref">index</code> is less than zero.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><pre><code>    &lt;code class=&quot;paramref&quot;&gt;array&lt;/code&gt; is multidimensional.  
 </code></pre>
 <p>-or-<br>
 The number of elements in the source <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a> is greater than the available space from <code class="paramref">index</code> to the end of the destination <code class="paramref">array</code>.<br>
 -or-<br>
 The type of the source <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a> cannot be cast automatically to the type of the destination <code class="paramref">array</code>.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+</dd>
+  </dl>
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_Dequeue_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Dequeue*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_Dequeue" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Dequeue">Dequeue()</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_Dequeue" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Dequeue">
+  Dequeue()
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public T Dequeue()</code></pre>
   </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">T</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_Enqueue_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Enqueue*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_Enqueue__0_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Enqueue(`0)">Enqueue(T)</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_Enqueue__0_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Enqueue(`0)">
+  Enqueue(T)
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void Enqueue(T item)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><span class="parametername">item</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>item</code> <span class="xref">T</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_GetEnumerator_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.GetEnumerator*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_GetEnumerator" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.GetEnumerator">GetEnumerator()</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_GetEnumerator" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.GetEnumerator">
+  GetEnumerator()
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public Queue&lt;T&gt;.Enumerator GetEnumerator()</code></pre>
   </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.queue-1">Queue</a>&lt;T&gt;.<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.queue-1.enumerator">Enumerator</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.queue-1">Queue</a>&lt;T&gt;.<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.queue-1.enumerator">Enumerator</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_OnRollback_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.OnRollback*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_OnRollback" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.OnRollback">OnRollback()</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_OnRollback" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.OnRollback">
+  OnRollback()
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected override void OnRollback()</code></pre>
   </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback">SyncableField.OnRollback()</a></div>
+
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_OnSyncRequested_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.OnSyncRequested*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_OnSyncRequested" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.OnSyncRequested">OnSyncRequested()</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_OnSyncRequested" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.OnSyncRequested">
+  OnSyncRequested()
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected override void OnSyncRequested()</code></pre>
   </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">InternalBaseClass.OnSyncRequested()</a></div>
+
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_Peek_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Peek*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_Peek" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Peek">Peek()</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_Peek" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.Peek">
+  Peek()
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public T Peek()</code></pre>
   </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">T</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_RegisterRPC_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.RegisterRPC*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)">RegisterRPC(ref SyncableRPCRegistrator)</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)">
+  RegisterRPC(ref SyncableRPCRegistrator)
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected override void RegisterRPC(ref SyncableRPCRegistrator r)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.SyncableRPCRegistrator.html">SyncableRPCRegistrator</a></td>
-        <td><span class="parametername">r</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__">SyncableField.RegisterRPC(ref SyncableRPCRegistrator)</a></div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>r</code> <a class="xref" href="LiteEntitySystem.SyncableRPCRegistrator.html">SyncableRPCRegistrator</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_TryDequeue_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.TryDequeue*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_TryDequeue__0__" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.TryDequeue(`0@)">TryDequeue(out T)</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_TryDequeue__0__" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.TryDequeue(`0@)">
+  TryDequeue(out T)
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool TryDequeue(out T item)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><span class="parametername">item</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>item</code> <span class="xref">T</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Extensions_SyncQueue_1_TryPeek_" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.TryPeek*"></a>
-  <h4 id="LiteEntitySystem_Extensions_SyncQueue_1_TryPeek__0__" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.TryPeek(`0@)">TryPeek(out T)</h4>
+
+  <h3 id="LiteEntitySystem_Extensions_SyncQueue_1_TryPeek__0__" data-uid="LiteEntitySystem.Extensions.SyncQueue`1.TryPeek(`0@)">
+  TryPeek(out T)
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool TryPeek(out T item)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><span class="parametername">item</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection&lt;T&gt;</a>
-  </div>
-  <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a>
-  </div>
-  <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a>
-  </div>
-  <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a>
-  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>item</code> <span class="xref">T</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
 
 </article>
-          </div>
 
-          <div class="hidden-sm col-md-2" role="complementary">
-            <div class="sideaffix">
-              <div class="contribution">
-                <ul class="nav">
-                </ul>
-              </div>
-              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In this article</h5>
-                <div></div>
-              </nav>
-            </div>
-          </div>
+        <div class="contribution d-print-none">
         </div>
+
+
       </div>
 
-      <footer>
-        <div class="grad-bottom"></div>
-        <div class="footer">
-          <div class="container">
-            <span class="pull-right">
-              <a href="#top">Back to top</a>
-            </span>
-      
-      <span>Generated by <strong>DocFX</strong></span>
-          </div>
-        </div>
-      </footer>
-    </div>
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
-    <script type="text/javascript" src="../styles/docfx.js"></script>
-    <script type="text/javascript" src="../styles/main.js"></script>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

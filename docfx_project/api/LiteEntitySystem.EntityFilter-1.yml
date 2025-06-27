@@ -79,7 +79,9 @@ items:
   summary: >-
     Called when entity created and synced
 
-    <param name="onConstructed">callback</param><param name="callOnExisting">call that callback on existing entities in this filter/list</param>
+    <param name="onConstructed">callback</param>
+
+    <param name="callOnExisting">call that callback on existing entities in this filter/list</param>
   example: []
   syntax:
     content: public void SubscribeToConstructed(Action<T> onConstructed, bool callOnExisting)
@@ -133,7 +135,6 @@ references:
   commentId: T:System.Object
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object
   name: object
   nameWithType: object
   fullName: object

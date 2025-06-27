@@ -578,7 +578,6 @@ references:
   commentId: M:System.ValueType.Equals(System.Object)
   parent: System.ValueType
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
   name: Equals(object)
   nameWithType: ValueType.Equals(object)
   fullName: System.ValueType.Equals(object)
@@ -589,23 +588,19 @@ references:
   - uid: System.ValueType.Equals(System.Object)
     name: Equals
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
   - name: (
   - uid: System.Object
     name: object
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
   - name: )
   spec.vb:
   - uid: System.ValueType.Equals(System.Object)
     name: Equals
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
   - name: (
   - uid: System.Object
     name: Object
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
   - name: )
 - uid: LiteEntitySystem.EntitySharedReference.Equals*
   commentId: Overload:LiteEntitySystem.EntitySharedReference.Equals
@@ -617,7 +612,6 @@ references:
   commentId: T:System.Object
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object
   name: object
   nameWithType: object
   fullName: object
@@ -628,7 +622,6 @@ references:
   commentId: T:System.ValueType
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.valuetype
   name: ValueType
   nameWithType: ValueType
   fullName: System.ValueType
@@ -636,7 +629,6 @@ references:
   commentId: M:System.ValueType.GetHashCode
   parent: System.ValueType
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
   name: GetHashCode()
   nameWithType: ValueType.GetHashCode()
   fullName: System.ValueType.GetHashCode()
@@ -644,14 +636,12 @@ references:
   - uid: System.ValueType.GetHashCode
     name: GetHashCode
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
   - name: (
   - name: )
   spec.vb:
   - uid: System.ValueType.GetHashCode
     name: GetHashCode
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
   - name: (
   - name: )
 - uid: LiteEntitySystem.EntitySharedReference.GetHashCode*
@@ -687,7 +677,6 @@ references:
   commentId: M:System.ValueType.ToString
   parent: System.ValueType
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
   name: ToString()
   nameWithType: ValueType.ToString()
   fullName: System.ValueType.ToString()
@@ -695,14 +684,12 @@ references:
   - uid: System.ValueType.ToString
     name: ToString
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
   - name: (
   - name: )
   spec.vb:
   - uid: System.ValueType.ToString
     name: ToString
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
   - name: (
   - name: )
 - uid: LiteEntitySystem.EntitySharedReference.ToString*

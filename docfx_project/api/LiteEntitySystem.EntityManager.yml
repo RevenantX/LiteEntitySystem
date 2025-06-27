@@ -36,6 +36,7 @@ items:
   - LiteEntitySystem.EntityManager.LerpFactor
   - LiteEntitySystem.EntityManager.MaxEntityCount
   - LiteEntitySystem.EntityManager.MaxHistorySize
+  - LiteEntitySystem.EntityManager.MaxLocalEntityCount
   - LiteEntitySystem.EntityManager.MaxPlayers
   - LiteEntitySystem.EntityManager.MaxSavedStateDiff
   - LiteEntitySystem.EntityManager.MaxSyncedEntityCount
@@ -97,10 +98,10 @@ items:
   summary: Maximum synchronized (without LocalOnly) entities
   example: []
   syntax:
-    content: public const int MaxSyncedEntityCount = 32767
+    content: public const int MaxSyncedEntityCount = 64000
     return:
       type: System.Int32
-    content.vb: Public Const MaxSyncedEntityCount As Integer = 32767
+    content.vb: Public Const MaxSyncedEntityCount As Integer = 64000
 - uid: LiteEntitySystem.EntityManager.MaxEntityCount
   commentId: F:LiteEntitySystem.EntityManager.MaxEntityCount
   id: MaxEntityCount
@@ -120,6 +121,27 @@ items:
     return:
       type: System.Int32
     content.vb: Public Const MaxEntityCount As Integer = 65534
+- uid: LiteEntitySystem.EntityManager.MaxLocalEntityCount
+  commentId: F:LiteEntitySystem.EntityManager.MaxLocalEntityCount
+  id: MaxLocalEntityCount
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: MaxLocalEntityCount
+  nameWithType: EntityManager.MaxLocalEntityCount
+  fullName: LiteEntitySystem.EntityManager.MaxLocalEntityCount
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Maximum count of predicted local entities
+  example: []
+  syntax:
+    content: public const int MaxLocalEntityCount = 1534
+    return:
+      type: System.Int32
+    content.vb: Public Const MaxLocalEntityCount As Integer = 1534
 - uid: LiteEntitySystem.EntityManager.ServerPlayerId
   commentId: F:LiteEntitySystem.EntityManager.ServerPlayerId
   id: ServerPlayerId
@@ -1383,7 +1405,6 @@ references:
   commentId: T:System.Object
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object
   name: object
   nameWithType: object
   fullName: object
@@ -1676,7 +1697,6 @@ references:
   commentId: T:LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{``0}
   parent: LiteEntitySystem.Internal
   definition: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
-  href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
   name: InterpolatorDelegateWithReturn<T>
   nameWithType: InterpolatorDelegateWithReturn<T>
   fullName: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn<T>
@@ -1686,14 +1706,12 @@ references:
   spec.csharp:
   - uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
     name: InterpolatorDelegateWithReturn
-    href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
   - name: <
   - name: T
   - name: '>'
   spec.vb:
   - uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
     name: InterpolatorDelegateWithReturn
-    href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
   - name: (
   - name: Of
   - name: " "
@@ -1701,7 +1719,6 @@ references:
   - name: )
 - uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
   commentId: T:LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
-  href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
   name: InterpolatorDelegateWithReturn<T>
   nameWithType: InterpolatorDelegateWithReturn<T>
   fullName: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn<T>
@@ -1711,14 +1728,12 @@ references:
   spec.csharp:
   - uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
     name: InterpolatorDelegateWithReturn
-    href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
   - name: <
   - name: T
   - name: '>'
   spec.vb:
   - uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
     name: InterpolatorDelegateWithReturn
-    href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
   - name: (
   - name: Of
   - name: " "

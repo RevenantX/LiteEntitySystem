@@ -1,92 +1,131 @@
-﻿<!DOCTYPE html>
-<!--[if IE]><![endif]-->
+<!DOCTYPE html>
 <html>
-
   <head>
     <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
       <title>Class ClientEntityManager </title>
-      <meta name="viewport" content="width=device-width">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ClientEntityManager ">
-    
-    <meta name="description" content="Client entity manager">
-      <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
-      <link rel="stylesheet" href="../styles/docfx.css">
-      <link rel="stylesheet" href="../styles/main.css">
-      <meta property="docfx:navrel" content="../toc.html">
-      <meta property="docfx:tocrel" content="toc.html">
-    
-    
-    
+      
+      <meta name="description" content="Client entity manager">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
   </head>
-  <body data-spy="scroll" data-target="#affix" data-offset="120">
-    <div id="wrapper">
-      <header>
 
-        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-
-              <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
-              </a>
-            </div>
-            <div class="collapse navbar-collapse" id="navbar">
-              <form class="navbar-form navbar-right" role="search" id="search">
-                <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
-                </div>
-              </form>
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
             </div>
           </div>
-        </nav>
+        </div>
+      </nav>
+    </header>
 
-        <div class="subnav navbar navbar-default">
-          <div class="container hide-when-search" id="breadcrumb">
-            <ul class="breadcrumb">
-              <li></li>
-            </ul>
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
           </div>
         </div>
-      </header>
-      <div role="main" class="container body-content hide-when-search">
+      </div>
 
-        <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
-          <div class="sidetoggle collapse" id="sidetoggle">
-            <div id="sidetoc"></div>
-          </div>
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
         </div>
-        <div class="article row grid-right">
-          <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.ClientEntityManager">
+
+        <article data-uid="LiteEntitySystem.ClientEntityManager">
 
 
 
-  <h1 id="LiteEntitySystem_ClientEntityManager" data-uid="LiteEntitySystem.ClientEntityManager" class="text-break">Class ClientEntityManager</h1>
-  <div class="markdown level0 summary"><p>Client entity manager</p>
-</div>
-  <div class="markdown level0 conceptual"></div>
-  <div class="inheritance">
-    <h5>Inheritance</h5>
-    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-    <div class="level1"><a class="xref" href="LiteEntitySystem.EntityManager.html">EntityManager</a></div>
-    <div class="level2"><span class="xref">ClientEntityManager</span></div>
+  <h1 id="LiteEntitySystem_ClientEntityManager" data-uid="LiteEntitySystem.ClientEntityManager" class="text-break">
+Class ClientEntityManager  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>LiteEntitySystem.dll</dd></dl>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
+
+  <div class="markdown summary"><p>Client entity manager</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class ClientEntityManager : EntityManager</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><span class="xref">object</span></div>
+      <div><a class="xref" href="LiteEntitySystem.EntityManager.html">EntityManager</a></div>
+      <div><span class="xref">ClientEntityManager</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxSyncedEntityCount">EntityManager.MaxSyncedEntityCount</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxEntityCount">EntityManager.MaxEntityCount</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxLocalEntityCount">EntityManager.MaxLocalEntityCount</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_ServerPlayerId">EntityManager.ServerPlayerId</a>
@@ -196,855 +235,1014 @@
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_DisableLagCompensation">EntityManager.DisableLagCompensation()</a>
     </div>
-  </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
-  <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
-  <h5 id="LiteEntitySystem_ClientEntityManager_syntax">Syntax</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class ClientEntityManager : EntityManager</code></pre>
-  </div>
-  <h3 id="constructors">Constructors
-</h3>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
 
 
   <a id="LiteEntitySystem_ClientEntityManager__ctor_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_Transport_AbstractNetPeer_System_Byte_LiteEntitySystem_MaxHistorySize_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,LiteEntitySystem.MaxHistorySize)">ClientEntityManager(EntityTypesMap, AbstractNetPeer, byte, MaxHistorySize)</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_Transport_AbstractNetPeer_System_Byte_LiteEntitySystem_MaxHistorySize_" data-uid="LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,LiteEntitySystem.MaxHistorySize)">
+  ClientEntityManager(EntityTypesMap, AbstractNetPeer, byte, MaxHistorySize)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Constructor</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ClientEntityManager(EntityTypesMap typesMap, AbstractNetPeer netPeer, byte headerByte, MaxHistorySize maxHistorySize = MaxHistorySize.Size32)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityTypesMap.html">EntityTypesMap</a></td>
-        <td><span class="parametername">typesMap</span></td>
-        <td><p>EntityTypesMap with registered entity types</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
-        <td><span class="parametername">netPeer</span></td>
-        <td><p>Local AbstractPeer</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
-        <td><span class="parametername">headerByte</span></td>
-        <td><p>Header byte that will be used for packets (to distinguish entity system packets)</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.MaxHistorySize.html">MaxHistorySize</a></td>
-        <td><span class="parametername">maxHistorySize</span></td>
-        <td><p>Maximum size of lag compensation history in ticks</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="fields">Fields
-</h3>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>typesMap</code> <a class="xref" href="LiteEntitySystem.EntityTypesMap.html">EntityTypesMap</a></dt>
+    <dd><p>EntityTypesMap with registered entity types</p>
+</dd>
+    <dt><code>netPeer</code> <a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></dt>
+    <dd><p>Local AbstractPeer</p>
+</dd>
+    <dt><code>headerByte</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd><p>Header byte that will be used for packets (to distinguish entity system packets)</p>
+</dd>
+    <dt><code>maxHistorySize</code> <a class="xref" href="LiteEntitySystem.MaxHistorySize.html">MaxHistorySize</a></dt>
+    <dd><p>Maximum size of lag compensation history in ticks</p>
+</dd>
+  </dl>
 
 
-  <h4 id="LiteEntitySystem_ClientEntityManager_InputBufferSize" data-uid="LiteEntitySystem.ClientEntityManager.InputBufferSize">InputBufferSize</h4>
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_InputBufferSize" data-uid="LiteEntitySystem.ClientEntityManager.InputBufferSize">
+  InputBufferSize
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Maximum stored inputs count</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public const int InputBufferSize = 64</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 
 
-  <h4 id="LiteEntitySystem_ClientEntityManager_PreferredBufferTimeHighest" data-uid="LiteEntitySystem.ClientEntityManager.PreferredBufferTimeHighest">PreferredBufferTimeHighest</h4>
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_PreferredBufferTimeHighest" data-uid="LiteEntitySystem.ClientEntityManager.PreferredBufferTimeHighest">
+  PreferredBufferTimeHighest
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Preferred input and incoming states buffer length in seconds lowest bound
 Buffer automatically decreases to Jitter time + PreferredBufferTimeHighest</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public float PreferredBufferTimeHighest</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 
 
-  <h4 id="LiteEntitySystem_ClientEntityManager_PreferredBufferTimeLowest" data-uid="LiteEntitySystem.ClientEntityManager.PreferredBufferTimeLowest">PreferredBufferTimeLowest</h4>
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_PreferredBufferTimeLowest" data-uid="LiteEntitySystem.ClientEntityManager.PreferredBufferTimeLowest">
+  PreferredBufferTimeLowest
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Preferred input and incoming states buffer length in seconds lowest bound
 Buffer automatically increases to Jitter time + PreferredBufferTimeLowest</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public float PreferredBufferTimeLowest</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="properties">Properties
-</h3>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
 
 
   <a id="LiteEntitySystem_ClientEntityManager_AverageJitter_" data-uid="LiteEntitySystem.ClientEntityManager.AverageJitter*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_AverageJitter" data-uid="LiteEntitySystem.ClientEntityManager.AverageJitter">AverageJitter</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_AverageJitter" data-uid="LiteEntitySystem.ClientEntityManager.AverageJitter">
+  AverageJitter
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Average jitter</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public float AverageJitter { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_CurrentRPCTick_" data-uid="LiteEntitySystem.ClientEntityManager.CurrentRPCTick*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_CurrentRPCTick" data-uid="LiteEntitySystem.ClientEntityManager.CurrentRPCTick">CurrentRPCTick</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_CurrentRPCTick" data-uid="LiteEntitySystem.ClientEntityManager.CurrentRPCTick">
+  CurrentRPCTick
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Tick of currently executing rpc (check only in client RPC methods)</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ushort CurrentRPCTick { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_IsExecutingRPC_" data-uid="LiteEntitySystem.ClientEntityManager.IsExecutingRPC*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_IsExecutingRPC" data-uid="LiteEntitySystem.ClientEntityManager.IsExecutingRPC">IsExecutingRPC</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_IsExecutingRPC" data-uid="LiteEntitySystem.ClientEntityManager.IsExecutingRPC">
+  IsExecutingRPC
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Is server-&gt;client rpc currently executing</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool IsExecutingRPC { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_LastProcessedTick_" data-uid="LiteEntitySystem.ClientEntityManager.LastProcessedTick*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_LastProcessedTick" data-uid="LiteEntitySystem.ClientEntityManager.LastProcessedTick">LastProcessedTick</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_LastProcessedTick" data-uid="LiteEntitySystem.ClientEntityManager.LastProcessedTick">
+  LastProcessedTick
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Player tick processed by server</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ushort LastProcessedTick { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_LastReceivedTick_" data-uid="LiteEntitySystem.ClientEntityManager.LastReceivedTick*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_LastReceivedTick" data-uid="LiteEntitySystem.ClientEntityManager.LastReceivedTick">LastReceivedTick</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_LastReceivedTick" data-uid="LiteEntitySystem.ClientEntityManager.LastReceivedTick">
+  LastReceivedTick
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Last received player tick by server</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ushort LastReceivedTick { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_LerpBufferCount_" data-uid="LiteEntitySystem.ClientEntityManager.LerpBufferCount*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_LerpBufferCount" data-uid="LiteEntitySystem.ClientEntityManager.LerpBufferCount">LerpBufferCount</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_LerpBufferCount" data-uid="LiteEntitySystem.ClientEntityManager.LerpBufferCount">
+  LerpBufferCount
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>States count in interpolation buffer</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public int LerpBufferCount { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_LerpBufferTimeLength_" data-uid="LiteEntitySystem.ClientEntityManager.LerpBufferTimeLength*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_LerpBufferTimeLength" data-uid="LiteEntitySystem.ClientEntityManager.LerpBufferTimeLength">LerpBufferTimeLength</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_LerpBufferTimeLength" data-uid="LiteEntitySystem.ClientEntityManager.LerpBufferTimeLength">
+  LerpBufferTimeLength
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Total states time in interpolation buffer</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public float LerpBufferTimeLength { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_LocalPlayer_" data-uid="LiteEntitySystem.ClientEntityManager.LocalPlayer*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_LocalPlayer" data-uid="LiteEntitySystem.ClientEntityManager.LocalPlayer">LocalPlayer</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_LocalPlayer" data-uid="LiteEntitySystem.ClientEntityManager.LocalPlayer">
+  LocalPlayer
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Our local player</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public NetPlayer LocalPlayer { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_NetPeer_" data-uid="LiteEntitySystem.ClientEntityManager.NetPeer*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_NetPeer" data-uid="LiteEntitySystem.ClientEntityManager.NetPeer">NetPeer</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_NetPeer" data-uid="LiteEntitySystem.ClientEntityManager.NetPeer">
+  NetPeer
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Client network peer</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public AbstractNetPeer NetPeer { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_NetworkJitter_" data-uid="LiteEntitySystem.ClientEntityManager.NetworkJitter*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_NetworkJitter" data-uid="LiteEntitySystem.ClientEntityManager.NetworkJitter">NetworkJitter</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_NetworkJitter" data-uid="LiteEntitySystem.ClientEntityManager.NetworkJitter">
+  NetworkJitter
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Network jitter in milliseconds</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public float NetworkJitter { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_PendingToRemoveEntites_" data-uid="LiteEntitySystem.ClientEntityManager.PendingToRemoveEntites*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_PendingToRemoveEntites" data-uid="LiteEntitySystem.ClientEntityManager.PendingToRemoveEntites">PendingToRemoveEntites</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_PendingToRemoveEntites" data-uid="LiteEntitySystem.ClientEntityManager.PendingToRemoveEntites">
+  PendingToRemoveEntites
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Entities that waiting for remove</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public int PendingToRemoveEntites { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_RawServerTick_" data-uid="LiteEntitySystem.ClientEntityManager.RawServerTick*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_RawServerTick" data-uid="LiteEntitySystem.ClientEntityManager.RawServerTick">RawServerTick</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_RawServerTick" data-uid="LiteEntitySystem.ClientEntityManager.RawServerTick">
+  RawServerTick
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Current state server tick</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ushort RawServerTick { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_RawTargetServerTick_" data-uid="LiteEntitySystem.ClientEntityManager.RawTargetServerTick*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_RawTargetServerTick" data-uid="LiteEntitySystem.ClientEntityManager.RawTargetServerTick">RawTargetServerTick</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_RawTargetServerTick" data-uid="LiteEntitySystem.ClientEntityManager.RawTargetServerTick">
+  RawTargetServerTick
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Target state server tick</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ushort RawTargetServerTick { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_RollBackTick_" data-uid="LiteEntitySystem.ClientEntityManager.RollBackTick*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_RollBackTick" data-uid="LiteEntitySystem.ClientEntityManager.RollBackTick">RollBackTick</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_RollBackTick" data-uid="LiteEntitySystem.ClientEntityManager.RollBackTick">
+  RollBackTick
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Current rollback tick (valid only in Rollback state)</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ushort RollBackTick { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_ServerInputBuffer_" data-uid="LiteEntitySystem.ClientEntityManager.ServerInputBuffer*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_ServerInputBuffer" data-uid="LiteEntitySystem.ClientEntityManager.ServerInputBuffer">ServerInputBuffer</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_ServerInputBuffer" data-uid="LiteEntitySystem.ClientEntityManager.ServerInputBuffer">
+  ServerInputBuffer
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Inputs count in server input buffer</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public byte ServerInputBuffer { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_ServerSendRate_" data-uid="LiteEntitySystem.ClientEntityManager.ServerSendRate*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_ServerSendRate" data-uid="LiteEntitySystem.ClientEntityManager.ServerSendRate">ServerSendRate</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_ServerSendRate" data-uid="LiteEntitySystem.ClientEntityManager.ServerSendRate">
+  ServerSendRate
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Send rate of server</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ServerSendRate ServerSendRate { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.ServerSendRate.html">ServerSendRate</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.ServerSendRate.html">ServerSendRate</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_ServerTick_" data-uid="LiteEntitySystem.ClientEntityManager.ServerTick*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_ServerTick" data-uid="LiteEntitySystem.ClientEntityManager.ServerTick">ServerTick</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_ServerTick" data-uid="LiteEntitySystem.ClientEntityManager.ServerTick">
+  ServerTick
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Current interpolated server tick</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ushort ServerTick { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_StateSize_" data-uid="LiteEntitySystem.ClientEntityManager.StateSize*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_StateSize" data-uid="LiteEntitySystem.ClientEntityManager.StateSize">StateSize</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_StateSize" data-uid="LiteEntitySystem.ClientEntityManager.StateSize">
+  StateSize
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Current state size in bytes</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public int StateSize { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_StoredCommands_" data-uid="LiteEntitySystem.ClientEntityManager.StoredCommands*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_StoredCommands" data-uid="LiteEntitySystem.ClientEntityManager.StoredCommands">StoredCommands</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_StoredCommands" data-uid="LiteEntitySystem.ClientEntityManager.StoredCommands">
+  StoredCommands
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Stored input commands count for prediction correction</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public int StoredCommands { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-</h3>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
 
 
   <a id="LiteEntitySystem_ClientEntityManager_Deserialize_" data-uid="LiteEntitySystem.ClientEntityManager.Deserialize*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_Deserialize_System_ReadOnlySpan_System_Byte__" data-uid="LiteEntitySystem.ClientEntityManager.Deserialize(System.ReadOnlySpan{System.Byte})">Deserialize(ReadOnlySpan&lt;byte&gt;)</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_Deserialize_System_ReadOnlySpan_System_Byte__" data-uid="LiteEntitySystem.ClientEntityManager.Deserialize(System.ReadOnlySpan{System.Byte})">
+  Deserialize(ReadOnlySpan&lt;byte&gt;)
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public DeserializeResult Deserialize(ReadOnlySpan&lt;byte&gt; inData)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
-        <td><span class="parametername">inData</span></td>
-        <td><p>Incoming data including header byte</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.DeserializeResult.html">DeserializeResult</a></td>
-        <td><p>Deserialization result</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>inData</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</dt>
+    <dd><p>Incoming data including header byte</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.DeserializeResult.html">DeserializeResult</a></dt>
+    <dd><p>Deserialization result</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_GetDiagnosticData_" data-uid="LiteEntitySystem.ClientEntityManager.GetDiagnosticData*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_GetDiagnosticData_System_Collections_Generic_Dictionary_System_Int32_LiteEntitySystem_LESDiagnosticDataEntry__" data-uid="LiteEntitySystem.ClientEntityManager.GetDiagnosticData(System.Collections.Generic.Dictionary{System.Int32,LiteEntitySystem.LESDiagnosticDataEntry})">GetDiagnosticData(Dictionary&lt;int, LESDiagnosticDataEntry&gt;)</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_GetDiagnosticData_System_Collections_Generic_Dictionary_System_Int32_LiteEntitySystem_LESDiagnosticDataEntry__" data-uid="LiteEntitySystem.ClientEntityManager.GetDiagnosticData(System.Collections.Generic.Dictionary{System.Int32,LiteEntitySystem.LESDiagnosticDataEntry})">
+  GetDiagnosticData(Dictionary&lt;int, LESDiagnosticDataEntry&gt;)
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void GetDiagnosticData(Dictionary&lt;int, LESDiagnosticDataEntry&gt; diagnosticDataDict)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>, <a class="xref" href="LiteEntitySystem.LESDiagnosticDataEntry.html">LESDiagnosticDataEntry</a>&gt;</td>
-        <td><span class="parametername">diagnosticDataDict</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>diagnosticDataDict</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>, <a class="xref" href="LiteEntitySystem.LESDiagnosticDataEntry.html">LESDiagnosticDataEntry</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_GetPlayerController_" data-uid="LiteEntitySystem.ClientEntityManager.GetPlayerController*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_GetPlayerController__1" data-uid="LiteEntitySystem.ClientEntityManager.GetPlayerController``1">GetPlayerController&lt;T&gt;()</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_GetPlayerController__1" data-uid="LiteEntitySystem.ClientEntityManager.GetPlayerController``1">
+  GetPlayerController&lt;T&gt;()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Return client controller if exist</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public T GetPlayerController&lt;T&gt;() where T : HumanControllerLogic</code></pre>
   </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><p>controller if exist otherwise null</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td><p>controller type</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">T</span></dt>
+    <dd><p>controller if exist otherwise null</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>controller type</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_OnAliveEntityAdded_" data-uid="LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_OnAliveEntityAdded_LiteEntitySystem_Internal_InternalEntity_" data-uid="LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)">OnAliveEntityAdded(InternalEntity)</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_OnAliveEntityAdded_LiteEntitySystem_Internal_InternalEntity_" data-uid="LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)">
+  OnAliveEntityAdded(InternalEntity)
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected override void OnAliveEntityAdded(InternalEntity entity)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></td>
-        <td><span class="parametername">entity</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_OnAliveEntityAdded_LiteEntitySystem_Internal_InternalEntity_">EntityManager.OnAliveEntityAdded(InternalEntity)</a></div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>entity</code> <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_OnLogicTick_" data-uid="LiteEntitySystem.ClientEntityManager.OnLogicTick*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_OnLogicTick" data-uid="LiteEntitySystem.ClientEntityManager.OnLogicTick">OnLogicTick()</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_OnLogicTick" data-uid="LiteEntitySystem.ClientEntityManager.OnLogicTick">
+  OnLogicTick()
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected override void OnLogicTick()</code></pre>
   </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_OnLogicTick">EntityManager.OnLogicTick()</a></div>
+
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_Reset_" data-uid="LiteEntitySystem.ClientEntityManager.Reset*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_Reset" data-uid="LiteEntitySystem.ClientEntityManager.Reset">Reset()</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_Reset" data-uid="LiteEntitySystem.ClientEntityManager.Reset">
+  Reset()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Remove all entities and reset all counters and timers</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public override void Reset()</code></pre>
   </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Reset">EntityManager.Reset()</a></div>
+
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ClientEntityManager_Update_" data-uid="LiteEntitySystem.ClientEntityManager.Update*"></a>
-  <h4 id="LiteEntitySystem_ClientEntityManager_Update" data-uid="LiteEntitySystem.ClientEntityManager.Update">Update()</h4>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_Update" data-uid="LiteEntitySystem.ClientEntityManager.Update">
+  Update()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Update method, call this every frame</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public override void Update()</code></pre>
   </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Update">EntityManager.Update()</a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </article>
-          </div>
 
-          <div class="hidden-sm col-md-2" role="complementary">
-            <div class="sideaffix">
-              <div class="contribution">
-                <ul class="nav">
-                </ul>
-              </div>
-              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In this article</h5>
-                <div></div>
-              </nav>
-            </div>
-          </div>
+        <div class="contribution d-print-none">
         </div>
+
+
       </div>
 
-      <footer>
-        <div class="grad-bottom"></div>
-        <div class="footer">
-          <div class="container">
-            <span class="pull-right">
-              <a href="#top">Back to top</a>
-            </span>
-      
-      <span>Generated by <strong>DocFX</strong></span>
-          </div>
-        </div>
-      </footer>
-    </div>
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
-    <script type="text/javascript" src="../styles/docfx.js"></script>
-    <script type="text/javascript" src="../styles/main.js"></script>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

@@ -418,7 +418,6 @@ references:
   commentId: M:System.ValueType.ToString
   parent: System.ValueType
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
   name: ToString()
   nameWithType: ValueType.ToString()
   fullName: System.ValueType.ToString()
@@ -426,14 +425,12 @@ references:
   - uid: System.ValueType.ToString
     name: ToString
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
   - name: (
   - name: )
   spec.vb:
   - uid: System.ValueType.ToString
     name: ToString
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
   - name: (
   - name: )
 - uid: LiteEntitySystem.Collections.BitSpan.ToString*
@@ -457,7 +454,6 @@ references:
   commentId: T:System.ValueType
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.valuetype
   name: ValueType
   nameWithType: ValueType
   fullName: System.ValueType

@@ -1,93 +1,136 @@
-﻿<!DOCTYPE html>
-<!--[if IE]><![endif]-->
+<!DOCTYPE html>
 <html>
-
   <head>
     <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
       <title>Class EntityLogic </title>
-      <meta name="viewport" content="width=device-width">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class EntityLogic ">
-    
-    <meta name="description" content="Base class for simple (not controlled by controller) entity">
-      <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
-      <link rel="stylesheet" href="../styles/docfx.css">
-      <link rel="stylesheet" href="../styles/main.css">
-      <meta property="docfx:navrel" content="../toc.html">
-      <meta property="docfx:tocrel" content="toc.html">
-    
-    
-    
+      
+      <meta name="description" content="Base class for simple (not controlled by controller) entity">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
   </head>
-  <body data-spy="scroll" data-target="#affix" data-offset="120">
-    <div id="wrapper">
-      <header>
 
-        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-
-              <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
-              </a>
-            </div>
-            <div class="collapse navbar-collapse" id="navbar">
-              <form class="navbar-form navbar-right" role="search" id="search">
-                <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
-                </div>
-              </form>
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
             </div>
           </div>
-        </nav>
+        </div>
+      </nav>
+    </header>
 
-        <div class="subnav navbar navbar-default">
-          <div class="container hide-when-search" id="breadcrumb">
-            <ul class="breadcrumb">
-              <li></li>
-            </ul>
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
           </div>
         </div>
-      </header>
-      <div role="main" class="container body-content hide-when-search">
+      </div>
 
-        <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
-          <div class="sidetoggle collapse" id="sidetoggle">
-            <div id="sidetoc"></div>
-          </div>
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
         </div>
-        <div class="article row grid-right">
-          <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.EntityLogic">
+
+        <article data-uid="LiteEntitySystem.EntityLogic">
 
 
 
-  <h1 id="LiteEntitySystem_EntityLogic" data-uid="LiteEntitySystem.EntityLogic" class="text-break">Class EntityLogic</h1>
-  <div class="markdown level0 summary"><p>Base class for simple (not controlled by controller) entity</p>
+  <h1 id="LiteEntitySystem_EntityLogic" data-uid="LiteEntitySystem.EntityLogic" class="text-break">
+Class EntityLogic  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>LiteEntitySystem.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Base class for simple (not controlled by controller) entity</p>
 </div>
-  <div class="markdown level0 conceptual"></div>
-  <div class="inheritance">
-    <h5>Inheritance</h5>
-    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-    <div class="level1"><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
-    <div class="level2"><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></div>
-    <div class="level3"><span class="xref">EntityLogic</span></div>
-      <div class="level4"><a class="xref" href="LiteEntitySystem.PawnLogic.html">PawnLogic</a></div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class EntityLogic : InternalEntity, IComparable&lt;InternalEntity&gt;</code></pre>
   </div>
-  <div class="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><span class="xref">object</span></div>
+      <div><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
+      <div><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></div>
+      <div><span class="xref">EntityLogic</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="LiteEntitySystem.PawnLogic.html">PawnLogic</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ClassId">InternalEntity.ClassId</a>
     </div>
@@ -187,671 +230,768 @@
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">InternalBaseClass.OnSyncRequested()</a>
     </div>
-  </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
-  <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
-  <h5 id="LiteEntitySystem_EntityLogic_syntax">Syntax</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class EntityLogic : InternalEntity, IComparable&lt;InternalEntity&gt;</code></pre>
-  </div>
-  <h3 id="constructors">Constructors
-</h3>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
 
 
   <a id="LiteEntitySystem_EntityLogic__ctor_" data-uid="LiteEntitySystem.EntityLogic.#ctor*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic__ctor_LiteEntitySystem_EntityParams_" data-uid="LiteEntitySystem.EntityLogic.#ctor(LiteEntitySystem.EntityParams)">EntityLogic(EntityParams)</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic__ctor_LiteEntitySystem_EntityParams_" data-uid="LiteEntitySystem.EntityLogic.#ctor(LiteEntitySystem.EntityParams)">
+  EntityLogic(EntityParams)
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected EntityLogic(EntityParams entityParams)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityParams.html">EntityParams</a></td>
-        <td><span class="parametername">entityParams</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="fields">Fields
-</h3>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>entityParams</code> <a class="xref" href="LiteEntitySystem.EntityParams.html">EntityParams</a></dt>
+    <dd></dd>
+  </dl>
 
 
-  <h4 id="LiteEntitySystem_EntityLogic_Childs" data-uid="LiteEntitySystem.EntityLogic.Childs">Childs</h4>
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="LiteEntitySystem_EntityLogic_Childs" data-uid="LiteEntitySystem.EntityLogic.Childs">
+  Childs
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Child entities (can be used for transforms or as components)</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public readonly SyncChilds Childs</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.SyncChilds.html">SyncChilds</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="properties">Properties
-</h3>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.SyncChilds.html">SyncChilds</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
 
 
   <a id="LiteEntitySystem_EntityLogic_IsPredicted_" data-uid="LiteEntitySystem.EntityLogic.IsPredicted*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_IsPredicted" data-uid="LiteEntitySystem.EntityLogic.IsPredicted">IsPredicted</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_IsPredicted" data-uid="LiteEntitySystem.EntityLogic.IsPredicted">
+  IsPredicted
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Is entity spawned using AddPredictedEntity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool IsPredicted { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_EntityLogic_Parent_" data-uid="LiteEntitySystem.EntityLogic.Parent*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_Parent" data-uid="LiteEntitySystem.EntityLogic.Parent">Parent</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_Parent" data-uid="LiteEntitySystem.EntityLogic.Parent">
+  Parent
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Parent entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public EntityLogic Parent { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_EntityLogic_ParentId_" data-uid="LiteEntitySystem.EntityLogic.ParentId*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_ParentId" data-uid="LiteEntitySystem.EntityLogic.ParentId">ParentId</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_ParentId" data-uid="LiteEntitySystem.EntityLogic.ParentId">
+  ParentId
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Parent entity shared reference</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public EntitySharedReference ParentId { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_EntityLogic_SharedReference_" data-uid="LiteEntitySystem.EntityLogic.SharedReference*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_SharedReference" data-uid="LiteEntitySystem.EntityLogic.SharedReference">SharedReference</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_SharedReference" data-uid="LiteEntitySystem.EntityLogic.SharedReference">
+  SharedReference
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Shared reference of this entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public EntitySharedReference SharedReference { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-</h3>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
 
 
   <a id="LiteEntitySystem_EntityLogic_AddPredictedEntity_" data-uid="LiteEntitySystem.EntityLogic.AddPredictedEntity*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_AddPredictedEntity__1_LiteEntitySystem_SyncVar_LiteEntitySystem_EntitySharedReference___System_Action___0__" data-uid="LiteEntitySystem.EntityLogic.AddPredictedEntity``1(LiteEntitySystem.SyncVar{LiteEntitySystem.EntitySharedReference}@,System.Action{``0})">AddPredictedEntity&lt;T&gt;(ref SyncVar&lt;EntitySharedReference&gt;, Action&lt;T&gt;)</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_AddPredictedEntity__1_LiteEntitySystem_SyncVar_LiteEntitySystem_EntitySharedReference___System_Action___0__" data-uid="LiteEntitySystem.EntityLogic.AddPredictedEntity``1(LiteEntitySystem.SyncVar{LiteEntitySystem.EntitySharedReference}@,System.Action{``0})">
+  AddPredictedEntity&lt;T&gt;(ref SyncVar&lt;EntitySharedReference&gt;, Action&lt;T&gt;)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
 Should be called also in rollback mode if you use EntityLogic.Childs</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void AddPredictedEntity&lt;T&gt;(ref SyncVar&lt;EntitySharedReference&gt; targetReference, Action&lt;T&gt; initMethod = null) where T : EntityLogic</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.SyncVar-1.html">SyncVar</a>&lt;<a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a>&gt;</td>
-        <td><span class="parametername">targetReference</span></td>
-        <td><p>SyncVar of class that will be set to predicted entity and synchronized once confirmation will be received</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
-        <td><span class="parametername">initMethod</span></td>
-        <td><p>Method that will be called after entity constructed</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td><p>Entity type</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>targetReference</code> <a class="xref" href="LiteEntitySystem.SyncVar-1.html">SyncVar</a>&lt;<a class="xref" href="LiteEntitySystem.EntitySharedReference.html">EntitySharedReference</a>&gt;</dt>
+    <dd><p>SyncVar of class that will be set to predicted entity and synchronized once confirmation will be received</p>
+</dd>
+    <dt><code>initMethod</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</dt>
+    <dd><p>Method that will be called after entity constructed</p>
+</dd>
+  </dl>
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>Entity type</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_EntityLogic_AddPredictedEntity_" data-uid="LiteEntitySystem.EntityLogic.AddPredictedEntity*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_AddPredictedEntity__1_System_Action___0__" data-uid="LiteEntitySystem.EntityLogic.AddPredictedEntity``1(System.Action{``0})">AddPredictedEntity&lt;T&gt;(Action&lt;T&gt;)</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_AddPredictedEntity__1_System_Action___0__" data-uid="LiteEntitySystem.EntityLogic.AddPredictedEntity``1(System.Action{``0})">
+  AddPredictedEntity&lt;T&gt;(Action&lt;T&gt;)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
 Should be called also in rollback mode</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public T AddPredictedEntity&lt;T&gt;(Action&lt;T&gt; initMethod = null) where T : EntityLogic</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
-        <td><span class="parametername">initMethod</span></td>
-        <td><p>Method that will be called after entity constructed</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><p>Created predicted local entity</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td><p>Entity type</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>initMethod</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</dt>
+    <dd><p>Method that will be called after entity constructed</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">T</span></dt>
+    <dd><p>Created predicted local entity</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>Entity type</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_EntityLogic_DisableLagCompensationForOwner_" data-uid="LiteEntitySystem.EntityLogic.DisableLagCompensationForOwner*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_DisableLagCompensationForOwner" data-uid="LiteEntitySystem.EntityLogic.DisableLagCompensationForOwner">DisableLagCompensationForOwner()</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_DisableLagCompensationForOwner" data-uid="LiteEntitySystem.EntityLogic.DisableLagCompensationForOwner">
+  DisableLagCompensationForOwner()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Disable lag compensation for player that owns this entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void DisableLagCompensationForOwner()</code></pre>
   </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
   <a id="LiteEntitySystem_EntityLogic_EnableLagCompensationForOwner_" data-uid="LiteEntitySystem.EntityLogic.EnableLagCompensationForOwner*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_EnableLagCompensationForOwner" data-uid="LiteEntitySystem.EntityLogic.EnableLagCompensationForOwner">EnableLagCompensationForOwner()</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_EnableLagCompensationForOwner" data-uid="LiteEntitySystem.EntityLogic.EnableLagCompensationForOwner">
+  EnableLagCompensationForOwner()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Enable lag compensation for player that owns this entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void EnableLagCompensationForOwner()</code></pre>
   </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
   <a id="LiteEntitySystem_EntityLogic_GetFrameSeed_" data-uid="LiteEntitySystem.EntityLogic.GetFrameSeed*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_GetFrameSeed" data-uid="LiteEntitySystem.EntityLogic.GetFrameSeed">GetFrameSeed()</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_GetFrameSeed" data-uid="LiteEntitySystem.EntityLogic.GetFrameSeed">
+  GetFrameSeed()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Get synchronized seed for random generators based on current tick. Can be used for rollback or inside RPCs</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public int GetFrameSeed()</code></pre>
   </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td><p>current tick depending on entity manager state (IsExecutingRPC and InRollBackState)</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>current tick depending on entity manager state (IsExecutingRPC and InRollBackState)</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_EntityLogic_GetParent_" data-uid="LiteEntitySystem.EntityLogic.GetParent*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_GetParent__1" data-uid="LiteEntitySystem.EntityLogic.GetParent``1">GetParent&lt;T&gt;()</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_GetParent__1" data-uid="LiteEntitySystem.EntityLogic.GetParent``1">
+  GetParent&lt;T&gt;()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Get parent entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public T GetParent&lt;T&gt;() where T : EntityLogic</code></pre>
   </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><p>parent entity</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td><p>Type of entity</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">T</span></dt>
+    <dd><p>parent entity</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>Type of entity</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_EntityLogic_IsSyncGroupEnabled_" data-uid="LiteEntitySystem.EntityLogic.IsSyncGroupEnabled*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_IsSyncGroupEnabled_LiteEntitySystem_SyncGroup_" data-uid="LiteEntitySystem.EntityLogic.IsSyncGroupEnabled(LiteEntitySystem.SyncGroup)">IsSyncGroupEnabled(SyncGroup)</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_IsSyncGroupEnabled_LiteEntitySystem_SyncGroup_" data-uid="LiteEntitySystem.EntityLogic.IsSyncGroupEnabled(LiteEntitySystem.SyncGroup)">
+  IsSyncGroupEnabled(SyncGroup)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Client only. Is synchronization of this entity to local player enabled</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool IsSyncGroupEnabled(SyncGroup group)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.SyncGroup.html">SyncGroup</a></td>
-        <td><span class="parametername">group</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td><p>true - when we have data on client or when called on server</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>group</code> <a class="xref" href="LiteEntitySystem.SyncGroup.html">SyncGroup</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>true - when we have data on client or when called on server</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_EntityLogic_OnBeforeParentDestroy_" data-uid="LiteEntitySystem.EntityLogic.OnBeforeParentDestroy*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_OnBeforeParentDestroy" data-uid="LiteEntitySystem.EntityLogic.OnBeforeParentDestroy">OnBeforeParentDestroy()</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_OnBeforeParentDestroy" data-uid="LiteEntitySystem.EntityLogic.OnBeforeParentDestroy">
+  OnBeforeParentDestroy()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Called before parent destroy</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void OnBeforeParentDestroy()</code></pre>
   </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
   <a id="LiteEntitySystem_EntityLogic_OnChildAdded_" data-uid="LiteEntitySystem.EntityLogic.OnChildAdded*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_OnChildAdded_LiteEntitySystem_EntityLogic_" data-uid="LiteEntitySystem.EntityLogic.OnChildAdded(LiteEntitySystem.EntityLogic)">OnChildAdded(EntityLogic)</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_OnChildAdded_LiteEntitySystem_EntityLogic_" data-uid="LiteEntitySystem.EntityLogic.OnChildAdded(LiteEntitySystem.EntityLogic)">
+  OnChildAdded(EntityLogic)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Called when child added</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void OnChildAdded(EntityLogic child)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></td>
-        <td><span class="parametername">child</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>child</code> <a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_EntityLogic_OnChildRemoved_" data-uid="LiteEntitySystem.EntityLogic.OnChildRemoved*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_OnChildRemoved_LiteEntitySystem_EntityLogic_" data-uid="LiteEntitySystem.EntityLogic.OnChildRemoved(LiteEntitySystem.EntityLogic)">OnChildRemoved(EntityLogic)</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_OnChildRemoved_LiteEntitySystem_EntityLogic_" data-uid="LiteEntitySystem.EntityLogic.OnChildRemoved(LiteEntitySystem.EntityLogic)">
+  OnChildRemoved(EntityLogic)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Called when child removed</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void OnChildRemoved(EntityLogic child)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></td>
-        <td><span class="parametername">child</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>child</code> <a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_EntityLogic_OnLagCompensationEnd_" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensationEnd*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_OnLagCompensationEnd" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensationEnd">OnLagCompensationEnd()</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_OnLagCompensationEnd" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensationEnd">
+  OnLagCompensationEnd()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Called when lag compensation ended for this entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void OnLagCompensationEnd()</code></pre>
   </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
   <a id="LiteEntitySystem_EntityLogic_OnLagCompensationStart_" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensationStart*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_OnLagCompensationStart" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensationStart">OnLagCompensationStart()</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_OnLagCompensationStart" data-uid="LiteEntitySystem.EntityLogic.OnLagCompensationStart">
+  OnLagCompensationStart()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Called when lag compensation was started for this entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void OnLagCompensationStart()</code></pre>
   </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
   <a id="LiteEntitySystem_EntityLogic_OnParentChanged_" data-uid="LiteEntitySystem.EntityLogic.OnParentChanged*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_OnParentChanged_LiteEntitySystem_EntityLogic_" data-uid="LiteEntitySystem.EntityLogic.OnParentChanged(LiteEntitySystem.EntityLogic)">OnParentChanged(EntityLogic)</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_OnParentChanged_LiteEntitySystem_EntityLogic_" data-uid="LiteEntitySystem.EntityLogic.OnParentChanged(LiteEntitySystem.EntityLogic)">
+  OnParentChanged(EntityLogic)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Called when parent changed</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void OnParentChanged(EntityLogic oldParent)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></td>
-        <td><span class="parametername">oldParent</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>oldParent</code> <a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_EntityLogic_OnSyncGroupsChanged_" data-uid="LiteEntitySystem.EntityLogic.OnSyncGroupsChanged*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_OnSyncGroupsChanged_LiteEntitySystem_SyncGroup_" data-uid="LiteEntitySystem.EntityLogic.OnSyncGroupsChanged(LiteEntitySystem.SyncGroup)">OnSyncGroupsChanged(SyncGroup)</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_OnSyncGroupsChanged_LiteEntitySystem_SyncGroup_" data-uid="LiteEntitySystem.EntityLogic.OnSyncGroupsChanged(LiteEntitySystem.SyncGroup)">
+  OnSyncGroupsChanged(SyncGroup)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Called when SyncGroups enabled or disabled on client</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void OnSyncGroupsChanged(SyncGroup enabledGroups)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.SyncGroup.html">SyncGroup</a></td>
-        <td><span class="parametername">enabledGroups</span></td>
-        <td><p>groups that are currently enabled</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>enabledGroups</code> <a class="xref" href="LiteEntitySystem.SyncGroup.html">SyncGroup</a></dt>
+    <dd><p>groups that are currently enabled</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_EntityLogic_RegisterRPC_" data-uid="LiteEntitySystem.EntityLogic.RegisterRPC*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_RegisterRPC_LiteEntitySystem_RPCRegistrator__" data-uid="LiteEntitySystem.EntityLogic.RegisterRPC(LiteEntitySystem.RPCRegistrator@)">RegisterRPC(ref RPCRegistrator)</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_RegisterRPC_LiteEntitySystem_RPCRegistrator__" data-uid="LiteEntitySystem.EntityLogic.RegisterRPC(LiteEntitySystem.RPCRegistrator@)">
+  RegisterRPC(ref RPCRegistrator)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Method for registering RPCs and OnChange notifications</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected override void RegisterRPC(ref RPCRegistrator r)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.RPCRegistrator.html">RPCRegistrator</a></td>
-        <td><span class="parametername">r</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_RegisterRPC_LiteEntitySystem_RPCRegistrator__">InternalEntity.RegisterRPC(ref RPCRegistrator)</a></div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>r</code> <a class="xref" href="LiteEntitySystem.RPCRegistrator.html">RPCRegistrator</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_EntityLogic_SetParent_" data-uid="LiteEntitySystem.EntityLogic.SetParent*"></a>
-  <h4 id="LiteEntitySystem_EntityLogic_SetParent_LiteEntitySystem_EntityLogic_" data-uid="LiteEntitySystem.EntityLogic.SetParent(LiteEntitySystem.EntityLogic)">SetParent(EntityLogic)</h4>
+
+  <h3 id="LiteEntitySystem_EntityLogic_SetParent_LiteEntitySystem_EntityLogic_" data-uid="LiteEntitySystem.EntityLogic.SetParent(LiteEntitySystem.EntityLogic)">
+  SetParent(EntityLogic)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Set parent entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void SetParent(EntityLogic newParent)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></td>
-        <td><span class="parametername">newParent</span></td>
-        <td><p>parent entity</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable&lt;T&gt;</a>
-  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>newParent</code> <a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></dt>
+    <dd><p>parent entity</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
 
 </article>
-          </div>
 
-          <div class="hidden-sm col-md-2" role="complementary">
-            <div class="sideaffix">
-              <div class="contribution">
-                <ul class="nav">
-                </ul>
-              </div>
-              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In this article</h5>
-                <div></div>
-              </nav>
-            </div>
-          </div>
+        <div class="contribution d-print-none">
         </div>
+
+
       </div>
 
-      <footer>
-        <div class="grad-bottom"></div>
-        <div class="footer">
-          <div class="container">
-            <span class="pull-right">
-              <a href="#top">Back to top</a>
-            </span>
-      
-      <span>Generated by <strong>DocFX</strong></span>
-          </div>
-        </div>
-      </footer>
-    </div>
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
-    <script type="text/javascript" src="../styles/docfx.js"></script>
-    <script type="text/javascript" src="../styles/main.js"></script>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

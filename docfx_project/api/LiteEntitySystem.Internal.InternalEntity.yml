@@ -890,7 +890,6 @@ references:
   commentId: T:System.Object
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object
   name: object
   nameWithType: object
   fullName: object
@@ -1550,7 +1549,6 @@ references:
   commentId: M:System.Object.GetHashCode
   parent: System.Object
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
   name: GetHashCode()
   nameWithType: object.GetHashCode()
   fullName: object.GetHashCode()
@@ -1560,14 +1558,12 @@ references:
   - uid: System.Object.GetHashCode
     name: GetHashCode
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
   - name: (
   - name: )
   spec.vb:
   - uid: System.Object.GetHashCode
     name: GetHashCode
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
   - name: (
   - name: )
 - uid: LiteEntitySystem.Internal.InternalEntity.GetHashCode*
@@ -1580,7 +1576,6 @@ references:
   commentId: M:System.Object.ToString
   parent: System.Object
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
   name: ToString()
   nameWithType: object.ToString()
   fullName: object.ToString()
@@ -1590,14 +1585,12 @@ references:
   - uid: System.Object.ToString
     name: ToString
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
   - name: (
   - name: )
   spec.vb:
   - uid: System.Object.ToString
     name: ToString
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
   - name: (
   - name: )
 - uid: LiteEntitySystem.Internal.InternalEntity.ToString*

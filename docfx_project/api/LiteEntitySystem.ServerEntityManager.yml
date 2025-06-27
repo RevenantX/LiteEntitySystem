@@ -50,6 +50,7 @@ items:
   inheritedMembers:
   - LiteEntitySystem.EntityManager.MaxSyncedEntityCount
   - LiteEntitySystem.EntityManager.MaxEntityCount
+  - LiteEntitySystem.EntityManager.MaxLocalEntityCount
   - LiteEntitySystem.EntityManager.ServerPlayerId
   - LiteEntitySystem.EntityManager.InvalidEntityId
   - LiteEntitySystem.EntityManager.EntitiesCount
@@ -813,7 +814,6 @@ references:
   commentId: T:System.Object
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object
   name: object
   nameWithType: object
   fullName: object
@@ -841,6 +841,13 @@ references:
   name: MaxEntityCount
   nameWithType: EntityManager.MaxEntityCount
   fullName: LiteEntitySystem.EntityManager.MaxEntityCount
+- uid: LiteEntitySystem.EntityManager.MaxLocalEntityCount
+  commentId: F:LiteEntitySystem.EntityManager.MaxLocalEntityCount
+  parent: LiteEntitySystem.EntityManager
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxLocalEntityCount
+  name: MaxLocalEntityCount
+  nameWithType: EntityManager.MaxLocalEntityCount
+  fullName: LiteEntitySystem.EntityManager.MaxLocalEntityCount
 - uid: LiteEntitySystem.EntityManager.ServerPlayerId
   commentId: F:LiteEntitySystem.EntityManager.ServerPlayerId
   parent: LiteEntitySystem.EntityManager
@@ -1002,7 +1009,6 @@ references:
   - name: (
   - uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
     name: InterpolatorDelegateWithReturn
-    href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
   - name: <
   - name: T
   - name: '>'
@@ -1019,7 +1025,6 @@ references:
   - name: (
   - uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
     name: InterpolatorDelegateWithReturn
-    href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
   - name: (
   - name: Of
   - name: " "
@@ -1545,7 +1550,6 @@ references:
   - name: (
   - uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
     name: InterpolatorDelegateWithReturn
-    href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
   - name: <
   - name: T
   - name: '>'
@@ -1562,7 +1566,6 @@ references:
   - name: (
   - uid: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn`1
     name: InterpolatorDelegateWithReturn
-    href: LiteEntitySystem.Internal.InterpolatorDelegateWithReturn-1.html
   - name: (
   - name: Of
   - name: " "

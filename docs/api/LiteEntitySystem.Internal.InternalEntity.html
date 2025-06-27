@@ -1,619 +1,761 @@
-﻿<!DOCTYPE html>
-<!--[if IE]><![endif]-->
+<!DOCTYPE html>
 <html>
-
   <head>
     <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
       <title>Class InternalEntity </title>
-      <meta name="viewport" content="width=device-width">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class InternalEntity ">
-    
-    
-      <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
-      <link rel="stylesheet" href="../styles/docfx.css">
-      <link rel="stylesheet" href="../styles/main.css">
-      <meta property="docfx:navrel" content="../toc.html">
-      <meta property="docfx:tocrel" content="toc.html">
-    
-    
-    
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
   </head>
-  <body data-spy="scroll" data-target="#affix" data-offset="120">
-    <div id="wrapper">
-      <header>
 
-        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-
-              <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
-              </a>
-            </div>
-            <div class="collapse navbar-collapse" id="navbar">
-              <form class="navbar-form navbar-right" role="search" id="search">
-                <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
-                </div>
-              </form>
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
             </div>
           </div>
-        </nav>
+        </div>
+      </nav>
+    </header>
 
-        <div class="subnav navbar navbar-default">
-          <div class="container hide-when-search" id="breadcrumb">
-            <ul class="breadcrumb">
-              <li></li>
-            </ul>
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
           </div>
         </div>
-      </header>
-      <div role="main" class="container body-content hide-when-search">
+      </div>
 
-        <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
-          <div class="sidetoggle collapse" id="sidetoggle">
-            <div id="sidetoc"></div>
-          </div>
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
         </div>
-        <div class="article row grid-right">
-          <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.Internal.InternalEntity">
+
+        <article data-uid="LiteEntitySystem.Internal.InternalEntity">
 
 
 
-  <h1 id="LiteEntitySystem_Internal_InternalEntity" data-uid="LiteEntitySystem.Internal.InternalEntity" class="text-break">Class InternalEntity</h1>
-  <div class="markdown level0 summary"></div>
-  <div class="markdown level0 conceptual"></div>
-  <div class="inheritance">
-    <h5>Inheritance</h5>
-    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-    <div class="level1"><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
-    <div class="level2"><span class="xref">InternalEntity</span></div>
-      <div class="level3"><a class="xref" href="LiteEntitySystem.ControllerLogic.html">ControllerLogic</a></div>
-      <div class="level3"><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></div>
-      <div class="level3"><a class="xref" href="LiteEntitySystem.SingletonEntityLogic.html">SingletonEntityLogic</a></div>
+  <h1 id="LiteEntitySystem_Internal_InternalEntity" data-uid="LiteEntitySystem.Internal.InternalEntity" class="text-break">
+Class InternalEntity  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a>.<a class="xref" href="LiteEntitySystem.Internal.html">Internal</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>LiteEntitySystem.dll</dd></dl>
   </div>
-  <div class="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">InternalBaseClass.OnSyncRequested()</a>
-    </div>
-  </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a>.<a class="xref" href="LiteEntitySystem.Internal.html">Internal</a></h6>
-  <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
-  <h5 id="LiteEntitySystem_Internal_InternalEntity_syntax">Syntax</h5>
+
+  <div class="markdown summary"></div>
+  <div class="markdown conceptual"></div>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public abstract class InternalEntity : InternalBaseClass, IComparable&lt;InternalEntity&gt;</code></pre>
   </div>
-  <h3 id="constructors">Constructors
-</h3>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><span class="xref">object</span></div>
+      <div><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
+      <div><span class="xref">InternalEntity</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="LiteEntitySystem.ControllerLogic.html">ControllerLogic</a></div>
+      <div><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></div>
+      <div><a class="xref" href="LiteEntitySystem.SingletonEntityLogic.html">SingletonEntityLogic</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">InternalBaseClass.OnSyncRequested()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity__ctor_" data-uid="LiteEntitySystem.Internal.InternalEntity.#ctor*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity__ctor_LiteEntitySystem_EntityParams_" data-uid="LiteEntitySystem.Internal.InternalEntity.#ctor(LiteEntitySystem.EntityParams)">InternalEntity(EntityParams)</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity__ctor_LiteEntitySystem_EntityParams_" data-uid="LiteEntitySystem.Internal.InternalEntity.#ctor(LiteEntitySystem.EntityParams)">
+  InternalEntity(EntityParams)
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected InternalEntity(EntityParams entityParams)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityParams.html">EntityParams</a></td>
-        <td><span class="parametername">entityParams</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="fields">Fields
-</h3>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>entityParams</code> <a class="xref" href="LiteEntitySystem.EntityParams.html">EntityParams</a></dt>
+    <dd></dd>
+  </dl>
 
 
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_ClassId" data-uid="LiteEntitySystem.Internal.InternalEntity.ClassId">ClassId</h4>
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_ClassId" data-uid="LiteEntitySystem.Internal.InternalEntity.ClassId">
+  ClassId
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Entity class id</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public readonly ushort ClassId</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 
 
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_EntityManager" data-uid="LiteEntitySystem.Internal.InternalEntity.EntityManager">EntityManager</h4>
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_EntityManager" data-uid="LiteEntitySystem.Internal.InternalEntity.EntityManager">
+  EntityManager
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Entity manager</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public readonly EntityManager EntityManager</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityManager.html">EntityManager</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 
 
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_Id" data-uid="LiteEntitySystem.Internal.InternalEntity.Id">Id</h4>
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.EntityManager.html">EntityManager</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_Id" data-uid="LiteEntitySystem.Internal.InternalEntity.Id">
+  Id
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Entity instance id</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public readonly ushort Id</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 
 
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_Version" data-uid="LiteEntitySystem.Internal.InternalEntity.Version">Version</h4>
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_Version" data-uid="LiteEntitySystem.Internal.InternalEntity.Version">
+  Version
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Entity version (for id reuse)</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public readonly byte Version</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="properties">Properties
-</h3>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_ClientManager_" data-uid="LiteEntitySystem.Internal.InternalEntity.ClientManager*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_ClientManager" data-uid="LiteEntitySystem.Internal.InternalEntity.ClientManager">ClientManager</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_ClientManager" data-uid="LiteEntitySystem.Internal.InternalEntity.ClientManager">
+  ClientManager
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>ClientEntityManager that available only on client. Will throw exception if called on server</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ClientEntityManager ClientManager { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.ClientEntityManager.html">ClientEntityManager</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.ClientEntityManager.html">ClientEntityManager</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_IsClient_" data-uid="LiteEntitySystem.Internal.InternalEntity.IsClient*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_IsClient" data-uid="LiteEntitySystem.Internal.InternalEntity.IsClient">IsClient</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_IsClient" data-uid="LiteEntitySystem.Internal.InternalEntity.IsClient">
+  IsClient
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Is entity on server</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool IsClient { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_IsConstructed_" data-uid="LiteEntitySystem.Internal.InternalEntity.IsConstructed*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_IsConstructed" data-uid="LiteEntitySystem.Internal.InternalEntity.IsConstructed">IsConstructed</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_IsConstructed" data-uid="LiteEntitySystem.Internal.InternalEntity.IsConstructed">
+  IsConstructed
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Is entity constructed (OnConstruct called)</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool IsConstructed { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_IsDestroyed_" data-uid="LiteEntitySystem.Internal.InternalEntity.IsDestroyed*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_IsDestroyed" data-uid="LiteEntitySystem.Internal.InternalEntity.IsDestroyed">IsDestroyed</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_IsDestroyed" data-uid="LiteEntitySystem.Internal.InternalEntity.IsDestroyed">
+  IsDestroyed
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Is entity is destroyed</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool IsDestroyed { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_IsLocal_" data-uid="LiteEntitySystem.Internal.InternalEntity.IsLocal*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_IsLocal" data-uid="LiteEntitySystem.Internal.InternalEntity.IsLocal">IsLocal</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_IsLocal" data-uid="LiteEntitySystem.Internal.InternalEntity.IsLocal">
+  IsLocal
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Is locally created entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool IsLocal { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_IsLocalControlled_" data-uid="LiteEntitySystem.Internal.InternalEntity.IsLocalControlled*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_IsLocalControlled" data-uid="LiteEntitySystem.Internal.InternalEntity.IsLocalControlled">IsLocalControlled</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_IsLocalControlled" data-uid="LiteEntitySystem.Internal.InternalEntity.IsLocalControlled">
+  IsLocalControlled
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Is entity local controlled</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool IsLocalControlled { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_IsRemoteControlled_" data-uid="LiteEntitySystem.Internal.InternalEntity.IsRemoteControlled*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_IsRemoteControlled" data-uid="LiteEntitySystem.Internal.InternalEntity.IsRemoteControlled">IsRemoteControlled</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_IsRemoteControlled" data-uid="LiteEntitySystem.Internal.InternalEntity.IsRemoteControlled">
+  IsRemoteControlled
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Is entity remote controlled</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool IsRemoteControlled { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_IsRemoved_" data-uid="LiteEntitySystem.Internal.InternalEntity.IsRemoved*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_IsRemoved" data-uid="LiteEntitySystem.Internal.InternalEntity.IsRemoved">IsRemoved</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_IsRemoved" data-uid="LiteEntitySystem.Internal.InternalEntity.IsRemoved">
+  IsRemoved
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Is entity released and not used after destroy.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool IsRemoved { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_IsServer_" data-uid="LiteEntitySystem.Internal.InternalEntity.IsServer*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_IsServer" data-uid="LiteEntitySystem.Internal.InternalEntity.IsServer">IsServer</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_IsServer" data-uid="LiteEntitySystem.Internal.InternalEntity.IsServer">
+  IsServer
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Is entity on server</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool IsServer { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_IsServerControlled_" data-uid="LiteEntitySystem.Internal.InternalEntity.IsServerControlled*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_IsServerControlled" data-uid="LiteEntitySystem.Internal.InternalEntity.IsServerControlled">IsServerControlled</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_IsServerControlled" data-uid="LiteEntitySystem.Internal.InternalEntity.IsServerControlled">
+  IsServerControlled
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Is entity is controlled by server</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool IsServerControlled { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_IsSingleton_" data-uid="LiteEntitySystem.Internal.InternalEntity.IsSingleton*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_IsSingleton" data-uid="LiteEntitySystem.Internal.InternalEntity.IsSingleton">IsSingleton</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_IsSingleton" data-uid="LiteEntitySystem.Internal.InternalEntity.IsSingleton">
+  IsSingleton
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Is entity based on SingletonEntityLogic</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool IsSingleton { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_OwnerId_" data-uid="LiteEntitySystem.Internal.InternalEntity.OwnerId*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_OwnerId" data-uid="LiteEntitySystem.Internal.InternalEntity.OwnerId">OwnerId</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_OwnerId" data-uid="LiteEntitySystem.Internal.InternalEntity.OwnerId">
+  OwnerId
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Owner player id
 ServerPlayerId - 0
 Singletons always controlled by server</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public byte OwnerId { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_ServerManager_" data-uid="LiteEntitySystem.Internal.InternalEntity.ServerManager*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_ServerManager" data-uid="LiteEntitySystem.Internal.InternalEntity.ServerManager">ServerManager</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_ServerManager" data-uid="LiteEntitySystem.Internal.InternalEntity.ServerManager">
+  ServerManager
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>ServerEntityManager that available only on server. Will throw exception if called on client</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ServerEntityManager ServerManager { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.ServerEntityManager.html">ServerEntityManager</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-</h3>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.ServerEntityManager.html">ServerEntityManager</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_CompareTo_" data-uid="LiteEntitySystem.Internal.InternalEntity.CompareTo*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_CompareTo_LiteEntitySystem_Internal_InternalEntity_" data-uid="LiteEntitySystem.Internal.InternalEntity.CompareTo(LiteEntitySystem.Internal.InternalEntity)">CompareTo(InternalEntity)</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_CompareTo_LiteEntitySystem_Internal_InternalEntity_" data-uid="LiteEntitySystem.Internal.InternalEntity.CompareTo(LiteEntitySystem.Internal.InternalEntity)">
+  CompareTo(InternalEntity)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public int CompareTo(InternalEntity other)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></td>
-        <td><span class="parametername">other</span></td>
-        <td><p>An object to compare with this instance.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td><p>A value that indicates the relative order of the objects being compared. The return value has these meanings:<br>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>other</code> <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></dt>
+    <dd><p>An object to compare with this instance.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>A value that indicates the relative order of the objects being compared. The return value has these meanings:<br>
 Value</p>
 <p>Meaning</p>
 <p>Less than zero</p>
@@ -622,391 +764,499 @@ Value</p>
 <p>This instance occurs in the same position in the sort order as <code class="paramref">other</code>.</p>
 <p>Greater than zero</p>
 <p>This instance follows <code class="paramref">other</code> in the sort order.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_Destroy_" data-uid="LiteEntitySystem.Internal.InternalEntity.Destroy*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_Destroy" data-uid="LiteEntitySystem.Internal.InternalEntity.Destroy">Destroy()</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_Destroy" data-uid="LiteEntitySystem.Internal.InternalEntity.Destroy">
+  Destroy()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Destroy entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void Destroy()</code></pre>
   </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
   <a id="LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_" data-uid="LiteEntitySystem.Internal.InternalEntity.ExecuteRPC*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_LiteEntitySystem_RemoteCall__" data-uid="LiteEntitySystem.Internal.InternalEntity.ExecuteRPC(LiteEntitySystem.RemoteCall@)">ExecuteRPC(in RemoteCall)</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_LiteEntitySystem_RemoteCall__" data-uid="LiteEntitySystem.Internal.InternalEntity.ExecuteRPC(LiteEntitySystem.RemoteCall@)">
+  ExecuteRPC(in RemoteCall)
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected void ExecuteRPC(in RemoteCall rpc)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.RemoteCall.html">RemoteCall</a></td>
-        <td><span class="parametername">rpc</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>rpc</code> <a class="xref" href="LiteEntitySystem.RemoteCall.html">RemoteCall</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_" data-uid="LiteEntitySystem.Internal.InternalEntity.ExecuteRPC*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_" data-uid="LiteEntitySystem.Internal.InternalEntity.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)">ExecuteRPC&lt;T&gt;(in RemoteCallSerializable&lt;T&gt;, T)</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_" data-uid="LiteEntitySystem.Internal.InternalEntity.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)">
+  ExecuteRPC&lt;T&gt;(in RemoteCallSerializable&lt;T&gt;, T)
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected void ExecuteRPC&lt;T&gt;(in RemoteCallSerializable&lt;T&gt; rpc, T value) where T : struct, ISpanSerializable</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.RemoteCallSerializable-1.html">RemoteCallSerializable</a>&lt;T&gt;</td>
-        <td><span class="parametername">rpc</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><span class="parametername">value</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>rpc</code> <a class="xref" href="LiteEntitySystem.RemoteCallSerializable-1.html">RemoteCallSerializable</a>&lt;T&gt;</dt>
+    <dd></dd>
+    <dt><code>value</code> <span class="xref">T</span></dt>
+    <dd></dd>
+  </dl>
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_" data-uid="LiteEntitySystem.Internal.InternalEntity.ExecuteRPC*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__" data-uid="LiteEntitySystem.Internal.InternalEntity.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})">ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCallSpan___0___System_ReadOnlySpan___0__" data-uid="LiteEntitySystem.Internal.InternalEntity.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})">
+  ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt;, ReadOnlySpan&lt;T&gt;)
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected void ExecuteRPC&lt;T&gt;(in RemoteCallSpan&lt;T&gt; rpc, ReadOnlySpan&lt;T&gt; value) where T : unmanaged</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.RemoteCallSpan-1.html">RemoteCallSpan</a>&lt;T&gt;</td>
-        <td><span class="parametername">rpc</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;T&gt;</td>
-        <td><span class="parametername">value</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>rpc</code> <a class="xref" href="LiteEntitySystem.RemoteCallSpan-1.html">RemoteCallSpan</a>&lt;T&gt;</dt>
+    <dd></dd>
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;T&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_" data-uid="LiteEntitySystem.Internal.InternalEntity.ExecuteRPC*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_" data-uid="LiteEntitySystem.Internal.InternalEntity.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)">ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt;, T)</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_ExecuteRPC__1_LiteEntitySystem_RemoteCall___0_____0_" data-uid="LiteEntitySystem.Internal.InternalEntity.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)">
+  ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt;, T)
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected void ExecuteRPC&lt;T&gt;(in RemoteCall&lt;T&gt; rpc, T value) where T : unmanaged</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.RemoteCall-1.html">RemoteCall</a>&lt;T&gt;</td>
-        <td><span class="parametername">rpc</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><span class="parametername">value</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>rpc</code> <a class="xref" href="LiteEntitySystem.RemoteCall-1.html">RemoteCall</a>&lt;T&gt;</dt>
+    <dd></dd>
+    <dt><code>value</code> <span class="xref">T</span></dt>
+    <dd></dd>
+  </dl>
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_GetHashCode_" data-uid="LiteEntitySystem.Internal.InternalEntity.GetHashCode*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_GetHashCode" data-uid="LiteEntitySystem.Internal.InternalEntity.GetHashCode">GetHashCode()</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_GetHashCode" data-uid="LiteEntitySystem.Internal.InternalEntity.GetHashCode">
+  GetHashCode()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
   </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td><p>A hash code for the current object.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a></div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>A hash code for the current object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_OnBeforeRollback_" data-uid="LiteEntitySystem.Internal.InternalEntity.OnBeforeRollback*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_OnBeforeRollback" data-uid="LiteEntitySystem.Internal.InternalEntity.OnBeforeRollback">OnBeforeRollback()</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_OnBeforeRollback" data-uid="LiteEntitySystem.Internal.InternalEntity.OnBeforeRollback">
+  OnBeforeRollback()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Called at rollback begin before all values reset to first frame in rollback queue.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void OnBeforeRollback()</code></pre>
   </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
   <a id="LiteEntitySystem_Internal_InternalEntity_OnConstructed_" data-uid="LiteEntitySystem.Internal.InternalEntity.OnConstructed*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_OnConstructed" data-uid="LiteEntitySystem.Internal.InternalEntity.OnConstructed">OnConstructed()</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_OnConstructed" data-uid="LiteEntitySystem.Internal.InternalEntity.OnConstructed">
+  OnConstructed()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Called when entity constructed</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void OnConstructed()</code></pre>
   </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
   <a id="LiteEntitySystem_Internal_InternalEntity_OnDestroy_" data-uid="LiteEntitySystem.Internal.InternalEntity.OnDestroy*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_OnDestroy" data-uid="LiteEntitySystem.Internal.InternalEntity.OnDestroy">OnDestroy()</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_OnDestroy" data-uid="LiteEntitySystem.Internal.InternalEntity.OnDestroy">
+  OnDestroy()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Event called on entity destroy</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void OnDestroy()</code></pre>
   </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
   <a id="LiteEntitySystem_Internal_InternalEntity_OnLateConstructed_" data-uid="LiteEntitySystem.Internal.InternalEntity.OnLateConstructed*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_OnLateConstructed" data-uid="LiteEntitySystem.Internal.InternalEntity.OnLateConstructed">OnLateConstructed()</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_OnLateConstructed" data-uid="LiteEntitySystem.Internal.InternalEntity.OnLateConstructed">
+  OnLateConstructed()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Called when entity constructed but at end of frame</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void OnLateConstructed()</code></pre>
   </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
   <a id="LiteEntitySystem_Internal_InternalEntity_OnRollback_" data-uid="LiteEntitySystem.Internal.InternalEntity.OnRollback*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_OnRollback" data-uid="LiteEntitySystem.Internal.InternalEntity.OnRollback">OnRollback()</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_OnRollback" data-uid="LiteEntitySystem.Internal.InternalEntity.OnRollback">
+  OnRollback()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Called at rollback begin after all values reset to first frame in rollback queue.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void OnRollback()</code></pre>
   </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
   <a id="LiteEntitySystem_Internal_InternalEntity_RegisterRPC_" data-uid="LiteEntitySystem.Internal.InternalEntity.RegisterRPC*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_RegisterRPC_LiteEntitySystem_RPCRegistrator__" data-uid="LiteEntitySystem.Internal.InternalEntity.RegisterRPC(LiteEntitySystem.RPCRegistrator@)">RegisterRPC(ref RPCRegistrator)</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_RegisterRPC_LiteEntitySystem_RPCRegistrator__" data-uid="LiteEntitySystem.Internal.InternalEntity.RegisterRPC(LiteEntitySystem.RPCRegistrator@)">
+  RegisterRPC(ref RPCRegistrator)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Method for registering RPCs and OnChange notifications</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void RegisterRPC(ref RPCRegistrator r)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.RPCRegistrator.html">RPCRegistrator</a></td>
-        <td><span class="parametername">r</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>r</code> <a class="xref" href="LiteEntitySystem.RPCRegistrator.html">RPCRegistrator</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_ToString_" data-uid="LiteEntitySystem.Internal.InternalEntity.ToString*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_ToString" data-uid="LiteEntitySystem.Internal.InternalEntity.ToString">ToString()</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_ToString" data-uid="LiteEntitySystem.Internal.InternalEntity.ToString">
+  ToString()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Returns a string that represents the current object.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
   </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
-        <td><p>A string that represents the current object.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a></div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A string that represents the current object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_Internal_InternalEntity_Update_" data-uid="LiteEntitySystem.Internal.InternalEntity.Update*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_Update" data-uid="LiteEntitySystem.Internal.InternalEntity.Update">Update()</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_Update" data-uid="LiteEntitySystem.Internal.InternalEntity.Update">
+  Update()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Fixed update. Called if entity has attribute <a class="xref" href="LiteEntitySystem.EntityFlagsAttribute.html">EntityFlagsAttribute</a> and flag Updateable</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void Update()</code></pre>
   </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
   <a id="LiteEntitySystem_Internal_InternalEntity_VisualUpdate_" data-uid="LiteEntitySystem.Internal.InternalEntity.VisualUpdate*"></a>
-  <h4 id="LiteEntitySystem_Internal_InternalEntity_VisualUpdate" data-uid="LiteEntitySystem.Internal.InternalEntity.VisualUpdate">VisualUpdate()</h4>
+
+  <h3 id="LiteEntitySystem_Internal_InternalEntity_VisualUpdate" data-uid="LiteEntitySystem.Internal.InternalEntity.VisualUpdate">
+  VisualUpdate()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Called only on <a class="xref" href="LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_Update">Update()</a> and if entity has attribute <a class="xref" href="LiteEntitySystem.EntityFlagsAttribute.html">EntityFlagsAttribute</a> and flag Updateable</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected virtual void VisualUpdate()</code></pre>
   </div>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable&lt;T&gt;</a>
-  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </article>
-          </div>
 
-          <div class="hidden-sm col-md-2" role="complementary">
-            <div class="sideaffix">
-              <div class="contribution">
-                <ul class="nav">
-                </ul>
-              </div>
-              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In this article</h5>
-                <div></div>
-              </nav>
-            </div>
-          </div>
+        <div class="contribution d-print-none">
         </div>
+
+
       </div>
 
-      <footer>
-        <div class="grad-bottom"></div>
-        <div class="footer">
-          <div class="container">
-            <span class="pull-right">
-              <a href="#top">Back to top</a>
-            </span>
-      
-      <span>Generated by <strong>DocFX</strong></span>
-          </div>
-        </div>
-      </footer>
-    </div>
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
-    <script type="text/javascript" src="../styles/docfx.js"></script>
-    <script type="text/javascript" src="../styles/main.js"></script>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

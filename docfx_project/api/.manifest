@@ -195,6 +195,7 @@
   "LiteEntitySystem.EntityManager.LerpFactor": "LiteEntitySystem.EntityManager.yml",
   "LiteEntitySystem.EntityManager.MaxEntityCount": "LiteEntitySystem.EntityManager.yml",
   "LiteEntitySystem.EntityManager.MaxHistorySize": "LiteEntitySystem.EntityManager.yml",
+  "LiteEntitySystem.EntityManager.MaxLocalEntityCount": "LiteEntitySystem.EntityManager.yml",
   "LiteEntitySystem.EntityManager.MaxPlayers": "LiteEntitySystem.EntityManager.yml",
   "LiteEntitySystem.EntityManager.MaxSavedStateDiff": "LiteEntitySystem.EntityManager.yml",
   "LiteEntitySystem.EntityManager.MaxSyncedEntityCount": "LiteEntitySystem.EntityManager.yml",

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>ServerEntityManager update flow </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="ServerEntityManager update flow ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="serverentitymanager-update-flow">ServerEntityManager update flow</h1>
+
+<p>The server runs the game simulation and is the source of truth for entity states. It processes ticks (frames of game logic) at a fixed rate.</p>
+<p>Every state that server send to clients contains:</p>
+<ul>
+<li>ServerTick</li>
+<li>Last processed (applied) client input tick</li>
+<li>All pending RPCs sincle last recieved server tick by player</li>
+<li>Entity SyncVar fields data</li>
+</ul>
+<p>Each tick, the server does the following in <code>ServerEntityManager.LogicUpdate</code>:</p>
+<h3 id="1-read-players-clientrequests">1. Read players <code>ClientRequests</code></h3>
+<ul>
+<li><p>Read client requests generated on client using:
+<a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SendRequest__1___0_">SendRequest&lt;T&gt;(T)</a>,
+<a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SendRequestStruct__1___0_">SendRequestStruct&lt;T&gt;(T)</a></p>
+</li>
+<li><p>Executes actions passed into server side methods:
+<a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SubscribeToClientRequest__1_System_Action___0__">SubscribeToClientRequest&lt;T&gt;(Action&lt;T&gt;)</a>,
+<a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SubscribeToClientRequestStruct__1_System_Func___0_System_Boolean__">SubscribeToClientRequestStruct&lt;T&gt;(Func&lt;T, bool&gt;)</a></p>
+</li>
+</ul>
+<h3 id="2-apply-players-input">2. Apply players Input</h3>
+<p>Apply pending inputs from all connected players using their controllers based on <a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic.html"><code>HumanControllerLogic</code></a> (LES’s client input system transmits each client’s controller inputs to the server every tick)</p>
+<p>For AI or bots typically inputs directly passed in Update logic to controlled entities</p>
+<h3 id="3-update-all-updateable-entities">3. Update all updateable Entities</h3>
+<ul>
+<li><p>Update the game state by running each entity’s logic that marked by <a class="xref" href="../api/LiteEntitySystem.EntityFlags.html#LiteEntitySystem_EntityFlags_Updateable"><code>[EntityFlags.Updateable]</code></a> or <a class="xref" href="../api/LiteEntitySystem.EntityFlags.html#LiteEntitySystem_EntityFlags_UpdateOnClient"><code>[EntityFlags.UpdateOnClient]</code></a>. For example, the server updates player pawn positions based on controller input, moves projectiles, checks collisions, etc. This is done in the entity classes update methods (often OnLogicTick in LES). The server is authoritative, so these updates determine the true state (e.g. whether a shot hit a target).</p>
+</li>
+<li><p>Execute <a class="xref" href="../api/LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnLateConstructed"><code>OnLateConstructed</code></a> method for all entities created on current logic tick</p>
+</li>
+<li><p>Refresh newly created <code>Construct RPCs</code> with latest entity data from current logic tick</p>
+</li>
+<li><p>Write entity data history for <code>LagCompensation</code></p>
+</li>
+</ul>
+<h3 id="4-send-logic-preparations">4. Send logic preparations</h3>
+<ul>
+<li><p>Check that current server state should be sent depending on send rate and PlayersCount (skip send logic if 0)</p>
+</li>
+<li><p>Remove old outdated RPCs that all players already have</p>
+</li>
+</ul>
+<h3 id="5-make-and-send-baseline-state">5. Make and send baseline state</h3>
+<ul>
+<li><p>Execute <a class="xref" href="../api/LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">OnSyncRequested()</a> methods for all <code>entities</code> and <code>SyncableFields</code>
+This method typically overrided in <a class="xref" href="../api/LiteEntitySystem.EntityLogic.html"><code>EntityLogic</code></a>/<a class="xref" href="../api/LiteEntitySystem.SyncableField.html"><code>SyncableField</code></a> - and calling <code>ExecuteRPCs</code>/<code>ExecuteClientAction</code> that should send some initial full sync data like full array data and size, dictionary info etc.
+Mostly used by classes inherited from <a class="xref" href="../api/LiteEntitySystem.SyncableField.html"><code>SyncableField</code></a>.</p>
+</li>
+<li><p>Sending first state with full data for newly connected players or players requested baseline state because of big lag/unsync</p>
+<ul>
+<li><p>For new players - rpcs only created inside <a class="xref" href="../api/LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">OnSyncRequested()</a> will be sent</p>
+</li>
+<li><p>For old players - all pending RPCs will be sent to maintain full RPC reliability</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-make-delta-packets">6. Make delta packets</h3>
+<p>State Serialization: LES prepares a delta-compressed state for each client.
+It compares each entity’s current state to what that client last acknowledged and serializes only the changes (position deltas, changed variables, etc.) and pending RPCs. This is efficient for bandwidth.</p>
+<p>You can mark entity RPCs and <code>SyncVars</code> to join <code>SyncGroups</code> to dynamically enable/disable replication for selected groups and entities for selected players.</p>
+<h3 id="7-trigger-network-send">7. Trigger network send</h3>
+<p>The server sends out state update packets to each client at a regular rate (configured send rate and tick rate). These include updated rpcs, positions, velocities, health, etc., for entities relevant to that client.</p>
+<p>Triggers network library (or custom stransport) Flush/Send logic to reduce latency.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,92 +1,131 @@
-﻿<!DOCTYPE html>
-<!--[if IE]><![endif]-->
+<!DOCTYPE html>
 <html>
-
   <head>
     <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
       <title>Class ServerEntityManager </title>
-      <meta name="viewport" content="width=device-width">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ServerEntityManager ">
-    
-    <meta name="description" content="Server entity manager">
-      <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
-      <link rel="stylesheet" href="../styles/docfx.css">
-      <link rel="stylesheet" href="../styles/main.css">
-      <meta property="docfx:navrel" content="../toc.html">
-      <meta property="docfx:tocrel" content="toc.html">
-    
-    
-    
+      
+      <meta name="description" content="Server entity manager">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
   </head>
-  <body data-spy="scroll" data-target="#affix" data-offset="120">
-    <div id="wrapper">
-      <header>
 
-        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-
-              <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
-              </a>
-            </div>
-            <div class="collapse navbar-collapse" id="navbar">
-              <form class="navbar-form navbar-right" role="search" id="search">
-                <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
-                </div>
-              </form>
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
             </div>
           </div>
-        </nav>
+        </div>
+      </nav>
+    </header>
 
-        <div class="subnav navbar navbar-default">
-          <div class="container hide-when-search" id="breadcrumb">
-            <ul class="breadcrumb">
-              <li></li>
-            </ul>
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
           </div>
         </div>
-      </header>
-      <div role="main" class="container body-content hide-when-search">
+      </div>
 
-        <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
-          <div class="sidetoggle collapse" id="sidetoggle">
-            <div id="sidetoc"></div>
-          </div>
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
         </div>
-        <div class="article row grid-right">
-          <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.ServerEntityManager">
+
+        <article data-uid="LiteEntitySystem.ServerEntityManager">
 
 
 
-  <h1 id="LiteEntitySystem_ServerEntityManager" data-uid="LiteEntitySystem.ServerEntityManager" class="text-break">Class ServerEntityManager</h1>
-  <div class="markdown level0 summary"><p>Server entity manager</p>
-</div>
-  <div class="markdown level0 conceptual"></div>
-  <div class="inheritance">
-    <h5>Inheritance</h5>
-    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-    <div class="level1"><a class="xref" href="LiteEntitySystem.EntityManager.html">EntityManager</a></div>
-    <div class="level2"><span class="xref">ServerEntityManager</span></div>
+  <h1 id="LiteEntitySystem_ServerEntityManager" data-uid="LiteEntitySystem.ServerEntityManager" class="text-break">
+Class ServerEntityManager  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>LiteEntitySystem.dll</dd></dl>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
+
+  <div class="markdown summary"><p>Server entity manager</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class ServerEntityManager : EntityManager</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><span class="xref">object</span></div>
+      <div><a class="xref" href="LiteEntitySystem.EntityManager.html">EntityManager</a></div>
+      <div><span class="xref">ServerEntityManager</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxSyncedEntityCount">EntityManager.MaxSyncedEntityCount</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxEntityCount">EntityManager.MaxEntityCount</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxLocalEntityCount">EntityManager.MaxLocalEntityCount</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_ServerPlayerId">EntityManager.ServerPlayerId</a>
@@ -199,1136 +238,996 @@
     <div>
       <a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Update">EntityManager.Update()</a>
     </div>
-  </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
-  <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
-  <h5 id="LiteEntitySystem_ServerEntityManager_syntax">Syntax</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class ServerEntityManager : EntityManager</code></pre>
-  </div>
-  <h3 id="constructors">Constructors
-</h3>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
 
 
   <a id="LiteEntitySystem_ServerEntityManager__ctor_" data-uid="LiteEntitySystem.ServerEntityManager.#ctor*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager__ctor_LiteEntitySystem_EntityTypesMap_System_Byte_System_Byte_LiteEntitySystem_ServerSendRate_LiteEntitySystem_MaxHistorySize_" data-uid="LiteEntitySystem.ServerEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,System.Byte,System.Byte,LiteEntitySystem.ServerSendRate,LiteEntitySystem.MaxHistorySize)">ServerEntityManager(EntityTypesMap, byte, byte, ServerSendRate, MaxHistorySize)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager__ctor_LiteEntitySystem_EntityTypesMap_System_Byte_System_Byte_LiteEntitySystem_ServerSendRate_LiteEntitySystem_MaxHistorySize_" data-uid="LiteEntitySystem.ServerEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,System.Byte,System.Byte,LiteEntitySystem.ServerSendRate,LiteEntitySystem.MaxHistorySize)">
+  ServerEntityManager(EntityTypesMap, byte, byte, ServerSendRate, MaxHistorySize)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Constructor</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public ServerEntityManager(EntityTypesMap typesMap, byte packetHeader, byte framesPerSecond, ServerSendRate sendRate, MaxHistorySize maxHistorySize = MaxHistorySize.Size32)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityTypesMap.html">EntityTypesMap</a></td>
-        <td><span class="parametername">typesMap</span></td>
-        <td><p>EntityTypesMap with registered entity types</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
-        <td><span class="parametername">packetHeader</span></td>
-        <td><p>Header byte that will be used for packets (to distinguish entity system packets)</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
-        <td><span class="parametername">framesPerSecond</span></td>
-        <td><p>Fixed framerate of game logic</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.ServerSendRate.html">ServerSendRate</a></td>
-        <td><span class="parametername">sendRate</span></td>
-        <td><p>Send rate of server (depends on fps)</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.MaxHistorySize.html">MaxHistorySize</a></td>
-        <td><span class="parametername">maxHistorySize</span></td>
-        <td><p>Maximum size of lag compensation history in ticks</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="fields">Fields
-</h3>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>typesMap</code> <a class="xref" href="LiteEntitySystem.EntityTypesMap.html">EntityTypesMap</a></dt>
+    <dd><p>EntityTypesMap with registered entity types</p>
+</dd>
+    <dt><code>packetHeader</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd><p>Header byte that will be used for packets (to distinguish entity system packets)</p>
+</dd>
+    <dt><code>framesPerSecond</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd><p>Fixed framerate of game logic</p>
+</dd>
+    <dt><code>sendRate</code> <a class="xref" href="LiteEntitySystem.ServerSendRate.html">ServerSendRate</a></dt>
+    <dd><p>Send rate of server (depends on fps)</p>
+</dd>
+    <dt><code>maxHistorySize</code> <a class="xref" href="LiteEntitySystem.MaxHistorySize.html">MaxHistorySize</a></dt>
+    <dd><p>Maximum size of lag compensation history in ticks</p>
+</dd>
+  </dl>
 
 
-  <h4 id="LiteEntitySystem_ServerEntityManager_MaxStoredInputs" data-uid="LiteEntitySystem.ServerEntityManager.MaxStoredInputs">MaxStoredInputs</h4>
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_MaxStoredInputs" data-uid="LiteEntitySystem.ServerEntityManager.MaxStoredInputs">
+  MaxStoredInputs
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public const int MaxStoredInputs = 30</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 
 
-  <h4 id="LiteEntitySystem_ServerEntityManager_SafeEntityUpdate" data-uid="LiteEntitySystem.ServerEntityManager.SafeEntityUpdate">SafeEntityUpdate</h4>
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_SafeEntityUpdate" data-uid="LiteEntitySystem.ServerEntityManager.SafeEntityUpdate">
+  SafeEntityUpdate
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Add try catch to entity updates</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool SafeEntityUpdate</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 
 
-  <h4 id="LiteEntitySystem_ServerEntityManager_SendRate" data-uid="LiteEntitySystem.ServerEntityManager.SendRate">SendRate</h4>
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_SendRate" data-uid="LiteEntitySystem.ServerEntityManager.SendRate">
+  SendRate
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Rate at which server will make and send packets</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public readonly ServerSendRate SendRate</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.ServerSendRate.html">ServerSendRate</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="properties">Properties
-</h3>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.ServerSendRate.html">ServerSendRate</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
 
 
   <a id="LiteEntitySystem_ServerEntityManager_PlayersCount_" data-uid="LiteEntitySystem.ServerEntityManager.PlayersCount*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_PlayersCount" data-uid="LiteEntitySystem.ServerEntityManager.PlayersCount">PlayersCount</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_PlayersCount" data-uid="LiteEntitySystem.ServerEntityManager.PlayersCount">
+  PlayersCount
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Network players count</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public int PlayersCount { get; }</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-</h3>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
 
 
   <a id="LiteEntitySystem_ServerEntityManager_AddAIController_" data-uid="LiteEntitySystem.ServerEntityManager.AddAIController*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_AddAIController__1_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddAIController``1(System.Action{``0})">AddAIController&lt;T&gt;(Action&lt;T&gt;)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_AddAIController__1_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddAIController``1(System.Action{``0})">
+  AddAIController&lt;T&gt;(Action&lt;T&gt;)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Add new AI controller entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public T AddAIController&lt;T&gt;(Action&lt;T&gt; initMethod = null) where T : AiControllerLogic</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
-        <td><span class="parametername">initMethod</span></td>
-        <td><p>Method that will be called after entity construction</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><p>Created entity or null in case of limit</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td><p>Entity type</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>initMethod</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</dt>
+    <dd><p>Method that will be called after entity construction</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">T</span></dt>
+    <dd><p>Created entity or null in case of limit</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>Entity type</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_AddController_" data-uid="LiteEntitySystem.ServerEntityManager.AddController*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_AddController__1_LiteEntitySystem_NetPlayer_LiteEntitySystem_PawnLogic_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddController``1(LiteEntitySystem.NetPlayer,LiteEntitySystem.PawnLogic,System.Action{``0})">AddController&lt;T&gt;(NetPlayer, PawnLogic, Action&lt;T&gt;)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_AddController__1_LiteEntitySystem_NetPlayer_LiteEntitySystem_PawnLogic_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddController``1(LiteEntitySystem.NetPlayer,LiteEntitySystem.PawnLogic,System.Action{``0})">
+  AddController&lt;T&gt;(NetPlayer, PawnLogic, Action&lt;T&gt;)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Add new player controller entity and start controlling entityToControl</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public T AddController&lt;T&gt;(NetPlayer owner, PawnLogic entityToControl, Action&lt;T&gt; initMethod = null) where T : HumanControllerLogic</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
-        <td><span class="parametername">owner</span></td>
-        <td><p>Player that owns this controller</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.PawnLogic.html">PawnLogic</a></td>
-        <td><span class="parametername">entityToControl</span></td>
-        <td><p>pawn that will be controlled</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
-        <td><span class="parametername">initMethod</span></td>
-        <td><p>Method that will be called after entity construction</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><p>Created entity or null in case of limit</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td><p>Entity type</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>owner</code> <a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></dt>
+    <dd><p>Player that owns this controller</p>
+</dd>
+    <dt><code>entityToControl</code> <a class="xref" href="LiteEntitySystem.PawnLogic.html">PawnLogic</a></dt>
+    <dd><p>pawn that will be controlled</p>
+</dd>
+    <dt><code>initMethod</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</dt>
+    <dd><p>Method that will be called after entity construction</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">T</span></dt>
+    <dd><p>Created entity or null in case of limit</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>Entity type</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_AddController_" data-uid="LiteEntitySystem.ServerEntityManager.AddController*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_AddController__1_LiteEntitySystem_NetPlayer_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddController``1(LiteEntitySystem.NetPlayer,System.Action{``0})">AddController&lt;T&gt;(NetPlayer, Action&lt;T&gt;)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_AddController__1_LiteEntitySystem_NetPlayer_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddController``1(LiteEntitySystem.NetPlayer,System.Action{``0})">
+  AddController&lt;T&gt;(NetPlayer, Action&lt;T&gt;)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Add new player controller entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public T AddController&lt;T&gt;(NetPlayer owner, Action&lt;T&gt; initMethod = null) where T : HumanControllerLogic</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
-        <td><span class="parametername">owner</span></td>
-        <td><p>Player that owns this controller</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
-        <td><span class="parametername">initMethod</span></td>
-        <td><p>Method that will be called after entity construction</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><p>Created entity or null in case of limit</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td><p>Entity type</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>owner</code> <a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></dt>
+    <dd><p>Player that owns this controller</p>
+</dd>
+    <dt><code>initMethod</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</dt>
+    <dd><p>Method that will be called after entity construction</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">T</span></dt>
+    <dd><p>Created entity or null in case of limit</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>Entity type</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_AddEntity_" data-uid="LiteEntitySystem.ServerEntityManager.AddEntity*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_AddEntity__1_LiteEntitySystem_EntityLogic_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddEntity``1(LiteEntitySystem.EntityLogic,System.Action{``0})">AddEntity&lt;T&gt;(EntityLogic, Action&lt;T&gt;)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_AddEntity__1_LiteEntitySystem_EntityLogic_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddEntity``1(LiteEntitySystem.EntityLogic,System.Action{``0})">
+  AddEntity&lt;T&gt;(EntityLogic, Action&lt;T&gt;)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Add new entity and set parent entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public T AddEntity&lt;T&gt;(EntityLogic parent, Action&lt;T&gt; initMethod = null) where T : EntityLogic</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></td>
-        <td><span class="parametername">parent</span></td>
-        <td><p>Parent entity</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
-        <td><span class="parametername">initMethod</span></td>
-        <td><p>Method that will be called after entity construction</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><p>Created entity or null in case of limit</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td><p>Entity type</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>parent</code> <a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></dt>
+    <dd><p>Parent entity</p>
+</dd>
+    <dt><code>initMethod</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</dt>
+    <dd><p>Method that will be called after entity construction</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">T</span></dt>
+    <dd><p>Created entity or null in case of limit</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>Entity type</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_AddEntity_" data-uid="LiteEntitySystem.ServerEntityManager.AddEntity*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_AddEntity__1_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddEntity``1(System.Action{``0})">AddEntity&lt;T&gt;(Action&lt;T&gt;)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_AddEntity__1_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddEntity``1(System.Action{``0})">
+  AddEntity&lt;T&gt;(Action&lt;T&gt;)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Add new entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public T AddEntity&lt;T&gt;(Action&lt;T&gt; initMethod = null) where T : EntityLogic</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
-        <td><span class="parametername">initMethod</span></td>
-        <td><p>Method that will be called after entity construction</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><p>Created entity or null in case of limit</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td><p>Entity type</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>initMethod</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</dt>
+    <dd><p>Method that will be called after entity construction</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">T</span></dt>
+    <dd><p>Created entity or null in case of limit</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>Entity type</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_AddPlayer_" data-uid="LiteEntitySystem.ServerEntityManager.AddPlayer*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_AddPlayer_LiteEntitySystem_Transport_AbstractNetPeer_" data-uid="LiteEntitySystem.ServerEntityManager.AddPlayer(LiteEntitySystem.Transport.AbstractNetPeer)">AddPlayer(AbstractNetPeer)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_AddPlayer_LiteEntitySystem_Transport_AbstractNetPeer_" data-uid="LiteEntitySystem.ServerEntityManager.AddPlayer(LiteEntitySystem.Transport.AbstractNetPeer)">
+  AddPlayer(AbstractNetPeer)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Create and add new player</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public NetPlayer AddPlayer(AbstractNetPeer peer)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
-        <td><span class="parametername">peer</span></td>
-        <td><p>AbstractPeer to use</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
-        <td><p>Newly created player, null if players count is maximum</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>peer</code> <a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></dt>
+    <dd><p>AbstractPeer to use</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></dt>
+    <dd><p>Newly created player, null if players count is maximum</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_AddSingleton_" data-uid="LiteEntitySystem.ServerEntityManager.AddSingleton*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_AddSingleton__1_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddSingleton``1(System.Action{``0})">AddSingleton&lt;T&gt;(Action&lt;T&gt;)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_AddSingleton__1_System_Action___0__" data-uid="LiteEntitySystem.ServerEntityManager.AddSingleton``1(System.Action{``0})">
+  AddSingleton&lt;T&gt;(Action&lt;T&gt;)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Add new entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public T AddSingleton&lt;T&gt;(Action&lt;T&gt; initMethod = null) where T : SingletonEntityLogic</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</td>
-        <td><span class="parametername">initMethod</span></td>
-        <td><p>Method that will be called after entity construction</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><p>Created entity or null in case of limit</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td><p>Entity type</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>initMethod</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</dt>
+    <dd><p>Method that will be called after entity construction</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">T</span></dt>
+    <dd><p>Created entity or null in case of limit</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>Entity type</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_Deserialize_" data-uid="LiteEntitySystem.ServerEntityManager.Deserialize*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_Deserialize_LiteEntitySystem_NetPlayer_System_ReadOnlySpan_System_Byte__" data-uid="LiteEntitySystem.ServerEntityManager.Deserialize(LiteEntitySystem.NetPlayer,System.ReadOnlySpan{System.Byte})">Deserialize(NetPlayer, ReadOnlySpan&lt;byte&gt;)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_Deserialize_LiteEntitySystem_NetPlayer_System_ReadOnlySpan_System_Byte__" data-uid="LiteEntitySystem.ServerEntityManager.Deserialize(LiteEntitySystem.NetPlayer,System.ReadOnlySpan{System.Byte})">
+  Deserialize(NetPlayer, ReadOnlySpan&lt;byte&gt;)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Read data from NetPlayer</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public DeserializeResult Deserialize(NetPlayer player, ReadOnlySpan&lt;byte&gt; inData)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
-        <td><span class="parametername">player</span></td>
-        <td><p>Player that sent input</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
-        <td><span class="parametername">inData</span></td>
-        <td><p>incoming data with header</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.DeserializeResult.html">DeserializeResult</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>player</code> <a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></dt>
+    <dd><p>Player that sent input</p>
+</dd>
+    <dt><code>inData</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</dt>
+    <dd><p>incoming data with header</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.DeserializeResult.html">DeserializeResult</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_Deserialize_" data-uid="LiteEntitySystem.ServerEntityManager.Deserialize*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_Deserialize_LiteEntitySystem_Transport_AbstractNetPeer_System_ReadOnlySpan_System_Byte__" data-uid="LiteEntitySystem.ServerEntityManager.Deserialize(LiteEntitySystem.Transport.AbstractNetPeer,System.ReadOnlySpan{System.Byte})">Deserialize(AbstractNetPeer, ReadOnlySpan&lt;byte&gt;)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_Deserialize_LiteEntitySystem_Transport_AbstractNetPeer_System_ReadOnlySpan_System_Byte__" data-uid="LiteEntitySystem.ServerEntityManager.Deserialize(LiteEntitySystem.Transport.AbstractNetPeer,System.ReadOnlySpan{System.Byte})">
+  Deserialize(AbstractNetPeer, ReadOnlySpan&lt;byte&gt;)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Read data for player linked to AbstractNetPeer</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public DeserializeResult Deserialize(AbstractNetPeer peer, ReadOnlySpan&lt;byte&gt; inData)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
-        <td><span class="parametername">peer</span></td>
-        <td><p>Player that sent input</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</td>
-        <td><span class="parametername">inData</span></td>
-        <td><p>incoming data with header</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.DeserializeResult.html">DeserializeResult</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>peer</code> <a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></dt>
+    <dd><p>Player that sent input</p>
+</dd>
+    <dt><code>inData</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</dt>
+    <dd><p>incoming data with header</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.DeserializeResult.html">DeserializeResult</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_GetPlayer_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayer*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_GetPlayer_System_Byte_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayer(System.Byte)">GetPlayer(byte)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_GetPlayer_System_Byte_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayer(System.Byte)">
+  GetPlayer(byte)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Get player by owner id</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public NetPlayer GetPlayer(byte ownerId)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
-        <td><span class="parametername">ownerId</span></td>
-        <td><p>id of player owner (Entity.OwnerId)</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>ownerId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd><p>id of player owner (Entity.OwnerId)</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_GetPlayerController_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayerController*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_GetPlayerController_LiteEntitySystem_NetPlayer_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayerController(LiteEntitySystem.NetPlayer)">GetPlayerController(NetPlayer)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_GetPlayerController_LiteEntitySystem_NetPlayer_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayerController(LiteEntitySystem.NetPlayer)">
+  GetPlayerController(NetPlayer)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Returns controller owned by the player</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public HumanControllerLogic GetPlayerController(NetPlayer player)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
-        <td><span class="parametername">player</span></td>
-        <td><p>player to remove</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.HumanControllerLogic.html">HumanControllerLogic</a></td>
-        <td><p>Instance if found, null if not</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>player</code> <a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></dt>
+    <dd><p>player to remove</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.HumanControllerLogic.html">HumanControllerLogic</a></dt>
+    <dd><p>Instance if found, null if not</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_GetPlayerController_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayerController*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_GetPlayerController_LiteEntitySystem_Transport_AbstractNetPeer_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayerController(LiteEntitySystem.Transport.AbstractNetPeer)">GetPlayerController(AbstractNetPeer)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_GetPlayerController_LiteEntitySystem_Transport_AbstractNetPeer_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayerController(LiteEntitySystem.Transport.AbstractNetPeer)">
+  GetPlayerController(AbstractNetPeer)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Returns controller owned by the player</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public HumanControllerLogic GetPlayerController(AbstractNetPeer player)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
-        <td><span class="parametername">player</span></td>
-        <td><p>player</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.HumanControllerLogic.html">HumanControllerLogic</a></td>
-        <td><p>Instance if found, null if not</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>player</code> <a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></dt>
+    <dd><p>player</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.HumanControllerLogic.html">HumanControllerLogic</a></dt>
+    <dd><p>Instance if found, null if not</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_GetPlayerController_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayerController*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_GetPlayerController_System_Byte_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayerController(System.Byte)">GetPlayerController(byte)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_GetPlayerController_System_Byte_" data-uid="LiteEntitySystem.ServerEntityManager.GetPlayerController(System.Byte)">
+  GetPlayerController(byte)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Returns controller owned by the player</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public HumanControllerLogic GetPlayerController(byte playerId)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
-        <td><span class="parametername">playerId</span></td>
-        <td><p>player</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.HumanControllerLogic.html">HumanControllerLogic</a></td>
-        <td><p>Instance if found, null if not</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>playerId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd><p>player</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="LiteEntitySystem.HumanControllerLogic.html">HumanControllerLogic</a></dt>
+    <dd><p>Instance if found, null if not</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_OnLogicTick_" data-uid="LiteEntitySystem.ServerEntityManager.OnLogicTick*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_OnLogicTick" data-uid="LiteEntitySystem.ServerEntityManager.OnLogicTick">OnLogicTick()</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_OnLogicTick" data-uid="LiteEntitySystem.ServerEntityManager.OnLogicTick">
+  OnLogicTick()
+  
+  </h3>
+
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected override void OnLogicTick()</code></pre>
   </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_OnLogicTick">EntityManager.OnLogicTick()</a></div>
+
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_RemovePlayer_" data-uid="LiteEntitySystem.ServerEntityManager.RemovePlayer*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_RemovePlayer_LiteEntitySystem_NetPlayer_" data-uid="LiteEntitySystem.ServerEntityManager.RemovePlayer(LiteEntitySystem.NetPlayer)">RemovePlayer(NetPlayer)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_RemovePlayer_LiteEntitySystem_NetPlayer_" data-uid="LiteEntitySystem.ServerEntityManager.RemovePlayer(LiteEntitySystem.NetPlayer)">
+  RemovePlayer(NetPlayer)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Remove player and it's owned entities</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool RemovePlayer(NetPlayer player)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
-        <td><span class="parametername">player</span></td>
-        <td><p>player to remove</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td><p>true if player removed successfully, false if player not found</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>player</code> <a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></dt>
+    <dd><p>player to remove</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>true if player removed successfully, false if player not found</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_RemovePlayer_" data-uid="LiteEntitySystem.ServerEntityManager.RemovePlayer*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_RemovePlayer_LiteEntitySystem_Transport_AbstractNetPeer_" data-uid="LiteEntitySystem.ServerEntityManager.RemovePlayer(LiteEntitySystem.Transport.AbstractNetPeer)">RemovePlayer(AbstractNetPeer)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_RemovePlayer_LiteEntitySystem_Transport_AbstractNetPeer_" data-uid="LiteEntitySystem.ServerEntityManager.RemovePlayer(LiteEntitySystem.Transport.AbstractNetPeer)">
+  RemovePlayer(AbstractNetPeer)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Remove player using NetPeer.Tag (is you assigned it or used <a class="xref" href="LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager_AddPlayer_LiteEntitySystem_Transport_AbstractNetPeer_">AddPlayer(AbstractNetPeer)</a> with assignToTag)</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public bool RemovePlayer(AbstractNetPeer player)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></td>
-        <td><span class="parametername">player</span></td>
-        <td><p>player to remove</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td><p>true if player removed successfully, false if player not found</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>player</code> <a class="xref" href="LiteEntitySystem.Transport.AbstractNetPeer.html">AbstractNetPeer</a></dt>
+    <dd><p>player to remove</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>true if player removed successfully, false if player not found</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_Reset_" data-uid="LiteEntitySystem.ServerEntityManager.Reset*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_Reset" data-uid="LiteEntitySystem.ServerEntityManager.Reset">Reset()</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_Reset" data-uid="LiteEntitySystem.ServerEntityManager.Reset">
+  Reset()
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Remove all entities and reset all counters and timers</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public override void Reset()</code></pre>
   </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Reset">EntityManager.Reset()</a></div>
+
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_ToggleSyncGroup_" data-uid="LiteEntitySystem.ServerEntityManager.ToggleSyncGroup*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_ToggleSyncGroup_LiteEntitySystem_NetPlayer_LiteEntitySystem_EntityLogic_LiteEntitySystem_SyncGroup_System_Boolean_" data-uid="LiteEntitySystem.ServerEntityManager.ToggleSyncGroup(LiteEntitySystem.NetPlayer,LiteEntitySystem.EntityLogic,LiteEntitySystem.SyncGroup,System.Boolean)">ToggleSyncGroup(NetPlayer, EntityLogic, SyncGroup, bool)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_ToggleSyncGroup_LiteEntitySystem_NetPlayer_LiteEntitySystem_EntityLogic_LiteEntitySystem_SyncGroup_System_Boolean_" data-uid="LiteEntitySystem.ServerEntityManager.ToggleSyncGroup(LiteEntitySystem.NetPlayer,LiteEntitySystem.EntityLogic,LiteEntitySystem.SyncGroup,System.Boolean)">
+  ToggleSyncGroup(NetPlayer, EntityLogic, SyncGroup, bool)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Change SyncVar and RPC synchronization by SyncGroup for player
 constructor and destruction will be synchronized anyways
 works only on server</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void ToggleSyncGroup(NetPlayer forPlayer, EntityLogic entity, SyncGroup syncGroup, bool enable)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></td>
-        <td><span class="parametername">forPlayer</span></td>
-        <td><p>For which player</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></td>
-        <td><span class="parametername">entity</span></td>
-        <td><p>entity</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.SyncGroup.html">SyncGroup</a></td>
-        <td><span class="parametername">syncGroup</span></td>
-        <td><p>syncGroup to enable/disable</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td><span class="parametername">enable</span></td>
-        <td><p>true - enable sync (if was disabled), disable otherwise</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>forPlayer</code> <a class="xref" href="LiteEntitySystem.NetPlayer.html">NetPlayer</a></dt>
+    <dd><p>For which player</p>
+</dd>
+    <dt><code>entity</code> <a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></dt>
+    <dd><p>entity</p>
+</dd>
+    <dt><code>syncGroup</code> <a class="xref" href="LiteEntitySystem.SyncGroup.html">SyncGroup</a></dt>
+    <dd><p>syncGroup to enable/disable</p>
+</dd>
+    <dt><code>enable</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>true - enable sync (if was disabled), disable otherwise</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
 
 
   <a id="LiteEntitySystem_ServerEntityManager_ToggleSyncGroup_" data-uid="LiteEntitySystem.ServerEntityManager.ToggleSyncGroup*"></a>
-  <h4 id="LiteEntitySystem_ServerEntityManager_ToggleSyncGroup_System_Byte_LiteEntitySystem_EntityLogic_LiteEntitySystem_SyncGroup_System_Boolean_" data-uid="LiteEntitySystem.ServerEntityManager.ToggleSyncGroup(System.Byte,LiteEntitySystem.EntityLogic,LiteEntitySystem.SyncGroup,System.Boolean)">ToggleSyncGroup(byte, EntityLogic, SyncGroup, bool)</h4>
+
+  <h3 id="LiteEntitySystem_ServerEntityManager_ToggleSyncGroup_System_Byte_LiteEntitySystem_EntityLogic_LiteEntitySystem_SyncGroup_System_Boolean_" data-uid="LiteEntitySystem.ServerEntityManager.ToggleSyncGroup(System.Byte,LiteEntitySystem.EntityLogic,LiteEntitySystem.SyncGroup,System.Boolean)">
+  ToggleSyncGroup(byte, EntityLogic, SyncGroup, bool)
+  
+  </h3>
+
   <div class="markdown level1 summary"><p>Change SyncVar and RPC synchronization by SyncGroup for player
 constructor and destruction will be synchronized anyways
 works only on server</p>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void ToggleSyncGroup(byte forPlayer, EntityLogic entity, SyncGroup syncGroup, bool enable)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></td>
-        <td><span class="parametername">forPlayer</span></td>
-        <td><p>For which player</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></td>
-        <td><span class="parametername">entity</span></td>
-        <td><p>entity</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LiteEntitySystem.SyncGroup.html">SyncGroup</a></td>
-        <td><span class="parametername">syncGroup</span></td>
-        <td><p>syncGroup to enable/disable</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td><span class="parametername">enable</span></td>
-        <td><p>true - enable sync (if was disabled), disable otherwise</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>forPlayer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd><p>For which player</p>
+</dd>
+    <dt><code>entity</code> <a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></dt>
+    <dd><p>entity</p>
+</dd>
+    <dt><code>syncGroup</code> <a class="xref" href="LiteEntitySystem.SyncGroup.html">SyncGroup</a></dt>
+    <dd><p>syncGroup to enable/disable</p>
+</dd>
+    <dt><code>enable</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>true - enable sync (if was disabled), disable otherwise</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
 
 </article>
-          </div>
 
-          <div class="hidden-sm col-md-2" role="complementary">
-            <div class="sideaffix">
-              <div class="contribution">
-                <ul class="nav">
-                </ul>
-              </div>
-              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In this article</h5>
-                <div></div>
-              </nav>
-            </div>
-          </div>
+        <div class="contribution d-print-none">
         </div>
+
+
       </div>
 
-      <footer>
-        <div class="grad-bottom"></div>
-        <div class="footer">
-          <div class="container">
-            <span class="pull-right">
-              <a href="#top">Back to top</a>
-            </span>
-      
-      <span>Generated by <strong>DocFX</strong></span>
-          </div>
-        </div>
-      </footer>
-    </div>
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
-    <script type="text/javascript" src="../styles/docfx.js"></script>
-    <script type="text/javascript" src="../styles/main.js"></script>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

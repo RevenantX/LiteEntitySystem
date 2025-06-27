@@ -127,7 +127,6 @@ references:
   commentId: T:System.Object
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object
   name: object
   nameWithType: object
   fullName: object
@@ -162,7 +161,6 @@ references:
   - uid: System.Object
     name: object
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
   - name: )
   spec.vb:
   - uid: System.Attribute.Equals(System.Object)
@@ -173,7 +171,6 @@ references:
   - uid: System.Object
     name: Object
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
   - name: )
 - uid: System.Attribute.GetCustomAttribute(System.Reflection.Assembly,System.Type)
   commentId: M:System.Attribute.GetCustomAttribute(System.Reflection.Assembly,System.Type)
@@ -1727,7 +1724,6 @@ references:
   - uid: System.Object
     name: object
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
   - name: )
   spec.vb:
   - uid: System.Attribute.Match(System.Object)
@@ -1738,7 +1734,6 @@ references:
   - uid: System.Object
     name: Object
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
   - name: )
 - uid: System.Attribute.TypeId
   commentId: P:System.Attribute.TypeId

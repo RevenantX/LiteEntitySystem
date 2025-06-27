@@ -2515,6 +2515,12 @@ references:
   commentId: F:LiteEntitySystem.EntityManager.MaxHistorySize
   fullName: LiteEntitySystem.EntityManager.MaxHistorySize
   nameWithType: EntityManager.MaxHistorySize
+- uid: LiteEntitySystem.EntityManager.MaxLocalEntityCount
+  name: MaxLocalEntityCount
+  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxLocalEntityCount
+  commentId: F:LiteEntitySystem.EntityManager.MaxLocalEntityCount
+  fullName: LiteEntitySystem.EntityManager.MaxLocalEntityCount
+  nameWithType: EntityManager.MaxLocalEntityCount
 - uid: LiteEntitySystem.EntityManager.MaxPlayers
   name: MaxPlayers
   href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_MaxPlayers

@@ -218,7 +218,6 @@ references:
   commentId: T:System.Object
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object
   name: object
   nameWithType: object
   fullName: object
@@ -502,7 +501,6 @@ references:
   commentId: M:System.Object.ToString
   parent: System.Object
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
   name: ToString()
   nameWithType: object.ToString()
   fullName: object.ToString()
@@ -512,14 +510,12 @@ references:
   - uid: System.Object.ToString
     name: ToString
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
   - name: (
   - name: )
   spec.vb:
   - uid: System.Object.ToString
     name: ToString
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
   - name: (
   - name: )
 - uid: LiteEntitySystem.Transport.LiteNetLibNetPeer.ToString*

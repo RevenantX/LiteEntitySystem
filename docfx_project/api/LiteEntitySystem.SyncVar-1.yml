@@ -29,11 +29,12 @@ items:
   - LiteEntitySystem
   namespace: LiteEntitySystem
   syntax:
-    content: 'public struct SyncVar<T> : IEquatable<T>, IEquatable<SyncVar<T>> where T : unmanaged'
+    content: 'public struct SyncVar<T> : ISyncVar<T>, IEquatable<T>, IEquatable<SyncVar<T>> where T : unmanaged'
     typeParameters:
     - id: T
-    content.vb: Public Structure SyncVar(Of T As Structure) Implements IEquatable(Of T), IEquatable(Of SyncVar(Of T))
+    content.vb: Public Structure SyncVar(Of T As Structure) Implements ISyncVar(Of T), IEquatable(Of T), IEquatable(Of SyncVar(Of T))
   implements:
+  - LiteEntitySystem.Internal.ISyncVar{{T}}
   - System.IEquatable{{T}}
   - System.IEquatable{LiteEntitySystem.SyncVar`1}
   nameWithType.vb: SyncVar(Of T)
@@ -406,6 +407,32 @@ references:
   name: LiteEntitySystem
   nameWithType: LiteEntitySystem
   fullName: LiteEntitySystem
+- uid: LiteEntitySystem.Internal.ISyncVar{{T}}
+  commentId: T:LiteEntitySystem.Internal.ISyncVar{`0}
+  parent: LiteEntitySystem.Internal
+  definition: LiteEntitySystem.Internal.ISyncVar`1
+  name: ISyncVar<T>
+  nameWithType: ISyncVar<T>
+  fullName: LiteEntitySystem.Internal.ISyncVar<T>
+  nameWithType.vb: ISyncVar(Of T)
+  fullName.vb: LiteEntitySystem.Internal.ISyncVar(Of T)
+  name.vb: ISyncVar(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Internal.ISyncVar`1
+    name: ISyncVar
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Internal.ISyncVar`1
+    name: ISyncVar
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
 - uid: System.IEquatable{{T}}
   commentId: T:System.IEquatable{`0}
   parent: System
@@ -476,6 +503,53 @@ references:
   - name: T
   - name: )
   - name: )
+- uid: LiteEntitySystem.Internal.ISyncVar`1
+  commentId: T:LiteEntitySystem.Internal.ISyncVar`1
+  isExternal: true
+  name: ISyncVar<T>
+  nameWithType: ISyncVar<T>
+  fullName: LiteEntitySystem.Internal.ISyncVar<T>
+  nameWithType.vb: ISyncVar(Of T)
+  fullName.vb: LiteEntitySystem.Internal.ISyncVar(Of T)
+  name.vb: ISyncVar(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.Internal.ISyncVar`1
+    name: ISyncVar
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.Internal.ISyncVar`1
+    name: ISyncVar
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiteEntitySystem.Internal
+  commentId: N:LiteEntitySystem.Internal
+  href: LiteEntitySystem.html
+  name: LiteEntitySystem.Internal
+  nameWithType: LiteEntitySystem.Internal
+  fullName: LiteEntitySystem.Internal
+  spec.csharp:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Internal
+    name: Internal
+    href: LiteEntitySystem.Internal.html
+  spec.vb:
+  - uid: LiteEntitySystem
+    name: LiteEntitySystem
+    href: LiteEntitySystem.html
+  - name: .
+  - uid: LiteEntitySystem.Internal
+    name: Internal
+    href: LiteEntitySystem.Internal.html
 - uid: System.IEquatable`1
   commentId: T:System.IEquatable`1
   isExternal: true
@@ -571,7 +645,6 @@ references:
   commentId: M:System.ValueType.ToString
   parent: System.ValueType
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
   name: ToString()
   nameWithType: ValueType.ToString()
   fullName: System.ValueType.ToString()
@@ -579,14 +652,12 @@ references:
   - uid: System.ValueType.ToString
     name: ToString
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
   - name: (
   - name: )
   spec.vb:
   - uid: System.ValueType.ToString
     name: ToString
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
   - name: (
   - name: )
 - uid: LiteEntitySystem.SyncVar`1.ToString*
@@ -612,7 +683,6 @@ references:
   commentId: T:System.ValueType
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.valuetype
   name: ValueType
   nameWithType: ValueType
   fullName: System.ValueType
@@ -620,7 +690,6 @@ references:
   commentId: M:System.ValueType.GetHashCode
   parent: System.ValueType
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
   name: GetHashCode()
   nameWithType: ValueType.GetHashCode()
   fullName: System.ValueType.GetHashCode()
@@ -628,14 +697,12 @@ references:
   - uid: System.ValueType.GetHashCode
     name: GetHashCode
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
   - name: (
   - name: )
   spec.vb:
   - uid: System.ValueType.GetHashCode
     name: GetHashCode
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
   - name: (
   - name: )
 - uid: LiteEntitySystem.SyncVar`1.GetHashCode*
@@ -661,7 +728,6 @@ references:
   commentId: M:System.ValueType.Equals(System.Object)
   parent: System.ValueType
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
   name: Equals(object)
   nameWithType: ValueType.Equals(object)
   fullName: System.ValueType.Equals(object)
@@ -672,23 +738,19 @@ references:
   - uid: System.ValueType.Equals(System.Object)
     name: Equals
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
   - name: (
   - uid: System.Object
     name: object
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
   - name: )
   spec.vb:
   - uid: System.ValueType.Equals(System.Object)
     name: Equals
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
   - name: (
   - uid: System.Object
     name: Object
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
   - name: )
 - uid: LiteEntitySystem.SyncVar`1.Equals*
   commentId: Overload:LiteEntitySystem.SyncVar`1.Equals
@@ -702,7 +764,6 @@ references:
   commentId: T:System.Object
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object
   name: object
   nameWithType: object
   fullName: object

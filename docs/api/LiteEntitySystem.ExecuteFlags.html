@@ -1,201 +1,202 @@
-﻿<!DOCTYPE html>
-<!--[if IE]><![endif]-->
+<!DOCTYPE html>
 <html>
-
   <head>
     <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
       <title>Enum ExecuteFlags </title>
-      <meta name="viewport" content="width=device-width">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Enum ExecuteFlags ">
-    
-    
-      <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
-      <link rel="stylesheet" href="../styles/docfx.css">
-      <link rel="stylesheet" href="../styles/main.css">
-      <meta property="docfx:navrel" content="../toc.html">
-      <meta property="docfx:tocrel" content="toc.html">
-    
-    
-    
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
   </head>
-  <body data-spy="scroll" data-target="#affix" data-offset="120">
-    <div id="wrapper">
-      <header>
 
-        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-
-              <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
-              </a>
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
             </div>
-            <div class="collapse navbar-collapse" id="navbar">
-              <form class="navbar-form navbar-right" role="search" id="search">
-                <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
-                </div>
-              </form>
-            </div>
-          </div>
-        </nav>
-
-        <div class="subnav navbar navbar-default">
-          <div class="container hide-when-search" id="breadcrumb">
-            <ul class="breadcrumb">
-              <li></li>
-            </ul>
           </div>
         </div>
-      </header>
-      <div role="main" class="container body-content hide-when-search">
+      </nav>
+    </header>
 
-        <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
-          <div class="sidetoggle collapse" id="sidetoggle">
-            <div id="sidetoc"></div>
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
           </div>
-        </div>
-        <div class="article row grid-right">
-          <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="LiteEntitySystem.ExecuteFlags">
-
-
-
-
-  <h1 id="LiteEntitySystem_ExecuteFlags" data-uid="LiteEntitySystem.ExecuteFlags" class="text-break">Enum ExecuteFlags</h1>
-  <div class="markdown level0 summary"></div>
-  <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></h6>
-  <h6><strong>Assembly</strong>: LiteEntitySystem.dll</h6>
-  <h5 id="LiteEntitySystem_ExecuteFlags_syntax">Syntax</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Flags]
-public enum ExecuteFlags : ushort</code></pre>
-  </div>
-  <h3 id="fields">Fields
-</h3>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    <thead>
-    </thead></thead><tbody>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_All">All</td>
-        <td><p>All flags, send to owner, to others, execute on prediction and on server</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_ExecuteOnPrediction">ExecuteOnPrediction</td>
-        <td><p>Execute RPC on client for owner of entity on prediction</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_ExecuteOnServer">ExecuteOnServer</td>
-        <td><p>Execute RPC directly on server</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_None">None</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_SendToAll">SendToAll</td>
-        <td><p>Execute RPC for all players</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_SendToOther">SendToOther</td>
-        <td><p>Execute RPC for non owners</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_SendToOwner">SendToOwner</td>
-        <td><p>Execute RPC for owner of entity</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_SyncGroup1">SyncGroup1</td>
-        <td><p>Toggleable sync group 1. Can include SyncVars and RPCs.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_SyncGroup2">SyncGroup2</td>
-        <td><p>Toggleable sync group 2. Can include SyncVars and RPCs.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_SyncGroup3">SyncGroup3</td>
-        <td><p>Toggleable sync group 3. Can include SyncVars and RPCs.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_SyncGroup4">SyncGroup4</td>
-        <td><p>Toggleable sync group 4. Can include SyncVars and RPCs.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="LiteEntitySystem_ExecuteFlags_SyncGroup5">SyncGroup5</td>
-        <td><p>Toggleable sync group 5. Can include SyncVars and RPCs.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="extensionmethods">Extension Methods</h3>
-  <div>
-      <a class="xref" href="LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_">Utils.GetEnumValueInt&lt;ExecuteFlags&gt;(ExecuteFlags)</a>
-  </div>
-  <div>
-      <a class="xref" href="LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_">Utils.GetEnumValue&lt;ExecuteFlags&gt;(ExecuteFlags)</a>
-  </div>
-  <div>
-      <a class="xref" href="LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_">Utils.HasFlagFast&lt;ExecuteFlags&gt;(ExecuteFlags, ExecuteFlags)</a>
-  </div>
-</article>
-          </div>
-
-          <div class="hidden-sm col-md-2" role="complementary">
-            <div class="sideaffix">
-              <div class="contribution">
-                <ul class="nav">
-                </ul>
-              </div>
-              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In this article</h5>
-                <div></div>
-              </nav>
-            </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
           </div>
         </div>
       </div>
 
-      <footer>
-        <div class="grad-bottom"></div>
-        <div class="footer">
-          <div class="container">
-            <span class="pull-right">
-              <a href="#top">Back to top</a>
-            </span>
-      
-      <span>Generated by <strong>DocFX</strong></span>
-          </div>
-        </div>
-      </footer>
-    </div>
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
-    <script type="text/javascript" src="../styles/docfx.js"></script>
-    <script type="text/javascript" src="../styles/main.js"></script>
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="LiteEntitySystem.ExecuteFlags">
+
+
+
+
+  <h1 id="LiteEntitySystem_ExecuteFlags" data-uid="LiteEntitySystem.ExecuteFlags" class="text-break">
+Enum ExecuteFlags  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>LiteEntitySystem.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"></div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Flags]
+public enum ExecuteFlags : ushort</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_">Utils.GetEnumValueInt&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_">Utils.GetEnumValue&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_">Utils.HasFlagFast&lt;T&gt;(T, T)</a>
+  </div>
+  </dd></dl>
+
+  <h2 id="fields">Fields
+</h2>
+  <dl class="parameters">
+    <dt id="LiteEntitySystem_ExecuteFlags_All"><code>All = SendToAll | ExecuteOnPrediction | ExecuteOnServer</code></dt>
+  
+  <dd><p>All flags, send to owner, to others, execute on prediction and on server</p>
+</dd>
+    <dt id="LiteEntitySystem_ExecuteFlags_ExecuteOnPrediction"><code>ExecuteOnPrediction = 4</code></dt>
+  
+  <dd><p>Execute RPC on client for owner of entity on prediction</p>
+</dd>
+    <dt id="LiteEntitySystem_ExecuteFlags_ExecuteOnServer"><code>ExecuteOnServer = 8</code></dt>
+  
+  <dd><p>Execute RPC directly on server</p>
+</dd>
+    <dt id="LiteEntitySystem_ExecuteFlags_None"><code>None = 0</code></dt>
+  
+  <dd></dd>
+    <dt id="LiteEntitySystem_ExecuteFlags_SendToAll"><code>SendToAll = SendToOwner | SendToOther</code></dt>
+  
+  <dd><p>Execute RPC for all players</p>
+</dd>
+    <dt id="LiteEntitySystem_ExecuteFlags_SendToOther"><code>SendToOther = 2</code></dt>
+  
+  <dd><p>Execute RPC for non owners</p>
+</dd>
+    <dt id="LiteEntitySystem_ExecuteFlags_SendToOwner"><code>SendToOwner = 1</code></dt>
+  
+  <dd><p>Execute RPC for owner of entity</p>
+</dd>
+    <dt id="LiteEntitySystem_ExecuteFlags_SyncGroup1"><code>SyncGroup1 = 16</code></dt>
+  
+  <dd><p>Toggleable sync group 1. Can include SyncVars and RPCs.</p>
+</dd>
+    <dt id="LiteEntitySystem_ExecuteFlags_SyncGroup2"><code>SyncGroup2 = 32</code></dt>
+  
+  <dd><p>Toggleable sync group 2. Can include SyncVars and RPCs.</p>
+</dd>
+    <dt id="LiteEntitySystem_ExecuteFlags_SyncGroup3"><code>SyncGroup3 = 64</code></dt>
+  
+  <dd><p>Toggleable sync group 3. Can include SyncVars and RPCs.</p>
+</dd>
+    <dt id="LiteEntitySystem_ExecuteFlags_SyncGroup4"><code>SyncGroup4 = 128</code></dt>
+  
+  <dd><p>Toggleable sync group 4. Can include SyncVars and RPCs.</p>
+</dd>
+    <dt id="LiteEntitySystem_ExecuteFlags_SyncGroup5"><code>SyncGroup5 = 256</code></dt>
+  
+  <dd><p>Toggleable sync group 5. Can include SyncVars and RPCs.</p>
+</dd>
+  </dl>
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
