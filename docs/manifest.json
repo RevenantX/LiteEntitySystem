@@ -1297,10 +1297,30 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/entity-creation.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/entity-creation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/index.md",
       "output": {
         ".html": {
           "relative_path": "articles/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/lag-compensation.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/lag-compensation.html"
         }
       },
       "version": ""

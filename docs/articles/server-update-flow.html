@@ -91,58 +91,67 @@
 <li>All pending RPCs sincle last recieved server tick by player</li>
 <li>Entity SyncVar fields data</li>
 </ul>
-<p>Each tick, the server does the following in <code>ServerEntityManager.LogicUpdate</code> (called internally from <code>ServerEntityManager.Update</code> public method):</p>
+<p>Each tick, the server does the following in <code>ServerEntityManager.LogicUpdate</code> (called internally from <a class="xref" href="../api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Update"><code>ServerEntityManager.Update</code></a> public method):</p>
 <h3 id="1-read-players-clientrequests">1. Read players <code>ClientRequests</code></h3>
 <ul>
 <li><p>Read client requests generated on client using:
 <a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SendRequest__1___0_">SendRequest&lt;T&gt;(T)</a>,
 <a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SendRequestStruct__1___0_">SendRequestStruct&lt;T&gt;(T)</a></p>
 </li>
-<li><p>Executes actions passed into server side methods:
+<li><p>Executes actions passed into server side methods (in order as client sent):
 <a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SubscribeToClientRequest__1_System_Action___0__">SubscribeToClientRequest&lt;T&gt;(Action&lt;T&gt;)</a>,
 <a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic.html#LiteEntitySystem_HumanControllerLogic_SubscribeToClientRequestStruct__1_System_Func___0_System_Boolean__">SubscribeToClientRequestStruct&lt;T&gt;(Func&lt;T, bool&gt;)</a></p>
 </li>
 </ul>
+<p><strong>Notice</strong> Currently this requests can arrive not in sync with player Input data because they sent using Reliable-Ordered network channel. Where <code>Inputs</code> sent unreliably with some special technics to improve reliability</p>
 <h3 id="2-apply-players-input">2. Apply players <code>Input</code></h3>
-<p>Apply pending inputs from all connected players using their controllers based on <a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic.html"><code>HumanControllerLogic</code></a> (LES’s client input system transmits each client’s controller inputs to the server every tick)</p>
-<p>Writes incoming input data to <code>HumanControllerLogic.CurrentInput</code></p>
+<p>Apply pending inputs (created on client using <a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_ModifyPendingInput"><code>HumanControllerLogic.ModifyPendingInput</code></a>) from all connected players using their controllers based on <a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic.html"><code>HumanControllerLogic</code></a> (LES’s client input system transmits each client’s controller inputs to the server every tick)</p>
+<p>Writes incoming input data to <a class="xref" href="../api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_CurrentInput"><code>HumanControllerLogic.CurrentInput</code></a></p>
 <p>For AI or bots typically inputs directly passed in Update logic to controlled entities</p>
 <h3 id="3-update-all-updateable-entities">3. <code>Update</code> all updateable Entities</h3>
 <ul>
-<li><p>Update the game state by running each entity’s logic that marked by <a class="xref" href="../api/LiteEntitySystem.EntityFlags.html#LiteEntitySystem_EntityFlags_Updateable"><code>[EntityFlags.Updateable]</code></a> or <a class="xref" href="../api/LiteEntitySystem.EntityFlags.html#LiteEntitySystem_EntityFlags_UpdateOnClient"><code>[EntityFlags.UpdateOnClient]</code></a>. For example, the server updates player pawn positions based on controller input, moves projectiles, checks collisions, etc. This is done in the entity classes update methods (often OnLogicTick in LES). The server is authoritative, so these updates determine the true state (e.g. whether a shot hit a target).</p>
+<li><p>Update the game state by running each entity’s logic that marked by <a class="xref" href="../api/LiteEntitySystem.EntityFlags.html#LiteEntitySystem_EntityFlags_Updateable"><code>[EntityFlags.Updateable]</code></a> or <a class="xref" href="../api/LiteEntitySystem.EntityFlags.html#LiteEntitySystem_EntityFlags_UpdateOnClient"><code>[EntityFlags.UpdateOnClient]</code></a>. For example, the server updates player pawn positions based on controller input, moves projectiles, checks collisions, etc. This is done in the entity classes <a class="xref" href="../api/LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Update"><code>InternalEntity.Update</code></a> method. The server is authoritative, so these updates determine the true state (e.g. whether a shot hit a target).</p>
 </li>
 <li><p>Execute <a class="xref" href="../api/LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnLateConstructed"><code>OnLateConstructed</code></a> method for all entities created on current logic tick</p>
 </li>
 <li><p>Refresh newly created <code>Construct RPCs</code> with latest entity data from current logic tick</p>
+<ul>
+<li><code>Construct RPC</code> contains all <code>SyncVar</code> data. So this data updated after all entities update</li>
+</ul>
 </li>
 <li><p>Write entity data history for <code>LagCompensation</code></p>
 </li>
 </ul>
+<p>Entitites created at current logic tick will not be included in this <code>Update</code> list</p>
 <h3 id="4-send-logic-preparations">4. Send logic preparations</h3>
 <ul>
-<li><p>Check that current server state should be sent depending on send rate and PlayersCount (skip send logic if 0)</p>
-</li>
-<li><p>Remove old outdated RPCs that all players already have</p>
-</li>
+<li>Check that current server state should be sent depending on send rate and PlayersCount (skip send logic if 0)</li>
 </ul>
 <h3 id="5-make-and-send-baseline-state">5. Make and send baseline state</h3>
 <ul>
-<li><p>Execute <a class="xref" href="../api/LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">OnSyncRequested()</a> methods for all <code>entities</code> and <code>SyncableFields</code>
+<li><p>For all new players make baseline state starting from executing <a class="xref" href="../api/LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">OnSyncRequested()</a> methods for all <code>Entities</code> and <code>SyncableFields</code>
 This method typically overrided in <a class="xref" href="../api/LiteEntitySystem.EntityLogic.html"><code>EntityLogic</code></a>/<a class="xref" href="../api/LiteEntitySystem.SyncableField.html"><code>SyncableField</code></a> - and calling <code>ExecuteRPCs</code>/<code>ExecuteClientAction</code> that should send some initial full sync data like full array data and size, dictionary info etc.
 Mostly used by classes inherited from <a class="xref" href="../api/LiteEntitySystem.SyncableField.html"><code>SyncableField</code></a>.</p>
 </li>
-<li><p>Sending first state with full data for newly connected players or players requested baseline state because of big lag/unsync</p>
+<li><p>Send baseline state with full data for newly connected players or players requested baseline state because of big lag/unsync</p>
 <ul>
-<li><p>For new players - rpcs only created inside <a class="xref" href="../api/LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">OnSyncRequested()</a> will be sent</p>
+<li><p>For new players - <code>NewRPC</code> (calling <code>new Entity</code>), <code>ConstructRPCs</code> (calling <code>OnConstructed</code>) and rpcs created only inside <a class="xref" href="../api/LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">OnSyncRequested()</a> will be sent</p>
 </li>
 <li><p>For old players - all pending RPCs will be sent to maintain full RPC reliability</p>
 </li>
 </ul>
 </li>
 </ul>
-<h3 id="6-make-delta-states">6. Make delta states</h3>
-<p>State Serialization: LES prepares a delta-compressed state for each client.
-It compares each entity’s current state to what that client last acknowledged and serializes only the changes (position deltas, changed variables, etc.) and pending RPCs. This is efficient for bandwidth.</p>
+<h3 id="6-make-and-send-delta-states">6. Make and send delta states</h3>
+<p>This part executes for all old players that already received baseline state</p>
+<ul>
+<li><p>Put in packet all pending RPCs that client didn't received yet. Each RPCs has tick info
+so client can execute them gradually over time to prevent shoot bursts on lags and similar things</p>
+</li>
+<li><p>Put delta-compressed state for each client.
+It compares each entity’s current state to what that client last acknowledged and serializes only the changes (position deltas, changed variables, etc.). This is efficient for bandwidth.</p>
+</li>
+</ul>
 <p>You can mark entity RPCs and <code>SyncVars</code> to join <code>SyncGroups</code> to dynamically enable/disable replication for selected groups and entities for selected players.</p>
 <h3 id="7-trigger-network-send">7. Trigger network send</h3>
 <p>The server sends out state update packets to each client at a regular rate (configured send rate and tick rate). These include updated rpcs, positions, velocities, health, etc., for entities relevant to that client.</p>
