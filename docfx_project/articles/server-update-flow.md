@@ -20,12 +20,15 @@ Each tick, the server does the following in `ServerEntityManager.LogicUpdate`:
 <xref:LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequest``1(System.Action{``0})>,
 <xref:LiteEntitySystem.HumanControllerLogic.SubscribeToClientRequestStruct``1(System.Func{``0,System.Boolean})> 
 
-### 2. Apply players Input
+### 2. Apply players `Input`
+
 Apply pending inputs from all connected players using their controllers based on [`HumanControllerLogic`](xref:LiteEntitySystem.HumanControllerLogic) (LES’s client input system transmits each client’s controller inputs to the server every tick)
+
+Writes incoming input data to `HumanControllerLogic.CurrentInput`
 
 For AI or bots typically inputs directly passed in Update logic to controlled entities
 
-### 3. Update all updateable Entities
+### 3. `Update` all updateable Entities
 * Update the game state by running each entity’s logic that marked by [`[EntityFlags.Updateable]`](xref:LiteEntitySystem.EntityFlags.Updateable) or [`[EntityFlags.UpdateOnClient]`](xref:LiteEntitySystem.EntityFlags.UpdateOnClient). For example, the server updates player pawn positions based on controller input, moves projectiles, checks collisions, etc. This is done in the entity classes update methods (often OnLogicTick in LES). The server is authoritative, so these updates determine the true state (e.g. whether a shot hit a target).
 
 * Execute [`OnLateConstructed`](xref:LiteEntitySystem.Internal.InternalEntity.OnLateConstructed) method for all entities created on current logic tick
@@ -52,7 +55,7 @@ Mostly used by classes inherited from [`SyncableField`](xref:LiteEntitySystem.Sy
 
     * For old players - all pending RPCs will be sent to maintain full RPC reliability
 
-### 6. Make delta packets
+### 6. Make delta states
 
 State Serialization: LES prepares a delta-compressed state for each client.
 It compares each entity’s current state to what that client last acknowledged and serializes only the changes (position deltas, changed variables, etc.) and pending RPCs. This is efficient for bandwidth.
