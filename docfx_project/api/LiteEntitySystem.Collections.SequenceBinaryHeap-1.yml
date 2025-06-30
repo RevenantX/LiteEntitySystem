@@ -8,6 +8,7 @@ items:
   - LiteEntitySystem.Collections.SequenceBinaryHeap`1.#ctor(System.Int32)
   - LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add(`0,System.UInt16)
   - LiteEntitySystem.Collections.SequenceBinaryHeap`1.AddAndOverwrite(`0,System.UInt16)
+  - LiteEntitySystem.Collections.SequenceBinaryHeap`1.Clear
   - LiteEntitySystem.Collections.SequenceBinaryHeap`1.Count
   - LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMin
   - LiteEntitySystem.Collections.SequenceBinaryHeap`1.ExtractMinWithSequence
@@ -79,6 +80,26 @@ items:
   nameWithType.vb: SequenceBinaryHeap(Of T).New(Integer)
   fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).New(Integer)
   name.vb: New(Integer)
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Clear
+  commentId: M:LiteEntitySystem.Collections.SequenceBinaryHeap`1.Clear
+  id: Clear
+  parent: LiteEntitySystem.Collections.SequenceBinaryHeap`1
+  langs:
+  - csharp
+  - vb
+  name: Clear()
+  nameWithType: SequenceBinaryHeap<T>.Clear()
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.Clear()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Collections
+  syntax:
+    content: public void Clear()
+    content.vb: Public Sub Clear()
+  overload: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Clear*
+  nameWithType.vb: SequenceBinaryHeap(Of T).Clear()
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).Clear()
 - uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add(`0,System.UInt16)
   commentId: M:LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add(`0,System.UInt16)
   id: Add(`0,System.UInt16)
@@ -265,6 +286,14 @@ references:
   nameWithType.vb: SequenceBinaryHeap(Of T).New
   fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).New
   name.vb: New
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Clear*
+  commentId: Overload:LiteEntitySystem.Collections.SequenceBinaryHeap`1.Clear
+  href: LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_Clear
+  name: Clear
+  nameWithType: SequenceBinaryHeap<T>.Clear
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.Clear
+  nameWithType.vb: SequenceBinaryHeap(Of T).Clear
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).Clear
 - uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add*
   commentId: Overload:LiteEntitySystem.Collections.SequenceBinaryHeap`1.Add
   href: LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_Add__0_System_UInt16_

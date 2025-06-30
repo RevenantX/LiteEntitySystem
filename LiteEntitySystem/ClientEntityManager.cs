@@ -17,11 +17,6 @@ namespace LiteEntitySystem
         /// Current interpolated server tick
         /// </summary>
         public ushort ServerTick { get; private set; }
-        
-        /// <summary>
-        /// Current rollback tick (valid only in Rollback state)
-        /// </summary>
-        public ushort RollBackTick { get; private set; }
 
         /// <summary>
         /// Tick of currently executing rpc (check only in client RPC methods)
@@ -559,12 +554,13 @@ namespace LiteEntitySystem
     
             //reapply input
             UpdateMode = UpdateMode.PredictionRollback;
+            ushort targetTick = _tick;
             for(int cmdNum = 0; cmdNum < _storedInputHeaders.Count; cmdNum++)
             {
                 //reapply input data
                 var storedInput = _storedInputHeaders[cmdNum];
                 _localPlayer.LoadInputInfo(storedInput.Header);
-                RollBackTick = storedInput.Tick;
+                _tick = storedInput.Tick;
                 foreach (var controller in GetEntities<HumanControllerLogic>())
                     controller.ReadStoredInput(cmdNum);
                 //simple update
@@ -575,6 +571,7 @@ namespace LiteEntitySystem
                     entity.Update();
                 }
             }
+            _tick = targetTick;
             UpdateMode = UpdateMode.Normal;
         }
 
@@ -835,12 +832,13 @@ namespace LiteEntitySystem
             {
                 //fast forward new but predicted entities
                 UpdateMode = UpdateMode.PredictionRollback;
+                ushort targetTick = _tick;
                 for(int cmdNum = Utils.SequenceDiff(ServerTick, _stateA.Tick); cmdNum < _storedInputHeaders.Count; cmdNum++)
                 {
                     //reapply input data
                     var storedInput = _storedInputHeaders[cmdNum];
                     _localPlayer.LoadInputInfo(storedInput.Header);
-                    RollBackTick = storedInput.Tick;
+                    _tick = storedInput.Tick;
                     foreach (var controller in GetEntities<HumanControllerLogic>())
                         controller.ReadStoredInput(cmdNum);
                     
@@ -858,6 +856,7 @@ namespace LiteEntitySystem
                         e.SafeUpdate();
                     }
                 }
+                _tick = targetTick;
                 UpdateMode = UpdateMode.Normal;
                 _entitiesToRollback.Clear();
             }

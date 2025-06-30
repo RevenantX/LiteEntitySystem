@@ -299,19 +299,6 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.ClientEntityManager.NetworkJitter
   nameWithType: ClientEntityManager.NetworkJitter
-- uid: LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  name: OnAliveEntityAdded(InternalEntity)
-  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_OnAliveEntityAdded_LiteEntitySystem_Internal_InternalEntity_
-  commentId: M:LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  fullName: LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  nameWithType: ClientEntityManager.OnAliveEntityAdded(InternalEntity)
-- uid: LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded*
-  name: OnAliveEntityAdded
-  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_OnAliveEntityAdded_
-  commentId: Overload:LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded
-  isSpec: "True"
-  fullName: LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded
-  nameWithType: ClientEntityManager.OnAliveEntityAdded
 - uid: LiteEntitySystem.ClientEntityManager.OnLogicTick
   name: OnLogicTick()
   href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_OnLogicTick
@@ -389,19 +376,6 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.ClientEntityManager.Reset
   nameWithType: ClientEntityManager.Reset
-- uid: LiteEntitySystem.ClientEntityManager.RollBackTick
-  name: RollBackTick
-  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_RollBackTick
-  commentId: P:LiteEntitySystem.ClientEntityManager.RollBackTick
-  fullName: LiteEntitySystem.ClientEntityManager.RollBackTick
-  nameWithType: ClientEntityManager.RollBackTick
-- uid: LiteEntitySystem.ClientEntityManager.RollBackTick*
-  name: RollBackTick
-  href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_RollBackTick_
-  commentId: Overload:LiteEntitySystem.ClientEntityManager.RollBackTick
-  isSpec: "True"
-  fullName: LiteEntitySystem.ClientEntityManager.RollBackTick
-  nameWithType: ClientEntityManager.RollBackTick
 - uid: LiteEntitySystem.ClientEntityManager.ServerInputBuffer
   name: ServerInputBuffer
   href: api/LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_ServerInputBuffer
@@ -1199,6 +1173,23 @@ references:
   fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).AddAndOverwrite
   nameWithType: SequenceBinaryHeap<T>.AddAndOverwrite
   nameWithType.vb: SequenceBinaryHeap(Of T).AddAndOverwrite
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Clear
+  name: Clear()
+  href: api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_Clear
+  commentId: M:LiteEntitySystem.Collections.SequenceBinaryHeap`1.Clear
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.Clear()
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).Clear()
+  nameWithType: SequenceBinaryHeap<T>.Clear()
+  nameWithType.vb: SequenceBinaryHeap(Of T).Clear()
+- uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Clear*
+  name: Clear
+  href: api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_Clear_
+  commentId: Overload:LiteEntitySystem.Collections.SequenceBinaryHeap`1.Clear
+  isSpec: "True"
+  fullName: LiteEntitySystem.Collections.SequenceBinaryHeap<T>.Clear
+  fullName.vb: LiteEntitySystem.Collections.SequenceBinaryHeap(Of T).Clear
+  nameWithType: SequenceBinaryHeap<T>.Clear
+  nameWithType.vb: SequenceBinaryHeap(Of T).Clear
 - uid: LiteEntitySystem.Collections.SequenceBinaryHeap`1.Count
   name: Count
   href: api/LiteEntitySystem.Collections.SequenceBinaryHeap-1.html#LiteEntitySystem_Collections_SequenceBinaryHeap_1_Count
@@ -2545,19 +2536,6 @@ references:
   commentId: F:LiteEntitySystem.EntityManager.Mode
   fullName: LiteEntitySystem.EntityManager.Mode
   nameWithType: EntityManager.Mode
-- uid: LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  name: OnAliveEntityAdded(InternalEntity)
-  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_OnAliveEntityAdded_LiteEntitySystem_Internal_InternalEntity_
-  commentId: M:LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  fullName: LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  nameWithType: EntityManager.OnAliveEntityAdded(InternalEntity)
-- uid: LiteEntitySystem.EntityManager.OnAliveEntityAdded*
-  name: OnAliveEntityAdded
-  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_OnAliveEntityAdded_
-  commentId: Overload:LiteEntitySystem.EntityManager.OnAliveEntityAdded
-  isSpec: "True"
-  fullName: LiteEntitySystem.EntityManager.OnAliveEntityAdded
-  nameWithType: EntityManager.OnAliveEntityAdded
 - uid: LiteEntitySystem.EntityManager.OnLogicTick
   name: OnLogicTick()
   href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_OnLogicTick
@@ -9518,6 +9496,23 @@ references:
   fullName.vb: LiteEntitySystem.SyncVar(Of T).GetHashCode
   nameWithType: SyncVar<T>.GetHashCode
   nameWithType.vb: SyncVar(Of T).GetHashCode
+- uid: LiteEntitySystem.SyncVar`1.InterpolatedValue
+  name: InterpolatedValue
+  href: api/LiteEntitySystem.SyncVar-1.html#LiteEntitySystem_SyncVar_1_InterpolatedValue
+  commentId: P:LiteEntitySystem.SyncVar`1.InterpolatedValue
+  fullName: LiteEntitySystem.SyncVar<T>.InterpolatedValue
+  fullName.vb: LiteEntitySystem.SyncVar(Of T).InterpolatedValue
+  nameWithType: SyncVar<T>.InterpolatedValue
+  nameWithType.vb: SyncVar(Of T).InterpolatedValue
+- uid: LiteEntitySystem.SyncVar`1.InterpolatedValue*
+  name: InterpolatedValue
+  href: api/LiteEntitySystem.SyncVar-1.html#LiteEntitySystem_SyncVar_1_InterpolatedValue_
+  commentId: Overload:LiteEntitySystem.SyncVar`1.InterpolatedValue
+  isSpec: "True"
+  fullName: LiteEntitySystem.SyncVar<T>.InterpolatedValue
+  fullName.vb: LiteEntitySystem.SyncVar(Of T).InterpolatedValue
+  nameWithType: SyncVar<T>.InterpolatedValue
+  nameWithType.vb: SyncVar(Of T).InterpolatedValue
 - uid: LiteEntitySystem.SyncVar`1.ToString
   name: ToString()
   href: api/LiteEntitySystem.SyncVar-1.html#LiteEntitySystem_SyncVar_1_ToString

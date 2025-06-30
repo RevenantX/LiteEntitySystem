@@ -20,7 +20,6 @@ items:
   - LiteEntitySystem.ClientEntityManager.LocalPlayer
   - LiteEntitySystem.ClientEntityManager.NetPeer
   - LiteEntitySystem.ClientEntityManager.NetworkJitter
-  - LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
   - LiteEntitySystem.ClientEntityManager.OnLogicTick
   - LiteEntitySystem.ClientEntityManager.PendingToRemoveEntites
   - LiteEntitySystem.ClientEntityManager.PreferredBufferTimeHighest
@@ -28,7 +27,6 @@ items:
   - LiteEntitySystem.ClientEntityManager.RawServerTick
   - LiteEntitySystem.ClientEntityManager.RawTargetServerTick
   - LiteEntitySystem.ClientEntityManager.Reset
-  - LiteEntitySystem.ClientEntityManager.RollBackTick
   - LiteEntitySystem.ClientEntityManager.ServerInputBuffer
   - LiteEntitySystem.ClientEntityManager.ServerSendRate
   - LiteEntitySystem.ClientEntityManager.ServerTick
@@ -116,29 +114,6 @@ items:
       type: System.UInt16
     content.vb: Public Property ServerTick As UShort
   overload: LiteEntitySystem.ClientEntityManager.ServerTick*
-- uid: LiteEntitySystem.ClientEntityManager.RollBackTick
-  commentId: P:LiteEntitySystem.ClientEntityManager.RollBackTick
-  id: RollBackTick
-  parent: LiteEntitySystem.ClientEntityManager
-  langs:
-  - csharp
-  - vb
-  name: RollBackTick
-  nameWithType: ClientEntityManager.RollBackTick
-  fullName: LiteEntitySystem.ClientEntityManager.RollBackTick
-  type: Property
-  assemblies:
-  - LiteEntitySystem
-  namespace: LiteEntitySystem
-  summary: Current rollback tick (valid only in Rollback state)
-  example: []
-  syntax:
-    content: public ushort RollBackTick { get; }
-    parameters: []
-    return:
-      type: System.UInt16
-    content.vb: Public Property RollBackTick As UShort
-  overload: LiteEntitySystem.ClientEntityManager.RollBackTick*
 - uid: LiteEntitySystem.ClientEntityManager.CurrentRPCTick
   commentId: P:LiteEntitySystem.ClientEntityManager.CurrentRPCTick
   id: CurrentRPCTick
@@ -685,29 +660,6 @@ items:
     content.vb: Public Overrides Sub Reset()
   overridden: LiteEntitySystem.EntityManager.Reset
   overload: LiteEntitySystem.ClientEntityManager.Reset*
-- uid: LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  commentId: M:LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  id: OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  parent: LiteEntitySystem.ClientEntityManager
-  langs:
-  - csharp
-  - vb
-  name: OnAliveEntityAdded(InternalEntity)
-  nameWithType: ClientEntityManager.OnAliveEntityAdded(InternalEntity)
-  fullName: LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  type: Method
-  assemblies:
-  - LiteEntitySystem
-  namespace: LiteEntitySystem
-  example: []
-  syntax:
-    content: protected override void OnAliveEntityAdded(InternalEntity entity)
-    parameters:
-    - id: entity
-      type: LiteEntitySystem.Internal.InternalEntity
-    content.vb: Protected Overrides Sub OnAliveEntityAdded(entity As InternalEntity)
-  overridden: LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  overload: LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded*
 - uid: LiteEntitySystem.ClientEntityManager.Deserialize(System.ReadOnlySpan{System.Byte})
   commentId: M:LiteEntitySystem.ClientEntityManager.Deserialize(System.ReadOnlySpan{System.Byte})
   id: Deserialize(System.ReadOnlySpan{System.Byte})
@@ -1709,12 +1661,6 @@ references:
   nameWithType.vb: UShort
   fullName.vb: UShort
   name.vb: UShort
-- uid: LiteEntitySystem.ClientEntityManager.RollBackTick*
-  commentId: Overload:LiteEntitySystem.ClientEntityManager.RollBackTick
-  href: LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_RollBackTick
-  name: RollBackTick
-  nameWithType: ClientEntityManager.RollBackTick
-  fullName: LiteEntitySystem.ClientEntityManager.RollBackTick
 - uid: LiteEntitySystem.ClientEntityManager.CurrentRPCTick*
   commentId: Overload:LiteEntitySystem.ClientEntityManager.CurrentRPCTick
   href: LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_CurrentRPCTick
@@ -1968,66 +1914,6 @@ references:
   name: Reset
   nameWithType: ClientEntityManager.Reset
   fullName: LiteEntitySystem.ClientEntityManager.Reset
-- uid: LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  commentId: M:LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  parent: LiteEntitySystem.EntityManager
-  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_OnAliveEntityAdded_LiteEntitySystem_Internal_InternalEntity_
-  name: OnAliveEntityAdded(InternalEntity)
-  nameWithType: EntityManager.OnAliveEntityAdded(InternalEntity)
-  fullName: LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  spec.csharp:
-  - uid: LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-    name: OnAliveEntityAdded
-    href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_OnAliveEntityAdded_LiteEntitySystem_Internal_InternalEntity_
-  - name: (
-  - uid: LiteEntitySystem.Internal.InternalEntity
-    name: InternalEntity
-    href: LiteEntitySystem.Internal.InternalEntity.html
-  - name: )
-  spec.vb:
-  - uid: LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-    name: OnAliveEntityAdded
-    href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_OnAliveEntityAdded_LiteEntitySystem_Internal_InternalEntity_
-  - name: (
-  - uid: LiteEntitySystem.Internal.InternalEntity
-    name: InternalEntity
-    href: LiteEntitySystem.Internal.InternalEntity.html
-  - name: )
-- uid: LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded*
-  commentId: Overload:LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded
-  href: LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_OnAliveEntityAdded_LiteEntitySystem_Internal_InternalEntity_
-  name: OnAliveEntityAdded
-  nameWithType: ClientEntityManager.OnAliveEntityAdded
-  fullName: LiteEntitySystem.ClientEntityManager.OnAliveEntityAdded
-- uid: LiteEntitySystem.Internal.InternalEntity
-  commentId: T:LiteEntitySystem.Internal.InternalEntity
-  parent: LiteEntitySystem.Internal
-  href: LiteEntitySystem.Internal.InternalEntity.html
-  name: InternalEntity
-  nameWithType: InternalEntity
-  fullName: LiteEntitySystem.Internal.InternalEntity
-- uid: LiteEntitySystem.Internal
-  commentId: N:LiteEntitySystem.Internal
-  href: LiteEntitySystem.html
-  name: LiteEntitySystem.Internal
-  nameWithType: LiteEntitySystem.Internal
-  fullName: LiteEntitySystem.Internal
-  spec.csharp:
-  - uid: LiteEntitySystem
-    name: LiteEntitySystem
-    href: LiteEntitySystem.html
-  - name: .
-  - uid: LiteEntitySystem.Internal
-    name: Internal
-    href: LiteEntitySystem.Internal.html
-  spec.vb:
-  - uid: LiteEntitySystem
-    name: LiteEntitySystem
-    href: LiteEntitySystem.html
-  - name: .
-  - uid: LiteEntitySystem.Internal
-    name: Internal
-    href: LiteEntitySystem.Internal.html
 - uid: LiteEntitySystem.ClientEntityManager.Deserialize*
   commentId: Overload:LiteEntitySystem.ClientEntityManager.Deserialize
   href: LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_Deserialize_System_ReadOnlySpan_System_Byte__

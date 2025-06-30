@@ -41,7 +41,6 @@ items:
   - LiteEntitySystem.EntityManager.MaxSavedStateDiff
   - LiteEntitySystem.EntityManager.MaxSyncedEntityCount
   - LiteEntitySystem.EntityManager.Mode
-  - LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
   - LiteEntitySystem.EntityManager.OnLogicTick
   - LiteEntitySystem.EntityManager.PlayerId
   - LiteEntitySystem.EntityManager.RegisterFieldType``1
@@ -1234,27 +1233,6 @@ items:
       type: System.Boolean
     content.vb: Protected Function ConstructEntity(e As InternalEntity) As Boolean
   overload: LiteEntitySystem.EntityManager.ConstructEntity*
-- uid: LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  commentId: M:LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  id: OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  parent: LiteEntitySystem.EntityManager
-  langs:
-  - csharp
-  - vb
-  name: OnAliveEntityAdded(InternalEntity)
-  nameWithType: EntityManager.OnAliveEntityAdded(InternalEntity)
-  fullName: LiteEntitySystem.EntityManager.OnAliveEntityAdded(LiteEntitySystem.Internal.InternalEntity)
-  type: Method
-  assemblies:
-  - LiteEntitySystem
-  namespace: LiteEntitySystem
-  syntax:
-    content: protected virtual void OnAliveEntityAdded(InternalEntity e)
-    parameters:
-    - id: e
-      type: LiteEntitySystem.Internal.InternalEntity
-    content.vb: Protected Overridable Sub OnAliveEntityAdded(e As InternalEntity)
-  overload: LiteEntitySystem.EntityManager.OnAliveEntityAdded*
 - uid: LiteEntitySystem.EntityManager.IsEntityLagCompensated(LiteEntitySystem.Internal.InternalEntity)
   commentId: M:LiteEntitySystem.EntityManager.IsEntityLagCompensated(LiteEntitySystem.Internal.InternalEntity)
   id: IsEntityLagCompensated(LiteEntitySystem.Internal.InternalEntity)
@@ -1971,12 +1949,6 @@ references:
   name: ConstructEntity
   nameWithType: EntityManager.ConstructEntity
   fullName: LiteEntitySystem.EntityManager.ConstructEntity
-- uid: LiteEntitySystem.EntityManager.OnAliveEntityAdded*
-  commentId: Overload:LiteEntitySystem.EntityManager.OnAliveEntityAdded
-  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_OnAliveEntityAdded_LiteEntitySystem_Internal_InternalEntity_
-  name: OnAliveEntityAdded
-  nameWithType: EntityManager.OnAliveEntityAdded
-  fullName: LiteEntitySystem.EntityManager.OnAliveEntityAdded
 - uid: LiteEntitySystem.EntityManager.IsEntityLagCompensated*
   commentId: Overload:LiteEntitySystem.EntityManager.IsEntityLagCompensated
   href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_IsEntityLagCompensated_LiteEntitySystem_Internal_InternalEntity_

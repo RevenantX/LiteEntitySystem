@@ -174,7 +174,7 @@ namespace LiteEntitySystem
         /// <returns>current tick depending on entity manager state (IsExecutingRPC and InRollBackState)</returns>
         public int GetFrameSeed() =>
             EntityManager.IsClient
-                ? (EntityManager.InRollBackState ? ClientManager.RollBackTick : (ClientManager.IsExecutingRPC ? ClientManager.CurrentRPCTick : EntityManager.Tick)) 
+                ? (ClientManager.IsExecutingRPC ? ClientManager.CurrentRPCTick : EntityManager.Tick)
                 : (InternalOwnerId.Value == EntityManager.ServerPlayerId ? EntityManager.Tick : ServerManager.GetPlayer(InternalOwnerId).LastProcessedTick);
         
         /// <summary>
@@ -212,12 +212,12 @@ namespace LiteEntitySystem
                 //local counter here should be reset
                 ushort potentialId = _localPredictedIdCounter.Value++;
 
-                var origEnt = ClientManager.FindEntityByPredictedId(ClientManager.RollBackTick, Id, potentialId);
+                var origEnt = ClientManager.FindEntityByPredictedId(ClientManager.Tick, Id, potentialId);
                 entity = origEnt as T;
                 if (entity == null)
                 {
-                    Logger.LogWarning($"Requested RbTick{ClientManager.RollBackTick}, ParentId: {Id}, potentialId: {potentialId}, requestedType: {typeof(T)}, foundType: {origEnt?.GetType()}");
-                    Logger.LogWarning($"Misspredicted entity add? RbTick: {ClientManager.RollBackTick}, potentialId: {potentialId}");
+                    Logger.LogWarning($"Requested RbTick{ClientManager.Tick}, ParentId: {Id}, potentialId: {potentialId}, requestedType: {typeof(T)}, foundType: {origEnt?.GetType()}");
+                    Logger.LogWarning($"Misspredicted entity add? RbTick: {ClientManager.Tick}, potentialId: {potentialId}");
                 }
                 else
                 {

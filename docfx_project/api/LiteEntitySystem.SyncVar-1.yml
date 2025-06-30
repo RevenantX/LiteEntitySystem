@@ -9,6 +9,7 @@ items:
   - LiteEntitySystem.SyncVar`1.Equals(System.Object)
   - LiteEntitySystem.SyncVar`1.Equals(`0)
   - LiteEntitySystem.SyncVar`1.GetHashCode
+  - LiteEntitySystem.SyncVar`1.InterpolatedValue
   - LiteEntitySystem.SyncVar`1.ToString
   - LiteEntitySystem.SyncVar`1.Value
   - LiteEntitySystem.SyncVar`1.op_Equality(LiteEntitySystem.SyncVar{`0},LiteEntitySystem.SyncVar{`0})
@@ -40,6 +41,29 @@ items:
   nameWithType.vb: SyncVar(Of T)
   fullName.vb: LiteEntitySystem.SyncVar(Of T)
   name.vb: SyncVar(Of T)
+- uid: LiteEntitySystem.SyncVar`1.InterpolatedValue
+  commentId: P:LiteEntitySystem.SyncVar`1.InterpolatedValue
+  id: InterpolatedValue
+  parent: LiteEntitySystem.SyncVar`1
+  langs:
+  - csharp
+  - vb
+  name: InterpolatedValue
+  nameWithType: SyncVar<T>.InterpolatedValue
+  fullName: LiteEntitySystem.SyncVar<T>.InterpolatedValue
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public T InterpolatedValue { get; }
+    parameters: []
+    return:
+      type: '{T}'
+    content.vb: Public ReadOnly Property InterpolatedValue As T
+  overload: LiteEntitySystem.SyncVar`1.InterpolatedValue*
+  nameWithType.vb: SyncVar(Of T).InterpolatedValue
+  fullName.vb: LiteEntitySystem.SyncVar(Of T).InterpolatedValue
 - uid: LiteEntitySystem.SyncVar`1.Value
   commentId: P:LiteEntitySystem.SyncVar`1.Value
   id: Value
@@ -585,14 +609,14 @@ references:
   name: System
   nameWithType: System
   fullName: System
-- uid: LiteEntitySystem.SyncVar`1.Value*
-  commentId: Overload:LiteEntitySystem.SyncVar`1.Value
-  href: LiteEntitySystem.SyncVar-1.html#LiteEntitySystem_SyncVar_1_Value
-  name: Value
-  nameWithType: SyncVar<T>.Value
-  fullName: LiteEntitySystem.SyncVar<T>.Value
-  nameWithType.vb: SyncVar(Of T).Value
-  fullName.vb: LiteEntitySystem.SyncVar(Of T).Value
+- uid: LiteEntitySystem.SyncVar`1.InterpolatedValue*
+  commentId: Overload:LiteEntitySystem.SyncVar`1.InterpolatedValue
+  href: LiteEntitySystem.SyncVar-1.html#LiteEntitySystem_SyncVar_1_InterpolatedValue
+  name: InterpolatedValue
+  nameWithType: SyncVar<T>.InterpolatedValue
+  fullName: LiteEntitySystem.SyncVar<T>.InterpolatedValue
+  nameWithType.vb: SyncVar(Of T).InterpolatedValue
+  fullName.vb: LiteEntitySystem.SyncVar(Of T).InterpolatedValue
 - uid: '{T}'
   commentId: '!:T'
   definition: T
@@ -603,6 +627,14 @@ references:
   name: T
   nameWithType: T
   fullName: T
+- uid: LiteEntitySystem.SyncVar`1.Value*
+  commentId: Overload:LiteEntitySystem.SyncVar`1.Value
+  href: LiteEntitySystem.SyncVar-1.html#LiteEntitySystem_SyncVar_1_Value
+  name: Value
+  nameWithType: SyncVar<T>.Value
+  fullName: LiteEntitySystem.SyncVar<T>.Value
+  nameWithType.vb: SyncVar(Of T).Value
+  fullName.vb: LiteEntitySystem.SyncVar(Of T).Value
 - uid: LiteEntitySystem.SyncVar`1.op_Implicit*
   commentId: Overload:LiteEntitySystem.SyncVar`1.op_Implicit
   name: implicit operator

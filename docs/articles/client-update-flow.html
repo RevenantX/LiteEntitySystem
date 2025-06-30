@@ -89,8 +89,7 @@
 subgraph LogicUpdate
     X[LocalSingleton.**VisualUpdate**] --&gt; X1
 
-    X1[LocalSingleton.**Update**] --&gt; A2 
-    A2[&quot;Restore real SyncVar values instead of Interpolated&quot;] --&gt; B2
+    X1[LocalSingleton.**Update**] --&gt; B2 
     B2[&quot;Apply **input** (set HumanControllerLogic.**CurrentInput**)&quot;] --&gt; C2
     C2[**Update** owned, local and UpdateOnClient entities] --&gt; D2
     D2[Execute **RPC**s for this frame] --&gt; B4
