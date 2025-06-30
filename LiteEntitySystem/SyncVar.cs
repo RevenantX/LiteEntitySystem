@@ -68,6 +68,10 @@ namespace LiteEntitySystem
         public SyncVarFlags(SyncFlags flags) => Flags = flags;
     }
 
+    /// <summary>
+    /// Synchronized variable
+    /// </summary>
+    /// <typeparam name="T">Variable type</typeparam>
     [StructLayout(LayoutKind.Sequential)]
     public struct SyncVar<T> : ISyncVar<T>, IEquatable<T>, IEquatable<SyncVar<T>> where T : unmanaged
     {
@@ -77,12 +81,16 @@ namespace LiteEntitySystem
         internal ushort FieldId;
         internal InternalEntity Container;
 
+        /// <summary>
+        /// Interpolated value on client (on server equals to Value)
+        /// </summary>
         public T InterpolatedValue => Container == null || Container.IsServer
             ? _value
             : Container.ClientManager.GetInterpolatedValue(ref this, _interpValue);
         
         //for interpolation
         void ISyncVar<T>.SvSetInterpValue(T value) => _interpValue = value;
+        void ISyncVar<T>.SvSetInterpValueFromCurrent() => _interpValue = _value;
         
         void ISyncVar<T>.SvSetDirect(T value) => _value = value;
         
@@ -105,6 +113,9 @@ namespace LiteEntitySystem
             return false;
         }
         
+        /// <summary>
+        /// Actual logical value
+        /// </summary>
         public T Value
         {
             get => _value;

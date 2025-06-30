@@ -1092,7 +1092,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "LiteEntitySystem.SyncVar<T>",
-      "Summary": null
+      "Summary": "<p sourcefile=\"api/LiteEntitySystem.SyncVar-1.yml\" sourcestartlinenumber=\"1\">Synchronized variable</p>\n"
     },
     {
       "type": "ManagedReference",

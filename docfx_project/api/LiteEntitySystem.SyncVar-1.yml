@@ -29,10 +29,13 @@ items:
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem
+  summary: Synchronized variable
+  example: []
   syntax:
     content: 'public struct SyncVar<T> : ISyncVar<T>, IEquatable<T>, IEquatable<SyncVar<T>> where T : unmanaged'
     typeParameters:
     - id: T
+      description: Variable type
     content.vb: Public Structure SyncVar(Of T As Structure) Implements ISyncVar(Of T), IEquatable(Of T), IEquatable(Of SyncVar(Of T))
   implements:
   - LiteEntitySystem.Internal.ISyncVar{{T}}
@@ -55,6 +58,8 @@ items:
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem
+  summary: Interpolated value on client (on server equals to Value)
+  example: []
   syntax:
     content: public T InterpolatedValue { get; }
     parameters: []
@@ -78,6 +83,8 @@ items:
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem
+  summary: Actual logical value
+  example: []
   syntax:
     content: public T Value { get; set; }
     parameters: []

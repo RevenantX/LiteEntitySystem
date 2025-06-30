@@ -50,7 +50,7 @@ namespace LiteEntitySystem.Internal
             RefMagic.SyncVarSetInterp<T, SyncVar<T>>(obj, offset, *(T*)data);
         
         internal sealed override void SetInterpValueFromCurrentValue(InternalBaseClass obj, int offset) =>
-            RefMagic.SyncVarSetInterp<T, SyncVar<T>>(obj, offset, RefMagic.GetFieldValue<SyncVar<T>>(obj, offset));
+            RefMagic.SyncVarSetInterpFromCurrent<T, SyncVar<T>>(obj, offset);
 
         internal sealed override void WriteTo(InternalBaseClass obj, int offset, byte* data) =>
             *(T*)data = RefMagic.GetFieldValue<SyncVar<T>>(obj, offset);
