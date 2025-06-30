@@ -101,7 +101,7 @@ end
     B[Send **input**] --&gt; C
     C{Check need to apply new server state}
     C --&gt;|YES| A1
-    C --&gt;|NO| E
+    C --&gt;|NO| D
 
 subgraph GoToNextState
     A1[&quot;**Destroy** spawned predicted local entities (they should be replaced by applied server state)&quot;] --&gt; B1
@@ -121,8 +121,7 @@ subgraph Rollback
          L1[&quot;For each stored, not acknoweldged input set **CurrentInput** and execute **Update**&quot;]
     end
 end
-    L1 --&gt; E
-    E[Apply visual interpolation to **SyncVar** values] --&gt; D
+    L1 --&gt; D
     D[&quot;Execute **VisualUpdate** for owned, local and **UpdateOnClient** entities&quot;]
 </code></pre>
 <ul>
