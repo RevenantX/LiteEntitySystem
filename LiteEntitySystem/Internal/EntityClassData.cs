@@ -63,6 +63,7 @@ namespace LiteEntitySystem.Internal
         public readonly int PredictedSize;
         public readonly EntityFieldInfo[] Fields;
         public readonly SyncableFieldInfo[] SyncableFields;
+        public readonly SyncableFieldInfo[] SyncableFieldsCustomRollback;
         public readonly int InterpolatedCount;
         public readonly EntityFieldInfo[] LagCompensatedFields;
         public readonly int LagCompensatedSize;
@@ -186,6 +187,7 @@ namespace LiteEntitySystem.Internal
             
             var fields = new List<EntityFieldInfo>();
             var syncableFields = new List<SyncableFieldInfo>();
+            var syncableFieldsWithCustomRollback = new List<SyncableFieldInfo>();
             var lagCompensatedFields = new List<EntityFieldInfo>();
             var ownedRollbackFields = new List<EntityFieldInfo>();
             var remoteRollbackFields = new List<EntityFieldInfo>();
@@ -248,6 +250,11 @@ namespace LiteEntitySystem.Internal
                             throw new Exception($"Syncable fields should be readonly! (Class: {entType} Field: {field.Name})");
                         
                         syncableFields.Add(new SyncableFieldInfo(offset, syncFlags));
+                        
+                        //add custom rollbacked separately
+                        if (ft.IsSubclassOf(typeof(SyncableFieldCustomRollback)))
+                            syncableFieldsWithCustomRollback.Add(new SyncableFieldInfo(offset, syncFlags));
+                        
                         var syncableFieldTypesWithBase = Utils.GetBaseTypes(ft, SyncableFieldType, true, true);
                         while(syncableFieldTypesWithBase.Count > 0)
                         {
@@ -295,6 +302,7 @@ namespace LiteEntitySystem.Internal
             });
             Fields = fields.ToArray();
             SyncableFields = syncableFields.ToArray();
+            SyncableFieldsCustomRollback = syncableFieldsWithCustomRollback.ToArray();
             FieldsCount = Fields.Length;
             FieldsFlagsSize = (FieldsCount-1) / 8 + 1;
             LagCompensatedFields = lagCompensatedFields.ToArray();

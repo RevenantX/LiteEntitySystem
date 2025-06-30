@@ -11,8 +11,6 @@
         private SyncVar<float> _time;
         private SyncVar<float> _maxTime;
         
-        public override bool IsRollbackSupported => true;
-
         public SyncTimer(float maxTime) 
         {
             _maxTime.Value = maxTime;

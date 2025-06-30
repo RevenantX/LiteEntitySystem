@@ -97,7 +97,7 @@ Class SyncChilds
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class SyncChilds : SyncableField, IEnumerable&lt;EntitySharedReference&gt;, IEnumerable</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class SyncChilds : SyncableFieldCustomRollback, IEnumerable&lt;EntitySharedReference&gt;, IEnumerable</code></pre>
   </div>
 
 
@@ -109,6 +109,7 @@ Class SyncChilds
       <div><span class="xref">object</span></div>
       <div><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
       <div><a class="xref" href="LiteEntitySystem.SyncableField.html">SyncableField</a></div>
+      <div><a class="xref" href="LiteEntitySystem.SyncableFieldCustomRollback.html">SyncableFieldCustomRollback</a></div>
       <div><span class="xref">SyncChilds</span></div>
     </dd>
   </dl>
@@ -153,38 +154,6 @@ Class SyncChilds
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="LiteEntitySystem_SyncChilds_IsRollbackSupported_" data-uid="LiteEntitySystem.SyncChilds.IsRollbackSupported*"></a>
-
-  <h3 id="LiteEntitySystem_SyncChilds_IsRollbackSupported" data-uid="LiteEntitySystem.SyncChilds.IsRollbackSupported">
-  IsRollbackSupported
-  
-  </h3>
-
-  <div class="markdown level1 summary"><p>Is supported rollback by this syncable field</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override bool IsRollbackSupported { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
     <dd></dd>
   </dl>
 

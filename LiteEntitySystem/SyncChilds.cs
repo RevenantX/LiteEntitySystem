@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LiteEntitySystem
 {
-    public sealed class SyncChilds : SyncableField, IEnumerable<EntitySharedReference>
+    public sealed class SyncChilds : SyncableFieldCustomRollback, IEnumerable<EntitySharedReference>
     {
         class EqualityComparer : IEqualityComparer<EntitySharedReference>
         {
@@ -27,8 +27,6 @@ namespace LiteEntitySystem
         private static RemoteCall<EntitySharedReference> _removeAction;
         private static RemoteCallSpan<EntitySharedReference> _initAction;
         
-        public override bool IsRollbackSupported => true;
-
         protected internal override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
             r.CreateClientAction(this, Add, ref _addAction);

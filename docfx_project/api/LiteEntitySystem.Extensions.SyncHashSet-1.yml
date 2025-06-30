@@ -12,7 +12,6 @@ items:
   - LiteEntitySystem.Extensions.SyncHashSet`1.Contains(`0)
   - LiteEntitySystem.Extensions.SyncHashSet`1.Count
   - LiteEntitySystem.Extensions.SyncHashSet`1.GetEnumerator
-  - LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported
   - LiteEntitySystem.Extensions.SyncHashSet`1.OnRollback
   - LiteEntitySystem.Extensions.SyncHashSet`1.OnSyncRequested
   - LiteEntitySystem.Extensions.SyncHashSet`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
@@ -29,18 +28,20 @@ items:
   - LiteEntitySystem
   namespace: LiteEntitySystem.Extensions
   syntax:
-    content: 'public class SyncHashSet<T> : SyncableField, IEnumerable<T>, IEnumerable where T : unmanaged'
+    content: 'public class SyncHashSet<T> : SyncableFieldCustomRollback, IEnumerable<T>, IEnumerable where T : unmanaged'
     typeParameters:
     - id: T
-    content.vb: Public Class SyncHashSet(Of T As Structure) Inherits SyncableField Implements IEnumerable(Of T), IEnumerable
+    content.vb: Public Class SyncHashSet(Of T As Structure) Inherits SyncableFieldCustomRollback Implements IEnumerable(Of T), IEnumerable
   inheritance:
   - System.Object
   - LiteEntitySystem.Internal.InternalBaseClass
   - LiteEntitySystem.SyncableField
+  - LiteEntitySystem.SyncableFieldCustomRollback
   implements:
   - System.Collections.Generic.IEnumerable{{T}}
   - System.Collections.IEnumerable
   inheritedMembers:
+  - LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged
   - LiteEntitySystem.SyncableField.IsClient
   - LiteEntitySystem.SyncableField.IsServer
   - LiteEntitySystem.SyncableField.ParentEntity
@@ -75,32 +76,6 @@ items:
   overload: LiteEntitySystem.Extensions.SyncHashSet`1.Count*
   nameWithType.vb: SyncHashSet(Of T).Count
   fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).Count
-- uid: LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported
-  commentId: P:LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported
-  id: IsRollbackSupported
-  parent: LiteEntitySystem.Extensions.SyncHashSet`1
-  langs:
-  - csharp
-  - vb
-  name: IsRollbackSupported
-  nameWithType: SyncHashSet<T>.IsRollbackSupported
-  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.IsRollbackSupported
-  type: Property
-  assemblies:
-  - LiteEntitySystem
-  namespace: LiteEntitySystem.Extensions
-  summary: Is supported rollback by this syncable field
-  example: []
-  syntax:
-    content: public override bool IsRollbackSupported { get; }
-    parameters: []
-    return:
-      type: System.Boolean
-    content.vb: Public Overrides ReadOnly Property IsRollbackSupported As Boolean
-  overridden: LiteEntitySystem.SyncableField.IsRollbackSupported
-  overload: LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported*
-  nameWithType.vb: SyncHashSet(Of T).IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).IsRollbackSupported
 - uid: LiteEntitySystem.Extensions.SyncHashSet`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   commentId: M:LiteEntitySystem.Extensions.SyncHashSet`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   id: RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
@@ -145,7 +120,7 @@ items:
   syntax:
     content: protected override void OnRollback()
     content.vb: Protected Overrides Sub OnRollback()
-  overridden: LiteEntitySystem.SyncableField.OnRollback
+  overridden: LiteEntitySystem.SyncableFieldCustomRollback.OnRollback
   overload: LiteEntitySystem.Extensions.SyncHashSet`1.OnRollback*
   nameWithType.vb: SyncHashSet(Of T).OnRollback()
   fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).OnRollback()
@@ -167,7 +142,7 @@ items:
   syntax:
     content: protected override void BeforeReadRPC()
     content.vb: Protected Overrides Sub BeforeReadRPC()
-  overridden: LiteEntitySystem.SyncableField.BeforeReadRPC
+  overridden: LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC
   overload: LiteEntitySystem.Extensions.SyncHashSet`1.BeforeReadRPC*
   nameWithType.vb: SyncHashSet(Of T).BeforeReadRPC()
   fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).BeforeReadRPC()
@@ -189,7 +164,7 @@ items:
   syntax:
     content: protected override void AfterReadRPC()
     content.vb: Protected Overrides Sub AfterReadRPC()
-  overridden: LiteEntitySystem.SyncableField.AfterReadRPC
+  overridden: LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC
   overload: LiteEntitySystem.Extensions.SyncHashSet`1.AfterReadRPC*
   nameWithType.vb: SyncHashSet(Of T).AfterReadRPC()
   fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).AfterReadRPC()
@@ -406,6 +381,13 @@ references:
   name: SyncableField
   nameWithType: SyncableField
   fullName: LiteEntitySystem.SyncableField
+- uid: LiteEntitySystem.SyncableFieldCustomRollback
+  commentId: T:LiteEntitySystem.SyncableFieldCustomRollback
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.SyncableFieldCustomRollback.html
+  name: SyncableFieldCustomRollback
+  nameWithType: SyncableFieldCustomRollback
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback
 - uid: System.Collections.Generic.IEnumerable{{T}}
   commentId: T:System.Collections.Generic.IEnumerable{`0}
   parent: System.Collections.Generic
@@ -443,6 +425,25 @@ references:
   name: IEnumerable
   nameWithType: IEnumerable
   fullName: System.Collections.IEnumerable
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged
+  commentId: M:LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged
+  parent: LiteEntitySystem.SyncableFieldCustomRollback
+  href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_MarkAsChanged
+  name: MarkAsChanged()
+  nameWithType: SyncableFieldCustomRollback.MarkAsChanged()
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged()
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged
+    name: MarkAsChanged
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_MarkAsChanged
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged
+    name: MarkAsChanged
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_MarkAsChanged
+  - name: (
+  - name: )
 - uid: LiteEntitySystem.SyncableField.IsClient
   commentId: P:LiteEntitySystem.SyncableField.IsClient
   parent: LiteEntitySystem.SyncableField
@@ -988,32 +989,6 @@ references:
   nameWithType.vb: Integer
   fullName.vb: Integer
   name.vb: Integer
-- uid: LiteEntitySystem.SyncableField.IsRollbackSupported
-  commentId: P:LiteEntitySystem.SyncableField.IsRollbackSupported
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsRollbackSupported
-  name: IsRollbackSupported
-  nameWithType: SyncableField.IsRollbackSupported
-  fullName: LiteEntitySystem.SyncableField.IsRollbackSupported
-- uid: LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported*
-  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported
-  href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_IsRollbackSupported
-  name: IsRollbackSupported
-  nameWithType: SyncHashSet<T>.IsRollbackSupported
-  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.IsRollbackSupported
-  nameWithType.vb: SyncHashSet(Of T).IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).IsRollbackSupported
-- uid: System.Boolean
-  commentId: T:System.Boolean
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.boolean
-  name: bool
-  nameWithType: bool
-  fullName: bool
-  nameWithType.vb: Boolean
-  fullName.vb: Boolean
-  name.vb: Boolean
 - uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   commentId: M:LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   parent: LiteEntitySystem.SyncableField
@@ -1059,23 +1034,23 @@ references:
   name: SyncableRPCRegistrator
   nameWithType: SyncableRPCRegistrator
   fullName: LiteEntitySystem.SyncableRPCRegistrator
-- uid: LiteEntitySystem.SyncableField.OnRollback
-  commentId: M:LiteEntitySystem.SyncableField.OnRollback
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.OnRollback
+  commentId: M:LiteEntitySystem.SyncableFieldCustomRollback.OnRollback
+  parent: LiteEntitySystem.SyncableFieldCustomRollback
+  href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_OnRollback
   name: OnRollback()
-  nameWithType: SyncableField.OnRollback()
-  fullName: LiteEntitySystem.SyncableField.OnRollback()
+  nameWithType: SyncableFieldCustomRollback.OnRollback()
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.OnRollback()
   spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.OnRollback
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.OnRollback
     name: OnRollback
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_OnRollback
   - name: (
   - name: )
   spec.vb:
-  - uid: LiteEntitySystem.SyncableField.OnRollback
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.OnRollback
     name: OnRollback
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_OnRollback
   - name: (
   - name: )
 - uid: LiteEntitySystem.Extensions.SyncHashSet`1.OnRollback*
@@ -1086,23 +1061,23 @@ references:
   fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.OnRollback
   nameWithType.vb: SyncHashSet(Of T).OnRollback
   fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).OnRollback
-- uid: LiteEntitySystem.SyncableField.BeforeReadRPC
-  commentId: M:LiteEntitySystem.SyncableField.BeforeReadRPC
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC
+  commentId: M:LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC
+  parent: LiteEntitySystem.SyncableFieldCustomRollback
+  href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_BeforeReadRPC
   name: BeforeReadRPC()
-  nameWithType: SyncableField.BeforeReadRPC()
-  fullName: LiteEntitySystem.SyncableField.BeforeReadRPC()
+  nameWithType: SyncableFieldCustomRollback.BeforeReadRPC()
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC()
   spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC
     name: BeforeReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_BeforeReadRPC
   - name: (
   - name: )
   spec.vb:
-  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC
     name: BeforeReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_BeforeReadRPC
   - name: (
   - name: )
 - uid: LiteEntitySystem.Extensions.SyncHashSet`1.BeforeReadRPC*
@@ -1113,23 +1088,23 @@ references:
   fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.BeforeReadRPC
   nameWithType.vb: SyncHashSet(Of T).BeforeReadRPC
   fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).BeforeReadRPC
-- uid: LiteEntitySystem.SyncableField.AfterReadRPC
-  commentId: M:LiteEntitySystem.SyncableField.AfterReadRPC
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC
+  commentId: M:LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC
+  parent: LiteEntitySystem.SyncableFieldCustomRollback
+  href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_AfterReadRPC
   name: AfterReadRPC()
-  nameWithType: SyncableField.AfterReadRPC()
-  fullName: LiteEntitySystem.SyncableField.AfterReadRPC()
+  nameWithType: SyncableFieldCustomRollback.AfterReadRPC()
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC()
   spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC
     name: AfterReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_AfterReadRPC
   - name: (
   - name: )
   spec.vb:
-  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC
     name: AfterReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_AfterReadRPC
   - name: (
   - name: )
 - uid: LiteEntitySystem.Extensions.SyncHashSet`1.AfterReadRPC*
@@ -1225,6 +1200,17 @@ references:
   fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.Contains
   nameWithType.vb: SyncHashSet(Of T).Contains
   fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).Contains
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
 - uid: LiteEntitySystem.Extensions.SyncHashSet`1.Remove*
   commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.Remove
   href: LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_Remove__0_

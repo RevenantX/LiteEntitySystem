@@ -9,7 +9,6 @@ items:
   - LiteEntitySystem.Extensions.SyncStateMachine`1.Add(`0,LiteEntitySystem.Extensions.StateCalls)
   - LiteEntitySystem.Extensions.SyncStateMachine`1.ChangeState(`0)
   - LiteEntitySystem.Extensions.SyncStateMachine`1.CurrentState
-  - LiteEntitySystem.Extensions.SyncStateMachine`1.IsRollbackSupported
   - LiteEntitySystem.Extensions.SyncStateMachine`1.SetInitialState(`0)
   - LiteEntitySystem.Extensions.SyncStateMachine`1.Update(System.Single)
   langs:
@@ -36,9 +35,6 @@ items:
   - LiteEntitySystem.SyncableField.IsServer
   - LiteEntitySystem.SyncableField.ParentEntity
   - LiteEntitySystem.SyncableField.ParentEntityLogic
-  - LiteEntitySystem.SyncableField.BeforeReadRPC
-  - LiteEntitySystem.SyncableField.AfterReadRPC
-  - LiteEntitySystem.SyncableField.OnRollback
   - LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   - LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
   - LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{{T}}@,{T})
@@ -71,32 +67,6 @@ items:
   overload: LiteEntitySystem.Extensions.SyncStateMachine`1.CurrentState*
   nameWithType.vb: SyncStateMachine(Of T).CurrentState
   fullName.vb: LiteEntitySystem.Extensions.SyncStateMachine(Of T).CurrentState
-- uid: LiteEntitySystem.Extensions.SyncStateMachine`1.IsRollbackSupported
-  commentId: P:LiteEntitySystem.Extensions.SyncStateMachine`1.IsRollbackSupported
-  id: IsRollbackSupported
-  parent: LiteEntitySystem.Extensions.SyncStateMachine`1
-  langs:
-  - csharp
-  - vb
-  name: IsRollbackSupported
-  nameWithType: SyncStateMachine<T>.IsRollbackSupported
-  fullName: LiteEntitySystem.Extensions.SyncStateMachine<T>.IsRollbackSupported
-  type: Property
-  assemblies:
-  - LiteEntitySystem
-  namespace: LiteEntitySystem.Extensions
-  summary: Is supported rollback by this syncable field
-  example: []
-  syntax:
-    content: public override bool IsRollbackSupported { get; }
-    parameters: []
-    return:
-      type: System.Boolean
-    content.vb: Public Overrides ReadOnly Property IsRollbackSupported As Boolean
-  overridden: LiteEntitySystem.SyncableField.IsRollbackSupported
-  overload: LiteEntitySystem.Extensions.SyncStateMachine`1.IsRollbackSupported*
-  nameWithType.vb: SyncStateMachine(Of T).IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncStateMachine(Of T).IsRollbackSupported
 - uid: LiteEntitySystem.Extensions.SyncStateMachine`1.#ctor
   commentId: M:LiteEntitySystem.Extensions.SyncStateMachine`1.#ctor
   id: '#ctor'
@@ -290,63 +260,6 @@ references:
   name: ParentEntityLogic
   nameWithType: SyncableField.ParentEntityLogic
   fullName: LiteEntitySystem.SyncableField.ParentEntityLogic
-- uid: LiteEntitySystem.SyncableField.BeforeReadRPC
-  commentId: M:LiteEntitySystem.SyncableField.BeforeReadRPC
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
-  name: BeforeReadRPC()
-  nameWithType: SyncableField.BeforeReadRPC()
-  fullName: LiteEntitySystem.SyncableField.BeforeReadRPC()
-  spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
-    name: BeforeReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
-    name: BeforeReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
-  - name: (
-  - name: )
-- uid: LiteEntitySystem.SyncableField.AfterReadRPC
-  commentId: M:LiteEntitySystem.SyncableField.AfterReadRPC
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
-  name: AfterReadRPC()
-  nameWithType: SyncableField.AfterReadRPC()
-  fullName: LiteEntitySystem.SyncableField.AfterReadRPC()
-  spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
-    name: AfterReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
-    name: AfterReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
-  - name: (
-  - name: )
-- uid: LiteEntitySystem.SyncableField.OnRollback
-  commentId: M:LiteEntitySystem.SyncableField.OnRollback
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
-  name: OnRollback()
-  nameWithType: SyncableField.OnRollback()
-  fullName: LiteEntitySystem.SyncableField.OnRollback()
-  spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.OnRollback
-    name: OnRollback
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: LiteEntitySystem.SyncableField.OnRollback
-    name: OnRollback
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
-  - name: (
-  - name: )
 - uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   commentId: M:LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   parent: LiteEntitySystem.SyncableField
@@ -820,32 +733,6 @@ references:
   name: T
   nameWithType: T
   fullName: T
-- uid: LiteEntitySystem.SyncableField.IsRollbackSupported
-  commentId: P:LiteEntitySystem.SyncableField.IsRollbackSupported
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsRollbackSupported
-  name: IsRollbackSupported
-  nameWithType: SyncableField.IsRollbackSupported
-  fullName: LiteEntitySystem.SyncableField.IsRollbackSupported
-- uid: LiteEntitySystem.Extensions.SyncStateMachine`1.IsRollbackSupported*
-  commentId: Overload:LiteEntitySystem.Extensions.SyncStateMachine`1.IsRollbackSupported
-  href: LiteEntitySystem.Extensions.SyncStateMachine-1.html#LiteEntitySystem_Extensions_SyncStateMachine_1_IsRollbackSupported
-  name: IsRollbackSupported
-  nameWithType: SyncStateMachine<T>.IsRollbackSupported
-  fullName: LiteEntitySystem.Extensions.SyncStateMachine<T>.IsRollbackSupported
-  nameWithType.vb: SyncStateMachine(Of T).IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncStateMachine(Of T).IsRollbackSupported
-- uid: System.Boolean
-  commentId: T:System.Boolean
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.boolean
-  name: bool
-  nameWithType: bool
-  fullName: bool
-  nameWithType.vb: Boolean
-  fullName.vb: Boolean
-  name.vb: Boolean
 - uid: LiteEntitySystem.Extensions.SyncStateMachine`1.#ctor*
   commentId: Overload:LiteEntitySystem.Extensions.SyncStateMachine`1.#ctor
   href: LiteEntitySystem.Extensions.SyncStateMachine-1.html#LiteEntitySystem_Extensions_SyncStateMachine_1__ctor

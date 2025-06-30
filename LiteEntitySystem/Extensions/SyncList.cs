@@ -5,7 +5,7 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncList<T> : SyncableField, ICollection<T>, IReadOnlyList<T> where T : unmanaged
+    public class SyncList<T> : SyncableFieldCustomRollback, ICollection<T>, IReadOnlyList<T> where T : unmanaged
     {
         public struct SyncListEnumerator : IEnumerator<T>
         {
@@ -48,8 +48,6 @@ namespace LiteEntitySystem.Extensions
         private static RemoteCallSpan<T> _initAction;
         private static RemoteCall<SetValueData> _setAction;
         
-        public override bool IsRollbackSupported => true;
-
         protected internal override void BeforeReadRPC()
         {
             _serverData ??= new T[_data.Length];

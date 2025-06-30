@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncDict<TKey,TValue> : SyncableField, IEnumerable<KeyValuePair<TKey,TValue>> where TKey : unmanaged where TValue : unmanaged
+    public class SyncDict<TKey,TValue> : SyncableFieldCustomRollback, IEnumerable<KeyValuePair<TKey,TValue>> where TKey : unmanaged where TValue : unmanaged
     {
         private struct KeyValue
         {
@@ -31,8 +31,6 @@ namespace LiteEntitySystem.Extensions
 
         public Dictionary<TKey, TValue>.KeyCollection Keys => _data.Keys;
         public Dictionary<TKey, TValue>.ValueCollection Values => _data.Values;
-        
-        public override bool IsRollbackSupported => true;
 
         protected internal override void RegisterRPC(ref SyncableRPCRegistrator r)
         {

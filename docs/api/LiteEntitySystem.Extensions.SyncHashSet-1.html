@@ -97,7 +97,7 @@ Class SyncHashSet&lt;T&gt;
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SyncHashSet&lt;T&gt; : SyncableField, IEnumerable&lt;T&gt;, IEnumerable where T : unmanaged</code></pre>
+    <pre><code class="lang-csharp hljs">public class SyncHashSet&lt;T&gt; : SyncableFieldCustomRollback, IEnumerable&lt;T&gt;, IEnumerable where T : unmanaged</code></pre>
   </div>
 
 
@@ -114,6 +114,7 @@ Class SyncHashSet&lt;T&gt;
       <div><span class="xref">object</span></div>
       <div><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
       <div><a class="xref" href="LiteEntitySystem.SyncableField.html">SyncableField</a></div>
+      <div><a class="xref" href="LiteEntitySystem.SyncableFieldCustomRollback.html">SyncableFieldCustomRollback</a></div>
       <div><span class="xref">SyncHashSet&lt;T&gt;</span></div>
     </dd>
   </dl>
@@ -130,6 +131,9 @@ Class SyncHashSet&lt;T&gt;
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
     <dd>
+    <div>
+      <a class="xref" href="LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_MarkAsChanged">SyncableFieldCustomRollback.MarkAsChanged()</a>
+    </div>
     <div>
       <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsClient">SyncableField.IsClient</a>
     </div>
@@ -186,38 +190,6 @@ Class SyncHashSet&lt;T&gt;
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="LiteEntitySystem_Extensions_SyncHashSet_1_IsRollbackSupported_" data-uid="LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported*"></a>
-
-  <h3 id="LiteEntitySystem_Extensions_SyncHashSet_1_IsRollbackSupported" data-uid="LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported">
-  IsRollbackSupported
-  
-  </h3>
-
-  <div class="markdown level1 summary"><p>Is supported rollback by this syncable field</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override bool IsRollbackSupported { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
     <dd></dd>
   </dl>
 

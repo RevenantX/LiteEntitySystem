@@ -15,8 +15,6 @@ namespace LiteEntitySystem.Extensions
 
         public T CurrentState => _state;
         
-        public override bool IsRollbackSupported => true;
-
         private readonly StateCalls[] _data;
 
         public SyncStateMachine()

@@ -63,7 +63,7 @@ namespace LiteEntitySystem.Internal
         public int DataOffset => _dataOffset;
         public int DataSize => _dataSize;
         
-        private readonly HashSet<SyncableField> _syncablesSet = new();
+        private readonly HashSet<SyncableFieldCustomRollback> _syncablesSet = new();
         private DeltaCompressor _rpcDeltaCompressor = new (Utils.SizeOfStruct<RPCHeader>());
 
         public ServerStateData() =>
@@ -285,9 +285,9 @@ namespace LiteEntitySystem.Internal
                     else
                     {
                         var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, rpcFieldInfo.SyncableOffset);
-                        if (_syncablesSet.Add(syncableField))
+                        if (syncableField is SyncableFieldCustomRollback sf && _syncablesSet.Add(sf))
                         {
-                            syncableField.BeforeReadRPC();
+                            sf.BeforeReadRPC();
                         }
                         try
                         {

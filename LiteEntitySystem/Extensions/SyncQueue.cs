@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncQueue<T> : SyncableField, IReadOnlyCollection<T>, ICollection where T : unmanaged
+    public class SyncQueue<T> : SyncableFieldCustomRollback, IReadOnlyCollection<T>, ICollection where T : unmanaged
     {
         // TODO: implement ring buffer instead of using .net's Queue.
         
@@ -20,9 +20,7 @@ namespace LiteEntitySystem.Extensions
         public int Count => _data.Count;
         public bool IsSynchronized => false;
         public object SyncRoot => throw new NotImplementedException("The SyncQueue Collection isn't thread-safe.");
-
-        public override bool IsRollbackSupported => true;
-
+        
         protected internal override void RegisterRPC(ref SyncableRPCRegistrator r)
         {
             base.RegisterRPC(ref r);

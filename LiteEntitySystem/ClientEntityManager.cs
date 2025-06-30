@@ -542,8 +542,8 @@ namespace LiteEntitySystem
                         }
                     }
                 }
-                for (int i = 0; i < classData.SyncableFields.Length; i++)
-                    RefMagic.GetFieldValue<SyncableField>(entity, classData.SyncableFields[i].Offset).OnRollback();
+                for (int i = 0; i < classData.SyncableFieldsCustomRollback.Length; i++)
+                    RefMagic.GetFieldValue<SyncableFieldCustomRollback>(entity, classData.SyncableFieldsCustomRollback[i].Offset).OnRollback();
                 entity.OnRollback();
             }
             

@@ -40,12 +40,8 @@ items:
   inheritedMembers:
   - LiteEntitySystem.SyncableField.IsClient
   - LiteEntitySystem.SyncableField.IsServer
-  - LiteEntitySystem.SyncableField.IsRollbackSupported
   - LiteEntitySystem.SyncableField.ParentEntity
   - LiteEntitySystem.SyncableField.ParentEntityLogic
-  - LiteEntitySystem.SyncableField.BeforeReadRPC
-  - LiteEntitySystem.SyncableField.AfterReadRPC
-  - LiteEntitySystem.SyncableField.OnRollback
   - LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
   - LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{{T}}@,{T})
   - LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{{T}}@,System.ReadOnlySpan{{T}})
@@ -403,13 +399,6 @@ references:
   name: IsServer
   nameWithType: SyncableField.IsServer
   fullName: LiteEntitySystem.SyncableField.IsServer
-- uid: LiteEntitySystem.SyncableField.IsRollbackSupported
-  commentId: P:LiteEntitySystem.SyncableField.IsRollbackSupported
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsRollbackSupported
-  name: IsRollbackSupported
-  nameWithType: SyncableField.IsRollbackSupported
-  fullName: LiteEntitySystem.SyncableField.IsRollbackSupported
 - uid: LiteEntitySystem.SyncableField.ParentEntity
   commentId: P:LiteEntitySystem.SyncableField.ParentEntity
   parent: LiteEntitySystem.SyncableField
@@ -424,63 +413,6 @@ references:
   name: ParentEntityLogic
   nameWithType: SyncableField.ParentEntityLogic
   fullName: LiteEntitySystem.SyncableField.ParentEntityLogic
-- uid: LiteEntitySystem.SyncableField.BeforeReadRPC
-  commentId: M:LiteEntitySystem.SyncableField.BeforeReadRPC
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
-  name: BeforeReadRPC()
-  nameWithType: SyncableField.BeforeReadRPC()
-  fullName: LiteEntitySystem.SyncableField.BeforeReadRPC()
-  spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
-    name: BeforeReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
-    name: BeforeReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
-  - name: (
-  - name: )
-- uid: LiteEntitySystem.SyncableField.AfterReadRPC
-  commentId: M:LiteEntitySystem.SyncableField.AfterReadRPC
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
-  name: AfterReadRPC()
-  nameWithType: SyncableField.AfterReadRPC()
-  fullName: LiteEntitySystem.SyncableField.AfterReadRPC()
-  spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
-    name: AfterReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
-    name: AfterReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
-  - name: (
-  - name: )
-- uid: LiteEntitySystem.SyncableField.OnRollback
-  commentId: M:LiteEntitySystem.SyncableField.OnRollback
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
-  name: OnRollback()
-  nameWithType: SyncableField.OnRollback()
-  fullName: LiteEntitySystem.SyncableField.OnRollback()
-  spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.OnRollback
-    name: OnRollback
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: LiteEntitySystem.SyncableField.OnRollback
-    name: OnRollback
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
-  - name: (
-  - name: )
 - uid: LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
   commentId: M:LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
   parent: LiteEntitySystem.SyncableField

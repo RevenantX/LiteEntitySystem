@@ -11,6 +11,7 @@ items:
   - LiteEntitySystem.Extensions.SyncFixedArray`1
   - LiteEntitySystem.Extensions.SyncHashSet`1
   - LiteEntitySystem.Extensions.SyncList`1
+  - LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator
   - LiteEntitySystem.Extensions.SyncNetSerializable`1
   - LiteEntitySystem.Extensions.SyncQueue`1
   - LiteEntitySystem.Extensions.SyncSpanSerializable`1
@@ -166,6 +167,40 @@ references:
   - name: " "
   - name: T
   - name: )
+- uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator
+  commentId: T:LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator
+  parent: LiteEntitySystem.Extensions
+  href: LiteEntitySystem.Extensions.SyncList-1.html
+  name: SyncList<T>.SyncListEnumerator
+  nameWithType: SyncList<T>.SyncListEnumerator
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.SyncListEnumerator
+  nameWithType.vb: SyncList(Of T).SyncListEnumerator
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).SyncListEnumerator
+  name.vb: SyncList(Of T).SyncListEnumerator
+  spec.csharp:
+  - uid: LiteEntitySystem.Extensions.SyncList`1
+    name: SyncList
+    href: LiteEntitySystem.Extensions.SyncList-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: .
+  - uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator
+    name: SyncListEnumerator
+    href: LiteEntitySystem.Extensions.SyncList-1.SyncListEnumerator.html
+  spec.vb:
+  - uid: LiteEntitySystem.Extensions.SyncList`1
+    name: SyncList
+    href: LiteEntitySystem.Extensions.SyncList-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: .
+  - uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator
+    name: SyncListEnumerator
+    href: LiteEntitySystem.Extensions.SyncList-1.SyncListEnumerator.html
 - uid: LiteEntitySystem.Extensions.SyncNetSerializable`1
   commentId: T:LiteEntitySystem.Extensions.SyncNetSerializable`1
   parent: LiteEntitySystem.Extensions

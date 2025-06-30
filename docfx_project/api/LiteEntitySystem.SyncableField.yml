@@ -5,16 +5,12 @@ items:
   id: SyncableField
   parent: LiteEntitySystem
   children:
-  - LiteEntitySystem.SyncableField.AfterReadRPC
-  - LiteEntitySystem.SyncableField.BeforeReadRPC
   - LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
   - LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSerializable{``0}@,``0)
   - LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCallSpan{``0}@,System.ReadOnlySpan{``0})
   - LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{``0}@,``0)
   - LiteEntitySystem.SyncableField.IsClient
-  - LiteEntitySystem.SyncableField.IsRollbackSupported
   - LiteEntitySystem.SyncableField.IsServer
-  - LiteEntitySystem.SyncableField.OnRollback
   - LiteEntitySystem.SyncableField.ParentEntity
   - LiteEntitySystem.SyncableField.ParentEntityLogic
   - LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
@@ -38,18 +34,14 @@ items:
   - LiteEntitySystem.Internal.InternalBaseClass
   derivedClasses:
   - LiteEntitySystem.Extensions.SyncArray`1
-  - LiteEntitySystem.Extensions.SyncDict`2
   - LiteEntitySystem.Extensions.SyncFixedArray`1
-  - LiteEntitySystem.Extensions.SyncHashSet`1
-  - LiteEntitySystem.Extensions.SyncList`1
   - LiteEntitySystem.Extensions.SyncNetSerializable`1
-  - LiteEntitySystem.Extensions.SyncQueue`1
   - LiteEntitySystem.Extensions.SyncSpanSerializable`1
   - LiteEntitySystem.Extensions.SyncSquare`1
   - LiteEntitySystem.Extensions.SyncStateMachine`1
   - LiteEntitySystem.Extensions.SyncString
   - LiteEntitySystem.Extensions.SyncTimer
-  - LiteEntitySystem.SyncChilds
+  - LiteEntitySystem.SyncableFieldCustomRollback
   inheritedMembers:
   - LiteEntitySystem.Internal.InternalBaseClass.OnSyncRequested
 - uid: LiteEntitySystem.SyncableField.IsClient
@@ -98,29 +90,6 @@ items:
       type: System.Boolean
     content.vb: Protected ReadOnly Property IsServer As Boolean
   overload: LiteEntitySystem.SyncableField.IsServer*
-- uid: LiteEntitySystem.SyncableField.IsRollbackSupported
-  commentId: P:LiteEntitySystem.SyncableField.IsRollbackSupported
-  id: IsRollbackSupported
-  parent: LiteEntitySystem.SyncableField
-  langs:
-  - csharp
-  - vb
-  name: IsRollbackSupported
-  nameWithType: SyncableField.IsRollbackSupported
-  fullName: LiteEntitySystem.SyncableField.IsRollbackSupported
-  type: Property
-  assemblies:
-  - LiteEntitySystem
-  namespace: LiteEntitySystem
-  summary: Is supported rollback by this syncable field
-  example: []
-  syntax:
-    content: public virtual bool IsRollbackSupported { get; }
-    parameters: []
-    return:
-      type: System.Boolean
-    content.vb: Public Overridable ReadOnly Property IsRollbackSupported As Boolean
-  overload: LiteEntitySystem.SyncableField.IsRollbackSupported*
 - uid: LiteEntitySystem.SyncableField.ParentEntity
   commentId: P:LiteEntitySystem.SyncableField.ParentEntity
   id: ParentEntity
@@ -167,60 +136,6 @@ items:
       type: LiteEntitySystem.EntityLogic
     content.vb: Protected ReadOnly Property ParentEntityLogic As EntityLogic
   overload: LiteEntitySystem.SyncableField.ParentEntityLogic*
-- uid: LiteEntitySystem.SyncableField.BeforeReadRPC
-  commentId: M:LiteEntitySystem.SyncableField.BeforeReadRPC
-  id: BeforeReadRPC
-  parent: LiteEntitySystem.SyncableField
-  langs:
-  - csharp
-  - vb
-  name: BeforeReadRPC()
-  nameWithType: SyncableField.BeforeReadRPC()
-  fullName: LiteEntitySystem.SyncableField.BeforeReadRPC()
-  type: Method
-  assemblies:
-  - LiteEntitySystem
-  namespace: LiteEntitySystem
-  syntax:
-    content: protected virtual void BeforeReadRPC()
-    content.vb: Protected Overridable Sub BeforeReadRPC()
-  overload: LiteEntitySystem.SyncableField.BeforeReadRPC*
-- uid: LiteEntitySystem.SyncableField.AfterReadRPC
-  commentId: M:LiteEntitySystem.SyncableField.AfterReadRPC
-  id: AfterReadRPC
-  parent: LiteEntitySystem.SyncableField
-  langs:
-  - csharp
-  - vb
-  name: AfterReadRPC()
-  nameWithType: SyncableField.AfterReadRPC()
-  fullName: LiteEntitySystem.SyncableField.AfterReadRPC()
-  type: Method
-  assemblies:
-  - LiteEntitySystem
-  namespace: LiteEntitySystem
-  syntax:
-    content: protected virtual void AfterReadRPC()
-    content.vb: Protected Overridable Sub AfterReadRPC()
-  overload: LiteEntitySystem.SyncableField.AfterReadRPC*
-- uid: LiteEntitySystem.SyncableField.OnRollback
-  commentId: M:LiteEntitySystem.SyncableField.OnRollback
-  id: OnRollback
-  parent: LiteEntitySystem.SyncableField
-  langs:
-  - csharp
-  - vb
-  name: OnRollback()
-  nameWithType: SyncableField.OnRollback()
-  fullName: LiteEntitySystem.SyncableField.OnRollback()
-  type: Method
-  assemblies:
-  - LiteEntitySystem
-  namespace: LiteEntitySystem
-  syntax:
-    content: protected virtual void OnRollback()
-    content.vb: Protected Overridable Sub OnRollback()
-  overload: LiteEntitySystem.SyncableField.OnRollback*
 - uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   commentId: M:LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   id: RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
@@ -448,12 +363,6 @@ references:
   name: IsServer
   nameWithType: SyncableField.IsServer
   fullName: LiteEntitySystem.SyncableField.IsServer
-- uid: LiteEntitySystem.SyncableField.IsRollbackSupported*
-  commentId: Overload:LiteEntitySystem.SyncableField.IsRollbackSupported
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsRollbackSupported
-  name: IsRollbackSupported
-  nameWithType: SyncableField.IsRollbackSupported
-  fullName: LiteEntitySystem.SyncableField.IsRollbackSupported
 - uid: LiteEntitySystem.SyncableField.ParentEntity*
   commentId: Overload:LiteEntitySystem.SyncableField.ParentEntity
   href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ParentEntity
@@ -480,24 +389,6 @@ references:
   name: EntityLogic
   nameWithType: EntityLogic
   fullName: LiteEntitySystem.EntityLogic
-- uid: LiteEntitySystem.SyncableField.BeforeReadRPC*
-  commentId: Overload:LiteEntitySystem.SyncableField.BeforeReadRPC
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
-  name: BeforeReadRPC
-  nameWithType: SyncableField.BeforeReadRPC
-  fullName: LiteEntitySystem.SyncableField.BeforeReadRPC
-- uid: LiteEntitySystem.SyncableField.AfterReadRPC*
-  commentId: Overload:LiteEntitySystem.SyncableField.AfterReadRPC
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
-  name: AfterReadRPC
-  nameWithType: SyncableField.AfterReadRPC
-  fullName: LiteEntitySystem.SyncableField.AfterReadRPC
-- uid: LiteEntitySystem.SyncableField.OnRollback*
-  commentId: Overload:LiteEntitySystem.SyncableField.OnRollback
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
-  name: OnRollback
-  nameWithType: SyncableField.OnRollback
-  fullName: LiteEntitySystem.SyncableField.OnRollback
 - uid: LiteEntitySystem.SyncableField.RegisterRPC*
   commentId: Overload:LiteEntitySystem.SyncableField.RegisterRPC
   href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__

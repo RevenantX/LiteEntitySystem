@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class SyncFixedArray&lt;T&gt; </title>
+      <title>Class SyncableFieldCustomRollback </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class SyncFixedArray&lt;T&gt; ">
+      <meta name="title" content="Class SyncableFieldCustomRollback ">
       
-      
+      <meta name="description" content="Syncable fields with custom rollback notifications and implementation">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -80,33 +80,29 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1">
+        <article data-uid="LiteEntitySystem.SyncableFieldCustomRollback">
 
 
 
-  <h1 id="LiteEntitySystem_Extensions_SyncFixedArray_1" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1" class="text-break">
-Class SyncFixedArray&lt;T&gt;  
+  <h1 id="LiteEntitySystem_SyncableFieldCustomRollback" data-uid="LiteEntitySystem.SyncableFieldCustomRollback" class="text-break">
+Class SyncableFieldCustomRollback  
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a>.<a class="xref" href="LiteEntitySystem.Extensions.html">Extensions</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></dd></dl>
   <dl><dt>Assembly</dt><dd>LiteEntitySystem.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Syncable fields with custom rollback notifications and implementation</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SyncFixedArray&lt;T&gt; : SyncableField where T : unmanaged, IEquatable&lt;T&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class SyncableFieldCustomRollback : SyncableField</code></pre>
   </div>
 
 
 
-  <h4 class="section">Type Parameters</h4>
-  <dl class="parameters">
-    <dt><code>T</code></dt>
-    <dd></dd>
-  </dl>
 
   <dl class="typelist inheritance">
     <dt>Inheritance</dt>
@@ -114,11 +110,21 @@ Class SyncFixedArray&lt;T&gt;
       <div><span class="xref">object</span></div>
       <div><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
       <div><a class="xref" href="LiteEntitySystem.SyncableField.html">SyncableField</a></div>
-      <div><span class="xref">SyncFixedArray&lt;T&gt;</span></div>
+      <div><span class="xref">SyncableFieldCustomRollback</span></div>
     </dd>
   </dl>
 
 
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="LiteEntitySystem.Extensions.SyncDict-2.html">SyncDict&lt;TKey, TValue&gt;</a></div>
+      <div><a class="xref" href="LiteEntitySystem.Extensions.SyncHashSet-1.html">SyncHashSet&lt;T&gt;</a></div>
+      <div><a class="xref" href="LiteEntitySystem.Extensions.SyncList-1.html">SyncList&lt;T&gt;</a></div>
+      <div><a class="xref" href="LiteEntitySystem.Extensions.SyncQueue-1.html">SyncQueue&lt;T&gt;</a></div>
+      <div><a class="xref" href="LiteEntitySystem.SyncChilds.html">SyncChilds</a></div>
+    </dd>
+  </dl>
 
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
@@ -136,6 +142,9 @@ Class SyncFixedArray&lt;T&gt;
       <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ParentEntityLogic">SyncableField.ParentEntityLogic</a>
     </div>
     <div>
+      <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__">SyncableField.RegisterRPC(ref SyncableRPCRegistrator)</a>
+    </div>
+    <div>
       <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__">SyncableField.ExecuteRPC(in RemoteCall)</a>
     </div>
     <div>
@@ -147,116 +156,10 @@ Class SyncFixedArray&lt;T&gt;
     <div>
       <a class="xref" href="LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC__1_LiteEntitySystem_RemoteCallSerializable___0_____0_">SyncableField.ExecuteRPC&lt;T&gt;(in RemoteCallSerializable&lt;T&gt;, T)</a>
     </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">InternalBaseClass.OnSyncRequested()</a>
+    </div>
   </dd></dl>
-
-
-
-
-
-
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="LiteEntitySystem_Extensions_SyncFixedArray_1__ctor_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.#ctor*"></a>
-
-  <h3 id="LiteEntitySystem_Extensions_SyncFixedArray_1__ctor_System_Int32_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.#ctor(System.Int32)">
-  SyncFixedArray(int)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SyncFixedArray(int size)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>size</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-  <h2 class="section" id="fields">Fields
-</h2>
-
-
-
-  <h3 id="LiteEntitySystem_Extensions_SyncFixedArray_1_Length" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.Length">
-  Length
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly int Length</code></pre>
-  </div>
-
-
-
-
-  <h4 class="section">Field Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-  <h2 class="section" id="properties">Properties
-</h2>
-
-
-  <a id="LiteEntitySystem_Extensions_SyncFixedArray_1_Item_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.Item*"></a>
-
-  <h3 id="LiteEntitySystem_Extensions_SyncFixedArray_1_Item_System_Int32_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.Item(System.Int32)">
-  this[int]
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T this[int index] { get; set; }</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><span class="xref">T</span></dt>
-    <dd></dd>
-  </dl>
-
-
 
 
 
@@ -267,38 +170,10 @@ Class SyncFixedArray&lt;T&gt;
 </h2>
 
 
-  <a id="LiteEntitySystem_Extensions_SyncFixedArray_1_OnSyncRequested_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.OnSyncRequested*"></a>
+  <a id="LiteEntitySystem_SyncableFieldCustomRollback_AfterReadRPC_" data-uid="LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC*"></a>
 
-  <h3 id="LiteEntitySystem_Extensions_SyncFixedArray_1_OnSyncRequested" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.OnSyncRequested">
-  OnSyncRequested()
-  
-  </h3>
-
-  <div class="markdown level1 summary"><p>Method for executing RPCs containing initial sync data that need to be sent after entity creation
-to existing players or when new player connected</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected override void OnSyncRequested()</code></pre>
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <a id="LiteEntitySystem_Extensions_SyncFixedArray_1_RegisterRPC_" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.RegisterRPC*"></a>
-
-  <h3 id="LiteEntitySystem_Extensions_SyncFixedArray_1_RegisterRPC_LiteEntitySystem_SyncableRPCRegistrator__" data-uid="LiteEntitySystem.Extensions.SyncFixedArray`1.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)">
-  RegisterRPC(ref SyncableRPCRegistrator)
+  <h3 id="LiteEntitySystem_SyncableFieldCustomRollback_AfterReadRPC" data-uid="LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC">
+  AfterReadRPC()
   
   </h3>
 
@@ -306,14 +181,88 @@ to existing players or when new player connected</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected override void RegisterRPC(ref SyncableRPCRegistrator r)</code></pre>
+    <pre><code class="lang-csharp hljs">protected abstract void AfterReadRPC()</code></pre>
   </div>
 
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>r</code> <a class="xref" href="LiteEntitySystem.SyncableRPCRegistrator.html">SyncableRPCRegistrator</a></dt>
-    <dd></dd>
-  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="LiteEntitySystem_SyncableFieldCustomRollback_BeforeReadRPC_" data-uid="LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC*"></a>
+
+  <h3 id="LiteEntitySystem_SyncableFieldCustomRollback_BeforeReadRPC" data-uid="LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC">
+  BeforeReadRPC()
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract void BeforeReadRPC()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="LiteEntitySystem_SyncableFieldCustomRollback_MarkAsChanged_" data-uid="LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged*"></a>
+
+  <h3 id="LiteEntitySystem_SyncableFieldCustomRollback_MarkAsChanged" data-uid="LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged">
+  MarkAsChanged()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Marks that SyncableField was modified on client and add parent entity to Rollback list</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void MarkAsChanged()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="LiteEntitySystem_SyncableFieldCustomRollback_OnRollback_" data-uid="LiteEntitySystem.SyncableFieldCustomRollback.OnRollback*"></a>
+
+  <h3 id="LiteEntitySystem_SyncableFieldCustomRollback_OnRollback" data-uid="LiteEntitySystem.SyncableFieldCustomRollback.OnRollback">
+  OnRollback()
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract void OnRollback()</code></pre>
+  </div>
+
 
 
 

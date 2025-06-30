@@ -163,6 +163,9 @@ items:
   - uid: LiteEntitySystem.SyncableField
     name: SyncableField
     type: Class
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback
+    name: SyncableFieldCustomRollback
+    type: Class
   - uid: LiteEntitySystem.SyncableRPCRegistrator
     name: SyncableRPCRegistrator
     type: Struct
@@ -225,6 +228,9 @@ items:
   - uid: LiteEntitySystem.Extensions.SyncList`1
     name: SyncList<T>
     type: Class
+  - uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator
+    name: SyncList<T>.SyncListEnumerator
+    type: Struct
   - uid: LiteEntitySystem.Extensions.SyncNetSerializable`1
     name: SyncNetSerializable<T>
     type: Class

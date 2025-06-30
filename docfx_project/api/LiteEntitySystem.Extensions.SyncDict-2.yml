@@ -13,7 +13,6 @@ items:
   - LiteEntitySystem.Extensions.SyncDict`2.ContainsValue(`1)
   - LiteEntitySystem.Extensions.SyncDict`2.Count
   - LiteEntitySystem.Extensions.SyncDict`2.GetEnumerator
-  - LiteEntitySystem.Extensions.SyncDict`2.IsRollbackSupported
   - LiteEntitySystem.Extensions.SyncDict`2.Item(`0)
   - LiteEntitySystem.Extensions.SyncDict`2.Keys
   - LiteEntitySystem.Extensions.SyncDict`2.OnRollback
@@ -33,19 +32,21 @@ items:
   - LiteEntitySystem
   namespace: LiteEntitySystem.Extensions
   syntax:
-    content: 'public class SyncDict<TKey, TValue> : SyncableField, IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable where TKey : unmanaged where TValue : unmanaged'
+    content: 'public class SyncDict<TKey, TValue> : SyncableFieldCustomRollback, IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable where TKey : unmanaged where TValue : unmanaged'
     typeParameters:
     - id: TKey
     - id: TValue
-    content.vb: Public Class SyncDict(Of TKey As Structure, TValue As Structure) Inherits SyncableField Implements IEnumerable(Of KeyValuePair(Of TKey, TValue)), IEnumerable
+    content.vb: Public Class SyncDict(Of TKey As Structure, TValue As Structure) Inherits SyncableFieldCustomRollback Implements IEnumerable(Of KeyValuePair(Of TKey, TValue)), IEnumerable
   inheritance:
   - System.Object
   - LiteEntitySystem.Internal.InternalBaseClass
   - LiteEntitySystem.SyncableField
+  - LiteEntitySystem.SyncableFieldCustomRollback
   implements:
   - System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
   - System.Collections.IEnumerable
   inheritedMembers:
+  - LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged
   - LiteEntitySystem.SyncableField.IsClient
   - LiteEntitySystem.SyncableField.IsServer
   - LiteEntitySystem.SyncableField.ParentEntity
@@ -126,32 +127,6 @@ items:
   overload: LiteEntitySystem.Extensions.SyncDict`2.Values*
   nameWithType.vb: SyncDict(Of TKey, TValue).Values
   fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).Values
-- uid: LiteEntitySystem.Extensions.SyncDict`2.IsRollbackSupported
-  commentId: P:LiteEntitySystem.Extensions.SyncDict`2.IsRollbackSupported
-  id: IsRollbackSupported
-  parent: LiteEntitySystem.Extensions.SyncDict`2
-  langs:
-  - csharp
-  - vb
-  name: IsRollbackSupported
-  nameWithType: SyncDict<TKey, TValue>.IsRollbackSupported
-  fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.IsRollbackSupported
-  type: Property
-  assemblies:
-  - LiteEntitySystem
-  namespace: LiteEntitySystem.Extensions
-  summary: Is supported rollback by this syncable field
-  example: []
-  syntax:
-    content: public override bool IsRollbackSupported { get; }
-    parameters: []
-    return:
-      type: System.Boolean
-    content.vb: Public Overrides ReadOnly Property IsRollbackSupported As Boolean
-  overridden: LiteEntitySystem.SyncableField.IsRollbackSupported
-  overload: LiteEntitySystem.Extensions.SyncDict`2.IsRollbackSupported*
-  nameWithType.vb: SyncDict(Of TKey, TValue).IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).IsRollbackSupported
 - uid: LiteEntitySystem.Extensions.SyncDict`2.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   commentId: M:LiteEntitySystem.Extensions.SyncDict`2.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   id: RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
@@ -196,7 +171,7 @@ items:
   syntax:
     content: protected override void OnRollback()
     content.vb: Protected Overrides Sub OnRollback()
-  overridden: LiteEntitySystem.SyncableField.OnRollback
+  overridden: LiteEntitySystem.SyncableFieldCustomRollback.OnRollback
   overload: LiteEntitySystem.Extensions.SyncDict`2.OnRollback*
   nameWithType.vb: SyncDict(Of TKey, TValue).OnRollback()
   fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).OnRollback()
@@ -218,7 +193,7 @@ items:
   syntax:
     content: protected override void BeforeReadRPC()
     content.vb: Protected Overrides Sub BeforeReadRPC()
-  overridden: LiteEntitySystem.SyncableField.BeforeReadRPC
+  overridden: LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC
   overload: LiteEntitySystem.Extensions.SyncDict`2.BeforeReadRPC*
   nameWithType.vb: SyncDict(Of TKey, TValue).BeforeReadRPC()
   fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).BeforeReadRPC()
@@ -240,7 +215,7 @@ items:
   syntax:
     content: protected override void AfterReadRPC()
     content.vb: Protected Overrides Sub AfterReadRPC()
-  overridden: LiteEntitySystem.SyncableField.AfterReadRPC
+  overridden: LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC
   overload: LiteEntitySystem.Extensions.SyncDict`2.AfterReadRPC*
   nameWithType.vb: SyncDict(Of TKey, TValue).AfterReadRPC()
   fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).AfterReadRPC()
@@ -513,6 +488,13 @@ references:
   name: SyncableField
   nameWithType: SyncableField
   fullName: LiteEntitySystem.SyncableField
+- uid: LiteEntitySystem.SyncableFieldCustomRollback
+  commentId: T:LiteEntitySystem.SyncableFieldCustomRollback
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.SyncableFieldCustomRollback.html
+  name: SyncableFieldCustomRollback
+  nameWithType: SyncableFieldCustomRollback
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback
 - uid: System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
   commentId: T:System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}
   parent: System.Collections.Generic
@@ -570,6 +552,25 @@ references:
   name: IEnumerable
   nameWithType: IEnumerable
   fullName: System.Collections.IEnumerable
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged
+  commentId: M:LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged
+  parent: LiteEntitySystem.SyncableFieldCustomRollback
+  href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_MarkAsChanged
+  name: MarkAsChanged()
+  nameWithType: SyncableFieldCustomRollback.MarkAsChanged()
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged()
+  spec.csharp:
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged
+    name: MarkAsChanged
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_MarkAsChanged
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged
+    name: MarkAsChanged
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_MarkAsChanged
+  - name: (
+  - name: )
 - uid: LiteEntitySystem.SyncableField.IsClient
   commentId: P:LiteEntitySystem.SyncableField.IsClient
   parent: LiteEntitySystem.SyncableField
@@ -1309,32 +1310,6 @@ references:
     name: ValueCollection
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2.valuecollection
-- uid: LiteEntitySystem.SyncableField.IsRollbackSupported
-  commentId: P:LiteEntitySystem.SyncableField.IsRollbackSupported
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsRollbackSupported
-  name: IsRollbackSupported
-  nameWithType: SyncableField.IsRollbackSupported
-  fullName: LiteEntitySystem.SyncableField.IsRollbackSupported
-- uid: LiteEntitySystem.Extensions.SyncDict`2.IsRollbackSupported*
-  commentId: Overload:LiteEntitySystem.Extensions.SyncDict`2.IsRollbackSupported
-  href: LiteEntitySystem.Extensions.SyncDict-2.html#LiteEntitySystem_Extensions_SyncDict_2_IsRollbackSupported
-  name: IsRollbackSupported
-  nameWithType: SyncDict<TKey, TValue>.IsRollbackSupported
-  fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.IsRollbackSupported
-  nameWithType.vb: SyncDict(Of TKey, TValue).IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).IsRollbackSupported
-- uid: System.Boolean
-  commentId: T:System.Boolean
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.boolean
-  name: bool
-  nameWithType: bool
-  fullName: bool
-  nameWithType.vb: Boolean
-  fullName.vb: Boolean
-  name.vb: Boolean
 - uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   commentId: M:LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   parent: LiteEntitySystem.SyncableField
@@ -1380,23 +1355,23 @@ references:
   name: SyncableRPCRegistrator
   nameWithType: SyncableRPCRegistrator
   fullName: LiteEntitySystem.SyncableRPCRegistrator
-- uid: LiteEntitySystem.SyncableField.OnRollback
-  commentId: M:LiteEntitySystem.SyncableField.OnRollback
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.OnRollback
+  commentId: M:LiteEntitySystem.SyncableFieldCustomRollback.OnRollback
+  parent: LiteEntitySystem.SyncableFieldCustomRollback
+  href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_OnRollback
   name: OnRollback()
-  nameWithType: SyncableField.OnRollback()
-  fullName: LiteEntitySystem.SyncableField.OnRollback()
+  nameWithType: SyncableFieldCustomRollback.OnRollback()
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.OnRollback()
   spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.OnRollback
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.OnRollback
     name: OnRollback
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_OnRollback
   - name: (
   - name: )
   spec.vb:
-  - uid: LiteEntitySystem.SyncableField.OnRollback
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.OnRollback
     name: OnRollback
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_OnRollback
   - name: (
   - name: )
 - uid: LiteEntitySystem.Extensions.SyncDict`2.OnRollback*
@@ -1407,23 +1382,23 @@ references:
   fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.OnRollback
   nameWithType.vb: SyncDict(Of TKey, TValue).OnRollback
   fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).OnRollback
-- uid: LiteEntitySystem.SyncableField.BeforeReadRPC
-  commentId: M:LiteEntitySystem.SyncableField.BeforeReadRPC
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC
+  commentId: M:LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC
+  parent: LiteEntitySystem.SyncableFieldCustomRollback
+  href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_BeforeReadRPC
   name: BeforeReadRPC()
-  nameWithType: SyncableField.BeforeReadRPC()
-  fullName: LiteEntitySystem.SyncableField.BeforeReadRPC()
+  nameWithType: SyncableFieldCustomRollback.BeforeReadRPC()
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC()
   spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC
     name: BeforeReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_BeforeReadRPC
   - name: (
   - name: )
   spec.vb:
-  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC
     name: BeforeReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_BeforeReadRPC
   - name: (
   - name: )
 - uid: LiteEntitySystem.Extensions.SyncDict`2.BeforeReadRPC*
@@ -1434,23 +1409,23 @@ references:
   fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.BeforeReadRPC
   nameWithType.vb: SyncDict(Of TKey, TValue).BeforeReadRPC
   fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).BeforeReadRPC
-- uid: LiteEntitySystem.SyncableField.AfterReadRPC
-  commentId: M:LiteEntitySystem.SyncableField.AfterReadRPC
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC
+  commentId: M:LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC
+  parent: LiteEntitySystem.SyncableFieldCustomRollback
+  href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_AfterReadRPC
   name: AfterReadRPC()
-  nameWithType: SyncableField.AfterReadRPC()
-  fullName: LiteEntitySystem.SyncableField.AfterReadRPC()
+  nameWithType: SyncableFieldCustomRollback.AfterReadRPC()
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC()
   spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC
     name: AfterReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_AfterReadRPC
   - name: (
   - name: )
   spec.vb:
-  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
+  - uid: LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC
     name: AfterReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
+    href: LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_AfterReadRPC
   - name: (
   - name: )
 - uid: LiteEntitySystem.Extensions.SyncDict`2.AfterReadRPC*
@@ -1532,6 +1507,17 @@ references:
   fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.TryGetValue
   nameWithType.vb: SyncDict(Of TKey, TValue).TryGetValue
   fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).TryGetValue
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
 - uid: LiteEntitySystem.Extensions.SyncDict`2.ContainsKey*
   commentId: Overload:LiteEntitySystem.Extensions.SyncDict`2.ContainsKey
   href: LiteEntitySystem.Extensions.SyncDict-2.html#LiteEntitySystem_Extensions_SyncDict_2_ContainsKey__0_

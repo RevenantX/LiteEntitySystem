@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LiteEntitySystem.Extensions
 {
-    public class SyncHashSet<T> : SyncableField, IEnumerable<T> where T : unmanaged
+    public class SyncHashSet<T> : SyncableFieldCustomRollback, IEnumerable<T> where T : unmanaged
     {
         public int Count => _data.Count;
 
@@ -16,8 +16,6 @@ namespace LiteEntitySystem.Extensions
         private static RemoteCall _clearAction;
         private static RemoteCall<T> _removeAction;
         private static RemoteCallSpan<T> _initAction;
-        
-        public override bool IsRollbackSupported => true;
 
         protected internal override void RegisterRPC(ref SyncableRPCRegistrator r)
         {

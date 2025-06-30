@@ -12,7 +12,6 @@ items:
   - LiteEntitySystem.Extensions.SyncTimer.ElapsedTime
   - LiteEntitySystem.Extensions.SyncTimer.Finish
   - LiteEntitySystem.Extensions.SyncTimer.HasStarted
-  - LiteEntitySystem.Extensions.SyncTimer.IsRollbackSupported
   - LiteEntitySystem.Extensions.SyncTimer.IsTimeElapsed
   - LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single,System.Single)
   - LiteEntitySystem.Extensions.SyncTimer.LerpByProgress(System.Single,System.Single,System.Boolean)
@@ -45,9 +44,6 @@ items:
   - LiteEntitySystem.SyncableField.IsServer
   - LiteEntitySystem.SyncableField.ParentEntity
   - LiteEntitySystem.SyncableField.ParentEntityLogic
-  - LiteEntitySystem.SyncableField.BeforeReadRPC
-  - LiteEntitySystem.SyncableField.AfterReadRPC
-  - LiteEntitySystem.SyncableField.OnRollback
   - LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   - LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
   - LiteEntitySystem.SyncableField.ExecuteRPC``1(LiteEntitySystem.RemoteCall{{T}}@,{T})
@@ -159,30 +155,6 @@ items:
       type: System.Boolean
     content.vb: Public ReadOnly Property HasStarted As Boolean
   overload: LiteEntitySystem.Extensions.SyncTimer.HasStarted*
-- uid: LiteEntitySystem.Extensions.SyncTimer.IsRollbackSupported
-  commentId: P:LiteEntitySystem.Extensions.SyncTimer.IsRollbackSupported
-  id: IsRollbackSupported
-  parent: LiteEntitySystem.Extensions.SyncTimer
-  langs:
-  - csharp
-  - vb
-  name: IsRollbackSupported
-  nameWithType: SyncTimer.IsRollbackSupported
-  fullName: LiteEntitySystem.Extensions.SyncTimer.IsRollbackSupported
-  type: Property
-  assemblies:
-  - LiteEntitySystem
-  namespace: LiteEntitySystem.Extensions
-  summary: Is supported rollback by this syncable field
-  example: []
-  syntax:
-    content: public override bool IsRollbackSupported { get; }
-    parameters: []
-    return:
-      type: System.Boolean
-    content.vb: Public Overrides ReadOnly Property IsRollbackSupported As Boolean
-  overridden: LiteEntitySystem.SyncableField.IsRollbackSupported
-  overload: LiteEntitySystem.Extensions.SyncTimer.IsRollbackSupported*
 - uid: LiteEntitySystem.Extensions.SyncTimer.#ctor(System.Single)
   commentId: M:LiteEntitySystem.Extensions.SyncTimer.#ctor(System.Single)
   id: '#ctor(System.Single)'
@@ -540,63 +512,6 @@ references:
   name: ParentEntityLogic
   nameWithType: SyncableField.ParentEntityLogic
   fullName: LiteEntitySystem.SyncableField.ParentEntityLogic
-- uid: LiteEntitySystem.SyncableField.BeforeReadRPC
-  commentId: M:LiteEntitySystem.SyncableField.BeforeReadRPC
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
-  name: BeforeReadRPC()
-  nameWithType: SyncableField.BeforeReadRPC()
-  fullName: LiteEntitySystem.SyncableField.BeforeReadRPC()
-  spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
-    name: BeforeReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: LiteEntitySystem.SyncableField.BeforeReadRPC
-    name: BeforeReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
-  - name: (
-  - name: )
-- uid: LiteEntitySystem.SyncableField.AfterReadRPC
-  commentId: M:LiteEntitySystem.SyncableField.AfterReadRPC
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
-  name: AfterReadRPC()
-  nameWithType: SyncableField.AfterReadRPC()
-  fullName: LiteEntitySystem.SyncableField.AfterReadRPC()
-  spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
-    name: AfterReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: LiteEntitySystem.SyncableField.AfterReadRPC
-    name: AfterReadRPC
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
-  - name: (
-  - name: )
-- uid: LiteEntitySystem.SyncableField.OnRollback
-  commentId: M:LiteEntitySystem.SyncableField.OnRollback
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
-  name: OnRollback()
-  nameWithType: SyncableField.OnRollback()
-  fullName: LiteEntitySystem.SyncableField.OnRollback()
-  spec.csharp:
-  - uid: LiteEntitySystem.SyncableField.OnRollback
-    name: OnRollback
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: LiteEntitySystem.SyncableField.OnRollback
-    name: OnRollback
-    href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
-  - name: (
-  - name: )
 - uid: LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   commentId: M:LiteEntitySystem.SyncableField.RegisterRPC(LiteEntitySystem.SyncableRPCRegistrator@)
   parent: LiteEntitySystem.SyncableField
@@ -1104,19 +1019,6 @@ references:
   name: HasStarted
   nameWithType: SyncTimer.HasStarted
   fullName: LiteEntitySystem.Extensions.SyncTimer.HasStarted
-- uid: LiteEntitySystem.SyncableField.IsRollbackSupported
-  commentId: P:LiteEntitySystem.SyncableField.IsRollbackSupported
-  parent: LiteEntitySystem.SyncableField
-  href: LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsRollbackSupported
-  name: IsRollbackSupported
-  nameWithType: SyncableField.IsRollbackSupported
-  fullName: LiteEntitySystem.SyncableField.IsRollbackSupported
-- uid: LiteEntitySystem.Extensions.SyncTimer.IsRollbackSupported*
-  commentId: Overload:LiteEntitySystem.Extensions.SyncTimer.IsRollbackSupported
-  href: LiteEntitySystem.Extensions.SyncTimer.html#LiteEntitySystem_Extensions_SyncTimer_IsRollbackSupported
-  name: IsRollbackSupported
-  nameWithType: SyncTimer.IsRollbackSupported
-  fullName: LiteEntitySystem.Extensions.SyncTimer.IsRollbackSupported
 - uid: LiteEntitySystem.Extensions.SyncTimer.#ctor*
   commentId: Overload:LiteEntitySystem.Extensions.SyncTimer.#ctor
   href: LiteEntitySystem.Extensions.SyncTimer.html#LiteEntitySystem_Extensions_SyncTimer__ctor_System_Single_

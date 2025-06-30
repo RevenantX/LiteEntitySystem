@@ -3658,23 +3658,6 @@ references:
   fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).GetEnumerator
   nameWithType: SyncDict<TKey, TValue>.GetEnumerator
   nameWithType.vb: SyncDict(Of TKey, TValue).GetEnumerator
-- uid: LiteEntitySystem.Extensions.SyncDict`2.IsRollbackSupported
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.Extensions.SyncDict-2.html#LiteEntitySystem_Extensions_SyncDict_2_IsRollbackSupported
-  commentId: P:LiteEntitySystem.Extensions.SyncDict`2.IsRollbackSupported
-  fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).IsRollbackSupported
-  nameWithType: SyncDict<TKey, TValue>.IsRollbackSupported
-  nameWithType.vb: SyncDict(Of TKey, TValue).IsRollbackSupported
-- uid: LiteEntitySystem.Extensions.SyncDict`2.IsRollbackSupported*
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.Extensions.SyncDict-2.html#LiteEntitySystem_Extensions_SyncDict_2_IsRollbackSupported_
-  commentId: Overload:LiteEntitySystem.Extensions.SyncDict`2.IsRollbackSupported
-  isSpec: "True"
-  fullName: LiteEntitySystem.Extensions.SyncDict<TKey, TValue>.IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncDict(Of TKey, TValue).IsRollbackSupported
-  nameWithType: SyncDict<TKey, TValue>.IsRollbackSupported
-  nameWithType.vb: SyncDict(Of TKey, TValue).IsRollbackSupported
 - uid: LiteEntitySystem.Extensions.SyncDict`2.Item(`0)
   name: this[TKey]
   href: api/LiteEntitySystem.Extensions.SyncDict-2.html#LiteEntitySystem_Extensions_SyncDict_2_Item__0_
@@ -4033,23 +4016,6 @@ references:
   fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).GetEnumerator
   nameWithType: SyncHashSet<T>.GetEnumerator
   nameWithType.vb: SyncHashSet(Of T).GetEnumerator
-- uid: LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_IsRollbackSupported
-  commentId: P:LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported
-  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).IsRollbackSupported
-  nameWithType: SyncHashSet<T>.IsRollbackSupported
-  nameWithType.vb: SyncHashSet(Of T).IsRollbackSupported
-- uid: LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported*
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_IsRollbackSupported_
-  commentId: Overload:LiteEntitySystem.Extensions.SyncHashSet`1.IsRollbackSupported
-  isSpec: "True"
-  fullName: LiteEntitySystem.Extensions.SyncHashSet<T>.IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncHashSet(Of T).IsRollbackSupported
-  nameWithType: SyncHashSet<T>.IsRollbackSupported
-  nameWithType.vb: SyncHashSet(Of T).IsRollbackSupported
 - uid: LiteEntitySystem.Extensions.SyncHashSet`1.OnRollback
   name: OnRollback()
   href: api/LiteEntitySystem.Extensions.SyncHashSet-1.html#LiteEntitySystem_Extensions_SyncHashSet_1_OnRollback
@@ -4344,23 +4310,6 @@ references:
   fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).IsReadOnly
   nameWithType: SyncList<T>.IsReadOnly
   nameWithType.vb: SyncList(Of T).IsReadOnly
-- uid: LiteEntitySystem.Extensions.SyncList`1.IsRollbackSupported
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.Extensions.SyncList-1.html#LiteEntitySystem_Extensions_SyncList_1_IsRollbackSupported
-  commentId: P:LiteEntitySystem.Extensions.SyncList`1.IsRollbackSupported
-  fullName: LiteEntitySystem.Extensions.SyncList<T>.IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).IsRollbackSupported
-  nameWithType: SyncList<T>.IsRollbackSupported
-  nameWithType.vb: SyncList(Of T).IsRollbackSupported
-- uid: LiteEntitySystem.Extensions.SyncList`1.IsRollbackSupported*
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.Extensions.SyncList-1.html#LiteEntitySystem_Extensions_SyncList_1_IsRollbackSupported_
-  commentId: Overload:LiteEntitySystem.Extensions.SyncList`1.IsRollbackSupported
-  isSpec: "True"
-  fullName: LiteEntitySystem.Extensions.SyncList<T>.IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).IsRollbackSupported
-  nameWithType: SyncList<T>.IsRollbackSupported
-  nameWithType.vb: SyncList(Of T).IsRollbackSupported
 - uid: LiteEntitySystem.Extensions.SyncList`1.Item(System.Int32)
   name: this[int]
   href: api/LiteEntitySystem.Extensions.SyncList-1.html#LiteEntitySystem_Extensions_SyncList_1_Item_System_Int32_
@@ -4467,6 +4416,102 @@ references:
   fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).RemoveAt
   nameWithType: SyncList<T>.RemoveAt
   nameWithType.vb: SyncList(Of T).RemoveAt
+- uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator
+  name: SyncList<T>.SyncListEnumerator
+  href: api/LiteEntitySystem.Extensions.SyncList-1.SyncListEnumerator.html
+  commentId: T:LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator
+  name.vb: SyncList(Of T).SyncListEnumerator
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.SyncListEnumerator
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).SyncListEnumerator
+  nameWithType: SyncList<T>.SyncListEnumerator
+  nameWithType.vb: SyncList(Of T).SyncListEnumerator
+- uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.#ctor(`0[],System.Int32)
+  name: SyncListEnumerator(T[], int)
+  href: api/LiteEntitySystem.Extensions.SyncList-1.SyncListEnumerator.html#LiteEntitySystem_Extensions_SyncList_1_SyncListEnumerator__ctor__0___System_Int32_
+  commentId: M:LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.#ctor(`0[],System.Int32)
+  name.vb: New(T(), Integer)
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.SyncListEnumerator.SyncListEnumerator(T[], int)
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).SyncListEnumerator.New(T(), Integer)
+  nameWithType: SyncList<T>.SyncListEnumerator.SyncListEnumerator(T[], int)
+  nameWithType.vb: SyncList(Of T).SyncListEnumerator.New(T(), Integer)
+- uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.#ctor*
+  name: SyncListEnumerator
+  href: api/LiteEntitySystem.Extensions.SyncList-1.SyncListEnumerator.html#LiteEntitySystem_Extensions_SyncList_1_SyncListEnumerator__ctor_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.SyncListEnumerator.SyncListEnumerator
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).SyncListEnumerator.New
+  nameWithType: SyncList<T>.SyncListEnumerator.SyncListEnumerator
+  nameWithType.vb: SyncList(Of T).SyncListEnumerator.New
+- uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.Current
+  name: Current
+  href: api/LiteEntitySystem.Extensions.SyncList-1.SyncListEnumerator.html#LiteEntitySystem_Extensions_SyncList_1_SyncListEnumerator_Current
+  commentId: P:LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.Current
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.SyncListEnumerator.Current
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).SyncListEnumerator.Current
+  nameWithType: SyncList<T>.SyncListEnumerator.Current
+  nameWithType.vb: SyncList(Of T).SyncListEnumerator.Current
+- uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.Current*
+  name: Current
+  href: api/LiteEntitySystem.Extensions.SyncList-1.SyncListEnumerator.html#LiteEntitySystem_Extensions_SyncList_1_SyncListEnumerator_Current_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.Current
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.SyncListEnumerator.Current
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).SyncListEnumerator.Current
+  nameWithType: SyncList<T>.SyncListEnumerator.Current
+  nameWithType.vb: SyncList(Of T).SyncListEnumerator.Current
+- uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.Dispose
+  name: Dispose()
+  href: api/LiteEntitySystem.Extensions.SyncList-1.SyncListEnumerator.html#LiteEntitySystem_Extensions_SyncList_1_SyncListEnumerator_Dispose
+  commentId: M:LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.Dispose
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.SyncListEnumerator.Dispose()
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).SyncListEnumerator.Dispose()
+  nameWithType: SyncList<T>.SyncListEnumerator.Dispose()
+  nameWithType.vb: SyncList(Of T).SyncListEnumerator.Dispose()
+- uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.Dispose*
+  name: Dispose
+  href: api/LiteEntitySystem.Extensions.SyncList-1.SyncListEnumerator.html#LiteEntitySystem_Extensions_SyncList_1_SyncListEnumerator_Dispose_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.Dispose
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.SyncListEnumerator.Dispose
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).SyncListEnumerator.Dispose
+  nameWithType: SyncList<T>.SyncListEnumerator.Dispose
+  nameWithType.vb: SyncList(Of T).SyncListEnumerator.Dispose
+- uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.MoveNext
+  name: MoveNext()
+  href: api/LiteEntitySystem.Extensions.SyncList-1.SyncListEnumerator.html#LiteEntitySystem_Extensions_SyncList_1_SyncListEnumerator_MoveNext
+  commentId: M:LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.MoveNext
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.SyncListEnumerator.MoveNext()
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).SyncListEnumerator.MoveNext()
+  nameWithType: SyncList<T>.SyncListEnumerator.MoveNext()
+  nameWithType.vb: SyncList(Of T).SyncListEnumerator.MoveNext()
+- uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.MoveNext*
+  name: MoveNext
+  href: api/LiteEntitySystem.Extensions.SyncList-1.SyncListEnumerator.html#LiteEntitySystem_Extensions_SyncList_1_SyncListEnumerator_MoveNext_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.MoveNext
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.SyncListEnumerator.MoveNext
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).SyncListEnumerator.MoveNext
+  nameWithType: SyncList<T>.SyncListEnumerator.MoveNext
+  nameWithType.vb: SyncList(Of T).SyncListEnumerator.MoveNext
+- uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.Reset
+  name: Reset()
+  href: api/LiteEntitySystem.Extensions.SyncList-1.SyncListEnumerator.html#LiteEntitySystem_Extensions_SyncList_1_SyncListEnumerator_Reset
+  commentId: M:LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.Reset
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.SyncListEnumerator.Reset()
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).SyncListEnumerator.Reset()
+  nameWithType: SyncList<T>.SyncListEnumerator.Reset()
+  nameWithType.vb: SyncList(Of T).SyncListEnumerator.Reset()
+- uid: LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.Reset*
+  name: Reset
+  href: api/LiteEntitySystem.Extensions.SyncList-1.SyncListEnumerator.html#LiteEntitySystem_Extensions_SyncList_1_SyncListEnumerator_Reset_
+  commentId: Overload:LiteEntitySystem.Extensions.SyncList`1.SyncListEnumerator.Reset
+  isSpec: "True"
+  fullName: LiteEntitySystem.Extensions.SyncList<T>.SyncListEnumerator.Reset
+  fullName.vb: LiteEntitySystem.Extensions.SyncList(Of T).SyncListEnumerator.Reset
+  nameWithType: SyncList<T>.SyncListEnumerator.Reset
+  nameWithType.vb: SyncList(Of T).SyncListEnumerator.Reset
 - uid: LiteEntitySystem.Extensions.SyncList`1.ToArray
   name: ToArray()
   href: api/LiteEntitySystem.Extensions.SyncList-1.html#LiteEntitySystem_Extensions_SyncList_1_ToArray
@@ -4754,23 +4799,6 @@ references:
   fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).GetEnumerator
   nameWithType: SyncQueue<T>.GetEnumerator
   nameWithType.vb: SyncQueue(Of T).GetEnumerator
-- uid: LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_IsRollbackSupported
-  commentId: P:LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported
-  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).IsRollbackSupported
-  nameWithType: SyncQueue<T>.IsRollbackSupported
-  nameWithType.vb: SyncQueue(Of T).IsRollbackSupported
-- uid: LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported*
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_IsRollbackSupported_
-  commentId: Overload:LiteEntitySystem.Extensions.SyncQueue`1.IsRollbackSupported
-  isSpec: "True"
-  fullName: LiteEntitySystem.Extensions.SyncQueue<T>.IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncQueue(Of T).IsRollbackSupported
-  nameWithType: SyncQueue<T>.IsRollbackSupported
-  nameWithType.vb: SyncQueue(Of T).IsRollbackSupported
 - uid: LiteEntitySystem.Extensions.SyncQueue`1.IsSynchronized
   name: IsSynchronized
   href: api/LiteEntitySystem.Extensions.SyncQueue-1.html#LiteEntitySystem_Extensions_SyncQueue_1_IsSynchronized
@@ -5264,23 +5292,6 @@ references:
   fullName.vb: LiteEntitySystem.Extensions.SyncStateMachine(Of T).CurrentState
   nameWithType: SyncStateMachine<T>.CurrentState
   nameWithType.vb: SyncStateMachine(Of T).CurrentState
-- uid: LiteEntitySystem.Extensions.SyncStateMachine`1.IsRollbackSupported
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.Extensions.SyncStateMachine-1.html#LiteEntitySystem_Extensions_SyncStateMachine_1_IsRollbackSupported
-  commentId: P:LiteEntitySystem.Extensions.SyncStateMachine`1.IsRollbackSupported
-  fullName: LiteEntitySystem.Extensions.SyncStateMachine<T>.IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncStateMachine(Of T).IsRollbackSupported
-  nameWithType: SyncStateMachine<T>.IsRollbackSupported
-  nameWithType.vb: SyncStateMachine(Of T).IsRollbackSupported
-- uid: LiteEntitySystem.Extensions.SyncStateMachine`1.IsRollbackSupported*
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.Extensions.SyncStateMachine-1.html#LiteEntitySystem_Extensions_SyncStateMachine_1_IsRollbackSupported_
-  commentId: Overload:LiteEntitySystem.Extensions.SyncStateMachine`1.IsRollbackSupported
-  isSpec: "True"
-  fullName: LiteEntitySystem.Extensions.SyncStateMachine<T>.IsRollbackSupported
-  fullName.vb: LiteEntitySystem.Extensions.SyncStateMachine(Of T).IsRollbackSupported
-  nameWithType: SyncStateMachine<T>.IsRollbackSupported
-  nameWithType.vb: SyncStateMachine(Of T).IsRollbackSupported
 - uid: LiteEntitySystem.Extensions.SyncStateMachine`1.SetInitialState(`0)
   name: SetInitialState(T)
   href: api/LiteEntitySystem.Extensions.SyncStateMachine-1.html#LiteEntitySystem_Extensions_SyncStateMachine_1_SetInitialState__0_
@@ -5501,19 +5512,6 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.Extensions.SyncTimer.HasStarted
   nameWithType: SyncTimer.HasStarted
-- uid: LiteEntitySystem.Extensions.SyncTimer.IsRollbackSupported
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.Extensions.SyncTimer.html#LiteEntitySystem_Extensions_SyncTimer_IsRollbackSupported
-  commentId: P:LiteEntitySystem.Extensions.SyncTimer.IsRollbackSupported
-  fullName: LiteEntitySystem.Extensions.SyncTimer.IsRollbackSupported
-  nameWithType: SyncTimer.IsRollbackSupported
-- uid: LiteEntitySystem.Extensions.SyncTimer.IsRollbackSupported*
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.Extensions.SyncTimer.html#LiteEntitySystem_Extensions_SyncTimer_IsRollbackSupported_
-  commentId: Overload:LiteEntitySystem.Extensions.SyncTimer.IsRollbackSupported
-  isSpec: "True"
-  fullName: LiteEntitySystem.Extensions.SyncTimer.IsRollbackSupported
-  nameWithType: SyncTimer.IsRollbackSupported
 - uid: LiteEntitySystem.Extensions.SyncTimer.IsTimeElapsed
   name: IsTimeElapsed
   href: api/LiteEntitySystem.Extensions.SyncTimer.html#LiteEntitySystem_Extensions_SyncTimer_IsTimeElapsed
@@ -9171,19 +9169,6 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.SyncChilds.GetEnumerator
   nameWithType: SyncChilds.GetEnumerator
-- uid: LiteEntitySystem.SyncChilds.IsRollbackSupported
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.SyncChilds.html#LiteEntitySystem_SyncChilds_IsRollbackSupported
-  commentId: P:LiteEntitySystem.SyncChilds.IsRollbackSupported
-  fullName: LiteEntitySystem.SyncChilds.IsRollbackSupported
-  nameWithType: SyncChilds.IsRollbackSupported
-- uid: LiteEntitySystem.SyncChilds.IsRollbackSupported*
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.SyncChilds.html#LiteEntitySystem_SyncChilds_IsRollbackSupported_
-  commentId: Overload:LiteEntitySystem.SyncChilds.IsRollbackSupported
-  isSpec: "True"
-  fullName: LiteEntitySystem.SyncChilds.IsRollbackSupported
-  nameWithType: SyncChilds.IsRollbackSupported
 - uid: LiteEntitySystem.SyncChilds.OnRollback
   name: OnRollback()
   href: api/LiteEntitySystem.SyncChilds.html#LiteEntitySystem_SyncChilds_OnRollback
@@ -9646,32 +9631,6 @@ references:
   commentId: T:LiteEntitySystem.SyncableField
   fullName: LiteEntitySystem.SyncableField
   nameWithType: SyncableField
-- uid: LiteEntitySystem.SyncableField.AfterReadRPC
-  name: AfterReadRPC()
-  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC
-  commentId: M:LiteEntitySystem.SyncableField.AfterReadRPC
-  fullName: LiteEntitySystem.SyncableField.AfterReadRPC()
-  nameWithType: SyncableField.AfterReadRPC()
-- uid: LiteEntitySystem.SyncableField.AfterReadRPC*
-  name: AfterReadRPC
-  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_AfterReadRPC_
-  commentId: Overload:LiteEntitySystem.SyncableField.AfterReadRPC
-  isSpec: "True"
-  fullName: LiteEntitySystem.SyncableField.AfterReadRPC
-  nameWithType: SyncableField.AfterReadRPC
-- uid: LiteEntitySystem.SyncableField.BeforeReadRPC
-  name: BeforeReadRPC()
-  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC
-  commentId: M:LiteEntitySystem.SyncableField.BeforeReadRPC
-  fullName: LiteEntitySystem.SyncableField.BeforeReadRPC()
-  nameWithType: SyncableField.BeforeReadRPC()
-- uid: LiteEntitySystem.SyncableField.BeforeReadRPC*
-  name: BeforeReadRPC
-  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_BeforeReadRPC_
-  commentId: Overload:LiteEntitySystem.SyncableField.BeforeReadRPC
-  isSpec: "True"
-  fullName: LiteEntitySystem.SyncableField.BeforeReadRPC
-  nameWithType: SyncableField.BeforeReadRPC
 - uid: LiteEntitySystem.SyncableField.ExecuteRPC(LiteEntitySystem.RemoteCall@)
   name: ExecuteRPC(in RemoteCall)
   href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ExecuteRPC_LiteEntitySystem_RemoteCall__
@@ -9728,19 +9687,6 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.SyncableField.IsClient
   nameWithType: SyncableField.IsClient
-- uid: LiteEntitySystem.SyncableField.IsRollbackSupported
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsRollbackSupported
-  commentId: P:LiteEntitySystem.SyncableField.IsRollbackSupported
-  fullName: LiteEntitySystem.SyncableField.IsRollbackSupported
-  nameWithType: SyncableField.IsRollbackSupported
-- uid: LiteEntitySystem.SyncableField.IsRollbackSupported*
-  name: IsRollbackSupported
-  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsRollbackSupported_
-  commentId: Overload:LiteEntitySystem.SyncableField.IsRollbackSupported
-  isSpec: "True"
-  fullName: LiteEntitySystem.SyncableField.IsRollbackSupported
-  nameWithType: SyncableField.IsRollbackSupported
 - uid: LiteEntitySystem.SyncableField.IsServer
   name: IsServer
   href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_IsServer
@@ -9754,19 +9700,6 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.SyncableField.IsServer
   nameWithType: SyncableField.IsServer
-- uid: LiteEntitySystem.SyncableField.OnRollback
-  name: OnRollback()
-  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback
-  commentId: M:LiteEntitySystem.SyncableField.OnRollback
-  fullName: LiteEntitySystem.SyncableField.OnRollback()
-  nameWithType: SyncableField.OnRollback()
-- uid: LiteEntitySystem.SyncableField.OnRollback*
-  name: OnRollback
-  href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_OnRollback_
-  commentId: Overload:LiteEntitySystem.SyncableField.OnRollback
-  isSpec: "True"
-  fullName: LiteEntitySystem.SyncableField.OnRollback
-  nameWithType: SyncableField.OnRollback
 - uid: LiteEntitySystem.SyncableField.ParentEntity
   name: ParentEntity
   href: api/LiteEntitySystem.SyncableField.html#LiteEntitySystem_SyncableField_ParentEntity
@@ -9809,6 +9742,64 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.SyncableField.RegisterRPC
   nameWithType: SyncableField.RegisterRPC
+- uid: LiteEntitySystem.SyncableFieldCustomRollback
+  name: SyncableFieldCustomRollback
+  href: api/LiteEntitySystem.SyncableFieldCustomRollback.html
+  commentId: T:LiteEntitySystem.SyncableFieldCustomRollback
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback
+  nameWithType: SyncableFieldCustomRollback
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC
+  name: AfterReadRPC()
+  href: api/LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_AfterReadRPC
+  commentId: M:LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC()
+  nameWithType: SyncableFieldCustomRollback.AfterReadRPC()
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC*
+  name: AfterReadRPC
+  href: api/LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_AfterReadRPC_
+  commentId: Overload:LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC
+  isSpec: "True"
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.AfterReadRPC
+  nameWithType: SyncableFieldCustomRollback.AfterReadRPC
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC
+  name: BeforeReadRPC()
+  href: api/LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_BeforeReadRPC
+  commentId: M:LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC()
+  nameWithType: SyncableFieldCustomRollback.BeforeReadRPC()
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC*
+  name: BeforeReadRPC
+  href: api/LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_BeforeReadRPC_
+  commentId: Overload:LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC
+  isSpec: "True"
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.BeforeReadRPC
+  nameWithType: SyncableFieldCustomRollback.BeforeReadRPC
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged
+  name: MarkAsChanged()
+  href: api/LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_MarkAsChanged
+  commentId: M:LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged()
+  nameWithType: SyncableFieldCustomRollback.MarkAsChanged()
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged*
+  name: MarkAsChanged
+  href: api/LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_MarkAsChanged_
+  commentId: Overload:LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged
+  isSpec: "True"
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.MarkAsChanged
+  nameWithType: SyncableFieldCustomRollback.MarkAsChanged
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.OnRollback
+  name: OnRollback()
+  href: api/LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_OnRollback
+  commentId: M:LiteEntitySystem.SyncableFieldCustomRollback.OnRollback
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.OnRollback()
+  nameWithType: SyncableFieldCustomRollback.OnRollback()
+- uid: LiteEntitySystem.SyncableFieldCustomRollback.OnRollback*
+  name: OnRollback
+  href: api/LiteEntitySystem.SyncableFieldCustomRollback.html#LiteEntitySystem_SyncableFieldCustomRollback_OnRollback_
+  commentId: Overload:LiteEntitySystem.SyncableFieldCustomRollback.OnRollback
+  isSpec: "True"
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback.OnRollback
+  nameWithType: SyncableFieldCustomRollback.OnRollback
 - uid: LiteEntitySystem.SyncableRPCRegistrator
   name: SyncableRPCRegistrator
   href: api/LiteEntitySystem.SyncableRPCRegistrator.html

@@ -57,6 +57,7 @@ items:
   - LiteEntitySystem.SyncVarFlags
   - LiteEntitySystem.SyncVar`1
   - LiteEntitySystem.SyncableField
+  - LiteEntitySystem.SyncableFieldCustomRollback
   - LiteEntitySystem.SyncableRPCRegistrator
   - LiteEntitySystem.UpdateMode
   - LiteEntitySystem.Utils
@@ -569,6 +570,13 @@ references:
   name: SyncableField
   nameWithType: SyncableField
   fullName: LiteEntitySystem.SyncableField
+- uid: LiteEntitySystem.SyncableFieldCustomRollback
+  commentId: T:LiteEntitySystem.SyncableFieldCustomRollback
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.SyncableFieldCustomRollback.html
+  name: SyncableFieldCustomRollback
+  nameWithType: SyncableFieldCustomRollback
+  fullName: LiteEntitySystem.SyncableFieldCustomRollback
 - uid: LiteEntitySystem.SyncChilds
   commentId: T:LiteEntitySystem.SyncChilds
   parent: LiteEntitySystem
