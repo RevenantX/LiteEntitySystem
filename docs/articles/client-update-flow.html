@@ -83,14 +83,53 @@
         <article data-uid="">
 
 <p>On the Client: The client continuously receives state updates from the server. The ClientEntityManager on each client handles applying these:</p>
+<pre><code class="lang-mermaid">flowchart TD
+    A[&quot;(Client)EntityManager.**Update**&quot;] --&gt; X
+
+subgraph LogicUpdate
+    X[LocalSingleton.**VisualUpdate**] --&gt; X1
+
+    X1[LocalSingleton.**Update**] --&gt; A2 
+    A2[&quot;Restore real SyncVar values instead of Interpolated&quot;] --&gt; B2
+    B2[&quot;Apply **input** (set HumanControllerLogic.**CurrentInput**)&quot;] --&gt; C2
+    C2[**Update** owned, local and UpdateOnClient entities] --&gt; D2
+    D2[Execute **RPC**s for this frame] --&gt; B4
+
+    B4[Execute **OnLateConstructed**] --&gt; E4
+    E4[Execute **BindOnSync** binded actions] --&gt; F4
+    F4[&quot;Write local lag compensation history (used for rollback)&quot;] --&gt; B
+end
+    B[Send **input**] --&gt; C
+    C{Check need to apply new server state}
+    C --&gt;|YES| A1
+    C --&gt;|NO| E
+
+subgraph GoToNextState
+    A1[&quot;**Destroy** spawned predicted local entities (they should be replaced by applied server state)&quot;] --&gt; B1
+    B1[Set **ServerTick** to applied tick] --&gt; B1_1
+    B1_1[Set SyncVars from new state] --&gt; C1
+    C1[Execute **RPC**s for applied tick] --&gt; D1
+    D1[Execute **OnLateConstructed**] --&gt; E1
+    E1[Execute **BindOnSync** binded actions] --&gt; F1
+    F1[&quot;Write local lag compensation history (used for rollback)&quot;] --&gt; H1
+end
+
+subgraph Rollback
+    H1[&quot;Call **OnBeforeRollback** for rollbacked entities&quot;] --&gt; J1
+    J1[Reset SyncVar values to acknowledged state] --&gt; K1
+    K1[&quot;Execute **OnRollback** for entities and SyncableFields&quot;] --&gt; L1
+    subgraph UpdateMode.PredictionRollback
+         L1[&quot;For each stored, not acknoweldged input set **CurrentInput** and execute **Update**&quot;]
+    end
+end
+    L1 --&gt; E
+    E[Apply visual interpolation to **SyncVar** values] --&gt; D
+    D[&quot;Execute **VisualUpdate** for owned, local and **UpdateOnClient** entities&quot;]
+</code></pre>
 <ul>
-<li><p>Interpolation: For remote entities (ones the client is not controlling), LES uses an interpolation buffer to smooth out movement
-github.com
-. Each update from the server comes with a tick timestamp; the client buffers a small amount of state and renders entities a bit behind the latest tick to interpolate between received positions. This results in smooth motion instead of jittery, frame-by-frame updates.</p>
+<li><p>Interpolation: For remote entities (ones the client is not controlling), LES uses an interpolation buffer to smooth out movement. Each update from the server comes with a tick timestamp, the client buffers a small amount of state and renders entities a bit behind the latest tick to interpolate between received positions. This results in smooth motion instead of jittery, frame-by-frame updates.</p>
 </li>
-<li><p>Prediction &amp; Reconciliation: For the local player’s own entity, the client may have predicted ahead. When the server’s update for that entity arrives, LES will reconcile any differences. If the server’s authoritative state differs from the client’s predicted state (e.g. due to unaccounted physics or corrections), the client will adjust. Minor differences might be corrected smoothly (slight position nudges) rather than instant teleportation, to hide latency.</p>
-</li>
-<li><p>SyncVar Updates: LES supports synchronized variables (“SyncVars”). When these change on the server, the new values are included in the delta update and the client applies them to its entity objects. Optional change callbacks (ISyncFieldChanged) can trigger client-side effects on update (e.g. updating a health bar when health changes).</p>
+<li><p>Prediction &amp; Reconciliation: For the local player’s own entity, the client may have predicted ahead. When the server’s update for that entity arrives, LES will reconcile any differences. If the server’s authoritative state differs from the client’s predicted state (e.g. due to unaccounted physics or corrections), the client will adjust.</p>
 </li>
 </ul>
 

@@ -93,6 +93,17 @@
 <li>Entity SyncVar fields data that was changed since last acknowledged tick by player</li>
 </ul>
 <p>Each tick, the server does the following in <code>ServerEntityManager.LogicUpdate</code> (called internally from <a class="xref" href="../api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_Update"><code>ServerEntityManager.Update</code></a> public method):</p>
+<pre><code class="lang-mermaid">flowchart TD
+    A0[&quot;(Server)EntityManager.**Update**&quot;] --&gt; B0
+    B0[LocalSingleton.**VisualUpdate**] --&gt; C0
+    C0[LocalSingleton.**Update**] --&gt; A
+    A[Read players **ClientRequests**] --&gt; B
+    B[Apply players **Input**] --&gt; C
+    C[**Update** all updateable Entities] --&gt; E
+    E[Make and send **baseline state**] --&gt; F
+    F[Make and send **delta states**] --&gt; G 
+    G[Trigger network **send**]
+</code></pre>
 <h3 id="1-read-players-clientrequests">1. Read players <code>ClientRequests</code></h3>
 <ul>
 <li><p>Read client requests generated on client using:

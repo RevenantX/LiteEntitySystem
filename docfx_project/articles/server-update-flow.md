@@ -12,6 +12,19 @@ Every delta-state that server send to clients contains:
 
 Each tick, the server does the following in `ServerEntityManager.LogicUpdate` (called internally from [`ServerEntityManager.Update`](xref:LiteEntitySystem.EntityManager.Update) public method):
 
+```mermaid
+flowchart TD
+    A0["(Server)EntityManager.**Update**"] --> B0
+    B0[LocalSingleton.**VisualUpdate**] --> C0
+    C0[LocalSingleton.**Update**] --> A
+    A[Read players **ClientRequests**] --> B
+    B[Apply players **Input**] --> C
+    C[**Update** all updateable Entities] --> E
+    E[Make and send **baseline state**] --> F
+    F[Make and send **delta states**] --> G 
+    G[Trigger network **send**]
+```
+
 ### 1. Read players `ClientRequests`
 
 * Read client requests generated on client using:
