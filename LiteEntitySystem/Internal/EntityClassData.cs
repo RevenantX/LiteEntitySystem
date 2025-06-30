@@ -311,7 +311,11 @@ namespace LiteEntitySystem.Internal
                 {
                     field.PredictedOffset = predictedOffset;
                     predictedOffset += field.IntSize;
-                    ownedRollbackFields.Add(field);
+                    
+                    //singletons can't be owned
+                    if (!IsSingleton)
+                        ownedRollbackFields.Add(field);
+                    
                     if(field.Flags.HasFlagFast(SyncFlags.AlwaysRollback))
                         remoteRollbackFields.Add(field);
                 }

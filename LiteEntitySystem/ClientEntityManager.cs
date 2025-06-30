@@ -125,7 +125,7 @@ namespace LiteEntitySystem
         public const int InputBufferSize = 64;
 
         //predicted entities that should use rollback
-        private readonly AVLTree<InternalEntity> _predictedEntities = new();
+        private readonly AVLTree<InternalEntity> _modifiedEntitiesToRollback = new();
         
         private readonly AbstractNetPeer _netPeer;
         private readonly Queue<ServerStateData> _statesPool = new(MaxSavedStateDiff);
@@ -136,7 +136,7 @@ namespace LiteEntitySystem
         private readonly HashSet<InternalEntity> _changedEntities = new();
         private readonly CircularBuffer<InputInfo> _storedInputHeaders = new(InputBufferSize);
         private InternalEntity[] _entitiesToRemove = new InternalEntity[64];
-        private readonly Queue<EntityLogic> _entitiesToRollback = new();
+        private readonly Queue<InternalEntity> _entitiesToRollback = new();
         private int _entitiesToRemoveCount;
 
         private ServerSendRate _serverSendRate;
@@ -232,7 +232,7 @@ namespace LiteEntitySystem
         public override void Reset()
         {
             base.Reset();
-            _predictedEntities.Clear();
+            _modifiedEntitiesToRollback.Clear();
             _localIdQueue.Reset();
             _readyStates.Clear();
             _syncCallsCount = 0;
@@ -500,8 +500,6 @@ namespace LiteEntitySystem
                 var entityToRemove = _entitiesToRemove[i];
                 if (_changedEntities.Contains(entityToRemove))
                     continue;
-
-                _predictedEntities.Remove(entityToRemove);
                 
                 //Logger.Log($"[CLI] RemovingEntity: {_entitiesToRemove[i].Id}");
                 RemoveEntity(entityToRemove);
@@ -518,12 +516,20 @@ namespace LiteEntitySystem
             
             //================== Rollback part ===========================
             //reset predicted entities
-            foreach (var entity in _predictedEntities)
+            _entitiesToRollback.Clear();
+            foreach (var entity in _modifiedEntitiesToRollback)
             {
                 ref var classData = ref ClassDataDict[entity.ClassId];
                 var rollbackFields = classData.GetRollbackFields(entity.IsLocalControlled);
-                if(rollbackFields == null || rollbackFields.Length == 0)
+                if (rollbackFields == null || rollbackFields.Length == 0)
                     continue;
+                _entitiesToRollback.Enqueue(entity);
+            }
+
+            foreach (var entity in _entitiesToRollback)
+            {
+                ref var classData = ref ClassDataDict[entity.ClassId];
+                var rollbackFields = classData.GetRollbackFields(entity.IsLocalControlled);
                 entity.OnBeforeRollback();
 
                 fixed (byte* predictedData = classData.ClientPredictedData(entity))
@@ -546,6 +552,9 @@ namespace LiteEntitySystem
                     RefMagic.GetFieldValue<SyncableField>(entity, classData.SyncableFields[i].Offset).OnRollback();
                 entity.OnRollback();
             }
+            
+            //clear modified here to readd changes after RollbackUpdate
+            _modifiedEntitiesToRollback.Clear();
     
             //reapply input
             UpdateMode = UpdateMode.PredictionRollback;
@@ -559,15 +568,27 @@ namespace LiteEntitySystem
                 foreach (var controller in GetEntities<HumanControllerLogic>())
                     controller.ReadStoredInput(cmdNum);
                 //simple update
-                foreach (var entity in AliveEntities)
+                //foreach (var entity in AliveEntities)
+                foreach (var entity in _entitiesToRollback)
                 {
-                    if (entity.IsLocal || !entity.IsLocalControlled)
+                    if (!entity.IsLocalControlled || !AliveEntities.Contains(entity))
                         continue;
                     entity.Update();
                 }
             }
             _tick = targetTick;
             UpdateMode = UpdateMode.Normal;
+            _entitiesToRollback.Clear();
+        }
+
+        internal override void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue)
+        {
+            if (entity.IsLocal || entity.IsDestroyed)
+                return;
+            
+            ref var classData = ref ClassDataDict[entity.ClassId];
+            if (classData.SyncableFields.Length > 0 || classData.Fields[fieldId].IsPredicted)
+                _modifiedEntitiesToRollback.Add(entity);
         }
 
         internal override void OnEntityDestroyed(InternalEntity e)
@@ -577,6 +598,8 @@ namespace LiteEntitySystem
                 if(e.IsLocalControlled && e is EntityLogic eLogic)
                     RemoveOwned(eLogic);
                 Utils.AddToArrayDynamic(ref _entitiesToRemove, ref _entitiesToRemoveCount, e);
+                
+                _modifiedEntitiesToRollback.Remove(e);
             }
             
             base.OnEntityDestroyed(e);
@@ -805,19 +828,12 @@ namespace LiteEntitySystem
                 Logger.Log($"[CEM] Replace entity by new: {entityDataHeader.Version}. Class: {entityDataHeader.ClassId}. Id: {entityId}");
                 entity.DestroyInternal();
                 RemoveEntity(entity);
-                _predictedEntities.Remove(entity);
                 entity = null;
             } 
             if (entity == null) //create new
             {
                 ref var classData = ref ClassDataDict[entityDataHeader.ClassId];
-                entity = AddEntity<InternalEntity>(new EntityParams(entityId, entityDataHeader, this, classData.AllocateDataCache()));
-                     
-                if (classData.PredictedSize > 0 || classData.SyncableFields.Length > 0)
-                {
-                    _predictedEntities.Add(entity);
-                    //Logger.Log($"Add predicted: {entity.GetType()}");
-                }
+                AddEntity<InternalEntity>(new EntityParams(entityId, entityDataHeader, this, classData.AllocateDataCache()));
             }
         }
         
