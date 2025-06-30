@@ -63,7 +63,6 @@ namespace LiteEntitySystem.Internal
         public readonly int PredictedSize;
         public readonly EntityFieldInfo[] Fields;
         public readonly SyncableFieldInfo[] SyncableFields;
-        public readonly int InterpolatedFieldsSize;
         public readonly int InterpolatedCount;
         public readonly EntityFieldInfo[] LagCompensatedFields;
         public readonly int LagCompensatedSize;
@@ -86,10 +85,8 @@ namespace LiteEntitySystem.Internal
         private readonly int _dataCacheSize;
         private readonly int _maxHistoryCount;
         private readonly int _historyStart;
-
-        public Span<byte> ClientInterpolatedPrevData(InternalEntity e) => new (e.IOBuffer, 0, InterpolatedFieldsSize);
-        public Span<byte> ClientInterpolatedNextData(InternalEntity e) => new (e.IOBuffer, InterpolatedFieldsSize, InterpolatedFieldsSize);
-        public Span<byte> ClientPredictedData(InternalEntity e) => new (e.IOBuffer, InterpolatedFieldsSize*2, PredictedSize);
+        
+        public Span<byte> ClientPredictedData(InternalEntity e) => new (e.IOBuffer, 0, PredictedSize);
 
         public EntityFieldInfo[] GetRollbackFields(bool isOwned) =>
             isOwned ? _ownedRollbackFields : _remoteRollbackFields;
@@ -174,7 +171,6 @@ namespace LiteEntitySystem.Internal
             FixedFieldsSize = 0;
             LagCompensatedSize = 0;
             InterpolatedCount = 0;
-            InterpolatedFieldsSize = 0;
             RemoteCallsClient = null;
             ClassId = typeInfo.ClassId;
             ClassEnumName = typeInfo.ClassName;
@@ -231,7 +227,6 @@ namespace LiteEntitySystem.Internal
                         int fieldSize = valueTypeProcessor.Size;
                         if (syncFlags.HasFlagFast(SyncFlags.Interpolated) && !ft.IsEnum)
                         {
-                            InterpolatedFieldsSize += fieldSize;
                             InterpolatedCount++;
                         }
                         var fieldInfo = new EntityFieldInfo($"{baseType.Name}-{field.Name}", valueTypeProcessor, offset, syncVarFlags);
@@ -339,8 +334,8 @@ namespace LiteEntitySystem.Internal
             }
             else
             {
-                _dataCacheSize = InterpolatedFieldsSize * 2 + PredictedSize + historySize;
-                _historyStart = InterpolatedFieldsSize * 2 + PredictedSize;
+                _dataCacheSize = PredictedSize + historySize;
+                _historyStart = PredictedSize;
             }
 
             Type = entType;

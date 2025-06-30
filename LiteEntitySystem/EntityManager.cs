@@ -553,16 +553,10 @@ namespace LiteEntitySystem
             if (IsEntityAlive(classData.Flags, e))
             {
                 AliveEntities.Add(e);
-                OnAliveEntityAdded(e);
             }
             _entitiesToLateConstruct.Enqueue(e);
 
             return true;
-        }
-        
-        protected virtual void OnAliveEntityAdded(InternalEntity e)
-        {
-            
         }
 
         protected static bool IsEntityLagCompensated(InternalEntity e)

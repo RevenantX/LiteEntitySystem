@@ -21,6 +21,11 @@ namespace LiteEntitySystem.Collections
             _data = new SequenceHeapNode[capacity];
             _count = 0;
         }
+
+        public void Clear()
+        {
+            _count = 0;
+        }
         
         public void Add(T item, ushort sequence) 
         {

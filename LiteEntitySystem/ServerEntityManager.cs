@@ -862,6 +862,9 @@ namespace LiteEntitySystem
                 //old freed entity
                 return;
             }
+            if(entity is AiControllerLogic)
+               return;
+            
             _changedEntities.Add(entity);
             _stateSerializers[entity.Id].UpdateFieldValue(fieldId, _minimalTick, _tick, ref newValue);
         }

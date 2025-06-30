@@ -64,9 +64,7 @@
         public unsafe bool ReadField(
             InternalEntity entity, 
             byte* rawData, 
-            byte* predictedData, 
-            byte* nextInterpDataPtr, 
-            byte* prevInterpDataPtr)
+            byte* predictedData)
         {
             if (IsPredicted)
                 RefMagic.CopyBlock(predictedData + PredictedOffset, rawData, Size);
@@ -77,14 +75,6 @@
             }
             else
             {
-                if (Flags.HasFlagFast(SyncFlags.Interpolated))
-                {
-                    if(nextInterpDataPtr != null)
-                        RefMagic.CopyBlock(nextInterpDataPtr + FixedOffset, rawData, Size);
-                    if(prevInterpDataPtr != null)
-                        RefMagic.CopyBlock(prevInterpDataPtr + FixedOffset, rawData, Size);
-                }
-
                 if (OnSync != null)
                 {
                     if (TypeProcessor.SetFromAndSync(entity, Offset, rawData))

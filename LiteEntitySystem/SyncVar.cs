@@ -72,8 +72,17 @@ namespace LiteEntitySystem
     public struct SyncVar<T> : ISyncVar<T>, IEquatable<T>, IEquatable<SyncVar<T>> where T : unmanaged
     {
         private T _value;
+        private T _interpValue;
+        
         internal ushort FieldId;
         internal InternalEntity Container;
+
+        public T InterpolatedValue => Container == null || Container.IsServer
+            ? _value
+            : Container.ClientManager.GetInterpolatedValue(ref this, _interpValue);
+        
+        //for interpolation
+        void ISyncVar<T>.SvSetInterpValue(T value) => _interpValue = value;
         
         void ISyncVar<T>.SvSetDirect(T value) => _value = value;
         

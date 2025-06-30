@@ -46,9 +46,6 @@ namespace LiteEntitySystem.Internal
         public ushort LastReceivedTick;
         public byte BufferedInputsCount;
         
-        private int _interpolatedCachesCount;
-        private InterpolatedCache[] _interpolatedCaches = new InterpolatedCache[DefaultCacheSize];
-        
         private int _totalPartsCount;
         private int _receivedPartsCount;
         private byte _maxReceivedPart;
@@ -69,10 +66,8 @@ namespace LiteEntitySystem.Internal
         private readonly HashSet<SyncableField> _syncablesSet = new();
         private DeltaCompressor _rpcDeltaCompressor = new (Utils.SizeOfStruct<RPCHeader>());
 
-        public ServerStateData()
-        {
+        public ServerStateData() =>
             _rpcDeltaCompressor.Init();
-        }
         
         public unsafe void GetDiagnosticData(
             InternalEntity[] entityDict, 
@@ -118,22 +113,6 @@ namespace LiteEntitySystem.Internal
                     ? classDatas[classId].ClassEnumName 
                     : "Unknown";
                 
-                /*
-                if (classId >= 0)
-                {
-                    ref var classData = ref classDatas[classId];
-                    int entityFieldsOffset = initialReaderPosition + StateSerializer.DiffHeaderSize;
-                    //interpolated fields goes first so can skip some checks
-                    for (int i = 0; i < classData.FieldsCount; i++)
-                    {
-                        if (!Utils.IsBitSet(Data, entityFieldsOffset, i))
-                            continue;
-                        ref var field = ref classData.Fields[i];
-                        Logger.Log($"{field.Name}({i}) - {field.Size}");
-                    }
-                }
-                */
-                
                 if(!diagnosticDataDict.TryGetValue(classId, out LESDiagnosticDataEntry entry))
                 {
                     entry = new LESDiagnosticDataEntry { Count = 1, Name = name, Size = totalSize };
@@ -175,7 +154,7 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        private void PreloadInterpolation(InternalEntity entity, int offset)
+        private unsafe void PreloadInterpolation(InternalEntity entity, int offset)
         {
             if (!entity.IsRemoteControlled)
                 return;
@@ -186,22 +165,22 @@ namespace LiteEntitySystem.Internal
             
             int entityFieldsOffset = offset + StateSerializer.DiffHeaderSize;
             int stateReaderOffset = entityFieldsOffset + classData.FieldsFlagsSize;
-
-            //preload interpolation info
-            Utils.ResizeIfFull(ref _interpolatedCaches, _interpolatedCachesCount + classData.InterpolatedCount);
             
             //interpolated fields goes first so can skip some checks
-            for (int i = 0; i < classData.InterpolatedCount; i++)
+            fixed (byte* rawData = Data)
             {
-                if (!Utils.IsBitSet(Data, entityFieldsOffset, i))
-                    continue;
-                ref var field = ref classData.Fields[i];
-                _interpolatedCaches[_interpolatedCachesCount++] = new InterpolatedCache(entity, ref field, stateReaderOffset);
-                stateReaderOffset += field.IntSize;
+                for (int i = 0; i < classData.InterpolatedCount; i++)
+                {
+                    if (!Utils.IsBitSet(Data, entityFieldsOffset, i))
+                        continue;
+                    ref var field = ref classData.Fields[i];
+                    field.TypeProcessor.SetInterpValue(entity, field.Offset, rawData + stateReaderOffset);
+                    stateReaderOffset += field.IntSize;
+                }
             }
         }
 
-        public unsafe void RemoteInterpolation(InternalEntity[] entityDict, float logicLerpMsec)
+        public void PreloadInterpolationForNewEntities(InternalEntity[] entityDict)
         {
             for (int i = 0; i < _nullEntitiesCount; i++)
             {
@@ -217,18 +196,6 @@ namespace LiteEntitySystem.Internal
                 _nullEntitiesCount--;
                 _nullEntitiesData[i] = _nullEntitiesData[_nullEntitiesCount];
                 i--;
-            }
-            
-            for(int i = 0; i < _interpolatedCachesCount; i++)
-            {
-                ref var interpolatedCache = ref _interpolatedCaches[i];
-                fixed (byte* initialDataPtr = interpolatedCache.Entity.ClassData.ClientInterpolatedNextData(interpolatedCache.Entity), nextDataPtr = Data)
-                    interpolatedCache.TypeProcessor.SetInterpolation(
-                        interpolatedCache.Entity, 
-                        interpolatedCache.FieldOffset,
-                        initialDataPtr + interpolatedCache.FieldFixedOffset,
-                        nextDataPtr + interpolatedCache.StateReaderOffset, 
-                        logicLerpMsec);
             }
         }
         
@@ -341,7 +308,6 @@ namespace LiteEntitySystem.Internal
         {
             Tick = tick;
             _receivedParts.SetAll(false);
-            _interpolatedCachesCount = 0;
             _maxReceivedPart = 0;
             _receivedPartsCount = 0;
             _totalPartsCount = 0;

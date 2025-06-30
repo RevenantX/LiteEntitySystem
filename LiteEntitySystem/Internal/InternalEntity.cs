@@ -201,18 +201,17 @@ namespace LiteEntitySystem.Internal
             ref var classData = ref EntityManager.ClassDataDict[ClassId];
             
             //setup field ids for BindOnChange and pass on server this for OnChangedEvent to StateSerializer
-            var onChangeTarget = EntityManager.IsServer && !IsLocal ? this : null;
             for (int i = 0; i < classData.FieldsCount; i++)
             {
                 ref var field = ref classData.Fields[i];
                 if (field.FieldType == FieldType.SyncVar)
                 {
-                    field.TypeProcessor.InitSyncVar(this, field.Offset, onChangeTarget, (ushort)i);
+                    field.TypeProcessor.InitSyncVar(this, field.Offset, this, (ushort)i);
                 }
                 else
                 {
                     var syncableField = RefMagic.GetFieldValue<SyncableField>(this, field.Offset);
-                    field.TypeProcessor.InitSyncVar(syncableField, field.SyncableSyncVarOffset, onChangeTarget, (ushort)i);
+                    field.TypeProcessor.InitSyncVar(syncableField, field.SyncableSyncVarOffset, this, (ushort)i);
                 }
             }
           

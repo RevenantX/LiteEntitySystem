@@ -7,8 +7,7 @@ flowchart TD
 subgraph LogicUpdate
     X[LocalSingleton.**VisualUpdate**] --> X1
 
-    X1[LocalSingleton.**Update**] --> A2 
-    A2["Restore real SyncVar values instead of Interpolated"] --> B2
+    X1[LocalSingleton.**Update**] --> B2 
     B2["Apply **input** (set HumanControllerLogic.**CurrentInput**)"] --> C2
     C2[**Update** owned, local and UpdateOnClient entities] --> D2
     D2[Execute **RPC**s for this frame] --> B4

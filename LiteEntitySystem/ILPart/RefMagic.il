@@ -34,6 +34,7 @@
     .method public hidebysig virtual newslot abstract instance void SvSetDirect(!T 'value') cil managed {}
     .method public hidebysig virtual newslot abstract instance void SvSetDirectAndStorePrev(!T 'value', [out] !T& prevValue) cil managed {}
     .method public hidebysig virtual newslot abstract instance bool SvSetFromAndSync(!T& 'value') cil managed {}
+    .method public hidebysig virtual newslot abstract instance void SvSetInterpValue(!T 'value') cil managed {}
 }
 
 .class public abstract auto ansi sealed beforefieldinit LiteEntitySystem.Internal.RefMagic extends [netstandard]System.Object
@@ -74,6 +75,24 @@
         ldarg 'value'
         constrained. !!TSyncVar
         callvirt instance void class LiteEntitySystem.Internal.ISyncVar`1<!!T>::SvSetDirect(!0)
+        ret
+    }
+
+    .method public hidebysig static void SyncVarSetInterp<
+        valuetype .ctor (class [netstandard]System.ValueType modreq ([netstandard]System.Runtime.InteropServices.UnmanagedType)) T,
+        valuetype .ctor (class LiteEntitySystem.Internal.ISyncVar`1<!!T>, class [netstandard]System.ValueType) TSyncVar>
+        (object obj, int32 offs, !!T 'value') cil managed aggressiveinlining
+    {
+        .param type T
+        .custom instance void [netstandard]System.Runtime.CompilerServices.IsUnmanagedAttribute::.ctor() = (01 00 00 00 )
+
+        ldarg obj
+        conv.i
+        ldarg offs
+        add
+        ldarg 'value'
+        constrained. !!TSyncVar
+        callvirt instance void class LiteEntitySystem.Internal.ISyncVar`1<!!T>::SvSetInterpValue(!0)
         ret
     }
 
