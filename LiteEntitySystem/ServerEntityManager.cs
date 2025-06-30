@@ -855,7 +855,7 @@ namespace LiteEntitySystem
             }       
         }
         
-        internal override void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue)
+        internal void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue) where T : unmanaged
         {
             if (entity.IsRemoved)
             {

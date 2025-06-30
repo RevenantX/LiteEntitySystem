@@ -121,8 +121,8 @@ namespace LiteEntitySystem
             get => _value;
             set
             {
-                if (Container != null && !Utils.FastEquals(ref value, ref _value))
-                    Container.EntityManager.EntityFieldChanged(Container, FieldId, ref value);
+                if (Container != null && Container.IsServer && !Utils.FastEquals(ref value, ref _value))
+                    Container.ServerManager.EntityFieldChanged(Container, FieldId, ref value);
                 _value = value;
             }
         }
@@ -131,7 +131,8 @@ namespace LiteEntitySystem
         {
             Container = container;
             FieldId = fieldId;
-            Container?.EntityManager.EntityFieldChanged(Container, FieldId, ref _value);
+            if (Container != null && Container.IsServer)
+                Container.ServerManager.EntityFieldChanged(Container, FieldId, ref _value);
         }
         
         public static implicit operator T(SyncVar<T> sv) => sv._value;

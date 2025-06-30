@@ -640,9 +640,6 @@ namespace LiteEntitySystem
 
         protected abstract void OnLogicTick();
 
-        internal abstract void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue)
-            where T : unmanaged;
-
         /// <summary>
         /// Main update method, updates internal fixed timer and do all other stuff
         /// </summary>

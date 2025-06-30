@@ -290,11 +290,6 @@ namespace LiteEntitySystem
             }
             return null;
         }
-
-        internal override void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue)
-        {
-            //currently nothing
-        }
         
         /// Read incoming data
         /// <param name="inData">Incoming data including header byte</param>
