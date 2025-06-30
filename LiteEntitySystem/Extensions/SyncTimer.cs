@@ -1,6 +1,4 @@
-﻿using LiteEntitySystem.Internal;
-
-namespace LiteEntitySystem.Extensions
+﻿namespace LiteEntitySystem.Extensions
 {
     public class SyncTimer : SyncableField
     {

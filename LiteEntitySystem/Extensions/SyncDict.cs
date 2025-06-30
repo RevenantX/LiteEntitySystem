@@ -85,18 +85,21 @@ namespace LiteEntitySystem.Extensions
         private void AddAction(KeyValue kv)
         {
             _data[kv.Key] = kv.Value;
+            MarkAsChanged();
         }
 
         public void Add(TKey key, TValue value)
         {
             _data.Add(key, value);
             ExecuteRPC(_addAction, new KeyValue(key,value));
+            MarkAsChanged();
         }
         
         public void Clear()
         {
             _data.Clear();
             ExecuteRPC(_clearAction);
+            MarkAsChanged();
         }
 
         public bool TryGetValue(TKey key, out TValue value)
@@ -124,6 +127,7 @@ namespace LiteEntitySystem.Extensions
             if (!_data.Remove(key)) 
                 return false;
             ExecuteRPC(_removeAction, key);
+            MarkAsChanged();
             return true;
         }
 

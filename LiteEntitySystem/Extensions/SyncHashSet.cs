@@ -86,12 +86,14 @@ namespace LiteEntitySystem.Extensions
         {
             _data.Add(x);
             ExecuteRPC(_addAction, x);
+            MarkAsChanged();
         }
         
         public void Clear()
         {
             _data.Clear();
             ExecuteRPC(_clearAction);
+            MarkAsChanged();
         }
 
         public bool Contains(T x) => _data.Contains(x);
@@ -103,6 +105,7 @@ namespace LiteEntitySystem.Extensions
             if (!_data.Remove(key)) 
                 return false;
             ExecuteRPC(_removeAction, key);
+            MarkAsChanged();
             return true;
         }
 

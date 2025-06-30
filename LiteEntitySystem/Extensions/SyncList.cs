@@ -126,12 +126,14 @@ namespace LiteEntitySystem.Extensions
             _data[_count] = item;
             _count++;
             ExecuteRPC(_addAction, item);
+            MarkAsChanged();
         }
         
         public void Clear()
         {
             _count = 0;
             ExecuteRPC(_clearAction);
+            MarkAsChanged();
         }
 
         public bool Contains(T item)
@@ -178,6 +180,7 @@ namespace LiteEntitySystem.Extensions
             _data[_count - 1] = default;
             _count--;
             ExecuteRPC(_removeAtAction, index);
+            MarkAsChanged();
         }
         
         public T this[int index]

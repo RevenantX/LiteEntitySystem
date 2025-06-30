@@ -74,6 +74,7 @@ namespace LiteEntitySystem.Extensions
         {
             _data.Enqueue(item);
             ExecuteRPC(_enqueueAction, item);
+            MarkAsChanged();
         }
 
         private void EnqueueClientAction(T item) => _data.Enqueue(item);
@@ -82,6 +83,7 @@ namespace LiteEntitySystem.Extensions
         {
             var value = _data.Dequeue();
             ExecuteRPC(_dequeueAction);
+            MarkAsChanged();
             return value;
         }
         
@@ -89,7 +91,10 @@ namespace LiteEntitySystem.Extensions
         {
             bool hasValue = _data.TryDequeue(out item);
             if (hasValue)
+            {
                 ExecuteRPC(_dequeueAction);
+                MarkAsChanged();
+            }
             return hasValue;
         }
 
@@ -105,6 +110,7 @@ namespace LiteEntitySystem.Extensions
         {
             _data.Clear();
             ExecuteRPC(_clearAction);
+            MarkAsChanged();
         }
 
         private void ClearClientAction() => _data.Clear();

@@ -518,14 +518,8 @@ namespace LiteEntitySystem
             //reset predicted entities
             _entitiesToRollback.Clear();
             foreach (var entity in _modifiedEntitiesToRollback)
-            {
-                ref var classData = ref ClassDataDict[entity.ClassId];
-                var rollbackFields = classData.GetRollbackFields(entity.IsLocalControlled);
-                if (rollbackFields == null || rollbackFields.Length == 0)
-                    continue;
                 _entitiesToRollback.Enqueue(entity);
-            }
-
+            
             foreach (var entity in _entitiesToRollback)
             {
                 ref var classData = ref ClassDataDict[entity.ClassId];
@@ -581,13 +575,21 @@ namespace LiteEntitySystem
             _entitiesToRollback.Clear();
         }
 
+        internal void MarkEntityChanged(InternalEntity entity)
+        {
+            if (entity.IsLocal || entity.IsDestroyed)
+                return;
+            _modifiedEntitiesToRollback.Add(entity);
+        }
+
         internal override void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue)
         {
             if (entity.IsLocal || entity.IsDestroyed)
                 return;
             
             ref var classData = ref ClassDataDict[entity.ClassId];
-            if (classData.SyncableFields.Length > 0 || classData.Fields[fieldId].IsPredicted)
+            var rollbackFields = classData.GetRollbackFields(entity.IsLocalControlled);
+            if (rollbackFields != null && rollbackFields.Length > 0 && classData.Fields[fieldId].IsPredicted)
                 _modifiedEntitiesToRollback.Add(entity);
         }
 

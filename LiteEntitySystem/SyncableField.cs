@@ -87,6 +87,16 @@ namespace LiteEntitySystem
         {
 
         }
+
+
+        /// <summary>
+        /// Marks that SyncableField was modified on client and add parent entity to Rollback list
+        /// </summary>
+        protected void MarkAsChanged()
+        {
+            if(_parentEntity != null && _parentEntity.IsClient)
+                _parentEntity.ClientManager.MarkEntityChanged(_parentEntity);
+        }
         
         protected void ExecuteRPC(in RemoteCall rpc)
         {
