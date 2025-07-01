@@ -27,9 +27,9 @@ subgraph GoToNextState
     C1[Execute **RPC**s for applied tick] --> D1
     D1[Execute **OnLateConstructed**] --> E1
     E1[Execute **BindOnSync** binded actions] --> F1
-    F1["Write local lag compensation history (used for rollback)"] --> H1
+    F1["Write local lag compensation history (used for rollback)"]
 end
-
+    F1 --> H1
 subgraph Rollback
     H1["Call **OnBeforeRollback** for rollbacked entities"] --> J1
     J1[Reset SyncVar values to acknowledged state] --> K1
