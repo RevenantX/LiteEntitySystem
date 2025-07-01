@@ -2456,6 +2456,19 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.EntityManager.IsEntityLagCompensated
   nameWithType: EntityManager.IsEntityLagCompensated
+- uid: LiteEntitySystem.EntityManager.IsLagCompensationEnabled
+  name: IsLagCompensationEnabled
+  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_IsLagCompensationEnabled
+  commentId: P:LiteEntitySystem.EntityManager.IsLagCompensationEnabled
+  fullName: LiteEntitySystem.EntityManager.IsLagCompensationEnabled
+  nameWithType: EntityManager.IsLagCompensationEnabled
+- uid: LiteEntitySystem.EntityManager.IsLagCompensationEnabled*
+  name: IsLagCompensationEnabled
+  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_IsLagCompensationEnabled_
+  commentId: Overload:LiteEntitySystem.EntityManager.IsLagCompensationEnabled
+  isSpec: "True"
+  fullName: LiteEntitySystem.EntityManager.IsLagCompensationEnabled
+  nameWithType: EntityManager.IsLagCompensationEnabled
 - uid: LiteEntitySystem.EntityManager.IsRunning
   name: IsRunning
   href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_IsRunning

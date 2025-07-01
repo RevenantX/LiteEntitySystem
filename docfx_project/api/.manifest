@@ -188,6 +188,7 @@
   "LiteEntitySystem.EntityManager.InvalidEntityId": "LiteEntitySystem.EntityManager.yml",
   "LiteEntitySystem.EntityManager.IsClient": "LiteEntitySystem.EntityManager.yml",
   "LiteEntitySystem.EntityManager.IsEntityLagCompensated(LiteEntitySystem.Internal.InternalEntity)": "LiteEntitySystem.EntityManager.yml",
+  "LiteEntitySystem.EntityManager.IsLagCompensationEnabled": "LiteEntitySystem.EntityManager.yml",
   "LiteEntitySystem.EntityManager.IsRunning": "LiteEntitySystem.EntityManager.yml",
   "LiteEntitySystem.EntityManager.IsServer": "LiteEntitySystem.EntityManager.yml",
   "LiteEntitySystem.EntityManager.LagCompensatedEntities": "LiteEntitySystem.EntityManager.yml",

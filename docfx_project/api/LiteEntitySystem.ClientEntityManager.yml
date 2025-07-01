@@ -75,6 +75,7 @@ items:
   - LiteEntitySystem.EntityManager.VisualDeltaTime
   - LiteEntitySystem.EntityManager.MaxPlayers
   - LiteEntitySystem.EntityManager.IsRunning
+  - LiteEntitySystem.EntityManager.IsLagCompensationEnabled
   - LiteEntitySystem.EntityManager.RegisterFieldType``1(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{{T}})
   - LiteEntitySystem.EntityManager.RegisterFieldType``1
   - LiteEntitySystem.EntityManager.GetEntityTypeFromClassId(System.UInt16)
@@ -939,6 +940,13 @@ references:
   name: IsRunning
   nameWithType: EntityManager.IsRunning
   fullName: LiteEntitySystem.EntityManager.IsRunning
+- uid: LiteEntitySystem.EntityManager.IsLagCompensationEnabled
+  commentId: P:LiteEntitySystem.EntityManager.IsLagCompensationEnabled
+  parent: LiteEntitySystem.EntityManager
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_IsLagCompensationEnabled
+  name: IsLagCompensationEnabled
+  nameWithType: EntityManager.IsLagCompensationEnabled
+  fullName: LiteEntitySystem.EntityManager.IsLagCompensationEnabled
 - uid: LiteEntitySystem.EntityManager.RegisterFieldType``1(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{{T}})
   commentId: M:LiteEntitySystem.EntityManager.RegisterFieldType``1(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{``0})
   parent: LiteEntitySystem.EntityManager

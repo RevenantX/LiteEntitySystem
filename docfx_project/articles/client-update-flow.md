@@ -13,8 +13,7 @@ subgraph LogicUpdate
     D2[Execute **RPC**s for this frame] --> B4
 
     B4[Execute **OnLateConstructed**] --> E4
-    E4[Execute **BindOnSync** binded actions] --> F4
-    F4["Write local lag compensation history (used for rollback)"] --> B
+    E4[Execute **BindOnSync** binded actions] --> B
 end
     B[Send **input**] --> C
     C{Check need to apply new server state}

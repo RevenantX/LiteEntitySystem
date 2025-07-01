@@ -346,7 +346,9 @@ namespace LiteEntitySystem
                     IsExecutingRPC = false;
                     int readerPosition = _stateA.DataOffset;
                     ReadDiff(ref readerPosition);
-                    ExecuteSyncCallsAndWriteHistory(_stateA);
+                    ExecuteSyncCalls(_stateA);
+                    foreach (var lagCompensatedEntity in LagCompensatedEntities)
+                        ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
                     
                     Logger.Log($"[CEM] Got baseline sync. Assigned player id: {header.PlayerId}, Original: {_stateA.Size}, Tick: {header.Tick}, SendRate: {_serverSendRate}");
                 }
@@ -492,7 +494,9 @@ namespace LiteEntitySystem
             IsExecutingRPC = false;
             int readerPosition = _stateA.DataOffset;
             ReadDiff(ref readerPosition);
-            ExecuteSyncCallsAndWriteHistory(_stateA);
+            ExecuteSyncCalls(_stateA);
+            foreach (var lagCompensatedEntity in LagCompensatedEntities)
+                ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
 
             for(int i = 0; i < _entitiesToRemoveCount; i++)
             {
@@ -654,7 +658,7 @@ namespace LiteEntitySystem
                 IsExecutingRPC = true;
                 _stateB.ExecuteRpcs(this, _stateA.Tick, false);
                 IsExecutingRPC = false;
-                ExecuteSyncCallsAndWriteHistory(_stateB);
+                ExecuteSyncCalls(_stateB);
             }
 
             if (NetworkJitter > _jitterMiddle)
@@ -711,6 +715,9 @@ namespace LiteEntitySystem
         internal T GetInterpolatedValue<T>(ref SyncVar<T> syncVar, T interpValue) where T : unmanaged
         {
             var typeProcessor = (ValueTypeProcessor<T>)ClassDataDict[syncVar.Container.ClassId].Fields[syncVar.FieldId].TypeProcessor;
+            if (IsLagCompensationEnabled && IsEntityLagCompensated(syncVar.Container))
+                return syncVar.Value;
+            
             return syncVar.Container.IsLocalControlled
                 ? typeProcessor.GetInterpolatedValue(interpValue, syncVar.Value, LerpFactor)
                 : typeProcessor.GetInterpolatedValue(syncVar.Value, interpValue, _remoteLerpMsec);
@@ -839,7 +846,7 @@ namespace LiteEntitySystem
             }
         }
         
-        private void ExecuteSyncCallsAndWriteHistory(ServerStateData stateData)
+        private void ExecuteSyncCalls(ServerStateData stateData)
         {
             if (_entitiesToRollback.Count > 0)
             {
@@ -878,8 +885,6 @@ namespace LiteEntitySystem
             for (int i = 0; i < _syncCallsCount; i++)
                 _syncCalls[i].Execute(stateData);
             _syncCallsCount = 0;
-            foreach (var lagCompensatedEntity in LagCompensatedEntities)
-                ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
         }
         
         internal unsafe void ReadConstructRPC(ushort entityId, byte* rawData, int readerPosition)

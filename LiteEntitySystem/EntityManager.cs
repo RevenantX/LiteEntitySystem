@@ -216,6 +216,11 @@ namespace LiteEntitySystem
         /// IsRunning - sets to false after Reset() call
         /// </summary>
         public bool IsRunning => _stopwatch.IsRunning;
+        
+        /// <summary>
+        /// Is lag compensation currently enabled
+        /// </summary>
+        public bool IsLagCompensationEnabled => _lagCompensationEnabled;
 
         /// <summary>
         /// Register custom field type with interpolation

@@ -30,6 +30,7 @@ items:
   - LiteEntitySystem.EntityManager.InvalidEntityId
   - LiteEntitySystem.EntityManager.IsClient
   - LiteEntitySystem.EntityManager.IsEntityLagCompensated(LiteEntitySystem.Internal.InternalEntity)
+  - LiteEntitySystem.EntityManager.IsLagCompensationEnabled
   - LiteEntitySystem.EntityManager.IsRunning
   - LiteEntitySystem.EntityManager.IsServer
   - LiteEntitySystem.EntityManager.LagCompensatedEntities
@@ -692,6 +693,29 @@ items:
       type: System.Boolean
     content.vb: Public ReadOnly Property IsRunning As Boolean
   overload: LiteEntitySystem.EntityManager.IsRunning*
+- uid: LiteEntitySystem.EntityManager.IsLagCompensationEnabled
+  commentId: P:LiteEntitySystem.EntityManager.IsLagCompensationEnabled
+  id: IsLagCompensationEnabled
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: IsLagCompensationEnabled
+  nameWithType: EntityManager.IsLagCompensationEnabled
+  fullName: LiteEntitySystem.EntityManager.IsLagCompensationEnabled
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Is lag compensation currently enabled
+  example: []
+  syntax:
+    content: public bool IsLagCompensationEnabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsLagCompensationEnabled As Boolean
+  overload: LiteEntitySystem.EntityManager.IsLagCompensationEnabled*
 - uid: LiteEntitySystem.EntityManager.RegisterFieldType``1(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{``0})
   commentId: M:LiteEntitySystem.EntityManager.RegisterFieldType``1(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{``0})
   id: RegisterFieldType``1(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{``0})
@@ -1665,6 +1689,12 @@ references:
   name: IsRunning
   nameWithType: EntityManager.IsRunning
   fullName: LiteEntitySystem.EntityManager.IsRunning
+- uid: LiteEntitySystem.EntityManager.IsLagCompensationEnabled*
+  commentId: Overload:LiteEntitySystem.EntityManager.IsLagCompensationEnabled
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_IsLagCompensationEnabled
+  name: IsLagCompensationEnabled
+  nameWithType: EntityManager.IsLagCompensationEnabled
+  fullName: LiteEntitySystem.EntityManager.IsLagCompensationEnabled
 - uid: LiteEntitySystem.EntityManager.RegisterFieldType*
   commentId: Overload:LiteEntitySystem.EntityManager.RegisterFieldType
   href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_RegisterFieldType__1_LiteEntitySystem_Internal_InterpolatorDelegateWithReturn___0__
