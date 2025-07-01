@@ -714,10 +714,10 @@ namespace LiteEntitySystem
 
         internal T GetInterpolatedValue<T>(ref SyncVar<T> syncVar, T interpValue) where T : unmanaged
         {
-            var typeProcessor = (ValueTypeProcessor<T>)ClassDataDict[syncVar.Container.ClassId].Fields[syncVar.FieldId].TypeProcessor;
             if (IsLagCompensationEnabled && IsEntityLagCompensated(syncVar.Container))
                 return syncVar.Value;
             
+            var typeProcessor = (ValueTypeProcessor<T>)ClassDataDict[syncVar.Container.ClassId].Fields[syncVar.FieldId].TypeProcessor;
             return syncVar.Container.IsLocalControlled
                 ? typeProcessor.GetInterpolatedValue(interpValue, syncVar.Value, LerpFactor)
                 : typeProcessor.GetInterpolatedValue(syncVar.Value, interpValue, _remoteLerpMsec);
