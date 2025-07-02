@@ -10,7 +10,7 @@ subgraph LogicUpdate
     X1[LocalSingleton.**Update**] --> B2 
     B2["Apply **input** (set HumanControllerLogic.**CurrentInput**)"] --> C2
     C2[**Update** owned, local and UpdateOnClient entities] --> D2
-    D2[Execute **RPC**s for this frame] --> B4
+    D2["Execute **RPC**s for this frame (including **OnConstructed**, **OnDestroyed**)"] --> B4
 
     B4[Execute **OnLateConstructed**] --> E4
     E4[Execute **BindOnSync** binded actions] --> B
@@ -24,7 +24,7 @@ subgraph GoToNextState
     A1["**Destroy** spawned predicted local entities (they should be replaced by applied server state)"] --> B1
     B1[Set **ServerTick** to applied tick] --> B1_1
     B1_1[Set SyncVars from new state] --> C1
-    C1[Execute **RPC**s for applied tick] --> D1
+    C1["Execute **RPC**s for applied tick (including **OnConstructed**, **OnDestroyed**)"] --> D1
     D1[Execute **OnLateConstructed**] --> E1
     E1[Execute **BindOnSync** binded actions] --> F1
     F1["Write local lag compensation history (used for rollback)"]
