@@ -241,6 +241,12 @@ namespace LiteEntitySystem
         internal readonly SequenceBinaryHeap<TInput> AvailableInput;
         
         /// <summary>
+        /// Returns default new input for custom cases where not all values should be 0
+        /// </summary>
+        /// <returns>New clean input</returns>
+        protected virtual TInput GetDefaultInput() => default;
+        
+        /// <summary>
         /// Get pending input reference for modifications
         /// Pending input resets to default after it was assigned to CurrentInput inside logic tick
         /// </summary>
@@ -249,7 +255,7 @@ namespace LiteEntitySystem
         {
             if (_shouldResetInput)
             {
-                _pendingInput = default;
+                _pendingInput = GetDefaultInput();
                 _shouldResetInput = false;
             }
             return ref _pendingInput;
@@ -276,6 +282,9 @@ namespace LiteEntitySystem
             {
                 AvailableInput = new(ServerEntityManager.MaxStoredInputs);
             }
+
+            // ReSharper disable once VirtualMemberCallInConstructor
+            _currentInput = GetDefaultInput();
         }
         
         internal override void RemoveClientProcessedInputs(ushort processedTick)
@@ -320,7 +329,7 @@ namespace LiteEntitySystem
                 else if (seqDiff == 0)
                 {
                     //Set input if tick equals
-                    CurrentInput = AvailableInput.ExtractMin();
+                    _currentInput = AvailableInput.ExtractMin();
                     break;
                 }
             }
