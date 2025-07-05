@@ -463,7 +463,7 @@ items:
     description: <code class="paramref">index</code> is less than zero.
   - type: System.ArgumentException
     commentId: T:System.ArgumentException
-    description: "        <code class=\"paramref\">array</code> is multidimensional.  \r\n-or-  \r\nThe number of elements in the source <xref href=\"System.Collections.ICollection\" data-throw-if-not-resolved=\"false\"></xref> is greater than the available space from <code class=\"paramref\">index</code> to the end of the destination <code class=\"paramref\">array</code>.  \r\n-or-  \r\nThe type of the source <xref href=\"System.Collections.ICollection\" data-throw-if-not-resolved=\"false\"></xref> cannot be cast automatically to the type of the destination <code class=\"paramref\">array</code>."
+    description: "        <code class=\"paramref\">array</code> is multidimensional.  \n-or-  \nThe number of elements in the source <xref href=\"System.Collections.ICollection\" data-throw-if-not-resolved=\"false\"></xref> is greater than the available space from <code class=\"paramref\">index</code> to the end of the destination <code class=\"paramref\">array</code>.  \n-or-  \nThe type of the source <xref href=\"System.Collections.ICollection\" data-throw-if-not-resolved=\"false\"></xref> cannot be cast automatically to the type of the destination <code class=\"paramref\">array</code>."
   implements:
   - System.Collections.ICollection.CopyTo(System.Array,System.Int32)
   nameWithType.vb: SyncQueue(Of T).CopyTo(Array, Integer)

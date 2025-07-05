@@ -101,6 +101,9 @@ namespace LiteEntitySystem
         /// </summary>
         public const int MaxLocalEntityCount = MaxEntityCount - MaxSyncedEntityCount;
         
+        /// <summary>
+        /// Server player Id - always 0 and reserved
+        /// </summary>
         public const byte ServerPlayerId = 0;
 
         /// <summary>
@@ -168,6 +171,9 @@ namespace LiteEntitySystem
         /// </summary>
         public byte PlayerId => InternalPlayerId;
 
+        /// <summary>
+        /// EntityManager packets header byte (can be used to distinguish LES packets from custom made)
+        /// </summary>
         public readonly byte HeaderByte;
         
         public bool InRollBackState => UpdateMode == UpdateMode.PredictionRollback;
@@ -177,7 +183,16 @@ namespace LiteEntitySystem
         internal const int MaxParts = 256;
         private const int MaxTicksPerUpdate = 5;
 
+        /// <summary>
+        /// Delta time between visual Updates
+        /// </summary>
         public double VisualDeltaTime { get; private set; }
+        
+        /// <summary>
+        /// Delta time between visual Updates (float)
+        /// </summary>
+        public float VisualDeltaTimeF => (float)VisualDeltaTime;
+        
         public const int MaxPlayers = byte.MaxValue-1;
         
         protected ushort _tick;

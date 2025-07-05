@@ -36,6 +36,7 @@ items:
   - System.IComparable{LiteEntitySystem.Internal.InternalEntity}
   inheritedMembers:
   - LiteEntitySystem.HumanControllerLogic{{TInput}}.IsBot
+  - LiteEntitySystem.HumanControllerLogic{{TInput}}.GetDefaultInput
   - LiteEntitySystem.HumanControllerLogic{{TInput}}.ModifyPendingInput
   - LiteEntitySystem.HumanControllerLogic{{TInput}}.CurrentInput
   - LiteEntitySystem.HumanControllerLogic.StringSizeLimit
@@ -258,6 +259,28 @@ references:
   fullName: LiteEntitySystem.HumanControllerLogic<TInput>.IsBot
   nameWithType.vb: HumanControllerLogic(Of TInput).IsBot
   fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).IsBot
+- uid: LiteEntitySystem.HumanControllerLogic{{TInput}}.GetDefaultInput
+  commentId: M:LiteEntitySystem.HumanControllerLogic{`0}.GetDefaultInput
+  parent: LiteEntitySystem.HumanControllerLogic{{TInput}}
+  definition: LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput
+  href: LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GetDefaultInput
+  name: GetDefaultInput()
+  nameWithType: HumanControllerLogic<TInput>.GetDefaultInput()
+  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.GetDefaultInput()
+  nameWithType.vb: HumanControllerLogic(Of TInput).GetDefaultInput()
+  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).GetDefaultInput()
+  spec.csharp:
+  - uid: LiteEntitySystem.HumanControllerLogic{`0}.GetDefaultInput
+    name: GetDefaultInput
+    href: LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GetDefaultInput
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.HumanControllerLogic{`0}.GetDefaultInput
+    name: GetDefaultInput
+    href: LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GetDefaultInput
+  - name: (
+  - name: )
 - uid: LiteEntitySystem.HumanControllerLogic{{TInput}}.ModifyPendingInput
   commentId: M:LiteEntitySystem.HumanControllerLogic{`0}.ModifyPendingInput
   parent: LiteEntitySystem.HumanControllerLogic{{TInput}}
@@ -1645,6 +1668,26 @@ references:
   fullName: LiteEntitySystem.HumanControllerLogic<TInput>.IsBot
   nameWithType.vb: HumanControllerLogic(Of TInput).IsBot
   fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).IsBot
+- uid: LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput
+  commentId: M:LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput
+  href: LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GetDefaultInput
+  name: GetDefaultInput()
+  nameWithType: HumanControllerLogic<TInput>.GetDefaultInput()
+  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.GetDefaultInput()
+  nameWithType.vb: HumanControllerLogic(Of TInput).GetDefaultInput()
+  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).GetDefaultInput()
+  spec.csharp:
+  - uid: LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput
+    name: GetDefaultInput
+    href: LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GetDefaultInput
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput
+    name: GetDefaultInput
+    href: LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GetDefaultInput
+  - name: (
+  - name: )
 - uid: LiteEntitySystem.HumanControllerLogic`1.ModifyPendingInput
   commentId: M:LiteEntitySystem.HumanControllerLogic`1.ModifyPendingInput
   href: LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_ModifyPendingInput

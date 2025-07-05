@@ -2773,6 +2773,19 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.EntityManager.VisualDeltaTime
   nameWithType: EntityManager.VisualDeltaTime
+- uid: LiteEntitySystem.EntityManager.VisualDeltaTimeF
+  name: VisualDeltaTimeF
+  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_VisualDeltaTimeF
+  commentId: P:LiteEntitySystem.EntityManager.VisualDeltaTimeF
+  fullName: LiteEntitySystem.EntityManager.VisualDeltaTimeF
+  nameWithType: EntityManager.VisualDeltaTimeF
+- uid: LiteEntitySystem.EntityManager.VisualDeltaTimeF*
+  name: VisualDeltaTimeF
+  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_VisualDeltaTimeF_
+  commentId: Overload:LiteEntitySystem.EntityManager.VisualDeltaTimeF
+  isSpec: "True"
+  fullName: LiteEntitySystem.EntityManager.VisualDeltaTimeF
+  nameWithType: EntityManager.VisualDeltaTimeF
 - uid: LiteEntitySystem.EntityManager._tick
   name: _tick
   href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager__tick
@@ -5934,6 +5947,23 @@ references:
   fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).CurrentInput
   nameWithType: HumanControllerLogic<TInput>.CurrentInput
   nameWithType.vb: HumanControllerLogic(Of TInput).CurrentInput
+- uid: LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput
+  name: GetDefaultInput()
+  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GetDefaultInput
+  commentId: M:LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput
+  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.GetDefaultInput()
+  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).GetDefaultInput()
+  nameWithType: HumanControllerLogic<TInput>.GetDefaultInput()
+  nameWithType.vb: HumanControllerLogic(Of TInput).GetDefaultInput()
+- uid: LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput*
+  name: GetDefaultInput
+  href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GetDefaultInput_
+  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput
+  isSpec: "True"
+  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.GetDefaultInput
+  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).GetDefaultInput
+  nameWithType: HumanControllerLogic<TInput>.GetDefaultInput
+  nameWithType.vb: HumanControllerLogic(Of TInput).GetDefaultInput
 - uid: LiteEntitySystem.HumanControllerLogic`1.IsBot
   name: IsBot
   href: api/LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_IsBot

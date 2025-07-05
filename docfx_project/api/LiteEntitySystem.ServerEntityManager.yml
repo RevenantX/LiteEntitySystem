@@ -69,6 +69,7 @@ items:
   - LiteEntitySystem.EntityManager.InRollBackState
   - LiteEntitySystem.EntityManager.InNormalState
   - LiteEntitySystem.EntityManager.VisualDeltaTime
+  - LiteEntitySystem.EntityManager.VisualDeltaTimeF
   - LiteEntitySystem.EntityManager.MaxPlayers
   - LiteEntitySystem.EntityManager.IsRunning
   - LiteEntitySystem.EntityManager.IsLagCompensationEnabled
@@ -975,6 +976,13 @@ references:
   name: VisualDeltaTime
   nameWithType: EntityManager.VisualDeltaTime
   fullName: LiteEntitySystem.EntityManager.VisualDeltaTime
+- uid: LiteEntitySystem.EntityManager.VisualDeltaTimeF
+  commentId: P:LiteEntitySystem.EntityManager.VisualDeltaTimeF
+  parent: LiteEntitySystem.EntityManager
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_VisualDeltaTimeF
+  name: VisualDeltaTimeF
+  nameWithType: EntityManager.VisualDeltaTimeF
+  fullName: LiteEntitySystem.EntityManager.VisualDeltaTimeF
 - uid: LiteEntitySystem.EntityManager.MaxPlayers
   commentId: F:LiteEntitySystem.EntityManager.MaxPlayers
   parent: LiteEntitySystem.EntityManager

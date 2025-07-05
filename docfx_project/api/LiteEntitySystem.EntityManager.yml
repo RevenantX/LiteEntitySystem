@@ -60,6 +60,7 @@ items:
   - LiteEntitySystem.EntityManager.Update
   - LiteEntitySystem.EntityManager.UpdateMode
   - LiteEntitySystem.EntityManager.VisualDeltaTime
+  - LiteEntitySystem.EntityManager.VisualDeltaTimeF
   - LiteEntitySystem.EntityManager._tick
   langs:
   - csharp
@@ -156,6 +157,8 @@ items:
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem
+  summary: Server player Id - always 0 and reserved
+  example: []
   syntax:
     content: public const byte ServerPlayerId = 0
     return:
@@ -464,6 +467,8 @@ items:
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem
+  summary: EntityManager packets header byte (can be used to distinguish LES packets from custom made)
+  example: []
   syntax:
     content: public readonly byte HeaderByte
     return:
@@ -544,6 +549,8 @@ items:
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem
+  summary: Delta time between visual Updates
+  example: []
   syntax:
     content: public double VisualDeltaTime { get; }
     parameters: []
@@ -551,6 +558,29 @@ items:
       type: System.Double
     content.vb: Public Property VisualDeltaTime As Double
   overload: LiteEntitySystem.EntityManager.VisualDeltaTime*
+- uid: LiteEntitySystem.EntityManager.VisualDeltaTimeF
+  commentId: P:LiteEntitySystem.EntityManager.VisualDeltaTimeF
+  id: VisualDeltaTimeF
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: VisualDeltaTimeF
+  nameWithType: EntityManager.VisualDeltaTimeF
+  fullName: LiteEntitySystem.EntityManager.VisualDeltaTimeF
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Delta time between visual Updates (float)
+  example: []
+  syntax:
+    content: public float VisualDeltaTimeF { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly Property VisualDeltaTimeF As Single
+  overload: LiteEntitySystem.EntityManager.VisualDeltaTimeF*
 - uid: LiteEntitySystem.EntityManager.MaxPlayers
   commentId: F:LiteEntitySystem.EntityManager.MaxPlayers
   id: MaxPlayers
@@ -1573,6 +1603,12 @@ references:
   name: VisualDeltaTime
   nameWithType: EntityManager.VisualDeltaTime
   fullName: LiteEntitySystem.EntityManager.VisualDeltaTime
+- uid: LiteEntitySystem.EntityManager.VisualDeltaTimeF*
+  commentId: Overload:LiteEntitySystem.EntityManager.VisualDeltaTimeF
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_VisualDeltaTimeF
+  name: VisualDeltaTimeF
+  nameWithType: EntityManager.VisualDeltaTimeF
+  fullName: LiteEntitySystem.EntityManager.VisualDeltaTimeF
 - uid: LiteEntitySystem.Collections.AVLTree{LiteEntitySystem.Internal.InternalEntity}
   commentId: T:LiteEntitySystem.Collections.AVLTree{LiteEntitySystem.Internal.InternalEntity}
   parent: LiteEntitySystem.Collections

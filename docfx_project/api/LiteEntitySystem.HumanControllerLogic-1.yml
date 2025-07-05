@@ -7,6 +7,7 @@ items:
   children:
   - LiteEntitySystem.HumanControllerLogic`1.#ctor(LiteEntitySystem.EntityParams)
   - LiteEntitySystem.HumanControllerLogic`1.CurrentInput
+  - LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput
   - LiteEntitySystem.HumanControllerLogic`1.IsBot
   - LiteEntitySystem.HumanControllerLogic`1.ModifyPendingInput
   langs:
@@ -133,6 +134,31 @@ items:
   overload: LiteEntitySystem.HumanControllerLogic`1.IsBot*
   nameWithType.vb: HumanControllerLogic(Of TInput).IsBot
   fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).IsBot
+- uid: LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput
+  commentId: M:LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput
+  id: GetDefaultInput
+  parent: LiteEntitySystem.HumanControllerLogic`1
+  langs:
+  - csharp
+  - vb
+  name: GetDefaultInput()
+  nameWithType: HumanControllerLogic<TInput>.GetDefaultInput()
+  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.GetDefaultInput()
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Returns default new input for custom cases where not all values should be 0
+  example: []
+  syntax:
+    content: protected virtual TInput GetDefaultInput()
+    return:
+      type: '{TInput}'
+      description: New clean input
+    content.vb: Protected Overridable Function GetDefaultInput() As TInput
+  overload: LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput*
+  nameWithType.vb: HumanControllerLogic(Of TInput).GetDefaultInput()
+  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).GetDefaultInput()
 - uid: LiteEntitySystem.HumanControllerLogic`1.ModifyPendingInput
   commentId: M:LiteEntitySystem.HumanControllerLogic`1.ModifyPendingInput
   id: ModifyPendingInput
@@ -2281,14 +2307,14 @@ references:
   nameWithType.vb: Boolean
   fullName.vb: Boolean
   name.vb: Boolean
-- uid: LiteEntitySystem.HumanControllerLogic`1.ModifyPendingInput*
-  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.ModifyPendingInput
-  href: LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_ModifyPendingInput
-  name: ModifyPendingInput
-  nameWithType: HumanControllerLogic<TInput>.ModifyPendingInput
-  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.ModifyPendingInput
-  nameWithType.vb: HumanControllerLogic(Of TInput).ModifyPendingInput
-  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).ModifyPendingInput
+- uid: LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput*
+  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.GetDefaultInput
+  href: LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_GetDefaultInput
+  name: GetDefaultInput
+  nameWithType: HumanControllerLogic<TInput>.GetDefaultInput
+  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.GetDefaultInput
+  nameWithType.vb: HumanControllerLogic(Of TInput).GetDefaultInput
+  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).GetDefaultInput
 - uid: '{TInput}'
   commentId: '!:TInput'
   definition: TInput
@@ -2299,6 +2325,14 @@ references:
   name: TInput
   nameWithType: TInput
   fullName: TInput
+- uid: LiteEntitySystem.HumanControllerLogic`1.ModifyPendingInput*
+  commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.ModifyPendingInput
+  href: LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_ModifyPendingInput
+  name: ModifyPendingInput
+  nameWithType: HumanControllerLogic<TInput>.ModifyPendingInput
+  fullName: LiteEntitySystem.HumanControllerLogic<TInput>.ModifyPendingInput
+  nameWithType.vb: HumanControllerLogic(Of TInput).ModifyPendingInput
+  fullName.vb: LiteEntitySystem.HumanControllerLogic(Of TInput).ModifyPendingInput
 - uid: LiteEntitySystem.HumanControllerLogic`1.CurrentInput*
   commentId: Overload:LiteEntitySystem.HumanControllerLogic`1.CurrentInput
   href: LiteEntitySystem.HumanControllerLogic-1.html#LiteEntitySystem_HumanControllerLogic_1_CurrentInput
