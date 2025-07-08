@@ -420,7 +420,7 @@ namespace LiteEntitySystem
         {
             base.RegisterRPC(ref r);
             
-            r.BindOnChange<SyncGroup, EntityLogic>(ref _isSyncEnabled, (e, _) => e.OnSyncGroupsChanged(e._isSyncEnabled.Value));
+            r.BindOnChange<EntityLogic, SyncGroup>(ref _isSyncEnabled, (e, _) => e.OnSyncGroupsChanged(e._isSyncEnabled.Value));
             
             r.CreateRPCAction<EntityLogic, ChangeParentData>(
                 (e, data) =>

@@ -489,38 +489,9 @@ namespace LiteEntitySystem
             _statesPool.Enqueue(_stateA);
             _stateA = _stateB;
             _stateB = null;
+            ServerTick = _stateA.Tick;
             
             //Logger.Log($"GotoState: IST: {ServerTick}, TST:{_stateA.Tick}}");
-            
-            //================== ReadEntityStates BEGIN ==================
-            _changedEntities.Clear();
-            ServerTick = _stateA.Tick;
-            IsExecutingRPC = true;
-            _stateA.ExecuteRpcs(this, minimalTick, false);
-            IsExecutingRPC = false;
-            int readerPosition = _stateA.DataOffset;
-            ReadDiff(ref readerPosition);
-            ExecuteSyncCalls(_stateA);
-            foreach (var lagCompensatedEntity in LagCompensatedEntities)
-                ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
-
-            for(int i = 0; i < _entitiesToRemoveCount; i++)
-            {
-                //skip changed
-                var entityToRemove = _entitiesToRemove[i];
-                if (_changedEntities.Contains(entityToRemove))
-                    continue;
-                
-                //Logger.Log($"[CLI] RemovingEntity: {_entitiesToRemove[i].Id}");
-                RemoveEntity(entityToRemove);
-                
-                _entitiesToRemoveCount--;
-                _entitiesToRemove[i] = _entitiesToRemove[_entitiesToRemoveCount];
-                _entitiesToRemove[_entitiesToRemoveCount] = null;
-                i--;
-            }
-            
-            //================== ReadEntityStates END ====================
             
             _remoteInterpolationTimer -= _remoteInterpolationTotalTime;
             
@@ -559,6 +530,37 @@ namespace LiteEntitySystem
             
             //clear modified here to readd changes after RollbackUpdate
             _modifiedEntitiesToRollback.Clear();
+            
+            //read entity states after rollback to correct bind on change
+            
+            //================== ReadEntityStates BEGIN ==================
+            _changedEntities.Clear();
+            IsExecutingRPC = true;
+            _stateA.ExecuteRpcs(this, minimalTick, false);
+            IsExecutingRPC = false;
+            int readerPosition = _stateA.DataOffset;
+            ReadDiff(ref readerPosition);
+            ExecuteSyncCalls(_stateA);
+            foreach (var lagCompensatedEntity in LagCompensatedEntities)
+                ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
+
+            for(int i = 0; i < _entitiesToRemoveCount; i++)
+            {
+                //skip changed
+                var entityToRemove = _entitiesToRemove[i];
+                if (_changedEntities.Contains(entityToRemove))
+                    continue;
+                
+                //Logger.Log($"[CLI] RemovingEntity: {_entitiesToRemove[i].Id}");
+                RemoveEntity(entityToRemove);
+                
+                _entitiesToRemoveCount--;
+                _entitiesToRemove[i] = _entitiesToRemove[_entitiesToRemoveCount];
+                _entitiesToRemove[_entitiesToRemoveCount] = null;
+                i--;
+            }
+            
+            //================== ReadEntityStates END ====================
     
             //reapply input
             UpdateMode = UpdateMode.PredictionRollback;
@@ -591,14 +593,25 @@ namespace LiteEntitySystem
             _modifiedEntitiesToRollback.Add(entity);
         }
 
-        internal override void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue)
+        internal override unsafe void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue)
         {
-            if (entity.IsLocal || entity.IsDestroyed)
+            if (entity.IsRemoved)
                 return;
             
             ref var classData = ref ClassDataDict[entity.ClassId];
+            ref var fieldInfo = ref classData.Fields[fieldId];
+            
+            if ((fieldInfo.OnSyncFlags & BindOnChangeFlags.ExecuteOnPrediction) != 0)
+            {
+                T value = newValue;
+                fieldInfo.OnSync(entity, new ReadOnlySpan<byte>(&value, sizeof(T)));
+            }
+
+            if (entity.IsLocal)
+                return;
+            
             var rollbackFields = classData.GetRollbackFields(entity.IsLocalControlled);
-            if (rollbackFields != null && rollbackFields.Length > 0 && classData.Fields[fieldId].IsPredicted)
+            if (rollbackFields != null && rollbackFields.Length > 0 &&fieldInfo.IsPredicted)
                 _modifiedEntitiesToRollback.Add(entity);
         }
 

@@ -5,6 +5,30 @@ using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
 {
+    [Flags]
+    public enum BindOnChangeFlags
+    {
+        /// <summary>
+        /// Execute in OnSync stage. Mostly useful for RemoteControlled entities to trigger change notification
+        /// </summary>
+        ExecuteOnSync =         1 << 0,
+        
+        /// <summary>
+        /// Execute on local prediction on Client
+        /// </summary>
+        ExecuteOnPrediction =   1 << 2,
+        
+        /// <summary>
+        /// Execute when value changed on server
+        /// </summary>
+        ExecuteOnServer =       1 << 3,
+        
+        /// <summary>
+        /// Combines ExecuteOnSync, ExecuteOnPrediction and ExecuteOnServer flags
+        /// </summary>
+        ExecuteAlways =         ExecuteOnSync | ExecuteOnPrediction | ExecuteOnServer
+    }
+    
     public delegate void SpanAction<T>(ReadOnlySpan<T> data);
     public delegate void SpanAction<in TCaller, T>(TCaller caller, ReadOnlySpan<T> data);
     internal delegate void MethodCallDelegate(object classPtr, ReadOnlySpan<byte> buffer);
@@ -116,9 +140,10 @@ namespace LiteEntitySystem
         /// </summary>
         /// <param name="syncVar">Variable to bind</param>
         /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
-        public void BindOnChange<T, TEntity>(ref SyncVar<T> syncVar, Action<TEntity, T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
+        public void BindOnChange<TEntity, T>(ref SyncVar<T> syncVar, Action<TEntity, T> onChangedAction, BindOnChangeFlags flags = BindOnChangeFlags.ExecuteOnSync) where T : unmanaged where TEntity : InternalEntity
         {
             _fields[syncVar.FieldId].OnSync = RemoteCall<T>.CreateMCD(onChangedAction);
+            _fields[syncVar.FieldId].OnSyncFlags = flags;
         }
         
         /// <summary>
@@ -127,10 +152,10 @@ namespace LiteEntitySystem
         /// <param name="self">Target entity for binding</param>
         /// <param name="syncVar">Variable to bind</param>
         /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
-        public void BindOnChange<T, TEntity>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction) where T : unmanaged where TEntity : InternalEntity
+        public void BindOnChange<TEntity, T>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction, BindOnChangeFlags flags = BindOnChangeFlags.ExecuteOnSync) where T : unmanaged where TEntity : InternalEntity
         {
             CheckTarget(self, onChangedAction.Target);
-            BindOnChange(ref syncVar, onChangedAction.Method.CreateDelegateHelper<Action<TEntity, T>>());
+            BindOnChange(ref syncVar, onChangedAction.Method.CreateDelegateHelper<Action<TEntity, T>>(), flags);
         }
         
         /// <summary>

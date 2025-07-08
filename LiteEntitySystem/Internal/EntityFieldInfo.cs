@@ -19,6 +19,7 @@
         public readonly bool IsPredicted;
         
         public MethodCallDelegate OnSync;
+        public BindOnChangeFlags OnSyncFlags;
         public int FixedOffset;
         public int PredictedOffset;
 
@@ -44,6 +45,7 @@
             SyncVarFlags flags,
             FieldType fieldType)
         {
+            OnSyncFlags = 0;
             Name = name;
             TypeProcessor = valueTypeProcessor;
             SyncableSyncVarOffset = syncableSyncVarOffset;
@@ -75,7 +77,7 @@
             }
             else
             {
-                if (OnSync != null)
+                if (OnSync != null && (OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0)
                 {
                     if (TypeProcessor.SetFromAndSync(entity, Offset, rawData))
                         return true; //create sync call
