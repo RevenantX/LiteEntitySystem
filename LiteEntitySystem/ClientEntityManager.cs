@@ -593,7 +593,7 @@ namespace LiteEntitySystem
             _modifiedEntitiesToRollback.Add(entity);
         }
 
-        internal override unsafe void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue)
+        internal override unsafe void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue, ref T oldValue)
         {
             if (entity.IsRemoved)
                 return;
@@ -603,7 +603,7 @@ namespace LiteEntitySystem
             
             if ((fieldInfo.OnSyncFlags & BindOnChangeFlags.ExecuteOnPrediction) != 0)
             {
-                T value = newValue;
+                T value = oldValue;
                 fieldInfo.OnSync(entity, new ReadOnlySpan<byte>(&value, sizeof(T)));
             }
 

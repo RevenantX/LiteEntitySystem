@@ -660,7 +660,7 @@ namespace LiteEntitySystem
 
         protected abstract void OnLogicTick();
         
-        internal abstract void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue)
+        internal abstract void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue, ref T oldValue)
             where T : unmanaged;
 
         /// <summary>

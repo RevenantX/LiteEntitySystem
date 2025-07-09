@@ -855,7 +855,7 @@ namespace LiteEntitySystem
             }       
         }
         
-        internal override unsafe void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue)
+        internal override unsafe void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue, ref T oldValue)
         {
             if (entity.IsRemoved)
             {
@@ -871,7 +871,7 @@ namespace LiteEntitySystem
             ref var fieldInfo = ref entity.ClassData.Fields[fieldId];
             if ((fieldInfo.OnSyncFlags & BindOnChangeFlags.ExecuteOnServer) != 0)
             {
-                T value = newValue;
+                T value = oldValue;
                 fieldInfo.OnSync(entity, new ReadOnlySpan<byte>(&value, sizeof(T)));
             }
         }
