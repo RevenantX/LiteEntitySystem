@@ -246,12 +246,6 @@ namespace LiteEntitySystem.Internal
                         *fields = 0;
                     }
                     
-                    //skip very old
-                    if (Utils.SequenceDiff(_fieldChangeTicks[i], minimalTick) <= 0)
-                    {
-                        continue;
-                    }
-                    
                     //not actual
                     if (Utils.SequenceDiff(_fieldChangeTicks[i], compareToTick) <= 0)
                     {
