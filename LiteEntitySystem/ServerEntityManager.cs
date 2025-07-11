@@ -847,9 +847,16 @@ namespace LiteEntitySystem
                         return false;
                     }
                 }
-                
+
+                if (rpcNode.Header.Id == RemoteCallPacket.ConstructOwnedRPCId && entity.OwnerId != player.Id)
+                    rpcNode.Header.Id = RemoteCallPacket.ConstructRPCId;
+
                 if (rpcNode.Header.Id == RemoteCallPacket.ConstructRPCId)
+                {
+                    if(entity.OwnerId == player.Id)
+                        rpcNode.Header.Id = RemoteCallPacket.ConstructOwnedRPCId;
                     stateSerializer.RefreshSyncGroupsVariable(player, new Span<byte>(rpcNode.Data));
+                }
 
                 return true;
             }       

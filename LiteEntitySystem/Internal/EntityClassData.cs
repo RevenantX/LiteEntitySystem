@@ -87,7 +87,7 @@ namespace LiteEntitySystem.Internal
         private readonly int _maxHistoryCount;
         private readonly int _historyStart;
         
-        public Span<byte> ClientPredictedData(InternalEntity e) => new (e.IOBuffer, 0, PredictedSize);
+        public Span<byte> GetLastServerData(InternalEntity e) => new (e.IOBuffer, 0, PredictedSize);
 
         public EntityFieldInfo[] GetRollbackFields(bool isOwned) =>
             isOwned ? _ownedRollbackFields : _remoteRollbackFields;

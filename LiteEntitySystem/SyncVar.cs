@@ -132,7 +132,9 @@ namespace LiteEntitySystem
         {
             Container = container;
             FieldId = fieldId;
-            Container.EntityManager.EntityFieldChanged(Container, FieldId, ref _value, ref _value);
+            T defaultValue = default;
+            if(!Utils.FastEquals(ref _value, ref defaultValue))
+                Container.EntityManager.EntityFieldChanged(Container, FieldId, ref _value, ref defaultValue);
         }
         
         public static implicit operator T(SyncVar<T> sv) => sv._value;

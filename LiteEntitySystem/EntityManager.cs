@@ -544,11 +544,11 @@ namespace LiteEntitySystem
             return entity;
         }
 
-        protected bool ConstructEntity(InternalEntity e)
+        protected void ConstructEntity(InternalEntity e)
         {
             if (e.IsConstructed)
-                return false;
-            e.IsConstructed = true;
+                return;
+            e.ConstructInternal();
             
             ref var classData = ref ClassDataDict[e.ClassId];
             if (classData.IsSingleton)
@@ -575,8 +575,6 @@ namespace LiteEntitySystem
                 AliveEntities.Add(e);
             }
             _entitiesToLateConstruct.Enqueue(e);
-
-            return true;
         }
 
         protected static bool IsEntityLagCompensated(InternalEntity e)
@@ -620,7 +618,7 @@ namespace LiteEntitySystem
                 EntitiesDict[e.Id] = null;
             EntitiesCount--;
             ClassDataDict[e.ClassId].ReleaseDataCache(e);
-            e.IsRemoved = true;
+            e.Remove();
             //Logger.Log($"{Mode} - RemoveEntity: {e.Id}");
         }
         

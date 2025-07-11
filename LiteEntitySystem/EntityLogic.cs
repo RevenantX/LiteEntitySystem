@@ -406,11 +406,9 @@ namespace LiteEntitySystem
             
         }
 
-        internal void RefreshOwnerInfo(EntityLogic oldOwner)
+        private void OnOwnerChanged(byte oldPlayerId)
         {
-            if (EntityManager.IsServer || IsLocal)
-                return;
-            if(oldOwner != null && oldOwner.InternalOwnerId.Value == EntityManager.InternalPlayerId)
+            if(oldPlayerId == EntityManager.InternalPlayerId)
                 ClientManager.RemoveOwned(this);
             if(InternalOwnerId.Value == EntityManager.InternalPlayerId)
                 ClientManager.AddOwned(this);
@@ -421,6 +419,7 @@ namespace LiteEntitySystem
             base.RegisterRPC(ref r);
             
             r.BindOnChange<EntityLogic, SyncGroup>(ref _isSyncEnabled, (e, _) => e.OnSyncGroupsChanged(e._isSyncEnabled.Value));
+            r.BindOnChange(this, ref InternalOwnerId, OnOwnerChanged);
             
             r.CreateRPCAction<EntityLogic, ChangeParentData>(
                 (e, data) =>
@@ -429,7 +428,6 @@ namespace LiteEntitySystem
                     {
                         case ChangeType.Parent:
                             var oldOwner = e.EntityManager.GetEntityById<EntityLogic>(data.Ref);
-                            e.RefreshOwnerInfo(oldOwner);
                             e.OnParentChanged(oldOwner);
                             break;
                         case ChangeType.ChildAdd:

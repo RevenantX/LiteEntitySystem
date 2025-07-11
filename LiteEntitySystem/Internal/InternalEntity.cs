@@ -4,10 +4,20 @@ using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
+    public enum EntityState
+    {
+        New = 0,
+        Constructed = 1,
+        Destroyed = 2,
+        Removed = 3
+    }
+    
     public abstract class InternalEntity : InternalBaseClass, IComparable<InternalEntity>
     {
         [SyncVarFlags(SyncFlags.NeverRollBack)]
         internal SyncVar<byte> InternalOwnerId;
+        
+        private EntityState _entityState;
         
         internal byte[] IOBuffer;
 
@@ -22,7 +32,6 @@ namespace LiteEntitySystem.Internal
         /// Entity instance id
         /// </summary>
         public readonly ushort Id;
-
         
         /// <summary>
         /// Entity manager
@@ -44,7 +53,7 @@ namespace LiteEntitySystem.Internal
         /// </summary>
         public readonly byte Version;
 
-        internal EntityDataHeader DataHeader => new EntityDataHeader
+        internal EntityDataHeader DataHeader => new
         (
             ClassId,
             Version,
@@ -54,7 +63,7 @@ namespace LiteEntitySystem.Internal
         /// <summary>
         /// Is entity is destroyed
         /// </summary>
-        public bool IsDestroyed { get; private set; }
+        public bool IsDestroyed => _entityState >= EntityState.Destroyed;
 
         /// <summary>
         /// Is entity local controlled
@@ -103,12 +112,17 @@ namespace LiteEntitySystem.Internal
         /// <summary>
         /// Is entity constructed (OnConstruct called)
         /// </summary>
-        public bool IsConstructed { get; internal set; }
+        public bool IsConstructed => _entityState >= EntityState.Constructed;
 
         /// <summary>
         /// Is entity released and not used after destroy.
         /// </summary>
-        public bool IsRemoved { get; internal set; }
+        public bool IsRemoved => _entityState == EntityState.Removed;
+        
+        /// <summary>
+        /// Entity state. New, Constructed, Destroyed, Removed
+        /// </summary>
+        public EntityState State => _entityState;
 
         /// <summary>
         /// Destroy entity
@@ -132,9 +146,25 @@ namespace LiteEntitySystem.Internal
         {
             if (IsDestroyed)
                 return;
-            IsDestroyed = true;
+            _entityState = EntityState.Destroyed;
             EntityManager.OnEntityDestroyed(this);
             OnDestroy();
+        }
+
+        internal void ConstructInternal()
+        {
+            if (_entityState != EntityState.New)
+                Logger.LogError($"Error! Calling construct on not new entity: {this}");
+            
+            _entityState = EntityState.Constructed;
+        }
+
+        internal void Remove()
+        {
+            if (_entityState != EntityState.Destroyed)
+                Logger.LogError($"Error! Calling remove on not destroyed entity: {this}");
+            
+            _entityState = EntityState.Removed;
         }
 
         internal void SafeUpdate()
