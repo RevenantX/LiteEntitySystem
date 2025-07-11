@@ -169,17 +169,46 @@ namespace LiteEntitySystem
             EntityManager.DisableLagCompensation();
         
         /// <summary>
-        /// Get synchronized seed for random generators based on current tick. Can be used for rollback or inside RPCs
+        /// Gets owner tick on client if entity is owned, and on server it returns owner tick.
+        /// Useful as seed for random generators based on current tick.
         /// </summary>
-        /// <returns>current tick depending on entity manager state (IsExecutingRPC and InRollBackState)</returns>
-        public int GetFrameSeed() =>
-            EntityManager.IsClient
-                ? (ClientManager.IsExecutingRPC ? ClientManager.CurrentRPCTick : EntityManager.Tick)
-                : (InternalOwnerId.Value == EntityManager.ServerPlayerId ? EntityManager.Tick : ServerManager.GetPlayer(InternalOwnerId).LastProcessedTick);
+        /// <returns>true if owner tick accessible, false if you trying get remote player tick</returns>
+        public bool TryGetOwnerTick(out ushort tick)
+        {
+            if (EntityManager.IsClient)
+            {
+                if (ClientManager.InternalPlayerId == InternalOwnerId.Value)
+                {
+                    tick = EntityManager.Tick;
+                    return true;
+                }
+
+                if (InternalOwnerId.Value == EntityManager.ServerPlayerId)
+                {
+                    tick = ClientManager.ServerTick;
+                    return true;
+                }
+          
+                //else
+                tick = EntityManager.Tick;
+                return false;
+            }
+            
+            //Server
+            if(InternalOwnerId.Value == EntityManager.ServerPlayerId)
+            {
+                tick = EntityManager.Tick;
+                return true;
+            }
+
+            tick = ServerManager.GetPlayer(InternalOwnerId).LastProcessedTick;
+            return true;
+        }
         
         /// <summary>
         /// Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
         /// Should be called also in rollback mode
+        /// Don't call this method inside Server->Client RPC! This will break many things.
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="initMethod">Method that will be called after entity constructed</param>

@@ -220,6 +220,8 @@ namespace LiteEntitySystem.Internal
             int initialRpcIndex = _rpcIndex;
             if (executeMode == RPCExecuteMode.OnNextState)
                 _rpcIndex = 0;
+
+            _entityManager.IsExecutingRPC = true;
             
             fixed (byte* rawData = Data)
             {
@@ -255,8 +257,7 @@ namespace LiteEntitySystem.Internal
                             continue;
                         }
                     }
-                    _entityManager.CurrentRPCTick = header.Tick;
-                    
+
                     if (header.Id == RemoteCallPacket.NewRPCId || 
                         header.Id == RemoteCallPacket.NewOwnedRPCId)
                     {
@@ -320,6 +321,8 @@ namespace LiteEntitySystem.Internal
             
             foreach (var syncableField in SyncablesBufferSet)
                 syncableField.AfterReadRPC();
+
+            _entityManager.IsExecutingRPC = false;
         }
 
         public void Reset(ushort tick)

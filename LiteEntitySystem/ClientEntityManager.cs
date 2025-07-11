@@ -19,14 +19,9 @@ namespace LiteEntitySystem
         public ushort ServerTick { get; private set; }
 
         /// <summary>
-        /// Tick of currently executing rpc (check only in client RPC methods)
-        /// </summary>
-        public ushort CurrentRPCTick { get; internal set; }
-
-        /// <summary>
         /// Is server->client rpc currently executing
         /// </summary>
-        public bool IsExecutingRPC { get; private set; }
+        public bool IsExecutingRPC { get; internal set; }
 
         /// <summary>
         /// Current state server tick
@@ -344,9 +339,7 @@ namespace LiteEntitySystem
                     _storedInputHeaders.Clear();
                     _jitterTimer.Reset();
                     
-                    IsExecutingRPC = true;
                     _stateA.ExecuteRpcs((ushort)(_stateA.Tick - 1),RPCExecuteMode.FirstSync);
-                    IsExecutingRPC = false;
                     int readerPosition = _stateA.DataOffset;
                     ReadDiff(ref readerPosition);
                     ExecuteSyncCalls(_stateA);
@@ -495,11 +488,13 @@ namespace LiteEntitySystem
             
             _remoteInterpolationTimer -= _remoteInterpolationTotalTime;
             
+            _entitiesToRollback.Clear();
+            foreach (var entity in _modifiedEntitiesToRollback)
+                _entitiesToRollback.Enqueue(entity);
+            
             //================== ReadEntityStates BEGIN ==================
             _changedEntities.Clear();
-            IsExecutingRPC = true;
             _stateA.ExecuteRpcs(minimalTick, RPCExecuteMode.OnNextState);
-            IsExecutingRPC = false;
             int readerPosition = _stateA.DataOffset;
             ReadDiff(ref readerPosition);
             ExecuteSyncCalls(_stateA);
@@ -524,10 +519,7 @@ namespace LiteEntitySystem
             //================== ReadEntityStates END ====================
             
             //================== Rollback part ===========================
-            _entitiesToRollback.Clear();
-            foreach (var entity in _modifiedEntitiesToRollback)
-                _entitiesToRollback.Enqueue(entity);
-            
+
             //reset predicted entities
             foreach (var entity in _entitiesToRollback)
             {
@@ -706,9 +698,7 @@ namespace LiteEntitySystem
             if (_stateB != null)
             {
                 //execute rpcs and spawn entities
-                IsExecutingRPC = true;
                 _stateB.ExecuteRpcs(_stateA.Tick, RPCExecuteMode.BetweenStates);
-                IsExecutingRPC = false;
                 ExecuteSyncCalls(_stateB);
                 
                 while(_remoteInterpolationTimer >= _remoteInterpolationTotalTime)
