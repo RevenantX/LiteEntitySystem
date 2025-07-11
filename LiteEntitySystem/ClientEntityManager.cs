@@ -454,39 +454,11 @@ namespace LiteEntitySystem
 
         private unsafe void GoToNextState()
         {
-            //remove processed inputs
-            foreach (var controller in GetEntities<HumanControllerLogic>())
-                controller.RemoveClientProcessedInputs(_stateB.ProcessedTick);
-            while (_storedInputHeaders.Count > 0 && Utils.SequenceDiff(_stateB.ProcessedTick, _storedInputHeaders.Front().Tick) >= 0)
-                _storedInputHeaders.PopFront();
-            
-            //delete predicted
-            while (_spawnPredictedEntities.TryPeek(out var info))
-            {
-                if (Utils.SequenceDiff(_stateB.ProcessedTick, info.tick) >= 0)
-                {
-                    //Logger.Log($"Delete predicted. Tick: {info.tick}, Entity: {info.entity}");
-                    _spawnPredictedEntities.Dequeue();
-                    info.entity.DestroyInternal();
-                    RemoveEntity(info.entity);
-                    _localIdQueue.ReuseId(info.entity.Id);
-                }
-                else
-                {
-                    break;
-                }
-            }
-            
-            ushort minimalTick = _stateA.Tick;
-            _statesPool.Enqueue(_stateA);
-            _stateA = _stateB;
-            _stateB = null;
-            ServerTick = _stateA.Tick;
-            
-            //Logger.Log($"GotoState: IST: {ServerTick}, TST:{_stateA.Tick}}");
-            
             _remoteInterpolationTimer -= _remoteInterpolationTotalTime;
+            ushort targetTick = _tick;
             
+            //Step a little to match "predicted" state at server processed tick
+            //for correct BindOnSync execution
             //================== Rollback part ===========================
             _entitiesToRollback.Clear();
             foreach (var entity in _modifiedEntitiesToRollback)
@@ -519,6 +491,58 @@ namespace LiteEntitySystem
                 entity.OnRollback();
             }
             
+            //reapply input
+            int cmdNum = 0;
+            UpdateMode = UpdateMode.PredictionRollback;
+            while(_storedInputHeaders.Count > 0 && Utils.SequenceDiff(_stateB.ProcessedTick, _storedInputHeaders.Front().Tick) >= 0)
+            {
+                var storedInput = _storedInputHeaders.Front();
+                _storedInputHeaders.PopFront();
+                _localPlayer.LoadInputInfo(storedInput.Header);
+                _tick = storedInput.Tick;
+                foreach (var controller in GetEntities<HumanControllerLogic>())
+                    controller.ReadStoredInput(cmdNum);
+                cmdNum++;
+                
+                //simple update
+                foreach (var entity in _entitiesToRollback)
+                {
+                    if (!entity.IsLocalControlled || !AliveEntities.Contains(entity))
+                        continue;
+                    entity.Update();
+                }
+            }
+            UpdateMode = UpdateMode.Normal;
+            
+            //remove processed inputs
+            foreach (var controller in GetEntities<HumanControllerLogic>())
+                controller.RemoveClientProcessedInputs(_stateB.ProcessedTick);
+            
+            //delete predicted
+            while (_spawnPredictedEntities.TryPeek(out var info))
+            {
+                if (Utils.SequenceDiff(_stateB.ProcessedTick, info.tick) >= 0)
+                {
+                    //Logger.Log($"Delete predicted. Tick: {info.tick}, Entity: {info.entity}");
+                    _spawnPredictedEntities.Dequeue();
+                    info.entity.DestroyInternal();
+                    RemoveEntity(info.entity);
+                    _localIdQueue.ReuseId(info.entity.Id);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            
+            ushort minimalTick = _stateA.Tick;
+            _statesPool.Enqueue(_stateA);
+            _stateA = _stateB;
+            _stateB = null;
+            ServerTick = _stateA.Tick;
+            
+            //Logger.Log($"GotoState: IST: {ServerTick}, TST:{_stateA.Tick}");
+            
             //================== ReadEntityStates BEGIN ==================
             _changedEntities.Clear();
             _stateA.ExecuteRpcs(minimalTick, RPCExecuteMode.OnNextState);
@@ -548,9 +572,8 @@ namespace LiteEntitySystem
             _modifiedEntitiesToRollback.Clear();
     
             //reapply input
-            UpdateMode = UpdateMode.PredictionRollback;
-            ushort targetTick = _tick;
-            for(int cmdNum = 0; cmdNum < _storedInputHeaders.Count; cmdNum++)
+            UpdateMode = UpdateMode.PredictionRollback; 
+            for(cmdNum = 0; cmdNum < _storedInputHeaders.Count; cmdNum++)
             {
                 //reapply input data
                 var storedInput = _storedInputHeaders[cmdNum];
@@ -578,8 +601,9 @@ namespace LiteEntitySystem
                     entity.Update();
                 }
             }
-            _tick = targetTick;
             UpdateMode = UpdateMode.Normal;
+            
+            _tick = targetTick;
             _entitiesToRollback.Clear();
         }
 
