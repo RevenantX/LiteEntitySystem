@@ -340,8 +340,7 @@ namespace LiteEntitySystem
                     _jitterTimer.Reset();
                     
                     _stateA.ExecuteRpcs((ushort)(_stateA.Tick - 1),RPCExecuteMode.FirstSync);
-                    int readerPosition = _stateA.DataOffset;
-                    ReadDiff(ref readerPosition);
+                    ReadDiff();
                     ExecuteSyncCalls(_stateA);
                     foreach (var lagCompensatedEntity in LagCompensatedEntities)
                         ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
@@ -488,38 +487,10 @@ namespace LiteEntitySystem
             
             _remoteInterpolationTimer -= _remoteInterpolationTotalTime;
             
+            //================== Rollback part ===========================
             _entitiesToRollback.Clear();
             foreach (var entity in _modifiedEntitiesToRollback)
                 _entitiesToRollback.Enqueue(entity);
-            
-            //================== ReadEntityStates BEGIN ==================
-            _changedEntities.Clear();
-            _stateA.ExecuteRpcs(minimalTick, RPCExecuteMode.OnNextState);
-            int readerPosition = _stateA.DataOffset;
-            ReadDiff(ref readerPosition);
-            ExecuteSyncCalls(_stateA);
-            foreach (var lagCompensatedEntity in LagCompensatedEntities)
-                ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
-
-            for(int i = 0; i < _entitiesToRemoveCount; i++)
-            {
-                //skip changed
-                var entityToRemove = _entitiesToRemove[i];
-                if (_changedEntities.Contains(entityToRemove))
-                    continue;
-                
-                //Logger.Log($"[CLI] RemovingEntity: {_entitiesToRemove[i].Id}");
-                RemoveEntity(entityToRemove);
-                
-                _entitiesToRemoveCount--;
-                _entitiesToRemove[i] = _entitiesToRemove[_entitiesToRemoveCount];
-                _entitiesToRemove[_entitiesToRemoveCount] = null;
-                i--;
-            }
-            //================== ReadEntityStates END ====================
-            
-            //================== Rollback part ===========================
-
             //reset predicted entities
             foreach (var entity in _entitiesToRollback)
             {
@@ -547,6 +518,31 @@ namespace LiteEntitySystem
                     RefMagic.GetFieldValue<SyncableFieldCustomRollback>(entity, classData.SyncableFieldsCustomRollback[i].Offset).OnRollback();
                 entity.OnRollback();
             }
+            
+            //================== ReadEntityStates BEGIN ==================
+            _changedEntities.Clear();
+            _stateA.ExecuteRpcs(minimalTick, RPCExecuteMode.OnNextState);
+            ReadDiff();
+            ExecuteSyncCalls(_stateA);
+            foreach (var lagCompensatedEntity in LagCompensatedEntities)
+                ClassDataDict[lagCompensatedEntity.ClassId].WriteHistory(lagCompensatedEntity, ServerTick);
+
+            for(int i = 0; i < _entitiesToRemoveCount; i++)
+            {
+                //skip changed
+                var entityToRemove = _entitiesToRemove[i];
+                if (_changedEntities.Contains(entityToRemove))
+                    continue;
+                
+                //Logger.Log($"[CLI] RemovingEntity: {_entitiesToRemove[i].Id}");
+                RemoveEntity(entityToRemove);
+                
+                _entitiesToRemoveCount--;
+                _entitiesToRemove[i] = _entitiesToRemove[_entitiesToRemoveCount];
+                _entitiesToRemove[_entitiesToRemoveCount] = null;
+                i--;
+            }
+            //================== ReadEntityStates END ====================
             
             //clear modified here to readd changes after RollbackUpdate
             _modifiedEntitiesToRollback.Clear();
@@ -903,8 +899,9 @@ namespace LiteEntitySystem
             //Logger.Log($"ConstructedEntity: {entityId}, pid: {entityLogic.PredictedId}");
         }
 
-        private unsafe void ReadDiff(ref int readerPosition)
+        private unsafe void ReadDiff()
         {
+            int readerPosition = _stateA.DataOffset;
             fixed (byte* rawData = _stateA.Data)
             {
                 while (readerPosition < _stateA.DataOffset + _stateA.DataSize)
