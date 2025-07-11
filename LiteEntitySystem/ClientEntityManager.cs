@@ -456,6 +456,7 @@ namespace LiteEntitySystem
         {
             _remoteInterpolationTimer -= _remoteInterpolationTotalTime;
             ushort targetTick = _tick;
+            var humanControllerFilter = GetEntities<HumanControllerLogic>();
             
             //Step a little to match "predicted" state at server processed tick
             //for correct BindOnSync execution
@@ -474,11 +475,15 @@ namespace LiteEntitySystem
                 {
                     for (int i = 0; i < rollbackFields.Length; i++)
                     {
-                        ref var field = ref rollbackFields[i];
+                        ref var field = ref classData.Fields[rollbackFields[i]];
                         if (field.FieldType == FieldType.SyncableSyncVar)
                         {
                             var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, field.Offset);
                             field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, lastServerData + field.PredictedOffset);
+                        }
+                        else if (field.OnSync != null && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnRollbackReset) != 0)
+                        {
+                            field.TypeProcessor.SetFromAndSync(entity, field.Offset, lastServerData + field.PredictedOffset, field.OnSync);
                         }
                         else
                         {
@@ -500,7 +505,7 @@ namespace LiteEntitySystem
                 _storedInputHeaders.PopFront();
                 _localPlayer.LoadInputInfo(storedInput.Header);
                 _tick = storedInput.Tick;
-                foreach (var controller in GetEntities<HumanControllerLogic>())
+                foreach (var controller in humanControllerFilter)
                     controller.ReadStoredInput(cmdNum);
                 cmdNum++;
                 
@@ -515,7 +520,7 @@ namespace LiteEntitySystem
             UpdateMode = UpdateMode.Normal;
             
             //remove processed inputs
-            foreach (var controller in GetEntities<HumanControllerLogic>())
+            foreach (var controller in humanControllerFilter)
                 controller.RemoveClientProcessedInputs(_stateB.ProcessedTick);
             
             //delete predicted
@@ -579,7 +584,7 @@ namespace LiteEntitySystem
                 var storedInput = _storedInputHeaders[cmdNum];
                 _localPlayer.LoadInputInfo(storedInput.Header);
                 _tick = storedInput.Tick;
-                foreach (var controller in GetEntities<HumanControllerLogic>())
+                foreach (var controller in humanControllerFilter)
                     controller.ReadStoredInput(cmdNum);
                 //simple update
                 foreach (var entity in _entitiesToRollback)

@@ -74,8 +74,8 @@ namespace LiteEntitySystem.Internal
         public RpcFieldInfo[] RemoteCallsClient;
         public readonly Type Type;
 
-        private readonly EntityFieldInfo[] _ownedRollbackFields;
-        private readonly EntityFieldInfo[] _remoteRollbackFields;
+        private readonly int[] _ownedRollbackFields;
+        private readonly int[] _remoteRollbackFields;
         
         private static readonly Type InternalEntityType = typeof(InternalEntity);
         internal static readonly Type SingletonEntityType = typeof(SingletonEntityLogic);
@@ -89,7 +89,7 @@ namespace LiteEntitySystem.Internal
         
         public Span<byte> GetLastServerData(InternalEntity e) => new (e.IOBuffer, 0, PredictedSize);
 
-        public EntityFieldInfo[] GetRollbackFields(bool isOwned) =>
+        public int[] GetRollbackFields(bool isOwned) =>
             isOwned ? _ownedRollbackFields : _remoteRollbackFields;
         
         public unsafe void WriteHistory(EntityLogic e, ushort tick)
@@ -189,8 +189,8 @@ namespace LiteEntitySystem.Internal
             var syncableFields = new List<SyncableFieldInfo>();
             var syncableFieldsWithCustomRollback = new List<SyncableFieldInfo>();
             var lagCompensatedFields = new List<EntityFieldInfo>();
-            var ownedRollbackFields = new List<EntityFieldInfo>();
-            var remoteRollbackFields = new List<EntityFieldInfo>();
+            var ownedRollbackFields = new List<int>();
+            var remoteRollbackFields = new List<int>();
             
             var allTypesStack = Utils.GetBaseTypes(entType, InternalEntityType, true, true);
             while(allTypesStack.Count > 0)
@@ -322,10 +322,10 @@ namespace LiteEntitySystem.Internal
                     
                     //singletons can't be owned
                     if (!IsSingleton)
-                        ownedRollbackFields.Add(field);
+                        ownedRollbackFields.Add(i);
                     
                     if(field.Flags.HasFlagFast(SyncFlags.AlwaysRollback))
-                        remoteRollbackFields.Add(field);
+                        remoteRollbackFields.Add(i);
                 }
                 else
                 {

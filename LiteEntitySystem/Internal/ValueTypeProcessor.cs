@@ -16,6 +16,7 @@ namespace LiteEntitySystem.Internal
         internal abstract void InitSyncVar(InternalBaseClass obj, int offset, InternalEntity entity, ushort fieldId);
         internal abstract void SetFrom(InternalBaseClass obj, int offset, byte* data);
         internal abstract bool SetFromAndSync(InternalBaseClass obj, int offset, byte* data);
+        internal abstract void SetFromAndSync(InternalBaseClass obj, int offset, byte* data, MethodCallDelegate onSyncDelegate);
         internal abstract void SetInterpValue(InternalBaseClass obj, int offset, byte* data);
         internal abstract void SetInterpValueFromCurrentValue(InternalBaseClass obj, int offset);
         internal abstract void WriteTo(InternalBaseClass obj, int offset, byte* data);
@@ -45,6 +46,13 @@ namespace LiteEntitySystem.Internal
 
         internal sealed override bool SetFromAndSync(InternalBaseClass obj, int offset, byte* data) =>
             RefMagic.SyncVarSetFromAndSync<T, SyncVar<T>>(obj, offset, ref *(T*)data);
+
+        internal sealed override void SetFromAndSync(InternalBaseClass obj, int offset, byte* data, MethodCallDelegate onSyncDelegate)
+        {
+            var tempData = *(T*)data;
+            if(RefMagic.SyncVarSetFromAndSync<T, SyncVar<T>>(obj, offset, ref tempData))
+                onSyncDelegate(obj, new ReadOnlySpan<byte>(&tempData, Size));
+        }
 
         internal sealed override void SetInterpValue(InternalBaseClass obj, int offset, byte* data) =>
             RefMagic.SyncVarSetInterp<T, SyncVar<T>>(obj, offset, *(T*)data);

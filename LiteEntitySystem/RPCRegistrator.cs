@@ -16,17 +16,22 @@ namespace LiteEntitySystem
         /// <summary>
         /// Execute on local prediction on Client
         /// </summary>
-        ExecuteOnPrediction =   1 << 2,
+        ExecuteOnPrediction =   1 << 1,
         
         /// <summary>
         /// Execute when value changed on server
         /// </summary>
-        ExecuteOnServer =       1 << 3,
+        ExecuteOnServer =       1 << 2,
+        
+        /// <summary>
+        /// Execute when SyncVar values reset in rollback (before OnRollback() called)
+        /// </summary>
+        ExecuteOnRollbackReset = 1 << 3,
         
         /// <summary>
         /// Combines ExecuteOnSync, ExecuteOnPrediction and ExecuteOnServer flags
         /// </summary>
-        ExecuteAlways =         ExecuteOnSync | ExecuteOnPrediction | ExecuteOnServer
+        ExecuteAlways =         ExecuteOnSync | ExecuteOnPrediction | ExecuteOnServer | ExecuteOnRollbackReset
     }
     
     public delegate void SpanAction<T>(ReadOnlySpan<T> data);
