@@ -18,8 +18,8 @@ namespace LiteEntitySystem.Internal
         public DeltaCompressor(int size)
         {
             Size = size;
-            DeltaBits = Size / FieldsDivision + (Size % FieldsDivision == 0 ? 0 : 1);
-            MinDeltaSize = DeltaBits / 8 + (DeltaBits % 8 == 0 ? 0 : 1);
+            DeltaBits = (Size + FieldsDivision - 1) / FieldsDivision;
+            MinDeltaSize = (DeltaBits + 7) / 8;
             MaxDeltaSize = MinDeltaSize + Size;
             _firstFullData = null;
         }

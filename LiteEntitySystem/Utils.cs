@@ -216,6 +216,18 @@ namespace LiteEntitySystem
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static T CreateDelegateHelper<T>(this MethodInfo method) where T : Delegate => (T)method.CreateDelegate(typeof(T));
+
+        public static string BytesToHexString(ReadOnlySpan<byte> bytes)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                sb.Append(bytes[i].ToString("X2"));
+                if(i != bytes.Length - 1)
+                    sb.Append('_');
+            }
+            return sb.ToString();
+        }
         
         internal static Stack<Type> GetBaseTypes(Type ofType, Type until, bool includeSelf, bool includeLast)
         {

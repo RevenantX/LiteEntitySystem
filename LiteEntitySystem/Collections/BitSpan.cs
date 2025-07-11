@@ -20,21 +20,21 @@ namespace LiteEntitySystem.Collections
         public BitSpan(Span<byte> bitRegion, int bitCount)
         {
             BitCount = bitCount;
-            ByteCount = bitCount / BitsInByte + (bitCount % BitsInByte == 0 ? 0 : 1);
+            ByteCount = (bitCount + 7) / BitsInByte;
             _bitRegion = bitRegion;
         }
         
         public unsafe BitSpan(byte* bitRegion, int bitCount)
         {
             BitCount = bitCount;
-            ByteCount = bitCount / BitsInByte + (bitCount % BitsInByte == 0 ? 0 : 1);
+            ByteCount = (bitCount + 7) / BitsInByte;
             _bitRegion = new Span<byte>(bitRegion, ByteCount);
         }
         
         public BitSpan(byte[] bitRegion, int offset, int bitCount)
         {
             BitCount = bitCount;
-            ByteCount = bitCount / BitsInByte + (bitCount % BitsInByte == 0 ? 0 : 1);
+            ByteCount = (bitCount + 7) / BitsInByte;
             _bitRegion = new Span<byte>(bitRegion, offset, ByteCount);
         }
 
@@ -82,28 +82,28 @@ namespace LiteEntitySystem.Collections
         public BitReadOnlySpan(Span<byte> bitRegion, int bitCount)
         {
             BitCount = bitCount;
-            ByteCount = bitCount / BitsInByte + (bitCount % BitsInByte == 0 ? 0 : 1);
+            ByteCount = (bitCount + 7) / BitsInByte;
             _bitRegion = bitRegion;
         }
         
         public BitReadOnlySpan(ReadOnlySpan<byte> bitRegion, int bitCount)
         {
             BitCount = bitCount;
-            ByteCount = bitCount / BitsInByte + (bitCount % BitsInByte == 0 ? 0 : 1);
+            ByteCount = (bitCount + 7) / BitsInByte;
             _bitRegion = bitRegion;
         }
         
         public unsafe BitReadOnlySpan(byte* bitRegion, int bitCount)
         {
             BitCount = bitCount;
-            ByteCount = bitCount / BitsInByte + (bitCount % BitsInByte == 0 ? 0 : 1);
+            ByteCount = (bitCount + 7) / BitsInByte;
             _bitRegion = new Span<byte>(bitRegion, ByteCount);
         }
         
         public BitReadOnlySpan(byte[] bitRegion, int offset, int bitCount)
         {
             BitCount = bitCount;
-            ByteCount = bitCount / BitsInByte + (bitCount % BitsInByte == 0 ? 0 : 1);
+            ByteCount = (bitCount + 7) / BitsInByte;
             _bitRegion = new Span<byte>(bitRegion, offset, ByteCount);
         }
 
