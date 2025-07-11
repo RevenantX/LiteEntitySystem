@@ -850,7 +850,7 @@ namespace LiteEntitySystem
             }
             var entity = EntitiesDict[entityId];
                     
-            //Logger.Log($"[CEM] ReadBaseline Entity: {entityId} pos: {bytesRead}");
+            //Logger.Log($"[CEM] New Entity: {entityId}");
             //remove old entity
             if (entity != null && entity.Version != entityDataHeader.Version)
             {

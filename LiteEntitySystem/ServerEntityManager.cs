@@ -832,11 +832,11 @@ namespace LiteEntitySystem
                     return false;
 
                 var entity = EntitiesDict[rpcNode.Header.EntityId];
-                if (!rpcNode.AllowToSendForPlayer(player.Id, entity.OwnerId))
+                if (!rpcNode.AllowToSendForPlayer(player.Id, entity.InternalOwnerId.Value))
                     return false;
 
                 //check sync groups
-                if (entity.OwnerId != player.Id)
+                if (entity.InternalOwnerId.Value != player.Id)
                 {
                     if (entity is EntityLogic el && 
                         player.EntitySyncInfo.TryGetValue(el, out var syncGroups) &&
@@ -848,14 +848,17 @@ namespace LiteEntitySystem
                     }
                 }
 
-                if (rpcNode.Header.Id == RemoteCallPacket.ConstructOwnedRPCId && entity.OwnerId != player.Id)
-                    rpcNode.Header.Id = RemoteCallPacket.ConstructRPCId;
-
-                if (rpcNode.Header.Id == RemoteCallPacket.ConstructRPCId)
+                switch (rpcNode.Header.Id)
                 {
-                    if(entity.OwnerId == player.Id)
-                        rpcNode.Header.Id = RemoteCallPacket.ConstructOwnedRPCId;
-                    stateSerializer.RefreshSyncGroupsVariable(player, new Span<byte>(rpcNode.Data));
+                    case RemoteCallPacket.NewOwnedRPCId when entity.InternalOwnerId.Value != player.Id:
+                        rpcNode.Header.Id = RemoteCallPacket.NewRPCId;
+                        break;
+                    case RemoteCallPacket.NewRPCId when entity.InternalOwnerId.Value == player.Id:
+                        rpcNode.Header.Id = RemoteCallPacket.NewOwnedRPCId;
+                        break;
+                    case RemoteCallPacket.ConstructRPCId:
+                        stateSerializer.RefreshSyncGroupsVariable(player, new Span<byte>(rpcNode.Data));
+                        break;
                 }
 
                 return true;

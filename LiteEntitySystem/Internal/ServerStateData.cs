@@ -228,32 +228,37 @@ namespace LiteEntitySystem.Internal
                     var remoteCallInfo = _remoteCallInfos[_rpcIndex];
                     var header = remoteCallInfo.Header;
                     
-                    if (Utils.SequenceDiff(header.Tick, minimalTick) <= 0)
+                    if (executeMode != RPCExecuteMode.FirstSync)
                     {
-                        //Logger.Log($"Skip rpc. Entity: {header.EntityId}. Tick {header.Tick} <= MinimalTick: {minimalTick}. Id: {header.Id}. ExecMode: {executeMode}");
-                        continue;
-                    }
-                    
-                    if (executeMode == RPCExecuteMode.BetweenStates)
-                    {
-                        if (remoteCallInfo.ExecuteOnNextState)
+                        if (executeMode == RPCExecuteMode.BetweenStates)
                         {
+                            if (remoteCallInfo.ExecuteOnNextState)
+                            {
+                                continue;
+                            }
+                            if (Utils.SequenceDiff(header.Tick, _entityManager.ServerTick) > 0)
+                            {
+                                //Logger.Log($"Skip rpc. Entity: {header.EntityId}. Tick {header.Tick} > ServerTick: {entityManager.ServerTick}. Id: {header.Id}.");
+                                break;
+                            }
+                        }
+                        //skip executed inside interpolation
+                        else if (executeMode == RPCExecuteMode.OnNextState && remoteCallInfo.ExecuteOnNextState == false && _rpcIndex < initialRpcIndex)
+                        {
+                            //Logger.Log($"Skip rpc. Entity: {header.EntityId}. _rpcIndex {_rpcIndex} < initialRpcIndex: {initialRpcIndex}. Id: {header.Id}.");
                             continue;
                         }
-                        if (Utils.SequenceDiff(header.Tick, _entityManager.ServerTick) > 0)
+
+                        if (Utils.SequenceDiff(header.Tick, minimalTick) <= 0)
                         {
-                            //Logger.Log($"Skip rpc. Entity: {header.EntityId}. Tick {header.Tick} > ServerTick: {entityManager.ServerTick}. Id: {header.Id}.");
-                            break;
+                            //Logger.Log($"Skip rpc. Entity: {header.EntityId}. Tick {header.Tick} <= MinimalTick: {minimalTick}. Id: {header.Id}. StateATick: {entityManager.RawServerTick}. StateBTick: {entityManager.RawTargetServerTick}");
+                            continue;
                         }
                     }
-                    //skip executed inside interpolation
-                    else if (executeMode == RPCExecuteMode.OnNextState && remoteCallInfo.ExecuteOnNextState == false && _rpcIndex < initialRpcIndex)
-                    {
-                        //Logger.Log($"Skip rpc. Entity: {header.EntityId}. _rpcIndex {_rpcIndex} < initialRpcIndex: {initialRpcIndex}. Id: {header.Id}.");
-                        continue;
-                    }
+                    _entityManager.CurrentRPCTick = header.Tick;
                     
-                    if (header.Id == RemoteCallPacket.NewRPCId)
+                    if (header.Id == RemoteCallPacket.NewRPCId || 
+                        header.Id == RemoteCallPacket.NewOwnedRPCId)
                     {
                         _entityManager.ReadNewRPC(header.EntityId, rawData + remoteCallInfo.DataOffset);
                         continue;
@@ -267,8 +272,6 @@ namespace LiteEntitySystem.Internal
                         continue;
                     }
                     
-                    _entityManager.CurrentRPCTick = header.Tick;
-                    
                     var rpcFieldInfo = _entityManager.ClassDataDict[entity.ClassId].RemoteCallsClient[header.Id];
                     if (rpcFieldInfo.SyncableOffset == -1)
                     {
@@ -276,7 +279,6 @@ namespace LiteEntitySystem.Internal
                         {
                             switch (header.Id)
                             {
-                                case RemoteCallPacket.ConstructOwnedRPCId:
                                 case RemoteCallPacket.ConstructRPCId:
                                     //Logger.Log($"ConstructRPC for entity: {header.EntityId}, Size: {header.ByteCount}, RpcReadPos: {remoteCallInfo.DataOffset}, Tick: {header.Tick}");
                                     //Logger.Log($"CRPCData: {Utils.BytesToHexString(new ReadOnlySpan<byte>(rawData + remoteCallInfo.DataOffset, header.ByteCount))}");
@@ -366,7 +368,7 @@ namespace LiteEntitySystem.Internal
                 {
                     executeOnNextState = true;
                 }
-                else if (header.Id == RemoteCallPacket.ConstructOwnedRPCId || 
+                else if (header.Id == RemoteCallPacket.NewOwnedRPCId || 
                          _entityManager.EntitiesDict[header.EntityId]?.InternalOwnerId.Value == _entityManager.InternalPlayerId)
                 {
                     LocalEntitiesBuffer.Add(header.EntityId);

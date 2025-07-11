@@ -20,10 +20,11 @@ namespace LiteEntitySystem.Internal
 
         public int TotalSize => RpcDeltaCompressor.MaxDeltaSize + Header.ByteCount;
         
-        public const int ReserverdRPCsCount = 4;
+        public const int ReservedRPCsCount = 4;
+        
         public const ushort NewRPCId = 0;
-        public const ushort ConstructRPCId = 1;
-        public const ushort ConstructOwnedRPCId = 2;
+        public const ushort NewOwnedRPCId = 1;
+        public const ushort ConstructRPCId = 2;
         public const ushort DestroyRPCId = 3;
 
         //can be static because doesnt use any buffers
@@ -31,7 +32,7 @@ namespace LiteEntitySystem.Internal
         
         public static void InitReservedRPCs(List<RpcFieldInfo> rpcCache)
         {
-            for(int i = 0; i < ReserverdRPCsCount; i++)
+            for(int i = 0; i < ReservedRPCsCount; i++)
                 rpcCache.Add(new RpcFieldInfo(-1, null));
         }
 
