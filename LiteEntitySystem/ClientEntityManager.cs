@@ -940,7 +940,7 @@ namespace LiteEntitySystem
             ref var classData = ref entity.ClassData;
             Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
             
-            //set values to same as predicted entity for corrent OnSync calls
+            //set values to same as predicted entity for correct OnSync calls
             if (entity is PredictableEntityLogic pel)
             {
                 foreach (var localEntity in _tempLocalEntities)
