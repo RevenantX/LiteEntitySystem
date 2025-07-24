@@ -16,7 +16,7 @@ namespace LiteEntitySystem
         private static RemoteCall<InitialData> SyncRPC;
         
         //used for spawn prediction
-        public readonly ushort CreatedAtTick;
+        internal readonly ushort CreatedAtTick;
 
         internal void InitEntity(ushort predictedId, EntitySharedReference initialParent)
         {
