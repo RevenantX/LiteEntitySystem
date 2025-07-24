@@ -941,7 +941,7 @@ namespace LiteEntitySystem
             Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
             
             //set values to same as predicted entity for correct OnSync calls
-            if (entity is PredictableEntityLogic pel)
+            if (!entity.IsConstructed && entity is PredictableEntityLogic pel)
             {
                 foreach (var localEntity in _tempLocalEntities)
                 {
@@ -951,7 +951,11 @@ namespace LiteEntitySystem
                     for (int i = 0; i < classData.FieldsCount; i++)
                     {
                         ref var field = ref classData.Fields[i];
-                        field.TypeProcessor.CopyFrom(entity, localEntity, field.Offset);
+                        //skip some fields because they need to trigger onChange
+                        if (i == pel.InternalOwnerId.FieldId || i == pel.IsSyncEnabledFieldId)
+                            continue;
+                        
+                        field.TypeProcessor.CopyFrom(pel, localEntity, field.Offset);
                     }
                     
                     break;
@@ -966,11 +970,11 @@ namespace LiteEntitySystem
                     
                     if (writeInterpolationData && field.Flags.HasFlagFast(SyncFlags.Interpolated))
                         field.TypeProcessor.SetInterpValue(entity, field.Offset, rawData + readerPosition);
-                    
+
                     if (field.ReadField(entity, rawData + readerPosition, predictedData))
                         _syncCalls[_syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition, field.IntSize);
 
-                    //Logger.Log($"E {entity.Id} Field updated: {field.Name}");
+                    //Logger.Log($"E {entity.Id} Field updated: {field.Name} = {field.TypeProcessor.ToString(entity, field.Offset)}");
                     readerPosition += field.IntSize;
                 }
             }

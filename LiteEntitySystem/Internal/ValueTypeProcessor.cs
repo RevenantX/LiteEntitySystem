@@ -40,7 +40,7 @@ namespace LiteEntitySystem.Internal
         }
 
         internal override void CopyFrom(InternalBaseClass toObj, InternalBaseClass fromObj, int offset) =>
-            RefMagic.SetFieldValue(toObj, offset, RefMagic.GetFieldValue<SyncVar<T>>(fromObj, offset));
+            RefMagic.SyncVarSetDirect<T, SyncVar<T>>(toObj, offset, RefMagic.GetFieldValue<SyncVar<T>>(fromObj, offset).Value);
 
         internal override void LoadHistory(InternalBaseClass obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime) =>
             RefMagic.SyncVarSetDirectAndStorePrev<T, SyncVar<T>>(obj, offset, *(T*)historyA, out *(T*)tempHistory);
