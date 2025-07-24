@@ -952,7 +952,7 @@ namespace LiteEntitySystem
                     {
                         ref var field = ref classData.Fields[i];
                         //skip some fields because they need to trigger onChange
-                        if (i == pel.InternalOwnerId.FieldId || i == pel.IsSyncEnabledFieldId)
+                        if (field.OnSync == null || i == pel.InternalOwnerId.FieldId || i == pel.IsSyncEnabledFieldId)
                             continue;
                         
                         field.TypeProcessor.CopyFrom(pel, localEntity, field.Offset);
