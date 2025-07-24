@@ -85,19 +85,6 @@ namespace LiteEntitySystem
 
         [SyncVarFlags(SyncFlags.OnlyForOwner)]
         private SyncVar<ushort> _localPredictedIdCounter;
-        
-        [SyncVarFlags(SyncFlags.OnlyForOwner)]
-        private SyncVar<ushort> _predictedId;
-        
-        [SyncVarFlags(SyncFlags.OnlyForOwner)]
-        private SyncVar<bool> _isPredicted;
-        
-        internal ulong PredictedId => _predictedId.Value;
-        
-        /// <summary>
-        /// Is entity spawned using AddPredictedEntity
-        /// </summary>
-        public bool IsPredicted => _isPredicted.Value;
 
         //specific per player
         private SyncVar<SyncGroup> _isSyncEnabled;
@@ -213,13 +200,12 @@ namespace LiteEntitySystem
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="initMethod">Method that will be called after entity constructed</param>
         /// <returns>Created predicted local entity</returns>
-        public T AddPredictedEntity<T>(Action<T> initMethod = null) where T : EntityLogic
+        public T AddPredictedEntity<T>(Action<T> initMethod = null) where T : PredictableEntityLogic
         {
             if (EntityManager.IsServer)
                 return ServerManager.AddEntity<T>(this, e =>
                 {
-                    e._predictedId.Value = _localPredictedIdCounter.Value++;
-                    e._isPredicted.Value = true;
+                    e.InitEntity(_localPredictedIdCounter.Value++, this);
                     initMethod?.Invoke(e);
                 });
 
@@ -258,8 +244,7 @@ namespace LiteEntitySystem
 
             entity = ClientManager.AddLocalEntity<T>(this, e =>
             {
-                e._predictedId.Value = _localPredictedIdCounter.Value++;
-                e._isPredicted.Value = true;
+                e.InitEntity(_localPredictedIdCounter.Value++, this);
                 //Logger.Log($"AddPredictedEntity. Id: {e.Id}, ClassId: {e.ClassId} PredId: {e._predictedId.Value}, Tick: {e.ClientManager.Tick}");
                 initMethod?.Invoke(e);
             });
@@ -274,7 +259,7 @@ namespace LiteEntitySystem
         /// <param name="targetReference">SyncVar of class that will be set to predicted entity and synchronized once confirmation will be received</param>
         /// <param name="initMethod">Method that will be called after entity constructed</param>
         /// <returns>Created predicted local entity</returns>
-        public void AddPredictedEntity<T>(ref SyncVar<EntitySharedReference> targetReference, Action<T> initMethod = null) where T : EntityLogic
+        public void AddPredictedEntity<T>(ref SyncVar<EntitySharedReference> targetReference, Action<T> initMethod = null) where T : PredictableEntityLogic
         {
             T entity;
             if (EntityManager.InRollBackState)
@@ -289,7 +274,11 @@ namespace LiteEntitySystem
             
             if (EntityManager.IsServer)
             {
-                entity = ServerManager.AddEntity(this, initMethod);
+                entity = ServerManager.AddEntity<T>(this, e =>
+                {
+                    e.InitEntity(_localPredictedIdCounter.Value++, this);
+                    initMethod?.Invoke(e);
+                });
                 targetReference.Value = entity;
                 return;
             }
@@ -302,7 +291,7 @@ namespace LiteEntitySystem
 
             entity = ClientManager.AddLocalEntity<T>(this, e =>
             {
-                e._predictedId.Value = _localPredictedIdCounter.Value++;
+                e.InitEntity(_localPredictedIdCounter.Value++, this);
                 initMethod?.Invoke(e);
             });
             targetReference.Value = entity;
@@ -390,8 +379,7 @@ namespace LiteEntitySystem
             {
                 ClientManager.RemoveOwned(this);
             }
-            var parent = EntityManager.GetEntityById<EntityLogic>(_parentRef);
-            if (parent != null && !parent.IsDestroyed)
+            if (EntityManager.TryGetEntityById<EntityLogic>(_parentRef, out var parent) && !parent.IsDestroyed)
             {
                 parent.Childs.Remove(this);
             }

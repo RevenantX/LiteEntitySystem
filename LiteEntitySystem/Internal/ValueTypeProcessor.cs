@@ -20,6 +20,7 @@ namespace LiteEntitySystem.Internal
         internal abstract void SetInterpValue(InternalBaseClass obj, int offset, byte* data);
         internal abstract void SetInterpValueFromCurrentValue(InternalBaseClass obj, int offset);
         internal abstract void WriteTo(InternalBaseClass obj, int offset, byte* data);
+        internal abstract void CopyFrom(InternalBaseClass toObj, InternalBaseClass fromObj, int offset);
         internal abstract void LoadHistory(InternalBaseClass obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime);
         internal abstract int GetHashCode(InternalBaseClass obj, int offset);
         internal abstract string ToString(InternalBaseClass obj, int offset);
@@ -37,7 +38,10 @@ namespace LiteEntitySystem.Internal
             sv.Init(entity, fieldId);
             RefMagic.SetFieldValue(obj, offset, sv);
         }
-        
+
+        internal override void CopyFrom(InternalBaseClass toObj, InternalBaseClass fromObj, int offset) =>
+            RefMagic.SetFieldValue(toObj, offset, RefMagic.GetFieldValue<SyncVar<T>>(fromObj, offset));
+
         internal override void LoadHistory(InternalBaseClass obj, int offset, byte* tempHistory, byte* historyA, byte* historyB, float lerpTime) =>
             RefMagic.SyncVarSetDirectAndStorePrev<T, SyncVar<T>>(obj, offset, *(T*)historyA, out *(T*)tempHistory);
         

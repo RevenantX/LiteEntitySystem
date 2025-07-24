@@ -66,6 +66,18 @@ namespace LiteEntitySystem
         Error,
         HeaderCheckFailed
     }
+
+    [Flags]
+    public enum DebugFrameModes
+    {
+        Client = 1 << 0,
+        Server = 1 << 1,
+        Rollback = 1 << 2,
+        
+        All = Client | Server | Rollback,
+        ClientAndRollback = Client | Rollback,
+        ClientAndServer = Server | Client
+    }
     
     public enum MaxHistorySize : byte
     {
@@ -243,6 +255,12 @@ namespace LiteEntitySystem
         /// <param name="interpolationDelegate">interpolation function</param>
         public static void RegisterFieldType<T>(InterpolatorDelegateWithReturn<T> interpolationDelegate) where T : unmanaged =>
             ValueTypeProcessor.Registered[typeof(T)] = new UserTypeProcessor<T>(interpolationDelegate);
+
+        /// <summary>
+        /// Get information about current update frame
+        /// </summary>
+        /// <returns>debug formatted string</returns>
+        public abstract string GetCurrentFrameDebugInfo(DebugFrameModes modes);
         
         /// <summary>
         /// Register custom field type

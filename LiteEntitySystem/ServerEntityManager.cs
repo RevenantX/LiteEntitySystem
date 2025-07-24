@@ -98,6 +98,9 @@ namespace LiteEntitySystem
             SetTickrate(framesPerSecond);
         }
 
+        public override string GetCurrentFrameDebugInfo(DebugFrameModes modes) =>
+            modes.HasFlagFast(DebugFrameModes.Server) ? $"[Server] Tick {_tick}" : string.Empty;
+
         public override void Reset()
         {
             base.Reset();
