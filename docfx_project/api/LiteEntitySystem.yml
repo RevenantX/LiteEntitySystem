@@ -6,8 +6,10 @@ items:
   children:
   - LiteEntitySystem.AiControllerLogic
   - LiteEntitySystem.AiControllerLogic`1
+  - LiteEntitySystem.BindOnChangeFlags
   - LiteEntitySystem.ClientEntityManager
   - LiteEntitySystem.ControllerLogic
+  - LiteEntitySystem.DebugFrameModes
   - LiteEntitySystem.DeserializeResult
   - LiteEntitySystem.EntityDataHeader
   - LiteEntitySystem.EntityFilter`1
@@ -40,6 +42,7 @@ items:
   - LiteEntitySystem.NetPlayerState
   - LiteEntitySystem.NetworkMode
   - LiteEntitySystem.PawnLogic
+  - LiteEntitySystem.PredictableEntityLogic
   - LiteEntitySystem.RPCRegistrator
   - LiteEntitySystem.RemoteCall
   - LiteEntitySystem.RemoteCallSerializable`1
@@ -198,6 +201,13 @@ references:
   name: DeserializeResult
   nameWithType: DeserializeResult
   fullName: LiteEntitySystem.DeserializeResult
+- uid: LiteEntitySystem.DebugFrameModes
+  commentId: T:LiteEntitySystem.DebugFrameModes
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.DebugFrameModes.html
+  name: DebugFrameModes
+  nameWithType: DebugFrameModes
+  fullName: LiteEntitySystem.DebugFrameModes
 - uid: LiteEntitySystem.MaxHistorySize
   commentId: T:LiteEntitySystem.MaxHistorySize
   parent: LiteEntitySystem
@@ -401,6 +411,19 @@ references:
   name: PawnLogic
   nameWithType: PawnLogic
   fullName: LiteEntitySystem.PawnLogic
+- uid: LiteEntitySystem.PredictableEntityLogic
+  commentId: T:LiteEntitySystem.PredictableEntityLogic
+  href: LiteEntitySystem.PredictableEntityLogic.html
+  name: PredictableEntityLogic
+  nameWithType: PredictableEntityLogic
+  fullName: LiteEntitySystem.PredictableEntityLogic
+- uid: LiteEntitySystem.BindOnChangeFlags
+  commentId: T:LiteEntitySystem.BindOnChangeFlags
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.BindOnChangeFlags.html
+  name: BindOnChangeFlags
+  nameWithType: BindOnChangeFlags
+  fullName: LiteEntitySystem.BindOnChangeFlags
 - uid: LiteEntitySystem.RemoteCall
   commentId: T:LiteEntitySystem.RemoteCall
   parent: LiteEntitySystem

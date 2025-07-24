@@ -7,8 +7,8 @@ items:
   children:
   - LiteEntitySystem.ClientEntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.Transport.AbstractNetPeer,System.Byte,LiteEntitySystem.MaxHistorySize)
   - LiteEntitySystem.ClientEntityManager.AverageJitter
-  - LiteEntitySystem.ClientEntityManager.CurrentRPCTick
   - LiteEntitySystem.ClientEntityManager.Deserialize(System.ReadOnlySpan{System.Byte})
+  - LiteEntitySystem.ClientEntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
   - LiteEntitySystem.ClientEntityManager.GetDiagnosticData(System.Collections.Generic.Dictionary{System.Int32,LiteEntitySystem.LESDiagnosticDataEntry})
   - LiteEntitySystem.ClientEntityManager.GetPlayerController``1
   - LiteEntitySystem.ClientEntityManager.InputBufferSize
@@ -116,29 +116,6 @@ items:
       type: System.UInt16
     content.vb: Public Property ServerTick As UShort
   overload: LiteEntitySystem.ClientEntityManager.ServerTick*
-- uid: LiteEntitySystem.ClientEntityManager.CurrentRPCTick
-  commentId: P:LiteEntitySystem.ClientEntityManager.CurrentRPCTick
-  id: CurrentRPCTick
-  parent: LiteEntitySystem.ClientEntityManager
-  langs:
-  - csharp
-  - vb
-  name: CurrentRPCTick
-  nameWithType: ClientEntityManager.CurrentRPCTick
-  fullName: LiteEntitySystem.ClientEntityManager.CurrentRPCTick
-  type: Property
-  assemblies:
-  - LiteEntitySystem
-  namespace: LiteEntitySystem
-  summary: Tick of currently executing rpc (check only in client RPC methods)
-  example: []
-  syntax:
-    content: public ushort CurrentRPCTick { get; }
-    parameters: []
-    return:
-      type: System.UInt16
-    content.vb: Public Property CurrentRPCTick As UShort
-  overload: LiteEntitySystem.ClientEntityManager.CurrentRPCTick*
 - uid: LiteEntitySystem.ClientEntityManager.IsExecutingRPC
   commentId: P:LiteEntitySystem.ClientEntityManager.IsExecutingRPC
   id: IsExecutingRPC
@@ -576,6 +553,33 @@ items:
     return:
       type: System.Int32
     content.vb: Public Const InputBufferSize As Integer = 64
+- uid: LiteEntitySystem.ClientEntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  commentId: M:LiteEntitySystem.ClientEntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  id: GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  parent: LiteEntitySystem.ClientEntityManager
+  langs:
+  - csharp
+  - vb
+  name: GetCurrentFrameDebugInfo(DebugFrameModes)
+  nameWithType: ClientEntityManager.GetCurrentFrameDebugInfo(DebugFrameModes)
+  fullName: LiteEntitySystem.ClientEntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Get information about current update frame
+  example: []
+  syntax:
+    content: public override string GetCurrentFrameDebugInfo(DebugFrameModes modes)
+    parameters:
+    - id: modes
+      type: LiteEntitySystem.DebugFrameModes
+    return:
+      type: System.String
+      description: debug formatted string
+    content.vb: Public Overrides Function GetCurrentFrameDebugInfo(modes As DebugFrameModes) As String
+  overridden: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  overload: LiteEntitySystem.ClientEntityManager.GetCurrentFrameDebugInfo*
 - uid: LiteEntitySystem.ClientEntityManager.GetPlayerController``1
   commentId: M:LiteEntitySystem.ClientEntityManager.GetPlayerController``1
   id: GetPlayerController``1
@@ -1677,12 +1681,6 @@ references:
   nameWithType.vb: UShort
   fullName.vb: UShort
   name.vb: UShort
-- uid: LiteEntitySystem.ClientEntityManager.CurrentRPCTick*
-  commentId: Overload:LiteEntitySystem.ClientEntityManager.CurrentRPCTick
-  href: LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_CurrentRPCTick
-  name: CurrentRPCTick
-  nameWithType: ClientEntityManager.CurrentRPCTick
-  fullName: LiteEntitySystem.ClientEntityManager.CurrentRPCTick
 - uid: LiteEntitySystem.ClientEntityManager.IsExecutingRPC*
   commentId: Overload:LiteEntitySystem.ClientEntityManager.IsExecutingRPC
   href: LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_IsExecutingRPC
@@ -1866,6 +1864,55 @@ references:
   name: PendingToRemoveEntites
   nameWithType: ClientEntityManager.PendingToRemoveEntites
   fullName: LiteEntitySystem.ClientEntityManager.PendingToRemoveEntites
+- uid: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  commentId: M:LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  parent: LiteEntitySystem.EntityManager
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetCurrentFrameDebugInfo_LiteEntitySystem_DebugFrameModes_
+  name: GetCurrentFrameDebugInfo(DebugFrameModes)
+  nameWithType: EntityManager.GetCurrentFrameDebugInfo(DebugFrameModes)
+  fullName: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  spec.csharp:
+  - uid: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+    name: GetCurrentFrameDebugInfo
+    href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetCurrentFrameDebugInfo_LiteEntitySystem_DebugFrameModes_
+  - name: (
+  - uid: LiteEntitySystem.DebugFrameModes
+    name: DebugFrameModes
+    href: LiteEntitySystem.DebugFrameModes.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+    name: GetCurrentFrameDebugInfo
+    href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetCurrentFrameDebugInfo_LiteEntitySystem_DebugFrameModes_
+  - name: (
+  - uid: LiteEntitySystem.DebugFrameModes
+    name: DebugFrameModes
+    href: LiteEntitySystem.DebugFrameModes.html
+  - name: )
+- uid: LiteEntitySystem.ClientEntityManager.GetCurrentFrameDebugInfo*
+  commentId: Overload:LiteEntitySystem.ClientEntityManager.GetCurrentFrameDebugInfo
+  href: LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_GetCurrentFrameDebugInfo_LiteEntitySystem_DebugFrameModes_
+  name: GetCurrentFrameDebugInfo
+  nameWithType: ClientEntityManager.GetCurrentFrameDebugInfo
+  fullName: LiteEntitySystem.ClientEntityManager.GetCurrentFrameDebugInfo
+- uid: LiteEntitySystem.DebugFrameModes
+  commentId: T:LiteEntitySystem.DebugFrameModes
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.DebugFrameModes.html
+  name: DebugFrameModes
+  nameWithType: DebugFrameModes
+  fullName: LiteEntitySystem.DebugFrameModes
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
 - uid: LiteEntitySystem.ClientEntityManager.GetPlayerController*
   commentId: Overload:LiteEntitySystem.ClientEntityManager.GetPlayerController
   href: LiteEntitySystem.ClientEntityManager.html#LiteEntitySystem_ClientEntityManager_GetPlayerController__1

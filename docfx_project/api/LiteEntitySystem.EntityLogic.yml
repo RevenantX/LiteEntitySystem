@@ -11,9 +11,7 @@ items:
   - LiteEntitySystem.EntityLogic.Childs
   - LiteEntitySystem.EntityLogic.DisableLagCompensationForOwner
   - LiteEntitySystem.EntityLogic.EnableLagCompensationForOwner
-  - LiteEntitySystem.EntityLogic.GetFrameSeed
   - LiteEntitySystem.EntityLogic.GetParent``1
-  - LiteEntitySystem.EntityLogic.IsPredicted
   - LiteEntitySystem.EntityLogic.IsSyncGroupEnabled(LiteEntitySystem.SyncGroup)
   - LiteEntitySystem.EntityLogic.OnBeforeParentDestroy
   - LiteEntitySystem.EntityLogic.OnChildAdded(LiteEntitySystem.EntityLogic)
@@ -27,6 +25,7 @@ items:
   - LiteEntitySystem.EntityLogic.RegisterRPC(LiteEntitySystem.RPCRegistrator@)
   - LiteEntitySystem.EntityLogic.SetParent(LiteEntitySystem.EntityLogic)
   - LiteEntitySystem.EntityLogic.SharedReference
+  - LiteEntitySystem.EntityLogic.TryGetOwnerTick(System.UInt16@)
   langs:
   - csharp
   - vb
@@ -48,6 +47,7 @@ items:
   - LiteEntitySystem.Internal.InternalEntity
   derivedClasses:
   - LiteEntitySystem.PawnLogic
+  - LiteEntitySystem.PredictableEntityLogic
   implements:
   - System.IComparable{LiteEntitySystem.Internal.InternalEntity}
   inheritedMembers:
@@ -68,6 +68,7 @@ items:
   - LiteEntitySystem.Internal.InternalEntity.IsSingleton
   - LiteEntitySystem.Internal.InternalEntity.IsConstructed
   - LiteEntitySystem.Internal.InternalEntity.IsRemoved
+  - LiteEntitySystem.Internal.InternalEntity.State
   - LiteEntitySystem.Internal.InternalEntity.Destroy
   - LiteEntitySystem.Internal.InternalEntity.OnDestroy
   - LiteEntitySystem.Internal.InternalEntity.Update
@@ -174,29 +175,6 @@ items:
       type: LiteEntitySystem.EntitySharedReference
     content.vb: Public ReadOnly Property SharedReference As EntitySharedReference
   overload: LiteEntitySystem.EntityLogic.SharedReference*
-- uid: LiteEntitySystem.EntityLogic.IsPredicted
-  commentId: P:LiteEntitySystem.EntityLogic.IsPredicted
-  id: IsPredicted
-  parent: LiteEntitySystem.EntityLogic
-  langs:
-  - csharp
-  - vb
-  name: IsPredicted
-  nameWithType: EntityLogic.IsPredicted
-  fullName: LiteEntitySystem.EntityLogic.IsPredicted
-  type: Property
-  assemblies:
-  - LiteEntitySystem
-  namespace: LiteEntitySystem
-  summary: Is entity spawned using AddPredictedEntity
-  example: []
-  syntax:
-    content: public bool IsPredicted { get; }
-    parameters: []
-    return:
-      type: System.Boolean
-    content.vb: Public ReadOnly Property IsPredicted As Boolean
-  overload: LiteEntitySystem.EntityLogic.IsPredicted*
 - uid: LiteEntitySystem.EntityLogic.IsSyncGroupEnabled(LiteEntitySystem.SyncGroup)
   commentId: M:LiteEntitySystem.EntityLogic.IsSyncGroupEnabled(LiteEntitySystem.SyncGroup)
   id: IsSyncGroupEnabled(LiteEntitySystem.SyncGroup)
@@ -287,29 +265,38 @@ items:
     content: public void DisableLagCompensationForOwner()
     content.vb: Public Sub DisableLagCompensationForOwner()
   overload: LiteEntitySystem.EntityLogic.DisableLagCompensationForOwner*
-- uid: LiteEntitySystem.EntityLogic.GetFrameSeed
-  commentId: M:LiteEntitySystem.EntityLogic.GetFrameSeed
-  id: GetFrameSeed
+- uid: LiteEntitySystem.EntityLogic.TryGetOwnerTick(System.UInt16@)
+  commentId: M:LiteEntitySystem.EntityLogic.TryGetOwnerTick(System.UInt16@)
+  id: TryGetOwnerTick(System.UInt16@)
   parent: LiteEntitySystem.EntityLogic
   langs:
   - csharp
   - vb
-  name: GetFrameSeed()
-  nameWithType: EntityLogic.GetFrameSeed()
-  fullName: LiteEntitySystem.EntityLogic.GetFrameSeed()
+  name: TryGetOwnerTick(out ushort)
+  nameWithType: EntityLogic.TryGetOwnerTick(out ushort)
+  fullName: LiteEntitySystem.EntityLogic.TryGetOwnerTick(out ushort)
   type: Method
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem
-  summary: Get synchronized seed for random generators based on current tick. Can be used for rollback or inside RPCs
+  summary: >-
+    Gets owner tick on client if entity is owned, and on server it returns owner tick.
+
+    Useful as seed for random generators based on current tick.
   example: []
   syntax:
-    content: public int GetFrameSeed()
+    content: public bool TryGetOwnerTick(out ushort tick)
+    parameters:
+    - id: tick
+      type: System.UInt16
     return:
-      type: System.Int32
-      description: current tick depending on entity manager state (IsExecutingRPC and InRollBackState)
-    content.vb: Public Function GetFrameSeed() As Integer
-  overload: LiteEntitySystem.EntityLogic.GetFrameSeed*
+      type: System.Boolean
+      description: true if owner tick accessible, false if you trying get remote player tick
+    content.vb: Public Function TryGetOwnerTick(tick As UShort) As Boolean
+  overload: LiteEntitySystem.EntityLogic.TryGetOwnerTick*
+  nameWithType.vb: EntityLogic.TryGetOwnerTick(UShort)
+  fullName.vb: LiteEntitySystem.EntityLogic.TryGetOwnerTick(UShort)
+  name.vb: TryGetOwnerTick(UShort)
 - uid: LiteEntitySystem.EntityLogic.AddPredictedEntity``1(System.Action{``0})
   commentId: M:LiteEntitySystem.EntityLogic.AddPredictedEntity``1(System.Action{``0})
   id: AddPredictedEntity``1(System.Action{``0})
@@ -328,9 +315,11 @@ items:
     Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
 
     Should be called also in rollback mode
+
+    Don't call this method inside Server-&gt;Client RPC! This will break many things.
   example: []
   syntax:
-    content: 'public T AddPredictedEntity<T>(Action<T> initMethod = null) where T : EntityLogic'
+    content: 'public T AddPredictedEntity<T>(Action<T> initMethod = null) where T : PredictableEntityLogic'
     parameters:
     - id: initMethod
       type: System.Action{{T}}
@@ -341,7 +330,7 @@ items:
     return:
       type: '{T}'
       description: Created predicted local entity
-    content.vb: Public Function AddPredictedEntity(Of T As EntityLogic)(initMethod As Action(Of T) = Nothing) As T
+    content.vb: Public Function AddPredictedEntity(Of T As PredictableEntityLogic)(initMethod As Action(Of T) = Nothing) As T
   overload: LiteEntitySystem.EntityLogic.AddPredictedEntity*
   nameWithType.vb: EntityLogic.AddPredictedEntity(Of T)(Action(Of T))
   fullName.vb: LiteEntitySystem.EntityLogic.AddPredictedEntity(Of T)(System.Action(Of T))
@@ -366,7 +355,7 @@ items:
     Should be called also in rollback mode if you use EntityLogic.Childs
   example: []
   syntax:
-    content: 'public void AddPredictedEntity<T>(ref SyncVar<EntitySharedReference> targetReference, Action<T> initMethod = null) where T : EntityLogic'
+    content: 'public void AddPredictedEntity<T>(ref SyncVar<EntitySharedReference> targetReference, Action<T> initMethod = null) where T : PredictableEntityLogic'
     parameters:
     - id: targetReference
       type: LiteEntitySystem.SyncVar{LiteEntitySystem.EntitySharedReference}
@@ -377,7 +366,7 @@ items:
     typeParameters:
     - id: T
       description: Entity type
-    content.vb: Public Sub AddPredictedEntity(Of T As EntityLogic)(targetReference As SyncVar(Of EntitySharedReference), initMethod As Action(Of T) = Nothing)
+    content.vb: Public Sub AddPredictedEntity(Of T As PredictableEntityLogic)(targetReference As SyncVar(Of EntitySharedReference), initMethod As Action(Of T) = Nothing)
   overload: LiteEntitySystem.EntityLogic.AddPredictedEntity*
   nameWithType.vb: EntityLogic.AddPredictedEntity(Of T)(SyncVar(Of EntitySharedReference), Action(Of T))
   fullName.vb: LiteEntitySystem.EntityLogic.AddPredictedEntity(Of T)(LiteEntitySystem.SyncVar(Of LiteEntitySystem.EntitySharedReference), System.Action(Of T))
@@ -802,6 +791,13 @@ references:
   name: IsRemoved
   nameWithType: InternalEntity.IsRemoved
   fullName: LiteEntitySystem.Internal.InternalEntity.IsRemoved
+- uid: LiteEntitySystem.Internal.InternalEntity.State
+  commentId: P:LiteEntitySystem.Internal.InternalEntity.State
+  parent: LiteEntitySystem.Internal.InternalEntity
+  href: LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_State
+  name: State
+  nameWithType: InternalEntity.State
+  fullName: LiteEntitySystem.Internal.InternalEntity.State
 - uid: LiteEntitySystem.Internal.InternalEntity.Destroy
   commentId: M:LiteEntitySystem.Internal.InternalEntity.Destroy
   parent: LiteEntitySystem.Internal.InternalEntity
@@ -1503,23 +1499,6 @@ references:
   name: SharedReference
   nameWithType: EntityLogic.SharedReference
   fullName: LiteEntitySystem.EntityLogic.SharedReference
-- uid: LiteEntitySystem.EntityLogic.IsPredicted*
-  commentId: Overload:LiteEntitySystem.EntityLogic.IsPredicted
-  href: LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_IsPredicted
-  name: IsPredicted
-  nameWithType: EntityLogic.IsPredicted
-  fullName: LiteEntitySystem.EntityLogic.IsPredicted
-- uid: System.Boolean
-  commentId: T:System.Boolean
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.boolean
-  name: bool
-  nameWithType: bool
-  fullName: bool
-  nameWithType.vb: Boolean
-  fullName.vb: Boolean
-  name.vb: Boolean
 - uid: LiteEntitySystem.EntityLogic.IsSyncGroupEnabled*
   commentId: Overload:LiteEntitySystem.EntityLogic.IsSyncGroupEnabled
   href: LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_IsSyncGroupEnabled_LiteEntitySystem_SyncGroup_
@@ -1533,6 +1512,17 @@ references:
   name: SyncGroup
   nameWithType: SyncGroup
   fullName: LiteEntitySystem.SyncGroup
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
 - uid: LiteEntitySystem.EntityLogic.OnSyncGroupsChanged*
   commentId: Overload:LiteEntitySystem.EntityLogic.OnSyncGroupsChanged
   href: LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_OnSyncGroupsChanged_LiteEntitySystem_SyncGroup_
@@ -1551,23 +1541,23 @@ references:
   name: DisableLagCompensationForOwner
   nameWithType: EntityLogic.DisableLagCompensationForOwner
   fullName: LiteEntitySystem.EntityLogic.DisableLagCompensationForOwner
-- uid: LiteEntitySystem.EntityLogic.GetFrameSeed*
-  commentId: Overload:LiteEntitySystem.EntityLogic.GetFrameSeed
-  href: LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_GetFrameSeed
-  name: GetFrameSeed
-  nameWithType: EntityLogic.GetFrameSeed
-  fullName: LiteEntitySystem.EntityLogic.GetFrameSeed
-- uid: System.Int32
-  commentId: T:System.Int32
+- uid: LiteEntitySystem.EntityLogic.TryGetOwnerTick*
+  commentId: Overload:LiteEntitySystem.EntityLogic.TryGetOwnerTick
+  href: LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_TryGetOwnerTick_System_UInt16__
+  name: TryGetOwnerTick
+  nameWithType: EntityLogic.TryGetOwnerTick
+  fullName: LiteEntitySystem.EntityLogic.TryGetOwnerTick
+- uid: System.UInt16
+  commentId: T:System.UInt16
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.int32
-  name: int
-  nameWithType: int
-  fullName: int
-  nameWithType.vb: Integer
-  fullName.vb: Integer
-  name.vb: Integer
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
 - uid: LiteEntitySystem.EntityLogic.AddPredictedEntity*
   commentId: Overload:LiteEntitySystem.EntityLogic.AddPredictedEntity
   href: LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_AddPredictedEntity__1_System_Action___0__

@@ -62,6 +62,7 @@ items:
   - LiteEntitySystem.Internal.InternalEntity.IsSingleton
   - LiteEntitySystem.Internal.InternalEntity.IsConstructed
   - LiteEntitySystem.Internal.InternalEntity.IsRemoved
+  - LiteEntitySystem.Internal.InternalEntity.State
   - LiteEntitySystem.Internal.InternalEntity.Destroy
   - LiteEntitySystem.Internal.InternalEntity.OnDestroy
   - LiteEntitySystem.Internal.InternalEntity.Update
@@ -451,6 +452,13 @@ references:
   name: IsRemoved
   nameWithType: InternalEntity.IsRemoved
   fullName: LiteEntitySystem.Internal.InternalEntity.IsRemoved
+- uid: LiteEntitySystem.Internal.InternalEntity.State
+  commentId: P:LiteEntitySystem.Internal.InternalEntity.State
+  parent: LiteEntitySystem.Internal.InternalEntity
+  href: LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_State
+  name: State
+  nameWithType: InternalEntity.State
+  fullName: LiteEntitySystem.Internal.InternalEntity.State
 - uid: LiteEntitySystem.Internal.InternalEntity.Destroy
   commentId: M:LiteEntitySystem.Internal.InternalEntity.Destroy
   parent: LiteEntitySystem.Internal.InternalEntity

@@ -429,38 +429,6 @@ Buffer automatically increases to Jitter time + PreferredBufferTimeLowest</p>
 
 
 
-  <a id="LiteEntitySystem_ClientEntityManager_CurrentRPCTick_" data-uid="LiteEntitySystem.ClientEntityManager.CurrentRPCTick*"></a>
-
-  <h3 id="LiteEntitySystem_ClientEntityManager_CurrentRPCTick" data-uid="LiteEntitySystem.ClientEntityManager.CurrentRPCTick">
-  CurrentRPCTick
-  
-  </h3>
-
-  <div class="markdown level1 summary"><p>Tick of currently executing rpc (check only in client RPC methods)</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ushort CurrentRPCTick { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="LiteEntitySystem_ClientEntityManager_IsExecutingRPC_" data-uid="LiteEntitySystem.ClientEntityManager.IsExecutingRPC*"></a>
 
   <h3 id="LiteEntitySystem_ClientEntityManager_IsExecutingRPC" data-uid="LiteEntitySystem.ClientEntityManager.IsExecutingRPC">
@@ -1002,6 +970,44 @@ Buffer automatically increases to Jitter time + PreferredBufferTimeLowest</p>
   <dl class="parameters">
     <dt><a class="xref" href="LiteEntitySystem.DeserializeResult.html">DeserializeResult</a></dt>
     <dd><p>Deserialization result</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="LiteEntitySystem_ClientEntityManager_GetCurrentFrameDebugInfo_" data-uid="LiteEntitySystem.ClientEntityManager.GetCurrentFrameDebugInfo*"></a>
+
+  <h3 id="LiteEntitySystem_ClientEntityManager_GetCurrentFrameDebugInfo_LiteEntitySystem_DebugFrameModes_" data-uid="LiteEntitySystem.ClientEntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)">
+  GetCurrentFrameDebugInfo(DebugFrameModes)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Get information about current update frame</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string GetCurrentFrameDebugInfo(DebugFrameModes modes)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>modes</code> <a class="xref" href="LiteEntitySystem.DebugFrameModes.html">DebugFrameModes</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>debug formatted string</p>
 </dd>
   </dl>
 

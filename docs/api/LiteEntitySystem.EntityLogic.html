@@ -125,6 +125,7 @@ Class EntityLogic
     <dt>Derived</dt>
     <dd>
       <div><a class="xref" href="LiteEntitySystem.PawnLogic.html">PawnLogic</a></div>
+      <div><a class="xref" href="LiteEntitySystem.PredictableEntityLogic.html">PredictableEntityLogic</a></div>
     </dd>
   </dl>
 
@@ -181,6 +182,9 @@ Class EntityLogic
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_IsRemoved">InternalEntity.IsRemoved</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_State">InternalEntity.State</a>
     </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Destroy">InternalEntity.Destroy()</a>
@@ -311,38 +315,6 @@ Class EntityLogic
 </h2>
 
 
-  <a id="LiteEntitySystem_EntityLogic_IsPredicted_" data-uid="LiteEntitySystem.EntityLogic.IsPredicted*"></a>
-
-  <h3 id="LiteEntitySystem_EntityLogic_IsPredicted" data-uid="LiteEntitySystem.EntityLogic.IsPredicted">
-  IsPredicted
-  
-  </h3>
-
-  <div class="markdown level1 summary"><p>Is entity spawned using AddPredictedEntity</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsPredicted { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="LiteEntitySystem_EntityLogic_Parent_" data-uid="LiteEntitySystem.EntityLogic.Parent*"></a>
 
   <h3 id="LiteEntitySystem_EntityLogic_Parent" data-uid="LiteEntitySystem.EntityLogic.Parent">
@@ -456,7 +428,7 @@ Should be called also in rollback mode if you use EntityLogic.Childs</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void AddPredictedEntity&lt;T&gt;(ref SyncVar&lt;EntitySharedReference&gt; targetReference, Action&lt;T&gt; initMethod = null) where T : EntityLogic</code></pre>
+    <pre><code class="lang-csharp hljs">public void AddPredictedEntity&lt;T&gt;(ref SyncVar&lt;EntitySharedReference&gt; targetReference, Action&lt;T&gt; initMethod = null) where T : PredictableEntityLogic</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -494,12 +466,13 @@ Should be called also in rollback mode if you use EntityLogic.Childs</p>
   </h3>
 
   <div class="markdown level1 summary"><p>Create predicted entity (like projectile) that will be replaced by server entity if prediction is successful
-Should be called also in rollback mode</p>
+Should be called also in rollback mode
+Don't call this method inside Server-&gt;Client RPC! This will break many things.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T AddPredictedEntity&lt;T&gt;(Action&lt;T&gt; initMethod = null) where T : EntityLogic</code></pre>
+    <pre><code class="lang-csharp hljs">public T AddPredictedEntity&lt;T&gt;(Action&lt;T&gt; initMethod = null) where T : PredictableEntityLogic</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -575,39 +548,6 @@ Should be called also in rollback mode</p>
   </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-  <a id="LiteEntitySystem_EntityLogic_GetFrameSeed_" data-uid="LiteEntitySystem.EntityLogic.GetFrameSeed*"></a>
-
-  <h3 id="LiteEntitySystem_EntityLogic_GetFrameSeed" data-uid="LiteEntitySystem.EntityLogic.GetFrameSeed">
-  GetFrameSeed()
-  
-  </h3>
-
-  <div class="markdown level1 summary"><p>Get synchronized seed for random generators based on current tick. Can be used for rollback or inside RPCs</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int GetFrameSeed()</code></pre>
-  </div>
-
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>current tick depending on entity manager state (IsExecutingRPC and InRollBackState)</p>
-</dd>
-  </dl>
 
 
 
@@ -960,6 +900,45 @@ Should be called also in rollback mode</p>
 </dd>
   </dl>
 
+
+
+
+
+
+
+
+
+
+
+
+  <a id="LiteEntitySystem_EntityLogic_TryGetOwnerTick_" data-uid="LiteEntitySystem.EntityLogic.TryGetOwnerTick*"></a>
+
+  <h3 id="LiteEntitySystem_EntityLogic_TryGetOwnerTick_System_UInt16__" data-uid="LiteEntitySystem.EntityLogic.TryGetOwnerTick(System.UInt16@)">
+  TryGetOwnerTick(out ushort)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets owner tick on client if entity is owned, and on server it returns owner tick.
+Useful as seed for random generators based on current tick.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool TryGetOwnerTick(out ushort tick)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tick</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>true if owner tick accessible, false if you trying get remote player tick</p>
+</dd>
+  </dl>
 
 
 

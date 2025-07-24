@@ -1237,7 +1237,7 @@ IsRunning - sets to false after Reset() call</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected bool ConstructEntity(InternalEntity e)</code></pre>
+    <pre><code class="lang-csharp hljs">protected void ConstructEntity(InternalEntity e)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -1246,11 +1246,6 @@ IsRunning - sets to false after Reset() call</p>
     <dd></dd>
   </dl>
 
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
-  </dl>
 
 
 
@@ -1374,6 +1369,44 @@ IsRunning - sets to false after Reset() call</p>
     <dd><p>Entity type</p>
 </dd>
   </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="LiteEntitySystem_EntityManager_GetCurrentFrameDebugInfo_" data-uid="LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo*"></a>
+
+  <h3 id="LiteEntitySystem_EntityManager_GetCurrentFrameDebugInfo_LiteEntitySystem_DebugFrameModes_" data-uid="LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)">
+  GetCurrentFrameDebugInfo(DebugFrameModes)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Get information about current update frame</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract string GetCurrentFrameDebugInfo(DebugFrameModes modes)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>modes</code> <a class="xref" href="LiteEntitySystem.DebugFrameModes.html">DebugFrameModes</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>debug formatted string</p>
+</dd>
+  </dl>
+
 
 
 

@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class ControllerLogic </title>
+      <title>Class PredictableEntityLogic </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class ControllerLogic ">
+      <meta name="title" content="Class PredictableEntityLogic ">
       
-      <meta name="description" content="Base class for Controller entities">
+      <meta name="description" content="Entity that can be spawned on client prediction">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -80,12 +80,12 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="LiteEntitySystem.ControllerLogic">
+        <article data-uid="LiteEntitySystem.PredictableEntityLogic">
 
 
 
-  <h1 id="LiteEntitySystem_ControllerLogic" data-uid="LiteEntitySystem.ControllerLogic" class="text-break">
-Class ControllerLogic  
+  <h1 id="LiteEntitySystem_PredictableEntityLogic" data-uid="LiteEntitySystem.PredictableEntityLogic" class="text-break">
+Class PredictableEntityLogic  
   </h1>
 
   <div class="facts text-secondary">
@@ -93,13 +93,12 @@ Class ControllerLogic
   <dl><dt>Assembly</dt><dd>LiteEntitySystem.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Base class for Controller entities</p>
+  <div class="markdown summary"><p>Entity that can be spawned on client prediction</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[EntityFlags(EntityFlags.OnlyForOwner)]
-public abstract class ControllerLogic : InternalEntity, IComparable&lt;InternalEntity&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class PredictableEntityLogic : EntityLogic, IComparable&lt;InternalEntity&gt;</code></pre>
   </div>
 
 
@@ -111,7 +110,8 @@ public abstract class ControllerLogic : InternalEntity, IComparable&lt;InternalE
       <div><span class="xref">object</span></div>
       <div><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></div>
       <div><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></div>
-      <div><span class="xref">ControllerLogic</span></div>
+      <div><a class="xref" href="LiteEntitySystem.EntityLogic.html">EntityLogic</a></div>
+      <div><span class="xref">PredictableEntityLogic</span></div>
     </dd>
   </dl>
 
@@ -122,17 +122,67 @@ public abstract class ControllerLogic : InternalEntity, IComparable&lt;InternalE
     </dd>
   </dl>
 
-  <dl class="typelist derived">
-    <dt>Derived</dt>
-    <dd>
-      <div><a class="xref" href="LiteEntitySystem.AiControllerLogic.html">AiControllerLogic</a></div>
-      <div><a class="xref" href="LiteEntitySystem.HumanControllerLogic.html">HumanControllerLogic</a></div>
-    </dd>
-  </dl>
 
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
     <dd>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_Childs">EntityLogic.Childs</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_ParentId">EntityLogic.ParentId</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_Parent">EntityLogic.Parent</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_SharedReference">EntityLogic.SharedReference</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_IsSyncGroupEnabled_LiteEntitySystem_SyncGroup_">EntityLogic.IsSyncGroupEnabled(SyncGroup)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_OnSyncGroupsChanged_LiteEntitySystem_SyncGroup_">EntityLogic.OnSyncGroupsChanged(SyncGroup)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_EnableLagCompensationForOwner">EntityLogic.EnableLagCompensationForOwner()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_DisableLagCompensationForOwner">EntityLogic.DisableLagCompensationForOwner()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_TryGetOwnerTick_System_UInt16__">EntityLogic.TryGetOwnerTick(out ushort)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_AddPredictedEntity__1_System_Action___0__">EntityLogic.AddPredictedEntity&lt;T&gt;(Action&lt;T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_AddPredictedEntity__1_LiteEntitySystem_SyncVar_LiteEntitySystem_EntitySharedReference___System_Action___0__">EntityLogic.AddPredictedEntity&lt;T&gt;(ref SyncVar&lt;EntitySharedReference&gt;, Action&lt;T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_SetParent_LiteEntitySystem_EntityLogic_">EntityLogic.SetParent(EntityLogic)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_GetParent__1">EntityLogic.GetParent&lt;T&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_OnLagCompensationStart">EntityLogic.OnLagCompensationStart()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_OnLagCompensationEnd">EntityLogic.OnLagCompensationEnd()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_OnBeforeParentDestroy">EntityLogic.OnBeforeParentDestroy()</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_OnParentChanged_LiteEntitySystem_EntityLogic_">EntityLogic.OnParentChanged(EntityLogic)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_OnChildAdded_LiteEntitySystem_EntityLogic_">EntityLogic.OnChildAdded(EntityLogic)</a>
+    </div>
+    <div>
+      <a class="xref" href="LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_OnChildRemoved_LiteEntitySystem_EntityLogic_">EntityLogic.OnChildRemoved(EntityLogic)</a>
+    </div>
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ClassId">InternalEntity.ClassId</a>
     </div>
@@ -212,9 +262,6 @@ public abstract class ControllerLogic : InternalEntity, IComparable&lt;InternalE
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_OnLateConstructed">InternalEntity.OnLateConstructed()</a>
     </div>
     <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_RegisterRPC_LiteEntitySystem_RPCRegistrator__">InternalEntity.RegisterRPC(ref RPCRegistrator)</a>
-    </div>
-    <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ExecuteRPC_LiteEntitySystem_RemoteCall__">InternalEntity.ExecuteRPC(in RemoteCall)</a>
     </div>
     <div>
@@ -235,9 +282,6 @@ public abstract class ControllerLogic : InternalEntity, IComparable&lt;InternalE
     <div>
       <a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_ToString">InternalEntity.ToString()</a>
     </div>
-    <div>
-      <a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html#LiteEntitySystem_Internal_InternalBaseClass_OnSyncRequested">InternalBaseClass.OnSyncRequested()</a>
-    </div>
   </dd></dl>
 
 
@@ -249,10 +293,10 @@ public abstract class ControllerLogic : InternalEntity, IComparable&lt;InternalE
 </h2>
 
 
-  <a id="LiteEntitySystem_ControllerLogic__ctor_" data-uid="LiteEntitySystem.ControllerLogic.#ctor*"></a>
+  <a id="LiteEntitySystem_PredictableEntityLogic__ctor_" data-uid="LiteEntitySystem.PredictableEntityLogic.#ctor*"></a>
 
-  <h3 id="LiteEntitySystem_ControllerLogic__ctor_LiteEntitySystem_EntityParams_" data-uid="LiteEntitySystem.ControllerLogic.#ctor(LiteEntitySystem.EntityParams)">
-  ControllerLogic(EntityParams)
+  <h3 id="LiteEntitySystem_PredictableEntityLogic__ctor_LiteEntitySystem_EntityParams_" data-uid="LiteEntitySystem.PredictableEntityLogic.#ctor(LiteEntitySystem.EntityParams)">
+  PredictableEntityLogic(EntityParams)
   
   </h3>
 
@@ -260,7 +304,7 @@ public abstract class ControllerLogic : InternalEntity, IComparable&lt;InternalE
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected ControllerLogic(EntityParams entityParams)</code></pre>
+    <pre><code class="lang-csharp hljs">protected PredictableEntityLogic(EntityParams entityParams)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -280,34 +324,32 @@ public abstract class ControllerLogic : InternalEntity, IComparable&lt;InternalE
 
 
 
-  <h2 class="section" id="properties">Properties
+  <h2 class="section" id="fields">Fields
 </h2>
 
 
-  <a id="LiteEntitySystem_ControllerLogic_IsBot_" data-uid="LiteEntitySystem.ControllerLogic.IsBot*"></a>
 
-  <h3 id="LiteEntitySystem_ControllerLogic_IsBot" data-uid="LiteEntitySystem.ControllerLogic.IsBot">
-  IsBot
+  <h3 id="LiteEntitySystem_PredictableEntityLogic_CreatedAtTick" data-uid="LiteEntitySystem.PredictableEntityLogic.CreatedAtTick">
+  CreatedAtTick
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Is controller - AI controller</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract bool IsBot { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly ushort CreatedAtTick</code></pre>
   </div>
 
 
 
 
-
-  <h4 class="section">Property Value</h4>
+  <h4 class="section">Field Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
     <dd></dd>
   </dl>
+
 
 
 
@@ -320,19 +362,20 @@ public abstract class ControllerLogic : InternalEntity, IComparable&lt;InternalE
 </h2>
 
 
-  <a id="LiteEntitySystem_ControllerLogic_BeforeControlledUpdate_" data-uid="LiteEntitySystem.ControllerLogic.BeforeControlledUpdate*"></a>
+  <a id="LiteEntitySystem_PredictableEntityLogic_OnSyncRequested_" data-uid="LiteEntitySystem.PredictableEntityLogic.OnSyncRequested*"></a>
 
-  <h3 id="LiteEntitySystem_ControllerLogic_BeforeControlledUpdate" data-uid="LiteEntitySystem.ControllerLogic.BeforeControlledUpdate">
-  BeforeControlledUpdate()
+  <h3 id="LiteEntitySystem_PredictableEntityLogic_OnSyncRequested" data-uid="LiteEntitySystem.PredictableEntityLogic.OnSyncRequested">
+  OnSyncRequested()
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Called before controlled entity update. Useful for input</p>
+  <div class="markdown level1 summary"><p>Method for executing RPCs containing initial sync data that need to be sent after entity creation
+to existing players or when new player connected</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected virtual void BeforeControlledUpdate()</code></pre>
+    <pre><code class="lang-csharp hljs">protected override void OnSyncRequested()</code></pre>
   </div>
 
 
@@ -347,116 +390,26 @@ public abstract class ControllerLogic : InternalEntity, IComparable&lt;InternalE
 
 
 
-  <a id="LiteEntitySystem_ControllerLogic_DestroyWithControlledEntity_" data-uid="LiteEntitySystem.ControllerLogic.DestroyWithControlledEntity*"></a>
+  <a id="LiteEntitySystem_PredictableEntityLogic_RegisterRPC_" data-uid="LiteEntitySystem.PredictableEntityLogic.RegisterRPC*"></a>
 
-  <h3 id="LiteEntitySystem_ControllerLogic_DestroyWithControlledEntity" data-uid="LiteEntitySystem.ControllerLogic.DestroyWithControlledEntity">
-  DestroyWithControlledEntity()
+  <h3 id="LiteEntitySystem_PredictableEntityLogic_RegisterRPC_LiteEntitySystem_RPCRegistrator__" data-uid="LiteEntitySystem.PredictableEntityLogic.RegisterRPC(LiteEntitySystem.RPCRegistrator@)">
+  RegisterRPC(ref RPCRegistrator)
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Destroy controller and controlled pawn</p>
+  <div class="markdown level1 summary"><p>Method for registering RPCs and OnChange notifications</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void DestroyWithControlledEntity()</code></pre>
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <a id="LiteEntitySystem_ControllerLogic_GetControlledEntity_" data-uid="LiteEntitySystem.ControllerLogic.GetControlledEntity*"></a>
-
-  <h3 id="LiteEntitySystem_ControllerLogic_GetControlledEntity__1" data-uid="LiteEntitySystem.ControllerLogic.GetControlledEntity``1">
-  GetControlledEntity&lt;T&gt;()
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T GetControlledEntity&lt;T&gt;() where T : PawnLogic</code></pre>
-  </div>
-
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><span class="xref">T</span></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Type Parameters</h4>
-  <dl class="parameters">
-    <dt><code>T</code></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-  <a id="LiteEntitySystem_ControllerLogic_StartControl_" data-uid="LiteEntitySystem.ControllerLogic.StartControl*"></a>
-
-  <h3 id="LiteEntitySystem_ControllerLogic_StartControl_LiteEntitySystem_PawnLogic_" data-uid="LiteEntitySystem.ControllerLogic.StartControl(LiteEntitySystem.PawnLogic)">
-  StartControl(PawnLogic)
-  
-  </h3>
-
-  <div class="markdown level1 summary"><p>Start control pawn</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void StartControl(PawnLogic target)</code></pre>
+    <pre><code class="lang-csharp hljs">protected override void RegisterRPC(ref RPCRegistrator r)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>target</code> <a class="xref" href="LiteEntitySystem.PawnLogic.html">PawnLogic</a></dt>
+    <dt><code>r</code> <a class="xref" href="LiteEntitySystem.RPCRegistrator.html">RPCRegistrator</a></dt>
     <dd></dd>
   </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-  <a id="LiteEntitySystem_ControllerLogic_StopControl_" data-uid="LiteEntitySystem.ControllerLogic.StopControl*"></a>
-
-  <h3 id="LiteEntitySystem_ControllerLogic_StopControl" data-uid="LiteEntitySystem.ControllerLogic.StopControl">
-  StopControl()
-  
-  </h3>
-
-  <div class="markdown level1 summary"><p>Stop control pawn</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void StopControl()</code></pre>
-  </div>
-
 
 
 

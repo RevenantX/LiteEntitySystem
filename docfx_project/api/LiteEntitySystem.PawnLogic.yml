@@ -41,12 +41,11 @@ items:
   - LiteEntitySystem.EntityLogic.ParentId
   - LiteEntitySystem.EntityLogic.Parent
   - LiteEntitySystem.EntityLogic.SharedReference
-  - LiteEntitySystem.EntityLogic.IsPredicted
   - LiteEntitySystem.EntityLogic.IsSyncGroupEnabled(LiteEntitySystem.SyncGroup)
   - LiteEntitySystem.EntityLogic.OnSyncGroupsChanged(LiteEntitySystem.SyncGroup)
   - LiteEntitySystem.EntityLogic.EnableLagCompensationForOwner
   - LiteEntitySystem.EntityLogic.DisableLagCompensationForOwner
-  - LiteEntitySystem.EntityLogic.GetFrameSeed
+  - LiteEntitySystem.EntityLogic.TryGetOwnerTick(System.UInt16@)
   - LiteEntitySystem.EntityLogic.AddPredictedEntity``1(System.Action{{T}})
   - LiteEntitySystem.EntityLogic.AddPredictedEntity``1(LiteEntitySystem.SyncVar{LiteEntitySystem.EntitySharedReference}@,System.Action{{T}})
   - LiteEntitySystem.EntityLogic.SetParent(LiteEntitySystem.EntityLogic)
@@ -75,6 +74,7 @@ items:
   - LiteEntitySystem.Internal.InternalEntity.IsSingleton
   - LiteEntitySystem.Internal.InternalEntity.IsConstructed
   - LiteEntitySystem.Internal.InternalEntity.IsRemoved
+  - LiteEntitySystem.Internal.InternalEntity.State
   - LiteEntitySystem.Internal.InternalEntity.Destroy
   - LiteEntitySystem.Internal.InternalEntity.OnDestroy
   - LiteEntitySystem.Internal.InternalEntity.OnBeforeRollback
@@ -261,13 +261,6 @@ references:
   name: SharedReference
   nameWithType: EntityLogic.SharedReference
   fullName: LiteEntitySystem.EntityLogic.SharedReference
-- uid: LiteEntitySystem.EntityLogic.IsPredicted
-  commentId: P:LiteEntitySystem.EntityLogic.IsPredicted
-  parent: LiteEntitySystem.EntityLogic
-  href: LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_IsPredicted
-  name: IsPredicted
-  nameWithType: EntityLogic.IsPredicted
-  fullName: LiteEntitySystem.EntityLogic.IsPredicted
 - uid: LiteEntitySystem.EntityLogic.IsSyncGroupEnabled(LiteEntitySystem.SyncGroup)
   commentId: M:LiteEntitySystem.EntityLogic.IsSyncGroupEnabled(LiteEntitySystem.SyncGroup)
   parent: LiteEntitySystem.EntityLogic
@@ -356,24 +349,38 @@ references:
     href: LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_DisableLagCompensationForOwner
   - name: (
   - name: )
-- uid: LiteEntitySystem.EntityLogic.GetFrameSeed
-  commentId: M:LiteEntitySystem.EntityLogic.GetFrameSeed
+- uid: LiteEntitySystem.EntityLogic.TryGetOwnerTick(System.UInt16@)
+  commentId: M:LiteEntitySystem.EntityLogic.TryGetOwnerTick(System.UInt16@)
   parent: LiteEntitySystem.EntityLogic
-  href: LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_GetFrameSeed
-  name: GetFrameSeed()
-  nameWithType: EntityLogic.GetFrameSeed()
-  fullName: LiteEntitySystem.EntityLogic.GetFrameSeed()
+  isExternal: true
+  href: LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_TryGetOwnerTick_System_UInt16__
+  name: TryGetOwnerTick(out ushort)
+  nameWithType: EntityLogic.TryGetOwnerTick(out ushort)
+  fullName: LiteEntitySystem.EntityLogic.TryGetOwnerTick(out ushort)
+  nameWithType.vb: EntityLogic.TryGetOwnerTick(UShort)
+  fullName.vb: LiteEntitySystem.EntityLogic.TryGetOwnerTick(UShort)
+  name.vb: TryGetOwnerTick(UShort)
   spec.csharp:
-  - uid: LiteEntitySystem.EntityLogic.GetFrameSeed
-    name: GetFrameSeed
-    href: LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_GetFrameSeed
+  - uid: LiteEntitySystem.EntityLogic.TryGetOwnerTick(System.UInt16@)
+    name: TryGetOwnerTick
+    href: LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_TryGetOwnerTick_System_UInt16__
   - name: (
+  - name: out
+  - name: " "
+  - uid: System.UInt16
+    name: ushort
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint16
   - name: )
   spec.vb:
-  - uid: LiteEntitySystem.EntityLogic.GetFrameSeed
-    name: GetFrameSeed
-    href: LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_GetFrameSeed
+  - uid: LiteEntitySystem.EntityLogic.TryGetOwnerTick(System.UInt16@)
+    name: TryGetOwnerTick
+    href: LiteEntitySystem.EntityLogic.html#LiteEntitySystem_EntityLogic_TryGetOwnerTick_System_UInt16__
   - name: (
+  - uid: System.UInt16
+    name: UShort
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint16
   - name: )
 - uid: LiteEntitySystem.EntityLogic.AddPredictedEntity``1(System.Action{{T}})
   commentId: M:LiteEntitySystem.EntityLogic.AddPredictedEntity``1(System.Action{``0})
@@ -829,6 +836,13 @@ references:
   name: IsRemoved
   nameWithType: InternalEntity.IsRemoved
   fullName: LiteEntitySystem.Internal.InternalEntity.IsRemoved
+- uid: LiteEntitySystem.Internal.InternalEntity.State
+  commentId: P:LiteEntitySystem.Internal.InternalEntity.State
+  parent: LiteEntitySystem.Internal.InternalEntity
+  href: LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_State
+  name: State
+  nameWithType: InternalEntity.State
+  fullName: LiteEntitySystem.Internal.InternalEntity.State
 - uid: LiteEntitySystem.Internal.InternalEntity.Destroy
   commentId: M:LiteEntitySystem.Internal.InternalEntity.Destroy
   parent: LiteEntitySystem.Internal.InternalEntity

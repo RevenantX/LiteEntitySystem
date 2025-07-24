@@ -6,6 +6,7 @@ items:
   parent: LiteEntitySystem
   children:
   - LiteEntitySystem.Utils.AddToArrayDynamic``1(``0[]@,System.Int32@,``0)
+  - LiteEntitySystem.Utils.BytesToHexString(System.ReadOnlySpan{System.Byte})
   - LiteEntitySystem.Utils.Encoding
   - LiteEntitySystem.Utils.FastEquals``1(``0@,System.Byte*)
   - LiteEntitySystem.Utils.FastEquals``1(``0@,``0@)
@@ -752,6 +753,32 @@ items:
   nameWithType.vb: Utils.SequenceDiff(UShort, UShort)
   fullName.vb: LiteEntitySystem.Utils.SequenceDiff(UShort, UShort)
   name.vb: SequenceDiff(UShort, UShort)
+- uid: LiteEntitySystem.Utils.BytesToHexString(System.ReadOnlySpan{System.Byte})
+  commentId: M:LiteEntitySystem.Utils.BytesToHexString(System.ReadOnlySpan{System.Byte})
+  id: BytesToHexString(System.ReadOnlySpan{System.Byte})
+  parent: LiteEntitySystem.Utils
+  langs:
+  - csharp
+  - vb
+  name: BytesToHexString(ReadOnlySpan<byte>)
+  nameWithType: Utils.BytesToHexString(ReadOnlySpan<byte>)
+  fullName: LiteEntitySystem.Utils.BytesToHexString(System.ReadOnlySpan<byte>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  syntax:
+    content: public static string BytesToHexString(ReadOnlySpan<byte> bytes)
+    parameters:
+    - id: bytes
+      type: System.ReadOnlySpan{System.Byte}
+    return:
+      type: System.String
+    content.vb: Public Shared Function BytesToHexString(bytes As ReadOnlySpan(Of Byte)) As String
+  overload: LiteEntitySystem.Utils.BytesToHexString*
+  nameWithType.vb: Utils.BytesToHexString(ReadOnlySpan(Of Byte))
+  fullName.vb: LiteEntitySystem.Utils.BytesToHexString(System.ReadOnlySpan(Of Byte))
+  name.vb: BytesToHexString(ReadOnlySpan(Of Byte))
 - uid: LiteEntitySystem.Utils.Encoding
   commentId: F:LiteEntitySystem.Utils.Encoding
   id: Encoding
@@ -1018,7 +1045,7 @@ references:
   nameWithType: Utils.GetEnumValueInt
   fullName: LiteEntitySystem.Utils.GetEnumValueInt
 - uid: LiteEntitySystem.SyncVar{{T}}
-  commentId: T:LiteEntitySystem.SyncVar{``0}
+  commentId: T:LiteEntitySystem.SyncVar{``1}
   parent: LiteEntitySystem
   definition: LiteEntitySystem.SyncVar`1
   href: LiteEntitySystem.SyncVar-1.html
@@ -1206,6 +1233,23 @@ references:
   name: SequenceDiff
   nameWithType: Utils.SequenceDiff
   fullName: LiteEntitySystem.Utils.SequenceDiff
+- uid: LiteEntitySystem.Utils.BytesToHexString*
+  commentId: Overload:LiteEntitySystem.Utils.BytesToHexString
+  href: LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_BytesToHexString_System_ReadOnlySpan_System_Byte__
+  name: BytesToHexString
+  nameWithType: Utils.BytesToHexString
+  fullName: LiteEntitySystem.Utils.BytesToHexString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
 - uid: System.Threading.ThreadLocal{System.Text.UTF8Encoding}
   commentId: T:System.Threading.ThreadLocal{System.Text.UTF8Encoding}
   parent: System.Threading

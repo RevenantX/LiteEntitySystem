@@ -1,5 +1,5 @@
 {
-  "source_base_path": "E:/Projects/LiteEntitySystem/docfx_project",
+  "source_base_path": "/home/revenantx/Projects/LiteEntitySystem/docfx_project",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -29,6 +29,20 @@
       "IsMRef": true,
       "Title": "LiteEntitySystem.AiControllerLogic",
       "Summary": "<p sourcefile=\"api/LiteEntitySystem.AiControllerLogic.yml\" sourcestartlinenumber=\"1\">Base class for AI Controller entities</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.BindOnChangeFlags.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.BindOnChangeFlags.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "LiteEntitySystem.BindOnChangeFlags",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -183,6 +197,20 @@
       "IsMRef": true,
       "Title": "LiteEntitySystem.ControllerLogic",
       "Summary": "<p sourcefile=\"api/LiteEntitySystem.ControllerLogic.yml\" sourcestartlinenumber=\"1\">Base class for Controller entities</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.DebugFrameModes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.DebugFrameModes.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "LiteEntitySystem.DebugFrameModes",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -760,6 +788,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.Internal.EntityState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.Internal.EntityState.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "LiteEntitySystem.Internal.EntityState",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/LiteEntitySystem.Internal.InternalBaseClass.yml",
       "output": {
         ".html": {
@@ -897,6 +939,20 @@
       "IsMRef": true,
       "Title": "LiteEntitySystem.PawnLogic",
       "Summary": "<p sourcefile=\"api/LiteEntitySystem.PawnLogic.yml\" sourcestartlinenumber=\"1\">Base class for entites that can be controlled by Controller</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LiteEntitySystem.PredictableEntityLogic.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LiteEntitySystem.PredictableEntityLogic.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "LiteEntitySystem.PredictableEntityLogic",
+      "Summary": "<p sourcefile=\"api/LiteEntitySystem.PredictableEntityLogic.yml\" sourcestartlinenumber=\"1\">Entity that can be spawned on client prediction</p>\n"
     },
     {
       "type": "ManagedReference",

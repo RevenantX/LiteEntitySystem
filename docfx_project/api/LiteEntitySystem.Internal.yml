@@ -4,6 +4,7 @@ items:
   commentId: N:LiteEntitySystem.Internal
   id: LiteEntitySystem.Internal
   children:
+  - LiteEntitySystem.Internal.EntityState
   - LiteEntitySystem.Internal.InternalBaseClass
   - LiteEntitySystem.Internal.InternalEntity
   langs:
@@ -23,6 +24,13 @@ references:
   name: InternalBaseClass
   nameWithType: InternalBaseClass
   fullName: LiteEntitySystem.Internal.InternalBaseClass
+- uid: LiteEntitySystem.Internal.EntityState
+  commentId: T:LiteEntitySystem.Internal.EntityState
+  parent: LiteEntitySystem.Internal
+  href: LiteEntitySystem.Internal.EntityState.html
+  name: EntityState
+  nameWithType: EntityState
+  fullName: LiteEntitySystem.Internal.EntityState
 - uid: LiteEntitySystem.Internal.InternalEntity
   commentId: T:LiteEntitySystem.Internal.InternalEntity
   parent: LiteEntitySystem.Internal

@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Namespace LiteEntitySystem.Internal </title>
+      <title>Enum DebugFrameModes </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Namespace LiteEntitySystem.Internal ">
+      <meta name="title" content="Enum DebugFrameModes ">
       
       
       <link rel="icon" href="../favicon.ico">
@@ -80,32 +80,72 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="LiteEntitySystem.Internal">
+        <article data-uid="LiteEntitySystem.DebugFrameModes">
 
-  <h1 id="LiteEntitySystem_Internal" data-uid="LiteEntitySystem.Internal" class="text-break">Namespace LiteEntitySystem.Internal</h1>
-  <div class="markdown level0 summary"></div>
-  <div class="markdown level0 conceptual"></div>
-  <div class="markdown level0 remarks"></div>
 
-    <h3 id="classes">
-Classes
-</h3>
-    <dl class="jumplist">
-      <dt><a class="xref" href="LiteEntitySystem.Internal.InternalBaseClass.html">InternalBaseClass</a></dt>
-      <dd><p>Base class for SyncableFields and Entities</p>
-</dd>
-    </dl>
-    <dl class="jumplist">
-      <dt><a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a></dt>
-      <dd></dd>
-    </dl>
-    <h3 id="enums">
-Enums
-</h3>
-    <dl class="jumplist">
-      <dt><a class="xref" href="LiteEntitySystem.Internal.EntityState.html">EntityState</a></dt>
-      <dd></dd>
-    </dl>
+
+
+  <h1 id="LiteEntitySystem_DebugFrameModes" data-uid="LiteEntitySystem.DebugFrameModes" class="text-break">
+Enum DebugFrameModes  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="LiteEntitySystem.html">LiteEntitySystem</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>LiteEntitySystem.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"></div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Flags]
+public enum DebugFrameModes</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValueInt__1___0_">Utils.GetEnumValueInt&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_GetEnumValue__1___0_">Utils.GetEnumValue&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="LiteEntitySystem.Utils.html#LiteEntitySystem_Utils_HasFlagFast__1___0___0_">Utils.HasFlagFast&lt;T&gt;(T, T)</a>
+  </div>
+  </dd></dl>
+
+  <h2 id="fields">Fields
+</h2>
+  <dl class="parameters">
+    <dt id="LiteEntitySystem_DebugFrameModes_All"><code>All = Server | ClientAndRollback</code></dt>
+  
+  <dd></dd>
+    <dt id="LiteEntitySystem_DebugFrameModes_Client"><code>Client = 1</code></dt>
+  
+  <dd></dd>
+    <dt id="LiteEntitySystem_DebugFrameModes_ClientAndRollback"><code>ClientAndRollback = Client | Rollback</code></dt>
+  
+  <dd></dd>
+    <dt id="LiteEntitySystem_DebugFrameModes_ClientAndServer"><code>ClientAndServer = Client | Server</code></dt>
+  
+  <dd></dd>
+    <dt id="LiteEntitySystem_DebugFrameModes_Rollback"><code>Rollback = 4</code></dt>
+  
+  <dd></dd>
+    <dt id="LiteEntitySystem_DebugFrameModes_Server"><code>Server = 2</code></dt>
+  
+  <dd></dd>
+  </dl>
+
 
 
 </article>

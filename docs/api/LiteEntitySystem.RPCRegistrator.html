@@ -118,8 +118,8 @@ Struct RPCRegistrator
 
   <a id="LiteEntitySystem_RPCRegistrator_BindOnChange_" data-uid="LiteEntitySystem.RPCRegistrator.BindOnChange*"></a>
 
-  <h3 id="LiteEntitySystem_RPCRegistrator_BindOnChange__2_LiteEntitySystem_SyncVar___0___System_Action___1___0__" data-uid="LiteEntitySystem.RPCRegistrator.BindOnChange``2(LiteEntitySystem.SyncVar{``0}@,System.Action{``1,``0})">
-  BindOnChange&lt;T, TEntity&gt;(ref SyncVar&lt;T&gt;, Action&lt;TEntity, T&gt;)
+  <h3 id="LiteEntitySystem_RPCRegistrator_BindOnChange__2_LiteEntitySystem_SyncVar___1___System_Action___0___1__LiteEntitySystem_BindOnChangeFlags_" data-uid="LiteEntitySystem.RPCRegistrator.BindOnChange``2(LiteEntitySystem.SyncVar{``1}@,System.Action{``0,``1},LiteEntitySystem.BindOnChangeFlags)">
+  BindOnChange&lt;TEntity, T&gt;(ref SyncVar&lt;T&gt;, Action&lt;TEntity, T&gt;, BindOnChangeFlags)
   
   </h3>
 
@@ -128,7 +128,7 @@ Struct RPCRegistrator
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void BindOnChange&lt;T, TEntity&gt;(ref SyncVar&lt;T&gt; syncVar, Action&lt;TEntity, T&gt; onChangedAction) where T : unmanaged where TEntity : InternalEntity</code></pre>
+    <pre><code class="lang-csharp hljs">public void BindOnChange&lt;TEntity, T&gt;(ref SyncVar&lt;T&gt; syncVar, Action&lt;TEntity, T&gt; onChangedAction, BindOnChangeFlags flags = BindOnChangeFlags.ExecuteOnSync) where TEntity : InternalEntity where T : unmanaged</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -139,14 +139,16 @@ Struct RPCRegistrator
     <dt><code>onChangedAction</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-2">Action</a>&lt;TEntity, T&gt;</dt>
     <dd><p>Action that will be called when variable changes by sync</p>
 </dd>
+    <dt><code>flags</code> <a class="xref" href="LiteEntitySystem.BindOnChangeFlags.html">BindOnChangeFlags</a></dt>
+    <dd></dd>
   </dl>
 
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>T</code></dt>
-    <dd></dd>
     <dt><code>TEntity</code></dt>
+    <dd></dd>
+    <dt><code>T</code></dt>
     <dd></dd>
   </dl>
 
@@ -161,8 +163,8 @@ Struct RPCRegistrator
 
   <a id="LiteEntitySystem_RPCRegistrator_BindOnChange_" data-uid="LiteEntitySystem.RPCRegistrator.BindOnChange*"></a>
 
-  <h3 id="LiteEntitySystem_RPCRegistrator_BindOnChange__2___1_LiteEntitySystem_SyncVar___0___System_Action___0__" data-uid="LiteEntitySystem.RPCRegistrator.BindOnChange``2(``1,LiteEntitySystem.SyncVar{``0}@,System.Action{``0})">
-  BindOnChange&lt;T, TEntity&gt;(TEntity, ref SyncVar&lt;T&gt;, Action&lt;T&gt;)
+  <h3 id="LiteEntitySystem_RPCRegistrator_BindOnChange__2___0_LiteEntitySystem_SyncVar___1___System_Action___1__LiteEntitySystem_BindOnChangeFlags_" data-uid="LiteEntitySystem.RPCRegistrator.BindOnChange``2(``0,LiteEntitySystem.SyncVar{``1}@,System.Action{``1},LiteEntitySystem.BindOnChangeFlags)">
+  BindOnChange&lt;TEntity, T&gt;(TEntity, ref SyncVar&lt;T&gt;, Action&lt;T&gt;, BindOnChangeFlags)
   
   </h3>
 
@@ -171,7 +173,7 @@ Struct RPCRegistrator
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void BindOnChange&lt;T, TEntity&gt;(TEntity self, ref SyncVar&lt;T&gt; syncVar, Action&lt;T&gt; onChangedAction) where T : unmanaged where TEntity : InternalEntity</code></pre>
+    <pre><code class="lang-csharp hljs">public void BindOnChange&lt;TEntity, T&gt;(TEntity self, ref SyncVar&lt;T&gt; syncVar, Action&lt;T&gt; onChangedAction, BindOnChangeFlags flags = BindOnChangeFlags.ExecuteOnSync) where TEntity : InternalEntity where T : unmanaged</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -185,14 +187,16 @@ Struct RPCRegistrator
     <dt><code>onChangedAction</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;T&gt;</dt>
     <dd><p>Action that will be called when variable changes by sync</p>
 </dd>
+    <dt><code>flags</code> <a class="xref" href="LiteEntitySystem.BindOnChangeFlags.html">BindOnChangeFlags</a></dt>
+    <dd></dd>
   </dl>
 
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>T</code></dt>
-    <dd></dd>
     <dt><code>TEntity</code></dt>
+    <dd></dd>
+    <dt><code>T</code></dt>
     <dd></dd>
   </dl>
 

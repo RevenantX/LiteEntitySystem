@@ -35,6 +35,7 @@ items:
   - LiteEntitySystem.Internal.InternalEntity.OwnerId
   - LiteEntitySystem.Internal.InternalEntity.RegisterRPC(LiteEntitySystem.RPCRegistrator@)
   - LiteEntitySystem.Internal.InternalEntity.ServerManager
+  - LiteEntitySystem.Internal.InternalEntity.State
   - LiteEntitySystem.Internal.InternalEntity.ToString
   - LiteEntitySystem.Internal.InternalEntity.Update
   - LiteEntitySystem.Internal.InternalEntity.Version
@@ -214,7 +215,7 @@ items:
     parameters: []
     return:
       type: System.Boolean
-    content.vb: Public Property IsDestroyed As Boolean
+    content.vb: Public ReadOnly Property IsDestroyed As Boolean
   overload: LiteEntitySystem.Internal.InternalEntity.IsDestroyed*
 - uid: LiteEntitySystem.Internal.InternalEntity.IsLocalControlled
   commentId: P:LiteEntitySystem.Internal.InternalEntity.IsLocalControlled
@@ -426,7 +427,7 @@ items:
     parameters: []
     return:
       type: System.Boolean
-    content.vb: Public Property IsConstructed As Boolean
+    content.vb: Public ReadOnly Property IsConstructed As Boolean
   overload: LiteEntitySystem.Internal.InternalEntity.IsConstructed*
 - uid: LiteEntitySystem.Internal.InternalEntity.IsRemoved
   commentId: P:LiteEntitySystem.Internal.InternalEntity.IsRemoved
@@ -449,8 +450,31 @@ items:
     parameters: []
     return:
       type: System.Boolean
-    content.vb: Public Property IsRemoved As Boolean
+    content.vb: Public ReadOnly Property IsRemoved As Boolean
   overload: LiteEntitySystem.Internal.InternalEntity.IsRemoved*
+- uid: LiteEntitySystem.Internal.InternalEntity.State
+  commentId: P:LiteEntitySystem.Internal.InternalEntity.State
+  id: State
+  parent: LiteEntitySystem.Internal.InternalEntity
+  langs:
+  - csharp
+  - vb
+  name: State
+  nameWithType: InternalEntity.State
+  fullName: LiteEntitySystem.Internal.InternalEntity.State
+  type: Property
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem.Internal
+  summary: Entity state. New, Constructed, Destroyed, Removed
+  example: []
+  syntax:
+    content: public EntityState State { get; }
+    parameters: []
+    return:
+      type: LiteEntitySystem.Internal.EntityState
+    content.vb: Public ReadOnly Property State As EntityState
+  overload: LiteEntitySystem.Internal.InternalEntity.State*
 - uid: LiteEntitySystem.Internal.InternalEntity.Destroy
   commentId: M:LiteEntitySystem.Internal.InternalEntity.Destroy
   id: Destroy
@@ -1128,6 +1152,19 @@ references:
   name: IsRemoved
   nameWithType: InternalEntity.IsRemoved
   fullName: LiteEntitySystem.Internal.InternalEntity.IsRemoved
+- uid: LiteEntitySystem.Internal.InternalEntity.State*
+  commentId: Overload:LiteEntitySystem.Internal.InternalEntity.State
+  href: LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_State
+  name: State
+  nameWithType: InternalEntity.State
+  fullName: LiteEntitySystem.Internal.InternalEntity.State
+- uid: LiteEntitySystem.Internal.EntityState
+  commentId: T:LiteEntitySystem.Internal.EntityState
+  parent: LiteEntitySystem.Internal
+  href: LiteEntitySystem.Internal.EntityState.html
+  name: EntityState
+  nameWithType: EntityState
+  fullName: LiteEntitySystem.Internal.EntityState
 - uid: LiteEntitySystem.Internal.InternalEntity.Destroy*
   commentId: Overload:LiteEntitySystem.Internal.InternalEntity.Destroy
   href: LiteEntitySystem.Internal.InternalEntity.html#LiteEntitySystem_Internal_InternalEntity_Destroy

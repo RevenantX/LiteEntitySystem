@@ -5,8 +5,8 @@ items:
   id: RPCRegistrator
   parent: LiteEntitySystem
   children:
-  - LiteEntitySystem.RPCRegistrator.BindOnChange``2(LiteEntitySystem.SyncVar{``0}@,System.Action{``1,``0})
-  - LiteEntitySystem.RPCRegistrator.BindOnChange``2(``1,LiteEntitySystem.SyncVar{``0}@,System.Action{``0})
+  - LiteEntitySystem.RPCRegistrator.BindOnChange``2(LiteEntitySystem.SyncVar{``1}@,System.Action{``0,``1},LiteEntitySystem.BindOnChangeFlags)
+  - LiteEntitySystem.RPCRegistrator.BindOnChange``2(``0,LiteEntitySystem.SyncVar{``1}@,System.Action{``1},LiteEntitySystem.BindOnChangeFlags)
   - LiteEntitySystem.RPCRegistrator.CreateRPCAction``1(System.Action{``0},LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)
   - LiteEntitySystem.RPCRegistrator.CreateRPCAction``1(``0,System.Action,LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)
   - LiteEntitySystem.RPCRegistrator.CreateRPCAction``2(LiteEntitySystem.SpanAction{``0,``1},LiteEntitySystem.RemoteCallSpan{``1}@,LiteEntitySystem.ExecuteFlags)
@@ -28,16 +28,16 @@ items:
   syntax:
     content: public readonly ref struct RPCRegistrator
     content.vb: Public Structure RPCRegistrator
-- uid: LiteEntitySystem.RPCRegistrator.BindOnChange``2(LiteEntitySystem.SyncVar{``0}@,System.Action{``1,``0})
-  commentId: M:LiteEntitySystem.RPCRegistrator.BindOnChange``2(LiteEntitySystem.SyncVar{``0}@,System.Action{``1,``0})
-  id: BindOnChange``2(LiteEntitySystem.SyncVar{``0}@,System.Action{``1,``0})
+- uid: LiteEntitySystem.RPCRegistrator.BindOnChange``2(LiteEntitySystem.SyncVar{``1}@,System.Action{``0,``1},LiteEntitySystem.BindOnChangeFlags)
+  commentId: M:LiteEntitySystem.RPCRegistrator.BindOnChange``2(LiteEntitySystem.SyncVar{``1}@,System.Action{``0,``1},LiteEntitySystem.BindOnChangeFlags)
+  id: BindOnChange``2(LiteEntitySystem.SyncVar{``1}@,System.Action{``0,``1},LiteEntitySystem.BindOnChangeFlags)
   parent: LiteEntitySystem.RPCRegistrator
   langs:
   - csharp
   - vb
-  name: BindOnChange<T, TEntity>(ref SyncVar<T>, Action<TEntity, T>)
-  nameWithType: RPCRegistrator.BindOnChange<T, TEntity>(ref SyncVar<T>, Action<TEntity, T>)
-  fullName: LiteEntitySystem.RPCRegistrator.BindOnChange<T, TEntity>(ref LiteEntitySystem.SyncVar<T>, System.Action<TEntity, T>)
+  name: BindOnChange<TEntity, T>(ref SyncVar<T>, Action<TEntity, T>, BindOnChangeFlags)
+  nameWithType: RPCRegistrator.BindOnChange<TEntity, T>(ref SyncVar<T>, Action<TEntity, T>, BindOnChangeFlags)
+  fullName: LiteEntitySystem.RPCRegistrator.BindOnChange<TEntity, T>(ref LiteEntitySystem.SyncVar<T>, System.Action<TEntity, T>, LiteEntitySystem.BindOnChangeFlags)
   type: Method
   assemblies:
   - LiteEntitySystem
@@ -45,7 +45,7 @@ items:
   summary: Bind notification of SyncVar changes to action
   example: []
   syntax:
-    content: 'public void BindOnChange<T, TEntity>(ref SyncVar<T> syncVar, Action<TEntity, T> onChangedAction) where T : unmanaged where TEntity : InternalEntity'
+    content: 'public void BindOnChange<TEntity, T>(ref SyncVar<T> syncVar, Action<TEntity, T> onChangedAction, BindOnChangeFlags flags = BindOnChangeFlags.ExecuteOnSync) where TEntity : InternalEntity where T : unmanaged'
     parameters:
     - id: syncVar
       type: LiteEntitySystem.SyncVar{{T}}
@@ -53,24 +53,26 @@ items:
     - id: onChangedAction
       type: System.Action{{TEntity},{T}}
       description: Action that will be called when variable changes by sync
+    - id: flags
+      type: LiteEntitySystem.BindOnChangeFlags
     typeParameters:
-    - id: T
     - id: TEntity
-    content.vb: Public Sub BindOnChange(Of T As Structure, TEntity As InternalEntity)(syncVar As SyncVar(Of T), onChangedAction As Action(Of TEntity, T))
+    - id: T
+    content.vb: Public Sub BindOnChange(Of TEntity As InternalEntity, T As Structure)(syncVar As SyncVar(Of T), onChangedAction As Action(Of TEntity, T), flags As BindOnChangeFlags = BindOnChangeFlags.ExecuteOnSync)
   overload: LiteEntitySystem.RPCRegistrator.BindOnChange*
-  nameWithType.vb: RPCRegistrator.BindOnChange(Of T, TEntity)(SyncVar(Of T), Action(Of TEntity, T))
-  fullName.vb: LiteEntitySystem.RPCRegistrator.BindOnChange(Of T, TEntity)(LiteEntitySystem.SyncVar(Of T), System.Action(Of TEntity, T))
-  name.vb: BindOnChange(Of T, TEntity)(SyncVar(Of T), Action(Of TEntity, T))
-- uid: LiteEntitySystem.RPCRegistrator.BindOnChange``2(``1,LiteEntitySystem.SyncVar{``0}@,System.Action{``0})
-  commentId: M:LiteEntitySystem.RPCRegistrator.BindOnChange``2(``1,LiteEntitySystem.SyncVar{``0}@,System.Action{``0})
-  id: BindOnChange``2(``1,LiteEntitySystem.SyncVar{``0}@,System.Action{``0})
+  nameWithType.vb: RPCRegistrator.BindOnChange(Of TEntity, T)(SyncVar(Of T), Action(Of TEntity, T), BindOnChangeFlags)
+  fullName.vb: LiteEntitySystem.RPCRegistrator.BindOnChange(Of TEntity, T)(LiteEntitySystem.SyncVar(Of T), System.Action(Of TEntity, T), LiteEntitySystem.BindOnChangeFlags)
+  name.vb: BindOnChange(Of TEntity, T)(SyncVar(Of T), Action(Of TEntity, T), BindOnChangeFlags)
+- uid: LiteEntitySystem.RPCRegistrator.BindOnChange``2(``0,LiteEntitySystem.SyncVar{``1}@,System.Action{``1},LiteEntitySystem.BindOnChangeFlags)
+  commentId: M:LiteEntitySystem.RPCRegistrator.BindOnChange``2(``0,LiteEntitySystem.SyncVar{``1}@,System.Action{``1},LiteEntitySystem.BindOnChangeFlags)
+  id: BindOnChange``2(``0,LiteEntitySystem.SyncVar{``1}@,System.Action{``1},LiteEntitySystem.BindOnChangeFlags)
   parent: LiteEntitySystem.RPCRegistrator
   langs:
   - csharp
   - vb
-  name: BindOnChange<T, TEntity>(TEntity, ref SyncVar<T>, Action<T>)
-  nameWithType: RPCRegistrator.BindOnChange<T, TEntity>(TEntity, ref SyncVar<T>, Action<T>)
-  fullName: LiteEntitySystem.RPCRegistrator.BindOnChange<T, TEntity>(TEntity, ref LiteEntitySystem.SyncVar<T>, System.Action<T>)
+  name: BindOnChange<TEntity, T>(TEntity, ref SyncVar<T>, Action<T>, BindOnChangeFlags)
+  nameWithType: RPCRegistrator.BindOnChange<TEntity, T>(TEntity, ref SyncVar<T>, Action<T>, BindOnChangeFlags)
+  fullName: LiteEntitySystem.RPCRegistrator.BindOnChange<TEntity, T>(TEntity, ref LiteEntitySystem.SyncVar<T>, System.Action<T>, LiteEntitySystem.BindOnChangeFlags)
   type: Method
   assemblies:
   - LiteEntitySystem
@@ -78,7 +80,7 @@ items:
   summary: Bind notification of SyncVar changes to action
   example: []
   syntax:
-    content: 'public void BindOnChange<T, TEntity>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction) where T : unmanaged where TEntity : InternalEntity'
+    content: 'public void BindOnChange<TEntity, T>(TEntity self, ref SyncVar<T> syncVar, Action<T> onChangedAction, BindOnChangeFlags flags = BindOnChangeFlags.ExecuteOnSync) where TEntity : InternalEntity where T : unmanaged'
     parameters:
     - id: self
       type: '{TEntity}'
@@ -89,14 +91,16 @@ items:
     - id: onChangedAction
       type: System.Action{{T}}
       description: Action that will be called when variable changes by sync
+    - id: flags
+      type: LiteEntitySystem.BindOnChangeFlags
     typeParameters:
-    - id: T
     - id: TEntity
-    content.vb: Public Sub BindOnChange(Of T As Structure, TEntity As InternalEntity)(self As TEntity, syncVar As SyncVar(Of T), onChangedAction As Action(Of T))
+    - id: T
+    content.vb: Public Sub BindOnChange(Of TEntity As InternalEntity, T As Structure)(self As TEntity, syncVar As SyncVar(Of T), onChangedAction As Action(Of T), flags As BindOnChangeFlags = BindOnChangeFlags.ExecuteOnSync)
   overload: LiteEntitySystem.RPCRegistrator.BindOnChange*
-  nameWithType.vb: RPCRegistrator.BindOnChange(Of T, TEntity)(TEntity, SyncVar(Of T), Action(Of T))
-  fullName.vb: LiteEntitySystem.RPCRegistrator.BindOnChange(Of T, TEntity)(TEntity, LiteEntitySystem.SyncVar(Of T), System.Action(Of T))
-  name.vb: BindOnChange(Of T, TEntity)(TEntity, SyncVar(Of T), Action(Of T))
+  nameWithType.vb: RPCRegistrator.BindOnChange(Of TEntity, T)(TEntity, SyncVar(Of T), Action(Of T), BindOnChangeFlags)
+  fullName.vb: LiteEntitySystem.RPCRegistrator.BindOnChange(Of TEntity, T)(TEntity, LiteEntitySystem.SyncVar(Of T), System.Action(Of T), LiteEntitySystem.BindOnChangeFlags)
+  name.vb: BindOnChange(Of TEntity, T)(TEntity, SyncVar(Of T), Action(Of T), BindOnChangeFlags)
 - uid: LiteEntitySystem.RPCRegistrator.CreateRPCAction``1(``0,System.Action,LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)
   commentId: M:LiteEntitySystem.RPCRegistrator.CreateRPCAction``1(``0,System.Action,LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)
   id: CreateRPCAction``1(``0,System.Action,LiteEntitySystem.RemoteCall@,LiteEntitySystem.ExecuteFlags)
@@ -404,12 +408,12 @@ references:
   fullName: LiteEntitySystem
 - uid: LiteEntitySystem.RPCRegistrator.BindOnChange*
   commentId: Overload:LiteEntitySystem.RPCRegistrator.BindOnChange
-  href: LiteEntitySystem.RPCRegistrator.html#LiteEntitySystem_RPCRegistrator_BindOnChange__2_LiteEntitySystem_SyncVar___0___System_Action___1___0__
+  href: LiteEntitySystem.RPCRegistrator.html#LiteEntitySystem_RPCRegistrator_BindOnChange__2_LiteEntitySystem_SyncVar___1___System_Action___0___1__LiteEntitySystem_BindOnChangeFlags_
   name: BindOnChange
   nameWithType: RPCRegistrator.BindOnChange
   fullName: LiteEntitySystem.RPCRegistrator.BindOnChange
 - uid: LiteEntitySystem.SyncVar{{T}}
-  commentId: T:LiteEntitySystem.SyncVar{``0}
+  commentId: T:LiteEntitySystem.SyncVar{``1}
   parent: LiteEntitySystem
   definition: LiteEntitySystem.SyncVar`1
   href: LiteEntitySystem.SyncVar-1.html
@@ -436,7 +440,7 @@ references:
   - name: T
   - name: )
 - uid: System.Action{{TEntity},{T}}
-  commentId: T:System.Action{``1,``0}
+  commentId: T:System.Action{``0,``1}
   parent: System
   definition: System.Action`2
   href: https://learn.microsoft.com/dotnet/api/system.action-2
@@ -470,6 +474,13 @@ references:
   - name: " "
   - name: T
   - name: )
+- uid: LiteEntitySystem.BindOnChangeFlags
+  commentId: T:LiteEntitySystem.BindOnChangeFlags
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.BindOnChangeFlags.html
+  name: BindOnChangeFlags
+  nameWithType: BindOnChangeFlags
+  fullName: LiteEntitySystem.BindOnChangeFlags
 - uid: LiteEntitySystem.SyncVar`1
   commentId: T:LiteEntitySystem.SyncVar`1
   parent: LiteEntitySystem

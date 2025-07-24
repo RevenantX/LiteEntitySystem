@@ -15,6 +15,7 @@ items:
   - LiteEntitySystem.ServerEntityManager.AddSingleton``1(System.Action{``0})
   - LiteEntitySystem.ServerEntityManager.Deserialize(LiteEntitySystem.NetPlayer,System.ReadOnlySpan{System.Byte})
   - LiteEntitySystem.ServerEntityManager.Deserialize(LiteEntitySystem.Transport.AbstractNetPeer,System.ReadOnlySpan{System.Byte})
+  - LiteEntitySystem.ServerEntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
   - LiteEntitySystem.ServerEntityManager.GetPlayer(System.Byte)
   - LiteEntitySystem.ServerEntityManager.GetPlayerController(LiteEntitySystem.NetPlayer)
   - LiteEntitySystem.ServerEntityManager.GetPlayerController(LiteEntitySystem.Transport.AbstractNetPeer)
@@ -213,6 +214,33 @@ items:
   nameWithType.vb: ServerEntityManager.New(EntityTypesMap, Byte, Byte, ServerSendRate, MaxHistorySize)
   fullName.vb: LiteEntitySystem.ServerEntityManager.New(LiteEntitySystem.EntityTypesMap, Byte, Byte, LiteEntitySystem.ServerSendRate, LiteEntitySystem.MaxHistorySize)
   name.vb: New(EntityTypesMap, Byte, Byte, ServerSendRate, MaxHistorySize)
+- uid: LiteEntitySystem.ServerEntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  commentId: M:LiteEntitySystem.ServerEntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  id: GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  parent: LiteEntitySystem.ServerEntityManager
+  langs:
+  - csharp
+  - vb
+  name: GetCurrentFrameDebugInfo(DebugFrameModes)
+  nameWithType: ServerEntityManager.GetCurrentFrameDebugInfo(DebugFrameModes)
+  fullName: LiteEntitySystem.ServerEntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Get information about current update frame
+  example: []
+  syntax:
+    content: public override string GetCurrentFrameDebugInfo(DebugFrameModes modes)
+    parameters:
+    - id: modes
+      type: LiteEntitySystem.DebugFrameModes
+    return:
+      type: System.String
+      description: debug formatted string
+    content.vb: Public Overrides Function GetCurrentFrameDebugInfo(modes As DebugFrameModes) As String
+  overridden: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  overload: LiteEntitySystem.ServerEntityManager.GetCurrentFrameDebugInfo*
 - uid: LiteEntitySystem.ServerEntityManager.Reset
   commentId: M:LiteEntitySystem.ServerEntityManager.Reset
   id: Reset
@@ -1797,6 +1825,55 @@ references:
   name: MaxHistorySize
   nameWithType: MaxHistorySize
   fullName: LiteEntitySystem.MaxHistorySize
+- uid: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  commentId: M:LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  parent: LiteEntitySystem.EntityManager
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetCurrentFrameDebugInfo_LiteEntitySystem_DebugFrameModes_
+  name: GetCurrentFrameDebugInfo(DebugFrameModes)
+  nameWithType: EntityManager.GetCurrentFrameDebugInfo(DebugFrameModes)
+  fullName: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  spec.csharp:
+  - uid: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+    name: GetCurrentFrameDebugInfo
+    href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetCurrentFrameDebugInfo_LiteEntitySystem_DebugFrameModes_
+  - name: (
+  - uid: LiteEntitySystem.DebugFrameModes
+    name: DebugFrameModes
+    href: LiteEntitySystem.DebugFrameModes.html
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+    name: GetCurrentFrameDebugInfo
+    href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetCurrentFrameDebugInfo_LiteEntitySystem_DebugFrameModes_
+  - name: (
+  - uid: LiteEntitySystem.DebugFrameModes
+    name: DebugFrameModes
+    href: LiteEntitySystem.DebugFrameModes.html
+  - name: )
+- uid: LiteEntitySystem.ServerEntityManager.GetCurrentFrameDebugInfo*
+  commentId: Overload:LiteEntitySystem.ServerEntityManager.GetCurrentFrameDebugInfo
+  href: LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager_GetCurrentFrameDebugInfo_LiteEntitySystem_DebugFrameModes_
+  name: GetCurrentFrameDebugInfo
+  nameWithType: ServerEntityManager.GetCurrentFrameDebugInfo
+  fullName: LiteEntitySystem.ServerEntityManager.GetCurrentFrameDebugInfo
+- uid: LiteEntitySystem.DebugFrameModes
+  commentId: T:LiteEntitySystem.DebugFrameModes
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.DebugFrameModes.html
+  name: DebugFrameModes
+  nameWithType: DebugFrameModes
+  fullName: LiteEntitySystem.DebugFrameModes
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
 - uid: LiteEntitySystem.EntityManager.Reset
   commentId: M:LiteEntitySystem.EntityManager.Reset
   parent: LiteEntitySystem.EntityManager

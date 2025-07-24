@@ -17,6 +17,7 @@ items:
   - LiteEntitySystem.EntityManager.EntitiesCount
   - LiteEntitySystem.EntityManager.ExecuteLateConstruct
   - LiteEntitySystem.EntityManager.GetControllers``1
+  - LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
   - LiteEntitySystem.EntityManager.GetEntities``1
   - LiteEntitySystem.EntityManager.GetEntityById``1(LiteEntitySystem.EntitySharedReference)
   - LiteEntitySystem.EntityManager.GetEntitySyncVarInfo(LiteEntitySystem.Internal.InternalEntity,LiteEntitySystem.IEntitySyncVarInfoPrinter)
@@ -775,6 +776,32 @@ items:
   nameWithType.vb: EntityManager.RegisterFieldType(Of T)(InterpolatorDelegateWithReturn(Of T))
   fullName.vb: LiteEntitySystem.EntityManager.RegisterFieldType(Of T)(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn(Of T))
   name.vb: RegisterFieldType(Of T)(InterpolatorDelegateWithReturn(Of T))
+- uid: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  commentId: M:LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  id: GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: GetCurrentFrameDebugInfo(DebugFrameModes)
+  nameWithType: EntityManager.GetCurrentFrameDebugInfo(DebugFrameModes)
+  fullName: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Get information about current update frame
+  example: []
+  syntax:
+    content: public abstract string GetCurrentFrameDebugInfo(DebugFrameModes modes)
+    parameters:
+    - id: modes
+      type: LiteEntitySystem.DebugFrameModes
+    return:
+      type: System.String
+      description: debug formatted string
+    content.vb: Public MustOverride Function GetCurrentFrameDebugInfo(modes As DebugFrameModes) As String
+  overload: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo*
 - uid: LiteEntitySystem.EntityManager.RegisterFieldType``1
   commentId: M:LiteEntitySystem.EntityManager.RegisterFieldType``1
   id: RegisterFieldType``1
@@ -1279,13 +1306,11 @@ items:
   - LiteEntitySystem
   namespace: LiteEntitySystem
   syntax:
-    content: protected bool ConstructEntity(InternalEntity e)
+    content: protected void ConstructEntity(InternalEntity e)
     parameters:
     - id: e
       type: LiteEntitySystem.Internal.InternalEntity
-    return:
-      type: System.Boolean
-    content.vb: Protected Function ConstructEntity(e As InternalEntity) As Boolean
+    content.vb: Protected Sub ConstructEntity(e As InternalEntity)
   overload: LiteEntitySystem.EntityManager.ConstructEntity*
 - uid: LiteEntitySystem.EntityManager.IsEntityLagCompensated(LiteEntitySystem.Internal.InternalEntity)
   commentId: M:LiteEntitySystem.EntityManager.IsEntityLagCompensated(LiteEntitySystem.Internal.InternalEntity)
@@ -1805,6 +1830,30 @@ references:
   - uid: LiteEntitySystem.Internal
     name: Internal
     href: LiteEntitySystem.Internal.html
+- uid: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo*
+  commentId: Overload:LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetCurrentFrameDebugInfo_LiteEntitySystem_DebugFrameModes_
+  name: GetCurrentFrameDebugInfo
+  nameWithType: EntityManager.GetCurrentFrameDebugInfo
+  fullName: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo
+- uid: LiteEntitySystem.DebugFrameModes
+  commentId: T:LiteEntitySystem.DebugFrameModes
+  parent: LiteEntitySystem
+  href: LiteEntitySystem.DebugFrameModes.html
+  name: DebugFrameModes
+  nameWithType: DebugFrameModes
+  fullName: LiteEntitySystem.DebugFrameModes
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
 - uid: LiteEntitySystem.EntityManager.SetTickrate*
   commentId: Overload:LiteEntitySystem.EntityManager.SetTickrate
   href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_SetTickrate_System_Byte_

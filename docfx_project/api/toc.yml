@@ -10,12 +10,18 @@ items:
   - uid: LiteEntitySystem.AiControllerLogic`1
     name: AiControllerLogic<T>
     type: Class
+  - uid: LiteEntitySystem.BindOnChangeFlags
+    name: BindOnChangeFlags
+    type: Enum
   - uid: LiteEntitySystem.ClientEntityManager
     name: ClientEntityManager
     type: Class
   - uid: LiteEntitySystem.ControllerLogic
     name: ControllerLogic
     type: Class
+  - uid: LiteEntitySystem.DebugFrameModes
+    name: DebugFrameModes
+    type: Enum
   - uid: LiteEntitySystem.DeserializeResult
     name: DeserializeResult
     type: Enum
@@ -111,6 +117,9 @@ items:
     type: Enum
   - uid: LiteEntitySystem.PawnLogic
     name: PawnLogic
+    type: Class
+  - uid: LiteEntitySystem.PredictableEntityLogic
+    name: PredictableEntityLogic
     type: Class
   - uid: LiteEntitySystem.RPCRegistrator
     name: RPCRegistrator
@@ -256,6 +265,9 @@ items:
   name: LiteEntitySystem.Internal
   type: Namespace
   items:
+  - uid: LiteEntitySystem.Internal.EntityState
+    name: EntityState
+    type: Enum
   - uid: LiteEntitySystem.Internal.InternalBaseClass
     name: InternalBaseClass
     type: Class
