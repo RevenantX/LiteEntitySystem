@@ -124,8 +124,20 @@ namespace LiteEntitySystem
                 var oldValue = _value;
                 _value = value;
                 if (Container != null && !Utils.FastEquals(ref value, ref oldValue))
-                    Container.EntityManager.EntityFieldChanged(Container, FieldId, ref value, ref oldValue);
+                    Container.EntityManager.EntityFieldChanged(Container, FieldId, ref value, ref oldValue, false);
             }
+        }
+
+        /// <summary>
+        /// Set value without triggering local OnSync notifications if there is any
+        /// </summary>
+        /// <param name="value"></param>
+        public void SetValueWithoutOnSyncNotification(T value)
+        {
+            var oldValue = _value;
+            _value = value;
+            if (Container != null && !Utils.FastEquals(ref value, ref oldValue))
+                Container.EntityManager.EntityFieldChanged(Container, FieldId, ref value, ref oldValue, true);
         }
 
         internal void Init(InternalEntity container, ushort fieldId)
@@ -134,7 +146,7 @@ namespace LiteEntitySystem
             FieldId = fieldId;
             T defaultValue = default;
             if(!Utils.FastEquals(ref _value, ref defaultValue))
-                Container.EntityManager.EntityFieldChanged(Container, FieldId, ref _value, ref defaultValue);
+                Container.EntityManager.EntityFieldChanged(Container, FieldId, ref _value, ref defaultValue, false);
         }
         
         public static implicit operator T(SyncVar<T> sv) => sv._value;

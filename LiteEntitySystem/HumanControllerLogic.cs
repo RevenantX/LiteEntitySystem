@@ -285,6 +285,7 @@ namespace LiteEntitySystem
 
             // ReSharper disable once VirtualMemberCallInConstructor
             _currentInput = GetDefaultInput();
+            _pendingInput = _currentInput;
         }
         
         internal override void RemoveClientProcessedInputs(ushort processedTick)

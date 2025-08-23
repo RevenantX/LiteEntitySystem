@@ -660,7 +660,7 @@ namespace LiteEntitySystem
             _modifiedEntitiesToRollback.Add(entity);
         }
 
-        internal override unsafe void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue, ref T oldValue)
+        internal override unsafe void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue, ref T oldValue, bool skipOnSync)
         {
             if (entity.IsRemoved)
                 return;
@@ -668,7 +668,7 @@ namespace LiteEntitySystem
             ref var classData = ref ClassDataDict[entity.ClassId];
             ref var fieldInfo = ref classData.Fields[fieldId];
             
-            if ((fieldInfo.OnSyncFlags & BindOnChangeFlags.ExecuteOnPrediction) != 0)
+            if (!skipOnSync && (fieldInfo.OnSyncFlags & BindOnChangeFlags.ExecuteOnPrediction) != 0)
             {
                 T value = oldValue;
                 fieldInfo.OnSync(entity, new ReadOnlySpan<byte>(&value, sizeof(T)));
@@ -947,6 +947,8 @@ namespace LiteEntitySystem
                 {
                     if (!pel.IsSameAsLocal(localEntity))
                         continue;
+                    
+                    //Logger.Log($"Found predictable entity. LocalId was: {localEntity.Id}, server id: {entityId}");
 
                     for (int i = 0; i < classData.FieldsCount; i++)
                     {

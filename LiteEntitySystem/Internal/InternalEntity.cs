@@ -8,8 +8,9 @@ namespace LiteEntitySystem.Internal
     {
         New = 0,
         Constructed = 1,
-        Destroyed = 2,
-        Removed = 3
+        LateConstructed = 2,
+        Destroyed = 3,
+        Removed = 4
     }
     
     public abstract class InternalEntity : InternalBaseClass, IComparable<InternalEntity>
@@ -159,6 +160,15 @@ namespace LiteEntitySystem.Internal
             _entityState = EntityState.Constructed;
         }
 
+        internal void LateConstructInternal()
+        {
+            if (_entityState != EntityState.Constructed)
+                Logger.LogError($"Error! Calling late construct on not constructed entity: {this}");
+            
+            _entityState = EntityState.LateConstructed;
+            OnLateConstructed();
+        }
+
         internal void Remove()
         {
             if (_entityState != EntityState.Destroyed)
@@ -221,7 +231,7 @@ namespace LiteEntitySystem.Internal
         /// <summary>
         /// Called when entity constructed but at end of frame
         /// </summary>
-        protected internal virtual void OnLateConstructed()
+        protected virtual void OnLateConstructed()
         {
             
         }

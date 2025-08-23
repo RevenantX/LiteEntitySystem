@@ -8,6 +8,7 @@ namespace LiteEntitySystem
     { 
         internal void Add(InternalEntity entity);
         internal void Remove(InternalEntity entity);
+        internal void TriggerConstructedEvent(InternalEntity entity);
     }
 
     //SortedSet like collection based on AVLTree
@@ -29,7 +30,8 @@ namespace LiteEntitySystem
         {
             if (callOnExisting)
                 foreach (var entity in this)
-                    onConstructed(entity);
+                    if(entity.State == EntityState.LateConstructed)
+                        onConstructed(entity);
             OnConstructed += onConstructed;
         }
         
@@ -46,14 +48,9 @@ namespace LiteEntitySystem
             return base.Remove(entity);
         }
 
-        internal override void Add(T data)
-        {
-            base.Add(data);
-            OnConstructed?.Invoke(data);
-        }
-
         void IEntityFilter.Add(InternalEntity entity) => Add((T) entity);
         void IEntityFilter.Remove(InternalEntity entity) => Remove((T) entity);
+        void IEntityFilter.TriggerConstructedEvent(InternalEntity entity) => OnConstructed?.Invoke((T)entity);
 
         internal override void Clear()
         {

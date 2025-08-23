@@ -20,6 +20,7 @@ namespace LiteEntitySystem
 
         internal void InitEntity(ushort predictedId, EntitySharedReference initialParent)
         {
+            //Logger.Log($"InitEntity. PredId: {predictedId}. Id: {Id}, Class: {ClassData.ClassEnumName}. Mode: {EntityManager.Mode}. InitalParrent: {initialParent}");
             _predictedId = predictedId;
             _initialParent = initialParent;
         }

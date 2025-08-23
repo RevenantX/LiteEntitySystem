@@ -435,8 +435,12 @@ namespace LiteEntitySystem
             {
                 foreach (var entity in GetEntities<InternalEntity>())
                 {
-                    if(entity is T castedEnt)
+                    if (entity is T castedEnt)
+                    {
                         typedFilter.Add(castedEnt);
+                        if(entity.State == EntityState.LateConstructed)
+                            entityFilter.TriggerConstructedEvent(entity);
+                    }
                 }
             }
 
@@ -669,14 +673,30 @@ namespace LiteEntitySystem
 
         protected void ExecuteLateConstruct()
         {
-            foreach (var internalEntity in _entitiesToLateConstruct)
-                internalEntity.OnLateConstructed();
+            foreach (var e in _entitiesToLateConstruct)
+            {
+                e.LateConstructInternal();
+                
+                ref var classData = ref ClassDataDict[e.ClassId];
+                if (classData.IsSingleton)
+                {
+                    foreach (var baseTypeInfo in classData.BaseTypes)
+                        if(!baseTypeInfo.IsSingleton)
+                            _entityFilters[baseTypeInfo.Id]?.TriggerConstructedEvent(e);
+                }
+                else
+                {
+                    _entityFilters[classData.FilterId]?.TriggerConstructedEvent(e);
+                    foreach (var baseTypeInfo in classData.BaseTypes)
+                        _entityFilters[baseTypeInfo.Id]?.TriggerConstructedEvent(e);
+                }
+            }
             _entitiesToLateConstruct.Clear();
         }
 
         protected abstract void OnLogicTick();
         
-        internal abstract void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue, ref T oldValue)
+        internal abstract void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue, ref T oldValue, bool skipOnSync)
             where T : unmanaged;
 
         /// <summary>
