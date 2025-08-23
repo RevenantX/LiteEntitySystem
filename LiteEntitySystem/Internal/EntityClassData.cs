@@ -164,6 +164,19 @@ namespace LiteEntitySystem.Internal
                 entity.IOBuffer = null;
             }
         }
+        
+        public void CallOnSync(InternalBaseClass entity, ref EntityFieldInfo field, ReadOnlySpan<byte> buffer)
+        {
+            if (field.FieldType == FieldType.SyncableSyncVar)
+            {
+                var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, field.Offset);
+                field.OnSync(syncableField, buffer);
+            }
+            else
+            {
+                field.OnSync(entity, buffer);
+            }
+        }
 
         public EntityClassData(EntityManager entityManager, ushort filterId, Type entType, RegisteredTypeInfo typeInfo)
         {

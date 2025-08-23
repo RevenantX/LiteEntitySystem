@@ -169,14 +169,12 @@ namespace LiteEntitySystem
         private readonly struct SyncCallInfo
         {
             private readonly InternalEntity _entity;
-            private readonly MethodCallDelegate _onSync;
             private readonly int _prevDataPos;
-            private readonly int _dataSize;
+            private readonly int _fieldId;
 
-            public SyncCallInfo(MethodCallDelegate onSync, InternalEntity entity, int prevDataPos, int dataSize)
+            public SyncCallInfo(InternalEntity entity, int prevDataPos, int fieldId)
             {
-                _dataSize = dataSize;
-                _onSync = onSync;
+                _fieldId = fieldId;
                 _entity = entity;
                 _prevDataPos = prevDataPos;
             }
@@ -185,7 +183,9 @@ namespace LiteEntitySystem
             {
                 try
                 {
-                    _onSync(_entity, new ReadOnlySpan<byte>(state.Data, _prevDataPos, _dataSize));
+                    ref var classData = ref _entity.ClassData;
+                    ref var fieldInfo = ref classData.Fields[_fieldId];
+                    classData.CallOnSync(_entity, ref fieldInfo, new ReadOnlySpan<byte>(state.Data, _prevDataPos, fieldInfo.IntSize));
                 }
                 catch (Exception e)
                 {
@@ -506,18 +506,27 @@ namespace LiteEntitySystem
                     for (int i = 0; i < rollbackFields.Length; i++)
                     {
                         ref var field = ref classData.Fields[rollbackFields[i]];
-                        if (field.FieldType == FieldType.SyncableSyncVar)
+                        if (field.OnSync != null && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnRollbackReset) != 0)
                         {
-                            var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, field.Offset);
-                            field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, lastServerData + field.PredictedOffset);
+                            //this is currently only place which doesn't call classData.CallOnSync
+                            if (field.FieldType == FieldType.SyncableSyncVar)
+                            {
+                                var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, field.Offset);
+                                field.TypeProcessor.SetFromAndSync(syncableField, field.SyncableSyncVarOffset, lastServerData + field.PredictedOffset, field.OnSync);
+                            }
+                            else
+                            {
+                                field.TypeProcessor.SetFromAndSync(entity, field.SyncableSyncVarOffset, lastServerData + field.PredictedOffset, field.OnSync);
+                            }
                         }
-                        else if (field.OnSync != null && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnRollbackReset) != 0)
+                        else if (field.FieldType == FieldType.SyncVar)
                         {
-                            field.TypeProcessor.SetFromAndSync(entity, field.Offset, lastServerData + field.PredictedOffset, field.OnSync);
+                            field.TypeProcessor.SetFrom(entity, field.Offset, lastServerData + field.PredictedOffset);
                         }
                         else
                         {
-                            field.TypeProcessor.SetFrom(entity, field.Offset, lastServerData + field.PredictedOffset);
+                            var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, field.Offset);
+                            field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, lastServerData + field.PredictedOffset);
                         }
                     }
                 }
@@ -670,8 +679,8 @@ namespace LiteEntitySystem
             
             if (!skipOnSync && (fieldInfo.OnSyncFlags & BindOnChangeFlags.ExecuteOnPrediction) != 0)
             {
-                T value = oldValue;
-                fieldInfo.OnSync(entity, new ReadOnlySpan<byte>(&value, sizeof(T)));
+                T oldValueCopy = oldValue;
+                classData.CallOnSync(entity, ref fieldInfo, new ReadOnlySpan<byte>(&oldValueCopy, fieldInfo.IntSize));
             }
             
             var rollbackFields = classData.GetRollbackFields(entity.IsLocalControlled);
@@ -974,7 +983,7 @@ namespace LiteEntitySystem
                         field.TypeProcessor.SetInterpValue(entity, field.Offset, rawData + readerPosition);
 
                     if (field.ReadField(entity, rawData + readerPosition, predictedData))
-                        _syncCalls[_syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition, field.IntSize);
+                        _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i);
 
                     //Logger.Log($"E {entity.Id} Field updated: {field.Name} = {field.TypeProcessor.ToString(entity, field.Offset)}");
                     readerPosition += field.IntSize;
@@ -1026,8 +1035,7 @@ namespace LiteEntitySystem
                                 continue;
                             ref var field = ref classData.Fields[i];
                             if (field.ReadField(entity, rawData + readerPosition, predictedData))
-                                _syncCalls[_syncCallsCount++] = new SyncCallInfo(field.OnSync, entity, readerPosition,
-                                    field.IntSize);
+                                _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i);
 
                             //Logger.Log($"E {entity.Id} Field updated: {field.Name}");
                             readerPosition += field.IntSize;

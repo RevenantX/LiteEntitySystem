@@ -280,7 +280,7 @@ namespace LiteEntitySystem.Internal
                 {
                     syncField.RPCOffset = (ushort)rpcCache.Count;
                     syncFieldInfo.RPCOffset = syncField.RPCOffset;
-                    var syncablesRegistrator = new SyncableRPCRegistrator(syncFieldInfo.Offset, rpcCache);
+                    var syncablesRegistrator = new SyncableRPCRegistrator(syncFieldInfo.Offset, rpcCache, classData.Fields);
                     syncField.RegisterRPC(ref syncablesRegistrator);
                 }
             }

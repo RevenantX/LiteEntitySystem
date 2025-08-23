@@ -36,11 +36,12 @@ namespace LiteEntitySystem
     
     public delegate void SpanAction<T>(ReadOnlySpan<T> data);
     public delegate void SpanAction<in TCaller, T>(TCaller caller, ReadOnlySpan<T> data);
-    internal delegate void MethodCallDelegate(object classPtr, ReadOnlySpan<byte> buffer);
+    internal delegate void MethodCallDelegate(InternalBaseClass classPtr, ReadOnlySpan<byte> buffer);
     
     public readonly struct RemoteCall
     {
-        internal static MethodCallDelegate CreateMCD<TClass>(Action<TClass> methodToCall) => (classPtr, _) => methodToCall((TClass)classPtr);
+        internal static MethodCallDelegate CreateMCD<TClass>(Action<TClass> methodToCall) where TClass : InternalBaseClass =>
+            (classPtr, _) => methodToCall((TClass)classPtr);
         
         internal readonly Action<InternalEntity> CachedAction;
         internal readonly ushort Id;
@@ -58,7 +59,7 @@ namespace LiteEntitySystem
     
     public readonly struct RemoteCall<T> where T : unmanaged
     {
-        internal static unsafe MethodCallDelegate CreateMCD<TClass>(Action<TClass, T> methodToCall) =>
+        internal static unsafe MethodCallDelegate CreateMCD<TClass>(Action<TClass, T> methodToCall) where TClass : InternalBaseClass =>
             (classPtr, buffer) =>
             {
                 fixed (byte* data = buffer)
@@ -81,7 +82,7 @@ namespace LiteEntitySystem
     
     public readonly struct RemoteCallSpan<T> where T : unmanaged
     {
-        internal static MethodCallDelegate CreateMCD<TClass>(SpanAction<TClass, T> methodToCall) =>
+        internal static MethodCallDelegate CreateMCD<TClass>(SpanAction<TClass, T> methodToCall) where TClass : InternalBaseClass =>
             (classPtr, buffer) => methodToCall((TClass)classPtr, MemoryMarshal.Cast<byte, T>(buffer));
         
         internal readonly SpanAction<InternalEntity, T> CachedAction;
@@ -100,7 +101,7 @@ namespace LiteEntitySystem
     
     public readonly struct RemoteCallSerializable<T> where T : struct, ISpanSerializable
     {
-        internal static MethodCallDelegate CreateMCD<TClass>(Action<TClass, T> methodToCall) =>
+        internal static MethodCallDelegate CreateMCD<TClass>(Action<TClass, T> methodToCall) where TClass : InternalBaseClass =>
             (classPtr, buffer) =>
             {
                 var t = default(T);
@@ -274,12 +275,14 @@ namespace LiteEntitySystem
 
     public readonly ref struct SyncableRPCRegistrator
     {
+        private readonly EntityFieldInfo[] _fields;
         private readonly List<RpcFieldInfo> _calls;
         private readonly int _syncableOffset;
         private readonly ushort _initialCallsSize;
 
-        internal SyncableRPCRegistrator(int syncableOffset, List<RpcFieldInfo> remoteCallsList)
+        internal SyncableRPCRegistrator(int syncableOffset, List<RpcFieldInfo> remoteCallsList, EntityFieldInfo[] fields)
         {
+            _fields = fields;
             _calls = remoteCallsList;
             _initialCallsSize = (ushort)_calls.Count;
             _syncableOffset = syncableOffset;
@@ -335,6 +338,29 @@ namespace LiteEntitySystem
             if (!remoteCallHandle.Initialized)
                 remoteCallHandle = new RemoteCallSerializable<T>(null, (ushort)(_calls.Count - _initialCallsSize), 0);
             _calls.Add(new RpcFieldInfo(_syncableOffset, RemoteCallSerializable<T>.CreateMCD(methodToCall)));
+        }
+        
+        /// <summary>
+        /// Bind notification of SyncVar changes to action
+        /// </summary>
+        /// <param name="syncVar">Variable to bind</param>
+        /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
+        public void BindOnChange<TSyncField, T>(ref SyncVar<T> syncVar, Action<TSyncField, T> onChangedAction, BindOnChangeFlags flags = BindOnChangeFlags.ExecuteOnSync) where T : unmanaged where TSyncField : SyncableField
+        {
+            _fields[syncVar.FieldId].OnSync = RemoteCall<T>.CreateMCD(onChangedAction);
+            _fields[syncVar.FieldId].OnSyncFlags = flags;
+        }
+        
+        /// <summary>
+        /// Bind notification of SyncVar changes to action
+        /// </summary>
+        /// <param name="self">Target entity for binding</param>
+        /// <param name="syncVar">Variable to bind</param>
+        /// <param name="onChangedAction">Action that will be called when variable changes by sync</param>
+        public void BindOnChange<TSyncField, T>(TSyncField self, ref SyncVar<T> syncVar, Action<T> onChangedAction, BindOnChangeFlags flags = BindOnChangeFlags.ExecuteOnSync) where T : unmanaged where TSyncField : SyncableField
+        {
+            RPCRegistrator.CheckTarget(self, onChangedAction.Target);
+            BindOnChange(ref syncVar, onChangedAction.Method.CreateDelegateHelper<Action<TSyncField, T>>(), flags);
         }
     }
 }

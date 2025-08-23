@@ -1,4 +1,6 @@
-﻿namespace LiteEntitySystem.Internal
+﻿using System;
+
+namespace LiteEntitySystem.Internal
 {
     internal enum FieldType
     {
@@ -73,7 +75,15 @@
             if (FieldType == FieldType.SyncableSyncVar)
             {
                 var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, Offset);
-                TypeProcessor.SetFrom(syncableField, SyncableSyncVarOffset, rawData);
+                if (OnSync != null && (OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0)
+                {
+                    if (TypeProcessor.SetFromAndSync(syncableField, SyncableSyncVarOffset, rawData))
+                        return true; //create sync call
+                }
+                else
+                {
+                    TypeProcessor.SetFrom(syncableField, SyncableSyncVarOffset, rawData);
+                }
             }
             else
             {

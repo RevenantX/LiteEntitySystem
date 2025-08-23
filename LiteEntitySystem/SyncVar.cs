@@ -105,9 +105,9 @@ namespace LiteEntitySystem
             if (!Utils.FastEquals(ref _value, ref value))
             {
                 // ReSharper disable once SwapViaDeconstruction
-                var tmp = _value;
+                var oldValue = _value;
                 _value = value;
-                value = tmp;
+                value = oldValue;
                 return true;
             }
             return false;
