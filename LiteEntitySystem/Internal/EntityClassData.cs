@@ -244,7 +244,7 @@ namespace LiteEntitySystem.Internal
                         {
                             InterpolatedCount++;
                         }
-                        var fieldInfo = new EntityFieldInfo($"{baseType.Name}-{field.Name}", valueTypeProcessor, offset, syncVarFlags);
+                        var fieldInfo = new EntityFieldInfo($"{baseType.Name}-{field.Name}", valueTypeProcessor, offset, syncVarFlags?.Flags ?? SyncFlags.None);
                         if (syncFlags.HasFlagFast(SyncFlags.LagCompensated))
                         {
                             lagCompensatedFields.Add(fieldInfo);
@@ -294,8 +294,21 @@ namespace LiteEntitySystem.Internal
                                     Logger.LogError($"Unregistered field type: {syncableFieldType}");
                                     continue;
                                 }
+                                
+                                var mergedSyncFlags = (syncableField.GetCustomAttribute<SyncVarFlags>()?.Flags ?? SyncFlags.None) | (syncVarFlags?.Flags ?? SyncFlags.None);
+                                if (mergedSyncFlags.HasFlagFast(SyncFlags.OnlyForOwner) &&
+                                    mergedSyncFlags.HasFlagFast(SyncFlags.OnlyForOtherPlayers))
+                                {
+                                    Logger.LogWarning($"{SyncFlags.OnlyForOwner} and {SyncFlags.OnlyForOtherPlayers} flags can't be used together! Field: {syncableType} - {syncableField.Name}");
+                                }
+                                if (mergedSyncFlags.HasFlagFast(SyncFlags.AlwaysRollback) &&
+                                    mergedSyncFlags.HasFlagFast(SyncFlags.NeverRollBack))
+                                {
+                                    Logger.LogWarning($"{SyncFlags.AlwaysRollback} and {SyncFlags.NeverRollBack} flags can't be used together! Field: {syncableType} - {syncableField.Name}");
+                                }
+                                
                                 int syncvarOffset = Utils.GetFieldOffset(syncableField);
-                                var fieldInfo = new EntityFieldInfo($"{baseType.Name}-{field.Name}:{syncableField.Name}", valueTypeProcessor, offset, syncvarOffset, syncVarFlags);
+                                var fieldInfo = new EntityFieldInfo($"{baseType.Name}-{field.Name}:{syncableField.Name}", valueTypeProcessor, offset, syncvarOffset, mergedSyncFlags);
                                 fields.Add(fieldInfo);
                                 FixedFieldsSize += fieldInfo.IntSize;
                                 if (fieldInfo.IsPredicted)

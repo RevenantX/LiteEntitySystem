@@ -26,14 +26,14 @@ namespace LiteEntitySystem.Internal
         public int PredictedOffset;
 
         //for value type
-        public EntityFieldInfo(string name, ValueTypeProcessor valueTypeProcessor, int offset, SyncVarFlags flags) : 
+        public EntityFieldInfo(string name, ValueTypeProcessor valueTypeProcessor, int offset, SyncFlags flags) : 
             this(name, valueTypeProcessor, offset, -1, flags, FieldType.SyncVar)
         {
 
         }
 
         //For syncable syncvar
-        public EntityFieldInfo(string name, ValueTypeProcessor valueTypeProcessor, int offset, int syncableSyncVarOffset, SyncVarFlags flags) :
+        public EntityFieldInfo(string name, ValueTypeProcessor valueTypeProcessor, int offset, int syncableSyncVarOffset, SyncFlags flags) :
             this(name, valueTypeProcessor, offset, syncableSyncVarOffset, flags, FieldType.SyncableSyncVar)
         {
 
@@ -44,7 +44,7 @@ namespace LiteEntitySystem.Internal
             ValueTypeProcessor valueTypeProcessor,
             int offset,
             int syncableSyncVarOffset,
-            SyncVarFlags flags,
+            SyncFlags flags,
             FieldType fieldType)
         {
             OnSyncFlags = 0;
@@ -58,7 +58,7 @@ namespace LiteEntitySystem.Internal
             FixedOffset = 0;
             PredictedOffset = 0;
             OnSync = null;
-            Flags = flags?.Flags ?? SyncFlags.None;
+            Flags = flags;
             IsPredicted = Flags.HasFlagFast(SyncFlags.AlwaysRollback) ||
                           (!Flags.HasFlagFast(SyncFlags.OnlyForOtherPlayers) &&
                            !Flags.HasFlagFast(SyncFlags.NeverRollBack));
