@@ -516,7 +516,7 @@ namespace LiteEntitySystem
                             }
                             else
                             {
-                                field.TypeProcessor.SetFromAndSync(entity, field.SyncableSyncVarOffset, lastServerData + field.PredictedOffset, field.OnSync);
+                                field.TypeProcessor.SetFromAndSync(entity, field.Offset, lastServerData + field.PredictedOffset, field.OnSync);
                             }
                         }
                         else if (field.FieldType == FieldType.SyncVar)
