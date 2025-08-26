@@ -92,6 +92,7 @@ namespace LiteEntitySystem.Internal
         public int[] GetRollbackFields(bool isOwned) =>
             isOwned ? _ownedRollbackFields : _remoteRollbackFields;
         
+        //here Offset used because SyncableFields doesn't support LagCompensated fields
         public unsafe void WriteHistory(EntityLogic e, ushort tick)
         {
             int historyOffset = ((tick % _maxHistoryCount)+1)*LagCompensatedSize;
@@ -162,19 +163,6 @@ namespace LiteEntitySystem.Internal
                 _dataCache.Enqueue(entity.IOBuffer);
                 Array.Clear(entity.IOBuffer, 0, _dataCacheSize);
                 entity.IOBuffer = null;
-            }
-        }
-        
-        public void CallOnSync(InternalBaseClass entity, ref EntityFieldInfo field, ReadOnlySpan<byte> buffer)
-        {
-            if (field.FieldType == FieldType.SyncableSyncVar)
-            {
-                var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, field.Offset);
-                field.OnSync(syncableField, buffer);
-            }
-            else
-            {
-                field.OnSync(entity, buffer);
             }
         }
 

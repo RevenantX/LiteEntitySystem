@@ -147,6 +147,12 @@ namespace LiteEntitySystem.Internal
         {
             if (IsDestroyed)
                 return;
+            if (_entityState == EntityState.Constructed)
+            {
+                //id destroyed before late construct - execute late construct first
+                LateConstructInternal();
+            }
+            
             _entityState = EntityState.Destroyed;
             EntityManager.OnEntityDestroyed(this);
             OnDestroy();
@@ -155,7 +161,7 @@ namespace LiteEntitySystem.Internal
         internal void ConstructInternal()
         {
             if (_entityState != EntityState.New)
-                Logger.LogError($"Error! Calling construct on not new entity: {this}");
+                Logger.LogError($"Error! Calling construct on not new entity: {this}. State: {_entityState}");
             
             _entityState = EntityState.Constructed;
         }
@@ -163,7 +169,7 @@ namespace LiteEntitySystem.Internal
         internal void LateConstructInternal()
         {
             if (_entityState != EntityState.Constructed)
-                Logger.LogError($"Error! Calling late construct on not constructed entity: {this}");
+                Logger.LogError($"Error! Calling late construct on not constructed entity: {this}. State: {_entityState}");
             
             _entityState = EntityState.LateConstructed;
             OnLateConstructed();
@@ -172,7 +178,7 @@ namespace LiteEntitySystem.Internal
         internal void Remove()
         {
             if (_entityState != EntityState.Destroyed)
-                Logger.LogError($"Error! Calling remove on not destroyed entity: {this}");
+                Logger.LogError($"Error! Calling remove on not destroyed entity: {this}. State: {_entityState}");
             
             _entityState = EntityState.Removed;
         }
@@ -244,15 +250,8 @@ namespace LiteEntitySystem.Internal
             for (int i = 0; i < classData.FieldsCount; i++)
             {
                 ref var field = ref classData.Fields[i];
-                if (field.FieldType == FieldType.SyncVar)
-                {
-                    field.TypeProcessor.InitSyncVar(this, field.Offset, this, (ushort)i);
-                }
-                else
-                {
-                    var syncableField = RefMagic.GetFieldValue<SyncableField>(this, field.Offset);
-                    field.TypeProcessor.InitSyncVar(syncableField, field.SyncableSyncVarOffset, this, (ushort)i);
-                }
+                var target = field.GetTargetObjectAndOffset(this, out int offset);
+                field.TypeProcessor.InitSyncVar(target, offset, this, (ushort)i);
             }
           
             List<RpcFieldInfo> rpcCache = null;

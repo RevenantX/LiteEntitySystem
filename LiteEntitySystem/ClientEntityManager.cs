@@ -185,7 +185,7 @@ namespace LiteEntitySystem
                 {
                     ref var classData = ref _entity.ClassData;
                     ref var fieldInfo = ref classData.Fields[_fieldId];
-                    classData.CallOnSync(_entity, ref fieldInfo, new ReadOnlySpan<byte>(state.Data, _prevDataPos, fieldInfo.IntSize));
+                    fieldInfo.OnSync(fieldInfo.GetTargetObject(_entity), new ReadOnlySpan<byte>(state.Data, _prevDataPos, fieldInfo.IntSize));
                 }
                 catch (Exception e)
                 {
@@ -283,10 +283,12 @@ namespace LiteEntitySystem
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
                     ref var field = ref classData.Fields[i];
+                    var targetObject = field.GetTargetObjectAndOffset(entity, out int offset);
+                    
                     if(field.Flags.HasFlagFast(SyncFlags.Interpolated))
-                        field.TypeProcessor.SetInterpValueFromCurrentValue(entity, field.Offset);
+                        field.TypeProcessor.SetInterpValueFromCurrentValue(targetObject, offset);
                     if(field.IsPredicted)
-                        field.TypeProcessor.WriteTo(entity, field.Offset, predictedData + field.PredictedOffset);
+                        field.TypeProcessor.WriteTo(targetObject, offset, predictedData + field.PredictedOffset);
                 }
             }
             
@@ -506,27 +508,16 @@ namespace LiteEntitySystem
                     for (int i = 0; i < rollbackFields.Length; i++)
                     {
                         ref var field = ref classData.Fields[rollbackFields[i]];
+                        var target = field.GetTargetObjectAndOffset(entity, out int offset);
+                        
                         if (field.OnSync != null && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnRollbackReset) != 0)
                         {
                             //this is currently only place which doesn't call classData.CallOnSync
-                            if (field.FieldType == FieldType.SyncableSyncVar)
-                            {
-                                var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, field.Offset);
-                                field.TypeProcessor.SetFromAndSync(syncableField, field.SyncableSyncVarOffset, lastServerData + field.PredictedOffset, field.OnSync);
-                            }
-                            else
-                            {
-                                field.TypeProcessor.SetFromAndSync(entity, field.Offset, lastServerData + field.PredictedOffset, field.OnSync);
-                            }
-                        }
-                        else if (field.FieldType == FieldType.SyncVar)
-                        {
-                            field.TypeProcessor.SetFrom(entity, field.Offset, lastServerData + field.PredictedOffset);
+                            field.TypeProcessor.SetFromAndSync(target, offset, lastServerData + field.PredictedOffset, field.OnSync);
                         }
                         else
                         {
-                            var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, field.Offset);
-                            field.TypeProcessor.SetFrom(syncableField, field.SyncableSyncVarOffset, lastServerData + field.PredictedOffset);
+                            field.TypeProcessor.SetFrom(target, offset, lastServerData + field.PredictedOffset);
                         }
                     }
                 }
@@ -649,7 +640,8 @@ namespace LiteEntitySystem
                         for(int i = 0; i < classData.InterpolatedCount; i++)
                         {
                             ref var field = ref classData.Fields[i];
-                            field.TypeProcessor.SetInterpValueFromCurrentValue(entity, field.Offset);
+                            var target = field.GetTargetObjectAndOffset(entity, out int offset);
+                            field.TypeProcessor.SetInterpValueFromCurrentValue(target, offset);
                         }
                     }
                     
@@ -680,7 +672,7 @@ namespace LiteEntitySystem
             if (!skipOnSync && (fieldInfo.OnSyncFlags & BindOnChangeFlags.ExecuteOnPrediction) != 0)
             {
                 T oldValueCopy = oldValue;
-                classData.CallOnSync(entity, ref fieldInfo, new ReadOnlySpan<byte>(&oldValueCopy, fieldInfo.IntSize));
+                fieldInfo.OnSync(fieldInfo.GetTargetObject(entity), new ReadOnlySpan<byte>(&oldValueCopy, fieldInfo.IntSize));
             }
             
             var rollbackFields = classData.GetRollbackFields(entity.IsLocalControlled);
@@ -730,7 +722,8 @@ namespace LiteEntitySystem
                     for (int i = 0; i < classData.InterpolatedCount; i++)
                     {
                         ref var field = ref classData.Fields[i];
-                        field.TypeProcessor.SetInterpValueFromCurrentValue(entity, field.Offset);
+                        var target = field.GetTargetObjectAndOffset(entity, out int offset);
+                        field.TypeProcessor.SetInterpValueFromCurrentValue(target, offset);
                     }
                 }
                 
@@ -966,7 +959,8 @@ namespace LiteEntitySystem
                         if (field.OnSync == null || i == pel.InternalOwnerId.FieldId || i == pel.IsSyncEnabledFieldId)
                             continue;
                         
-                        field.TypeProcessor.CopyFrom(pel, localEntity, field.Offset);
+                        var target = field.GetTargetObjectAndOffset(entity, out int offset);
+                        field.TypeProcessor.CopyFrom(target, localEntity, offset);
                     }
                     
                     break;
@@ -978,12 +972,23 @@ namespace LiteEntitySystem
                 for (int i = 0; i < classData.FieldsCount; i++)
                 {
                     ref var field = ref classData.Fields[i];
+                    var target = field.GetTargetObjectAndOffset(entity, out int offset);
                     
                     if (writeInterpolationData && field.Flags.HasFlagFast(SyncFlags.Interpolated))
-                        field.TypeProcessor.SetInterpValue(entity, field.Offset, rawData + readerPosition);
+                        field.TypeProcessor.SetInterpValue(target, offset, rawData + readerPosition);
 
-                    if (field.ReadField(entity, rawData + readerPosition, predictedData))
-                        _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i);
+                    if (field.IsPredicted)
+                        RefMagic.CopyBlock(predictedData + field.PredictedOffset, rawData + readerPosition, field.Size);
+                    
+                    if (field.OnSync != null && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0)
+                    {
+                        if (field.TypeProcessor.SetFromAndSync(target, offset, rawData + readerPosition))
+                            _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i);
+                    }
+                    else
+                    {
+                        field.TypeProcessor.SetFrom(target, offset, rawData + readerPosition);
+                    }
 
                     //Logger.Log($"E {entity.Id} Field updated: {field.Name} = {field.TypeProcessor.ToString(entity, field.Offset)}");
                     readerPosition += field.IntSize;
@@ -1034,8 +1039,20 @@ namespace LiteEntitySystem
                             if (!Utils.IsBitSet(rawData + fieldsFlagsOffset, i))
                                 continue;
                             ref var field = ref classData.Fields[i];
-                            if (field.ReadField(entity, rawData + readerPosition, predictedData))
-                                _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i);
+                            var target = field.GetTargetObjectAndOffset(entity, out int offset);
+                            
+                            if (field.IsPredicted)
+                                RefMagic.CopyBlock(predictedData + field.PredictedOffset, rawData + readerPosition, field.Size);
+                    
+                            if (field.OnSync != null && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0)
+                            {
+                                if (field.TypeProcessor.SetFromAndSync(target, offset, rawData + readerPosition))
+                                    _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i);
+                            }
+                            else
+                            {
+                                field.TypeProcessor.SetFrom(target, offset, rawData + readerPosition);
+                            }
 
                             //Logger.Log($"E {entity.Id} Field updated: {field.Name}");
                             readerPosition += field.IntSize;

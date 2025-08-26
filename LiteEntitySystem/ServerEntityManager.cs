@@ -885,7 +885,7 @@ namespace LiteEntitySystem
             if (!skipOnSync && (fieldInfo.OnSyncFlags & BindOnChangeFlags.ExecuteOnServer) != 0)
             {
                 T value = oldValue;
-                entity.ClassData.CallOnSync(entity, ref fieldInfo, new ReadOnlySpan<byte>(&value, fieldInfo.IntSize));
+                fieldInfo.OnSync(fieldInfo.GetTargetObject(entity), new ReadOnlySpan<byte>(&value, fieldInfo.IntSize));
             }
         }
 

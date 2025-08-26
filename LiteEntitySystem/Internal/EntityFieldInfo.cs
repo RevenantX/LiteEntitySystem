@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace LiteEntitySystem.Internal
 {
@@ -12,7 +13,6 @@ namespace LiteEntitySystem.Internal
     {
         public readonly string Name; //used for debug
         public readonly ValueTypeProcessor TypeProcessor;
-        public readonly int Offset;
         public readonly int SyncableSyncVarOffset;
         public readonly uint Size;
         public readonly int IntSize;
@@ -24,6 +24,11 @@ namespace LiteEntitySystem.Internal
         public BindOnChangeFlags OnSyncFlags;
         public int FixedOffset;
         public int PredictedOffset;
+        
+        /// <summary>
+        /// Direct field offset which for Entities - is SyncVar<T>, and for SyncableField - SyncableField
+        /// </summary>
+        public readonly int Offset;
 
         //for value type
         public EntityFieldInfo(string name, ValueTypeProcessor valueTypeProcessor, int offset, SyncFlags flags) : 
@@ -64,41 +69,21 @@ namespace LiteEntitySystem.Internal
                            !Flags.HasFlagFast(SyncFlags.NeverRollBack));
         }
 
-
-        public unsafe bool ReadField(
-            InternalEntity entity, 
-            byte* rawData, 
-            byte* predictedData)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public InternalBaseClass GetTargetObjectAndOffset(InternalEntity entity, out int offset)
         {
-            if (IsPredicted)
-                RefMagic.CopyBlock(predictedData + PredictedOffset, rawData, Size);
             if (FieldType == FieldType.SyncableSyncVar)
             {
-                var syncableField = RefMagic.GetFieldValue<SyncableField>(entity, Offset);
-                if (OnSync != null && (OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0)
-                {
-                    if (TypeProcessor.SetFromAndSync(syncableField, SyncableSyncVarOffset, rawData))
-                        return true; //create sync call
-                }
-                else
-                {
-                    TypeProcessor.SetFrom(syncableField, SyncableSyncVarOffset, rawData);
-                }
+                offset = SyncableSyncVarOffset;
+                return RefMagic.GetFieldValue<SyncableField>(entity, Offset);
             }
-            else
-            {
-                if (OnSync != null && (OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0)
-                {
-                    if (TypeProcessor.SetFromAndSync(entity, Offset, rawData))
-                        return true; //create sync call
-                }
-                else
-                {
-                    TypeProcessor.SetFrom(entity, Offset, rawData);
-                }
-            }
-
-            return false;
+            offset = Offset;
+            return entity;
         }
+        
+        public InternalBaseClass GetTargetObject(InternalEntity entity) =>
+            FieldType == FieldType.SyncableSyncVar
+                ? RefMagic.GetFieldValue<SyncableField>(entity, Offset)
+                : entity;
     }
 }

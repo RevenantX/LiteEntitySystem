@@ -360,8 +360,12 @@ namespace LiteEntitySystem
         public void GetEntitySyncVarInfo(InternalEntity entity, IEntitySyncVarInfoPrinter resultPrinter)
         {
             ref var classData = ref ClassDataDict[entity.ClassId];
-            foreach (EntityFieldInfo fi in classData.Fields)
-                resultPrinter.PrintFieldInfo(fi.Name, fi.TypeProcessor.ToString(entity, fi.Offset));
+            for(int i = 0; i < classData.FieldsCount; i++)
+            {
+                ref var fi = ref classData.Fields[i]; 
+                var target = fi.GetTargetObjectAndOffset(entity, out int offset);
+                resultPrinter.PrintFieldInfo(fi.Name, fi.TypeProcessor.ToString(target, offset));
+            }
         }
 
         /// <summary>
@@ -675,6 +679,8 @@ namespace LiteEntitySystem
         {
             foreach (var e in _entitiesToLateConstruct)
             {
+                if (e.IsDestroyed)
+                    continue;
                 e.LateConstructInternal();
                 
                 ref var classData = ref ClassDataDict[e.ClassId];

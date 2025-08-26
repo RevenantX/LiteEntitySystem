@@ -182,7 +182,8 @@ namespace LiteEntitySystem.Internal
                     if (!Utils.IsBitSet(Data, entityFieldsOffset, i))
                         continue;
                     ref var field = ref classData.Fields[i];
-                    field.TypeProcessor.SetInterpValue(entity, field.Offset, rawData + stateReaderOffset);
+                    var target = field.GetTargetObjectAndOffset(entity, out int fieldOffset);
+                    field.TypeProcessor.SetInterpValue(target, fieldOffset, rawData + stateReaderOffset);
                     stateReaderOffset += field.IntSize;
                 }
             }
