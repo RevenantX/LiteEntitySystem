@@ -49,6 +49,10 @@ namespace LiteEntitySystem
 
         internal void Init(InternalEntity parentEntity, SyncFlags fieldFlags)
         {
+            //already initialized
+            if (_parentEntity != null)
+                return;
+            
             _parentEntity = parentEntity;
             if (fieldFlags.HasFlagFast(SyncFlags.OnlyForOwner))
                 _executeFlags = ExecuteFlags.SendToOwner;

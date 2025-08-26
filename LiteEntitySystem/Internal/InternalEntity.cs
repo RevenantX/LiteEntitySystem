@@ -251,6 +251,10 @@ namespace LiteEntitySystem.Internal
             {
                 ref var field = ref classData.Fields[i];
                 var target = field.GetTargetObjectAndOffset(this, out int offset);
+                
+                //init before SyncVar init because SyncVar can call OnChange
+                if (field.FieldType == FieldType.SyncableSyncVar)
+                    RefMagic.GetFieldValue<SyncableField>(this, field.Offset).Init(this, field.Flags);
                 field.TypeProcessor.InitSyncVar(target, offset, this, (ushort)i);
             }
           
