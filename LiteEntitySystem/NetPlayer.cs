@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using LiteEntitySystem.Collections;
 using LiteEntitySystem.Internal;
 using LiteEntitySystem.Transport;
@@ -43,7 +44,8 @@ namespace LiteEntitySystem
         internal NetPlayerState State;
         internal readonly SequenceBinaryHeap<InputInfo> AvailableInput;
         internal readonly Dictionary<EntityLogic, SyncGroupData> EntitySyncInfo;
-
+        internal DateTime ServerTickChangedTime;
+        
         internal NetPlayer(AbstractNetPeer peer, byte id)
         {
             Id = id;

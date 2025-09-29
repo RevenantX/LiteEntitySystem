@@ -442,7 +442,7 @@ namespace LiteEntitySystem
                     if (entity is T castedEnt)
                     {
                         typedFilter.Add(castedEnt);
-                        if(entity.State == EntityState.LateConstructed)
+                        if(entity.CreationState == EntityState.LateConstructed)
                             entityFilter.TriggerConstructedEvent(entity);
                     }
                 }

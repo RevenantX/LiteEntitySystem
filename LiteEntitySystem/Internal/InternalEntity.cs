@@ -123,7 +123,7 @@ namespace LiteEntitySystem.Internal
         /// <summary>
         /// Entity state. New, Constructed, Destroyed, Removed
         /// </summary>
-        public EntityState State => _entityState;
+        public EntityState CreationState => _entityState;
 
         /// <summary>
         /// Destroy entity

@@ -61,6 +61,11 @@ namespace LiteEntitySystem
         /// Network players count
         /// </summary>
         public int PlayersCount => _netPlayers.Count;
+
+        /// <summary>
+        /// Timeout after which player will receive baseline state if player cannot receive big partial state
+        /// </summary>
+        public float PlayerResyncTimeout = 4.0f;
         
         /// <summary>
         /// Rate at which server will make and send packets
@@ -356,7 +361,7 @@ namespace LiteEntitySystem
         /// <param name="inData">incoming data with header</param>
         public unsafe DeserializeResult Deserialize(NetPlayer player, ReadOnlySpan<byte> inData)
         {
-            if (inData[0] != HeaderByte)
+            if (inData.Length == 0 || inData[0] != HeaderByte)
                 return DeserializeResult.HeaderCheckFailed;
             inData = inData.Slice(1);
             
@@ -396,7 +401,7 @@ namespace LiteEntitySystem
             }
             
             ushort clientTick = BitConverter.ToUInt16(inData);
-            inData = inData.Slice(2);
+            inData = inData.Slice(sizeof(ushort));
             while (inData.Length >= InputPacketHeader.Size)
             {
                 var inputInfo = new InputInfo{ Tick = clientTick };
@@ -429,7 +434,10 @@ namespace LiteEntitySystem
                 }
                 inputInfo.Header.LerpMsec = Math.Clamp(inputInfo.Header.LerpMsec, 0f, 1f);
                 if (Utils.SequenceDiff(inputInfo.Header.StateB, player.CurrentServerTick) > 0)
+                {
                     player.CurrentServerTick = inputInfo.Header.StateB;
+                    player.ServerTickChangedTime = DateTime.UtcNow;
+                }
                 //Logger.Log($"ReadInput: {clientTick} stateA: {inputInfo.Header.StateA}");
                 clientTick++;
                 
@@ -533,6 +541,8 @@ namespace LiteEntitySystem
             _minimalTick = _tick;
             bool resizeCompressionBuffer = false;
             int playersCount = _netPlayers.Count;
+            
+            //apply pending incoming inputs
             for (int pidx = 0; pidx < playersCount; pidx++)
             {
                 var player = _netPlayers.GetByIndex(pidx);
@@ -565,6 +575,7 @@ namespace LiteEntitySystem
                 }
             }
 
+            //update entities
             if (SafeEntityUpdate)
             {
                 foreach (var aliveEntity in AliveEntities)
@@ -595,6 +606,8 @@ namespace LiteEntitySystem
             //==================================================================
             if (playersCount == 0 || _tick % (int) SendRate != 0)
                 return;
+
+            var currentTimeUtc = DateTime.UtcNow;
             
             //remove old rpcs
             while (_pendingRPCs.TryPeek(out var rpcNode) && Utils.SequenceDiff(rpcNode.Header.Tick, _minimalTick) < 0)
@@ -623,6 +636,8 @@ namespace LiteEntitySystem
                 _syncForPlayer = null;
                 int rpcSize = 0;
                 RPCHeader prevRpcHeader = new();
+                
+                //if player need baseline state - send it reliably
                 if (player.State == NetPlayerState.RequestBaseline)
                 {
                     int originalLength = 0;
@@ -654,7 +669,7 @@ namespace LiteEntitySystem
                     else //like baseline but only queued rpcs and diff data
                     {
                         foreach (var rpcNode in _pendingRPCs)
-                            if(ShouldSendRPC(rpcNode, player))
+                            if(ShouldSendRPC(rpcNode, player, true))
                                 rpcNode.WriteTo(packetBuffer, ref originalLength, ref prevRpcHeader);
                         rpcSize = originalLength;
                         
@@ -688,12 +703,22 @@ namespace LiteEntitySystem
                     player.StateBTick = _tick;
                     player.CurrentServerTick = _tick;
                     player.State = NetPlayerState.WaitingForFirstInput;
+                    player.ServerTickChangedTime = DateTime.UtcNow;
                     Logger.Log($"[SEM] SendWorld to player {player.Id}. orig: {originalLength} b, compressed: {encodedLength} b, ExecutedTick: {_tick}");
                     continue;
                 }
+                
                 if (player.State != NetPlayerState.Active)
                 {
                     //waiting to load initial state
+                    continue;
+                }
+                
+                //check if player cannot receive partial state due to high packet loss and large state size
+                if ((currentTimeUtc - player.ServerTickChangedTime).TotalSeconds > PlayerResyncTimeout)
+                {
+                    Logger.Log($"P:{player.Id} Request baseline {_tick} because timeout");
+                    player.State = NetPlayerState.RequestBaseline;
                     continue;
                 }
                 
@@ -708,7 +733,7 @@ namespace LiteEntitySystem
                 
                 foreach (var rpcNode in _pendingRPCs)
                 {
-                    if(!ShouldSendRPC(rpcNode, player))
+                    if(!ShouldSendRPC(rpcNode, player, false))
                         continue;
                     
                     //use another approach to sum size because writePosition can be edited by CheckOverflow
@@ -796,7 +821,7 @@ namespace LiteEntitySystem
                 {
                     if (header->Part == MaxParts-1)
                     {
-                        Logger.Log($"P:{player.Id} Request baseline {_tick}");
+                        Logger.Log($"P:{player.Id} Request baseline {_tick} because state size");
                         player.State = NetPlayerState.RequestBaseline;
                         break;
                     }
@@ -812,7 +837,7 @@ namespace LiteEntitySystem
                 }
             }
             
-            bool ShouldSendRPC(RemoteCallPacket rpcNode, NetPlayer player)
+            bool ShouldSendRPC(RemoteCallPacket rpcNode, NetPlayer player, bool isBaseline)
             {
                 //SyncForPlayer calls?
                 if (rpcNode.OnlyForPlayer != null && rpcNode.OnlyForPlayer != player)
@@ -853,12 +878,15 @@ namespace LiteEntitySystem
 
                 switch (rpcNode.Header.Id)
                 {
-                    case RemoteCallPacket.NewOwnedRPCId when entity.InternalOwnerId.Value != player.Id:
+                    case RemoteCallPacket.NewOwnedRPCId when entity.InternalOwnerId.Value != player.Id || isBaseline:
                         rpcNode.Header.Id = RemoteCallPacket.NewRPCId;
                         break;
-                    case RemoteCallPacket.NewRPCId when entity.InternalOwnerId.Value == player.Id:
+                    
+                    //do this change only for diff states for best local->remote entity swap
+                    case RemoteCallPacket.NewRPCId when entity.InternalOwnerId.Value == player.Id && !isBaseline:
                         rpcNode.Header.Id = RemoteCallPacket.NewOwnedRPCId;
                         break;
+                    
                     case RemoteCallPacket.ConstructRPCId:
                         stateSerializer.RefreshSyncGroupsVariable(player, new Span<byte>(rpcNode.Data));
                         break;

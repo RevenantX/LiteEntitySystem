@@ -30,7 +30,7 @@ namespace LiteEntitySystem
         {
             if (callOnExisting)
                 foreach (var entity in this)
-                    if(entity.State == EntityState.LateConstructed)
+                    if(entity.CreationState == EntityState.LateConstructed)
                         onConstructed(entity);
             OnConstructed += onConstructed;
         }
