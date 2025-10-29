@@ -656,7 +656,7 @@ namespace LiteEntitySystem
 
         internal void MarkEntityChanged(InternalEntity entity)
         {
-            if (entity.IsRemoved)
+            if (entity.IsRemoved || IsExecutingRPC)
                 return;
             _modifiedEntitiesToRollback.Add(entity);
         }
@@ -904,11 +904,11 @@ namespace LiteEntitySystem
             //remove old entity
             if (entity != null && entity.Version != entityDataHeader.Version)
             {
-                //this should be impossible now?
-                
+                //can happen when entities in remove list but new arrived
                 //this can be only on logics (not on singletons)
                 Logger.Log($"[CEM] Replace entity by new: {entityDataHeader.Version}. Class: {entityDataHeader.ClassId}. Id: {entityId}");
                 entity.DestroyInternal();
+                
                 RemoveEntity(entity);
                 entity = null;
             } 

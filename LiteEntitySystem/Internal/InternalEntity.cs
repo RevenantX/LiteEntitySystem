@@ -50,6 +50,11 @@ namespace LiteEntitySystem.Internal
         public bool IsClient => EntityManager.IsClient;
 
         /// <summary>
+        /// Entity ClassId name
+        /// </summary>
+        public string ClassIdName => ClassData.ClassEnumName;
+
+        /// <summary>
         /// Entity version (for id reuse)
         /// </summary>
         public readonly byte Version;
@@ -124,6 +129,12 @@ namespace LiteEntitySystem.Internal
         /// Entity state. New, Constructed, Destroyed, Removed
         /// </summary>
         public EntityState CreationState => _entityState;
+
+        /// <summary>
+        /// Used to detect situation when base.RegisterRPC isn't called
+        /// </summary>
+        [ThreadStatic]
+        private static bool IsBaseRegisterRPCCalled;
 
         /// <summary>
         /// Destroy entity
@@ -266,7 +277,12 @@ namespace LiteEntitySystem.Internal
                 RemoteCallPacket.InitReservedRPCs(rpcCache);
 
                 var rpcRegistrator = new RPCRegistrator(rpcCache, classData.Fields);
+                IsBaseRegisterRPCCalled = false;
                 RegisterRPC(ref rpcRegistrator);
+                if (!IsBaseRegisterRPCCalled)
+                {
+                    Logger.LogError($"Error! You need always call to base.RegisterRPC in your overrides. Failed class: {ClassIdName}");
+                }
                 //Logger.Log($"RegisterRPCs for class: {classData.ClassId}");
             }
             //setup id for later sync calls
@@ -298,7 +314,7 @@ namespace LiteEntitySystem.Internal
         /// <param name="r"></param>
         protected virtual void RegisterRPC(ref RPCRegistrator r)
         {
-
+            IsBaseRegisterRPCCalled = true;
         }
         
         protected void ExecuteRPC(in RemoteCall rpc)

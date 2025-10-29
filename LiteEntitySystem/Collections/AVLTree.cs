@@ -147,7 +147,7 @@ namespace LiteEntitySystem.Collections
             return c;
         }
 
-        internal virtual void Add(T data)
+        internal void Add(T data)
         {
             if (_nodesCount + 1 == int.MaxValue)
                 throw new Exception("collection overflow");

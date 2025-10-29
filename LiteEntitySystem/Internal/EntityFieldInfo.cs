@@ -81,6 +81,7 @@ namespace LiteEntitySystem.Internal
             return entity;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public InternalBaseClass GetTargetObject(InternalEntity entity) =>
             FieldType == FieldType.SyncableSyncVar
                 ? RefMagic.GetFieldValue<SyncableField>(entity, Offset)

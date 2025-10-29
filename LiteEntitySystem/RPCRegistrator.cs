@@ -14,7 +14,7 @@ namespace LiteEntitySystem
         ExecuteOnSync =         1 << 0,
         
         /// <summary>
-        /// Execute on local prediction on Client
+        /// Execute on local prediction on Client and on rollback
         /// </summary>
         ExecuteOnPrediction =   1 << 1,
         

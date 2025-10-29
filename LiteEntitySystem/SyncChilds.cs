@@ -37,17 +37,18 @@ namespace LiteEntitySystem
 
         protected internal override void OnRollback()
         {
-            if (_data == null || _serverData == null)
+            if (_data == null)
                 return;
             _data.Clear();
+            //Logger.Log($"ClearChilds: {ParentEntity.EntityManager.UpdateMode}");
+            if (_serverData == null)
+                return;
             foreach (var x in _serverData)
                 _data.Add(x);
         }
 
         protected internal override void BeforeReadRPC()
         {
-            if (_data == null)
-                return;
             _serverData ??= new HashSet<EntitySharedReference>(SharedReferenceComparer);
             _tempData = _data;
             _data = _serverData;
@@ -55,9 +56,16 @@ namespace LiteEntitySystem
 
         protected internal override void AfterReadRPC()
         {
-            if (_data == null || _tempData == null)
-                return;
             _data = _tempData;
+            _tempData = null;
+            if (_serverData == null)
+                return;
+            if (_data == null)
+            {
+                if (_serverData.Count == 0)
+                    return;
+                _data = new HashSet<EntitySharedReference>(SharedReferenceComparer);
+            }
             _data.Clear();
             foreach (var kv in _serverData)
                 _data.Add(kv);
@@ -110,6 +118,9 @@ namespace LiteEntitySystem
             _data ??= new HashSet<EntitySharedReference>(SharedReferenceComparer);
             _data.Add(x);
             ExecuteRPC(_addAction, x);
+            MarkAsChanged();
+            //if(IsClient)
+            //    Logger.Log($"AddChild: {x} {ParentEntity.EntityManager.UpdateMode} at tick: {ParentEntity.ClientManager.Tick}");
         }
         
         internal void Clear()
@@ -118,6 +129,7 @@ namespace LiteEntitySystem
                 return;
             _data.Clear();
             ExecuteRPC(_clearAction);
+            MarkAsChanged();
         }
 
         public bool Contains(EntitySharedReference x) => _data != null && _data.Contains(x);
@@ -129,6 +141,7 @@ namespace LiteEntitySystem
             if (_data == null || !_data.Remove(key)) 
                 return false;
             ExecuteRPC(_removeAction, key);
+            MarkAsChanged();
             return true;
         }
 

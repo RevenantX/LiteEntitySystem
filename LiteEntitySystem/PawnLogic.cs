@@ -27,7 +27,6 @@
 
         protected internal override void Update()
         {
-            base.Update();
             Controller?.BeforeControlledUpdate();
         }
 

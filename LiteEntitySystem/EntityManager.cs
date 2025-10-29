@@ -637,6 +637,10 @@ namespace LiteEntitySystem
         
         protected void RemoveEntity(InternalEntity e)
         {
+            //this can happen on entity replace.
+            if (e.IsRemoved)
+                return;
+            
             if(!e.IsDestroyed)
                 Logger.LogError($"Remove not destroyed entity!: {e}");
 

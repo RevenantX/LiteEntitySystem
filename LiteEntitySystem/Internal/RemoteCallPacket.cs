@@ -33,7 +33,7 @@ namespace LiteEntitySystem.Internal
         public static void InitReservedRPCs(List<RpcFieldInfo> rpcCache)
         {
             for(int i = 0; i < ReservedRPCsCount; i++)
-                rpcCache.Add(new RpcFieldInfo(-1, null));
+                rpcCache.Add(new RpcFieldInfo(null));
         }
 
         public bool AllowToSendForPlayer(byte forPlayerId, byte entityOwnerId)

@@ -400,6 +400,9 @@ namespace LiteEntitySystem
                 humanControllerLogic.DeltaDecodeInit();
             }
             
+            if (player.State == NetPlayerState.WaitingForFirstInput)
+                player.AvailableInput.Clear();
+            
             ushort clientTick = BitConverter.ToUInt16(inData);
             inData = inData.Slice(sizeof(ushort));
             while (inData.Length >= InputPacketHeader.Size)
