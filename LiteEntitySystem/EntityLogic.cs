@@ -198,7 +198,7 @@ namespace LiteEntitySystem
         /// Don't call this method inside Server->Client RPC! This will break many things.
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
-        /// <param name="initMethod">Method that will be called after entity constructed</param>
+        /// <param name="initMethod">Method that will be called before entity OnConstructed</param>
         /// <returns>Created predicted local entity</returns>
         public T AddPredictedEntity<T>(Action<T> initMethod = null) where T : PredictableEntityLogic
         {
@@ -257,7 +257,7 @@ namespace LiteEntitySystem
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="targetReference">SyncVar of class that will be set to predicted entity and synchronized once confirmation will be received</param>
-        /// <param name="initMethod">Method that will be called after entity constructed</param>
+        /// <param name="initMethod">Method that will be called before entity OnConstructed</param>
         /// <returns>Created predicted local entity</returns>
         public void AddPredictedEntity<T>(ref SyncVar<EntitySharedReference> targetReference, Action<T> initMethod = null) where T : PredictableEntityLogic
         {

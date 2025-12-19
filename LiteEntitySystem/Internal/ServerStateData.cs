@@ -259,10 +259,10 @@ namespace LiteEntitySystem.Internal
                         }
                     }
 
-                    if (header.Id == RemoteCallPacket.NewRPCId || 
-                        header.Id == RemoteCallPacket.NewOwnedRPCId)
+                    if (header.Id == (ushort)InternalRPCType.New || 
+                        header.Id == (ushort)InternalRPCType.NewOwned)
                     {
-                        _entityManager.ReadNewRPC(header.EntityId, rawData + remoteCallInfo.DataOffset);
+                        _entityManager.ReadNewRPC(header.EntityId, rawData + remoteCallInfo.DataOffset, remoteCallInfo.Header.ByteCount);
                         continue;
                     }
                     
@@ -279,15 +279,15 @@ namespace LiteEntitySystem.Internal
                     {
                         try
                         {
-                            switch (header.Id)
+                            switch ((InternalRPCType)header.Id)
                             {
-                                case RemoteCallPacket.ConstructRPCId:
+                                case InternalRPCType.Construct:
                                     //Logger.Log($"ConstructRPC for entity: {header.EntityId}, Size: {header.ByteCount}, RpcReadPos: {remoteCallInfo.DataOffset}, Tick: {header.Tick}");
                                     //Logger.Log($"CRPCData: {Utils.BytesToHexString(new ReadOnlySpan<byte>(rawData + remoteCallInfo.DataOffset, header.ByteCount))}");
                                     _entityManager.ReadConstructRPC(header.EntityId, rawData, remoteCallInfo.DataOffset);
                                     break;
                                 
-                                case RemoteCallPacket.DestroyRPCId:
+                                case InternalRPCType.Destroy:
                                     //Logger.Log($"DestroyRPC for {header.EntityId}");
                                     entity.DestroyInternal();
                                     break;
@@ -372,7 +372,7 @@ namespace LiteEntitySystem.Internal
                 {
                     executeOnNextState = true;
                 }
-                else if (header.Id == RemoteCallPacket.NewOwnedRPCId || 
+                else if (header.Id == (ushort)InternalRPCType.NewOwned || 
                          _entityManager.EntitiesDict[header.EntityId]?.InternalOwnerId.Value == _entityManager.InternalPlayerId)
                 {
                     LocalEntitiesBuffer.Add(header.EntityId);

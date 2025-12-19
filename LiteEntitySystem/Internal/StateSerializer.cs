@@ -4,7 +4,7 @@ namespace LiteEntitySystem.Internal
 {
     internal struct StateSerializer
     {
-        public static readonly int HeaderSize = Utils.SizeOfStruct<EntityDataHeader>();
+        public static readonly ushort HeaderSize = (ushort)Utils.SizeOfStruct<EntityDataHeader>();
         public const int DiffHeaderSize = 4;
         public const int MaxStateSize = 32767; //half of ushort
         
@@ -19,12 +19,18 @@ namespace LiteEntitySystem.Internal
         private ushort[] _fieldChangeTicks;
         private ushort _versionChangedTick;
         private uint _fullDataSize;
+        private DateTime _lastRefreshedTime;
+        private int _secondsBetweenRefresh;
         
         public byte NextVersion;
         public ushort LastChangedTick;
         
-        private DateTime _lastRefreshedTime;
-        private int _secondsBetweenRefresh;
+        /// <summary>
+        /// Get maximum delta size
+        /// </summary>
+        /// <returns>FullDataSize + ushort(size of data) + ushort(entityId) + _fieldFlagsSize</returns>
+        public int MaximumSize =>
+            _entity == null ? 0 : (int)_fullDataSize + sizeof(ushort) + sizeof(ushort) + _fieldsFlagsSize;
         
         public void AllocateMemory(ref EntityClassData classData, byte[] ioBuffer)
         {
@@ -78,7 +84,7 @@ namespace LiteEntitySystem.Internal
         public void MarkChanged(ushort minimalTick, ushort tick)
         {
             LastChangedTick = tick;
-            //refresh every X seconds to prevent wrap-arounded bugs
+            //refresh every X seconds to prevent wrap-around bugs
             DateTime currentTime = DateTime.UtcNow;
             if ((currentTime - _lastRefreshedTime).TotalSeconds > _secondsBetweenRefresh)
             {
@@ -90,16 +96,87 @@ namespace LiteEntitySystem.Internal
             }
         }
 
-        public int GetMaximumSize() =>
-            _entity == null ? 0 : (int)_fullDataSize + sizeof(ushort) + sizeof(ushort) + _fieldsFlagsSize;
-
-        public void MakeNewRPC()
+        public RemoteCallPacket MakeNewRPC()
         {
-            _entity.ServerManager.AddRemoteCall(
+            //add rpc
+            return _entity.ServerManager.AddRemoteCall(
                 _entity,
-                new ReadOnlySpan<byte>(_latestEntityData, 0, HeaderSize),
-                RemoteCallPacket.NewRPCId,
+                (ushort)InternalRPCType.New,
                 ExecuteFlags.SendToAll);
+        }
+
+        public unsafe void RefreshNewRPC(RemoteCallPacket packet)
+        {
+            //skip cases when no packet generated
+            if (packet == null)
+                return;
+            
+            Utils.ResizeOrCreate(ref packet.Data, MaximumSize);
+            
+            fixed (byte* lastEntityData = _latestEntityData, resultData = packet.Data)
+            {
+                //copy header
+                RefMagic.CopyBlock(resultData, lastEntityData, HeaderSize);
+                //make diff between default data
+                byte* entityDataAfterHeader = lastEntityData + HeaderSize;
+                
+                // -1 for cycle
+                int writePosition = HeaderSize + _fieldsFlagsSize;
+                byte* fields = resultData + HeaderSize - 1;
+                int readPosition = 0;
+
+                //write fields
+                for (int i = 0; i < _fieldsCount; i++)
+                {
+                    if (i % 8 == 0) //reset next byte each 8 bits
+                        *++fields = 0;
+
+                    ref var field = ref _fields[i];
+                    
+                    /*
+                    if (((field.Flags & SyncFlags.OnlyForOwner) != 0 && !isOwned) || 
+                        ((field.Flags & SyncFlags.OnlyForOtherPlayers) != 0 && isOwned))
+                    {
+                        //Logger.Log($"SkipSync: {field.Name}, isOwned: {isOwned}");
+                        continue;
+                    }
+                    
+                    
+                    if(!isOwned && SyncGroupUtils.IsSyncVarDisabled(enabledSyncGroups, field.Flags))
+                    {
+                        //IgnoreDiffSyncSettings
+                        continue;
+                    }
+                    */
+                    //compare with 0
+                    if (Utils.IsZero(lastEntityData + HeaderSize + readPosition, field.IntSize))
+                    {
+                        readPosition += field.IntSize;
+                        continue;
+                    }
+                    readPosition += field.IntSize;
+                    
+                    *fields |= (byte)(1 << i % 8);
+                    //Logger.Log($"WriteNewChanges. Entity: {_entity}, {field.Name}");
+                    
+                    RefMagic.CopyBlock(resultData + writePosition, entityDataAfterHeader + field.FixedOffset, field.Size);
+                    writePosition += field.IntSize;
+                }
+
+                if (writePosition > MaxStateSize)
+                {
+                    Logger.LogError($"Entity {_entity.Id}, Class: {_entity.ClassId} state size is more than: {MaxStateSize}");
+                    writePosition = HeaderSize;
+                }
+                
+                //update info after resize for correct buffer allocation
+                int prevTotalSize = packet.TotalSize;
+                packet.Header.ByteCount = (ushort)writePosition;
+                _entity.ServerManager.NotifyRPCResized(prevTotalSize, packet.TotalSize);
+
+                //if (writePosition > HeaderSize + _fieldsFlagsSize)
+                //    Logger.Log($"NewRPC bytes (server) eid:{_entity.Id} cls:{_entity.ClassId} len:{writePosition} data:{Utils.BytesToHexString(new ReadOnlySpan<byte>(resultData, writePosition))}");
+            }
         }
         
         //refresh construct rpc with latest values (old behaviour)
@@ -107,7 +184,7 @@ namespace LiteEntitySystem.Internal
         {
             fixed (byte* sourceData = _latestEntityData, rawData = packet.Data)
             {
-                RefMagic.CopyBlock(rawData, sourceData + HeaderSize, (uint)(_fullDataSize - HeaderSize));
+                RefMagic.CopyBlock(rawData, sourceData + HeaderSize, _fullDataSize - HeaderSize);
             }
         }
         
@@ -157,7 +234,7 @@ namespace LiteEntitySystem.Internal
             _entity.ServerManager.AddRemoteCall(
                 _entity,
                 (ReadOnlySpan<byte>)entityDataSpan,
-                RemoteCallPacket.ConstructRPCId,
+                (ushort)InternalRPCType.Construct,
                 ExecuteFlags.SendToAll);
             //Logger.Log($"Added constructed RPC: {_entity}");
         }
@@ -168,7 +245,7 @@ namespace LiteEntitySystem.Internal
             LastChangedTick = tick;
             _entity.ServerManager.AddRemoteCall(
                 _entity,
-                RemoteCallPacket.DestroyRPCId,
+                (ushort)InternalRPCType.Destroy,
                 ExecuteFlags.SendToAll);
         }
 
@@ -240,11 +317,8 @@ namespace LiteEntitySystem.Internal
                 //write fields
                 for (int i = 0; i < _fieldsCount; i++)
                 {
-                    if (i % 8 == 0)
-                    {
-                        fields++;
-                        *fields = 0;
-                    }
+                    if (i % 8 == 0) //reset next byte each 8 bits
+                        *++fields = 0;
                     
                     //not actual
                     if (Utils.SequenceDiff(_fieldChangeTicks[i], compareToTick) <= 0)

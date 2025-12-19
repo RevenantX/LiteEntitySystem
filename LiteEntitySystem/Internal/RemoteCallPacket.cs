@@ -10,6 +10,16 @@ namespace LiteEntitySystem.Internal
         public ushort Tick;
         public ushort ByteCount;
     }
+
+    internal enum InternalRPCType : ushort
+    {
+        New,
+        NewOwned,
+        Construct,
+        Destroy,
+        
+        Total
+    }
     
     internal sealed class RemoteCallPacket
     {
@@ -19,20 +29,13 @@ namespace LiteEntitySystem.Internal
         public ExecuteFlags ExecuteFlags;
 
         public int TotalSize => RpcDeltaCompressor.MaxDeltaSize + Header.ByteCount;
-        
-        public const int ReservedRPCsCount = 4;
-        
-        public const ushort NewRPCId = 0;
-        public const ushort NewOwnedRPCId = 1;
-        public const ushort ConstructRPCId = 2;
-        public const ushort DestroyRPCId = 3;
 
         //can be static because doesnt use any buffers
         private static DeltaCompressor RpcDeltaCompressor = new(Utils.SizeOfStruct<RPCHeader>());
         
         public static void InitReservedRPCs(List<RpcFieldInfo> rpcCache)
         {
-            for(int i = 0; i < ReservedRPCsCount; i++)
+            for(var i = InternalRPCType.New; i < InternalRPCType.Total; i++)
                 rpcCache.Add(new RpcFieldInfo(null));
         }
 

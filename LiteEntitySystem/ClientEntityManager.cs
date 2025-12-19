@@ -128,6 +128,7 @@ namespace LiteEntitySystem
         private readonly SequenceBinaryHeap<ServerStateData> _readyStates = new(MaxSavedStateDiff);
         private readonly Queue<PredictableEntityLogic> _tempLocalEntities = new ();
         private readonly byte[] _sendBuffer = new byte[NetConstants.MaxPacketSize];
+        private readonly byte[] _zeroFieldBuffer = new byte[StateSerializer.MaxStateSize];
         private readonly HashSet<InternalEntity> _changedEntities = new();
         private readonly CircularBuffer<InputInfo> _storedInputHeaders = new(InputBufferSize);
         private InternalEntity[] _entitiesToRemove = new InternalEntity[64];
@@ -889,7 +890,7 @@ namespace LiteEntitySystem
                 AliveEntities.Remove(entity);
         }
 
-        internal unsafe void ReadNewRPC(ushort entityId, byte* rawData)
+        internal unsafe void ReadNewRPC(ushort entityId, byte* rawData, int byteCount)
         {
             //Logger.Log("NewRPC");
             var entityDataHeader = *(EntityDataHeader*)rawData;
@@ -915,8 +916,12 @@ namespace LiteEntitySystem
             if (entity == null) //create new
             {
                 ref var classData = ref ClassDataDict[entityDataHeader.ClassId];
-                AddEntity<InternalEntity>(new EntityParams(entityId, entityDataHeader, this, classData.AllocateDataCache()));
+                entity = AddEntity<InternalEntity>(new EntityParams(entityId, entityDataHeader, this, classData.AllocateDataCache()));
             }
+            
+            ApplyEntityDelta(entity, rawData, StateSerializer.HeaderSize, true);
+            
+            //Logger.Log($"NewRPC bytes (client) eid:{entityId} cls:{entity.ClassId} data:{Utils.BytesToHexString(new ReadOnlySpan<byte>(rawData, byteCount))}");
         }
         
         private void ExecuteSyncCalls(ServerStateData stateData)
@@ -1025,41 +1030,74 @@ namespace LiteEntitySystem
                         readerPosition = endPos;
                         continue;
                     }
-
-                    ref var classData = ref entity.ClassData;
-                    readerPosition += classData.FieldsFlagsSize;
-                    _changedEntities.Add(entity);
-                    Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
-
-                    int fieldsFlagsOffset = readerPosition - classData.FieldsFlagsSize;
-                    fixed (byte* predictedData = classData.GetLastServerData(entity))
-                    {
-                        for (int i = 0; i < classData.FieldsCount; i++)
-                        {
-                            if (!Utils.IsBitSet(rawData + fieldsFlagsOffset, i))
-                                continue;
-                            ref var field = ref classData.Fields[i];
-                            var target = field.GetTargetObjectAndOffset(entity, out int offset);
-                            
-                            if (field.IsPredicted)
-                                RefMagic.CopyBlock(predictedData + field.PredictedOffset, rawData + readerPosition, field.Size);
                     
-                            if (field.OnSync != null && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0)
-                            {
-                                if (field.TypeProcessor.SetFromAndSync(target, offset, rawData + readerPosition))
-                                    _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i);
-                            }
-                            else
-                            {
-                                field.TypeProcessor.SetFrom(target, offset, rawData + readerPosition);
-                            }
+                    ApplyEntityDelta(entity, rawData, readerPosition, false);
+                    readerPosition = endPos;
+                }
+            }
+        }
 
-                            //Logger.Log($"E {entity.Id} Field updated: {field.Name}");
-                            readerPosition += field.IntSize;
+        private unsafe void ApplyEntityDelta(InternalEntity entity, byte* rawData, int fieldsFlagsOffset, bool insideNewRPC)
+        {
+            ref var classData = ref entity.ClassData;
+            _changedEntities.Add(entity);
+            if (!insideNewRPC)
+                Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + classData.FieldsCount);
+            int readerPosition = fieldsFlagsOffset + classData.FieldsFlagsSize;
+            
+            fixed (byte* predictedData = classData.GetLastServerData(entity), zeroFieldData = _zeroFieldBuffer)
+            {
+                for (int i = 0; i < classData.FieldsCount; i++)
+                {
+                    ref var field = ref classData.Fields[i];
+                    bool hasData = Utils.IsBitSet(rawData + fieldsFlagsOffset, i);
+                    
+                    byte* fieldData;
+                    int fieldSize = field.IntSize;
+
+                    //inside new rpc StateSerializer compares data with zeroes. So use same logic to decode
+                    if (insideNewRPC && !hasData)
+                    {
+                        if (fieldSize > StateSerializer.MaxStateSize)
+                        {
+                            Logger.LogError($"Field too large for zero buffer. Entity: {entity}. Field: {field.Name}. Size: {fieldSize}");
+                            continue;
+                        }
+                        fieldData = zeroFieldData;
+                    }
+                    else if (!hasData)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        fieldData = rawData + readerPosition;
+                    }
+                    
+                    var target = field.GetTargetObjectAndOffset(entity, out int offset);
+                    
+                    if (field.IsPredicted)
+                        RefMagic.CopyBlock(predictedData + field.PredictedOffset, fieldData, field.Size);
+                    
+                    if (field.OnSync != null && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0)
+                    {
+                        if (insideNewRPC)
+                        {
+                            //execute immediately using temp data buffer inside SetFromAndSync
+                            field.TypeProcessor.SetFromAndSync(target, offset, fieldData, field.OnSync);
+                        }
+                        else if (field.TypeProcessor.SetFromAndSync(target, offset, fieldData))
+                        {
+                            _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i);
                         }
                     }
+                    else
+                    {
+                        field.TypeProcessor.SetFrom(target, offset, fieldData);
+                    }
 
-                    readerPosition = endPos;
+                    if (hasData)
+                        readerPosition += field.IntSize;
                 }
             }
         }
