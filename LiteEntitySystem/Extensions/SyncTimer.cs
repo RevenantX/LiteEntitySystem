@@ -26,6 +26,9 @@
         {
             get
             {
+                if(_maxTime == 0f)
+                    return 1f;
+                    
                 float p = _time/_maxTime;
                 return p > 1f ? 1f : p;
             }

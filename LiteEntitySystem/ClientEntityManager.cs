@@ -730,6 +730,7 @@ namespace LiteEntitySystem
                 
                 entity.Update();
             }
+            ExecuteLocalSingletonsLateUpdate();
         }
 
         /// <summary>

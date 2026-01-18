@@ -719,6 +719,13 @@ namespace LiteEntitySystem
         internal abstract void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue, ref T oldValue, bool skipOnSync)
             where T : unmanaged;
 
+        protected void ExecuteLocalSingletonsLateUpdate()
+        {
+            foreach (var localSingleton in _localSingletons)
+                if(localSingleton.Value is ILocalSingletonWithUpdate updSingleton)
+                    updSingleton.LateUpdate(DeltaTimeF);
+        }
+
         /// <summary>
         /// Main update method, updates internal fixed timer and do all other stuff
         /// </summary>

@@ -597,6 +597,7 @@ namespace LiteEntitySystem
             }
             
             ExecuteLateConstruct();
+            ExecuteLocalSingletonsLateUpdate();
 
             //refresh construct rpc with latest updates to entity at creation tick
             foreach (var rpcNode in _pendingRPCs)

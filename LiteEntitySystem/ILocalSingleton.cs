@@ -9,5 +9,6 @@ namespace LiteEntitySystem
     {
         void Update(float dt);
         void VisualUpdate(float dt);
+        void LateUpdate(float dt);
     }
 }
