@@ -29,6 +29,11 @@ namespace LiteEntitySystem
         ExecuteOnRollbackReset = 1 << 3,
         
         /// <summary>
+        /// Execute after entity new() called and initial state read before OnConstructed
+        /// </summary>
+        ExecuteOnNew =         1 << 4,
+        
+        /// <summary>
         /// Combines ExecuteOnSync, ExecuteOnPrediction and ExecuteOnServer flags
         /// </summary>
         ExecuteAlways =         ExecuteOnSync | ExecuteOnPrediction | ExecuteOnServer | ExecuteOnRollbackReset
@@ -220,6 +225,7 @@ namespace LiteEntitySystem
         
         /// <summary>
         /// Creates cached rpc action
+        /// This method can be used for virtual methods
         /// </summary>
         /// <param name="methodToCall">RPC method to call</param>
         /// <param name="remoteCallHandle">output handle that should be used to call rpc</param>
@@ -233,6 +239,7 @@ namespace LiteEntitySystem
         
         /// <summary>
         /// Creates cached rpc action with valueType argument
+        /// This method can be used for virtual methods
         /// </summary>
         /// <param name="methodToCall">RPC method to call</param>
         /// <param name="remoteCallHandle">output handle that should be used to call rpc</param>
@@ -246,6 +253,7 @@ namespace LiteEntitySystem
 
         /// <summary>
         /// Creates cached rpc action with Span argument
+        /// This method can be used for virtual methods
         /// </summary>
         /// <param name="methodToCall">RPC method to call</param>
         /// <param name="remoteCallHandle">output handle that should be used to call rpc</param>
@@ -259,6 +267,7 @@ namespace LiteEntitySystem
         
         /// <summary>
         /// Creates cached rpc action with ISpanSerializable argument
+        /// This method can be used for virtual methods
         /// </summary>
         /// <param name="methodToCall">RPC method to call</param>
         /// <param name="remoteCallHandle">output handle that should be used to call rpc</param>

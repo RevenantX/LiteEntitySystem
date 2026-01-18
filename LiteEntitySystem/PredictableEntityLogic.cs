@@ -18,6 +18,12 @@ namespace LiteEntitySystem
         //used for spawn prediction
         internal readonly ushort CreatedAtTick;
 
+        /// <summary>
+        /// Is entity is recrated from server when created using AddPredictedEntity
+        /// Can be true only on client
+        /// </summary>
+        public bool IsRecreated { get; internal set; }
+
         internal void InitEntity(ushort predictedId, EntitySharedReference initialParent)
         {
             //Logger.Log($"InitEntity. PredId: {predictedId}. Id: {Id}, Class: {ClassData.ClassEnumName}. Mode: {EntityManager.Mode}. InitalParrent: {initialParent}");

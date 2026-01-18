@@ -954,6 +954,8 @@ namespace LiteEntitySystem
                 {
                     if (!pel.IsSameAsLocal(localEntity))
                         continue;
+
+                    pel.IsRecreated = true;
                     
                     //Logger.Log($"Found predictable entity. LocalId was: {localEntity.Id}, server id: {entityId}");
 
@@ -1079,17 +1081,19 @@ namespace LiteEntitySystem
                     if (field.IsPredicted)
                         RefMagic.CopyBlock(predictedData + field.PredictedOffset, fieldData, field.Size);
                     
-                    if (field.OnSync != null && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0)
+                
+                    if (field.OnSync != null && insideNewRPC)
                     {
-                        if (insideNewRPC)
+                        if ((field.OnSyncFlags & BindOnChangeFlags.ExecuteOnNew) != 0)
                         {
                             //execute immediately using temp data buffer inside SetFromAndSync
                             field.TypeProcessor.SetFromAndSync(target, offset, fieldData, field.OnSync);
                         }
-                        else if (field.TypeProcessor.SetFromAndSync(target, offset, fieldData))
-                        {
-                            _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i);
-                        }
+                        //else skip set? because will be triggered in OnConstructed
+                    }
+                    else if (field.OnSync != null && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0 && field.TypeProcessor.SetFromAndSync(target, offset, fieldData))
+                    {
+                        _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i);
                     }
                     else
                     {
