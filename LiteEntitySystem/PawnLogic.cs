@@ -14,6 +14,9 @@
             get => EntityManager.GetEntityById<ControllerLogic>(_controller);
             internal set
             {
+                if(IsDestroyed)
+                    return;
+
                 byte ownerId = EntityManager.ServerPlayerId;
                 if (value != null)
                 {

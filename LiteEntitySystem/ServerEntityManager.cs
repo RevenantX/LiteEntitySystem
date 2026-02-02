@@ -519,7 +519,8 @@ namespace LiteEntitySystem
         internal override void OnEntityDestroyed(InternalEntity e)
         {
             //sync all disabled data before destroy
-            if (e is EntityLogic el)
+            /*
+            if (_netPlayers.Count > 0 && e is EntityLogic el)
             {
                 for(int i = 0; i < _netPlayers.Count; i++)
                 {
@@ -527,9 +528,14 @@ namespace LiteEntitySystem
                         MarkFieldsChanged(e, SyncGroupUtils.ToSyncFlags(~syncGroupData.EnabledGroups));
                 }
             }
+            */
             
-            _stateSerializers[e.Id].MakeDestroyedRPC(_tick);
             base.OnEntityDestroyed(e);
+
+            if(_netPlayers.Count == 0)
+                RemoveEntity(e);
+            else
+                _stateSerializers[e.Id].MakeDestroyedRPC(_tick);
         }
 
         protected override unsafe void OnLogicTick()
