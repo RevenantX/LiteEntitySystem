@@ -34,7 +34,7 @@ Fix method name type in `AddSingleton`</PackageReleaseNotes>
 
     <ItemGroup>
       <PackageReference Include="K4os.Compression.LZ4" Version="1.3.8" />
-      <PackageReference Include="LiteNetLib" Version="1.3.1" />
+      <PackageReference Include="LiteNetLib" Version="2.0.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -44,8 +44,8 @@ Fix method name type in `AddSingleton`</PackageReleaseNotes>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\LiteEntitySystemAnalyzer\bin\$(Configuration)\netstandard2.0\LiteEntitySystemAnalyzer.dll" Pack="true" PackagePath="analyzers\dotnet\cs\"/>
-      <Content Include="ILPart\RefMagic.dll" Pack="true" PackagePath="lib\$(TargetFramework)"/>
-      <None Include="..\README.md" Pack="true" PackagePath="\"/>
+      <Content Include="..\LiteEntitySystemAnalyzer\bin\$(Configuration)\netstandard2.0\LiteEntitySystemAnalyzer.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
+      <Content Include="ILPart\RefMagic.dll" Pack="true" PackagePath="lib\$(TargetFramework)" />
+      <None Include="..\README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 </Project>
