@@ -45,7 +45,7 @@ Only SyncVar.Value can be changed (never do x = new SyncVar())
 
 ## Dependencies
 
-* LiteNetLib 1.x: https://github.com/RevenantX/LiteNetLib
+* LiteNetLib 2.x: https://github.com/RevenantX/LiteNetLib
 * LZ4: https://github.com/MiloszKrajewski/K4os.Compression.LZ4
 
 ## Support developer
