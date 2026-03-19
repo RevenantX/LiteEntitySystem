@@ -126,27 +126,13 @@ namespace LiteEntitySystem
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool FastEquals<T>(ref T a, ref T b) where T : unmanaged
         {
-            var aBytes = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref a, 1));
-            var bBytes = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref b, 1));
-            return aBytes.SequenceEqual(bBytes);
+            int sz = sizeof(T);
+            fixed (T* ta = &a, tb = &b)
+            {
+                return new ReadOnlySpan<byte>((byte*)ta, sz).SequenceEqual(new ReadOnlySpan<byte>((byte*)tb, sz));
+            }
         }
-    
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe bool FastEquals<T>(ref T a, byte* x2) where T : unmanaged
-        {
-            var aBytes = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref a, 1));
-            var bBytes = new ReadOnlySpan<byte>(x2, sizeof(T));
-            return aBytes.SequenceEqual(bBytes);
-        }
-    
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe bool FastEquals(byte* x1, byte* x2, int l)
-        {
-            var aBytes = new ReadOnlySpan<byte>(x1, l);
-            var bBytes = new ReadOnlySpan<byte>(x2, l);
-            return aBytes.SequenceEqual(bBytes);
-        }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool IsZero(byte *x1, int l)
         {
