@@ -63,6 +63,13 @@ namespace LiteNetLib.Utils
             writer.Put(v.x);
             writer.Put(v.y);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Put(this NetDataWriter writer, Vector2Int v)
+        {
+            writer.Put(v.x);
+            writer.Put(v.y);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Put(this NetDataWriter writer, Quaternion q)
@@ -113,6 +120,15 @@ namespace LiteNetLib.Utils
             Vector2 v = new Vector2();
             v.x = reader.GetFloat();
             v.y = reader.GetFloat();
+            return v;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector2Int GetVector2Int(this NetDataReader reader)
+        {
+            Vector2Int v = new Vector2Int();
+            v.x = reader.GetInt();
+            v.y = reader.GetInt();
             return v;
         }
 

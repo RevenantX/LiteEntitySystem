@@ -69,12 +69,7 @@ namespace LiteEntitySystem.Extensions
             {
                 if (_disposed) throw new ObjectDisposedException(nameof(Channel<TSender, TMessage>));
                 _handlers.Add(handler);
-                return new BusSubscription(() => Unsubscribe(handler));
-            }
-
-            private void Unsubscribe(Action<TSender, TMessage> handler)
-            {
-                _handlers.Remove(handler);
+                return new BusSubscription(() => _handlers.Remove(handler));
             }
 
             public void Publish(TSender sender, in TMessage msg, bool debugToLog = false)
@@ -188,5 +183,13 @@ namespace LiteEntitySystem.Extensions
         /// <returns>The local message bus instance, or null if not yet created.</returns>
         public static LocalMessageBus GetLocalMessageBus(this InternalEntity ent) =>
             ent.EntityManager.GetLocalSingleton<LocalMessageBus>();
+
+        /// <summary>
+        /// Gets the local message bus singleton from the entity manager.
+        /// </summary>
+        /// <param name="ent">The entity to get the message bus from.</param>
+        /// <returns>The local message bus instance, or null if not yet created.</returns>
+        public static LocalMessageBus GetLocalMessageBus(this EntityManager ent) =>
+            ent.GetLocalSingleton<LocalMessageBus>();
     }
 }

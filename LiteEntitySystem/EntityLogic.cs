@@ -331,8 +331,7 @@ namespace LiteEntitySystem
         internal static void SetOwner(EntityLogic entity, byte ownerId)
         {
             entity.InternalOwnerId.Value = ownerId;
-            entity.ServerManager.MarkFieldsChanged(entity, SyncFlags.OnlyForOwner);
-            entity.ServerManager.MarkFieldsChanged(entity, SyncFlags.OnlyForOtherPlayers);
+            entity.ServerManager.MarkFieldsChanged(entity, SyncFlags.OnlyForOwner | SyncFlags.OnlyForOtherPlayers);
             foreach (var child in entity.Childs)
                 SetOwner(entity.EntityManager.GetEntityById<EntityLogic>(child), ownerId);
         }

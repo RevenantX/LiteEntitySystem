@@ -76,7 +76,7 @@ namespace LiteEntitySystem.Internal
         public void MarkFieldsChanged(ushort minimalTick, ushort tick, SyncFlags onlyWithFlags)
         {
             for (int i = 0; i < _fieldsCount; i++)
-                if ((_fields[i].Flags & onlyWithFlags) == onlyWithFlags)
+                if ((_fields[i].Flags & onlyWithFlags) != 0)
                     _fieldChangeTicks[i] = tick;
             MarkChanged(minimalTick, tick);
         }
