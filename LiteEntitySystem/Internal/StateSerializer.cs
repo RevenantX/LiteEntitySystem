@@ -5,6 +5,9 @@ namespace LiteEntitySystem.Internal
     internal struct StateSerializer
     {
         public static readonly ushort HeaderSize = (ushort)Utils.SizeOfStruct<EntityDataHeader>();
+
+        private static byte[] ZeroArray = new byte[1024];
+
         public const int DiffHeaderSize = 4;
         public const int MaxStateSize = 32767; //half of ushort
         
@@ -149,7 +152,11 @@ namespace LiteEntitySystem.Internal
                     }
                     */
                     //compare with 0
-                    if (Utils.IsZero(lastEntityData + HeaderSize + readPosition, field.IntSize))
+                    if(field.IntSize > ZeroArray.Length)
+                        ZeroArray = new byte[field.IntSize];
+
+                    var zeroArraySpan = new ReadOnlySpan<byte>(ZeroArray, 0, field.IntSize);
+                    if (new ReadOnlySpan<byte>(lastEntityData + HeaderSize + readPosition, field.IntSize).SequenceEqual(zeroArraySpan))
                     {
                         readPosition += field.IntSize;
                         continue;

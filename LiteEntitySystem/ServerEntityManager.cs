@@ -108,6 +108,12 @@ namespace LiteEntitySystem
 
         public override void Reset()
         {
+            //remove destroyed in changed entities
+            foreach(var e in _changedEntities)
+            {
+                if(e.IsDestroyed)
+                    RemoveEntity(e);
+            }
             base.Reset();
             _nextOrderNum = 0;
             _changedEntities.Clear();

@@ -132,16 +132,6 @@ namespace LiteEntitySystem
                 return new ReadOnlySpan<byte>((byte*)ta, sz).SequenceEqual(new ReadOnlySpan<byte>((byte*)tb, sz));
             }
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe bool IsZero(byte *x1, int l)
-        {
-            for (int i=0; i < l/8; i++, x1+=8)
-                if (*(long*)x1 != 0) return false;
-            if ((l & 4)!=0) { if (*(int*)x1!=0) return false; x1+=4; }
-            if ((l & 2)!=0) { if (*(short*)x1!=0) return false; x1+=2; }
-            return (l & 1) == 0 || *x1 == 0;
-        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ResizeIfFull<T>(ref T[] arr, int count)
