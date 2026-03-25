@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using LiteEntitySystem.Internal;
+using ByteSpan = System.ReadOnlySpan<byte>;
 
 namespace LiteEntitySystem
 {
@@ -165,17 +166,23 @@ namespace LiteEntitySystem
 
         public override bool Equals(object o) => o is SyncVar<T> sv && FastEquals(ref sv._value, ref _value);
         
-        public static bool operator==(SyncVar<T> a, SyncVar<T> b) => FastEquals(ref a._value, ref b._value);
+        public static unsafe bool operator==(SyncVar<T> a, SyncVar<T> b) =>
+            new ByteSpan(&a._value, Size).SequenceEqual(new ByteSpan(&b._value, Size));
 
-        public static bool operator!=(SyncVar<T> a, SyncVar<T> b) => FastEquals(ref a._value, ref b._value) == false;
+        public static unsafe bool operator!=(SyncVar<T> a, SyncVar<T> b) =>
+            new ByteSpan(&a._value, Size).SequenceEqual(new ByteSpan(&b._value, Size)) == false;
         
-        public static bool operator==(T a, SyncVar<T> b) => FastEquals(ref a, ref b._value);
+        public static unsafe bool operator==(T a, SyncVar<T> b) =>
+            new ByteSpan(&a, Size).SequenceEqual(new ByteSpan(&b._value, Size));
         
-        public static bool operator!=(T a, SyncVar<T> b) => FastEquals(ref a, ref b._value) == false;
+        public static unsafe bool operator!=(T a, SyncVar<T> b) =>
+            new ByteSpan(&a, Size).SequenceEqual(new ByteSpan(&b._value, Size)) == false;
         
-        public static bool operator==(SyncVar<T> a, T b) => FastEquals(ref b, ref a._value);
+        public static unsafe bool operator==(SyncVar<T> a, T b) =>
+            new ByteSpan(&a._value, Size).SequenceEqual(new ByteSpan(&b, Size));
         
-        public static bool operator!=(SyncVar<T> a, T b) => FastEquals(ref b, ref a._value) == false;
+        public static unsafe bool operator!=(SyncVar<T> a, T b) =>
+            new ByteSpan(&a._value, Size).SequenceEqual(new ByteSpan(&b, Size)) == false;
 
         public bool Equals(T v) => FastEquals(ref _value, ref v);
         
@@ -186,7 +193,7 @@ namespace LiteEntitySystem
         {
             fixed (T* ta = &a, tb = &b)
             {
-                return new ReadOnlySpan<byte>((byte*)ta, Size).SequenceEqual(new ReadOnlySpan<byte>((byte*)tb, Size));
+                return new ByteSpan((byte*)ta, Size).SequenceEqual(new ByteSpan((byte*)tb, Size));
             }
         }
     }
