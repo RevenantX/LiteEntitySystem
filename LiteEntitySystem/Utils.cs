@@ -124,16 +124,6 @@ namespace LiteEntitySystem
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe bool FastEquals<T>(ref T a, ref T b) where T : unmanaged
-        {
-            int sz = sizeof(T);
-            fixed (T* ta = &a, tb = &b)
-            {
-                return new ReadOnlySpan<byte>((byte*)ta, sz).SequenceEqual(new ReadOnlySpan<byte>((byte*)tb, sz));
-            }
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ResizeIfFull<T>(ref T[] arr, int count)
         {
             if (count >= arr.Length)

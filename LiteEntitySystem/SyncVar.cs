@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using LiteEntitySystem.Internal;
 
@@ -81,6 +82,13 @@ namespace LiteEntitySystem
         internal ushort FieldId;
         internal InternalEntity Container;
 
+        public static readonly int Size;
+
+        unsafe static SyncVar()
+        {
+            Size = sizeof(T);
+        }
+
         /// <summary>
         /// Interpolated value on client (on server equals to Value)
         /// </summary>
@@ -102,7 +110,7 @@ namespace LiteEntitySystem
         
         bool ISyncVar<T>.SvSetFromAndSync(ref T value)
         {
-            if (!Utils.FastEquals(ref _value, ref value))
+            if (!FastEquals(ref _value, ref value))
             {
                 // ReSharper disable once SwapViaDeconstruction
                 var oldValue = _value;
@@ -123,7 +131,7 @@ namespace LiteEntitySystem
             {
                 var oldValue = _value;
                 _value = value;
-                if (Container != null && !Utils.FastEquals(ref value, ref oldValue))
+                if (Container != null && !FastEquals(ref value, ref oldValue))
                     Container.EntityManager.EntityFieldChanged(Container, FieldId, ref value, ref oldValue, false);
             }
         }
@@ -136,7 +144,7 @@ namespace LiteEntitySystem
         {
             var oldValue = _value;
             _value = value;
-            if (Container != null && !Utils.FastEquals(ref value, ref oldValue))
+            if (Container != null && !FastEquals(ref value, ref oldValue))
                 Container.EntityManager.EntityFieldChanged(Container, FieldId, ref value, ref oldValue, true);
         }
 
@@ -145,7 +153,7 @@ namespace LiteEntitySystem
             Container = container;
             FieldId = fieldId;
             T defaultValue = default;
-            if(!Utils.FastEquals(ref _value, ref defaultValue))
+            if(!FastEquals(ref _value, ref defaultValue))
                 Container.EntityManager.EntityFieldChanged(Container, FieldId, ref _value, ref defaultValue, false);
         }
         
@@ -155,22 +163,31 @@ namespace LiteEntitySystem
 
         public override int GetHashCode() => _value.GetHashCode();
 
-        public override bool Equals(object o) => o is SyncVar<T> sv && Utils.FastEquals(ref sv._value, ref _value);
+        public override bool Equals(object o) => o is SyncVar<T> sv && FastEquals(ref sv._value, ref _value);
         
-        public static bool operator==(SyncVar<T> a, SyncVar<T> b) => Utils.FastEquals(ref a._value, ref b._value);
+        public static bool operator==(SyncVar<T> a, SyncVar<T> b) => FastEquals(ref a._value, ref b._value);
 
-        public static bool operator!=(SyncVar<T> a, SyncVar<T> b) => Utils.FastEquals(ref a._value, ref b._value) == false;
+        public static bool operator!=(SyncVar<T> a, SyncVar<T> b) => FastEquals(ref a._value, ref b._value) == false;
         
-        public static bool operator==(T a, SyncVar<T> b) => Utils.FastEquals(ref a, ref b._value);
+        public static bool operator==(T a, SyncVar<T> b) => FastEquals(ref a, ref b._value);
         
-        public static bool operator!=(T a, SyncVar<T> b) => Utils.FastEquals(ref a, ref b._value) == false;
+        public static bool operator!=(T a, SyncVar<T> b) => FastEquals(ref a, ref b._value) == false;
         
-        public static bool operator==(SyncVar<T> a, T b) => Utils.FastEquals(ref b, ref a._value);
+        public static bool operator==(SyncVar<T> a, T b) => FastEquals(ref b, ref a._value);
         
-        public static bool operator!=(SyncVar<T> a, T b) => Utils.FastEquals(ref b, ref a._value) == false;
+        public static bool operator!=(SyncVar<T> a, T b) => FastEquals(ref b, ref a._value) == false;
 
-        public bool Equals(T v) => Utils.FastEquals(ref _value, ref v);
+        public bool Equals(T v) => FastEquals(ref _value, ref v);
         
-        public bool Equals(SyncVar<T> tv) => Utils.FastEquals(ref _value, ref tv._value);
+        public bool Equals(SyncVar<T> tv) => FastEquals(ref _value, ref tv._value);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static unsafe bool FastEquals(ref T a, ref T b)
+        {
+            fixed (T* ta = &a, tb = &b)
+            {
+                return new ReadOnlySpan<byte>((byte*)ta, Size).SequenceEqual(new ReadOnlySpan<byte>((byte*)tb, Size));
+            }
+        }
     }
 }
