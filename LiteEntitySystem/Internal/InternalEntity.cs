@@ -394,6 +394,6 @@ namespace LiteEntitySystem.Internal
         public override int GetHashCode() => UpdateOrderNum;
 
         public override string ToString() =>
-            $"Entity. Id: {Id}, ClassId: {ClassId}, Version: {Version}";
+            $"Entity. Id: {Id}, ClassId: {ClassData.ClassEnumName}, Version: {Version}";
     }
 }

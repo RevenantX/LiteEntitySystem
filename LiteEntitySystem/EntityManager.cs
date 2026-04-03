@@ -266,7 +266,7 @@ namespace LiteEntitySystem
         /// Register custom field type
         /// </summary>
         public static void RegisterFieldType<T>() where T : unmanaged =>
-            ValueTypeProcessor.Registered[typeof(T)] = new UserTypeProcessor<T>(null);
+            ValueTypeProcessor.Registered[typeof(T)] = new ValueTypeProcessor<T>();
         
         private static void RegisterBasicFieldType<T>(ValueTypeProcessor<T> proc) where T : unmanaged =>
             ValueTypeProcessor.Registered.Add(typeof(T), proc);
@@ -376,6 +376,9 @@ namespace LiteEntitySystem
             var entityFilter = GetEntities<InternalEntity>();
             var entitiesToDestroy = new InternalEntity[entityFilter.Count];
 
+            int entityCountBefore = EntitiesCount;
+            int entityCountInFilter = entityFilter.Count;
+
             int idx = 0;
             foreach (var entity in GetEntities<InternalEntity>())
                 entitiesToDestroy[idx++] = entity;
@@ -396,7 +399,7 @@ namespace LiteEntitySystem
             Array.Clear(_entityFilters, 0, _entityFilters.Length);
             
             if(EntitiesCount != 0)
-                Logger.LogWarning($"Entities not fully removed: {EntitiesCount}");
+                Logger.LogWarning($"Entities not fully removed: {EntitiesCount}. EntityCountBefore: {entityCountBefore}. Entities in filter before: {entityCountInFilter}");
             EntitiesCount = 0;
             
             _tick = 0;
