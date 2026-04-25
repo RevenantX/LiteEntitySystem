@@ -32,7 +32,7 @@ Only SyncVar.Value can be changed (never do x = new SyncVar())
 * Serialization of custom types (like strings,lists,arrays,jsons,etc)
 * Synchronized variables (with optional notifications on change)
 * Client-side prediction
-* Client-side spawn prediction (for projectiles)
+* Client-side spawn prediction (as example for projectiles prediction)
 * Remote procedure calls (RPC) with compile-time checks
 * Client input system
 * Basic hierarchy system (childs, parent)
