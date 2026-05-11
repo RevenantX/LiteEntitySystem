@@ -538,7 +538,7 @@ namespace LiteEntitySystem
             
             base.OnEntityDestroyed(e);
 
-            if(_netPlayers.Count == 0)
+            if(_netPlayers.Count == 0 || e is AiControllerLogic)
                 RemoveEntity(e);
             else
                 _stateSerializers[e.Id].MakeDestroyedRPC(_tick);
@@ -919,13 +919,8 @@ namespace LiteEntitySystem
         
         internal override unsafe void EntityFieldChanged<T>(InternalEntity entity, ushort fieldId, ref T newValue, ref T oldValue, bool skipOnSync)
         {
-            if (entity.IsRemoved)
-            {
-                //old freed entity
+            if(entity.IsRemoved || entity is AiControllerLogic)
                 return;
-            }
-            if(entity is AiControllerLogic)
-               return;
             
             _changedEntities.Add(entity);
             _stateSerializers[entity.Id].UpdateFieldValue(fieldId, _minimalTick, _tick, ref newValue);
@@ -939,7 +934,7 @@ namespace LiteEntitySystem
         }
 
         internal void MarkFieldsChanged(InternalEntity entity, SyncFlags onlyWithFlags)
-        {
+        {    
             _changedEntities.Add(entity);
             _stateSerializers[entity.Id].MarkFieldsChanged(_minimalTick, _tick, onlyWithFlags);
         }

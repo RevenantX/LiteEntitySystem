@@ -16,6 +16,11 @@ namespace LiteEntitySystem
         /// </summary>
         public abstract bool IsBot { get; }
 
+        /// <summary>
+        /// Controlled pawn
+        /// </summary>
+        /// <typeparam name="T">pawn type</typeparam>
+        /// <returns>controlled pawn</returns>
         public T GetControlledEntity<T>() where T : PawnLogic =>
             EntityManager.GetEntityById<T>(_controlledEntity);
 
@@ -25,6 +30,15 @@ namespace LiteEntitySystem
         protected internal virtual void BeforeControlledUpdate()
         {
             
+        }
+
+        protected override void RegisterRPC(ref RPCRegistrator r)
+        {
+            base.RegisterRPC(ref r);
+            r.BindOnChange<ControllerLogic, EntitySharedReference>(
+                ref _controlledEntity, 
+                static (e, prev) => e.OnControlledEntityChanged(e.EntityManager.GetEntityById<PawnLogic>(prev)), 
+                BindOnChangeFlags.ExecuteOnSync | BindOnChangeFlags.ExecuteOnNew | BindOnChangeFlags.ExecuteOnServer);
         }
 
         /// <summary>
@@ -46,8 +60,17 @@ namespace LiteEntitySystem
             if (IsClient)
                 return;
             StopControl();
-            _controlledEntity.Value = target;
             GetControlledEntity<PawnLogic>().Controller = this;
+            _controlledEntity.Value = target;
+        }
+
+        /// <summary>
+        /// Called when ControlledEntity changed
+        /// </summary>
+        /// <param name="prevPawn">previous controlled entity</param>
+        protected virtual void OnControlledEntityChanged(PawnLogic prevPawn)
+        {
+            
         }
 
         internal override void DestroyInternal()
