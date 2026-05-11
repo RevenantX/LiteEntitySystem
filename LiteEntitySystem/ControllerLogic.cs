@@ -60,7 +60,7 @@ namespace LiteEntitySystem
             if (IsClient)
                 return;
             StopControl();
-            GetControlledEntity<PawnLogic>().Controller = this;
+            EntityManager.GetEntityById<PawnLogic>(target).Controller = this;
             _controlledEntity.Value = target;
         }
 
