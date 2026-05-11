@@ -175,7 +175,7 @@ namespace LiteEntitySystem
                     tick = ClientManager.ServerTick;
                     return true;
                 }
-          
+
                 //else
                 tick = EntityManager.Tick;
                 return false;
@@ -221,34 +221,31 @@ namespace LiteEntitySystem
                 return null;
             }
             
-            T entity;
             if (EntityManager.InRollBackState)
             {
                 //local counter here should be reset
                 ushort potentialId = _localPredictedIdCounter.Value++;
 
                 var origEnt = ClientManager.FindEntityByPredictedId(ClientManager.Tick, Id, potentialId);
-                entity = origEnt as T;
-                if (entity == null)
+                if (origEnt is not T entity)
                 {
-                    Logger.LogWarning($"Requested RbTick{ClientManager.Tick}, ParentId: {Id}, potentialId: {potentialId}, requestedType: {typeof(T)}, foundType: {origEnt?.GetType()}");
-                    Logger.LogWarning($"Misspredicted entity add? RbTick: {ClientManager.Tick}, potentialId: {potentialId}");
+                    Logger.LogWarning($"Misspredicted entity add? Requested RbTick{ClientManager.Tick}, ParentId: {Id}, potentialId: {potentialId}, requestedType: {typeof(T)}, foundType: {origEnt?.GetType()}");
+                    return null;
                 }
                 else
                 {
                     //add to childs on rollback
                     Childs.Add(entity);
+                    return entity;
                 }
-                return entity;
             }
 
-            entity = ClientManager.AddLocalEntity<T>(this, e =>
+            return ClientManager.AddLocalEntity<T>(this, e =>
             {
                 e.InitEntity(_localPredictedIdCounter.Value++, this);
                 //Logger.Log($"AddPredictedEntity. Id: {e.Id}, ClassId: {e.ClassId} PredId: {e._predictedId.Value}, Tick: {e.ClientManager.Tick}");
                 initMethod?.Invoke(e);
             });
-            return entity;
         }
         
         /// <summary>
