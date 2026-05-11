@@ -232,12 +232,10 @@ namespace LiteEntitySystem
                     Logger.LogWarning($"Misspredicted entity add? Requested RbTick{ClientManager.Tick}, ParentId: {Id}, potentialId: {potentialId}, requestedType: {typeof(T)}, foundType: {origEnt?.GetType()}");
                     return null;
                 }
-                else
-                {
-                    //add to childs on rollback
-                    Childs.Add(entity);
-                    return entity;
-                }
+
+                //add to childs on rollback
+                Childs.Add(entity);
+                return entity;
             }
 
             return ClientManager.AddLocalEntity<T>(this, e =>
