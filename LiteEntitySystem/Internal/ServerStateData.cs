@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using K4os.Compression.LZ4;
 
 namespace LiteEntitySystem.Internal
@@ -262,7 +263,7 @@ namespace LiteEntitySystem.Internal
                     if (header.Id == (ushort)InternalRPCType.New || 
                         header.Id == (ushort)InternalRPCType.NewOwned)
                     {
-                        _entityManager.ReadNewRPC(header.EntityId, rawData + remoteCallInfo.DataOffset, remoteCallInfo.Header.ByteCount);
+                        _entityManager.ReadNewRPC(header.EntityId, rawData, remoteCallInfo.DataOffset, remoteCallInfo.Header.ByteCount);
                         continue;
                     }
                     

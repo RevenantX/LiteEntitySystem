@@ -15,14 +15,24 @@ namespace LiteEntitySystem
         Removed
     }
 
-    internal struct InputInfo
+    internal struct FirstInputHeader
     {
         public ushort Tick;
+        public ushort LatestServerTick;
+    }
+
+    internal struct InputInfo
+    {
+        public FirstInputHeader FirstInputHeader;
+        public ushort Tick => FirstInputHeader.Tick;
+        public ushort LatestServerTick => FirstInputHeader.LatestServerTick;
         public InputPacketHeader Header;
 
         public InputInfo(ushort tick, InputPacketHeader header)
         {
-            Tick = tick;
+            FirstInputHeader.Tick = tick;
+            //updated before send
+            FirstInputHeader.LatestServerTick = 0;
             Header = header;
         }
     }
@@ -34,7 +44,7 @@ namespace LiteEntitySystem
         
         internal ushort LastProcessedTick;
         internal ushort LastReceivedTick;
-        internal ushort CurrentServerTick;
+        internal ushort LatestServerTick;
         internal ushort StateATick;
         internal ushort StateBTick;
         internal float LerpTime;
@@ -45,6 +55,8 @@ namespace LiteEntitySystem
         internal readonly SequenceBinaryHeap<InputInfo> AvailableInput;
         internal readonly Dictionary<EntityLogic, SyncGroupData> EntitySyncInfo;
         internal DateTime ServerTickChangedTime;
+        internal readonly Queue<RemoteCallPacket> PendingRPCs;
+        internal int PendingRPCSize;
         
         internal NetPlayer(AbstractNetPeer peer, byte id)
         {
@@ -58,6 +70,7 @@ namespace LiteEntitySystem
             AvailableInput = new SequenceBinaryHeap<InputInfo>(serverMaxStoredInputs);
             EntitySyncInfo = new();
             State = NetPlayerState.RequestBaseline;
+            PendingRPCs = new();
         }
 
         internal void LoadInputInfo(InputPacketHeader inputData)
@@ -73,6 +86,42 @@ namespace LiteEntitySystem
             StateATick = inputData.Header.StateA;
             StateBTick = inputData.Header.StateB;
             LerpTime = inputData.Header.LerpMsec;
+        }
+
+        internal void EnqueueRpc(RemoteCallPacket remoteCallPacket)
+        {
+            PendingRPCSize += remoteCallPacket.TotalSize;
+            PendingRPCs.Enqueue(remoteCallPacket);
+            remoteCallPacket.RefCount++;
+        }
+
+        internal void NotifyRPCResized(int prevTotalSize, int newTotalSize)
+        {
+            PendingRPCSize -= prevTotalSize;
+            PendingRPCSize += newTotalSize;
+        }
+
+        internal void RemoveAllRpcs(Queue<RemoteCallPacket> rpcPool)
+        {
+            while (PendingRPCs.TryDequeue(out var rpcNode))
+            {
+                rpcNode.RefCount--;
+                if(rpcNode.RefCount == 0)
+                    rpcPool.Enqueue(rpcNode);
+            }
+            PendingRPCSize = 0;
+        }
+
+        internal void RemoveOldRpcs(Queue<RemoteCallPacket> rpcPool)
+        {
+            while (PendingRPCs.TryPeek(out var rpcNode) && Utils.SequenceDiff(rpcNode.Header.Tick, LatestServerTick) <= 0)
+            {
+                PendingRPCSize -= rpcNode.TotalSize;
+                PendingRPCs.Dequeue();
+                rpcNode.RefCount--;
+                if(rpcNode.RefCount == 0)
+                    rpcPool.Enqueue(rpcNode);
+            }
         }
     }
 }

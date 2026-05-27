@@ -17,7 +17,6 @@ namespace LiteEntitySystem.Internal
         NewOwned,
         Construct,
         Destroy,
-        
         Total
     }
     
@@ -25,8 +24,8 @@ namespace LiteEntitySystem.Internal
     {
         public RPCHeader Header;
         public byte[] Data;
-        public NetPlayer OnlyForPlayer;
         public ExecuteFlags ExecuteFlags;
+        public int RefCount;
 
         public int TotalSize => RpcDeltaCompressor.MaxDeltaSize + Header.ByteCount;
 
@@ -61,9 +60,8 @@ namespace LiteEntitySystem.Internal
             return headerEncodedSize + Header.ByteCount;
         }
         
-        public void Init(NetPlayer targetPlayer, InternalEntity entity, ushort tick, ushort byteCount, ushort rpcId, ExecuteFlags executeFlags)
+        public void Init(InternalEntity entity, ushort tick, ushort byteCount, ushort rpcId, ExecuteFlags executeFlags)
         {
-            OnlyForPlayer = targetPlayer;
             ExecuteFlags = executeFlags;
             Header.EntityId = entity.Id;
             Header.Tick = tick;

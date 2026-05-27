@@ -325,7 +325,7 @@ namespace LiteEntitySystem.Internal
             {
                 if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
                     rpc.CachedAction(this);
-                ServerManager.AddRemoteCall(this, rpc.Id, rpc.Flags);
+                ServerManager.AddRemoteCall(null, this, rpc.Id, rpc.Flags);
             }
             else if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction) && IsLocalControlled)
                 rpc.CachedAction(this);
@@ -341,7 +341,7 @@ namespace LiteEntitySystem.Internal
                     rpc.CachedAction(this, value);
                 unsafe
                 {
-                    ServerManager.AddRemoteCall(this, new ReadOnlySpan<T>(&value, 1), rpc.Id, rpc.Flags);
+                    ServerManager.AddRemoteCall(null, this, new ReadOnlySpan<T>(&value, 1), rpc.Id, rpc.Flags);
                 }
             }
             else if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction) && IsLocalControlled)
@@ -356,7 +356,7 @@ namespace LiteEntitySystem.Internal
             {
                 if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnServer))
                     rpc.CachedAction(this, value);
-                ServerManager.AddRemoteCall(this, value, rpc.Id, rpc.Flags);
+                ServerManager.AddRemoteCall(null, this, value, rpc.Id, rpc.Flags);
             }
             else if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction) && IsLocalControlled)
                 rpc.CachedAction(this, value);
@@ -372,7 +372,7 @@ namespace LiteEntitySystem.Internal
                     rpc.CachedAction(this, value);
                 var writer = new SpanWriter(stackalloc byte[value.MaxSize]);
                 value.Serialize(ref writer);
-                ServerManager.AddRemoteCall<byte>(this, writer.RawData.Slice(0, writer.Position), rpc.Id, rpc.Flags);
+                ServerManager.AddRemoteCall<byte>(null, this, writer.RawData.Slice(0, writer.Position), rpc.Id, rpc.Flags);
             }
             else if (rpc.Flags.HasFlagFast(ExecuteFlags.ExecuteOnPrediction) && IsLocalControlled)
                 rpc.CachedAction(this, value);

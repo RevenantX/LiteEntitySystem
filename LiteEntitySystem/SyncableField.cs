@@ -75,7 +75,7 @@ namespace LiteEntitySystem
         protected void ExecuteRPC(in RemoteCall rpc)
         {
             if(IsServer)
-                _parentEntity.ServerManager.AddRemoteCall(_parentEntity, (ushort)(rpc.Id + RPCOffset), _executeFlags);
+                _parentEntity.ServerManager.AddRemoteCall(null, _parentEntity, (ushort)(rpc.Id + RPCOffset), _executeFlags);
         }
 
         protected void ExecuteRPC<T>(in RemoteCall<T> rpc, T value) where T : unmanaged
@@ -83,14 +83,14 @@ namespace LiteEntitySystem
             unsafe
             {
                 if(IsServer)
-                    _parentEntity.ServerManager.AddRemoteCall(_parentEntity, new ReadOnlySpan<T>(&value, 1), (ushort)(rpc.Id + RPCOffset), _executeFlags);
+                    _parentEntity.ServerManager.AddRemoteCall(null, _parentEntity, new ReadOnlySpan<T>(&value, 1), (ushort)(rpc.Id + RPCOffset), _executeFlags);
             }
         }
 
         protected void ExecuteRPC<T>(in RemoteCallSpan<T> rpc, ReadOnlySpan<T> value) where T : unmanaged
         {
             if(IsServer)
-                _parentEntity.ServerManager.AddRemoteCall(_parentEntity, value, (ushort)(rpc.Id + RPCOffset), _executeFlags);
+                _parentEntity.ServerManager.AddRemoteCall(null, _parentEntity, value, (ushort)(rpc.Id + RPCOffset), _executeFlags);
         }
 
         protected void ExecuteRPC<T>(in RemoteCallSerializable<T> rpc, T value) where T : struct, ISpanSerializable
@@ -99,7 +99,7 @@ namespace LiteEntitySystem
             {
                 var writer = new SpanWriter(stackalloc byte[value.MaxSize]);
                 value.Serialize(ref writer);
-                _parentEntity.ServerManager.AddRemoteCall<byte>(_parentEntity, writer.RawData.Slice(0, writer.Position), (ushort)(rpc.Id + RPCOffset), _executeFlags);
+                _parentEntity.ServerManager.AddRemoteCall<byte>(null, _parentEntity, writer.RawData.Slice(0, writer.Position), (ushort)(rpc.Id + RPCOffset), _executeFlags);
             }
         }
     }
