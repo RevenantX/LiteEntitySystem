@@ -122,6 +122,7 @@ namespace LiteEntitySystem
             _maxDataSize = 0;
             _netPlayers.Clear();
             _firstBaselineRequestedPlayers.Clear();
+            _constructRpcsToRefresh.Clear();
         }
 
         /// <summary>
