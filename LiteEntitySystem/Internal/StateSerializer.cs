@@ -130,6 +130,8 @@ namespace LiteEntitySystem.Internal
         public unsafe void RefreshNewRPC(NetPlayer forPlayer, RemoteCallPacket packet)
         {
             Utils.ResizeOrCreate(ref packet.Data, MaximumSize);
+
+            RefreshSyncGroupsVariable(forPlayer);
             
             fixed (byte* lastEntityData = _latestEntityData, resultData = packet.Data)
             {
@@ -179,11 +181,8 @@ namespace LiteEntitySystem.Internal
         }
         
         //refresh construct rpc with latest values (old behaviour)
-        public unsafe void RefreshConstructedRPC(NetPlayer forPlayer, RemoteCallPacket packet)
+        public unsafe void RefreshConstructedRPC(NetPlayer forPlayer, RemoteCallPacket packet, bool skipDelta)
         {
-            bool isOwned = _entity.InternalOwnerId.Value == forPlayer.Id;
-            Utils.ResizeOrCreate(ref packet.Data, MaximumSize);
-
             //make on sync
             try
             {
@@ -197,7 +196,11 @@ namespace LiteEntitySystem.Internal
                 Logger.LogError($"Exception in OnSyncRequested: {e}");
             }
 
-            //it can be null on entity creation
+            if(skipDelta)
+                return;
+
+            bool isOwned = _entity.InternalOwnerId.Value == forPlayer.Id;
+            Utils.ResizeOrCreate(ref packet.Data, MaximumSize);
             var enabledSyncGroups = RefreshSyncGroupsVariable(forPlayer);
             
             fixed (byte* lastEntityData = _latestEntityData, resultData = packet.Data)

@@ -263,7 +263,12 @@ namespace LiteEntitySystem.Internal
                     if (header.Id == (ushort)InternalRPCType.New || 
                         header.Id == (ushort)InternalRPCType.NewOwned)
                     {
-                        _entityManager.ReadNewRPC(header.EntityId, rawData, remoteCallInfo.DataOffset, remoteCallInfo.Header.ByteCount);
+                        _entityManager.ReadNewRPC(
+                            header.EntityId, 
+                            rawData, 
+                            remoteCallInfo.DataOffset, 
+                            remoteCallInfo.Header.ByteCount,
+                            executeMode == RPCExecuteMode.FirstSync);
                         continue;
                     }
                     
@@ -285,7 +290,7 @@ namespace LiteEntitySystem.Internal
                                 case InternalRPCType.Construct:
                                     //Logger.Log($"ConstructRPC for entity: {header.EntityId}, Size: {header.ByteCount}, RpcReadPos: {remoteCallInfo.DataOffset}, Tick: {header.Tick}");
                                     //Logger.Log($"CRPCData: {Utils.BytesToHexString(new ReadOnlySpan<byte>(rawData + remoteCallInfo.DataOffset, header.ByteCount))}");
-                                    _entityManager.ReadConstructRPC(header.EntityId, rawData, remoteCallInfo.DataOffset);
+                                    _entityManager.ReadConstructRPC(header.EntityId, rawData, remoteCallInfo.DataOffset, header.ByteCount);
                                     break;
                                 
                                 case InternalRPCType.Destroy:

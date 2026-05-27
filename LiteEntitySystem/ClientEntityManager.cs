@@ -172,21 +172,25 @@ namespace LiteEntitySystem
             private readonly InternalEntity _entity;
             private readonly int _prevDataPos;
             private readonly int _fieldId;
+            public readonly bool PrevDataIsZero;
 
-            public SyncCallInfo(InternalEntity entity, int prevDataPos, int fieldId)
+            public SyncCallInfo(InternalEntity entity, int prevDataPos, int fieldId, bool prevDataIsZero)
             {
                 _fieldId = fieldId;
                 _entity = entity;
-                _prevDataPos = prevDataPos;
+                PrevDataIsZero = prevDataIsZero;
+                _prevDataPos = prevDataIsZero ? 0 : prevDataPos;
             }
 
-            public void Execute(ServerStateData state)
+            public void Execute(byte[] prevDataStorage)
             {
                 try
                 {
                     ref var classData = ref _entity.ClassData;
                     ref var fieldInfo = ref classData.Fields[_fieldId];
-                    fieldInfo.OnSync(fieldInfo.GetTargetObject(_entity), new ReadOnlySpan<byte>(state.Data, _prevDataPos, fieldInfo.IntSize));
+                    fieldInfo.OnSync(
+                        fieldInfo.GetTargetObject(_entity), 
+                        new ReadOnlySpan<byte>(prevDataStorage, _prevDataPos, fieldInfo.IntSize));
                 }
                 catch (Exception e)
                 {
@@ -900,7 +904,7 @@ namespace LiteEntitySystem
                 AliveEntities.Remove(entity);
         }
 
-        internal unsafe void ReadNewRPC(ushort entityId, byte* rawData, int readerPosition, int byteCount)
+        internal unsafe void ReadNewRPC(ushort entityId, byte* rawData, int readerPosition, int byteCount, bool firstSync)
         {
             //Logger.Log("NewRPC");
             var entityDataHeader = *(EntityDataHeader*)(rawData+readerPosition);
@@ -931,18 +935,18 @@ namespace LiteEntitySystem
                 entity = AddEntity<InternalEntity>(new EntityParams(entityId, entityDataHeader, this, classData.AllocateDataCache()));
             }
             
-            ApplyEntityDelta(entity, rawData, readerPosition + StateSerializer.HeaderSize, true, true);
+            ApplyEntityDelta(entity, rawData, readerPosition + StateSerializer.HeaderSize, true, true, firstSync);
         }
         
         private void ExecuteSyncCalls(ServerStateData stateData)
         {
             ExecuteLateConstruct();
             for (int i = 0; i < _syncCallsCount; i++)
-                _syncCalls[i].Execute(stateData);
+                _syncCalls[i].Execute(_syncCalls[i].PrevDataIsZero ? _zeroFieldBuffer : stateData.Data);
             _syncCallsCount = 0;
         }
         
-        internal unsafe void ReadConstructRPC(ushort entityId, byte* rawData, int readerPosition)
+        internal unsafe void ReadConstructRPC(ushort entityId, byte* rawData, int readerPosition, int bytesCount)
         {
             //Logger.Log("ConstructRPC");
             if (!IsEntityIdValid(entityId))
@@ -983,7 +987,8 @@ namespace LiteEntitySystem
                 }
             }
 
-            ApplyEntityDelta(entity, rawData, readerPosition, false, writeInterpolationData);
+            if(bytesCount > 0)
+                ApplyEntityDelta(entity, rawData, readerPosition, false, writeInterpolationData, false);
 
             //add owned entities to rollback queue
             if(!entity.IsConstructed && entity.InternalOwnerId.Value == InternalPlayerId)
@@ -1017,7 +1022,7 @@ namespace LiteEntitySystem
                     }
                     
                     Utils.ResizeOrCreate(ref _syncCalls, _syncCallsCount + entity.ClassData.FieldsCount);
-                    ApplyEntityDelta(entity, rawData, readerPosition, false, false);
+                    ApplyEntityDelta(entity, rawData, readerPosition, false, false, false);
                     readerPosition = endPos;
                 }
             }
@@ -1028,7 +1033,8 @@ namespace LiteEntitySystem
             byte* rawData, 
             int fieldsFlagsOffset, 
             bool insideNewRPC,
-            bool writeInterpolationData)
+            bool writeInterpolationData,
+            bool firstSync)
         {
             ref var classData = ref entity.ClassData;
             _changedEntities.Add(entity);
@@ -1078,11 +1084,17 @@ namespace LiteEntitySystem
                             //execute immediately using temp data buffer inside SetFromAndSync
                             field.TypeProcessor.SetFromAndSync(target, offset, fieldData, field.OnSync);
                         }
+                        // call sync calls on first sync in new because constructed will be empty (to reduce datasize)
+                        if (firstSync && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0)
+                        {
+                            if (field.TypeProcessor.SetFromAndSync(target, offset, fieldData))
+                                _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i, !hasData);
+                        }   
                         //else skip set? because will be triggered in OnConstructed
                     }
                     else if (field.OnSync != null && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0 && field.TypeProcessor.SetFromAndSync(target, offset, fieldData))
                     {
-                        _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i);
+                        _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i, !hasData);
                     }
                     else
                     {
