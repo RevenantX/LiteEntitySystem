@@ -116,6 +116,12 @@ namespace LiteEntitySystem
         
         protected void SendRequest<T>(T request, Action<bool> onResult) where T : class, new()
         {
+            if(onResult == null)
+            {
+                SendRequest(request);
+                return;
+            }
+
             if (EntityManager.InRollBackState)
             {
                 Logger.LogWarning("SendRequest is ignored in Rollback mode");
@@ -146,6 +152,12 @@ namespace LiteEntitySystem
         
         protected void SendRequestStruct<T>(T request, Action<bool> onResult) where T : struct, INetSerializable
         {
+            if(onResult == null)
+            {
+                SendRequestStruct(request);
+                return;
+            }
+
             if (EntityManager.InRollBackState)
             {
                 Logger.LogWarning("SendRequest is ignored in Rollback mode");
