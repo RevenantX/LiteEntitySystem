@@ -854,13 +854,6 @@ namespace LiteEntitySystem
             
             bool ShouldSendRPC(RemoteCallPacket rpcNode, NetPlayer player, bool isBaseline)
             {  
-                //old rpc
-                if (Utils.SequenceDiff(rpcNode.Header.Tick, player.LatestServerTick) <= 0)
-                {
-                    //Logger.Log($"SkipSend oldTick: {rpcNode.Header.Tick}, {rpcNode.Header.Id}, EID: {rpcNode.Header.EntityId}");
-                    return false;
-                }
-
                 ref var stateSerializer = ref _stateSerializers[rpcNode.Header.EntityId];
                 
                 //mostly controllers

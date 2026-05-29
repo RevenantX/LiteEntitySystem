@@ -292,9 +292,7 @@ namespace LiteEntitySystem.Internal
         {
             if (_entity == null || (!includeDestroyed && _entity.IsDestroyed))
                 return false;
-            if (_flags.HasFlagFast(EntityFlags.OnlyForOwner) && _entity.InternalOwnerId.Value != playerId)
-                return false;
-            return true;
+            return ((_flags & EntityFlags.OnlyForOwner) == 0) || _entity.InternalOwnerId.Value == playerId;
         }
 
         public void Free()
