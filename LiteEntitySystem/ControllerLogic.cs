@@ -38,7 +38,7 @@ namespace LiteEntitySystem
             r.BindOnChange<ControllerLogic, EntitySharedReference>(
                 ref _controlledEntity, 
                 static (e, prev) => e.OnControlledEntityChanged(e.EntityManager.GetEntityById<PawnLogic>(prev)), 
-                BindOnChangeFlags.ExecuteOnSync | BindOnChangeFlags.ExecuteOnNew | BindOnChangeFlags.ExecuteOnServer);
+                BindOnChangeFlags.ExecuteOnSync | BindOnChangeFlags.ExecuteOnServer);
         }
 
         /// <summary>

@@ -29,11 +29,6 @@ namespace LiteEntitySystem
         ExecuteOnRollbackReset = 1 << 3,
         
         /// <summary>
-        /// Execute after entity new() called and initial state read before OnConstructed
-        /// </summary>
-        ExecuteOnNew =         1 << 4,
-        
-        /// <summary>
         /// Combines ExecuteOnSync, ExecuteOnPrediction and ExecuteOnServer flags
         /// </summary>
         ExecuteAlways =         ExecuteOnSync | ExecuteOnPrediction | ExecuteOnServer | ExecuteOnRollbackReset

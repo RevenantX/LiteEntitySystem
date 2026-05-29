@@ -1077,29 +1077,10 @@ namespace LiteEntitySystem
                     if (field.IsPredicted)
                         RefMagic.CopyBlock(predictedData + field.PredictedOffset, fieldData, field.Size);
                 
-                    if (field.OnSync != null && insideNewRPC)
-                    {
-                        if ((field.OnSyncFlags & BindOnChangeFlags.ExecuteOnNew) != 0)
-                        {
-                            //execute immediately using temp data buffer inside SetFromAndSync
-                            field.TypeProcessor.SetFromAndSync(target, offset, fieldData, field.OnSync);
-                        }
-                        // call sync calls on first sync in new because constructed will be empty (to reduce datasize)
-                        if (firstSync && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0)
-                        {
-                            if (field.TypeProcessor.SetFromAndSync(target, offset, fieldData))
-                                _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i, !hasData);
-                        }   
-                        //else skip set? because will be triggered in OnConstructed
-                    }
-                    else if (field.OnSync != null && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0 && field.TypeProcessor.SetFromAndSync(target, offset, fieldData))
-                    {
+                    if (field.OnSync != null && (field.OnSyncFlags & BindOnChangeFlags.ExecuteOnSync) != 0 && field.TypeProcessor.SetFromAndSync(target, offset, fieldData))
                         _syncCalls[_syncCallsCount++] = new SyncCallInfo(entity, readerPosition, i, !hasData);
-                    }
                     else
-                    {
                         field.TypeProcessor.SetFrom(target, offset, fieldData);
-                    }
 
                     if (hasData)
                         readerPosition += field.IntSize;
