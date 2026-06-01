@@ -508,7 +508,9 @@ namespace LiteEntitySystem
             for(int i = 0; i < _netPlayers.Count; i++)
             {
                 var netPlayer = _netPlayers.GetByIndex(i);
-                tempList.Add((netPlayer, stateSerializer.MakeNewRPC(netPlayer)));
+                var newRpc = stateSerializer.MakeNewRPC(netPlayer);
+                if(newRpc != null)
+                    tempList.Add((netPlayer, newRpc));
             }
             
             //init and construct
