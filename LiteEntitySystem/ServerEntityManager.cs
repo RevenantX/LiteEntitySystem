@@ -492,11 +492,12 @@ namespace LiteEntitySystem
         
         private T Add<T>(Action<T> initMethod) where T : InternalEntity
         {
-            if (EntityClassInfo<T>.ClassId == 0)
+            ushort classId = GetClassId<T>();
+            if (classId == 0)
                 throw new Exception($"Unregistered entity type: {typeof(T)}");
             
             //create entity data and filters
-            ref var classData = ref ClassDataDict[EntityClassInfo<T>.ClassId];
+            ref var classData = ref ClassDataDict[classId];
             if (_entityIdQueue.AvailableIds == 0)
             {
                 Logger.Log($"Cannot add entity. Max entity count reached: {MaxSyncedEntityCount}");

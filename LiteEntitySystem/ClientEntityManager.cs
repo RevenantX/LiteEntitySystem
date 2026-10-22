@@ -265,7 +265,14 @@ namespace LiteEntitySystem
                 return null;
             }
 
-            ref var classData = ref ClassDataDict[EntityClassInfo<T>.ClassId];
+            ushort classId = GetClassId<T>();
+            if (classId == 0)
+            {
+                Logger.LogError($"Class: {typeof(T)} is not registered");
+                return null;
+            }
+
+            ref var classData = ref ClassDataDict[classId];
 
             if(classData.Type == null)
             {
@@ -276,7 +283,7 @@ namespace LiteEntitySystem
             var entity = AddEntity<T>(new EntityParams(
                 _localIdQueue.GetNewId(),
                 new EntityDataHeader(
-                    EntityClassInfo<T>.ClassId, 
+                    classId, 
                     0, 
                     0),
                 this,

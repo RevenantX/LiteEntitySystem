@@ -390,11 +390,4 @@ namespace LiteEntitySystem.Internal
             }
         }
     }
-
-    // ReSharper disable once UnusedTypeParameter
-    internal static class EntityClassInfo<T>
-    {
-        // ReSharper disable once StaticMemberInGenericType
-        internal static ushort ClassId;
-    }
 }

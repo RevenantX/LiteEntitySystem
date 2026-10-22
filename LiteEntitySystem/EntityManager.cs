@@ -218,6 +218,9 @@ namespace LiteEntitySystem
         private readonly SingletonEntityLogic[] _singletonEntities;
         private readonly IEntityFilter[] _entityFilters;
         private readonly Dictionary<Type, ushort> _registeredTypeIds = new();
+
+        //class ids of this manager's types map (per manager, not per process)
+        private readonly Dictionary<Type, ushort> _classIds = new();
         private readonly Dictionary<Type, ILocalSingleton> _localSingletons = new();
         private readonly Dictionary<Type, ILocalSingleton> _localSingletonBaseTypes = new();
         private readonly Queue<InternalEntity> _entitiesToLateConstruct = new();
@@ -303,6 +306,15 @@ namespace LiteEntitySystem
                 _slowdownTicks = 100;
         }
 
+        /// <summary>
+        /// Class id of entity type in this manager's types map
+        /// </summary>
+        /// <returns>class id or 0 if type isn't registered</returns>
+        public ushort GetClassId(Type type) =>
+            _classIds.TryGetValue(type, out var classId) ? classId : (ushort)0;
+
+        internal ushort GetClassId<T>() where T : InternalEntity => GetClassId(typeof(T));
+
         protected EntityManager(
             EntityTypesMap typesMap, 
             NetworkMode mode,
@@ -327,6 +339,7 @@ namespace LiteEntitySystem
                     entType, 
                     typeInfo);
                 _registeredTypeIds.Add(entType, classData.FilterId);
+                _classIds.Add(entType, typeInfo.ClassId);
                 ClassDataDict[typeInfo.ClassId] = classData;
                 //Logger.Log($"Register: {entType.Name} ClassId: {classId}");
             }

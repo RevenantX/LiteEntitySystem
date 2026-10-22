@@ -39,7 +39,34 @@ namespace LiteEntitySystem
 
         private bool _isFinished;
         private ulong _resultHash = 14695981039346656037UL; //FNV1a offset
-        
+
+        /// <summary>
+        /// Register entity type with explicit class id (for maps that are not driven by enum)
+        /// </summary>
+        /// <param name="classId">Class id, must be greater than 0 and unique within map</param>
+        /// <param name="className">Class name used in logs and debug</param>
+        /// <param name="constructor">Constructor of entity</param>
+        /// <typeparam name="TEntity">Type of entity</typeparam>
+        protected void RegisterType<TEntity>(ushort classId, string className, EntityConstructor<TEntity> constructor) where TEntity : InternalEntity =>
+            RegisterType(typeof(TEntity), classId, className, constructor);
+
+        /// <summary>
+        /// Register entity type known only at runtime with explicit class id
+        /// </summary>
+        /// <param name="entityType">Type of entity, must derive from InternalEntity</param>
+        /// <param name="classId">Class id, must be greater than 0 and unique within map</param>
+        /// <param name="className">Class name used in logs and debug</param>
+        /// <param name="constructor">Constructor of entity, must create instances of entityType</param>
+        protected void RegisterType(Type entityType, ushort classId, string className, EntityConstructor<InternalEntity> constructor)
+        {
+            if (classId == 0)
+                throw new ArgumentException("Class id 0 is reserved", nameof(classId));
+            if (!typeof(InternalEntity).IsAssignableFrom(entityType))
+                throw new ArgumentException($"{entityType} is not an entity type", nameof(entityType));
+            RegisteredTypes.Add(entityType, new RegisteredTypeInfo(classId, className, constructor));
+            MaxId = Math.Max(MaxId, classId);
+        }
+
         /// <summary>
         /// Can be used to detect that server/client has difference
         /// </summary>
@@ -107,7 +134,6 @@ namespace LiteEntitySystem
         public EntityTypesMap<T> Register<TEntity>(T id, EntityConstructor<TEntity> constructor) where TEntity : InternalEntity
         {
             ushort classId = (ushort)(id.GetEnumValue()+1);
-            EntityClassInfo<TEntity>.ClassId = classId;
             RegisteredTypes.Add(typeof(TEntity), new RegisteredTypeInfo(classId, id.ToString(), constructor));
             MaxId = Math.Max(MaxId, classId);
             return this;
