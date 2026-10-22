@@ -58,6 +58,11 @@ namespace LiteEntitySystem
                 throw new ArgumentException("Class id 0 is reserved", nameof(classId));
             if (!typeof(InternalEntity).IsAssignableFrom(entityType))
                 throw new ArgumentException($"{entityType} is not an entity type", nameof(entityType));
+            foreach (var typeInfo in RegisteredTypes.Values)
+            {
+                if (typeInfo.ClassId == classId)
+                    throw new ArgumentException($"Class id {classId} is already registered", nameof(classId));
+            }
             RegisteredTypes.Add(entityType, new RegisteredTypeInfo(classId, className, constructor));
             MaxId = Math.Max(MaxId, classId);
         }
