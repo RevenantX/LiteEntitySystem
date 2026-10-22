@@ -197,29 +197,83 @@ Modify only in case when you know what you doing</p>
 </h2>
 
 
-  <a id="LiteEntitySystem_EntityTypesMap_EvaluateEntityClassDataHash_" data-uid="LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash*"></a>
+  <a id="LiteEntitySystem_EntityTypesMap_RegisterType_" data-uid="LiteEntitySystem.EntityTypesMap.RegisterType*"></a>
 
-  <h3 id="LiteEntitySystem_EntityTypesMap_EvaluateEntityClassDataHash" data-uid="LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash">
-  EvaluateEntityClassDataHash()
+  <h3 id="LiteEntitySystem_EntityTypesMap_RegisterType_System_Type_System_UInt16_System_String_LiteEntitySystem_EntityConstructor_LiteEntitySystem_Internal_InternalEntity__" data-uid="LiteEntitySystem.EntityTypesMap.RegisterType(System.Type,System.UInt16,System.String,LiteEntitySystem.EntityConstructor{LiteEntitySystem.Internal.InternalEntity})">
+  RegisterType(Type, ushort, string, EntityConstructor&lt;InternalEntity&gt;)
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Can be used to detect that server/client has difference</p>
+  <div class="markdown level1 summary"><p>Register entity type known only at runtime with explicit class id</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ulong EvaluateEntityClassDataHash()</code></pre>
+    <pre><code class="lang-csharp hljs">protected void RegisterType(Type entityType, ushort classId, string className, EntityConstructor&lt;InternalEntity&gt; constructor)</code></pre>
   </div>
 
-
-  <h4 class="section">Returns</h4>
+  <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a></dt>
-    <dd><p>hash</p>
+    <dt><code>entityType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
+    <dd><p>Type of entity, must derive from InternalEntity</p>
+</dd>
+    <dt><code>classId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd><p>Class id, must be greater than 0 and unique within map</p>
+</dd>
+    <dt><code>className</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Class name used in logs and debug</p>
+</dd>
+    <dt><code>constructor</code> <span class="xref">EntityConstructor</span>&lt;<a class="xref" href="LiteEntitySystem.Internal.InternalEntity.html">InternalEntity</a>&gt;</dt>
+    <dd><p>Constructor of entity, must create instances of entityType</p>
 </dd>
   </dl>
 
+
+
+
+
+
+
+
+
+
+
+
+  <a id="LiteEntitySystem_EntityTypesMap_RegisterType_" data-uid="LiteEntitySystem.EntityTypesMap.RegisterType*"></a>
+
+  <h3 id="LiteEntitySystem_EntityTypesMap_RegisterType__1_System_UInt16_System_String_LiteEntitySystem_EntityConstructor___0__" data-uid="LiteEntitySystem.EntityTypesMap.RegisterType``1(System.UInt16,System.String,LiteEntitySystem.EntityConstructor{``0})">
+  RegisterType&lt;TEntity&gt;(ushort, string, EntityConstructor&lt;TEntity&gt;)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Register entity type with explicit class id (for maps that are not driven by enum)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void RegisterType&lt;TEntity&gt;(ushort classId, string className, EntityConstructor&lt;TEntity&gt; constructor) where TEntity : InternalEntity</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>classId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd><p>Class id, must be greater than 0 and unique within map</p>
+</dd>
+    <dt><code>className</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Class name used in logs and debug</p>
+</dd>
+    <dt><code>constructor</code> <span class="xref">EntityConstructor</span>&lt;TEntity&gt;</dt>
+    <dd><p>Constructor of entity</p>
+</dd>
+  </dl>
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TEntity</code></dt>
+    <dd><p>Type of entity</p>
+</dd>
+  </dl>
 
 
 

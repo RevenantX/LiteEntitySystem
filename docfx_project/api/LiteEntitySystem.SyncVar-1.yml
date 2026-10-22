@@ -483,7 +483,6 @@ items:
 references:
 - uid: LiteEntitySystem
   commentId: N:LiteEntitySystem
-  href: LiteEntitySystem.html
   name: LiteEntitySystem
   nameWithType: LiteEntitySystem
   fullName: LiteEntitySystem
@@ -610,26 +609,21 @@ references:
   - name: )
 - uid: LiteEntitySystem.Internal
   commentId: N:LiteEntitySystem.Internal
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Internal
   nameWithType: LiteEntitySystem.Internal
   fullName: LiteEntitySystem.Internal
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Internal
     name: Internal
-    href: LiteEntitySystem.Internal.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Internal
     name: Internal
-    href: LiteEntitySystem.Internal.html
 - uid: System.IEquatable`1
   commentId: T:System.IEquatable`1
   isExternal: true

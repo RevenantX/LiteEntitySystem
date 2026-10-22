@@ -30,7 +30,6 @@ items:
   inheritedMembers:
   - LiteEntitySystem.EntityTypesMap.MaxId
   - LiteEntitySystem.EntityTypesMap.RegisteredTypes
-  - LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
   nameWithType.vb: EntityTypesMap(Of T)
   fullName.vb: LiteEntitySystem.EntityTypesMap(Of T)
   name.vb: EntityTypesMap(Of T)
@@ -72,7 +71,6 @@ items:
 references:
 - uid: LiteEntitySystem
   commentId: N:LiteEntitySystem
-  href: LiteEntitySystem.html
   name: LiteEntitySystem
   nameWithType: LiteEntitySystem
   fullName: LiteEntitySystem
@@ -107,25 +105,6 @@ references:
   name: RegisteredTypes
   nameWithType: EntityTypesMap.RegisteredTypes
   fullName: LiteEntitySystem.EntityTypesMap.RegisteredTypes
-- uid: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
-  commentId: M:LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
-  parent: LiteEntitySystem.EntityTypesMap
-  href: LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_EvaluateEntityClassDataHash
-  name: EvaluateEntityClassDataHash()
-  nameWithType: EntityTypesMap.EvaluateEntityClassDataHash()
-  fullName: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash()
-  spec.csharp:
-  - uid: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
-    name: EvaluateEntityClassDataHash
-    href: LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_EvaluateEntityClassDataHash
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
-    name: EvaluateEntityClassDataHash
-    href: LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_EvaluateEntityClassDataHash
-  - name: (
-  - name: )
 - uid: System
   commentId: N:System
   isExternal: true

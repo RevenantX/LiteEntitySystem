@@ -9,6 +9,7 @@ items:
   - LiteEntitySystem.EntityManager.AddEntity``1(LiteEntitySystem.EntityParams)
   - LiteEntitySystem.EntityManager.AddLocalSingleton``1(``0)
   - LiteEntitySystem.EntityManager.AliveEntities
+  - LiteEntitySystem.EntityManager.ClassDataHash
   - LiteEntitySystem.EntityManager.ConstructEntity(LiteEntitySystem.Internal.InternalEntity)
   - LiteEntitySystem.EntityManager.DeltaTime
   - LiteEntitySystem.EntityManager.DeltaTimeF
@@ -17,6 +18,7 @@ items:
   - LiteEntitySystem.EntityManager.EntitiesCount
   - LiteEntitySystem.EntityManager.ExecuteLateConstruct
   - LiteEntitySystem.EntityManager.ExecuteLocalSingletonsLateUpdate
+  - LiteEntitySystem.EntityManager.GetClassId(System.Type)
   - LiteEntitySystem.EntityManager.GetControllers``1
   - LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo(LiteEntitySystem.DebugFrameModes)
   - LiteEntitySystem.EntityManager.GetEntities``1
@@ -661,6 +663,30 @@ items:
     return:
       type: LiteEntitySystem.Collections.AVLTree{LiteEntitySystem.EntityLogic}
     content.vb: Protected ReadOnly LagCompensatedEntities As AVLTree(Of EntityLogic)
+- uid: LiteEntitySystem.EntityManager.ClassDataHash
+  commentId: F:LiteEntitySystem.EntityManager.ClassDataHash
+  id: ClassDataHash
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: ClassDataHash
+  nameWithType: EntityManager.ClassDataHash
+  fullName: LiteEntitySystem.EntityManager.ClassDataHash
+  type: Field
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: >-
+    Hash of synchronized layout of all registered classes (local only AI controllers excluded).
+
+    Compare server and client values to detect that server/client has difference
+  example: []
+  syntax:
+    content: public readonly ulong ClassDataHash
+    return:
+      type: System.UInt64
+    content.vb: Public ReadOnly ClassDataHash As ULong
 - uid: LiteEntitySystem.EntityManager.SpeedMultiplier
   commentId: F:LiteEntitySystem.EntityManager.SpeedMultiplier
   id: SpeedMultiplier
@@ -854,6 +880,32 @@ items:
   nameWithType.vb: EntityManager.SetTickrate(Byte)
   fullName.vb: LiteEntitySystem.EntityManager.SetTickrate(Byte)
   name.vb: SetTickrate(Byte)
+- uid: LiteEntitySystem.EntityManager.GetClassId(System.Type)
+  commentId: M:LiteEntitySystem.EntityManager.GetClassId(System.Type)
+  id: GetClassId(System.Type)
+  parent: LiteEntitySystem.EntityManager
+  langs:
+  - csharp
+  - vb
+  name: GetClassId(Type)
+  nameWithType: EntityManager.GetClassId(Type)
+  fullName: LiteEntitySystem.EntityManager.GetClassId(System.Type)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Class id of entity type in this manager's types map
+  example: []
+  syntax:
+    content: public ushort GetClassId(Type type)
+    parameters:
+    - id: type
+      type: System.Type
+    return:
+      type: System.UInt16
+      description: class id or 0 if type isn't registered
+    content.vb: Public Function GetClassId(type As Type) As UShort
+  overload: LiteEntitySystem.EntityManager.GetClassId*
 - uid: LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.NetworkMode,System.Byte,LiteEntitySystem.MaxHistorySize)
   commentId: M:LiteEntitySystem.EntityManager.#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.NetworkMode,System.Byte,LiteEntitySystem.MaxHistorySize)
   id: '#ctor(LiteEntitySystem.EntityTypesMap,LiteEntitySystem.NetworkMode,System.Byte,LiteEntitySystem.MaxHistorySize)'
@@ -1475,7 +1527,6 @@ items:
 references:
 - uid: LiteEntitySystem
   commentId: N:LiteEntitySystem
-  href: LiteEntitySystem.html
   name: LiteEntitySystem
   nameWithType: LiteEntitySystem
   fullName: LiteEntitySystem
@@ -1555,26 +1606,21 @@ references:
   fullName: LiteEntitySystem.Extensions.LocalMessageBusExtensions
 - uid: LiteEntitySystem.Extensions
   commentId: N:LiteEntitySystem.Extensions
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Extensions
   nameWithType: LiteEntitySystem.Extensions
   fullName: LiteEntitySystem.Extensions
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Extensions
     name: Extensions
-    href: LiteEntitySystem.Extensions.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Extensions
     name: Extensions
-    href: LiteEntitySystem.Extensions.html
 - uid: System.Int32
   commentId: T:System.Int32
   parent: System
@@ -1793,26 +1839,21 @@ references:
   - name: )
 - uid: LiteEntitySystem.Collections
   commentId: N:LiteEntitySystem.Collections
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Collections
   nameWithType: LiteEntitySystem.Collections
   fullName: LiteEntitySystem.Collections
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Collections
     name: Collections
-    href: LiteEntitySystem.Collections.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Collections
     name: Collections
-    href: LiteEntitySystem.Collections.html
 - uid: LiteEntitySystem.Collections.AVLTree{LiteEntitySystem.EntityLogic}
   commentId: T:LiteEntitySystem.Collections.AVLTree{LiteEntitySystem.EntityLogic}
   parent: LiteEntitySystem.Collections
@@ -1844,6 +1885,17 @@ references:
     name: EntityLogic
     href: LiteEntitySystem.EntityLogic.html
   - name: )
+- uid: System.UInt64
+  commentId: T:System.UInt64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint64
+  name: ulong
+  nameWithType: ulong
+  fullName: ulong
+  nameWithType.vb: ULong
+  fullName.vb: ULong
+  name.vb: ULong
 - uid: LiteEntitySystem.EntityManager.IsRunning*
   commentId: Overload:LiteEntitySystem.EntityManager.IsRunning
   href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_IsRunning
@@ -1910,26 +1962,21 @@ references:
   - name: )
 - uid: LiteEntitySystem.Internal
   commentId: N:LiteEntitySystem.Internal
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Internal
   nameWithType: LiteEntitySystem.Internal
   fullName: LiteEntitySystem.Internal
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Internal
     name: Internal
-    href: LiteEntitySystem.Internal.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Internal
     name: Internal
-    href: LiteEntitySystem.Internal.html
 - uid: LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo*
   commentId: Overload:LiteEntitySystem.EntityManager.GetCurrentFrameDebugInfo
   href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetCurrentFrameDebugInfo_LiteEntitySystem_DebugFrameModes_
@@ -1960,6 +2007,20 @@ references:
   name: SetTickrate
   nameWithType: EntityManager.SetTickrate
   fullName: LiteEntitySystem.EntityManager.SetTickrate
+- uid: LiteEntitySystem.EntityManager.GetClassId*
+  commentId: Overload:LiteEntitySystem.EntityManager.GetClassId
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetClassId_System_Type_
+  name: GetClassId
+  nameWithType: EntityManager.GetClassId
+  fullName: LiteEntitySystem.EntityManager.GetClassId
+- uid: System.Type
+  commentId: T:System.Type
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type
+  nameWithType: Type
+  fullName: System.Type
 - uid: LiteEntitySystem.EntityManager.#ctor*
   commentId: Overload:LiteEntitySystem.EntityManager.#ctor
   href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager__ctor_LiteEntitySystem_EntityTypesMap_LiteEntitySystem_NetworkMode_System_Byte_LiteEntitySystem_MaxHistorySize_
@@ -1982,14 +2043,6 @@ references:
   name: GetEntityTypeFromClassId
   nameWithType: EntityManager.GetEntityTypeFromClassId
   fullName: LiteEntitySystem.EntityManager.GetEntityTypeFromClassId
-- uid: System.Type
-  commentId: T:System.Type
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.type
-  name: Type
-  nameWithType: Type
-  fullName: System.Type
 - uid: LiteEntitySystem.EntityManager.GetEntitySyncVarInfo*
   commentId: Overload:LiteEntitySystem.EntityManager.GetEntitySyncVarInfo
   href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetEntitySyncVarInfo_LiteEntitySystem_Internal_InternalEntity_LiteEntitySystem_IEntitySyncVarInfoPrinter_

@@ -250,7 +250,6 @@ items:
 references:
 - uid: LiteEntitySystem
   commentId: N:LiteEntitySystem
-  href: LiteEntitySystem.html
   name: LiteEntitySystem
   nameWithType: LiteEntitySystem
   fullName: LiteEntitySystem
@@ -1690,26 +1689,21 @@ references:
   fullName: System
 - uid: LiteEntitySystem.Internal
   commentId: N:LiteEntitySystem.Internal
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Internal
   nameWithType: LiteEntitySystem.Internal
   fullName: LiteEntitySystem.Internal
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Internal
     name: Internal
-    href: LiteEntitySystem.Internal.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Internal
     name: Internal
-    href: LiteEntitySystem.Internal.html
 - uid: System.IComparable`1
   commentId: T:System.IComparable`1
   isExternal: true
@@ -2435,26 +2429,21 @@ references:
   - name: )
 - uid: LiteEntitySystem.Extensions
   commentId: N:LiteEntitySystem.Extensions
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Extensions
   nameWithType: LiteEntitySystem.Extensions
   fullName: LiteEntitySystem.Extensions
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Extensions
     name: Extensions
-    href: LiteEntitySystem.Extensions.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Extensions
     name: Extensions
-    href: LiteEntitySystem.Extensions.html
 - uid: LiteEntitySystem.ControllerLogic.IsBot
   commentId: P:LiteEntitySystem.ControllerLogic.IsBot
   parent: LiteEntitySystem.ControllerLogic

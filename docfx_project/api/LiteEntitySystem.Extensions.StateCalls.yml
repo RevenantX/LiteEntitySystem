@@ -81,26 +81,21 @@ items:
 references:
 - uid: LiteEntitySystem.Extensions
   commentId: N:LiteEntitySystem.Extensions
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Extensions
   nameWithType: LiteEntitySystem.Extensions
   fullName: LiteEntitySystem.Extensions
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Extensions
     name: Extensions
-    href: LiteEntitySystem.Extensions.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Extensions
     name: Extensions
-    href: LiteEntitySystem.Extensions.html
 - uid: System.Action
   commentId: T:System.Action
   parent: System

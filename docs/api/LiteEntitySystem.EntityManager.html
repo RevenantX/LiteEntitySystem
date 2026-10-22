@@ -210,6 +210,38 @@ Class EntityManager
 
 
 
+  <h3 id="LiteEntitySystem_EntityManager_ClassDataHash" data-uid="LiteEntitySystem.EntityManager.ClassDataHash">
+  ClassDataHash
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Hash of synchronized layout of all registered classes (local only AI controllers excluded).
+Compare server and client values to detect that server/client has difference</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly ulong ClassDataHash</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
   <h3 id="LiteEntitySystem_EntityManager_HeaderByte" data-uid="LiteEntitySystem.EntityManager.HeaderByte">
   HeaderByte
   
@@ -1362,6 +1394,44 @@ IsRunning - sets to false after Reset() call</p>
   </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
+  <a id="LiteEntitySystem_EntityManager_GetClassId_" data-uid="LiteEntitySystem.EntityManager.GetClassId*"></a>
+
+  <h3 id="LiteEntitySystem_EntityManager_GetClassId_System_Type_" data-uid="LiteEntitySystem.EntityManager.GetClassId(System.Type)">
+  GetClassId(Type)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Class id of entity type in this manager's types map</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort GetClassId(Type type)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>type</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd><p>class id or 0 if type isn't registered</p>
+</dd>
+  </dl>
 
 
 

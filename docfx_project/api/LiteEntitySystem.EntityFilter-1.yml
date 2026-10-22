@@ -127,7 +127,6 @@ items:
 references:
 - uid: LiteEntitySystem
   commentId: N:LiteEntitySystem
-  href: LiteEntitySystem.html
   name: LiteEntitySystem
   nameWithType: LiteEntitySystem
   fullName: LiteEntitySystem
@@ -357,26 +356,21 @@ references:
   - name: )
 - uid: LiteEntitySystem.Collections
   commentId: N:LiteEntitySystem.Collections
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Collections
   nameWithType: LiteEntitySystem.Collections
   fullName: LiteEntitySystem.Collections
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Collections
     name: Collections
-    href: LiteEntitySystem.Collections.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Collections
     name: Collections
-    href: LiteEntitySystem.Collections.html
 - uid: System.Collections.Generic.IEnumerable`1
   commentId: T:System.Collections.Generic.IEnumerable`1
   isExternal: true

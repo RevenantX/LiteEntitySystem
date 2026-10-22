@@ -5,8 +5,9 @@ items:
   id: EntityTypesMap
   parent: LiteEntitySystem
   children:
-  - LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
   - LiteEntitySystem.EntityTypesMap.MaxId
+  - LiteEntitySystem.EntityTypesMap.RegisterType(System.Type,System.UInt16,System.String,LiteEntitySystem.EntityConstructor{LiteEntitySystem.Internal.InternalEntity})
+  - LiteEntitySystem.EntityTypesMap.RegisterType``1(System.UInt16,System.String,LiteEntitySystem.EntityConstructor{``0})
   - LiteEntitySystem.EntityTypesMap.RegisteredTypes
   langs:
   - csharp
@@ -73,33 +74,81 @@ items:
     return:
       type: System.Collections.Generic.Dictionary{System.Type,LiteEntitySystem.RegisteredTypeInfo}
     content.vb: Public ReadOnly RegisteredTypes As Dictionary(Of Type, RegisteredTypeInfo)
-- uid: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
-  commentId: M:LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
-  id: EvaluateEntityClassDataHash
+- uid: LiteEntitySystem.EntityTypesMap.RegisterType``1(System.UInt16,System.String,LiteEntitySystem.EntityConstructor{``0})
+  commentId: M:LiteEntitySystem.EntityTypesMap.RegisterType``1(System.UInt16,System.String,LiteEntitySystem.EntityConstructor{``0})
+  id: RegisterType``1(System.UInt16,System.String,LiteEntitySystem.EntityConstructor{``0})
   parent: LiteEntitySystem.EntityTypesMap
   langs:
   - csharp
   - vb
-  name: EvaluateEntityClassDataHash()
-  nameWithType: EntityTypesMap.EvaluateEntityClassDataHash()
-  fullName: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash()
+  name: RegisterType<TEntity>(ushort, string, EntityConstructor<TEntity>)
+  nameWithType: EntityTypesMap.RegisterType<TEntity>(ushort, string, EntityConstructor<TEntity>)
+  fullName: LiteEntitySystem.EntityTypesMap.RegisterType<TEntity>(ushort, string, LiteEntitySystem.EntityConstructor<TEntity>)
   type: Method
   assemblies:
   - LiteEntitySystem
   namespace: LiteEntitySystem
-  summary: Can be used to detect that server/client has difference
+  summary: Register entity type with explicit class id (for maps that are not driven by enum)
   example: []
   syntax:
-    content: public ulong EvaluateEntityClassDataHash()
-    return:
-      type: System.UInt64
-      description: hash
-    content.vb: Public Function EvaluateEntityClassDataHash() As ULong
-  overload: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash*
+    content: 'protected void RegisterType<TEntity>(ushort classId, string className, EntityConstructor<TEntity> constructor) where TEntity : InternalEntity'
+    parameters:
+    - id: classId
+      type: System.UInt16
+      description: Class id, must be greater than 0 and unique within map
+    - id: className
+      type: System.String
+      description: Class name used in logs and debug
+    - id: constructor
+      type: LiteEntitySystem.EntityConstructor{{TEntity}}
+      description: Constructor of entity
+    typeParameters:
+    - id: TEntity
+      description: Type of entity
+    content.vb: Protected Sub RegisterType(Of TEntity As InternalEntity)(classId As UShort, className As String, constructor As EntityConstructor(Of TEntity))
+  overload: LiteEntitySystem.EntityTypesMap.RegisterType*
+  nameWithType.vb: EntityTypesMap.RegisterType(Of TEntity)(UShort, String, EntityConstructor(Of TEntity))
+  fullName.vb: LiteEntitySystem.EntityTypesMap.RegisterType(Of TEntity)(UShort, String, LiteEntitySystem.EntityConstructor(Of TEntity))
+  name.vb: RegisterType(Of TEntity)(UShort, String, EntityConstructor(Of TEntity))
+- uid: LiteEntitySystem.EntityTypesMap.RegisterType(System.Type,System.UInt16,System.String,LiteEntitySystem.EntityConstructor{LiteEntitySystem.Internal.InternalEntity})
+  commentId: M:LiteEntitySystem.EntityTypesMap.RegisterType(System.Type,System.UInt16,System.String,LiteEntitySystem.EntityConstructor{LiteEntitySystem.Internal.InternalEntity})
+  id: RegisterType(System.Type,System.UInt16,System.String,LiteEntitySystem.EntityConstructor{LiteEntitySystem.Internal.InternalEntity})
+  parent: LiteEntitySystem.EntityTypesMap
+  langs:
+  - csharp
+  - vb
+  name: RegisterType(Type, ushort, string, EntityConstructor<InternalEntity>)
+  nameWithType: EntityTypesMap.RegisterType(Type, ushort, string, EntityConstructor<InternalEntity>)
+  fullName: LiteEntitySystem.EntityTypesMap.RegisterType(System.Type, ushort, string, LiteEntitySystem.EntityConstructor<LiteEntitySystem.Internal.InternalEntity>)
+  type: Method
+  assemblies:
+  - LiteEntitySystem
+  namespace: LiteEntitySystem
+  summary: Register entity type known only at runtime with explicit class id
+  example: []
+  syntax:
+    content: protected void RegisterType(Type entityType, ushort classId, string className, EntityConstructor<InternalEntity> constructor)
+    parameters:
+    - id: entityType
+      type: System.Type
+      description: Type of entity, must derive from InternalEntity
+    - id: classId
+      type: System.UInt16
+      description: Class id, must be greater than 0 and unique within map
+    - id: className
+      type: System.String
+      description: Class name used in logs and debug
+    - id: constructor
+      type: LiteEntitySystem.EntityConstructor{LiteEntitySystem.Internal.InternalEntity}
+      description: Constructor of entity, must create instances of entityType
+    content.vb: Protected Sub RegisterType(entityType As Type, classId As UShort, className As String, constructor As EntityConstructor(Of InternalEntity))
+  overload: LiteEntitySystem.EntityTypesMap.RegisterType*
+  nameWithType.vb: EntityTypesMap.RegisterType(Type, UShort, String, EntityConstructor(Of InternalEntity))
+  fullName.vb: LiteEntitySystem.EntityTypesMap.RegisterType(System.Type, UShort, String, LiteEntitySystem.EntityConstructor(Of LiteEntitySystem.Internal.InternalEntity))
+  name.vb: RegisterType(Type, UShort, String, EntityConstructor(Of InternalEntity))
 references:
 - uid: LiteEntitySystem
   commentId: N:LiteEntitySystem
-  href: LiteEntitySystem.html
   name: LiteEntitySystem
   nameWithType: LiteEntitySystem
   fullName: LiteEntitySystem
@@ -247,20 +296,103 @@ references:
     name: Generic
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.collections.generic
-- uid: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash*
-  commentId: Overload:LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
-  href: LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_EvaluateEntityClassDataHash
-  name: EvaluateEntityClassDataHash
-  nameWithType: EntityTypesMap.EvaluateEntityClassDataHash
-  fullName: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
-- uid: System.UInt64
-  commentId: T:System.UInt64
+- uid: LiteEntitySystem.EntityTypesMap.RegisterType*
+  commentId: Overload:LiteEntitySystem.EntityTypesMap.RegisterType
+  href: LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_RegisterType__1_System_UInt16_System_String_LiteEntitySystem_EntityConstructor___0__
+  name: RegisterType
+  nameWithType: EntityTypesMap.RegisterType
+  fullName: LiteEntitySystem.EntityTypesMap.RegisterType
+- uid: System.String
+  commentId: T:System.String
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.uint64
-  name: ulong
-  nameWithType: ulong
-  fullName: ulong
-  nameWithType.vb: ULong
-  fullName.vb: ULong
-  name.vb: ULong
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: LiteEntitySystem.EntityConstructor{{TEntity}}
+  commentId: T:LiteEntitySystem.EntityConstructor{``0}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.EntityConstructor`1
+  name: EntityConstructor<TEntity>
+  nameWithType: EntityConstructor<TEntity>
+  fullName: LiteEntitySystem.EntityConstructor<TEntity>
+  nameWithType.vb: EntityConstructor(Of TEntity)
+  fullName.vb: LiteEntitySystem.EntityConstructor(Of TEntity)
+  name.vb: EntityConstructor(Of TEntity)
+  spec.csharp:
+  - uid: LiteEntitySystem.EntityConstructor`1
+    name: EntityConstructor
+  - name: <
+  - name: TEntity
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.EntityConstructor`1
+    name: EntityConstructor
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TEntity
+  - name: )
+- uid: LiteEntitySystem.EntityConstructor`1
+  commentId: T:LiteEntitySystem.EntityConstructor`1
+  name: EntityConstructor<T>
+  nameWithType: EntityConstructor<T>
+  fullName: LiteEntitySystem.EntityConstructor<T>
+  nameWithType.vb: EntityConstructor(Of T)
+  fullName.vb: LiteEntitySystem.EntityConstructor(Of T)
+  name.vb: EntityConstructor(Of T)
+  spec.csharp:
+  - uid: LiteEntitySystem.EntityConstructor`1
+    name: EntityConstructor
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.EntityConstructor`1
+    name: EntityConstructor
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Type
+  commentId: T:System.Type
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type
+  nameWithType: Type
+  fullName: System.Type
+- uid: LiteEntitySystem.EntityConstructor{LiteEntitySystem.Internal.InternalEntity}
+  commentId: T:LiteEntitySystem.EntityConstructor{LiteEntitySystem.Internal.InternalEntity}
+  parent: LiteEntitySystem
+  definition: LiteEntitySystem.EntityConstructor`1
+  href: LiteEntitySystem.Internal.InternalEntity.html
+  name: EntityConstructor<InternalEntity>
+  nameWithType: EntityConstructor<InternalEntity>
+  fullName: LiteEntitySystem.EntityConstructor<LiteEntitySystem.Internal.InternalEntity>
+  nameWithType.vb: EntityConstructor(Of InternalEntity)
+  fullName.vb: LiteEntitySystem.EntityConstructor(Of LiteEntitySystem.Internal.InternalEntity)
+  name.vb: EntityConstructor(Of InternalEntity)
+  spec.csharp:
+  - uid: LiteEntitySystem.EntityConstructor`1
+    name: EntityConstructor
+  - name: <
+  - uid: LiteEntitySystem.Internal.InternalEntity
+    name: InternalEntity
+    href: LiteEntitySystem.Internal.InternalEntity.html
+  - name: '>'
+  spec.vb:
+  - uid: LiteEntitySystem.EntityConstructor`1
+    name: EntityConstructor
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiteEntitySystem.Internal.InternalEntity
+    name: InternalEntity
+    href: LiteEntitySystem.Internal.InternalEntity.html
+  - name: )

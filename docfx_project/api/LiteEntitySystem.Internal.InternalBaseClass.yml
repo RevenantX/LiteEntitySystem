@@ -52,26 +52,21 @@ items:
 references:
 - uid: LiteEntitySystem.Internal
   commentId: N:LiteEntitySystem.Internal
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Internal
   nameWithType: LiteEntitySystem.Internal
   fullName: LiteEntitySystem.Internal
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Internal
     name: Internal
-    href: LiteEntitySystem.Internal.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Internal
     name: Internal
-    href: LiteEntitySystem.Internal.html
 - uid: System.Object
   commentId: T:System.Object
   parent: System
