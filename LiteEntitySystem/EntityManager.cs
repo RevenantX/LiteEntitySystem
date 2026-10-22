@@ -221,6 +221,12 @@ namespace LiteEntitySystem
 
         //class ids of this manager's types map (per manager, not per process)
         private readonly Dictionary<Type, ushort> _classIds = new();
+
+        /// <summary>
+        /// Hash of synchronized layout of all registered classes (local only AI controllers excluded).
+        /// Compare server and client values to detect that server/client has difference
+        /// </summary>
+        public readonly ulong ClassDataHash;
         private readonly Dictionary<Type, ILocalSingleton> _localSingletons = new();
         private readonly Dictionary<Type, ILocalSingleton> _localSingletonBaseTypes = new();
         private readonly Queue<InternalEntity> _entitiesToLateConstruct = new();
@@ -349,6 +355,18 @@ namespace LiteEntitySystem
                 //map base ids
                 ClassDataDict[registeredType.ClassId].PrepareBaseTypes(_registeredTypeIds, ref singletonCount, ref filterCount);
             }
+
+            var classDataHash = new LayoutHasher();
+            for (int classId = 1; classId < ClassDataDict.Length; classId++)
+            {
+                ref var classData = ref ClassDataDict[classId];
+                //don't hash localonly types
+                if (classData.Type == null || classData.Type.IsSubclassOf(typeof(AiControllerLogic)))
+                    continue;
+                classDataHash.Add(classId);
+                classDataHash.Add(classData.LayoutHash);
+            }
+            ClassDataHash = classDataHash.Value;
 
             _entityFilters = new IEntityFilter[filterCount];
             _singletonEntities = new SingletonEntityLogic[singletonCount];

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
@@ -37,9 +35,6 @@ namespace LiteEntitySystem
         /// </summary>
         public readonly Dictionary<Type, RegisteredTypeInfo> RegisteredTypes = new();
 
-        private bool _isFinished;
-        private ulong _resultHash = 14695981039346656037UL; //FNV1a offset
-
         /// <summary>
         /// Register entity type with explicit class id (for maps that are not driven by enum)
         /// </summary>
@@ -65,57 +60,6 @@ namespace LiteEntitySystem
                 throw new ArgumentException($"{entityType} is not an entity type", nameof(entityType));
             RegisteredTypes.Add(entityType, new RegisteredTypeInfo(classId, className, constructor));
             MaxId = Math.Max(MaxId, classId);
-        }
-
-        /// <summary>
-        /// Can be used to detect that server/client has difference
-        /// </summary>
-        /// <returns>hash</returns>
-        public ulong EvaluateEntityClassDataHash()
-        {
-            //FNV1a 64 bit hash
-            if (!_isFinished)
-            {
-                //don't hash localonly types
-                foreach (var (entType, _) in RegisteredTypes
-                    .Where(kv => !kv.Key.IsSubclassOf(typeof(AiControllerLogic)))
-                    .OrderBy(kv => kv.Value.ClassId))
-                {
-                    var allTypesStack = Utils.GetBaseTypes(entType, typeof(InternalEntity), true, true);
-                    while(allTypesStack.Count > 0)
-                    {
-                        foreach (var field in Utils.GetProcessedFields(allTypesStack.Pop()))
-                        {
-                            if (field.FieldType.IsSubclassOf(typeof(SyncableField)))
-                            {
-                                foreach (var syncableField in Utils.GetProcessedFields(field.FieldType))
-                                    TryHashField(syncableField);
-                            }
-                            else
-                            {
-                                TryHashField(field);
-                            }
-                        }
-                    }
-                }
-                _isFinished = true;
-            }
-            return _resultHash;
-
-            void TryHashField(FieldInfo fi)
-            {
-                var ft = fi.FieldType;
-                if ((fi.IsStatic && Utils.IsRemoteCallType(ft)) || 
-                    (ft.IsGenericType && !ft.IsArray && ft.GetGenericTypeDefinition() == typeof(SyncVar<>)))
-                {
-                    string ftName = ft.Name + (ft.IsGenericType ? ft.GetGenericArguments()[0].Name : string.Empty);
-                    for (int i = 0; i < ftName.Length; i++)
-                    {
-                        _resultHash ^= ftName[i];
-                        _resultHash *= 1099511628211UL; //prime
-                    }
-                }
-            }
         }
     }
 
