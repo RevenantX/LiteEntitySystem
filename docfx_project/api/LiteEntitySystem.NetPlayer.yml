@@ -65,7 +65,6 @@ items:
 references:
 - uid: LiteEntitySystem
   commentId: N:LiteEntitySystem
-  href: LiteEntitySystem.html
   name: LiteEntitySystem
   nameWithType: LiteEntitySystem
   fullName: LiteEntitySystem
@@ -145,26 +144,21 @@ references:
   fullName: LiteEntitySystem.Transport.LiteNetLibExtensions
 - uid: LiteEntitySystem.Transport
   commentId: N:LiteEntitySystem.Transport
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Transport
   nameWithType: LiteEntitySystem.Transport
   fullName: LiteEntitySystem.Transport
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Transport
     name: Transport
-    href: LiteEntitySystem.Transport.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Transport
     name: Transport
-    href: LiteEntitySystem.Transport.html
 - uid: System.Byte
   commentId: T:System.Byte
   parent: System

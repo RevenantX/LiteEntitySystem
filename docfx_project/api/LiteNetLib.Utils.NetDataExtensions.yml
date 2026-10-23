@@ -113,26 +113,21 @@ items:
 references:
 - uid: LiteNetLib.Utils
   commentId: N:LiteNetLib.Utils
-  href: LiteNetLib.html
   name: LiteNetLib.Utils
   nameWithType: LiteNetLib.Utils
   fullName: LiteNetLib.Utils
   spec.csharp:
   - uid: LiteNetLib
     name: LiteNetLib
-    href: LiteNetLib.html
   - name: .
   - uid: LiteNetLib.Utils
     name: Utils
-    href: LiteNetLib.Utils.html
   spec.vb:
   - uid: LiteNetLib
     name: LiteNetLib
-    href: LiteNetLib.html
   - name: .
   - uid: LiteNetLib.Utils
     name: Utils
-    href: LiteNetLib.Utils.html
 - uid: System.Object
   commentId: T:System.Object
   parent: System

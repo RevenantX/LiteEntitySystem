@@ -21,6 +21,9 @@ items:
   syntax:
     content: public interface ISyncFieldChanged
     content.vb: Public Interface ISyncFieldChanged
+  derivedClasses:
+  - LiteEntitySystem.Extensions.SyncNetSerializable`1
+  - LiteEntitySystem.Extensions.SyncSpanSerializable`1
 - uid: LiteEntitySystem.ISyncFieldChanged.ValueChanged
   commentId: E:LiteEntitySystem.ISyncFieldChanged.ValueChanged
   id: ValueChanged
@@ -43,7 +46,6 @@ items:
 references:
 - uid: LiteEntitySystem
   commentId: N:LiteEntitySystem
-  href: LiteEntitySystem.html
   name: LiteEntitySystem
   nameWithType: LiteEntitySystem
   fullName: LiteEntitySystem

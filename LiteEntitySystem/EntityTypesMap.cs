@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using LiteEntitySystem.Internal;
 
 namespace LiteEntitySystem
@@ -37,58 +35,36 @@ namespace LiteEntitySystem
         /// </summary>
         public readonly Dictionary<Type, RegisteredTypeInfo> RegisteredTypes = new();
 
-        private bool _isFinished;
-        private ulong _resultHash = 14695981039346656037UL; //FNV1a offset
-        
         /// <summary>
-        /// Can be used to detect that server/client has difference
+        /// Register entity type with explicit class id (for maps that are not driven by enum)
         /// </summary>
-        /// <returns>hash</returns>
-        public ulong EvaluateEntityClassDataHash()
-        {
-            //FNV1a 64 bit hash
-            if (!_isFinished)
-            {
-                //don't hash localonly types
-                foreach (var (entType, _) in RegisteredTypes
-                    .Where(kv => !kv.Key.IsSubclassOf(typeof(AiControllerLogic)))
-                    .OrderBy(kv => kv.Value.ClassId))
-                {
-                    var allTypesStack = Utils.GetBaseTypes(entType, typeof(InternalEntity), true, true);
-                    while(allTypesStack.Count > 0)
-                    {
-                        foreach (var field in Utils.GetProcessedFields(allTypesStack.Pop()))
-                        {
-                            if (field.FieldType.IsSubclassOf(typeof(SyncableField)))
-                            {
-                                foreach (var syncableField in Utils.GetProcessedFields(field.FieldType))
-                                    TryHashField(syncableField);
-                            }
-                            else
-                            {
-                                TryHashField(field);
-                            }
-                        }
-                    }
-                }
-                _isFinished = true;
-            }
-            return _resultHash;
+        /// <param name="classId">Class id, must be greater than 0 and unique within map</param>
+        /// <param name="className">Class name used in logs and debug</param>
+        /// <param name="constructor">Constructor of entity</param>
+        /// <typeparam name="TEntity">Type of entity</typeparam>
+        protected void RegisterType<TEntity>(ushort classId, string className, EntityConstructor<TEntity> constructor) where TEntity : InternalEntity =>
+            RegisterType(typeof(TEntity), classId, className, constructor);
 
-            void TryHashField(FieldInfo fi)
+        /// <summary>
+        /// Register entity type known only at runtime with explicit class id
+        /// </summary>
+        /// <param name="entityType">Type of entity, must derive from InternalEntity</param>
+        /// <param name="classId">Class id, must be greater than 0 and unique within map</param>
+        /// <param name="className">Class name used in logs and debug</param>
+        /// <param name="constructor">Constructor of entity, must create instances of entityType</param>
+        protected void RegisterType(Type entityType, ushort classId, string className, EntityConstructor<InternalEntity> constructor)
+        {
+            if (classId == 0)
+                throw new ArgumentException("Class id 0 is reserved", nameof(classId));
+            if (!typeof(InternalEntity).IsAssignableFrom(entityType))
+                throw new ArgumentException($"{entityType} is not an entity type", nameof(entityType));
+            foreach (var typeInfo in RegisteredTypes.Values)
             {
-                var ft = fi.FieldType;
-                if ((fi.IsStatic && Utils.IsRemoteCallType(ft)) || 
-                    (ft.IsGenericType && !ft.IsArray && ft.GetGenericTypeDefinition() == typeof(SyncVar<>)))
-                {
-                    string ftName = ft.Name + (ft.IsGenericType ? ft.GetGenericArguments()[0].Name : string.Empty);
-                    for (int i = 0; i < ftName.Length; i++)
-                    {
-                        _resultHash ^= ftName[i];
-                        _resultHash *= 1099511628211UL; //prime
-                    }
-                }
+                if (typeInfo.ClassId == classId)
+                    throw new ArgumentException($"Class id {classId} is already registered", nameof(classId));
             }
+            RegisteredTypes.Add(entityType, new RegisteredTypeInfo(classId, className, constructor));
+            MaxId = Math.Max(MaxId, classId);
         }
     }
 
@@ -107,7 +83,6 @@ namespace LiteEntitySystem
         public EntityTypesMap<T> Register<TEntity>(T id, EntityConstructor<TEntity> constructor) where TEntity : InternalEntity
         {
             ushort classId = (ushort)(id.GetEnumValue()+1);
-            EntityClassInfo<TEntity>.ClassId = classId;
             RegisteredTypes.Add(typeof(TEntity), new RegisteredTypeInfo(classId, id.ToString(), constructor));
             MaxId = Math.Max(MaxId, classId);
             return this;

@@ -421,26 +421,21 @@ items:
 references:
 - uid: LiteEntitySystem.Collections
   commentId: N:LiteEntitySystem.Collections
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Collections
   nameWithType: LiteEntitySystem.Collections
   fullName: LiteEntitySystem.Collections
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Collections
     name: Collections
-    href: LiteEntitySystem.Collections.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Collections
     name: Collections
-    href: LiteEntitySystem.Collections.html
 - uid: System.Object
   commentId: T:System.Object
   parent: System

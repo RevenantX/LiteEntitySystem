@@ -19,6 +19,8 @@ items:
   syntax:
     content: public interface ILocalSingleton
     content.vb: Public Interface ILocalSingleton
+  derivedClasses:
+  - LiteEntitySystem.Extensions.LocalMessageBus
 - uid: LiteEntitySystem.ILocalSingleton.Destroy
   commentId: M:LiteEntitySystem.ILocalSingleton.Destroy
   id: Destroy
@@ -40,7 +42,6 @@ items:
 references:
 - uid: LiteEntitySystem
   commentId: N:LiteEntitySystem
-  href: LiteEntitySystem.html
   name: LiteEntitySystem
   nameWithType: LiteEntitySystem
   fullName: LiteEntitySystem

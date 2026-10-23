@@ -23,6 +23,8 @@ items:
     typeParameters:
     - id: T
     content.vb: Public Interface ISyncFieldChanged(Of T)
+  derivedClasses:
+  - LiteEntitySystem.Extensions.SyncString
   nameWithType.vb: ISyncFieldChanged(Of T)
   fullName.vb: LiteEntitySystem.ISyncFieldChanged(Of T)
   name.vb: ISyncFieldChanged(Of T)
@@ -52,7 +54,6 @@ items:
 references:
 - uid: LiteEntitySystem
   commentId: N:LiteEntitySystem
-  href: LiteEntitySystem.html
   name: LiteEntitySystem
   nameWithType: LiteEntitySystem
   fullName: LiteEntitySystem

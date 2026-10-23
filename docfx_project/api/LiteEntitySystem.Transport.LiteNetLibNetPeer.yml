@@ -194,26 +194,21 @@ items:
 references:
 - uid: LiteEntitySystem.Transport
   commentId: N:LiteEntitySystem.Transport
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Transport
   nameWithType: LiteEntitySystem.Transport
   fullName: LiteEntitySystem.Transport
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Transport
     name: Transport
-    href: LiteEntitySystem.Transport.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Transport
     name: Transport
-    href: LiteEntitySystem.Transport.html
 - uid: System.Object
   commentId: T:System.Object
   parent: System

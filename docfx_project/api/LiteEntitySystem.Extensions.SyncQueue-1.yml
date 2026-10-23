@@ -463,7 +463,16 @@ items:
     description: <code class="paramref">index</code> is less than zero.
   - type: System.ArgumentException
     commentId: T:System.ArgumentException
-    description: "        <code class=\"paramref\">array</code> is multidimensional.  \n-or-  \nThe number of elements in the source <xref href=\"System.Collections.ICollection\" data-throw-if-not-resolved=\"false\"></xref> is greater than the available space from <code class=\"paramref\">index</code> to the end of the destination <code class=\"paramref\">array</code>.  \n-or-  \nThe type of the source <xref href=\"System.Collections.ICollection\" data-throw-if-not-resolved=\"false\"></xref> cannot be cast automatically to the type of the destination <code class=\"paramref\">array</code>."
+    description: >-
+      <code class="paramref">array</code> is multidimensional.  
+
+      -or-  
+
+      The number of elements in the source <xref href="System.Collections.ICollection" data-throw-if-not-resolved="false"></xref> is greater than the available space from <code class="paramref">index</code> to the end of the destination <code class="paramref">array</code>.  
+
+      -or-  
+
+      The type of the source <xref href="System.Collections.ICollection" data-throw-if-not-resolved="false"></xref> cannot be cast automatically to the type of the destination <code class="paramref">array</code>.
   implements:
   - System.Collections.ICollection.CopyTo(System.Array,System.Int32)
   nameWithType.vb: SyncQueue(Of T).CopyTo(Array, Integer)
@@ -494,26 +503,21 @@ items:
 references:
 - uid: LiteEntitySystem.Extensions
   commentId: N:LiteEntitySystem.Extensions
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Extensions
   nameWithType: LiteEntitySystem.Extensions
   fullName: LiteEntitySystem.Extensions
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Extensions
     name: Extensions
-    href: LiteEntitySystem.Extensions.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Extensions
     name: Extensions
-    href: LiteEntitySystem.Extensions.html
 - uid: System.Object
   commentId: T:System.Object
   parent: System
@@ -878,29 +882,23 @@ references:
   fullName: System
 - uid: LiteEntitySystem.Internal
   commentId: N:LiteEntitySystem.Internal
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Internal
   nameWithType: LiteEntitySystem.Internal
   fullName: LiteEntitySystem.Internal
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Internal
     name: Internal
-    href: LiteEntitySystem.Internal.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Internal
     name: Internal
-    href: LiteEntitySystem.Internal.html
 - uid: LiteEntitySystem
   commentId: N:LiteEntitySystem
-  href: LiteEntitySystem.html
   name: LiteEntitySystem
   nameWithType: LiteEntitySystem
   fullName: LiteEntitySystem

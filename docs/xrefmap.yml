@@ -2280,6 +2280,12 @@ references:
   commentId: F:LiteEntitySystem.EntityManager.AliveEntities
   fullName: LiteEntitySystem.EntityManager.AliveEntities
   nameWithType: EntityManager.AliveEntities
+- uid: LiteEntitySystem.EntityManager.ClassDataHash
+  name: ClassDataHash
+  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_ClassDataHash
+  commentId: F:LiteEntitySystem.EntityManager.ClassDataHash
+  fullName: LiteEntitySystem.EntityManager.ClassDataHash
+  nameWithType: EntityManager.ClassDataHash
 - uid: LiteEntitySystem.EntityManager.ConstructEntity(LiteEntitySystem.Internal.InternalEntity)
   name: ConstructEntity(InternalEntity)
   href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_ConstructEntity_LiteEntitySystem_Internal_InternalEntity_
@@ -2384,6 +2390,19 @@ references:
   isSpec: "True"
   fullName: LiteEntitySystem.EntityManager.ExecuteLocalSingletonsLateUpdate
   nameWithType: EntityManager.ExecuteLocalSingletonsLateUpdate
+- uid: LiteEntitySystem.EntityManager.GetClassId(System.Type)
+  name: GetClassId(Type)
+  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetClassId_System_Type_
+  commentId: M:LiteEntitySystem.EntityManager.GetClassId(System.Type)
+  fullName: LiteEntitySystem.EntityManager.GetClassId(System.Type)
+  nameWithType: EntityManager.GetClassId(Type)
+- uid: LiteEntitySystem.EntityManager.GetClassId*
+  name: GetClassId
+  href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetClassId_
+  commentId: Overload:LiteEntitySystem.EntityManager.GetClassId
+  isSpec: "True"
+  fullName: LiteEntitySystem.EntityManager.GetClassId
+  nameWithType: EntityManager.GetClassId
 - uid: LiteEntitySystem.EntityManager.GetControllers*
   name: GetControllers
   href: api/LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetControllers_
@@ -3141,25 +3160,37 @@ references:
   commentId: T:LiteEntitySystem.EntityTypesMap
   fullName: LiteEntitySystem.EntityTypesMap
   nameWithType: EntityTypesMap
-- uid: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
-  name: EvaluateEntityClassDataHash()
-  href: api/LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_EvaluateEntityClassDataHash
-  commentId: M:LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
-  fullName: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash()
-  nameWithType: EntityTypesMap.EvaluateEntityClassDataHash()
-- uid: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash*
-  name: EvaluateEntityClassDataHash
-  href: api/LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_EvaluateEntityClassDataHash_
-  commentId: Overload:LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
-  isSpec: "True"
-  fullName: LiteEntitySystem.EntityTypesMap.EvaluateEntityClassDataHash
-  nameWithType: EntityTypesMap.EvaluateEntityClassDataHash
 - uid: LiteEntitySystem.EntityTypesMap.MaxId
   name: MaxId
   href: api/LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_MaxId
   commentId: F:LiteEntitySystem.EntityTypesMap.MaxId
   fullName: LiteEntitySystem.EntityTypesMap.MaxId
   nameWithType: EntityTypesMap.MaxId
+- uid: LiteEntitySystem.EntityTypesMap.RegisterType(System.Type,System.UInt16,System.String,LiteEntitySystem.EntityConstructor{LiteEntitySystem.Internal.InternalEntity})
+  name: RegisterType(Type, ushort, string, EntityConstructor<InternalEntity>)
+  href: api/LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_RegisterType_System_Type_System_UInt16_System_String_LiteEntitySystem_EntityConstructor_LiteEntitySystem_Internal_InternalEntity__
+  commentId: M:LiteEntitySystem.EntityTypesMap.RegisterType(System.Type,System.UInt16,System.String,LiteEntitySystem.EntityConstructor{LiteEntitySystem.Internal.InternalEntity})
+  name.vb: RegisterType(Type, UShort, String, EntityConstructor(Of InternalEntity))
+  fullName: LiteEntitySystem.EntityTypesMap.RegisterType(System.Type, ushort, string, LiteEntitySystem.EntityConstructor<LiteEntitySystem.Internal.InternalEntity>)
+  fullName.vb: LiteEntitySystem.EntityTypesMap.RegisterType(System.Type, UShort, String, LiteEntitySystem.EntityConstructor(Of LiteEntitySystem.Internal.InternalEntity))
+  nameWithType: EntityTypesMap.RegisterType(Type, ushort, string, EntityConstructor<InternalEntity>)
+  nameWithType.vb: EntityTypesMap.RegisterType(Type, UShort, String, EntityConstructor(Of InternalEntity))
+- uid: LiteEntitySystem.EntityTypesMap.RegisterType*
+  name: RegisterType
+  href: api/LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_RegisterType_
+  commentId: Overload:LiteEntitySystem.EntityTypesMap.RegisterType
+  isSpec: "True"
+  fullName: LiteEntitySystem.EntityTypesMap.RegisterType
+  nameWithType: EntityTypesMap.RegisterType
+- uid: LiteEntitySystem.EntityTypesMap.RegisterType``1(System.UInt16,System.String,LiteEntitySystem.EntityConstructor{``0})
+  name: RegisterType<TEntity>(ushort, string, EntityConstructor<TEntity>)
+  href: api/LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_RegisterType__1_System_UInt16_System_String_LiteEntitySystem_EntityConstructor___0__
+  commentId: M:LiteEntitySystem.EntityTypesMap.RegisterType``1(System.UInt16,System.String,LiteEntitySystem.EntityConstructor{``0})
+  name.vb: RegisterType(Of TEntity)(UShort, String, EntityConstructor(Of TEntity))
+  fullName: LiteEntitySystem.EntityTypesMap.RegisterType<TEntity>(ushort, string, LiteEntitySystem.EntityConstructor<TEntity>)
+  fullName.vb: LiteEntitySystem.EntityTypesMap.RegisterType(Of TEntity)(UShort, String, LiteEntitySystem.EntityConstructor(Of TEntity))
+  nameWithType: EntityTypesMap.RegisterType<TEntity>(ushort, string, EntityConstructor<TEntity>)
+  nameWithType.vb: EntityTypesMap.RegisterType(Of TEntity)(UShort, String, EntityConstructor(Of TEntity))
 - uid: LiteEntitySystem.EntityTypesMap.RegisteredTypes
   name: RegisteredTypes
   href: api/LiteEntitySystem.EntityTypesMap.html#LiteEntitySystem_EntityTypesMap_RegisteredTypes

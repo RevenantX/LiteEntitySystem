@@ -73,10 +73,12 @@ items:
   - LiteEntitySystem.EntityManager.VisualDeltaTime
   - LiteEntitySystem.EntityManager.VisualDeltaTimeF
   - LiteEntitySystem.EntityManager.MaxPlayers
+  - LiteEntitySystem.EntityManager.ClassDataHash
   - LiteEntitySystem.EntityManager.IsRunning
   - LiteEntitySystem.EntityManager.IsLagCompensationEnabled
   - LiteEntitySystem.EntityManager.RegisterFieldType``1(LiteEntitySystem.Internal.InterpolatorDelegateWithReturn{{T}})
   - LiteEntitySystem.EntityManager.RegisterFieldType``1
+  - LiteEntitySystem.EntityManager.GetClassId(System.Type)
   - LiteEntitySystem.EntityManager.GetEntityTypeFromClassId(System.UInt16)
   - LiteEntitySystem.EntityManager.GetEntitySyncVarInfo(LiteEntitySystem.Internal.InternalEntity,LiteEntitySystem.IEntitySyncVarInfoPrinter)
   - LiteEntitySystem.EntityManager.GetEntityById``1(LiteEntitySystem.EntitySharedReference)
@@ -860,7 +862,6 @@ items:
 references:
 - uid: LiteEntitySystem
   commentId: N:LiteEntitySystem
-  href: LiteEntitySystem.html
   name: LiteEntitySystem
   nameWithType: LiteEntitySystem
   fullName: LiteEntitySystem
@@ -1042,6 +1043,13 @@ references:
   name: MaxPlayers
   nameWithType: EntityManager.MaxPlayers
   fullName: LiteEntitySystem.EntityManager.MaxPlayers
+- uid: LiteEntitySystem.EntityManager.ClassDataHash
+  commentId: F:LiteEntitySystem.EntityManager.ClassDataHash
+  parent: LiteEntitySystem.EntityManager
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_ClassDataHash
+  name: ClassDataHash
+  nameWithType: EntityManager.ClassDataHash
+  fullName: LiteEntitySystem.EntityManager.ClassDataHash
 - uid: LiteEntitySystem.EntityManager.IsRunning
   commentId: P:LiteEntitySystem.EntityManager.IsRunning
   parent: LiteEntitySystem.EntityManager
@@ -1128,6 +1136,34 @@ references:
   - name: T
   - name: )
   - name: (
+  - name: )
+- uid: LiteEntitySystem.EntityManager.GetClassId(System.Type)
+  commentId: M:LiteEntitySystem.EntityManager.GetClassId(System.Type)
+  parent: LiteEntitySystem.EntityManager
+  isExternal: true
+  href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetClassId_System_Type_
+  name: GetClassId(Type)
+  nameWithType: EntityManager.GetClassId(Type)
+  fullName: LiteEntitySystem.EntityManager.GetClassId(System.Type)
+  spec.csharp:
+  - uid: LiteEntitySystem.EntityManager.GetClassId(System.Type)
+    name: GetClassId
+    href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetClassId_System_Type_
+  - name: (
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: )
+  spec.vb:
+  - uid: LiteEntitySystem.EntityManager.GetClassId(System.Type)
+    name: GetClassId
+    href: LiteEntitySystem.EntityManager.html#LiteEntitySystem_EntityManager_GetClassId_System_Type_
+  - name: (
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
   - name: )
 - uid: LiteEntitySystem.EntityManager.GetEntityTypeFromClassId(System.UInt16)
   commentId: M:LiteEntitySystem.EntityManager.GetEntityTypeFromClassId(System.UInt16)
@@ -1839,26 +1875,21 @@ references:
   fullName: LiteEntitySystem.Extensions.LocalMessageBusExtensions
 - uid: LiteEntitySystem.Extensions
   commentId: N:LiteEntitySystem.Extensions
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Extensions
   nameWithType: LiteEntitySystem.Extensions
   fullName: LiteEntitySystem.Extensions
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Extensions
     name: Extensions
-    href: LiteEntitySystem.Extensions.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Extensions
     name: Extensions
-    href: LiteEntitySystem.Extensions.html
 - uid: System.Int32
   commentId: T:System.Int32
   parent: System
@@ -2055,26 +2086,21 @@ references:
   fullName: LiteEntitySystem.Transport.AbstractNetPeer
 - uid: LiteEntitySystem.Transport
   commentId: N:LiteEntitySystem.Transport
-  href: LiteEntitySystem.html
   name: LiteEntitySystem.Transport
   nameWithType: LiteEntitySystem.Transport
   fullName: LiteEntitySystem.Transport
   spec.csharp:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Transport
     name: Transport
-    href: LiteEntitySystem.Transport.html
   spec.vb:
   - uid: LiteEntitySystem
     name: LiteEntitySystem
-    href: LiteEntitySystem.html
   - name: .
   - uid: LiteEntitySystem.Transport
     name: Transport
-    href: LiteEntitySystem.Transport.html
 - uid: LiteEntitySystem.ServerEntityManager.GetPlayer*
   commentId: Overload:LiteEntitySystem.ServerEntityManager.GetPlayer
   href: LiteEntitySystem.ServerEntityManager.html#LiteEntitySystem_ServerEntityManager_GetPlayer_System_Byte_

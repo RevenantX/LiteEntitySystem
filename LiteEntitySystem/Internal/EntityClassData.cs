@@ -74,6 +74,12 @@ namespace LiteEntitySystem.Internal
         public RpcFieldInfo[] RemoteCallsClient;
         public readonly Type Type;
 
+        /// <summary>
+        /// Hash of everything that must match between peers: wire layout of fields (names, types with their
+        /// struct contents, sizes, flags, fixed offsets), syncable field types and remote calls
+        /// </summary>
+        public readonly ulong LayoutHash;
+
         private readonly int[] _ownedRollbackFields;
         private readonly int[] _remoteRollbackFields;
         
@@ -193,10 +199,13 @@ namespace LiteEntitySystem.Internal
             var ownedRollbackFields = new List<int>();
             var remoteRollbackFields = new List<int>();
             
+            var layoutHash = new LayoutHasher();
+            
             var allTypesStack = Utils.GetBaseTypes(entType, InternalEntityType, true, true);
             while(allTypesStack.Count > 0)
             {
                 var baseType = allTypesStack.Pop();
+                layoutHash.Add(baseType.Name);
                 
                 var setFlagsAttribute = baseType.GetCustomAttribute<EntityFlagsAttribute>();
                 Flags |= setFlagsAttribute != null ? setFlagsAttribute.Flags : 0;
@@ -209,7 +218,11 @@ namespace LiteEntitySystem.Internal
                         throw new Exception($"RemoteCalls should be static! (Class: {entType} Field: {field.Name})");
                     
                     if(field.IsStatic)
+                    {
+                        if (Utils.IsRemoteCallType(ft))
+                            layoutHash.AddField(field);
                         continue;
+                    }
                     
                     var syncVarFlags = field.GetCustomAttribute<SyncVarFlags>() ?? baseType.GetCustomAttribute<SyncVarFlags>();
                     var syncFlags = syncVarFlags?.Flags ?? SyncFlags.None;
@@ -218,6 +231,7 @@ namespace LiteEntitySystem.Internal
                     //syncvars
                     if (ft.IsGenericType && !ft.IsArray && ft.GetGenericTypeDefinition() == typeof(SyncVar<>))
                     {
+                        layoutHash.AddField(field);
                         ft = ft.GetGenericArguments()[0];
                         if (ft.IsEnum)
                             ft = ft.GetEnumUnderlyingType();
@@ -250,6 +264,9 @@ namespace LiteEntitySystem.Internal
                         if (!field.IsInitOnly)
                             throw new Exception($"Syncable fields should be readonly! (Class: {entType} Field: {field.Name})");
                         
+                        //generic arguments (SyncArray<TStruct> etc) aren't visible in Fields
+                        layoutHash.AddField(field);
+                        layoutHash.Add((int)syncFlags);
                         syncableFields.Add(new SyncableFieldInfo(offset, syncFlags));
                         
                         //add custom rollbacked separately
@@ -266,6 +283,9 @@ namespace LiteEntitySystem.Internal
                                 var syncableFieldType = syncableField.FieldType;
                                 if(Utils.IsRemoteCallType(syncableFieldType) && !syncableField.IsStatic)
                                     throw new Exception($"RemoteCalls should be static! (Class: {syncableType} Field: {syncableField.Name})");
+                                
+                                if (syncableField.IsStatic && Utils.IsRemoteCallType(syncableFieldType))
+                                    layoutHash.AddField(syncableField);
                                 
                                 if (!syncableFieldType.IsValueType || 
                                     !syncableFieldType.IsGenericType || 
@@ -352,6 +372,25 @@ namespace LiteEntitySystem.Internal
                 }
             }
             
+            layoutHash.Add(ClassId);
+            layoutHash.Add(ClassEnumName);
+            layoutHash.Add((int)Flags);
+            layoutHash.Add(IsSingleton ? 1 : 0);
+            layoutHash.Add(FixedFieldsSize);
+            layoutHash.Add(PredictedSize);
+            layoutHash.Add(LagCompensatedSize);
+            foreach (var field in Fields)
+            {
+                //Offset isn't hashed: it's managed memory offset and differs between runtimes
+                layoutHash.Add(field.Name);
+                layoutHash.Add(field.IntSize);
+                layoutHash.Add((int)field.FieldType);
+                layoutHash.Add((int)field.Flags);
+                layoutHash.Add(field.FixedOffset);
+                layoutHash.Add(field.PredictedOffset);
+            }
+            LayoutHash = layoutHash.Value;
+            
             //cache rollbackFields
             _ownedRollbackFields = ownedRollbackFields.ToArray();
             _remoteRollbackFields = remoteRollbackFields.ToArray();
@@ -391,10 +430,105 @@ namespace LiteEntitySystem.Internal
         }
     }
 
-    // ReSharper disable once UnusedTypeParameter
-    internal static class EntityClassInfo<T>
+    /// <summary>
+    /// FNV1a 64 bit hash of class layout. Types are hashed by name and, for structs, by their fields
+    /// in declaration (= memory) order, so a reordered or changed struct (also partial one) changes the hash.
+    /// </summary>
+    internal sealed class LayoutHasher
     {
-        // ReSharper disable once StaticMemberInGenericType
-        internal static ushort ClassId;
+        private readonly HashSet<Type> _walkedTypes = new();
+
+        public ulong Value { get; private set; } = 14695981039346656037UL; //FNV1a offset
+
+        public void Add(string str)
+        {
+            Add(str.Length);
+            foreach (char c in str)
+                AddByte(c);
+        }
+
+        public void Add(int value)
+        {
+            for (int i = 0; i < 4; i++)
+                AddByte(value >> (i * 8));
+        }
+
+        public void Add(ulong value)
+        {
+            for (int i = 0; i < 8; i++)
+                AddByte((int)(value >> (i * 8)));
+        }
+
+        public void AddField(FieldInfo field)
+        {
+            Add(field.Name);
+            AddType(field.FieldType);
+        }
+
+        public void AddType(Type t)
+        {
+            Add(TypeName(t));
+            Walk(t);
+        }
+
+        private void AddByte(int b)
+        {
+            Value ^= (byte)b;
+            Value *= 1099511628211UL; //prime
+        }
+
+        //contents of struct and generic arguments, name only for classes
+        private void Walk(Type t)
+        {
+            if (!_walkedTypes.Add(t))
+                return;
+            if (t.IsArray || t.IsPointer)
+            {
+                Walk(t.GetElementType());
+                return;
+            }
+            if (t.IsGenericType)
+            {
+                foreach (var arg in t.GetGenericArguments())
+                    Walk(arg);
+            }
+            if (t.IsEnum)
+            {
+                Add(TypeName(t.GetEnumUnderlyingType()));
+                return;
+            }
+            if (!t.IsValueType || t.IsPrimitive)
+                return;
+            var layout = t.StructLayoutAttribute;
+            if (layout != null)
+            {
+                Add((int)layout.Value);
+                Add(layout.Pack);
+                Add(layout.Size);
+            }
+            //metadata order, not sorted: it's the memory layout of the struct
+            foreach (var field in t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                Add(field.Name);
+                Add(TypeName(field.FieldType));
+                Walk(field.FieldType);
+            }
+        }
+
+        //assembly independent name (FullName of generic types contains assembly qualified arguments)
+        private static string TypeName(Type t)
+        {
+            if (t.IsArray)
+                return TypeName(t.GetElementType()) + "[" + new string(',', t.GetArrayRank() - 1) + "]";
+            if (t.IsPointer)
+                return TypeName(t.GetElementType()) + "*";
+            if (!t.IsGenericType)
+                return t.FullName ?? t.Name;
+            var args = t.GetGenericArguments();
+            var names = new string[args.Length];
+            for (int i = 0; i < args.Length; i++)
+                names[i] = TypeName(args[i]);
+            return t.GetGenericTypeDefinition().FullName + "[" + string.Join(",", names) + "]";
+        }
     }
 }
