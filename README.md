@@ -42,6 +42,7 @@ Only SyncVar.Value can be changed (never do x = new SyncVar())
 * LZ4 compression of initial world state
 * Also works as game logic engine
 * LiteNetLib as default transport, but you can implement any other transport
+* Direct connection transport for zero latency local tests or singleplayer mode in multiplayer game
 
 ## Dependencies
 
