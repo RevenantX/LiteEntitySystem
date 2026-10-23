@@ -52,6 +52,20 @@ public class DirectConnectionTests
         Assert.AreEqual(DeserializeResult.Done, result);
     }
 
+    [TestMethod]
+    public void ClassDataHashIgnoresLogicOnlySubclassIdentity()
+    {
+        var serverTypes = new EntityTypesMap<TestEntityId>()
+            .Register(TestEntityId.Player, entityParams => new ServerPlayer(entityParams));
+        var clientTypes = new EntityTypesMap<TestEntityId>()
+            .Register(TestEntityId.Player, entityParams => new ClientPlayer(entityParams));
+        var connection = new DirectConnection();
+        var server = new ServerEntityManager(serverTypes, TestLESHeader, TestFPS, ServerSendRate.EqualToFPS);
+        var client = new ClientEntityManager(clientTypes, connection.ClientPeer, TestLESHeader);
+
+        Assert.AreEqual(server.ClassDataHash, client.ClassDataHash);
+    }
+
     [TestCleanup]
     public void ClearLogger()
     {
@@ -65,23 +79,5 @@ public class DirectConnectionTests
         public void Log(string log) => _testContext.WriteLine($"[INFO] {log}");
         public void LogError(string log) => _testContext.WriteLine($"[ERROR] {log}");
         public void LogWarning(string log) => _testContext.WriteLine($"[WARNING] {log}");
-    }
-
-    private enum TestEntityId : byte
-    {
-        TestEntity
-    }
-
-    private sealed class TestEntity : EntityLogic
-    {
-        private SyncVar<int> _testSyncValue;
-
-        public TestEntity(EntityParams entityParams) : base(entityParams)
-        {
-        }
-
-        public void SetValue() => _testSyncValue.Value = 351122;
-
-        public bool CheckValue() => _testSyncValue == 351122;
     }
 }

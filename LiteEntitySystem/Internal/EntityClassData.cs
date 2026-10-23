@@ -205,13 +205,35 @@ namespace LiteEntitySystem.Internal
             while(allTypesStack.Count > 0)
             {
                 var baseType = allTypesStack.Pop();
-                layoutHash.Add(baseType.Name);
+                var processedFields = Utils.GetProcessedFields(baseType);
+                //add subclasses names only if they had sync members
+                bool hasLayoutMembers = false;
+                foreach (var field in processedFields)
+                {
+                    var fieldType = field.FieldType;
+                    if (field.IsStatic)
+                    {
+                        if (Utils.IsRemoteCallType(fieldType))
+                        {
+                            hasLayoutMembers = true;
+                            break;
+                        }
+                    }
+                    else if ((fieldType.IsGenericType && !fieldType.IsArray && fieldType.GetGenericTypeDefinition() == typeof(SyncVar<>)) ||
+                             fieldType.IsSubclassOf(SyncableFieldType))
+                    {
+                        hasLayoutMembers = true;
+                        break;
+                    }
+                }
+                if (hasLayoutMembers)
+                    layoutHash.Add(baseType.Name);
                 
                 var setFlagsAttribute = baseType.GetCustomAttribute<EntityFlagsAttribute>();
                 Flags |= setFlagsAttribute != null ? setFlagsAttribute.Flags : 0;
                 
                 //cache fields
-                foreach (var field in Utils.GetProcessedFields(baseType))
+                foreach (var field in processedFields)
                 {
                     var ft = field.FieldType;
                     if(Utils.IsRemoteCallType(ft) && !field.IsStatic)
