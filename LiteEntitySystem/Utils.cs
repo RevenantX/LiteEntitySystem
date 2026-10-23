@@ -129,17 +129,6 @@ namespace LiteEntitySystem
             if (count >= arr.Length)
                 Array.Resize(ref arr, count*2);
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void AddToArrayDynamic<T>(ref T[] arr, ref int count, T value)
-        {
-            if (arr == null)
-                arr = new T[count > 8 ? count : 8];
-            else if (count >= arr.Length)
-                Array.Resize(ref arr, count*2);
-            arr[count] = value;
-            count++;
-        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ResizeOrCreate<T>(ref T[] arr, int count)

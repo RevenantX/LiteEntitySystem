@@ -34,6 +34,27 @@ _entityManager = new ClientEntityManager(typesMap, new LiteNetLibNetPeer(peer, t
 `assignToTag: true` stores the adapter in LiteNetLib's `Tag`, which is how later callbacks recover it (`(LiteNetLibNetPeer)peer.Tag`). The extension methods `GetLiteNetLibNetPeerFromTag()` and `GetLiteNetLibNetPeer()` do the same lookups in one call.
 
 ## Sharing a connection
+## In-memory direct connection
+
+`DirectConnection` provides a deterministic, socket-free client/server pair. Bind each endpoint's `PacketReceived` event to the matching manager and call `Pump()` after updates to deliver queued packets:
+
+```csharp
+var connection = new DirectConnection();
+var player = serverManager.AddPlayer(connection.ServerPeer);
+var clientManager = new ClientEntityManager(typesMap, connection.ClientPeer, headerByte);
+
+connection.ServerPeer.PacketReceived += packet =>
+    serverManager.Deserialize(connection.ServerPeer, packet.Span);
+connection.ClientPeer.PacketReceived += packet =>
+    clientManager.Deserialize(packet.Span);
+
+// After server/client updates, deliver packets queued in either direction.
+connection.Pump();
+```
+
+The connection copies payloads when they are sent. `Pump()` processes packets already queued at its start, client to server before server to client; packets sent from a receive callback are delivered by the next call. Both delivery methods are deterministic and loss-free, so this is useful for integration tests but does not simulate unreliable packet loss. The optional constructor argument sets the maximum unreliable packet size reported by both peers (default `1200`).
+
+## Sharing a connection
 
 Every packet the library produces starts with the header byte given to the manager, so your own protocol can travel on the same connection. Route by peeking at the first byte:
 

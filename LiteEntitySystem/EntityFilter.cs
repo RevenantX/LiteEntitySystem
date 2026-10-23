@@ -14,6 +14,8 @@ namespace LiteEntitySystem
     //SortedSet like collection based on AVLTree
     public class EntityFilter<T> : AVLTree<T>, IEntityFilter where T : InternalEntity
     {
+        internal static EntityFilter<T> EmptySet;
+
         private event Action<T> OnConstructed;
         
         /// <summary>

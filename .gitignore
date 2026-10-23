@@ -4,3 +4,4 @@ bin
 .vs
 .DS_Store
 *.user
+.vscode/

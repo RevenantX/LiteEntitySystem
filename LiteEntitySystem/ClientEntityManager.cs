@@ -706,7 +706,8 @@ namespace LiteEntitySystem
                 //because remote and server alive entities managed by EntityManager
                 if(e.IsLocalControlled && e is EntityLogic eLogic)
                     RemoveOwned(eLogic);
-                Utils.AddToArrayDynamic(ref _entitiesToRemove, ref _entitiesToRemoveCount, e);
+                Utils.ResizeIfFull(ref _entitiesToRemove, _entitiesToRemoveCount);
+                _entitiesToRemove[_entitiesToRemoveCount++] = e;
             }
             _modifiedEntitiesToRollback.Remove(e);
             base.OnEntityDestroyed(e);

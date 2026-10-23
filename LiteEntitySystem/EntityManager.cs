@@ -376,6 +376,8 @@ namespace LiteEntitySystem
             _entityFilters[internalEntityFilterId] = new EntityFilter<InternalEntity>();
         }
 
+        internal bool IsTypeRegistered<T>() => _registeredTypeIds.ContainsKey(typeof(T));
+
         /// <summary>
         /// Get type of entity from classId. Returns null if classId is unknown
         /// </summary>
@@ -471,7 +473,11 @@ namespace LiteEntitySystem
         public EntityFilter<T> GetEntities<T>() where T : InternalEntity
         {
             if (!_registeredTypeIds.TryGetValue(typeof(T), out ushort typeId))
-                throw new Exception($"Unregistered type: {typeof(T)}");
+            {
+                if(EntityFilter<T>.EmptySet == null)
+                    EntityFilter<T>.EmptySet = new EntityFilter<T>();
+                return EntityFilter<T>.EmptySet;
+            }
             
             ref var entityFilter = ref _entityFilters[typeId];
             if (entityFilter != null)
