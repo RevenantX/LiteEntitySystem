@@ -12,8 +12,8 @@
         <Title>LiteEntitySystem</Title>
         <Description>Pure C# HighLevel API for multiplayer games using .NET Standard 2.1</Description>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <Version>1.2.2</Version>
-        <PackageReleaseNotes>https://github.com/RevenantX/LiteEntitySystem/releases/tag/1.2.1</PackageReleaseNotes>
+        <Version>1.3.0</Version>
+        <PackageReleaseNotes>https://github.com/RevenantX/LiteEntitySystem/releases/tag/1.3.0</PackageReleaseNotes>
         <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
     </PropertyGroup>
 
